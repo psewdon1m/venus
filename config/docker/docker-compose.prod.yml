@@ -1,0 +1,311 @@
+# Venus Platform - Production Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+
+version: '3.9'
+
+services:
+  # ==================================================
+  # Production Database
+  # ==================================================
+
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-venus_prod}
+      POSTGRES_USER: ${DATABASE_USER:-venus_user}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - /opt/venus/backups/postgres:/backups
+    # No port exposure - internal only
+    networks:
+      - data_net
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  redis:
+    image: redis:7-alpine
+    restart: always
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    # No port exposure - internal only
+    networks:
+      - data_net
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  # ==================================================
+  # Production Services
+  # ==================================================
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+    # No port exposure - behind Nginx
+    networks:
+      - frontend_net
+      - backend_net
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+    networks:
+      - backend_net
+      - data_net
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  project-service:
+    build:
+      context: ./services/project-service
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+    networks:
+      - backend_net
+      - data_net
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  persona-service:
+    build:
+      context: ./services/persona-service
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+    networks:
+      - backend_net
+      - data_net
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  media-service:
+    build:
+      context: ./services/media-service
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+    volumes:
+      - /opt/venus/tmp/uploads:/tmp/uploads
+    networks:
+      - backend_net
+      - data_net
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  ai-cv-service:
+    build:
+      context: ./services/ai-cv-service
+      dockerfile: Dockerfile
+      target: production
+    restart: always
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+    volumes:
+      - /opt/venus/tmp/cv-generated:/tmp/cv-generated
+    networks:
+      - backend_net
+      - data_net
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: production
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_CDN_URL=${NEXT_PUBLIC_CDN_URL}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+    restart: always
+    environment:
+      NODE_ENV: production
+    # No port exposure - behind Nginx
+    networks:
+      - frontend_net
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ==================================================
+  # Production Nginx (SSL Termination & Reverse Proxy)
+  # ==================================================
+
+  nginx:
+    image: nginx:alpine
+    container_name: venus-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/log/nginx:/var/log/nginx
+    networks:
+      - frontend_net
+    depends_on:
+      - frontend
+      - api-gateway
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  # ==================================================
+  # Monitoring (Production)
+  # ==================================================
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: venus-prometheus
+    restart: always
+    volumes:
+      - ./infrastructure/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    networks:
+      - backend_net
+    profiles:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: venus-grafana
+    restart: always
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      GF_SERVER_ROOT_URL: https://admin.tgcall.us/grafana
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infrastructure/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    networks:
+      - backend_net
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+
+volumes:
+  prometheus_data:
+    name: venus-prometheus-data
+  grafana_data:
+    name: venus-grafana-data

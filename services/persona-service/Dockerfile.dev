@@ -1,0 +1,18 @@
+# Development Dockerfile for Auth Service
+# Optimized for hot-reload
+
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Install dependencies will be done via volume mount
+# This keeps the container light
+
+ENV NODE_ENV=development
+
+EXPOSE 4001
+
+CMD ["pnpm", "dev"]

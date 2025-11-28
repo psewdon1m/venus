@@ -1,0 +1,146 @@
+// Venus Platform - Prisma Schema
+// Database: SQLite for development
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// ==================================================
+// Core Entities
+// ==================================================
+
+model Account {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relations
+  personas      Persona[]
+  projects      Project[]
+  mediaFiles    MediaFile[]
+  cvGenerations CVGeneration[]
+
+  @@map("accounts")
+}
+
+model Persona {
+  id          String   @id @default(cuid())
+  accountId   String
+  slug        String   @unique
+  displayName String
+  manifest    String?
+  settings    String   @default("{}")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  account         Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  personaProjects PersonaProject[]
+  cvGenerations   CVGeneration[]
+
+  @@index([accountId])
+  @@index([slug])
+  @@map("personas")
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  accountId   String
+  title       String
+  slug        String
+  type        String   // 'album' or 'main-project'
+  content     String   @default("{}")
+  status      String   @default("draft") // 'draft' or 'published'
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  publishedAt DateTime?
+
+  // Relations
+  account         Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  personaProjects PersonaProject[]
+
+  @@unique([accountId, slug])
+  @@index([accountId])
+  @@index([slug])
+  @@index([status])
+  @@map("projects")
+}
+
+model PersonaProject {
+  id           String  @id @default(cuid())
+  personaId    String
+  projectId    String
+  displayOrder Int     @default(0)
+  isVisible    Boolean @default(true)
+
+  // Relations
+  persona Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([personaId, projectId])
+  @@index([personaId])
+  @@index([projectId])
+  @@map("persona_projects")
+}
+
+model MediaFile {
+  id          String   @id @default(cuid())
+  accountId   String
+  filename    String
+  storagePath String
+  mimeType    String
+  sizeBytes   Int
+  metadata    String   @default("{}")
+  createdAt   DateTime @default(now())
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([mimeType])
+  @@map("media_files")
+}
+
+model CVGeneration {
+  id        String   @id @default(cuid())
+  accountId String
+  personaId String
+  content   String
+  pdfUrl    String
+  createdAt DateTime @default(now())
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  persona Persona @relation(fields: [personaId], references: [id], onDelete: Cascade)
+
+  @@index([accountId])
+  @@index([personaId])
+  @@map("cv_generations")
+}
+
+// ==================================================
+// Session Management
+// ==================================================
+
+model Session {
+  id           String   @id @default(cuid())
+  accountId    String
+  refreshToken String   @unique
+  userAgent    String?
+  ipAddress    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([accountId])
+  @@index([refreshToken])
+  @@index([expiresAt])
+  @@map("sessions")
+}

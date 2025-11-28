@@ -1,0 +1,188 @@
+# Venus Platform - Development Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+version: '3.9'
+
+services:
+  # ==================================================
+  # Development Overrides
+  # ==================================================
+
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: venus_dev
+    volumes:
+      # Map local SQL scripts for hot-reload
+      - ./infrastructure/postgres:/docker-entrypoint-initdb.d:ro
+
+  redis:
+    ports:
+      - "6379:6379"
+
+  api-gateway:
+    build:
+      context: ./services/api-gateway
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      # Hot reload source code
+      - ./services/api-gateway/src:/app/src:cached
+      - ./services/api-gateway/package.json:/app/package.json:cached
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DEBUG: "venus:*"
+      WATCH_FILES: "true"
+    command: npm run dev
+
+  auth-service:
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./services/auth-service/src:/app/src:cached
+      - ./services/auth-service/package.json:/app/package.json:cached
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DEBUG: "venus:*"
+    command: npm run dev
+
+  project-service:
+    build:
+      context: ./services/project-service
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./services/project-service/src:/app/src:cached
+      - ./services/project-service/package.json:/app/package.json:cached
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DEBUG: "venus:*"
+    command: npm run dev
+
+  persona-service:
+    build:
+      context: ./services/persona-service
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./services/persona-service/src:/app/src:cached
+      - ./services/persona-service/package.json:/app/package.json:cached
+      - /app/node_modules
+    environment:
+      NODE_ENV: development
+      DEBUG: "venus:*"
+    command: npm run dev
+
+  media-service:
+    build:
+      context: ./services/media-service
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./services/media-service/src:/app/src:cached
+      - ./services/media-service/package.json:/app/package.json:cached
+      - /app/node_modules
+      # Store uploads locally for dev
+      - ./tmp/uploads:/tmp/uploads
+    environment:
+      NODE_ENV: development
+      DEBUG: "venus:*"
+    command: npm run dev
+
+  ai-cv-service:
+    build:
+      context: ./services/ai-cv-service
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      - ./services/ai-cv-service/src:/app/src:cached
+      - ./services/ai-cv-service/package.json:/app/package.json:cached
+      - /app/node_modules
+      # Store generated PDFs locally for dev
+      - ./tmp/cv-generated:/tmp/cv-generated
+    environment:
+      NODE_ENV: development
+      DEBUG: "venus:*"
+    command: npm run dev
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      target: development
+    volumes:
+      # Hot reload Next.js
+      - ./frontend/src:/app/src:cached
+      - ./frontend/public:/app/public:cached
+      - ./frontend/package.json:/app/package.json:cached
+      - ./frontend/next.config.js:/app/next.config.js:cached
+      - ./frontend/tsconfig.json:/app/tsconfig.json:cached
+      - ./frontend/tailwind.config.ts:/app/tailwind.config.ts:cached
+      - /app/node_modules
+      - /app/.next
+    environment:
+      NODE_ENV: development
+    command: npm run dev
+
+  # ==================================================
+  # Development Tools
+  # ==================================================
+
+  # PostgreSQL Admin UI
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: venus-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@venus.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - data_net
+    depends_on:
+      - postgres
+    profiles:
+      - dev-tools
+
+  # Redis Commander UI
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: venus-redis-commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8081:8081"
+    networks:
+      - data_net
+    depends_on:
+      - redis
+    profiles:
+      - dev-tools
+
+  # Mailhog for email testing
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: venus-mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - backend_net
+    profiles:
+      - dev-tools
+
+volumes:
+  pgadmin_data:
+    name: venus-pgadmin-data

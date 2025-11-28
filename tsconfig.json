@@ -1,0 +1,68 @@
+{
+  "compilerOptions": {
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    
+    // Module Resolution
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    // Emit
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "importHelpers": true,
+    "isolatedModules": true,
+    
+    // Interop Constraints  
+    "skipLibCheck": true,
+    
+    // Output
+    "outDir": "./dist",
+    "rootDir": "./",
+    
+    // Path Mapping
+    "baseUrl": ".",
+    "paths": {
+      "@venus/shared/*": ["./shared/*/src"],
+      "@venus/types": ["./shared/types/src"],
+      "@venus/utils": ["./shared/utils/src"],
+      "@venus/config": ["./shared/config/src"]
+    }
+  },
+  "include": [
+    "services/**/*",
+    "shared/**/*",
+    "scripts/**/*",
+    "tests/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "build",
+    "coverage",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "frontend"
+  ]
+}

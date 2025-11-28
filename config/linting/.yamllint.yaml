@@ -1,0 +1,58 @@
+# Yamllint configuration for YAML linting
+# https://yamllint.readthedocs.io/en/stable/configuration.html
+
+extends: default
+
+rules:
+  # Line length
+  line-length:
+    max: 120
+    level: warning
+
+  # Indentation
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Empty lines
+  empty-lines:
+    max-start: 0
+    max-end: 0
+    max: 2
+
+  # Comments
+  comments:
+    require-starting-space: true
+    ignore-shebangs: true
+
+  # Brackets and braces
+  brackets:
+    forbid: false
+
+  # Quotes
+  quotes:
+    prefer-single: true
+
+  # Truthy values
+  truthy:
+    allowed-values: ['true', 'false']
+    check-keys: false
+
+  # Document start
+  document-start:
+    present: false
+
+  # Empty values
+  empty-values:
+    forbid-in-block-mappings: true
+    forbid-in-flow-mappings: true
+
+  # Key duplicates
+  key-duplicates: {}
+
+  # Octal values
+  octal-values: {}
+
+  # Comments indentation
+  comments-indentation: {}

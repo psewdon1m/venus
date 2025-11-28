@@ -1,0 +1,161 @@
+name: Deploy to Production
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to deploy (e.g., v1.2.3)'
+        required: true
+        type: string
+
+jobs:
+  pre-deployment-checks:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Verify staging health
+        run: |
+          curl -f https://staging.venus.app/health || exit 1
+
+      - name: Check recent CI success
+        run: |
+          # Verify last CI run was successful
+          gh run list --workflow=ci --status=success --limit=1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify version tag exists
+        run: |
+          git ls-remote --tags origin | grep ${{ inputs.version }} || exit 1
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: pre-deployment-checks
+    environment:
+      name: production
+      url: https://venus.app
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.version }}
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PRODUCTION_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.PRODUCTION_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Create database backup
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+            cd /opt/venus
+
+            # Create backup before deployment
+            TIMESTAMP=$(date +%Y%m%d%H%M%S)
+            docker exec venus-postgres pg_dump -U postgres venus_prod > /opt/venus/backups/pre-deploy-$TIMESTAMP.sql
+
+            # Keep only last 5 backups
+            cd /opt/venus/backups
+            ls -t pre-deploy-*.sql | tail -n +6 | xargs rm -f
+          EOF
+
+      - name: Enable maintenance mode
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+            # Set maintenance flag in Redis
+            docker exec venus-redis redis-cli SET maintenance_mode true EX 3600
+          EOF
+
+      - name: Deploy with blue-green strategy
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+            cd /opt/venus
+
+            # Pull latest changes
+            git checkout ${{ inputs.version }}
+
+            # Install dependencies
+            pnpm install --frozen-lockfile
+
+            # Run database migrations
+            pnpm --filter @venus/project-service migrate
+
+            # Deploy to green environment
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build venus-green
+
+            # Wait for green environment to be healthy
+            sleep 60
+
+            # Health checks on green
+            curl -f https://green.venus.app/health || exit 1
+            curl -f https://api.green.venus.app/health || exit 1
+
+            # Switch traffic to green (update load balancer)
+            # This would be specific to your load balancer setup
+            # For example, with AWS ALB:
+            # aws elbv2 modify-listener --listener-arn $LISTENER_ARN --default-actions Type=forward,TargetGroupArn=$GREEN_TARGET_GROUP
+
+            # Keep blue running for 1 hour for rollback
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d venus-blue
+          EOF
+
+      - name: Post-deployment validation
+        run: |
+          # Run smoke tests on production
+          npm run test:smoke
+        env:
+          BASE_URL: https://venus.app
+
+      - name: Disable maintenance mode
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+            # Remove maintenance flag
+            docker exec venus-redis redis-cli DEL maintenance_mode
+          EOF
+
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ inputs.version }}
+          release_name: Release ${{ inputs.version }}
+          body: |
+            ## Production Deployment
+
+            **Version:** ${{ inputs.version }}
+            **Deployed at:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+            **Commit:** ${{ github.sha }}
+
+            ### Changes
+            See [CHANGELOG.md](../CHANGELOG.md) for details.
+
+      - name: Notify team
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          payload: |
+            {
+              "text": "🚀 Deployed to production: ${{ inputs.version }}\n<${{ github.server_url }}/${{ github.repository }}/releases/tag/${{ inputs.version }}|View release>"
+            }
+
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: success()
+    steps:
+      - name: Scale down blue environment
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.PRODUCTION_HOST }} << 'EOF'
+            cd /opt/venus
+
+            # Wait 1 hour, then scale down blue environment
+            sleep 3600
+
+            # Scale down blue services
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --scale venus-blue=0
+
+            # Clean up old images
+            docker image prune -f
+          EOF

@@ -1,0 +1,131 @@
+{
+  "name": "venus",
+  "version": "0.0.1-alpha",
+  "private": true,
+  "description": "Venus - Open-source portfolio platform for visual and technical creators",
+  "author": "Venus Contributors",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "pnpm run --parallel --stream dev",
+    "build": "pnpm run --recursive --stream build",
+    "start": "pnpm run --parallel --stream start",
+    "test": "pnpm run --recursive --stream test",
+    "test:unit": "pnpm run --recursive --stream test:unit",
+    "test:integration": "pnpm run --recursive --stream test:integration",
+    "test:e2e": "playwright test",
+    "test:coverage": "pnpm run --recursive --stream test:coverage",
+    "lint": "eslint . --config config/linting/.eslintrc.js",
+    "lint:fix": "eslint . --config config/linting/.eslintrc.js --fix",
+    "lint:docker": "npx @hadolint/hadolint --config config/linting/.hadolint.yaml **/Dockerfile*",
+    "lint:yaml": "python -m yamllint --config-file config/linting/.yamllint.yaml **/*.{yml,yaml} || echo 'yamllint not installed locally - will run in CI'",
+    "lint:markdown": "npx markdownlint-cli --config config/linting/.markdownlint.json **/*.md",
+    "lint:all": "npm run lint && npm run lint:docker && npm run lint:yaml && npm run lint:markdown",
+    "format": "prettier --config config/linting/.prettierrc --ignore-path config/linting/.prettierignore --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --config config/linting/.prettierrc --ignore-path config/linting/.prettierignore --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "typecheck": "pnpm run --recursive --stream typecheck",
+    "clean": "pnpm run --recursive --stream clean && rm -rf node_modules",
+    "prepare": "husky install",
+    "migrate": "pnpm --filter @venus/project-service migrate",
+    "migrate:dev": "pnpm --filter @venus/project-service migrate:dev",
+    "migrate:reset": "pnpm --filter @venus/project-service migrate:reset",
+    "seed": "pnpm --filter @venus/project-service seed",
+    "docker:up": "docker compose -f config/docker/docker-compose.yml up -d",
+    "docker:down": "docker compose -f config/docker/docker-compose.yml down",
+    "docker:logs": "docker compose -f config/docker/docker-compose.yml logs -f",
+    "docker:build": "docker compose -f config/docker/docker-compose.yml build",
+    "docker:dev": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml up -d",
+    "docker:staging": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.staging.yml up -d",
+    "docker:prod": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.prod.yml up -d"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^18.4.3",
+    "@commitlint/config-conventional": "^18.4.3",
+    "@playwright/test": "^1.40.1",
+    "@types/node": "^20.10.5",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "markdownlint-cli": "^0.39.0",
+    "prettier": "^3.1.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  },
+  "workspaces": [
+    "frontend",
+    "services/*",
+    "shared/*"
+  ],
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ],
+    "rules": {
+      "type-enum": [
+        2,
+        "always",
+        [
+          "feat",
+          "fix",
+          "docs",
+          "style",
+          "refactor",
+          "test",
+          "chore",
+          "perf",
+          "ci",
+          "build",
+          "revert"
+        ]
+      ],
+      "scope-enum": [
+        2,
+        "always",
+        [
+          "frontend",
+          "api-gateway",
+          "auth",
+          "projects",
+          "personas",
+          "media",
+          "cv",
+          "shared",
+          "infra",
+          "docs",
+          "config"
+        ]
+      ],
+      "subject-max-length": [
+        2,
+        "always",
+        72
+      ]
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "printWidth": 100,
+    "arrowParens": "always"
+  }
+}

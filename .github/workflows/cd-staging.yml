@@ -1,0 +1,82 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [main]
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+    environment:
+      name: staging
+      url: https://staging.venus.app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.STAGING_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to staging server
+        run: |
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.STAGING_HOST }} << 'EOF'
+            cd /opt/venus
+
+            # Pull latest changes
+            git pull origin main
+
+            # Install dependencies
+            pnpm install --frozen-lockfile
+
+            # Run database migrations
+            pnpm --filter @venus/project-service migrate
+
+            # Build and start services
+            docker compose -f docker-compose.yml -f docker-compose.staging.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d --build
+
+            # Wait for services to be healthy
+            sleep 30
+
+            # Run health checks
+            curl -f https://staging.venus.app/health || exit 1
+            curl -f https://api.staging.venus.app/health || exit 1
+
+            # Clean up old images
+            docker image prune -f
+          EOF
+
+      - name: Run smoke tests
+        run: |
+          npm run test:smoke
+        env:
+          BASE_URL: https://staging.venus.app
+
+      - name: Notify Slack
+        if: success()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          payload: |
+            {
+              "text": "🚀 Deployed to staging: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|View commit>"
+            }
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v1
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
+          payload: |
+            {
+              "text": "❌ Staging deployment failed: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+            }
