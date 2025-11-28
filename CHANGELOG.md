@@ -8,17 +8,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Planned
-- Fix API Gateway proxy for persona-service (http-proxy-middleware body forwarding issue)
 - Complete project placeholder system implementation
 - Media Service implementation
 - AI-CV Service implementation
 - CI/CD pipeline setup
 - Multiple personas support (КТ2)
 
+## [0.1.1-alpha] - 2025-11-28
+
+### Fixed
+- **API Gateway proxy body forwarding issue** - POST/PUT requests to persona-service now work correctly
+  - Implemented proper body forwarding in `proxyToService` function using native Node.js HTTP
+  - Added explicit Content-Type and Content-Length headers for JSON payloads
+  - Auth service proxy updated with `onProxyReq` callback for body forwarding
+- **Frontend API integration** - Replaced mock data with real API calls
+  - Dashboard now loads projects and personas from backend services
+  - Auth forms use real authentication endpoints
+  - Removed mock UI components and data
+
+### Changed
+- **Project Status:** КТ1 fully stable, ready for КТ2 development
+- **API Gateway:** All proxy routes now handle request bodies correctly
+- **Frontend:** Complete API integration with error handling and loading states
+
 ## [0.1.0-alpha] - 2025-11-22
 
 ### Added
-- **КТ1: Минимальный MVP завершен** 🎉
+- **КТ1: Минимальный MVP завершен** 
   - Полный flow: регистрация → создание персоны → проекты с плейсхолдерами → публичная страница
   - Регистрация и аутентификация с JWT токенами
   - Создание персон с уникальными slugs
@@ -37,7 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - JWT аутентификация middleware
   - Rate limiting и CORS
   - Health checks для всех сервисов
-  - ⚠️ **Known Issue:** POST requests to persona-service hang (proxy body forwarding bug)
 
 - **Persona Service Enhancement**
   - Полный CRUD для персон
@@ -53,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Frontend Implementation**
   - Next.js 15 с App Router
   - Auth context и protected routes
-  - Dashboard с mock UI для проектов и персон
+  - Dashboard с API integration для проектов и персон
   - Public persona pages (`/[slug]`)
   - Responsive design с Tailwind CSS
 
@@ -77,8 +92,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Testing:** Manual testing completed for КТ1 criteria
 
 ### Known Issues
-- API Gateway proxy hangs on POST requests to persona-service (workaround: direct service calls work)
-- Frontend uses mock data (needs API integration)
 - Lighthouse score optimization pending final measurements
 
 ---
@@ -259,7 +272,8 @@ Venus follows Semantic Versioning:
 - [Issues](https://github.com/your-org/venus/issues)
 - [Releases](https://github.com/your-org/venus/releases)
 
-[Unreleased]: https://github.com/your-org/venus/compare/v0.1.0-alpha...HEAD
-[0.1.0-alpha]: https://github.com/your-org/venus/releases/tag/v0.1.0-alpha
+[Unreleased]: https://github.com/your-org/venus/compare/v0.1.1-alpha...HEAD
+[0.1.1-alpha]: https://github.com/your-org/venus/releases/tag/v0.1.1-alpha
+[0.1.0-alpha]: https://github.com/your-org/venus/compare/v0.1.0-alpha...v0.1.1-alpha
 [0.0.2-alpha]: https://github.com/your-org/venus/releases/tag/v0.0.2-alpha
 [0.0.1-alpha]: https://github.com/your-org/venus/releases/tag/v0.0.1-alpha

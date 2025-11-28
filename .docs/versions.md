@@ -2,6 +2,10 @@
 
 ---
 
+v0.0.1 (dev) (2025-11-28 21:30): 1st commit
+
+---
+
 ## Related Documentation
 
 - [`docs/git_managment.md`](git_managment.md) — Git workflow и releases
@@ -9,7 +13,6 @@
 - [`infrastructure/cloud/domains.md`](infrastructure/cloud/domains.md) — DNS и SSL setup
 - [`docs/stack.md`](stack.md) — Technology stack
 - [`docs/manifest.md`](manifest.md) — философия и архитектура проекта
-- [`docs/codex.md`](codex.md) — корневые правила проекта
 - [`docs/stages.md`](stages.md) — этапы разработки
 - [`docs/traceability-matrix.md`](traceability-matrix.md) — трассировка требований
 - [`docs/directory_tree.md`](directory_tree.md) — структура проекта

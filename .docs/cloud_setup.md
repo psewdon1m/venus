@@ -87,7 +87,7 @@ ssh root@31.172.78.81
 ssh deploy@31.172.78.81
 ```
 
-**⚠️ Безопасность:** SSH ключи хранятся локально в `secrets/` директории.
+** Безопасность:** SSH ключи хранятся локально в `secrets/` директории.
 
 ### Firewall Конфигурация
 
@@ -160,8 +160,8 @@ dpkg-reconfigure --priority=low unattended-upgrades
 
 **Домен:** `tgcall.us`  
 **Назначение:** Production frontend  
-**Cloudflare Proxy:** ✅ Enabled  
-**SSL:** ✅ Issued  
+**Cloudflare Proxy:**  Enabled  
+**SSL:**  Issued  
 
 **URLs:**
 - Production: `https://tgcall.us`
@@ -187,15 +187,15 @@ dpkg-reconfigure --priority=low unattended-upgrades
 ### Cloudflare Конфигурация
 
 #### Security Settings
-- ✅ SSL/TLS: Full (strict)
-- ✅ Always Use HTTPS: Enabled
-- ✅ HTTP Strict Transport Security: Enabled
-- ✅ Automatic HTTPS Rewrites: Enabled
+-  SSL/TLS: Full (strict)
+-  Always Use HTTPS: Enabled
+-  HTTP Strict Transport Security: Enabled
+-  Automatic HTTPS Rewrites: Enabled
 
 #### Performance Settings
-- ✅ Auto Minify: CSS, JavaScript, HTML
-- ✅ Brotli Compression: Enabled
-- ✅ Rocket Loader: Enabled (test impact)
+-  Auto Minify: CSS, JavaScript, HTML
+-  Brotli Compression: Enabled
+-  Rocket Loader: Enabled (test impact)
 
 #### Caching
 - Static assets: Cache Everything (1 year)
@@ -203,9 +203,9 @@ dpkg-reconfigure --priority=low unattended-upgrades
 - CDN assets: Cache Everything (1 month)
 
 #### DDoS Protection
-- ✅ DDoS Protection: Enabled (automatic)
-- ✅ Rate Limiting: Configure in dashboard
-- ✅ Bot Fight Mode: Enabled
+-  DDoS Protection: Enabled (automatic)
+-  Rate Limiting: Configure in dashboard
+-  Bot Fight Mode: Enabled
 
 ### DNS Проверка
 
@@ -470,15 +470,15 @@ ssh root@31.172.78.81 "docker compose restart SERVICE_NAME"
 ### Maintenance Tasks
 
 **Monthly:**
-- ✅ Verify SSL certificates auto-renewal
-- ✅ Check DNS records validity
-- ✅ Review Cloudflare analytics
-- ✅ Update firewall rules if needed
+-  Verify SSL certificates auto-renewal
+-  Check DNS records validity
+-  Review Cloudflare analytics
+-  Update firewall rules if needed
 
 **Quarterly:**
-- ✅ Review and update Cloudflare settings
-- ✅ Audit subdomain usage
-- ✅ Check for unused DNS records
+-  Review and update Cloudflare settings
+-  Audit subdomain usage
+-  Check for unused DNS records
 
 ---
 

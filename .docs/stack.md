@@ -509,14 +509,14 @@
 
 ### Когда использовать готовые решения
 
-**✅ Используйте когда:**
+** Используйте когда:**
 - Функциональность commodity (auth, email, search)
 - Time-to-market критичен
 - Нет специфических требований
 - Решение well-maintained и popular
 - Cost-effective для вашего scale
 
-**❌ Пишите сами когда:**
+** Пишите сами когда:**
 - Требования уникальные для проекта
 - Нужен полный control над логикой
 - Vendor lock-in неприемлем
@@ -580,19 +580,19 @@
 ### Не изобретайте велосипед
 
 **Commodity functions (используйте готовые):**
-- ✅ Authentication (Clerk, Supabase Auth, Auth0)
-- ✅ Email delivery (Resend, SendGrid)
-- ✅ Media processing (Cloudinary, imgix)
-- ✅ Search (Algolia, Meilisearch)
-- ✅ Analytics (Plausible, PostHog)
-- ✅ Monitoring (Sentry, Grafana Cloud)
-- ✅ CDN (Cloudflare, AWS CloudFront)
+-  Authentication (Clerk, Supabase Auth, Auth0)
+-  Email delivery (Resend, SendGrid)
+-  Media processing (Cloudinary, imgix)
+-  Search (Algolia, Meilisearch)
+-  Analytics (Plausible, PostHog)
+-  Monitoring (Sentry, Grafana Cloud)
+-  CDN (Cloudflare, AWS CloudFront)
 
 **Core business logic (пишите сами):**
-- ❌ Placeholder system (уникальная фича)
-- ❌ Multi-persona architecture (core differentiator)
-- ❌ Album структура (ключевая ценность)
-- ❌ AI-CV prompts и логика (competitive advantage)
+-  Placeholder system (уникальная фича)
+-  Multi-persona architecture (core differentiator)
+-  Album структура (ключевая ценность)
+-  AI-CV prompts и логика (competitive advantage)
 
 ---
 

@@ -167,7 +167,7 @@ chmod 600 .env.production
 
 ## Security Best Practices
 
-### ✅ DO
+### DO
 - Use cryptographically strong secrets (`openssl rand`)
 - Different secrets per environment
 - Regular rotation (90-180 days)
@@ -175,7 +175,7 @@ chmod 600 .env.production
 - Environment variables in containers
 - Log all secret access
 
-### ❌ DON'T
+### DON'T
 - Commit secrets to git
 - Share secrets via email/chat
 - Reuse secrets across environments

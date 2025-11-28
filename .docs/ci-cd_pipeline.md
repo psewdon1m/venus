@@ -48,10 +48,10 @@ Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E
 
 ### Предварительные Требования
 
-- ✅ GitHub repository с Actions enabled
-- ✅ VPS server для staging/production
-- ✅ Domain configuration (см. `infrastructure/cloud/domains.md`)
-- ✅ SSH access к deployment server
+-  GitHub repository с Actions enabled
+-  VPS server для staging/production
+-  Domain configuration (см. `infrastructure/cloud/domains.md`)
+-  SSH access к deployment server
 
 ### Базовая Настройка (10 минут)
 
@@ -173,13 +173,13 @@ Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E
 ```yaml
 # Settings → Branches → Add rule
 Branch name: main
-Required PR reviews: ✅
+Required PR reviews: 
 Required status checks:
   - lint
   - test
   - build
   - security-scan
-Require branches up to date: ✅
+Require branches up to date: 
 ```
 
 #### Container Registry
@@ -425,7 +425,7 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           payload: |
             {
-              "text": "🚀 Deployed to staging: ${{ github.sha }}"
+              "text": " Deployed to staging: ${{ github.sha }}"
             }
 ```
 
@@ -501,7 +501,7 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           payload: |
             {
-              "text": "🚀 Deployed to production: ${{ inputs.version }}"
+              "text": " Deployed to production: ${{ inputs.version }}"
             }
 ```
 
@@ -544,10 +544,10 @@ spec:
 
 **Safe migrations:**
 ```sql
--- ✅ Safe: Add column with default
+--  Safe: Add column with default
 ALTER TABLE projects ADD COLUMN new_field VARCHAR DEFAULT '';
 
--- ❌ Unsafe: Drop column (breaks old code)
+--  Unsafe: Drop column (breaks old code)
 ALTER TABLE projects DROP COLUMN old_field;
 ```
 
@@ -629,22 +629,22 @@ aws rds restore-db-instance-from-db-snapshot \
 **Future:** HashiCorp Vault integration
 
 **Best Practices:**
-- ✅ Use environment-specific secrets
-- ✅ Rotate secrets regularly (90-180 days)
-- ✅ Never commit secrets to git
-- ✅ Audit secret access logs
+-  Use environment-specific secrets
+-  Rotate secrets regularly (90-180 days)
+-  Never commit secrets to git
+-  Audit secret access logs
 
 ### Access Control
 
 **GitHub:**
-- ✅ Protected main branch
-- ✅ Required PR reviews
-- ✅ Environment protection rules
+-  Protected main branch
+-  Required PR reviews
+-  Environment protection rules
 
 **Server:**
-- ✅ SSH key authentication only
-- ✅ Limited user access (deploy user)
-- ✅ File permissions (600 for .env files)
+-  SSH key authentication only
+-  Limited user access (deploy user)
+-  File permissions (600 for .env files)
 
 ### Secrets Rotation
 
