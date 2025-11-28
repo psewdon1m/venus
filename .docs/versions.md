@@ -2,6 +2,10 @@
 
 ---
 
+v0.1.1-alpha (dev) (2025-11-28 22:00): API gateway fix and frontend API integration
+
+---
+
 v0.0.1 (dev) (2025-11-28 21:30): 1st commit
 
 ---
