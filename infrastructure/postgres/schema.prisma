@@ -19,6 +19,7 @@ model Account {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String
+  role         String   @default("USER") // USER, ADMIN
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -27,6 +28,7 @@ model Account {
   projects      Project[]
   mediaFiles    MediaFile[]
   cvGenerations CVGeneration[]
+  sessions      Session[]
 
   @@map("accounts")
 }
@@ -35,9 +37,11 @@ model Persona {
   id          String   @id @default(cuid())
   accountId   String
   slug        String   @unique
+  publicSlug  String?  @unique
   displayName String
   manifest    String?
   settings    String   @default("{}")
+  isPublic    Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -48,6 +52,8 @@ model Persona {
 
   @@index([accountId])
   @@index([slug])
+  @@index([publicSlug])
+  @@index([isPublic])
   @@map("personas")
 }
 
@@ -138,6 +144,9 @@ model Session {
   ipAddress    String?
   expiresAt    DateTime
   createdAt    DateTime @default(now())
+
+  // Relations
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
   @@index([accountId])
   @@index([refreshToken])

@@ -1,6 +1,7 @@
 // Venus Platform - API Gateway
 // Single entry point for all backend services
 
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -9,9 +10,46 @@ import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import http from 'http';
 import https from 'https';
+import { z } from 'zod';
 
-import { authenticateToken, optionalAuth } from './middleware/auth';
+import { authenticateToken, optionalAuth, requireAdmin } from './middleware/auth';
+import { combinedRateLimit } from './middleware/rateLimit';
 import { logger } from './utils/logger';
+
+// ==================================================
+// Zod validation schemas
+// ==================================================
+
+const adminRoleUpdateSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: z.object({
+    role: z.enum(['USER', 'ADMIN']),
+  }),
+});
+
+// Validation middleware
+const validate = (schema: any) => {
+  return (req: any, res: any, next: any) => {
+    try {
+      schema.parse(req);
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid input data',
+            details: error.errors,
+          },
+        });
+      }
+      next(error);
+    }
+  };
+};
 
 dotenv.config();
 
@@ -29,21 +67,35 @@ const AI_CV_SERVICE_URL = 'http://localhost:4005';
 // Middleware
 // ==================================================
 
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'"],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+}));
 app.use(cors({
   origin: process.env.CORS_ORIGINS?.split(',') || 'http://localhost:3000',
   credentials: true,
 }));
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
-  message: { error: 'Too many requests, please try again later' },
-});
-app.use(limiter);
+// Combined rate limiting (per-user for authenticated, IP-based for anonymous)
+app.use(combinedRateLimit);
 
 // Request logging
 app.use((req, res, next) => {
@@ -174,6 +226,42 @@ app.get('/health', (req, res) => {
     uptime: process.uptime(),
   });
 });
+
+// Admin routes (require admin role)
+app.get('/api/admin/health', requireAdmin, (req, res) => {
+  res.json({
+    success: true,
+    data: {
+      message: 'Admin access granted',
+      user: req.user,
+    },
+  });
+});
+
+// Proxy admin routes to services
+app.use('/api/admin/auth', requireAdmin, createProxyMiddleware({
+  target: AUTH_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: { '^/api/admin/auth': '/admin' },
+}));
+
+app.use('/api/admin/personas', requireAdmin, createProxyMiddleware({
+  target: PERSONA_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: { '^/api/admin/personas': '/admin/personas' },
+}));
+
+app.use('/api/admin/projects', requireAdmin, createProxyMiddleware({
+  target: PROJECT_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: { '^/api/admin/projects': '/admin/projects' },
+}));
+
+app.use('/api/admin/media', requireAdmin, createProxyMiddleware({
+  target: MEDIA_SERVICE_URL,
+  changeOrigin: true,
+  pathRewrite: { '^/api/admin/media': '/admin' },
+}));
 
 // 404 handler
 app.use((req, res) => {

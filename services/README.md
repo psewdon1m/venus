@@ -1,7 +1,7 @@
 # services/ — Микросервисы backend Venus
 
-**Последнее обновление:** 2025-11-27  
-**Статус:** Базовая структура всех сервисов создана
+**Последнее обновление:** 2025-12-01
+**Статус:** v0.1.2-alpha - полная безопасность, S3 интеграция и admin инструменты
 
 ---
 
@@ -351,6 +351,121 @@ npm run test:e2e
 - **Secure headers** (helmet.js)
 - **CORS configuration**
 
+### Новые возможности безопасности (v0.1.1-alpha)
+
+#### Zod Validation
+- **Type-safe validation** для всех API endpoints
+- **Centralized schemas** в каждом сервисе
+- **Automatic error responses** с деталями валидации
+
+```typescript
+// Пример схемы в persona-service
+const createPersonaSchema = z.object({
+  body: z.object({
+    displayName: z.string().min(1).max(100),
+    manifest: z.string().optional(),
+    slug: z.string().optional(),
+  }),
+});
+
+// Использование в routes
+router.post('/', authenticateToken, validate(createPersonaSchema), handler);
+```
+
+#### Admin RBAC
+- **Role-based middleware** `requireAdmin` в каждом сервисе
+- **JWT role extraction** из токенов
+- **Admin-only endpoints** для управления пользователями и контентом
+
+```typescript
+// Admin middleware
+export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  if (req.user?.role !== 'ADMIN') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
+
+// Использование
+router.get('/admin/accounts', requireAdmin, listAccountsHandler);
+```
+
+#### HTTP-Only Cookies
+- **Secure refresh tokens** в httpOnly cookies
+- **Automatic rotation** при refresh
+- **CSRF protection** через SameSite cookies
+
+```typescript
+res.cookie('refreshToken', token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'strict',
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+});
+```
+
+#### File Upload Security
+- **Magic bytes validation** через file-type library
+- **MIME type verification** на сервере
+- **Size limits** и type restrictions
+
+### S3/R2 Storage Integration
+
+#### Media Service Updates
+- **Cloudflare R2/S3** для надежного хранения файлов
+- **Unique filename generation** с timestamp + random ID
+- **CDN URL generation** для fast delivery
+- **Metadata storage** в PostgreSQL с S3 keys
+
+```typescript
+// Upload flow
+const key = `uploads/${userId}/${timestamp}-${randomId}.${extension}`;
+await s3Client.send(new PutObjectCommand({
+  Bucket: BUCKET_NAME,
+  Key: key,
+  Body: fileBuffer,
+  ContentType: mimeType,
+}));
+
+const cdnUrl = `${process.env.CDN_BASE_URL}/${key}`;
+```
+
+#### Environment Variables
+```bash
+# S3/R2 Configuration
+S3_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+S3_BUCKET_NAME=venus-media
+AWS_ACCESS_KEY_ID=<r2-access-key>
+AWS_SECRET_ACCESS_KEY=<r2-secret-key>
+CDN_BASE_URL=https://cdn.venus.app
+```
+
+### Admin Tools
+
+#### Default Admin User
+```bash
+# Создание admin пользователя для тестирования
+node scripts/create-admin.js
+
+# Credentials:
+# Email: admin@venus.app
+# Password: admin123!@#
+```
+
+#### Admin Endpoints
+```bash
+# Управление пользователями
+GET  /api/admin/auth/accounts          # Список всех пользователей
+POST /api/admin/auth/accounts/:id/role # Изменение роли пользователя
+
+# Управление контентом
+GET  /api/admin/personas               # Список всех персон
+DELETE /api/admin/personas/:id         # Удаление любой персоны
+
+GET  /api/admin/media/files            # Список всех файлов
+DELETE /api/admin/media/files/:id      # Удаление любого файла
+```
+
 ---
 
 ## Развертывание
@@ -398,4 +513,4 @@ CMD ["npm", "start"]
 
 ---
 
-**Последнее обновление этого файла:** 2025-11-27
+**Последнее обновление этого файла:** 2025-12-01 (v0.1.2-alpha)

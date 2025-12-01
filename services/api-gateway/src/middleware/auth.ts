@@ -12,6 +12,7 @@ declare global {
       user?: {
         userId: string;
         email: string;
+        role: string;
         type: string;
       };
     }
@@ -20,8 +21,13 @@ declare global {
 
 // JWT verification middleware
 export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
+  // Try to get token from Authorization header first
+  let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+  // If no header token, try to get from cookies
+  if (!token && req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  }
 
   if (!token) {
     return res.status(401).json({
@@ -50,6 +56,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
     req.user = {
       userId: decoded.userId,
       email: decoded.email,
+      role: decoded.role || 'USER',
       type: decoded.type,
     };
 
@@ -67,8 +74,13 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
 // Optional authentication (doesn't fail if no token)
 export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+  // Try to get token from Authorization header first
+  let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
+
+  // If no header token, try to get from cookies
+  if (!token && req.cookies && req.cookies.accessToken) {
+    token = req.cookies.accessToken;
+  }
 
   if (token) {
     try {
@@ -77,6 +89,7 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction) =>
         req.user = {
           userId: decoded.userId,
           email: decoded.email,
+          role: decoded.role || 'USER',
           type: decoded.type,
         };
       }
@@ -87,3 +100,45 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction) =>
 
   next();
 };
+
+// RBAC middleware
+export const requireRole = (requiredRole: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: 'AUTH_REQUIRED',
+          message: 'Authentication required',
+        },
+      });
+    }
+
+    const userRole = req.user.role || 'USER';
+
+    // Define role hierarchy: ADMIN > USER
+    const roleHierarchy = {
+      'USER': 1,
+      'ADMIN': 2,
+    };
+
+    const userLevel = roleHierarchy[userRole as keyof typeof roleHierarchy] || 0;
+    const requiredLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
+
+    if (userLevel < requiredLevel) {
+      return res.status(403).json({
+        success: false,
+        error: {
+          code: 'INSUFFICIENT_PERMISSIONS',
+          message: `Insufficient permissions. Required role: ${requiredRole}, your role: ${userRole}`,
+        },
+      });
+    }
+
+    next();
+  };
+};
+
+// Specific role middlewares
+export const requireAdmin = requireRole('ADMIN');
+export const requireUser = requireRole('USER');

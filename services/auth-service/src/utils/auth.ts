@@ -16,15 +16,15 @@ export interface AuthTokens {
   refreshTokenExpiry: number;
 }
 
-// Password utilities (mock for development)
+import bcrypt from 'bcrypt';
+
+// Password utilities
 export const hashPassword = async (password: string): Promise<string> => {
-  // Mock implementation for development - replace with real bcrypt later
-  return `mock_hash_${password}_salt_${Date.now()}`;
+  return await bcrypt.hash(password, BCRYPT_ROUNDS);
 };
 
 export const verifyPassword = async (password: string, hash: string): Promise<boolean> => {
-  // Mock implementation for development - replace with real bcrypt later
-  return hash === `mock_hash_${password}_salt_${hash.split('_salt_')[1]}`;
+  return await bcrypt.compare(password, hash);
 };
 
 // JWT utilities
@@ -44,9 +44,9 @@ export const verifyToken = (token: string): any => {
   }
 };
 
-export const generateTokens = (userId: string, email: string): AuthTokens => {
-  const accessToken = generateAccessToken({ userId, email, type: 'access' });
-  const refreshToken = generateRefreshToken({ userId, email, type: 'refresh' });
+export const generateTokens = (userId: string, email: string, role: string = 'USER'): AuthTokens => {
+  const accessToken = generateAccessToken({ userId, email, role, type: 'access' });
+  const refreshToken = generateRefreshToken({ userId, email, role, type: 'refresh' });
 
   return {
     accessToken,

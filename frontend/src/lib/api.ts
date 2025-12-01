@@ -20,17 +20,9 @@ class ApiClient {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+      credentials: 'include', // Include httpOnly cookies
       ...options,
     };
-
-    // Add auth token if available
-    const token = this.getAuthToken();
-    if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
-    }
 
     const response = await fetch(url, config);
 
@@ -42,24 +34,11 @@ class ApiClient {
     return response.json();
   }
 
-  private getAuthToken(): string | null {
-    if (typeof window === 'undefined') return null;
-    return localStorage.getItem('auth_token');
-  }
-
-  private setAuthToken(token: string): void {
-    if (typeof window === 'undefined') return;
-    localStorage.setItem('auth_token', token);
-  }
-
-  private clearAuthToken(): void {
-    if (typeof window === 'undefined') return;
-    localStorage.removeItem('auth_token');
-  }
+  // Remove token management - now using httpOnly cookies
 
   // Auth methods
   async register(data: { email: string; password: string; confirmPassword: string }) {
-    const response = await this.request<{ data: { user: any; accessToken: string; refreshToken: string } }>(
+    const response = await this.request<{ data: { user: any } }>(
       '/api/auth/register',
       {
         method: 'POST',
@@ -67,12 +46,11 @@ class ApiClient {
       }
     );
 
-    this.setAuthToken(response.data.accessToken);
     return response.data;
   }
 
   async login(data: { email: string; password: string }) {
-    const response = await this.request<{ data: { user: any; accessToken: string; refreshToken: string } }>(
+    const response = await this.request<{ data: { user: any } }>(
       '/api/auth/login',
       {
         method: 'POST',
@@ -80,12 +58,13 @@ class ApiClient {
       }
     );
 
-    this.setAuthToken(response.data.accessToken);
     return response.data;
   }
 
-  logout(): void {
-    this.clearAuthToken();
+  async logout() {
+    return this.request('/api/auth/logout', {
+      method: 'POST',
+    });
   }
 
   // Project methods
@@ -122,7 +101,7 @@ class ApiClient {
     return this.request<{ data: { personas: any[]; meta: any } }>('/api/personas');
   }
 
-  async createPersona(data: { name: string; description?: string }) {
+  async createPersona(data: { displayName: string; manifest?: string; slug?: string }) {
     return this.request<{ data: { persona: any } }>('/api/personas', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -133,7 +112,7 @@ class ApiClient {
     return this.request<{ data: { persona: any } }>(`/api/personas/${id}`);
   }
 
-  async updatePersona(id: string, data: Partial<{ name: string; description: string }>) {
+  async updatePersona(id: string, data: Partial<{ displayName: string; manifest?: string; settings?: any }>) {
     return this.request<{ data: { persona: any } }>(`/api/personas/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -143,6 +122,42 @@ class ApiClient {
   async deletePersona(id: string) {
     return this.request<{ data: { message: string } }>(`/api/personas/${id}`, {
       method: 'DELETE',
+    });
+  }
+
+  // Persona-Project assignment methods
+  async getPersonaProjects(personaId: string) {
+    return this.request<{ data: { projects: any[]; meta: any } }>(`/api/personas/${personaId}/projects`);
+  }
+
+  async assignProjectToPersona(personaId: string, data: { projectId: string; displayOrder?: number; isVisible?: boolean }) {
+    return this.request<{ data: { assignment: any } }>(`/api/personas/${personaId}/projects`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateProjectAssignment(personaId: string, projectId: string, data: Partial<{ displayOrder: number; isVisible: boolean }>) {
+    return this.request<{ data: { assignment: any } }>(`/api/personas/${personaId}/projects/${projectId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async removeProjectFromPersona(personaId: string, projectId: string) {
+    return this.request<{ data: { message: string } }>(`/api/personas/${personaId}/projects/${projectId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Persona public methods
+  async getPublicPersona(slug: string) {
+    return this.request<{ data: { persona: any } }>(`/api/public/${slug}`);
+  }
+
+  async publishPersona(personaId: string) {
+    return this.request<{ data: { persona: any } }>(`/api/personas/${personaId}/publish`, {
+      method: 'POST',
     });
   }
 

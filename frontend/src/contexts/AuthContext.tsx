@@ -26,14 +26,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is already logged in
-    const token = localStorage.getItem('auth_token');
-    if (token) {
-      // TODO: Validate token and get user info
-      // For now, we'll assume the token is valid
-      setUser({ id: 'temp', email: 'temp@example.com', createdAt: '', updatedAt: '' });
-    }
-    setIsLoading(false);
+    // Check if user is already logged in by making a request that requires auth
+    const checkAuth = async () => {
+      try {
+        // Try to get user data - if it succeeds, user is authenticated
+        const response = await fetch('/api/auth/me', {
+          credentials: 'include', // Include cookies
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.data.user);
+        }
+      } catch (error) {
+        // User is not authenticated
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   const login = async (email: string, password: string) => {

@@ -14,6 +14,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI/CD pipeline setup
 - Multiple personas support (КТ2)
 
+## [0.1.2-alpha] - 2025-12-01
+
+### Added
+- **Complete Zod Validation Coverage**
+  - Zod schemas implemented for all public endpoints across all services
+  - Type-safe validation middleware with automatic error responses
+  - Centralized validation logic in persona-service, media-service, and api-gateway
+
+- **Full Admin RBAC Implementation**
+  - Real admin role checking in downstream services (not just gateway)
+  - `requireAdmin` middleware in auth-service, persona-service, and media-service
+  - Admin-only endpoints for user management, content moderation, and file administration
+
+- **S3/R2 Storage Integration**
+  - Complete Cloudflare R2/S3 integration for media uploads
+  - Unique filename generation with timestamp + random ID
+  - Real S3 upload with proper error handling and CDN URL generation
+  - Environment configuration for production storage
+
+- **Admin Tools & Testing Infrastructure**
+  - Default admin user creation script (`scripts/create-admin.js`)
+  - Admin credentials: admin@venus.app / admin123!@#
+  - Comprehensive admin endpoints for system management
+
+### Changed
+- **Project Status:** All security and storage infrastructure completed
+- **Documentation:** Updated services/README.md with new security features and S3 integration
+- **Testing Readiness:** Full admin testing capabilities implemented
+
 ## [0.1.1-alpha] - 2025-11-28
 
 ### Fixed
@@ -30,6 +59,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Project Status:** КТ1 fully stable, ready for КТ2 development
 - **API Gateway:** All proxy routes now handle request bodies correctly
 - **Frontend:** Complete API integration with error handling and loading states
+
+### Added
+- **Security Enhancements:**
+  - Zod validation schemas implemented across all services (persona-service, media-service, api-gateway)
+  - Real admin RBAC with role-based middleware in downstream services
+  - HTTP-only cookies for refresh tokens with secure settings
+  - Magic bytes validation for file uploads
+- **Media Storage:**
+  - S3/R2 integration for file uploads with Cloudflare CDN
+  - Unique filename generation and metadata storage
+  - CDN URL generation for uploaded files
+- **Admin Tools:**
+  - Default admin user creation script (`scripts/create-admin.js`)
+  - Admin role management endpoints
+  - Admin-only file and persona management
 
 ## [0.1.0-alpha] - 2025-11-22
 
@@ -272,8 +316,9 @@ Venus follows Semantic Versioning:
 - [Issues](https://github.com/your-org/venus/issues)
 - [Releases](https://github.com/your-org/venus/releases)
 
-[Unreleased]: https://github.com/your-org/venus/compare/v0.1.1-alpha...HEAD
-[0.1.1-alpha]: https://github.com/your-org/venus/releases/tag/v0.1.1-alpha
+[Unreleased]: https://github.com/your-org/venus/compare/v0.1.2-alpha...HEAD
+[0.1.2-alpha]: https://github.com/your-org/venus/releases/tag/v0.1.2-alpha
+[0.1.1-alpha]: https://github.com/your-org/venus/compare/v0.1.1-alpha...v0.1.2-alpha
 [0.1.0-alpha]: https://github.com/your-org/venus/compare/v0.1.0-alpha...v0.1.1-alpha
 [0.0.2-alpha]: https://github.com/your-org/venus/releases/tag/v0.0.2-alpha
 [0.0.1-alpha]: https://github.com/your-org/venus/releases/tag/v0.0.1-alpha

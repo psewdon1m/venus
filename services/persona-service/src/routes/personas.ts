@@ -1,10 +1,130 @@
 // Persona routes - CRUD operations for personas and placeholders
 
 import { Router } from 'express';
+import { z } from 'zod';
 import { authenticateToken } from '../middleware/auth';
 import { prisma } from '@venus/types';
 
 const router = Router();
+
+// ==================================================
+// Zod validation schemas
+// ==================================================
+
+const createPersonaSchema = z.object({
+  body: z.object({
+    displayName: z.string().min(1).max(100),
+    manifest: z.string().optional(),
+    slug: z.string().min(1).max(100).optional(),
+  }),
+});
+
+const updatePersonaSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: z.object({
+    displayName: z.string().min(1).max(100).optional(),
+    manifest: z.string().optional(),
+    settings: z.any().optional(),
+  }),
+});
+
+const personaIdSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+});
+
+const createPlaceholderSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: z.object({
+    type: z.string().min(1),
+    order: z.number().int().positive().optional(),
+    content: z.any().optional(),
+  }),
+});
+
+const updatePlaceholderSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+    placeholderId: z.string(),
+  }),
+  body: z.object({
+    content: z.any().optional(),
+    order: z.number().int().positive().optional(),
+    enabled: z.boolean().optional(),
+  }),
+});
+
+const placeholderIdSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+    placeholderId: z.string(),
+  }),
+});
+
+const reorderPlaceholdersSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: z.object({
+    placeholderIds: z.array(z.string()),
+  }),
+});
+
+const assignProjectSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: z.object({
+    projectId: z.string().uuid(),
+    displayOrder: z.number().int().min(0).optional().default(0),
+    isVisible: z.boolean().optional().default(true),
+  }),
+});
+
+const updateProjectAssignmentSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+    projectId: z.string().uuid(),
+  }),
+  body: z.object({
+    displayOrder: z.number().int().min(0).optional(),
+    isVisible: z.boolean().optional(),
+  }),
+});
+
+const projectIdSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+    projectId: z.string().uuid(),
+  }),
+});
+
+// Validation middleware
+const validate = (schema: any) => {
+  return (req: any, res: any, next: any) => {
+    try {
+      schema.parse(req);
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid input data',
+            details: error.errors,
+          },
+        });
+      }
+      next(error);
+    }
+  };
+};
 
 // ==================================================
 // Persona CRUD Operations
@@ -67,25 +187,15 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // POST /personas - Create new persona
-router.post('/', authenticateToken, async (req, res) => {
+router.post('/', authenticateToken, validate(createPersonaSchema), async (req, res) => {
   try {
     const userId = req.user!.userId;
-    const { displayName, manifest, slug } = req.body;
-
-    if (!displayName || typeof displayName !== 'string' || displayName.trim().length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Display name is required and must be a non-empty string',
-        },
-      });
-    }
+    const data = req.body;
 
     // Generate slug if not provided
-    let finalSlug = slug;
+    let finalSlug = data.slug;
     if (!finalSlug) {
-      finalSlug = displayName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      finalSlug = data.displayName.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
     }
 
     // Check if slug is unique
@@ -107,8 +217,8 @@ router.post('/', authenticateToken, async (req, res) => {
       data: {
         accountId: userId,
         slug: finalSlug,
-        displayName: displayName.trim(),
-        manifest: manifest || null,
+        displayName: data.displayName.trim(),
+        manifest: data.manifest || null,
         settings: '{}',
       },
       select: {
@@ -141,38 +251,182 @@ router.post('/', authenticateToken, async (req, res) => {
 });
 
 // GET /personas/:id - Get persona details
-router.get('/:id', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement persona retrieval
-  res.json({
-    success: true,
-    data: {
-      persona: { id, name: 'Sample Persona', description: 'Sample description' }
+router.get('/:id', authenticateToken, validate(personaIdSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId, // Only owner can view
+      },
+      select: {
+        id: true,
+        slug: true,
+        displayName: true,
+        manifest: true,
+        settings: true,
+        createdAt: true,
+        updatedAt: true,
+        personaProjects: {
+          include: {
+            project: {
+              select: {
+                id: true,
+                title: true,
+                slug: true,
+                type: true,
+                status: true,
+              }
+            }
+          },
+          orderBy: { displayOrder: 'asc' }
+        }
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
     }
-  });
+
+    res.json({
+      success: true,
+      data: {
+        persona,
+      },
+    });
+  } catch (error) {
+    console.error('Get persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to get persona',
+      },
+    });
+  }
 });
 
 // PUT /personas/:id - Update persona
-router.put('/:id', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement persona update
-  res.json({
-    success: true,
-    data: {
-      message: 'Persona updated successfully',
-      persona: { id, name: 'Updated Persona' }
+router.put('/:id', authenticateToken, validate(updatePersonaSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+    const data = req.body;
+
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId, // Only owner can update
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
     }
-  });
+
+    const updateData: any = {};
+    if (data.displayName !== undefined) {
+      updateData.displayName = data.displayName.trim();
+    }
+
+    if (data.manifest !== undefined) {
+      updateData.manifest = data.manifest;
+    }
+
+    if (data.settings !== undefined) {
+      updateData.settings = typeof data.settings === 'string' ? data.settings : JSON.stringify(data.settings);
+    }
+
+    const updatedPersona = await prisma.persona.update({
+      where: { id: personaId },
+      data: updateData,
+      select: {
+        id: true,
+        slug: true,
+        displayName: true,
+        manifest: true,
+        settings: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Persona updated successfully',
+        persona: updatedPersona,
+      },
+    });
+  } catch (error) {
+    console.error('Update persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to update persona',
+      },
+    });
+  }
 });
 
 // DELETE /personas/:id - Delete persona
-router.delete('/:id', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement persona deletion
-  res.json({
-    success: true,
-    data: { message: 'Persona deleted successfully' }
-  });
+router.delete('/:id', authenticateToken, validate(personaIdSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId, // Only owner can delete
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    await prisma.persona.delete({
+      where: { id: personaId },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Persona deleted successfully',
+      },
+    });
+  } catch (error) {
+    console.error('Delete persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to delete persona',
+      },
+    });
+  }
 });
 
 // ==================================================
@@ -180,62 +434,353 @@ router.delete('/:id', (req, res) => {
 // ==================================================
 
 // GET /personas/:id/placeholders - List persona placeholders
-router.get('/:id/placeholders', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement placeholder listing
-  res.json({
-    success: true,
-    data: {
-      placeholders: [],
-      meta: { total: 0 }
+router.get('/:id/placeholders', authenticateToken, validate(personaIdSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
     }
-  });
+
+    // Get placeholders from persona settings
+    const settings = JSON.parse(persona.settings || '{}');
+    const placeholders = settings.placeholders || [];
+
+    res.json({
+      success: true,
+      data: {
+        placeholders,
+        meta: { total: placeholders.length }
+      }
+    });
+  } catch (error) {
+    console.error('List placeholders error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to list placeholders',
+      },
+    });
+  }
 });
 
 // POST /personas/:id/placeholders - Add placeholder to persona
-router.post('/:id/placeholders', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement placeholder creation
-  res.status(201).json({
-    success: true,
-    data: {
-      message: 'Placeholder added successfully',
-      placeholder: { id: 'temp-placeholder-id', type: 'project', order: 1 }
+router.post('/:id/placeholders', authenticateToken, validate(createPlaceholderSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+    const { type, order, content } = req.body;
+
+    if (!type || typeof type !== 'string') {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Placeholder type is required',
+        },
+      });
     }
-  });
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    // Get current settings
+    const settings = JSON.parse(persona.settings || '{}');
+    const placeholders = settings.placeholders || [];
+
+    // Generate unique ID
+    const placeholderId = `placeholder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Create new placeholder
+    const newPlaceholder = {
+      id: placeholderId,
+      type,
+      order: order || placeholders.length + 1,
+      content: content || {},
+      enabled: true,
+    };
+
+    // Add to placeholders array
+    placeholders.push(newPlaceholder);
+
+    // Save updated settings
+    await prisma.persona.update({
+      where: { id: personaId },
+      data: {
+        settings: JSON.stringify({ ...settings, placeholders }),
+      },
+    });
+
+    res.status(201).json({
+      success: true,
+      data: {
+        message: 'Placeholder added successfully',
+        placeholder: newPlaceholder,
+      },
+    });
+  } catch (error) {
+    console.error('Add placeholder error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to add placeholder',
+      },
+    });
+  }
 });
 
 // PUT /personas/:id/placeholders/:placeholderId - Update placeholder
-router.put('/:id/placeholders/:placeholderId', (req, res) => {
-  const { id, placeholderId } = req.params;
-  // TODO: Implement placeholder update
-  res.json({
-    success: true,
-    data: {
-      message: 'Placeholder updated successfully',
-      placeholder: { id: placeholderId, type: 'project', order: 1 }
+router.put('/:id/placeholders/:placeholderId', authenticateToken, validate(updatePlaceholderSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+    const placeholderId = req.params.placeholderId;
+    const { content, order, enabled } = req.body;
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
     }
-  });
+
+    // Get current content
+    const currentContent = JSON.parse(persona.settings || '{}');
+    const placeholders = currentContent.placeholders || [];
+
+    // Find and update placeholder
+    const placeholderIndex = placeholders.findIndex((p: any) => p.id === placeholderId);
+    if (placeholderIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'PLACEHOLDER_NOT_FOUND',
+          message: 'Placeholder not found',
+        },
+      });
+    }
+
+    // Update placeholder
+    const updatedPlaceholder = {
+      ...placeholders[placeholderIndex],
+      content: content !== undefined ? content : placeholders[placeholderIndex].content,
+      order: order !== undefined ? order : placeholders[placeholderIndex].order,
+      enabled: enabled !== undefined ? enabled : placeholders[placeholderIndex].enabled,
+    };
+
+    placeholders[placeholderIndex] = updatedPlaceholder;
+
+    // Save updated settings
+    await prisma.persona.update({
+      where: { id: personaId },
+      data: {
+        settings: JSON.stringify({ ...currentContent, placeholders }),
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Placeholder updated successfully',
+        placeholder: updatedPlaceholder,
+      },
+    });
+  } catch (error) {
+    console.error('Update placeholder error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to update placeholder',
+      },
+    });
+  }
 });
 
 // DELETE /personas/:id/placeholders/:placeholderId - Remove placeholder
-router.delete('/:id/placeholders/:placeholderId', (req, res) => {
-  const { id, placeholderId } = req.params;
-  // TODO: Implement placeholder deletion
-  res.json({
-    success: true,
-    data: { message: 'Placeholder removed successfully' }
-  });
+router.delete('/:id/placeholders/:placeholderId', authenticateToken, validate(placeholderIdSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+    const placeholderId = req.params.placeholderId;
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    // Get current settings
+    const settings = JSON.parse(persona.settings || '{}');
+    const placeholders = settings.placeholders || [];
+
+    // Find and remove placeholder
+    const placeholderIndex = placeholders.findIndex((p: any) => p.id === placeholderId);
+    if (placeholderIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'PLACEHOLDER_NOT_FOUND',
+          message: 'Placeholder not found',
+        },
+      });
+    }
+
+    // Remove placeholder
+    placeholders.splice(placeholderIndex, 1);
+
+    // Save updated settings
+    await prisma.persona.update({
+      where: { id: personaId },
+      data: {
+        settings: JSON.stringify({ ...settings, placeholders }),
+      },
+    });
+
+    res.json({
+      success: true,
+      data: { message: 'Placeholder removed successfully' }
+    });
+  } catch (error) {
+    console.error('Remove placeholder error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to remove placeholder',
+      },
+    });
+  }
 });
 
 // POST /personas/:id/placeholders/reorder - Reorder placeholders
-router.post('/:id/placeholders/reorder', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement placeholder reordering
-  res.json({
-    success: true,
-    data: { message: 'Placeholders reordered successfully' }
-  });
+router.post('/:id/placeholders/reorder', authenticateToken, validate(reorderPlaceholdersSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+    const { placeholderIds } = req.body;
+
+    if (!Array.isArray(placeholderIds)) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'placeholderIds must be an array',
+        },
+      });
+    }
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    // Get current settings
+    const settings = JSON.parse(persona.settings || '{}');
+    const placeholders = settings.placeholders || [];
+
+    // Reorder placeholders based on provided order
+    const reorderedPlaceholders = placeholderIds.map((id: string, index: number) => {
+      const placeholder = placeholders.find((p: any) => p.id === id);
+      if (!placeholder) {
+        throw new Error(`Placeholder with id ${id} not found`);
+      }
+      return { ...placeholder, order: index + 1 };
+    });
+
+    // Save updated settings
+    await prisma.persona.update({
+      where: { id: personaId },
+      data: {
+        settings: JSON.stringify({ ...settings, placeholders: reorderedPlaceholders }),
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Placeholders reordered successfully',
+        placeholders: reorderedPlaceholders,
+      }
+    });
+  } catch (error) {
+    console.error('Reorder placeholders error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to reorder placeholders',
+      },
+    });
+  }
 });
 
 // ==================================================
@@ -243,28 +788,642 @@ router.post('/:id/placeholders/reorder', (req, res) => {
 // ==================================================
 
 // GET /public/:slug - Get public persona by slug
-router.get('/public/:slug', (req, res) => {
-  const { slug } = req.params;
-  // TODO: Implement public persona retrieval
-  res.json({
-    success: true,
-    data: {
-      persona: { id: 'public-id', slug, name: 'Public Persona', isPublic: true }
+router.get('/public/:slug', async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const persona = await prisma.persona.findFirst({
+      where: {
+        OR: [
+          { slug: slug, isPublic: true },
+          { publicSlug: slug, isPublic: true }
+        ]
+      },
+      select: {
+        id: true,
+        slug: true,
+        publicSlug: true,
+        displayName: true,
+        manifest: true,
+        createdAt: true,
+        personaProjects: {
+          where: { isVisible: true },
+          include: {
+            project: {
+              select: {
+                id: true,
+                title: true,
+                slug: true,
+                type: true,
+                status: true,
+                content: true,
+                createdAt: true,
+                updatedAt: true,
+              }
+            }
+          },
+          orderBy: { displayOrder: 'asc' }
+        }
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Public persona not found',
+        },
+      });
     }
-  });
+
+    // Format projects for public display
+    const projects = persona.personaProjects.map(pp => ({
+      id: pp.project.id,
+      title: pp.project.title,
+      slug: pp.project.slug,
+      type: pp.project.type,
+      status: pp.project.status,
+      content: JSON.parse(pp.project.content),
+      createdAt: pp.project.createdAt,
+      updatedAt: pp.project.updatedAt,
+    }));
+
+    const publicPersona = {
+      id: persona.id,
+      slug: persona.publicSlug || persona.slug,
+      displayName: persona.displayName,
+      manifest: persona.manifest,
+      projects,
+      createdAt: persona.createdAt,
+    };
+
+    res.json({
+      success: true,
+      data: {
+        persona: publicPersona,
+      },
+    });
+  } catch (error) {
+    console.error('Get public persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to get public persona',
+      },
+    });
+  }
 });
 
 // POST /personas/:id/publish - Make persona public
-router.post('/:id/publish', (req, res) => {
-  const { id } = req.params;
-  // TODO: Implement persona publishing
-  res.json({
-    success: true,
-    data: {
-      message: 'Persona published successfully',
-      persona: { id, isPublic: true, slug: 'generated-slug' }
+router.post('/:id/publish', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
     }
-  });
+
+    if (persona.isPublic) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'ALREADY_PUBLIC',
+          message: 'Persona is already public',
+        },
+      });
+    }
+
+    // Generate public slug if not set
+    let publicSlug = persona.publicSlug;
+    if (!publicSlug) {
+      // Use existing slug or generate a unique one
+      publicSlug = persona.slug;
+
+      // Check if slug is unique among public personas
+      const existingPublic = await prisma.persona.findFirst({
+        where: {
+          OR: [
+            { slug: publicSlug, isPublic: true },
+            { publicSlug: publicSlug }
+          ],
+          NOT: { id: personaId }
+        }
+      });
+
+      if (existingPublic) {
+        // Generate unique slug
+        let counter = 1;
+        let uniqueSlug = `${persona.slug}-${counter}`;
+        while (await prisma.persona.findFirst({
+          where: {
+            OR: [
+              { slug: uniqueSlug, isPublic: true },
+              { publicSlug: uniqueSlug }
+            ]
+          }
+        })) {
+          counter++;
+          uniqueSlug = `${persona.slug}-${counter}`;
+        }
+        publicSlug = uniqueSlug;
+      }
+    }
+
+    // Update persona to make it public
+    const updatedPersona = await prisma.persona.update({
+      where: { id: personaId },
+      data: {
+        isPublic: true,
+        publicSlug,
+      },
+      select: {
+        id: true,
+        slug: true,
+        publicSlug: true,
+        displayName: true,
+        manifest: true,
+        isPublic: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Persona published successfully',
+        persona: updatedPersona,
+      },
+    });
+  } catch (error) {
+    console.error('Publish persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to publish persona',
+      },
+    });
+  }
+});
+
+// ==================================================
+// Persona-Project Assignment Operations
+// ==================================================
+
+// GET /personas/:id/projects - Get projects assigned to persona
+router.get('/:id/projects', authenticateToken, validate(personaIdSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    const personaProjects = await prisma.personaProject.findMany({
+      where: { personaId },
+      include: {
+        project: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            type: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+          }
+        }
+      },
+      orderBy: { displayOrder: 'asc' }
+    });
+
+    const projects = personaProjects.map(pp => ({
+      ...pp.project,
+      personaProjectId: pp.id,
+      displayOrder: pp.displayOrder,
+      isVisible: pp.isVisible,
+    }));
+
+    res.json({
+      success: true,
+      data: {
+        projects,
+        meta: { total: projects.length }
+      },
+    });
+  } catch (error) {
+    console.error('Get persona projects error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to get persona projects',
+      },
+    });
+  }
+});
+
+// POST /personas/:id/projects - Assign project to persona
+router.post('/:id/projects', authenticateToken, validate(assignProjectSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const personaId = req.params.id;
+    const { projectId, displayOrder = 0, isVisible = true } = req.body;
+
+    if (!personaId || !projectId) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Persona ID and Project ID are required',
+        },
+      });
+    }
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    // Verify project ownership
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        accountId: userId,
+      },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Project not found',
+        },
+      });
+    }
+
+    // Check if already assigned
+    const existing = await prisma.personaProject.findUnique({
+      where: {
+        personaId_projectId: {
+          personaId,
+          projectId,
+        }
+      }
+    });
+
+    if (existing) {
+      return res.status(409).json({
+        success: false,
+        error: {
+          code: 'ALREADY_ASSIGNED',
+          message: 'Project is already assigned to this persona',
+        },
+      });
+    }
+
+    const personaProject = await prisma.personaProject.create({
+      data: {
+        personaId,
+        projectId,
+        displayOrder,
+        isVisible,
+      },
+    });
+
+    // Get created assignment with project details
+    const createdWithProject = await prisma.personaProject.findUnique({
+      where: { id: personaProject.id },
+      include: {
+        project: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            type: true,
+            status: true,
+          }
+        }
+      }
+    });
+
+    res.status(201).json({
+      success: true,
+      data: {
+        message: 'Project assigned to persona successfully',
+        assignment: {
+          id: personaProject.id,
+          personaId: personaProject.personaId,
+          projectId: personaProject.projectId,
+          displayOrder: personaProject.displayOrder,
+          isVisible: personaProject.isVisible,
+          project: createdWithProject!.project,
+        }
+      },
+    });
+  } catch (error) {
+    console.error('Assign project to persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to assign project to persona',
+      },
+    });
+  }
+});
+
+// PUT /personas/:id/projects/:projectId - Update project assignment
+router.put('/:id/projects/:projectId', authenticateToken, validate(updateProjectAssignmentSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const { id: personaId, projectId } = req.params;
+    const { displayOrder, isVisible } = req.body;
+
+    if (!personaId || !projectId) {
+      return res.status(400).json({
+        success: false,
+        error: {
+          code: 'VALIDATION_ERROR',
+          message: 'Invalid persona or project ID',
+        },
+      });
+    }
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    const personaProject = await prisma.personaProject.findFirst({
+      where: {
+        personaId,
+        projectId,
+      },
+    });
+
+    if (!personaProject) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Project assignment not found',
+        },
+      });
+    }
+
+    const updateData: any = {};
+    if (displayOrder !== undefined) updateData.displayOrder = displayOrder;
+    if (isVisible !== undefined) updateData.isVisible = isVisible;
+
+    const updated = await prisma.personaProject.update({
+      where: { id: personaProject.id },
+      data: updateData,
+    });
+
+    // Get updated assignment with project details
+    const updatedWithProject = await prisma.personaProject.findUnique({
+      where: { id: updated.id },
+      include: {
+        project: {
+          select: {
+            id: true,
+            title: true,
+            slug: true,
+            type: true,
+            status: true,
+          }
+        }
+      }
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Project assignment updated successfully',
+        assignment: {
+          id: updated.id,
+          personaId: updated.personaId,
+          projectId: updated.projectId,
+          displayOrder: updated.displayOrder,
+          isVisible: updated.isVisible,
+          project: updatedWithProject!.project,
+        }
+      },
+    });
+  } catch (error) {
+    console.error('Update project assignment error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to update project assignment',
+      },
+    });
+  }
+});
+
+// DELETE /personas/:id/projects/:projectId - Remove project from persona
+router.delete('/:id/projects/:projectId', authenticateToken, validate(projectIdSchema), async (req, res) => {
+  try {
+    const userId = req.user!.userId;
+    const { id: personaId, projectId } = req.params;
+
+    // Verify persona ownership
+    const persona = await prisma.persona.findFirst({
+      where: {
+        id: personaId,
+        accountId: userId,
+      },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    const personaProject = await prisma.personaProject.findFirst({
+      where: {
+        personaId,
+        projectId,
+      },
+    });
+
+    if (!personaProject) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Project assignment not found',
+        },
+      });
+    }
+
+    await prisma.personaProject.delete({
+      where: { id: personaProject.id },
+    });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Project removed from persona successfully',
+      },
+    });
+  } catch (error) {
+    console.error('Remove project from persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to remove project from persona',
+      },
+    });
+  }
+});
+
+// ==================================================
+// Admin Operations (require admin role)
+// ==================================================
+
+// GET /admin/personas - List all personas (admin only)
+router.get('/admin/personas', requireAdmin, async (req, res) => {
+  try {
+
+    const personas = await prisma.persona.findMany({
+      select: {
+        id: true,
+        slug: true,
+        displayName: true,
+        manifest: true,
+        accountId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      data: { personas },
+    });
+  } catch (error) {
+    console.error('Admin list personas error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to list personas',
+      },
+    });
+  }
+});
+
+// DELETE /admin/personas/:id - Delete any persona (admin only)
+router.delete('/admin/personas/:id', requireAdmin, async (req, res) => {
+  try {
+
+    const personaId = req.params.id;
+
+    const persona = await prisma.persona.findUnique({
+      where: { id: personaId },
+    });
+
+    if (!persona) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Persona not found',
+        },
+      });
+    }
+
+    await prisma.persona.delete({
+      where: { id: personaId },
+    });
+
+    console.log('Persona deleted by admin', { adminId: req.user!.userId, personaId });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Persona deleted successfully',
+      },
+    });
+  } catch (error) {
+    console.error('Admin delete persona error:', error);
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to delete persona',
+      },
+    });
+  }
 });
 
 export default router;

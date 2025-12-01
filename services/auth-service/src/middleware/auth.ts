@@ -1,7 +1,8 @@
-// Authentication middleware for persona-service
+// Authentication middleware for auth-service
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { storage } from '../utils/storage';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -29,10 +30,22 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
 
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as any;
 
+    // Get user from database to ensure they still exist and get role
+    const user = await storage.getAccountById(decoded.userId);
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: {
+          code: 'USER_NOT_FOUND',
+          message: 'User not found',
+        },
+      });
+    }
+
     req.user = {
-      userId: decoded.userId,
-      email: decoded.email,
-      role: decoded.role || 'USER',
+      userId: user.id,
+      email: user.email,
+      role: user.role || 'USER',
       type: decoded.type || 'access',
     };
 

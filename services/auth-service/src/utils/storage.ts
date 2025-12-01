@@ -17,6 +17,7 @@ class DatabaseStorage {
       id: newAccount.id,
       email: newAccount.email,
       passwordHash: newAccount.passwordHash,
+      role: newAccount.role,
       createdAt: newAccount.createdAt,
       updatedAt: newAccount.updatedAt,
     };
@@ -49,6 +50,7 @@ class DatabaseStorage {
       id: account.id,
       email: account.email,
       passwordHash: account.passwordHash,
+      role: account.role,
       createdAt: account.createdAt,
       updatedAt: account.updatedAt,
     };
@@ -65,6 +67,27 @@ class DatabaseStorage {
         id: updatedAccount.id,
         email: updatedAccount.email,
         passwordHash: updatedAccount.passwordHash,
+        role: updatedAccount.role,
+        createdAt: updatedAccount.createdAt,
+        updatedAt: updatedAccount.updatedAt,
+      };
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async updateAccountRole(id: string, role: string): Promise<Account | null> {
+    try {
+      const updatedAccount = await prisma.account.update({
+        where: { id },
+        data: { role },
+      });
+
+      return {
+        id: updatedAccount.id,
+        email: updatedAccount.email,
+        passwordHash: updatedAccount.passwordHash,
+        role: updatedAccount.role,
         createdAt: updatedAccount.createdAt,
         updatedAt: updatedAccount.updatedAt,
       };
@@ -84,6 +107,75 @@ class DatabaseStorage {
     }
   }
 
+  // GDPR compliance methods
+  async getPersonasByAccountId(accountId: string) {
+    return await prisma.persona.findMany({
+      where: { accountId },
+    });
+  }
+
+  async getProjectsByAccountId(accountId: string) {
+    return await prisma.project.findMany({
+      where: { accountId },
+    });
+  }
+
+  async getMediaFilesByAccountId(accountId: string) {
+    return await prisma.mediaFile.findMany({
+      where: { accountId },
+    });
+  }
+
+  async getCVGenerationsByAccountId(accountId: string) {
+    return await prisma.cVGeneration.findMany({
+      where: { accountId },
+    });
+  }
+
+  // Session management
+  async createSession(accountId: string, refreshToken: string, userAgent?: string, ipAddress?: string) {
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+
+    return await prisma.session.create({
+      data: {
+        accountId,
+        refreshToken,
+        userAgent,
+        ipAddress,
+        expiresAt,
+      },
+    });
+  }
+
+  async getSessionByRefreshToken(refreshToken: string) {
+    return await prisma.session.findUnique({
+      where: { refreshToken },
+      include: { account: true },
+    });
+  }
+
+  async revokeSession(sessionId: string) {
+    return await prisma.session.delete({
+      where: { id: sessionId },
+    });
+  }
+
+  async revokeAllUserSessions(accountId: string) {
+    return await prisma.session.deleteMany({
+      where: { accountId },
+    });
+  }
+
+  async cleanupExpiredSessions() {
+    return await prisma.session.deleteMany({
+      where: {
+        expiresAt: {
+          lt: new Date(),
+        },
+      },
+    });
+  }
+
   // Utility methods
   async getAllAccounts(): Promise<Account[]> {
     const accounts = await prisma.account.findMany();
@@ -92,6 +184,7 @@ class DatabaseStorage {
       id: account.id,
       email: account.email,
       passwordHash: account.passwordHash,
+      role: account.role,
       createdAt: account.createdAt,
       updatedAt: account.updatedAt,
     }));

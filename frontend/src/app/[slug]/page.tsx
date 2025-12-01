@@ -1,19 +1,21 @@
-'use client';
+// Public persona page - displays published personas
 
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { apiClient } from '@/lib/api';
+import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
-interface Persona {
-  id: string;
-  slug: string;
-  displayName: string;
-  manifest?: string;
+interface PublicPersonaPageProps {
+  params: {
+    slug: string;
+  };
 }
 
 interface Project {
   id: string;
   title: string;
   slug: string;
+  type: string;
+  status: string;
   content: {
     placeholders: Array<{
       id: string;
@@ -22,143 +24,151 @@ interface Project {
       content: any;
     }>;
   };
+  createdAt: string;
+  updatedAt: string;
 }
 
-export default function PersonaPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+interface Persona {
+  id: string;
+  slug: string;
+  displayName: string;
+  manifest: string | null;
+  projects: Project[];
+  createdAt: string;
+}
 
-  const [persona, setPersona] = useState<Persona | null>(null);
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+// Generate metadata for SEO
+export async function generateMetadata({ params }: PublicPersonaPageProps): Promise<Metadata> {
+  try {
+    const response = await apiClient.getPublicPersona(params.slug);
+    const persona = response.data.persona;
 
-  useEffect(() => {
-    const fetchPersonaData = async () => {
-      try {
-        // TODO: Fetch from API
-        // For now, mock data
-        setPersona({
-          id: '1',
-          slug,
-          displayName: 'John Doe',
-          manifest: 'Creative designer with 5+ years of experience in motion graphics and branding.'
-        });
-
-        setProjects([
-          {
-            id: '1',
-            title: 'Brand Identity Project',
-            slug: 'brand-identity',
-            content: {
-              placeholders: [
-                {
-                  id: 'cover-1',
-                  type: 'cover',
-                  order: 1,
-                  content: {
-                    title: 'Brand Identity Project',
-                    subtitle: 'Complete brand redesign for tech startup'
-                  }
-                },
-                {
-                  id: 'meta-1',
-                  type: 'meta',
-                  order: 2,
-                  content: {
-                    role: 'Lead Designer',
-                    year: 2024,
-                    industry: 'Technology',
-                    client: 'TechCorp'
-                  }
-                },
-                {
-                  id: 'process-1',
-                  type: 'process',
-                  order: 3,
-                  content: {
-                    description: 'Research, mood boards, logo concepts, final designs'
-                  }
-                }
-              ]
-            }
-          }
-        ]);
-      } catch (err) {
-        setError('Failed to load persona');
-      } finally {
-        setLoading(false);
-      }
+    return {
+      title: `${persona.displayName} - Portfolio`,
+      description: persona.manifest || `Portfolio of ${persona.displayName}`,
+      openGraph: {
+        title: `${persona.displayName} - Portfolio`,
+        description: persona.manifest || `Portfolio of ${persona.displayName}`,
+        type: 'profile',
+      },
     };
-
-    if (slug) {
-      fetchPersonaData();
-    }
-  }, [slug]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-      </div>
-    );
+  } catch (error) {
+    return {
+      title: 'Portfolio Not Found',
+      description: 'The requested portfolio could not be found.',
+    };
   }
+}
 
-  if (error || !persona) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Persona Not Found</h1>
-          <p className="text-gray-600">The persona you're looking for doesn't exist.</p>
-        </div>
-      </div>
-    );
+// Fetch persona data
+async function getPersonaData(slug: string): Promise<Persona | null> {
+  try {
+    const response = await apiClient.getPublicPersona(slug);
+    return response.data.persona;
+  } catch (error) {
+    console.error('Failed to fetch persona:', error);
+    return null;
+  }
+}
+
+export default async function PublicPersonaPage({ params }: PublicPersonaPageProps) {
+  const persona = await getPersonaData(params.slug);
+
+  if (!persona) {
+    notFound();
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">{persona.displayName}</h1>
-          {persona.manifest && (
-            <p className="text-xl text-gray-600 leading-relaxed">{persona.manifest}</p>
-          )}
+      <header className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              {persona.displayName}
+            </h1>
+            {persona.manifest && (
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                {persona.manifest}
+              </p>
+            )}
+          </div>
         </div>
       </header>
 
       {/* Projects Grid */}
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project) => (
-            <div key={project.id} className="group cursor-pointer">
-              <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                {/* Placeholder for project image */}
-                <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                  <span className="text-gray-500 text-sm">Project Image</span>
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-gray-900 group-hover:text-gray-600 transition-colors">
-                {project.title}
-              </h3>
-              <p className="text-sm text-gray-600 mt-1">
-                {project.content.placeholders.find(p => p.type === 'meta')?.content.role || 'Project'}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {projects.length === 0 && (
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {persona.projects.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500">No projects yet.</p>
+            <p className="text-gray-500 text-lg">No projects published yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {persona.projects.map((project) => {
+              // Find cover placeholder
+              const coverPlaceholder = project.content.placeholders.find(
+                (p: any) => p.type === 'cover'
+              );
+
+              return (
+                <div
+                  key={project.id}
+                  className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                >
+                  {/* Project Cover */}
+                  <div className="aspect-video bg-gray-200 flex items-center justify-center">
+                    {coverPlaceholder?.content?.image ? (
+                      <img
+                        src={coverPlaceholder.content.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="text-gray-400 text-center">
+                        <div className="w-16 h-16 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <span className="text-2xl font-bold">
+                            {project.title.charAt(0).toUpperCase()}
+                          </span>
+                        </div>
+                        <p className="text-sm">No image</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Project Info */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      {project.title}
+                    </h3>
+
+                    {coverPlaceholder?.content?.subtitle && (
+                      <p className="text-gray-600 mb-3">
+                        {coverPlaceholder.content.subtitle}
+                      </p>
+                    )}
+
+                    <div className="flex items-center justify-between">
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        {project.type}
+                      </span>
+                      <span className="text-sm text-gray-500">
+                        {new Date(project.createdAt).getFullYear()}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 mt-16">
-        <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-          <p className="text-gray-600">Built with Venus Platform</p>
+      <footer className="bg-white border-t border-gray-200 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center text-gray-500">
+            <p>© {new Date().getFullYear()} {persona.displayName}. Powered by Venus Platform.</p>
+          </div>
         </div>
       </footer>
     </div>

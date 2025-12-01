@@ -2,7 +2,7 @@
 
 import type { CreateProjectRequest, Project, ProjectListResponse, ProjectResponse, UpdateProjectRequest } from '@venus/types';
 import { Request, Response, Router } from 'express';
-import { body, param, validationResult } from 'express-validator';
+import { z } from 'zod';
 import { authenticateToken } from '../middleware/auth';
 import { logger } from '../utils/logger';
 import { prisma } from '@venus/types';
@@ -10,26 +10,56 @@ import { prisma } from '@venus/types';
 const router = Router();
 
 // ==================================================
-// Validation middleware
+// Zod validation schemas
 // ==================================================
 
-const createProjectValidation = [
-  body('title').isString().isLength({ min: 1, max: 100 }).withMessage('Title must be 1-100 characters'),
-  body('slug').optional().isString().isLength({ min: 1, max: 100 }).withMessage('Slug must be 1-100 characters'),
-  body('type').isIn(['album', 'main-project']).withMessage('Type must be album or main-project'),
-];
+const createProjectSchema = z.object({
+  body: z.object({
+    title: z.string().min(1).max(100),
+    slug: z.string().min(1).max(100).optional(),
+    type: z.enum(['album', 'main-project']),
+  }),
+});
 
-const updateProjectValidation = [
-  param('id').isUUID().withMessage('Invalid project ID'),
-  body('title').optional().isString().isLength({ min: 1, max: 100 }).withMessage('Title must be 1-100 characters'),
-  body('slug').optional().isString().isLength({ min: 1, max: 100 }).withMessage('Slug must be 1-100 characters'),
-  body('content').optional(),
-  body('status').optional().isIn(['draft', 'published']).withMessage('Status must be draft or published'),
-];
+const updateProjectSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+  body: z.object({
+    title: z.string().min(1).max(100).optional(),
+    slug: z.string().min(1).max(100).optional(),
+    content: z.any().optional(),
+    status: z.enum(['draft', 'published']).optional(),
+  }),
+});
 
-const projectIdValidation = [
-  param('id').isUUID().withMessage('Invalid project ID'),
-];
+const projectIdSchema = z.object({
+  params: z.object({
+    id: z.string().uuid(),
+  }),
+});
+
+// Validation middleware
+const validate = (schema: any) => {
+  return (req: Request, res: Response, next: any) => {
+    try {
+      schema.parse(req);
+      next();
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'VALIDATION_ERROR',
+            message: 'Invalid input data',
+            details: error.errors,
+          },
+        });
+      }
+      next(error);
+    }
+  };
+};
 
 // ==================================================
 // Routes
@@ -94,20 +124,8 @@ router.get('/', authenticateToken, async (req: Request, res: Response) => {
 });
 
 // POST /projects - Create new project
-router.post('/', authenticateToken, createProjectValidation, async (req: Request, res: Response) => {
+router.post('/', authenticateToken, validate(createProjectSchema), async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid input data',
-          details: errors.array(),
-        },
-      });
-    }
-
     const userId = req.user!.userId;
     const data: CreateProjectRequest = req.body;
 
@@ -135,39 +153,162 @@ router.post('/', authenticateToken, createProjectValidation, async (req: Request
       });
     }
 
-    // Create default placeholders
-    const defaultPlaceholders = [
-      {
-        id: 'cover-1',
-        type: 'cover',
-        order: 1,
-        content: {
-          image: null,
-          title: data.title,
-          subtitle: 'Project subtitle'
-        }
-      },
-      {
-        id: 'meta-1',
-        type: 'meta',
-        order: 2,
-        content: {
-          role: 'Designer',
-          year: new Date().getFullYear(),
-          industry: 'Design',
-          client: 'Client Name'
-        }
-      },
-      {
-        id: 'process-1',
-        type: 'process',
-        order: 3,
-        content: {
-          description: 'Project process description',
-          images: []
-        }
+    // Check main-project uniqueness
+    if (data.type === 'main-project') {
+      const existingMainProject = await prisma.project.findFirst({
+        where: {
+          accountId: userId,
+          type: 'main-project',
+        },
+      });
+
+      if (existingMainProject) {
+        return res.status(409).json({
+          success: false,
+          error: {
+            code: 'MAIN_PROJECT_EXISTS',
+            message: 'Only one main-project is allowed per account',
+          },
+        });
       }
-    ];
+    }
+
+    // Create default placeholders based on project type
+    const defaultPlaceholders = [];
+
+    if (data.type === 'album') {
+      // Full album with all placeholder types
+      defaultPlaceholders.push(
+        {
+          id: 'cover-1',
+          type: 'cover',
+          order: 1,
+          content: {
+            image: null,
+            title: data.title,
+            subtitle: 'Project subtitle'
+          }
+        },
+        {
+          id: 'meta-1',
+          type: 'meta',
+          order: 2,
+          content: {
+            role: 'Designer',
+            year: new Date().getFullYear(),
+            industry: 'Design',
+            client: 'Client Name'
+          }
+        },
+        {
+          id: 'context-1',
+          type: 'context',
+          order: 3,
+          content: {
+            problem: 'Describe the problem this project solves',
+            goals: ['Goal 1', 'Goal 2']
+          }
+        },
+        {
+          id: 'role-1',
+          type: 'role',
+          order: 4,
+          content: {
+            title: 'My Role',
+            description: 'Describe your role in this project',
+            responsibilities: ['Responsibility 1', 'Responsibility 2']
+          }
+        },
+        {
+          id: 'process-1',
+          type: 'process',
+          order: 5,
+          content: {
+            description: 'Describe the development process',
+            images: [],
+            stages: [
+              { title: 'Planning', description: 'Initial planning phase' },
+              { title: 'Design', description: 'Design phase' },
+              { title: 'Development', description: 'Implementation phase' }
+            ]
+          }
+        },
+        {
+          id: 'gallery-1',
+          type: 'gallery',
+          order: 6,
+          content: {
+            images: [],
+            layout: 'grid'
+          }
+        },
+        {
+          id: 'technical-1',
+          type: 'technical',
+          order: 7,
+          content: {
+            tools: ['Tool 1', 'Tool 2'],
+            stack: ['Technology 1', 'Technology 2'],
+            technologies: ['Tech 1', 'Tech 2']
+          }
+        },
+        {
+          id: 'results-1',
+          type: 'results',
+          order: 8,
+          content: {
+            description: 'Project outcomes and results',
+            metrics: [
+              { label: 'Completion', value: '100%', unit: '%' },
+              { label: 'Satisfaction', value: 5, unit: '/5' }
+            ]
+          }
+        },
+        {
+          id: 'credits-1',
+          type: 'credits',
+          order: 9,
+          content: {
+            team: [
+              { name: 'Team Member', role: 'Role' }
+            ],
+            acknowledgments: 'Special thanks to...'
+          }
+        }
+      );
+    } else if (data.type === 'main-project') {
+      // Main project with minimal placeholders
+      defaultPlaceholders.push(
+        {
+          id: 'cover-1',
+          type: 'cover',
+          order: 1,
+          content: {
+            image: null,
+            title: data.title,
+            subtitle: 'Portfolio overview'
+          }
+        },
+        {
+          id: 'meta-1',
+          type: 'meta',
+          order: 2,
+          content: {
+            role: 'Portfolio',
+            year: new Date().getFullYear(),
+            type: 'personal'
+          }
+        },
+        {
+          id: 'context-1',
+          type: 'context',
+          order: 3,
+          content: {
+            brief: 'Overview of my work and expertise'
+          }
+        }
+      );
+    }
 
     const project = await prisma.project.create({
       data: {
@@ -213,20 +354,8 @@ router.post('/', authenticateToken, createProjectValidation, async (req: Request
 });
 
 // GET /projects/:id - Get project details
-router.get('/:id', authenticateToken, projectIdValidation, async (req: Request, res: Response) => {
+router.get('/:id', authenticateToken, validate(projectIdSchema), async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid project ID',
-          details: errors.array(),
-        },
-      });
-    }
-
     const userId = req.user!.userId;
     const projectId = req.params.id;
 
@@ -276,20 +405,8 @@ router.get('/:id', authenticateToken, projectIdValidation, async (req: Request, 
 });
 
 // PUT /projects/:id - Update project
-router.put('/:id', authenticateToken, updateProjectValidation, async (req: Request, res: Response) => {
+router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid input data',
-          details: errors.array(),
-        },
-      });
-    }
-
     const userId = req.user!.userId;
     const projectId = req.params.id;
     const data: UpdateProjectRequest = req.body;
@@ -353,20 +470,8 @@ router.put('/:id', authenticateToken, updateProjectValidation, async (req: Reque
 });
 
 // DELETE /projects/:id - Delete project
-router.delete('/:id', authenticateToken, projectIdValidation, async (req: Request, res: Response) => {
+router.delete('/:id', authenticateToken, validate(projectIdSchema), async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR',
-          message: 'Invalid project ID',
-          details: errors.array(),
-        },
-      });
-    }
-
     const userId = req.user!.userId;
     const projectId = req.params.id;
 
@@ -401,6 +506,107 @@ router.delete('/:id', authenticateToken, projectIdValidation, async (req: Reques
     });
   } catch (error) {
     logger.error('Delete project error', { error: (error as Error).message, projectId: req.params.id, userId: req.user?.userId });
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to delete project',
+      },
+    });
+  }
+});
+
+// ==================================================
+// Admin Operations (require admin role)
+// ==================================================
+
+// GET /admin/projects - List all projects (admin only)
+router.get('/admin/projects', authenticateToken, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user!.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Admin access required',
+        },
+      });
+    }
+
+    const projects = await prisma.project.findMany({
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        type: true,
+        status: true,
+        accountId: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    res.json({
+      success: true,
+      data: { projects },
+    });
+  } catch (error) {
+    logger.error('Admin list projects error', { error: error.message });
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'Failed to list projects',
+      },
+    });
+  }
+});
+
+// DELETE /admin/projects/:id - Delete any project (admin only)
+router.delete('/admin/projects/:id', authenticateToken, async (req, res) => {
+  try {
+    // Check if user is admin
+    if (req.user!.role !== 'ADMIN') {
+      return res.status(403).json({
+        success: false,
+        error: {
+          code: 'FORBIDDEN',
+          message: 'Admin access required',
+        },
+      });
+    }
+
+    const projectId = req.params.id;
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!project) {
+      return res.status(404).json({
+        success: false,
+        error: {
+          code: 'NOT_FOUND',
+          message: 'Project not found',
+        },
+      });
+    }
+
+    await prisma.project.delete({
+      where: { id: projectId },
+    });
+
+    logger.info('Project deleted by admin', { adminId: req.user!.userId, projectId });
+
+    res.json({
+      success: true,
+      data: {
+        message: 'Project deleted successfully',
+      },
+    });
+  } catch (error) {
+    logger.error('Admin delete project error', { error: error.message });
     res.status(500).json({
       success: false,
       error: {

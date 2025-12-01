@@ -1,4 +1,4 @@
-// Authentication middleware for persona-service
+// Authentication middleware for media-service
 
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
