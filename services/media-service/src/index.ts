@@ -4,17 +4,32 @@
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 import multer from 'multer';
 import path from 'path';
 import { fileTypeFromBuffer } from 'file-type';
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { z } from 'zod';
 
 import type { HealthCheckResponse } from '@venus/types';
-import { authenticateToken, requireAdmin } from './middleware/auth';
+import { authenticateToken, requireAdmin, AuthenticatedRequest } from './middleware/auth';
+
+// Extend Express Request to include validatedFile
+declare global {
+  namespace Express {
+    interface Request {
+      validatedFile?: {
+        buffer: Buffer;
+        originalname: string;
+        mimetype: string;
+        size: number;
+        detectedMime: string;
+        ext: string;
+      };
+    }
+  }
+}
 
 dotenv.config();
 
@@ -57,7 +72,7 @@ const validate = (schema: any) => {
   };
 };
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.MEDIA_SERVICE_PORT || 4004;
 const prisma = new PrismaClient();
 
@@ -87,34 +102,37 @@ const upload = multer({
 });
 
 // File validation middleware
-const validateFile = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+const validateFile = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
   const file = req.file;
 
   if (!file) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       error: { code: 'NO_FILE', message: 'No file uploaded' },
     });
+    return;
   }
 
   // Check file extension
   const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg', '.gif', '.mp4', '.webm', '.pdf'];
   const ext = path.extname(file.originalname).toLowerCase();
   if (!allowedExtensions.includes(ext)) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       error: { code: 'INVALID_FILE_TYPE', message: 'File type not allowed' },
     });
+    return;
   }
 
   // Check magic bytes
   try {
     const fileType = await fileTypeFromBuffer(file.buffer);
     if (!fileType) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: { code: 'INVALID_FILE', message: 'Could not determine file type' },
       });
+      return;
     }
 
     // Validate mime type matches extension
@@ -125,10 +143,11 @@ const validateFile = async (req: express.Request, res: express.Response, next: e
     ];
 
     if (!allowedMimeTypes.includes(fileType.mime)) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: { code: 'INVALID_MIME_TYPE', message: 'File mime type not allowed' },
       });
+      return;
     }
 
     // Store validated file info
@@ -143,15 +162,16 @@ const validateFile = async (req: express.Request, res: express.Response, next: e
 
     next();
   } catch (error) {
-    return res.status(400).json({
+    res.status(400).json({
       success: false,
       error: { code: 'FILE_VALIDATION_ERROR', message: 'File validation failed' },
     });
+    return;
   }
 };
 
 // Health check
-app.get('/health', async (req, res) => {
+app.get('/health', async (_req, res) => {
   let dbHealthy = false;
   let storageHealthy = true; // TODO: Actual S3/R2 check
 
@@ -178,7 +198,7 @@ app.get('/health', async (req, res) => {
 });
 
 // Media upload endpoint with validation
-app.post('/media/upload', authenticateToken, upload.single('file'), validateFile, validate(uploadFileSchema), async (req, res) => {
+app.post('/media/upload', authenticateToken, upload.single('file'), validateFile, validate(uploadFileSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const validatedFile = req.validatedFile!;
@@ -264,7 +284,7 @@ process.on('SIGTERM', async () => {
 // ==================================================
 
 // GET /admin/files - List all media files (admin only)
-app.get('/admin/files', requireAdmin, async (req, res) => {
+app.get('/admin/files', requireAdmin, async (_req: AuthenticatedRequest, res) => {
   try {
 
     const files = await prisma.mediaFile.findMany({
@@ -295,7 +315,7 @@ app.get('/admin/files', requireAdmin, async (req, res) => {
 });
 
 // DELETE /admin/files/:id - Delete any media file (admin only)
-app.delete('/admin/files/:id', requireAdmin, validate(fileIdSchema), async (req, res) => {
+app.delete('/admin/files/:id', requireAdmin, validate(fileIdSchema), async (req: AuthenticatedRequest, res): Promise<void> => {
   try {
 
     const fileId = req.params.id;
@@ -305,13 +325,14 @@ app.delete('/admin/files/:id', requireAdmin, validate(fileIdSchema), async (req,
     });
 
     if (!file) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'File not found',
         },
       });
+      return;
     }
 
     await prisma.mediaFile.delete({
