@@ -18,12 +18,14 @@ ARG SERVICE_NAME
 ARG SERVICE_PATH
 
 # Copy workspace manifests and scoped packages
-COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json ./
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json .npmrc ./
 COPY shared ./shared
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
+COPY .pnpm-store ./.pnpm-store
+ENV PNPM_HOME=/workspace/.pnpm-store
 
 # Install only the service and its dependencies
-RUN pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile
+RUN pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --offline
 
 # ==================================================
 # Build stage
