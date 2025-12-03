@@ -2,11 +2,11 @@ name: Deploy to Staging
 
 on:
   push:
-    branches: [main]
+    branches: [stage]
   workflow_run:
     workflows: ["CI"]
     types: [completed]
-    branches: [main]
+    branches: [stage]
 
 jobs:
   deploy-staging:
