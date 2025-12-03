@@ -1,7 +1,7 @@
 # scripts/ — Скрипты автоматизации проекта Venus
 
-**Последнее обновление:** 2025-11-27  
-**Статус:** Базовые скрипты созданы
+**Последнее обновление:** 2025-12-03
+**Статус:** Security и admin скрипты добавлены
 
 ---
 
@@ -20,6 +20,8 @@
 
 ```
 scripts/
+├── generate-secrets.js  # Генерация безопасных секретов
+├── create-admin.js      # Создание admin пользователя
 ├── db/                  # Database скрипты
 │   ├── migrate.sh       # Миграции БД
 │   ├── backup.sh        # Бэкапы
@@ -37,6 +39,62 @@ scripts/
 ```
 
 ---
+
+## Security Scripts
+
+### Secret Generation (`generate-secrets.js`)
+
+**Назначение:** Генерация криптографически безопасных секретов для JWT, сессий и баз данных.
+
+**Использование:**
+```bash
+# Сгенерировать новые секреты
+node scripts/generate-secrets.js
+
+# Вывод:
+# JWT_SECRET=6RVP4v63py16d7uuMTlVxweQN8VkGQmSkaYq2Ko1dQ4=
+# SESSION_SECRET=neIdMSRMAKJM7qHeTRgDL4OopuxYwnrUN5V+034AdB0=
+# DATABASE_PASSWORD=hUT///qxWBGhrcDzS8Kk1w==
+# REDIS_PASSWORD=wFUMEU5vxklSi+EwTUT5zQ==
+```
+
+**Безопасность:**
+- Использует `crypto.randomBytes()` для криптографической стойкости
+- JWT_SECRET: 256+ бит (32 байта, base64 encoded)
+- SESSION_SECRET: 256+ бит (32 байта, base64 encoded)
+- Генерирует уникальные значения при каждом запуске
+
+**Когда использовать:**
+- При настройке нового environment (staging/production)
+- При ротации секретов (рекомендуется каждые 90 дней)
+- Никогда не используйте одинаковые секреты для разных сред!
+
+---
+
+## Admin Scripts
+
+### Admin User Creation (`create-admin.js`)
+
+**Назначение:** Создание администраторского пользователя для тестирования и управления системой.
+
+**Использование:**
+```bash
+# Создать admin пользователя
+node scripts/create-admin.js
+
+# Использует переменные из .env:
+# ADMIN_EMAIL=admin@venus.app
+# ADMIN_PASSWORD=VenusAdmin2025!
+```
+
+**Функциональность:**
+- Создает пользователя с ролью ADMIN
+- Хэширует пароль с bcrypt
+- Проверяет существование пользователя перед созданием
+
+---
+
+## Database Scripts
 
 ## Database Scripts
 
@@ -259,4 +317,4 @@ chmod 700 scripts/deploy/production.sh
 
 ---
 
-**Последнее обновление этого файла:** 2025-11-27
+**Последнее обновление этого файла:** 2025-12-03

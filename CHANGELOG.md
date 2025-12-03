@@ -14,6 +14,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI/CD pipeline setup
 - Multiple personas support (КТ2)
 
+## [0.1.3-alpha] - 2025-12-03
+
+### Added
+- **Frontend Dockerfile & health endpoint** - Multi-stage Next.js Dockerfile plus `/api/health` route for uptime probes
+- **Secret generation tooling** - `scripts/generate-secrets.js` for JWT/session/database credentials
+- **Staging environment template** - Updated `config/environments/.env.staging.example` with ready-to-use values
+
+### Changed
+- **Scripts documentation:** Expanded `scripts/README.md` with security and admin workflow guidance
+
+
 ## [0.1.2-alpha] - 2025-12-01
 
 ### Added
@@ -316,8 +327,9 @@ Venus follows Semantic Versioning:
 - [Issues](https://github.com/your-org/venus/issues)
 - [Releases](https://github.com/your-org/venus/releases)
 
-[Unreleased]: https://github.com/your-org/venus/compare/v0.1.2-alpha...HEAD
-[0.1.2-alpha]: https://github.com/your-org/venus/releases/tag/v0.1.2-alpha
+[Unreleased]: https://github.com/your-org/venus/compare/v0.1.3-alpha...HEAD
+[0.1.3-alpha]: https://github.com/your-org/venus/releases/tag/v0.1.3-alpha
+[0.1.2-alpha]: https://github.com/your-org/venus/compare/v0.1.2-alpha...v0.1.3-alpha
 [0.1.1-alpha]: https://github.com/your-org/venus/compare/v0.1.1-alpha...v0.1.2-alpha
 [0.1.0-alpha]: https://github.com/your-org/venus/compare/v0.1.0-alpha...v0.1.1-alpha
 [0.0.2-alpha]: https://github.com/your-org/venus/releases/tag/v0.0.2-alpha
