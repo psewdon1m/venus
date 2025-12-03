@@ -15,7 +15,7 @@ services:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     # No port exposure - internal only
     networks:
       - data_net
@@ -46,7 +46,7 @@ services:
 
   api-gateway:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: services/api-gateway/Dockerfile
       target: production
     restart: always
@@ -72,7 +72,7 @@ services:
 
   auth-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: services/auth-service/Dockerfile
       target: production
     restart: always
@@ -96,7 +96,7 @@ services:
 
   project-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: services/project-service/Dockerfile
       target: production
     restart: always
@@ -120,7 +120,7 @@ services:
 
   persona-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: services/persona-service/Dockerfile
       target: production
     restart: always
@@ -144,7 +144,7 @@ services:
 
   media-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: services/media-service/Dockerfile
       target: production
     restart: always
@@ -152,7 +152,7 @@ services:
       NODE_ENV: staging
       LOG_LEVEL: debug
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-../..}/tmp/uploads:/tmp/uploads
+      - ${COMPOSE_PROJECT_DIR:-.}/tmp/uploads:/tmp/uploads
     networks:
       - backend_net
       - data_net
@@ -170,7 +170,7 @@ services:
 
   ai-cv-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: services/ai-cv-service/Dockerfile
       target: production
     restart: always
@@ -178,7 +178,7 @@ services:
       NODE_ENV: staging
       LOG_LEVEL: debug
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-../..}/tmp/cv-generated:/tmp/cv-generated
+      - ${COMPOSE_PROJECT_DIR:-.}/tmp/cv-generated:/tmp/cv-generated
     networks:
       - backend_net
       - data_net
@@ -196,7 +196,7 @@ services:
 
   frontend:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-../..}
+      context: ${COMPOSE_PROJECT_DIR:-.}
       dockerfile: frontend/Dockerfile
       target: production
       args:
@@ -234,8 +234,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/nginx/staging.nginx.conf:/etc/nginx/nginx.conf:ro
-      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/nginx/staging.nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/log/nginx:/var/log/nginx
     networks:
