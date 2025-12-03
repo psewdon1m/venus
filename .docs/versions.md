@@ -2,6 +2,7 @@
 
 ---
 
+v0.1.3-stage.1 (stage) (2025-12-03 14:00): stage validation for dockerized frontend & secrets tooling
 v0.1.3 (dev) (2025-12-03 10:00): frontend docker build, health endpoint, secret tooling
 v0.1.2 (dev) (2025-12-01 12:00): admin RBAC, Zod validation, S3 media storage
 v0.1.1 (dev) (2025-11-28 22:00): API gateway fix and frontend API integration
