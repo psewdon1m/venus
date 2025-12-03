@@ -20,7 +20,7 @@ services:
       - "${DATABASE_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ${COMPOSE_PROJECT_DIR}/infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - data_net
     healthcheck:
@@ -52,7 +52,7 @@ services:
 
   api-gateway:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/api-gateway/Dockerfile
     container_name: venus-api-gateway
     restart: unless-stopped
@@ -82,7 +82,7 @@ services:
 
   auth-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/auth-service/Dockerfile
     container_name: venus-auth-service
     restart: unless-stopped
@@ -112,7 +112,7 @@ services:
 
   project-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/project-service/Dockerfile
     container_name: venus-project-service
     restart: unless-stopped
@@ -137,7 +137,7 @@ services:
 
   persona-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/persona-service/Dockerfile
     container_name: venus-persona-service
     restart: unless-stopped
@@ -162,7 +162,7 @@ services:
 
   media-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/media-service/Dockerfile
     container_name: venus-media-service
     restart: unless-stopped
@@ -194,7 +194,7 @@ services:
 
   ai-cv-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/ai-cv-service/Dockerfile
     container_name: venus-ai-cv-service
     restart: unless-stopped
@@ -226,7 +226,7 @@ services:
 
   frontend:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: frontend/Dockerfile
     container_name: venus-frontend
     restart: unless-stopped

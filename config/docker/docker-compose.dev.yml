@@ -21,13 +21,13 @@ services:
 
   api-gateway:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/api-gateway/Dockerfile.dev
       target: development
     volumes:
       # Hot reload source code
-      - ${COMPOSE_PROJECT_DIR}/services/api-gateway/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/services/api-gateway/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/api-gateway/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/api-gateway/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -37,12 +37,12 @@ services:
 
   auth-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/auth-service/Dockerfile.dev
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/services/auth-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/services/auth-service/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/auth-service/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/auth-service/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -51,12 +51,12 @@ services:
 
   project-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/project-service/Dockerfile.dev
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/services/project-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/services/project-service/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/project-service/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/project-service/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -65,12 +65,12 @@ services:
 
   persona-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/persona-service/Dockerfile.dev
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/services/persona-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/services/persona-service/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/persona-service/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/persona-service/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -79,15 +79,15 @@ services:
 
   media-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/media-service/Dockerfile.dev
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/services/media-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/services/media-service/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/media-service/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/media-service/package.json:/app/package.json:cached
       - /app/node_modules
       # Store uploads locally for dev
-      - ${COMPOSE_PROJECT_DIR}/tmp/uploads:/tmp/uploads
+      - ${COMPOSE_PROJECT_DIR:-../..}/tmp/uploads:/tmp/uploads
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
@@ -95,15 +95,15 @@ services:
 
   ai-cv-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/ai-cv-service/Dockerfile.dev
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/services/ai-cv-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/services/ai-cv-service/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/ai-cv-service/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/services/ai-cv-service/package.json:/app/package.json:cached
       - /app/node_modules
       # Store generated PDFs locally for dev
-      - ${COMPOSE_PROJECT_DIR}/tmp/cv-generated:/tmp/cv-generated
+      - ${COMPOSE_PROJECT_DIR:-../..}/tmp/cv-generated:/tmp/cv-generated
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
@@ -111,17 +111,17 @@ services:
 
   frontend:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: frontend/Dockerfile.dev
       target: development
     volumes:
       # Hot reload Next.js
-      - ${COMPOSE_PROJECT_DIR}/frontend/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR}/frontend/public:/app/public:cached
-      - ${COMPOSE_PROJECT_DIR}/frontend/package.json:/app/package.json:cached
-      - ${COMPOSE_PROJECT_DIR}/frontend/next.config.js:/app/next.config.js:cached
-      - ${COMPOSE_PROJECT_DIR}/frontend/tsconfig.json:/app/tsconfig.json:cached
-      - ${COMPOSE_PROJECT_DIR}/frontend/tailwind.config.ts:/app/tailwind.config.ts:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/frontend/src:/app/src:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/frontend/public:/app/public:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/frontend/package.json:/app/package.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/frontend/next.config.js:/app/next.config.js:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/frontend/tsconfig.json:/app/tsconfig.json:cached
+      - ${COMPOSE_PROJECT_DIR:-../..}/frontend/tailwind.config.ts:/app/tailwind.config.ts:cached
       - /app/node_modules
       - /app/.next
     environment:

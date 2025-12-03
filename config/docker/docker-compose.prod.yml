@@ -49,7 +49,7 @@ services:
 
   api-gateway:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/api-gateway/Dockerfile
       target: production
     restart: always
@@ -74,7 +74,7 @@ services:
 
   auth-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/auth-service/Dockerfile
       target: production
     restart: always
@@ -98,7 +98,7 @@ services:
 
   project-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/project-service/Dockerfile
       target: production
     restart: always
@@ -122,7 +122,7 @@ services:
 
   persona-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/persona-service/Dockerfile
       target: production
     restart: always
@@ -146,7 +146,7 @@ services:
 
   media-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/media-service/Dockerfile
       target: production
     restart: always
@@ -172,7 +172,7 @@ services:
 
   ai-cv-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: services/ai-cv-service/Dockerfile
       target: production
     restart: always
@@ -198,7 +198,7 @@ services:
 
   frontend:
     build:
-      context: ${COMPOSE_PROJECT_DIR}
+      context: ${COMPOSE_PROJECT_DIR:-../..}
       dockerfile: frontend/Dockerfile
       target: production
       args:
@@ -235,8 +235,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ${COMPOSE_PROJECT_DIR}/infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/log/nginx:/var/log/nginx
     networks:
@@ -264,7 +264,7 @@ services:
     container_name: venus-prometheus
     restart: always
     volumes:
-      - ${COMPOSE_PROJECT_DIR}/infrastructure/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -289,7 +289,7 @@ services:
       GF_SERVER_ROOT_URL: https://admin.tgcall.us/grafana
     volumes:
       - grafana_data:/var/lib/grafana
-      - ${COMPOSE_PROJECT_DIR}/infrastructure/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ${COMPOSE_PROJECT_DIR:-../..}/infrastructure/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
     networks:
       - backend_net
     depends_on:
