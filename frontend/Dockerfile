@@ -1,84 +1,43 @@
 # Multi-stage Dockerfile for Venus Frontend (Next.js)
 
-# ==================================================
-# Base stage
-# ==================================================
+ARG SERVICE_NAME=frontend
+ARG SERVICE_PATH=frontend
+
 FROM node:20-alpine AS base
-WORKDIR /app
+WORKDIR /workspace
+RUN apk add --no-cache curl && \
+    corepack enable && corepack prepare pnpm@latest --activate
 
-# Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
-
-# ==================================================
-# Dependencies stage
-# ==================================================
 FROM base AS dependencies
+ARG SERVICE_NAME
+ARG SERVICE_PATH
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json ./
+COPY shared ./shared
+COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+RUN pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile
 
-# ==================================================
-# Build stage
-# ==================================================
-FROM base AS build
+FROM dependencies AS build
+ARG SERVICE_NAME
+RUN pnpm --filter @venus/types run build || true
+RUN pnpm --filter ${SERVICE_NAME} run build
 
-# Copy dependencies
-COPY --from=dependencies /app/node_modules ./node_modules
-
-# Copy source code
-COPY . .
-
-# Copy shared types if needed
-# COPY ../shared/types ./shared/types
-
-# Build Next.js application
-RUN pnpm build
-
-# ==================================================
-# Production stage
-# ==================================================
-FROM base AS production
-
+FROM node:20-alpine AS production
+WORKDIR /workspace
 ENV NODE_ENV=production
+ARG SERVICE_PATH
+RUN apk add --no-cache curl && \
+    corepack enable && corepack prepare pnpm@latest --activate
 
-# Copy built application
-COPY --from=build /app/.next ./.next
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
-COPY --from=build /app/public ./public
-COPY --from=build /app/next.config.ts ./
+COPY --from=dependencies /workspace/node_modules ./node_modules
+COPY --from=build /workspace/shared ./shared
+COPY --from=build /workspace/${SERVICE_PATH} ./${SERVICE_PATH}
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
-USER nodejs
-
+WORKDIR /workspace/${SERVICE_PATH}
 EXPOSE 3000
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:3000/api/health || exit 1
 
 CMD ["pnpm", "start"]
-
-# ==================================================
-# Development stage
-# ==================================================
-FROM base AS development
-
-ENV NODE_ENV=development
-
-# Install all dependencies (including devDependencies)
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install
-
-# Copy source
-COPY . .
-
-EXPOSE 3000
-
-CMD ["pnpm", "dev"]

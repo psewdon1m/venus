@@ -1,77 +1,52 @@
-# Multi-stage Dockerfile for Auth Service
+# Multi-stage Dockerfile for API Gateway
+
+ARG SERVICE_NAME=@venus/api-gateway
+ARG SERVICE_PATH=services/api-gateway
 
 # ==================================================
 # Base stage
 # ==================================================
 FROM node:20-alpine AS base
-WORKDIR /app
-
-# Install pnpm
+WORKDIR /workspace
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # ==================================================
 # Dependencies stage
 # ==================================================
 FROM base AS dependencies
+ARG SERVICE_NAME
+ARG SERVICE_PATH
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
-COPY ../../shared/types/package.json ../../shared/types/
+# Copy workspace manifests and scoped packages
+COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json ./
+COPY shared ./shared
+COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
-# Install dependencies
-RUN pnpm install --frozen-lockfile
+# Install only the service and its dependencies
+RUN pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile
 
 # ==================================================
 # Build stage
 # ==================================================
-FROM base AS build
+FROM dependencies AS build
+ARG SERVICE_NAME
 
-# Copy dependencies
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY --from=dependencies /app/../../shared ./../../shared
-
-# Copy source code
-COPY . .
-
-# Build TypeScript
-RUN pnpm build
+# Build shared types (if present) and the service itself
+RUN pnpm --filter @venus/types run build || true
+RUN pnpm --filter ${SERVICE_NAME} run build
 
 # ==================================================
 # Production stage
 # ==================================================
-FROM base AS production
-
+FROM node:20-alpine AS production
+WORKDIR /workspace
 ENV NODE_ENV=production
+ARG SERVICE_PATH
 
-# Copy built application
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/package.json ./package.json
+COPY --from=dependencies /workspace/node_modules ./node_modules
+COPY --from=build /workspace/shared ./shared
+COPY --from=build /workspace/${SERVICE_PATH} ./${SERVICE_PATH}
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs && \
-    adduser -S nodejs -u 1001
-
-USER nodejs
-
-EXPOSE 4001
-
+WORKDIR /workspace/${SERVICE_PATH}
+EXPOSE 4000
 CMD ["node", "dist/index.js"]
-
-# ==================================================
-# Development stage
-# ==================================================
-FROM base AS development
-
-ENV NODE_ENV=development
-
-# Install all dependencies (including devDependencies)
-COPY package.json pnpm-lock.yaml* ./
-RUN pnpm install
-
-# Copy source
-COPY . .
-
-EXPOSE 4001
-
-CMD ["pnpm", "dev"]
