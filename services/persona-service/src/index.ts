@@ -3,7 +3,7 @@
 
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler';
@@ -12,7 +12,7 @@ import { logger } from './utils/logger';
 
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PERSONA_SERVICE_PORT || 4003;
 
 // ==================================================
@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Request logging
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
     userAgent: req.get('user-agent'),
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 // ==================================================
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -52,7 +52,7 @@ app.use('/personas', personaRouter);
 app.use('/public', personaRouter); // Public persona access
 
 // 404 handler
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).json({
     success: false,
     error: {

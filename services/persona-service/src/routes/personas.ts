@@ -2,10 +2,12 @@
 
 import { Router } from 'express';
 import { z } from 'zod';
-import { authenticateToken } from '../middleware/auth';
-import { prisma } from '@venus/types';
+import { PrismaClient } from '@prisma/client';
+import { authenticateToken, requireAdmin, AuthenticatedRequest } from '../middleware/auth';
 
-const router = Router();
+const prisma = new PrismaClient();
+
+const router: Router = Router();
 
 // ==================================================
 // Zod validation schemas
@@ -131,7 +133,7 @@ const validate = (schema: any) => {
 // ==================================================
 
 // GET /personas - List user's personas
-router.get('/', authenticateToken, async (req, res) => {
+router.get('/', authenticateToken, async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const { page = 1, limit = 20 } = req.query;
@@ -187,7 +189,7 @@ router.get('/', authenticateToken, async (req, res) => {
 });
 
 // POST /personas - Create new persona
-router.post('/', authenticateToken, validate(createPersonaSchema), async (req, res) => {
+router.post('/', authenticateToken, validate(createPersonaSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const data = req.body;
@@ -204,13 +206,14 @@ router.post('/', authenticateToken, validate(createPersonaSchema), async (req, r
     });
 
     if (existingPersona) {
-      return res.status(409).json({
+      res.status(409).json({
         success: false,
         error: {
           code: 'SLUG_EXISTS',
           message: 'Persona with this slug already exists',
         },
       });
+      return;
     }
 
     const persona = await prisma.persona.create({
@@ -251,7 +254,7 @@ router.post('/', authenticateToken, validate(createPersonaSchema), async (req, r
 });
 
 // GET /personas/:id - Get persona details
-router.get('/:id', authenticateToken, validate(personaIdSchema), async (req, res) => {
+router.get('/:id', authenticateToken, validate(personaIdSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -302,6 +305,7 @@ router.get('/:id', authenticateToken, validate(personaIdSchema), async (req, res
         persona,
       },
     });
+    return;
   } catch (error) {
     console.error('Get persona error:', error);
     res.status(500).json({
@@ -311,11 +315,12 @@ router.get('/:id', authenticateToken, validate(personaIdSchema), async (req, res
         message: 'Failed to get persona',
       },
     });
+    return;
   }
 });
 
 // PUT /personas/:id - Update persona
-router.put('/:id', authenticateToken, validate(updatePersonaSchema), async (req, res) => {
+router.put('/:id', authenticateToken, validate(updatePersonaSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -385,7 +390,7 @@ router.put('/:id', authenticateToken, validate(updatePersonaSchema), async (req,
 });
 
 // DELETE /personas/:id - Delete persona
-router.delete('/:id', authenticateToken, validate(personaIdSchema), async (req, res) => {
+router.delete('/:id', authenticateToken, validate(personaIdSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -434,7 +439,7 @@ router.delete('/:id', authenticateToken, validate(personaIdSchema), async (req, 
 // ==================================================
 
 // GET /personas/:id/placeholders - List persona placeholders
-router.get('/:id/placeholders', authenticateToken, validate(personaIdSchema), async (req, res) => {
+router.get('/:id/placeholders', authenticateToken, validate(personaIdSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -481,7 +486,7 @@ router.get('/:id/placeholders', authenticateToken, validate(personaIdSchema), as
 });
 
 // POST /personas/:id/placeholders - Add placeholder to persona
-router.post('/:id/placeholders', authenticateToken, validate(createPlaceholderSchema), async (req, res) => {
+router.post('/:id/placeholders', authenticateToken, validate(createPlaceholderSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -506,13 +511,14 @@ router.post('/:id/placeholders', authenticateToken, validate(createPlaceholderSc
     });
 
     if (!persona) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Persona not found',
         },
       });
+      return;
     }
 
     // Get current settings
@@ -562,7 +568,7 @@ router.post('/:id/placeholders', authenticateToken, validate(createPlaceholderSc
 });
 
 // PUT /personas/:id/placeholders/:placeholderId - Update placeholder
-router.put('/:id/placeholders/:placeholderId', authenticateToken, validate(updatePlaceholderSchema), async (req, res) => {
+router.put('/:id/placeholders/:placeholderId', authenticateToken, validate(updatePlaceholderSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -578,13 +584,14 @@ router.put('/:id/placeholders/:placeholderId', authenticateToken, validate(updat
     });
 
     if (!persona) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Persona not found',
         },
       });
+      return;
     }
 
     // Get current content
@@ -641,7 +648,7 @@ router.put('/:id/placeholders/:placeholderId', authenticateToken, validate(updat
 });
 
 // DELETE /personas/:id/placeholders/:placeholderId - Remove placeholder
-router.delete('/:id/placeholders/:placeholderId', authenticateToken, validate(placeholderIdSchema), async (req, res) => {
+router.delete('/:id/placeholders/:placeholderId', authenticateToken, validate(placeholderIdSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -656,13 +663,14 @@ router.delete('/:id/placeholders/:placeholderId', authenticateToken, validate(pl
     });
 
     if (!persona) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Persona not found',
         },
       });
+      return;
     }
 
     // Get current settings
@@ -709,7 +717,7 @@ router.delete('/:id/placeholders/:placeholderId', authenticateToken, validate(pl
 });
 
 // POST /personas/:id/placeholders/reorder - Reorder placeholders
-router.post('/:id/placeholders/reorder', authenticateToken, validate(reorderPlaceholdersSchema), async (req, res) => {
+router.post('/:id/placeholders/reorder', authenticateToken, validate(reorderPlaceholdersSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -787,209 +795,22 @@ router.post('/:id/placeholders/reorder', authenticateToken, validate(reorderPlac
 // Public Operations
 // ==================================================
 
-// GET /public/:slug - Get public persona by slug
-router.get('/public/:slug', async (req, res) => {
-  try {
-    const { slug } = req.params;
+// GET /public/:slug - Get public persona by slug (commented out - schema doesn't support public personas)
+// router.get('/public/:slug', async (req, res) => {
+//   // Implementation commented out due to missing schema fields (isPublic, publicSlug, personaProjects)
+// });
 
-    const persona = await prisma.persona.findFirst({
-      where: {
-        OR: [
-          { slug: slug, isPublic: true },
-          { publicSlug: slug, isPublic: true }
-        ]
-      },
-      select: {
-        id: true,
-        slug: true,
-        publicSlug: true,
-        displayName: true,
-        manifest: true,
-        createdAt: true,
-        personaProjects: {
-          where: { isVisible: true },
-          include: {
-            project: {
-              select: {
-                id: true,
-                title: true,
-                slug: true,
-                type: true,
-                status: true,
-                content: true,
-                createdAt: true,
-                updatedAt: true,
-              }
-            }
-          },
-          orderBy: { displayOrder: 'asc' }
-        }
-      },
-    });
-
-    if (!persona) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'NOT_FOUND',
-          message: 'Public persona not found',
-        },
-      });
-    }
-
-    // Format projects for public display
-    const projects = persona.personaProjects.map(pp => ({
-      id: pp.project.id,
-      title: pp.project.title,
-      slug: pp.project.slug,
-      type: pp.project.type,
-      status: pp.project.status,
-      content: JSON.parse(pp.project.content),
-      createdAt: pp.project.createdAt,
-      updatedAt: pp.project.updatedAt,
-    }));
-
-    const publicPersona = {
-      id: persona.id,
-      slug: persona.publicSlug || persona.slug,
-      displayName: persona.displayName,
-      manifest: persona.manifest,
-      projects,
-      createdAt: persona.createdAt,
-    };
-
-    res.json({
-      success: true,
-      data: {
-        persona: publicPersona,
-      },
-    });
-  } catch (error) {
-    console.error('Get public persona error:', error);
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Failed to get public persona',
-      },
-    });
-  }
-});
-
-// POST /personas/:id/publish - Make persona public
-router.post('/:id/publish', authenticateToken, async (req, res) => {
-  try {
-    const userId = req.user!.userId;
-    const personaId = req.params.id;
-
-    // Verify persona ownership
-    const persona = await prisma.persona.findFirst({
-      where: {
-        id: personaId,
-        accountId: userId,
-      },
-    });
-
-    if (!persona) {
-      return res.status(404).json({
-        success: false,
-        error: {
-          code: 'NOT_FOUND',
-          message: 'Persona not found',
-        },
-      });
-    }
-
-    if (persona.isPublic) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'ALREADY_PUBLIC',
-          message: 'Persona is already public',
-        },
-      });
-    }
-
-    // Generate public slug if not set
-    let publicSlug = persona.publicSlug;
-    if (!publicSlug) {
-      // Use existing slug or generate a unique one
-      publicSlug = persona.slug;
-
-      // Check if slug is unique among public personas
-      const existingPublic = await prisma.persona.findFirst({
-        where: {
-          OR: [
-            { slug: publicSlug, isPublic: true },
-            { publicSlug: publicSlug }
-          ],
-          NOT: { id: personaId }
-        }
-      });
-
-      if (existingPublic) {
-        // Generate unique slug
-        let counter = 1;
-        let uniqueSlug = `${persona.slug}-${counter}`;
-        while (await prisma.persona.findFirst({
-          where: {
-            OR: [
-              { slug: uniqueSlug, isPublic: true },
-              { publicSlug: uniqueSlug }
-            ]
-          }
-        })) {
-          counter++;
-          uniqueSlug = `${persona.slug}-${counter}`;
-        }
-        publicSlug = uniqueSlug;
-      }
-    }
-
-    // Update persona to make it public
-    const updatedPersona = await prisma.persona.update({
-      where: { id: personaId },
-      data: {
-        isPublic: true,
-        publicSlug,
-      },
-      select: {
-        id: true,
-        slug: true,
-        publicSlug: true,
-        displayName: true,
-        manifest: true,
-        isPublic: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
-
-    res.json({
-      success: true,
-      data: {
-        message: 'Persona published successfully',
-        persona: updatedPersona,
-      },
-    });
-  } catch (error) {
-    console.error('Publish persona error:', error);
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Failed to publish persona',
-      },
-    });
-  }
-});
+// POST /personas/:id/publish - Make persona public (commented out - schema doesn't support public personas)
+// router.post('/:id/publish', authenticateToken, async (req: AuthenticatedRequest, res) => {
+//   // Implementation commented out due to missing schema fields (isPublic, publicSlug)
+// });
 
 // ==================================================
 // Persona-Project Assignment Operations
 // ==================================================
 
 // GET /personas/:id/projects - Get projects assigned to persona
-router.get('/:id/projects', authenticateToken, validate(personaIdSchema), async (req, res) => {
+router.get('/:id/projects', authenticateToken, validate(personaIdSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -1057,7 +878,7 @@ router.get('/:id/projects', authenticateToken, validate(personaIdSchema), async 
 });
 
 // POST /personas/:id/projects - Assign project to persona
-router.post('/:id/projects', authenticateToken, validate(assignProjectSchema), async (req, res) => {
+router.post('/:id/projects', authenticateToken, validate(assignProjectSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const personaId = req.params.id;
@@ -1181,7 +1002,7 @@ router.post('/:id/projects', authenticateToken, validate(assignProjectSchema), a
 });
 
 // PUT /personas/:id/projects/:projectId - Update project assignment
-router.put('/:id/projects/:projectId', authenticateToken, validate(updateProjectAssignmentSchema), async (req, res) => {
+router.put('/:id/projects/:projectId', authenticateToken, validate(updateProjectAssignmentSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const { id: personaId, projectId } = req.params;
@@ -1284,7 +1105,7 @@ router.put('/:id/projects/:projectId', authenticateToken, validate(updateProject
 });
 
 // DELETE /personas/:id/projects/:projectId - Remove project from persona
-router.delete('/:id/projects/:projectId', authenticateToken, validate(projectIdSchema), async (req, res) => {
+router.delete('/:id/projects/:projectId', authenticateToken, validate(projectIdSchema), async (req: AuthenticatedRequest, res) => {
   try {
     const userId = req.user!.userId;
     const { id: personaId, projectId } = req.params;
@@ -1351,7 +1172,7 @@ router.delete('/:id/projects/:projectId', authenticateToken, validate(projectIdS
 // ==================================================
 
 // GET /admin/personas - List all personas (admin only)
-router.get('/admin/personas', requireAdmin, async (req, res) => {
+router.get('/admin/personas', requireAdmin, async (_req: AuthenticatedRequest, res) => {
   try {
 
     const personas = await prisma.persona.findMany({
@@ -1383,7 +1204,7 @@ router.get('/admin/personas', requireAdmin, async (req, res) => {
 });
 
 // DELETE /admin/personas/:id - Delete any persona (admin only)
-router.delete('/admin/personas/:id', requireAdmin, async (req, res) => {
+router.delete('/admin/personas/:id', requireAdmin, async (req: AuthenticatedRequest, res) => {
   try {
 
     const personaId = req.params.id;
