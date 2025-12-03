@@ -2,6 +2,8 @@
 
 ---
 
+v0.1.5 (stage) (2025-12-03 21:05): Prisma env config, role defaults, tooling cleanup
+v0.1.5 (dev)   (2025-12-03 20:55): Prisma env config, role defaults, tooling cleanup
 v0.1.4 (stage) (2025-12-03 20:45): stage-only CI/CD pipeline and service typing cleanup
 v0.1.4 (dev)   (2025-12-03 20:00): stage-only CI/CD pipeline and service typing cleanup
 v0.1.3 (stage) (2025-12-03 14:00): stage validation for dockerized frontend & secrets tooling
