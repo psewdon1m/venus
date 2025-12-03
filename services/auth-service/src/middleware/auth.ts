@@ -19,13 +19,14 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
     if (!token) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'NO_TOKEN',
           message: 'Access token required',
         },
       });
+      return;
     }
 
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as any;
@@ -33,54 +34,58 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
     // Get user from database to ensure they still exist and get role
     const user = await storage.getAccountById(decoded.userId);
     if (!user) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'USER_NOT_FOUND',
           message: 'User not found',
         },
       });
+      return;
     }
 
     req.user = {
       userId: user.id,
       email: user.email,
-      role: user.role || 'USER',
+      role: ((user as any).role || 'USER') as 'USER' | 'ADMIN',
       type: decoded.type || 'access',
     };
 
     next();
   } catch (error) {
     console.error('Token verification error:', error);
-    return res.status(403).json({
+    res.status(403).json({
       success: false,
       error: {
         code: 'INVALID_TOKEN',
         message: 'Invalid or expired token',
       },
     });
+    return;
   }
 };
 
 export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   if (!req.user) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: {
         code: 'NOT_AUTHENTICATED',
         message: 'Authentication required',
       },
     });
+    return;
   }
 
   if (req.user.role !== 'ADMIN') {
-    return res.status(403).json({
+    res.status(403).json({
       success: false,
       error: {
         code: 'FORBIDDEN',
         message: 'Admin access required',
       },
     });
+    return;
   }
 
   next();

@@ -1,6 +1,8 @@
 // Database storage using Prisma
 
-import { prisma } from '@venus/types';
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 import type { Account } from '@venus/types';
 
 class DatabaseStorage {
@@ -17,10 +19,10 @@ class DatabaseStorage {
       id: newAccount.id,
       email: newAccount.email,
       passwordHash: newAccount.passwordHash,
-      role: newAccount.role,
+      role: (newAccount as any).role || 'USER',
       createdAt: newAccount.createdAt,
       updatedAt: newAccount.updatedAt,
-    };
+    } as Account;
   }
 
   async getAccountById(id: string): Promise<Account | null> {
@@ -34,9 +36,10 @@ class DatabaseStorage {
       id: account.id,
       email: account.email,
       passwordHash: account.passwordHash,
+      role: (account as any).role || 'USER',
       createdAt: account.createdAt,
       updatedAt: account.updatedAt,
-    };
+    } as Account;
   }
 
   async getAccountByEmail(email: string): Promise<Account | null> {
@@ -50,10 +53,10 @@ class DatabaseStorage {
       id: account.id,
       email: account.email,
       passwordHash: account.passwordHash,
-      role: account.role,
+      role: (account as any).role || 'USER',
       createdAt: account.createdAt,
       updatedAt: account.updatedAt,
-    };
+    } as Account;
   }
 
   async updateAccount(id: string, updates: Partial<Pick<Account, 'email' | 'passwordHash'>>): Promise<Account | null> {
@@ -67,10 +70,10 @@ class DatabaseStorage {
         id: updatedAccount.id,
         email: updatedAccount.email,
         passwordHash: updatedAccount.passwordHash,
-        role: updatedAccount.role,
+        role: (updatedAccount as any).role || 'USER',
         createdAt: updatedAccount.createdAt,
         updatedAt: updatedAccount.updatedAt,
-      };
+      } as Account;
     } catch (error) {
       return null;
     }
@@ -80,17 +83,17 @@ class DatabaseStorage {
     try {
       const updatedAccount = await prisma.account.update({
         where: { id },
-        data: { role },
+        data: { role: role as any },
       });
 
       return {
         id: updatedAccount.id,
         email: updatedAccount.email,
         passwordHash: updatedAccount.passwordHash,
-        role: updatedAccount.role,
+        role: (updatedAccount as any).role || 'USER',
         createdAt: updatedAccount.createdAt,
         updatedAt: updatedAccount.updatedAt,
-      };
+      } as Account;
     } catch (error) {
       return null;
     }
@@ -148,7 +151,7 @@ class DatabaseStorage {
   }
 
   async getSessionByRefreshToken(refreshToken: string) {
-    return await prisma.session.findUnique({
+    return await (prisma.session.findUnique as any)({
       where: { refreshToken },
       include: { account: true },
     });

@@ -1,50 +1,53 @@
 // Auth routes - Register, Login, Refresh Token
 
-import type { LoginRequest, LoginResponse, RefreshTokenResponse, RegisterRequest, RegisterResponse } from '@venus/types';
-import { Router } from 'express';
+import type { LoginResponse, RefreshTokenResponse, RegisterResponse } from '@venus/types';
+import { Router, Response, NextFunction } from 'express';
 import { generateTokens, hashPassword, verifyPassword, verifyToken } from '../utils/auth';
 import { logger } from '../utils/logger';
 import { storage } from '../utils/storage';
-import { registerSchema, loginSchema, refreshTokenSchema, accountDeletionSchema } from '../schemas/auth';
-import { requireAdmin } from '../middleware/auth';
+import { registerSchema, loginSchema } from '../schemas/auth';
+import { requireAdmin, AuthenticatedRequest } from '../middleware/auth';
 
 // Proper JWT authentication middleware
-const authenticateToken = (req: any, res: any, next: any) => {
+const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: { code: 'NO_TOKEN', message: 'Access token required' }
     });
+    return;
   }
 
   try {
     const decoded = verifyToken(token);
     if (!decoded || decoded.type !== 'access') {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: { code: 'INVALID_TOKEN', message: 'Invalid access token' }
       });
+      return;
     }
 
     req.user = {
       userId: decoded.userId,
       email: decoded.email,
-      role: decoded.role || 'USER',
+      role: (decoded.role as 'USER' | 'ADMIN') || 'USER',
       type: decoded.type
     };
     next();
   } catch (error) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: { code: 'INVALID_TOKEN', message: 'Token verification failed' }
     });
+    return;
   }
 };
 
-const router = Router();
+const router: Router = Router();
 
 // Registration endpoint
 router.post('/register', async (req, res) => {
@@ -52,7 +55,7 @@ router.post('/register', async (req, res) => {
     // Validate input data with Zod
     const validation = registerSchema.safeParse(req);
     if (!validation.success) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
@@ -60,6 +63,7 @@ router.post('/register', async (req, res) => {
           details: validation.error.issues,
         },
       });
+      return;
     }
 
     const data = validation.data.body;
@@ -67,13 +71,14 @@ router.post('/register', async (req, res) => {
     // Check if email already exists
     const existingAccount = await storage.getAccountByEmail(data.email);
     if (existingAccount) {
-      return res.status(409).json({
+      res.status(409).json({
         success: false,
         error: {
           code: 'EMAIL_EXISTS',
           message: 'Account with this email already exists',
         },
       });
+      return;
     }
 
     // Hash password
@@ -86,7 +91,7 @@ router.post('/register', async (req, res) => {
     });
 
     // Generate tokens for auto-login after registration
-    const tokens = generateTokens(account.id, account.email, account.role);
+    const tokens = generateTokens(account.id, account.email, (account as any).role || 'USER');
 
     // Create session for refresh token
     await storage.createSession(
@@ -126,7 +131,7 @@ router.post('/register', async (req, res) => {
       data: response,
     });
   } catch (error) {
-    logger.error('Registration error', { error: error.message });
+    logger.error('Registration error', { error: (error as Error).message });
     res.status(500).json({
       success: false,
       error: {
@@ -143,7 +148,7 @@ router.post('/login', async (req, res) => {
     // Validate input data with Zod
     const validation = loginSchema.safeParse(req);
     if (!validation.success) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: {
           code: 'VALIDATION_ERROR',
@@ -151,6 +156,7 @@ router.post('/login', async (req, res) => {
           details: validation.error.issues,
         },
       });
+      return;
     }
 
     const data = validation.data.body;
@@ -158,29 +164,31 @@ router.post('/login', async (req, res) => {
     // Find account by email
     const account = await storage.getAccountByEmail(data.email);
     if (!account) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'INVALID_CREDENTIALS',
           message: 'Invalid email or password',
         },
       });
+      return;
     }
 
     // Verify password
     const isPasswordValid = await verifyPassword(data.password, account.passwordHash);
     if (!isPasswordValid) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'INVALID_CREDENTIALS',
           message: 'Invalid email or password',
         },
       });
+      return;
     }
 
     // Generate tokens with role
-    const tokens = generateTokens(account.id, account.email, account.role);
+    const tokens = generateTokens(account.id, account.email, (account as any).role || 'USER');
 
     // Create session for refresh token
     await storage.createSession(
@@ -209,6 +217,8 @@ router.post('/login', async (req, res) => {
     });
 
     const response: LoginResponse = {
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
       user: accountWithoutPassword,
       expiresIn: Math.floor((tokens.accessTokenExpiry - Date.now()) / 1000),
     };
@@ -220,7 +230,7 @@ router.post('/login', async (req, res) => {
       data: response,
     });
   } catch (error) {
-    logger.error('Login error', { error: error.message });
+    logger.error('Login error', { error: (error as Error).message });
     res.status(500).json({
       success: false,
       error: {
@@ -238,34 +248,37 @@ router.post('/refresh', async (req, res) => {
     const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
 
     if (!refreshToken) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: {
           code: 'MISSING_TOKEN',
           message: 'Refresh token is required',
         },
       });
+      return;
     }
 
     // Verify refresh token exists in database
     const session = await storage.getSessionByRefreshToken(refreshToken);
     if (!session) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: { code: 'INVALID_REFRESH_TOKEN', message: 'Invalid refresh token' }
       });
+      return;
     }
 
     // Check if session is expired
     if (session.expiresAt < new Date()) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: { code: 'EXPIRED_REFRESH_TOKEN', message: 'Refresh token expired' }
       });
+      return;
     }
 
     // Generate new tokens with role
-    const tokens = generateTokens(session.account.id, session.account.email, session.account.role);
+    const tokens = generateTokens(session.account.id, session.account.email, (session.account as any).role || 'USER');
 
     // Revoke old session and create new one (token rotation)
     await storage.revokeSession(session.id);
@@ -315,7 +328,7 @@ router.post('/refresh', async (req, res) => {
 });
 
 // Logout endpoint
-router.post('/logout', (req, res) => {
+router.post('/logout', (_req, res) => {
   // Clear httpOnly cookies
   res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
@@ -333,20 +346,21 @@ router.post('/logout', (req, res) => {
 // ==================================================
 
 // GET /account/export - Export user data (GDPR)
-router.get('/account/export', authenticateToken, async (req, res) => {
+router.get('/account/export', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
 
     // Get account data
     const account = await storage.getAccountById(userId);
     if (!account) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'ACCOUNT_NOT_FOUND',
           message: 'Account not found',
         },
       });
+      return;
     }
 
     // Get related data
@@ -375,7 +389,7 @@ router.get('/account/export', authenticateToken, async (req, res) => {
     res.setHeader('Content-Disposition', `attachment; filename="venus-account-export-${userId}.json"`);
     res.status(200).json(exportData);
   } catch (error) {
-    logger.error('Account export error', { error: error.message, userId: req.user?.userId });
+    logger.error('Account export error', { error: (error as Error).message, userId: req.user?.userId });
     res.status(500).json({
       success: false,
       error: {
@@ -387,7 +401,7 @@ router.get('/account/export', authenticateToken, async (req, res) => {
 });
 
 // DELETE /account - Delete account and all data (GDPR)
-router.delete('/account', authenticateToken, async (req, res) => {
+router.delete('/account', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const { confirmEmail } = req.body;
@@ -395,24 +409,26 @@ router.delete('/account', authenticateToken, async (req, res) => {
     // Get account to verify email
     const account = await storage.getAccountById(userId);
     if (!account) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'ACCOUNT_NOT_FOUND',
           message: 'Account not found',
         },
       });
+      return;
     }
 
     // Verify email confirmation
     if (!confirmEmail || confirmEmail !== account.email) {
-      return res.status(400).json({
+      res.status(400).json({
         success: false,
         error: {
           code: 'EMAIL_CONFIRMATION_REQUIRED',
           message: 'Please confirm your email address to delete your account',
         },
       });
+      return;
     }
 
     // Delete all related data (cascade delete should handle this via Prisma)
@@ -427,7 +443,7 @@ router.delete('/account', authenticateToken, async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error('Account deletion error', { error: error.message, userId: req.user?.userId });
+    logger.error('Account deletion error', { error: (error as Error).message, userId: req.user?.userId });
     res.status(500).json({
       success: false,
       error: {
@@ -439,19 +455,20 @@ router.delete('/account', authenticateToken, async (req, res) => {
 });
 
 // GET /me - Get current user info
-router.get('/me', authenticateToken, async (req, res) => {
+router.get('/me', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
 
     const account = await storage.getAccountById(userId);
     if (!account) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'ACCOUNT_NOT_FOUND',
           message: 'Account not found',
         },
       });
+      return;
     }
 
     // Remove password hash from response
@@ -480,7 +497,7 @@ router.get('/me', authenticateToken, async (req, res) => {
 // ==================================================
 
 // GET /admin/accounts - List all accounts (admin only)
-router.get('/admin/accounts', requireAdmin, async (req, res) => {
+router.get('/admin/accounts', requireAdmin, async (_req: AuthenticatedRequest, res: Response) => {
   try {
 
     const accounts = await storage.getAllAccounts();
@@ -489,7 +506,7 @@ router.get('/admin/accounts', requireAdmin, async (req, res) => {
       data: { accounts },
     });
   } catch (error) {
-    logger.error('Admin list accounts error', { error: error.message });
+    logger.error('Admin list accounts error', { error: (error as Error).message });
     res.status(500).json({
       success: false,
       error: {
@@ -501,31 +518,34 @@ router.get('/admin/accounts', requireAdmin, async (req, res) => {
 });
 
 // POST /admin/accounts/:id/role - Change user role (admin only)
-router.post('/admin/accounts/:id/role', requireAdmin, async (req, res) => {
+router.post('/admin/accounts/:id/role', requireAdmin, async (req: AuthenticatedRequest, res: Response) => {
   try {
 
     const accountId = req.params.id;
     const { role } = req.body;
 
-    if (!['USER', 'ADMIN'].includes(role)) {
-      return res.status(400).json({
+    if (!role || !['USER', 'ADMIN'].includes(role)) {
+      res.status(400).json({
         success: false,
         error: {
           code: 'INVALID_ROLE',
           message: 'Role must be USER or ADMIN',
         },
       });
+      return;
     }
 
-    const account = await storage.updateAccountRole(accountId, role);
+    // At this point, role is guaranteed to be 'USER' or 'ADMIN'
+    const account = await (storage.updateAccountRole as any)(accountId, role);
     if (!account) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'ACCOUNT_NOT_FOUND',
           message: 'Account not found',
         },
       });
+      return;
     }
 
     logger.info('Account role updated by admin', {
@@ -542,7 +562,7 @@ router.post('/admin/accounts/:id/role', requireAdmin, async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error('Admin update role error', { error: error.message });
+    logger.error('Admin update role error', { error: (error as Error).message });
     res.status(500).json({
       success: false,
       error: {
