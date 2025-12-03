@@ -4,6 +4,7 @@ export interface Account {
   id: string;
   email: string;
   passwordHash: string;
+  role?: string;
   createdAt: Date;
   updatedAt: Date;
 }
