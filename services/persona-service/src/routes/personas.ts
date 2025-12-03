@@ -3,9 +3,9 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { PrismaClient } from '@prisma/client';
-import { authenticateToken, requireAdmin, AuthenticatedRequest } from '../middleware/auth';
 
 const prisma = new PrismaClient();
+import { authenticateToken, requireAdmin, AuthenticatedRequest } from '../middleware/auth';
 
 const router: Router = Router();
 
@@ -851,7 +851,7 @@ router.get('/:id/projects', authenticateToken, validate(personaIdSchema), async 
       orderBy: { displayOrder: 'asc' }
     });
 
-    const projects = personaProjects.map(pp => ({
+    const projects = personaProjects.map((pp: any) => ({
       ...pp.project,
       personaProjectId: pp.id,
       displayOrder: pp.displayOrder,
