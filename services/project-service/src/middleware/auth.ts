@@ -12,10 +12,20 @@ declare global {
       user?: {
         userId: string;
         email: string;
+        role?: string;
         type: string;
       };
     }
   }
+}
+
+export interface AuthenticatedRequest extends Request {
+  user?: {
+    userId: string;
+    email: string;
+    role?: string;
+    type: string;
+  };
 }
 
 // JWT verification middleware
@@ -24,13 +34,14 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
   if (!token) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: {
         code: 'NO_TOKEN',
         message: 'Access token required',
       },
     });
+    return;
   }
 
   try {
@@ -38,29 +49,32 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
     // Check if it's an access token
     if (decoded.type !== 'access') {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'INVALID_TOKEN_TYPE',
           message: 'Access token required',
         },
       });
+      return;
     }
 
     req.user = {
       userId: decoded.userId,
       email: decoded.email,
+      role: decoded.role || 'USER',
       type: decoded.type,
     };
 
     next();
   } catch (error) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: {
         code: 'INVALID_TOKEN',
         message: 'Invalid access token',
       },
     });
+    return;
   }
 };

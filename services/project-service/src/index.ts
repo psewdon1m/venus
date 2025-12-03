@@ -3,7 +3,7 @@
 
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express from 'express';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 
 import type { HealthCheckResponse } from '@venus/types';
@@ -12,7 +12,7 @@ import { logger } from './utils/logger';
 
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.PROJECT_SERVICE_PORT || 4002;
 
 // ==================================================
@@ -25,7 +25,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Request logging
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
     userAgent: req.get('user-agent'),
@@ -38,7 +38,7 @@ app.use((req, res, next) => {
 // ==================================================
 
 // Health check (mock for development)
-app.get('/health', async (req, res) => {
+app.get('/health', async (_req, res) => {
   const health: HealthCheckResponse = {
     status: 'healthy',
     timestamp: new Date().toISOString(),

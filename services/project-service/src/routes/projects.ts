@@ -1,13 +1,14 @@
 // Project routes - CRUD operations for projects
 
-import type { CreateProjectRequest, Project, ProjectListResponse, ProjectResponse, UpdateProjectRequest } from '@venus/types';
+import type { CreateProjectRequest, ProjectListResponse, ProjectResponse, UpdateProjectRequest } from '@venus/types';
 import { Request, Response, Router } from 'express';
 import { z } from 'zod';
-import { authenticateToken } from '../middleware/auth';
+import { PrismaClient } from '@prisma/client';
+import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
-import { prisma } from '@venus/types';
 
-const router = Router();
+const prisma = new PrismaClient();
+const router: Router = Router();
 
 // ==================================================
 // Zod validation schemas
@@ -47,7 +48,7 @@ const validate = (schema: any) => {
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -55,6 +56,7 @@ const validate = (schema: any) => {
             details: error.errors,
           },
         });
+        return;
       }
       next(error);
     }
@@ -66,7 +68,7 @@ const validate = (schema: any) => {
 // ==================================================
 
 // GET /projects - List user's projects
-router.get('/', authenticateToken, async (req: Request, res: Response) => {
+router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const { page = 1, limit = 20, status } = req.query;
@@ -98,7 +100,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response) => {
     ]);
 
     const response: ProjectListResponse = {
-      projects,
+      projects: projects as any,
       meta: {
         page: pageNum,
         limit: limitNum,
@@ -124,7 +126,7 @@ router.get('/', authenticateToken, async (req: Request, res: Response) => {
 });
 
 // POST /projects - Create new project
-router.post('/', authenticateToken, validate(createProjectSchema), async (req: Request, res: Response) => {
+router.post('/', authenticateToken, validate(createProjectSchema), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const data: CreateProjectRequest = req.body;
@@ -144,13 +146,14 @@ router.post('/', authenticateToken, validate(createProjectSchema), async (req: R
     });
 
     if (existingProject) {
-      return res.status(409).json({
+      res.status(409).json({
         success: false,
         error: {
           code: 'SLUG_EXISTS',
           message: 'Project with this slug already exists',
         },
       });
+      return;
     }
 
     // Check main-project uniqueness
@@ -163,13 +166,14 @@ router.post('/', authenticateToken, validate(createProjectSchema), async (req: R
       });
 
       if (existingMainProject) {
-        return res.status(409).json({
+        res.status(409).json({
           success: false,
           error: {
             code: 'MAIN_PROJECT_EXISTS',
             message: 'Only one main-project is allowed per account',
           },
         });
+        return;
       }
     }
 
@@ -354,7 +358,7 @@ router.post('/', authenticateToken, validate(createProjectSchema), async (req: R
 });
 
 // GET /projects/:id - Get project details
-router.get('/:id', authenticateToken, validate(projectIdSchema), async (req: Request, res: Response) => {
+router.get('/:id', authenticateToken, validate(projectIdSchema), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const projectId = req.params.id;
@@ -377,16 +381,17 @@ router.get('/:id', authenticateToken, validate(projectIdSchema), async (req: Req
     });
 
     if (!project) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Project not found',
         },
       });
+      return;
     }
 
-    const response: ProjectResponse = { project };
+    const response: ProjectResponse = { project: project as any };
 
     res.json({
       success: true,
@@ -405,7 +410,7 @@ router.get('/:id', authenticateToken, validate(projectIdSchema), async (req: Req
 });
 
 // PUT /projects/:id - Update project
-router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req: Request, res: Response) => {
+router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const projectId = req.params.id;
@@ -419,13 +424,14 @@ router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req:
     });
 
     if (!project) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Project not found',
         },
       });
+      return;
     }
 
     const updatedProject = await prisma.project.update({
@@ -433,7 +439,7 @@ router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req:
       data: {
         title: data.title,
         slug: data.slug,
-        content: data.content,
+        content: data.content ? JSON.stringify(data.content) : undefined,
         status: data.status,
       },
       select: {
@@ -443,7 +449,6 @@ router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req:
         type: true,
         content: true,
         status: true,
-        viewCount: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -451,7 +456,7 @@ router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req:
 
     logger.info('Project updated', { projectId, userId });
 
-    const response: ProjectResponse = { project: updatedProject };
+    const response: ProjectResponse = { project: updatedProject as any };
 
     res.json({
       success: true,
@@ -470,7 +475,7 @@ router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req:
 });
 
 // DELETE /projects/:id - Delete project
-router.delete('/:id', authenticateToken, validate(projectIdSchema), async (req: Request, res: Response) => {
+router.delete('/:id', authenticateToken, validate(projectIdSchema), async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
     const projectId = req.params.id;
@@ -483,13 +488,14 @@ router.delete('/:id', authenticateToken, validate(projectIdSchema), async (req: 
     });
 
     if (!project) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Project not found',
         },
       });
+      return;
     }
 
     await prisma.project.delete({
@@ -521,17 +527,18 @@ router.delete('/:id', authenticateToken, validate(projectIdSchema), async (req: 
 // ==================================================
 
 // GET /admin/projects - List all projects (admin only)
-router.get('/admin/projects', authenticateToken, async (req, res) => {
+router.get('/admin/projects', authenticateToken, async (req: AuthenticatedRequest, res) => {
   try {
     // Check if user is admin
     if (req.user!.role !== 'ADMIN') {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: {
           code: 'FORBIDDEN',
           message: 'Admin access required',
         },
       });
+      return;
     }
 
     const projects = await prisma.project.findMany({
@@ -552,7 +559,7 @@ router.get('/admin/projects', authenticateToken, async (req, res) => {
       data: { projects },
     });
   } catch (error) {
-    logger.error('Admin list projects error', { error: error.message });
+    logger.error('Admin list projects error', { error: (error as Error).message });
     res.status(500).json({
       success: false,
       error: {
@@ -564,17 +571,18 @@ router.get('/admin/projects', authenticateToken, async (req, res) => {
 });
 
 // DELETE /admin/projects/:id - Delete any project (admin only)
-router.delete('/admin/projects/:id', authenticateToken, async (req, res) => {
+router.delete('/admin/projects/:id', authenticateToken, async (req: AuthenticatedRequest, res) => {
   try {
     // Check if user is admin
     if (req.user!.role !== 'ADMIN') {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: {
           code: 'FORBIDDEN',
           message: 'Admin access required',
         },
       });
+      return;
     }
 
     const projectId = req.params.id;
@@ -584,13 +592,14 @@ router.delete('/admin/projects/:id', authenticateToken, async (req, res) => {
     });
 
     if (!project) {
-      return res.status(404).json({
+      res.status(404).json({
         success: false,
         error: {
           code: 'NOT_FOUND',
           message: 'Project not found',
         },
       });
+      return;
     }
 
     await prisma.project.delete({
@@ -606,7 +615,7 @@ router.delete('/admin/projects/:id', authenticateToken, async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error('Admin delete project error', { error: error.message });
+    logger.error('Admin delete project error', { error: (error as Error).message });
     res.status(500).json({
       success: false,
       error: {
