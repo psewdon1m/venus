@@ -15,10 +15,9 @@ ARG SERVICE_PATH
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json .npmrc ./
 COPY shared ./shared
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
-COPY .pnpm-store ./.pnpm-store
-ENV PNPM_HOME=/workspace/.pnpm-store
 
-RUN pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --offline
+RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
+    pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
 
 FROM dependencies AS build
 ARG SERVICE_NAME
