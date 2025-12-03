@@ -4,13 +4,11 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express from 'express';
-import rateLimit from 'express-rate-limit';
+import express, { Express } from 'express';
 import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 import http from 'http';
 import https from 'https';
-import { z } from 'zod';
 
 import { authenticateToken, optionalAuth, requireAdmin } from './middleware/auth';
 import { combinedRateLimit } from './middleware/rateLimit';
@@ -20,40 +18,33 @@ import { logger } from './utils/logger';
 // Zod validation schemas
 // ==================================================
 
-const adminRoleUpdateSchema = z.object({
-  params: z.object({
-    id: z.string().uuid(),
-  }),
-  body: z.object({
-    role: z.enum(['USER', 'ADMIN']),
-  }),
-});
+// Validation middleware (commented out as not used)
+// const validate = (schema: any) => {
+//   return (req: Request, res: Response, next: any) => {
+//     try {
+//       schema.parse(req);
+//       next();
+//     } catch (error) {
+//       return res.status(400).json({
+//         success: false,
+//         error: {
+//           code: 'VALIDATION_ERROR',
+//           message: 'Invalid input data',
+//           details: (error as any).errors,
+//         },
+//       });
+//     }
+//   };
+// };
 
-// Validation middleware
-const validate = (schema: any) => {
-  return (req: any, res: any, next: any) => {
-    try {
-      schema.parse(req);
-      next();
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({
-          success: false,
-          error: {
-            code: 'VALIDATION_ERROR',
-            message: 'Invalid input data',
-            details: error.errors,
-          },
-        });
-      }
-      next(error);
-    }
-  };
-};
+// Zod schemas (keeping for future use)
+// const adminRoleUpdateSchema = {
+//   // placeholder
+// };
 
 dotenv.config();
 
-const app = express();
+const app: Express = express();
 const PORT = process.env.API_GATEWAY_PORT || 4000;
 
 // Service URLs (using localhost for development)
@@ -98,7 +89,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(combinedRateLimit);
 
 // Request logging
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   logger.info(`${req.method} ${req.path}`, {
     ip: req.ip,
     userAgent: req.get('user-agent'),
@@ -138,7 +129,7 @@ const proxyToService = (serviceUrl: string) => {
     });
 
     proxyReq.on('error', (err) => {
-      logger.error('Proxy request error', { error: err.message, serviceUrl });
+      logger.error('Proxy request error', { error: (err as Error).message, serviceUrl });
       res.status(503).json({ error: 'Service unavailable' });
     });
 
@@ -163,7 +154,7 @@ app.use('/api/auth', createProxyMiddleware({
   target: AUTH_SERVICE_URL,
   changeOrigin: true,
   pathRewrite: { '^/api/auth': '/auth' },
-  onProxyReq: (proxyReq, req, res) => {
+  onProxyReq: (proxyReq, req, _res) => {
     // Ensure body is properly forwarded
     if (req.body && Object.keys(req.body).length > 0) {
       const bodyData = JSON.stringify(req.body);
@@ -172,7 +163,7 @@ app.use('/api/auth', createProxyMiddleware({
       proxyReq.write(bodyData);
     }
   },
-  onError: (err, req, res) => {
+  onError: (err, _req, res) => {
     logger.error('Auth service proxy error', { error: err.message });
     res.status(503).json({ error: 'Auth service unavailable' });
   },
@@ -196,7 +187,7 @@ app.use('/api/media', authenticateToken, createProxyMiddleware({
   target: MEDIA_SERVICE_URL,
   changeOrigin: true,
   pathRewrite: { '^/api/media': '/media' },
-  onError: (err, req, res) => {
+  onError: (err, _req, res) => {
     logger.error('Media service proxy error', { error: err.message });
     res.status(503).json({ error: 'Media service unavailable' });
   },
@@ -207,7 +198,7 @@ app.use('/api/cv', authenticateToken, createProxyMiddleware({
   target: AI_CV_SERVICE_URL,
   changeOrigin: true,
   pathRewrite: { '^/api/cv': '/cv' },
-  onError: (err, req, res) => {
+  onError: (err, _req, res) => {
     logger.error('AI-CV service proxy error', { error: err.message });
     res.status(503).json({ error: 'AI-CV service unavailable' });
   },
@@ -217,7 +208,7 @@ app.use('/api/cv', authenticateToken, createProxyMiddleware({
 // Health Check
 // ==================================================
 
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
@@ -264,7 +255,7 @@ app.use('/api/admin/media', requireAdmin, createProxyMiddleware({
 }));
 
 // 404 handler
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).json({
     success: false,
     error: {

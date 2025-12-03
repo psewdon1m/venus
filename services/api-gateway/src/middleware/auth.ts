@@ -12,7 +12,7 @@ declare global {
       user?: {
         userId: string;
         email: string;
-        role: string;
+        role?: string;
         type: string;
       };
     }
@@ -30,13 +30,14 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 
   if (!token) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: {
         code: 'NO_TOKEN',
         message: 'Access token required',
       },
     });
+    return;
   }
 
   try {
@@ -44,13 +45,14 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
     // Check if it's an access token
     if (decoded.type !== 'access') {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'INVALID_TOKEN_TYPE',
           message: 'Access token required',
         },
       });
+      return;
     }
 
     req.user = {
@@ -62,18 +64,19 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
     next();
   } catch (error) {
-    return res.status(401).json({
+    res.status(401).json({
       success: false,
       error: {
         code: 'INVALID_TOKEN',
         message: 'Invalid access token',
       },
     });
+    return;
   }
 };
 
 // Optional authentication (doesn't fail if no token)
-export const optionalAuth = (req: Request, res: Response, next: NextFunction) => {
+export const optionalAuth = (req: Request, _res: Response, next: NextFunction) => {
   // Try to get token from Authorization header first
   let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
@@ -105,13 +108,14 @@ export const optionalAuth = (req: Request, res: Response, next: NextFunction) =>
 export const requireRole = (requiredRole: string) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      return res.status(401).json({
+      res.status(401).json({
         success: false,
         error: {
           code: 'AUTH_REQUIRED',
           message: 'Authentication required',
         },
       });
+      return;
     }
 
     const userRole = req.user.role || 'USER';
@@ -126,13 +130,14 @@ export const requireRole = (requiredRole: string) => {
     const requiredLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0;
 
     if (userLevel < requiredLevel) {
-      return res.status(403).json({
+      res.status(403).json({
         success: false,
         error: {
           code: 'INSUFFICIENT_PERMISSIONS',
           message: `Insufficient permissions. Required role: ${requiredRole}, your role: ${userRole}`,
         },
       });
+      return;
     }
 
     next();
