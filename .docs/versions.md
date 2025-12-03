@@ -2,6 +2,8 @@
 
 ---
 
+v0.1.6 (stage) (2025-12-03 21:35): temporary media auth bypass and Prisma init fixes
+v0.1.6 (dev)   (2025-12-03 21:25): temporary media auth bypass and Prisma init fixes
 v0.1.5 (stage) (2025-12-03 21:05): Prisma env config, role defaults, tooling cleanup
 v0.1.5 (dev)   (2025-12-03 20:55): Prisma env config, role defaults, tooling cleanup
 v0.1.4 (stage) (2025-12-03 20:45): stage-only CI/CD pipeline and service typing cleanup
