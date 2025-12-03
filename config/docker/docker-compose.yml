@@ -2,8 +2,6 @@
 # Base configuration for all environments
 # Override with docker-compose.dev.yml or docker-compose.prod.yml
 
-version: '3.9'
-
 services:
   # ==================================================
   # Databases & Cache
@@ -22,7 +20,7 @@ services:
       - "${DATABASE_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../../infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - data_net
     healthcheck:
@@ -54,8 +52,8 @@ services:
 
   api-gateway:
     build:
-      context: ./services/api-gateway
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: services/api-gateway/Dockerfile
     container_name: venus-api-gateway
     restart: unless-stopped
     ports:
@@ -84,8 +82,8 @@ services:
 
   auth-service:
     build:
-      context: ./services/auth-service
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: services/auth-service/Dockerfile
     container_name: venus-auth-service
     restart: unless-stopped
     environment:
@@ -114,8 +112,8 @@ services:
 
   project-service:
     build:
-      context: ./services/project-service
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: services/project-service/Dockerfile
     container_name: venus-project-service
     restart: unless-stopped
     environment:
@@ -139,8 +137,8 @@ services:
 
   persona-service:
     build:
-      context: ./services/persona-service
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: services/persona-service/Dockerfile
     container_name: venus-persona-service
     restart: unless-stopped
     environment:
@@ -164,8 +162,8 @@ services:
 
   media-service:
     build:
-      context: ./services/media-service
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: services/media-service/Dockerfile
     container_name: venus-media-service
     restart: unless-stopped
     environment:
@@ -196,8 +194,8 @@ services:
 
   ai-cv-service:
     build:
-      context: ./services/ai-cv-service
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: services/ai-cv-service/Dockerfile
     container_name: venus-ai-cv-service
     restart: unless-stopped
     environment:
@@ -228,8 +226,8 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: frontend/Dockerfile
     container_name: venus-frontend
     restart: unless-stopped
     ports:

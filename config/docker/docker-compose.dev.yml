@@ -1,8 +1,6 @@
 # Venus Platform - Development Override
 # Usage: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 
-version: '3.9'
-
 services:
   # ==================================================
   # Development Overrides
@@ -15,7 +13,7 @@ services:
       POSTGRES_DB: venus_dev
     volumes:
       # Map local SQL scripts for hot-reload
-      - ./infrastructure/postgres:/docker-entrypoint-initdb.d:ro
+      - ../../infrastructure/postgres:/docker-entrypoint-initdb.d:ro
 
   redis:
     ports:
@@ -23,13 +21,13 @@ services:
 
   api-gateway:
     build:
-      context: ./services/api-gateway
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: services/api-gateway/Dockerfile.dev
       target: development
     volumes:
       # Hot reload source code
-      - ./services/api-gateway/src:/app/src:cached
-      - ./services/api-gateway/package.json:/app/package.json:cached
+      - ../../services/api-gateway/src:/app/src:cached
+      - ../../services/api-gateway/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -39,12 +37,12 @@ services:
 
   auth-service:
     build:
-      context: ./services/auth-service
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: services/auth-service/Dockerfile.dev
       target: development
     volumes:
-      - ./services/auth-service/src:/app/src:cached
-      - ./services/auth-service/package.json:/app/package.json:cached
+      - ../../services/auth-service/src:/app/src:cached
+      - ../../services/auth-service/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -53,12 +51,12 @@ services:
 
   project-service:
     build:
-      context: ./services/project-service
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: services/project-service/Dockerfile.dev
       target: development
     volumes:
-      - ./services/project-service/src:/app/src:cached
-      - ./services/project-service/package.json:/app/package.json:cached
+      - ../../services/project-service/src:/app/src:cached
+      - ../../services/project-service/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -67,12 +65,12 @@ services:
 
   persona-service:
     build:
-      context: ./services/persona-service
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: services/persona-service/Dockerfile.dev
       target: development
     volumes:
-      - ./services/persona-service/src:/app/src:cached
-      - ./services/persona-service/package.json:/app/package.json:cached
+      - ../../services/persona-service/src:/app/src:cached
+      - ../../services/persona-service/package.json:/app/package.json:cached
       - /app/node_modules
     environment:
       NODE_ENV: development
@@ -81,15 +79,15 @@ services:
 
   media-service:
     build:
-      context: ./services/media-service
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: services/media-service/Dockerfile.dev
       target: development
     volumes:
-      - ./services/media-service/src:/app/src:cached
-      - ./services/media-service/package.json:/app/package.json:cached
+      - ../../services/media-service/src:/app/src:cached
+      - ../../services/media-service/package.json:/app/package.json:cached
       - /app/node_modules
       # Store uploads locally for dev
-      - ./tmp/uploads:/tmp/uploads
+      - ../../tmp/uploads:/tmp/uploads
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
@@ -97,15 +95,15 @@ services:
 
   ai-cv-service:
     build:
-      context: ./services/ai-cv-service
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: services/ai-cv-service/Dockerfile.dev
       target: development
     volumes:
-      - ./services/ai-cv-service/src:/app/src:cached
-      - ./services/ai-cv-service/package.json:/app/package.json:cached
+      - ../../services/ai-cv-service/src:/app/src:cached
+      - ../../services/ai-cv-service/package.json:/app/package.json:cached
       - /app/node_modules
       # Store generated PDFs locally for dev
-      - ./tmp/cv-generated:/tmp/cv-generated
+      - ../../tmp/cv-generated:/tmp/cv-generated
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
@@ -113,17 +111,17 @@ services:
 
   frontend:
     build:
-      context: ./frontend
-      dockerfile: Dockerfile.dev
+      context: ../..
+      dockerfile: frontend/Dockerfile.dev
       target: development
     volumes:
       # Hot reload Next.js
-      - ./frontend/src:/app/src:cached
-      - ./frontend/public:/app/public:cached
-      - ./frontend/package.json:/app/package.json:cached
-      - ./frontend/next.config.js:/app/next.config.js:cached
-      - ./frontend/tsconfig.json:/app/tsconfig.json:cached
-      - ./frontend/tailwind.config.ts:/app/tailwind.config.ts:cached
+      - ../../frontend/src:/app/src:cached
+      - ../../frontend/public:/app/public:cached
+      - ../../frontend/package.json:/app/package.json:cached
+      - ../../frontend/next.config.js:/app/next.config.js:cached
+      - ../../frontend/tsconfig.json:/app/tsconfig.json:cached
+      - ../../frontend/tailwind.config.ts:/app/tailwind.config.ts:cached
       - /app/node_modules
       - /app/.next
     environment:
