@@ -2,6 +2,8 @@
 // AI-powered CV generation microservice
 
 import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
 import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
@@ -13,7 +15,6 @@ dotenv.config();
 
 const app: express.Application = express();
 const PORT = process.env.AI_CV_SERVICE_PORT || 4005;
-const prisma = new PrismaClient();
 
 app.use(helmet());
 app.use(cors());
