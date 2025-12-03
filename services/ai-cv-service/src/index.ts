@@ -11,7 +11,7 @@ import type { HealthCheckResponse } from '@venus/types';
 
 dotenv.config();
 
-const app = express();
+const app: express.Application = express();
 const PORT = process.env.AI_CV_SERVICE_PORT || 4005;
 const prisma = new PrismaClient();
 
@@ -20,7 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 // Health check
-app.get('/health', async (req, res) => {
+app.get('/health', async (_req, res) => {
   let dbHealthy = false;
   let aiHealthy = Boolean(process.env.OPENAI_API_KEY);
 
@@ -47,7 +47,7 @@ app.get('/health', async (req, res) => {
 });
 
 // CV endpoints (stubbed)
-app.post('/cv/generate', (req, res) => {
+app.post('/cv/generate', (_req, res) => {
   res.status(501).json({
     success: false,
     error: { code: 'NOT_IMPLEMENTED', message: 'CV generation not yet implemented' },
