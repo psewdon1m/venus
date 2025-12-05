@@ -1,4 +1,4 @@
-name: Deploy to Staging
+name: Deploy to Stage
 
 on:
   push:
@@ -9,12 +9,12 @@ on:
     branches: [stage]
 
 jobs:
-  deploy-staging:
+  deploy-stage:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
     environment:
-      name: staging
-      url: https://staging.venus.app
+      name: stage
+      url: https://stage.venus.app
 
     steps:
       - uses: actions/checkout@v4
@@ -22,13 +22,13 @@ jobs:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.STAGING_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.STAGE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.STAGING_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.STAGE_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to staging server
+      - name: Deploy to stage server
         run: |
-          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.STAGING_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.STAGE_HOST }} << 'EOF'
             cd /opt/venus
 
             # Pull latest changes
@@ -41,15 +41,15 @@ jobs:
             pnpm --filter @venus/project-service migrate
 
             # Build and start services
-            docker compose -f docker-compose.yml -f docker-compose.staging.yml pull
-            docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d --build
+            docker compose -f docker-compose.yml -f docker-compose.stage.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.stage.yml up -d --build
 
             # Wait for services to be healthy
             sleep 30
 
             # Run health checks
-            curl -f https://staging.venus.app/health || exit 1
-            curl -f https://api.staging.venus.app/health || exit 1
+            curl -f https://stage.venus.app/health || exit 1
+            curl -f https://api.stage.venus.app/health || exit 1
 
             # Clean up old images
             docker image prune -f
@@ -59,7 +59,7 @@ jobs:
         run: |
           npm run test:smoke
         env:
-          BASE_URL: https://staging.venus.app
+          BASE_URL: https://stage.venus.app
 
       - name: Notify Slack
         if: success()
@@ -68,7 +68,7 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           payload: |
             {
-              "text": "🚀 Deployed to staging: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|View commit>"
+              "text": "🚀 Deployed to stage: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|View commit>"
             }
 
       - name: Notify Slack on failure
@@ -78,5 +78,5 @@ jobs:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           payload: |
             {
-              "text": "❌ Staging deployment failed: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+              "text": "❌ Stage deployment failed: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
             }
