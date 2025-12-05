@@ -22,7 +22,7 @@
 ### Архитектура
 
 ```
-Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E2E Tests → Manual Approval → Deploy Production
+Commit/PR → Lint → Test → Build → Security Scan → Deploy Stage → E2E Tests → Manual Approval → Deploy Production
 ```
 
 ### Ключевые Возможности
@@ -39,7 +39,7 @@ Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E
 | Среда | Триггер | Автоматизация | URL |
 |-------|---------|---------------|-----|
 | **Development** | Push to any branch | CI only | localhost |
-| **Staging** | Push to main | CI + Auto deploy | staging.venus.app |
+| **Stage** | Push to main | CI + Auto deploy | stage.venus.app |
 | **Production** | Manual approval | Full pipeline | venus.app |
 
 ---
@@ -49,7 +49,7 @@ Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E
 ### Предварительные Требования
 
 -  GitHub repository с Actions enabled
--  VPS server для staging/production
+-  VPS server для stage/production
 -  Domain configuration (см. `infrastructure/cloud/domains.md`)
 -  SSH access к deployment server
 
@@ -77,10 +77,10 @@ Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E
 
 4. **Environment Secrets:**
    ```bash
-   # Staging Environment в GitHub:
-   # STAGING_HOST=31.172.78.81
-   # STAGING_SSH_PRIVATE_KEY=<paste-key>
-   # STAGING_DATABASE_URL=postgresql://...
+   # Stage Environment в GitHub:
+   # STAGE_HOST=31.172.78.81
+   # STAGE_SSH_PRIVATE_KEY=<paste-key>
+   # STAGE_DATABASE_URL=postgresql://...
    ```
 
 5. **Тест Pipeline:**
@@ -142,9 +142,9 @@ Commit/PR → Lint → Test → Build → Security Scan → Deploy Staging → E
 
 **Fail on:** Critical/High severity issues
 
-### 5. Deploy Staging
+### 5. Deploy Stage
 
-**Цель:** Автоматический deploy на staging
+**Цель:** Автоматический deploy на stage
 
 **Process:**
 1. Pre-deployment checks
@@ -196,12 +196,12 @@ Require branches up to date:
 
 #### Environment Secrets
 
-**Staging Environment:**
+**Stage Environment:**
 ```yaml
-STAGING_HOST=31.172.78.81
-STAGING_SSH_PRIVATE_KEY=-----BEGIN OPENSSH PRIVATE KEY-----
-STAGING_DATABASE_URL=postgresql://venus_user:password@postgres:5432/venus_staging
-STAGING_REDIS_URL=redis://:password@redis:6379
+STAGE_HOST=31.172.78.81
+STAGE_SSH_PRIVATE_KEY=-----BEGIN OPENSSH PRIVATE KEY-----
+STAGE_DATABASE_URL=postgresql://venus_user:password@postgres:5432/venus_stage
+STAGE_REDIS_URL=redis://:password@redis:6379
 ```
 
 **Production Environment:**
@@ -219,9 +219,9 @@ BLUE_TARGET_GROUP=arn:aws:elasticloadbalancing:...
 #### Directory Structure
 ```bash
 /opt/venus/
-├── .env.staging          # Staging environment variables
+├── .env.stage          # Stage environment variables
 ├── .env.production       # Production environment variables
-├── docker-compose.staging.yml
+├── docker-compose.stage.yml
 ├── docker-compose.prod.yml
 ├── backups/              # Database backups
 └── tmp/                  # Temporary files
@@ -231,10 +231,10 @@ BLUE_TARGET_GROUP=arn:aws:elasticloadbalancing:...
 
 #### Environment Files
 
-**Staging (.env.staging):**
+**Stage (.env.stage):**
 ```bash
 # Database
-DATABASE_URL=postgresql://venus_user:strong_password@postgres:5432/venus_staging
+DATABASE_URL=postgresql://venus_user:strong_password@postgres:5432/venus_stage
 
 # Redis
 REDIS_URL=redis://:redis_password@redis:6379
@@ -249,8 +249,8 @@ S3_ACCESS_KEY=your-r2-access-key
 S3_SECRET_KEY=your-r2-secret-key
 
 # URLs
-NEXT_PUBLIC_API_URL=https://api.staging.venus.app
-NEXT_PUBLIC_SITE_URL=https://staging.venus.app
+NEXT_PUBLIC_API_URL=https://api.stage.venus.app
+NEXT_PUBLIC_SITE_URL=https://stage.venus.app
 ```
 
 ---
@@ -380,10 +380,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-### CD Staging Workflow (`.github/workflows/cd-staging.yml`)
+### CD Stage Workflow (`.github/workflows/cd-stage.yml`)
 
 ```yaml
-name: Deploy to Staging
+name: Deploy to Stage
 on:
   push:
     branches: [main]
@@ -393,20 +393,20 @@ on:
     branches: [main]
 
 jobs:
-  deploy-staging:
+  deploy-stage:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     environment:
-      name: staging
-      url: https://staging.venus.app
+      name: stage
+      url: https://stage.venus.app
     steps:
       - uses: actions/checkout@v4
       - name: Deploy via SSH
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.STAGING_HOST }}
+          host: ${{ secrets.STAGE_HOST }}
           username: deploy
-          key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
+          key: ${{ secrets.STAGE_SSH_PRIVATE_KEY }}
           script: |
             cd /opt/venus
             # Pull latest images
@@ -417,15 +417,15 @@ jobs:
             docker compose up -d
             # Health checks
             sleep 30
-            curl -f https://api.staging.venus.app/health || exit 1
-            curl -f https://staging.venus.app/api/health || exit 1
+            curl -f https://api.stage.venus.app/health || exit 1
+            curl -f https://stage.venus.app/api/health || exit 1
       - name: Notify Slack
         uses: slackapi/slack-github-action@v1
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK }}
           payload: |
             {
-              "text": " Deployed to staging: ${{ github.sha }}"
+              "text": " Deployed to stage: ${{ github.sha }}"
             }
 ```
 
@@ -445,13 +445,13 @@ jobs:
   pre-deployment-checks:
     runs-on: ubuntu-latest
     steps:
-      - name: Verify staging health
+      - name: Verify stage health
         run: |
-          curl -f https://staging.venus.app/health || exit 1
+          curl -f https://stage.venus.app/health || exit 1
       - name: Check recent E2E results
         run: |
-          # Verify last staging deploy was successful
-          gh run list --workflow=cd-staging --status=success --limit=1
+          # Verify last stage deploy was successful
+          gh run list --workflow=cd-stage --status=success --limit=1
 
   deploy-production:
     runs-on: ubuntu-latest
@@ -560,7 +560,7 @@ ALTER TABLE projects DROP COLUMN old_field;
 **Track:**
 - Pipeline execution time (<10 min target)
 - Success/failure rates (>95% target)
-- Deploy frequency (staging: multiple/day, prod: weekly)
+- Deploy frequency (stage: multiple/day, prod: weekly)
 - Cost per pipeline run
 
 ### Common Issues
@@ -594,7 +594,7 @@ curl http://localhost:4000/health
 #### Database Migration Failed
 ```bash
 # Check migration status
-docker compose exec postgres psql -U postgres -d venus_staging \
+docker compose exec postgres psql -U postgres -d venus_stage \
   -c "SELECT * FROM _prisma_migrations"
 
 # Manual migration

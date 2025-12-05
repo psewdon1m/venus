@@ -24,11 +24,11 @@ config/
 │   ├── docker-compose.yml          # Базовая конфигурация
 │   ├── docker-compose.dev.yml      # Development overrides
 │   ├── docker-compose.prod.yml     # Production overrides
-│   └── docker-compose.staging.yml  # Staging overrides
+│   └── docker-compose.stage.yml  # Stage overrides
 ├── environments/        # Environment переменные
 │   ├── .env.example                # Шаблон переменных
 │   ├── .env.production.example     # Production template
-│   └── .env.staging.example        # Staging template
+│   └── .env.stage.example        # Stage template
 ├── linting/             # Правила линтинга
 │   ├── .eslintrc.js                # ESLint конфигурация
 │   ├── .prettierrc                # Prettier конфигурация
@@ -118,7 +118,7 @@ BCRYPT_ROUNDS=12
 ```
 
 ### Environment-specific Templates
-- **.env.staging.example** — для staging environment
+- **.env.stage.example** — для stage environment
 - **.env.production.example** — для production environment
 
 ---

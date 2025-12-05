@@ -15,7 +15,7 @@
 1. **Выбор cloud-провайдеров.**
     - **Compute:**
       - Production: AWS ECS/EKS, Google Cloud Run, или DigitalOcean Kubernetes
-      - Staging: Railway, Render, или Fly.io для быстрого деплоя
+      - Stage: Railway, Render, или Fly.io для быстрого деплоя
     - **Database:**
       - PostgreSQL: AWS RDS, Supabase, или Railway Postgres
       - Redis: Redis Cloud, AWS ElastiCache
@@ -751,8 +751,8 @@ stages:
    - test             # Unit + Integration tests
    - build            # Docker images build
    - security-scan    # Dependency vulnerabilities
-   - deploy-staging   # Auto deploy to staging
-   - e2e-test         # E2E tests on staging
+   - deploy-stage   # Auto deploy to stage
+   - e2e-test         # E2E tests on stage
    - deploy-prod      # Manual deploy to production
 ```
 

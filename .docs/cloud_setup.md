@@ -165,7 +165,7 @@ dpkg-reconfigure --priority=low unattended-upgrades
 
 **URLs:**
 - Production: `https://tgcall.us`
-- Staging: `https://staging.tgcall.us` (planned)
+- Stage: `https://stage.tgcall.us` (planned)
 
 ### Сабдомены
 
@@ -179,8 +179,8 @@ dpkg-reconfigure --priority=low unattended-upgrades
 
 ### Будущие Сабдомены
 
-- `staging.tgcall.us` - Staging frontend
-- `api.staging.tgcall.us` - Staging API
+- `stage.tgcall.us` - Stage frontend
+- `api.stage.tgcall.us` - Stage API
 - `docs.tgcall.us` - API documentation
 - `status.tgcall.us` - Status page
 
@@ -330,9 +330,9 @@ server {
 
 ```bash
 /opt/venus/
-├── .env.staging          # Staging environment variables
+├── .env.stage          # Stage environment variables
 ├── .env.production       # Production environment variables
-├── docker-compose.staging.yml
+├── docker-compose.stage.yml
 ├── docker-compose.prod.yml
 ├── backups/              # Database backups
 └── tmp/                  # Temporary files

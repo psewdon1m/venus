@@ -109,7 +109,7 @@ requirepass your-redis-password
 - **Subdomains:**
   - `api.tgcall.us` — API Gateway
   - `cdn.tgcall.us` — Media CDN
-  - `staging.venus.app` — Staging environment
+  - `stage.venus.app` — Stage environment
 
 #### DNS Configuration
 ```dns
@@ -145,7 +145,7 @@ certbot renew --quiet
 ```bash
 # На сервере
 /opt/venus/.env.production
-/opt/venus/.env.staging
+/opt/venus/.env.stage
 
 # Права доступа
 chmod 600 .env.*
@@ -340,7 +340,7 @@ systemctl restart sshd
 
 ### Optimization Strategies
 1. **Reserved Instances** for predictable workloads
-2. **Spot Instances** for staging/development
+2. **Spot Instances** for stage/development
 3. **CDN** to reduce bandwidth costs
 4. **Object Storage** instead of block storage
 

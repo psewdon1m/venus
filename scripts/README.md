@@ -28,7 +28,7 @@ scripts/
 │   ├── restore.sh       # Восстановление
 │   └── seed.sh          # Заполнение тестовыми данными
 ├── deploy/              # Deployment скрипты
-│   ├── staging.sh       # Deploy на staging
+│   ├── stage.sh       # Deploy на stage
 │   ├── production.sh    # Deploy на production
 │   └── rollback.sh      # Откат deployment
 ├── setup/               # Setup скрипты
@@ -65,7 +65,7 @@ node scripts/generate-secrets.js
 - Генерирует уникальные значения при каждом запуске
 
 **Когда использовать:**
-- При настройке нового environment (staging/production)
+- При настройке нового environment (stage/production)
 - При ротации секретов (рекомендуется каждые 90 дней)
 - Никогда не используйте одинаковые секреты для разных сред!
 
@@ -137,12 +137,12 @@ echo "Backup completed: venus_prod_$DATE.sql"
 
 ## Deployment Scripts
 
-### Staging Deployment (`deploy/staging.sh`)
+### Stage Deployment (`deploy/stage.sh`)
 ```bash
 #!/bin/bash
-# Staging deployment script
+# Stage deployment script
 
-echo "Deploying to staging..."
+echo "Deploying to stage..."
 
 # Pull latest images
 docker compose pull
@@ -155,9 +155,9 @@ docker compose up -d
 
 # Health checks
 sleep 30
-curl -f https://staging.venus.app/health || exit 1
+curl -f https://stage.venus.app/health || exit 1
 
-echo "Staging deployment completed"
+echo "Stage deployment completed"
 ```
 
 ### Production Deployment (`deploy/production.sh`)
@@ -249,15 +249,15 @@ echo "CI environment ready"
 ./scripts/db/backup.sh
 
 # Deployment (with caution)
-./scripts/deploy/staging.sh
+./scripts/deploy/stage.sh
 ```
 
 ### В CI/CD
 ```yaml
 # .github/workflows/deploy.yml
-- name: Deploy to staging
-  run: ./scripts/deploy/staging.sh
-  environment: staging
+- name: Deploy to stage
+  run: ./scripts/deploy/stage.sh
+  environment: stage
 ```
 
 ### На сервере

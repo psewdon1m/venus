@@ -24,7 +24,7 @@
 | Ветка | Назначение | Защита | CI/CD |
 |-------|------------|--------|-------|
 | **dev** (default) | Основная разработка | Нет | Lint, test, build |
-| **stage** | Предпродакшн тестирование | PR review | +Интеграционные тесты, staging deploy |
+| **stage** | Предпродакшн тестирование | PR review | +Интеграционные тесты, stage deploy |
 | **prod** | Продакшн | Multiple approvals | +Security scans, production deploy |
 
 ### Временные ветки
@@ -81,7 +81,7 @@ git describe --tags --abbrev=0
 1. Merge стабильной версии из dev в stage
 2. Провести интеграционное тестирование
 3. Создать stage tag (v1.2.3-stage.1)
-4. Deploy на staging environment
+4. Deploy на stage environment
 
 **Prod ветка:**
 1. Финальное тестирование на stage
@@ -167,7 +167,7 @@ docs(api): update API usage examples
 - [ ] Интеграционные тесты пройдены
 - [ ] QA approval получен
 - [ ] [`docs/versions.md`](versions.md) updated с `(stage)`
-- [ ] Staging environment готов
+- [ ] Stage environment готов
 
 **Для prod релиза:**
 - [ ] Stage testing завершено успешно
@@ -322,7 +322,7 @@ Git operations триггерят CI/CD pipeline по веткам:
 
 **Stage ветка:**
 - Push: CI + интеграционные тесты
-- Tag: deploy на staging environment
+- Tag: deploy на stage environment
 - PR review: обязательно перед merge
 
 **Prod ветка:**

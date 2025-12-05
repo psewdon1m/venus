@@ -9,7 +9,7 @@ venus/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml
-│   │   ├── cd-staging.yml
+│   │   ├── cd-stage.yml
 │   │   └── cd-production.yml
 │   ├── ISSUE_TEMPLATE/
 │   └── PULL_REQUEST_TEMPLATE.md

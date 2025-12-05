@@ -325,7 +325,7 @@
 | DEV-002 | Hot reload | Nodemon/Next dev | 7.1 | ⏳ | Fast iteration |
 | DEV-003 | Testing framework | Jest + Playwright | 7.1 | ⏳ | >80% coverage |
 | DEV-004 | CI/CD pipeline | GitHub Actions | 7.2 | ⏳ | `.github/workflows/` |
-| DEV-005 | Automated deployment | Staging auto, prod manual | 7.2 | ⏳ | [`docs/ci-cd-pipeline.md`](ci-cd-pipeline.md) |
+| DEV-005 | Automated deployment | Stage auto, prod manual | 7.2 | ⏳ | [`docs/ci-cd-pipeline.md`](ci-cd-pipeline.md) |
 | DEV-006 | Monitoring | Prometheus + Grafana | 7.3 | ⏳ | `infrastructure/monitoring/` |
 | DEV-007 | Error tracking | Sentry integration | 7.3 | ⏳ | Real-time error reporting |
 

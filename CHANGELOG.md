@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Frontend Dockerfile & health endpoint** - Multi-stage Next.js Dockerfile plus `/api/health` route for uptime probes
 - **Secret generation tooling** - `scripts/generate-secrets.js` for JWT/session/database credentials
-- **Staging environment template** - Updated `config/environments/.env.staging.example` with ready-to-use values
+- **Stage environment template** - Updated `config/environments/.env.stage.example` with ready-to-use values
 
 ### Changed
 - **Scripts documentation:** Expanded `scripts/README.md` with security and admin workflow guidance

@@ -22,7 +22,7 @@
 .github/
 ├── workflows/              # GitHub Actions workflows
 │   ├── ci.yml             # Continuous Integration
-│   ├── cd-staging.yml     # Deploy to staging
+│   ├── cd-stage.yml     # Deploy to stage
 │   └── cd-production.yml  # Deploy to production
 ├── ISSUE_TEMPLATE/        # Issue templates
 │   ├── bug-report.md      # Bug report template
@@ -83,7 +83,7 @@ jobs:
       - run: npm run build
 ```
 
-### CD Staging (`workflows/cd-staging.yml`)
+### CD Stage (`workflows/cd-stage.yml`)
 
 **Triggers:**
 - Push to `main` branch (after CI passes)
@@ -91,27 +91,27 @@ jobs:
 **Jobs:**
 ```yaml
 jobs:
-  deploy-staging:
+  deploy-stage:
     runs-on: ubuntu-latest
-    environment: staging
+    environment: stage
     steps:
       - uses: actions/checkout@v4
       - uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.STAGING_SSH_PRIVATE_KEY }}
-          known_hosts: ${{ secrets.STAGING_KNOWN_HOSTS }}
+          key: ${{ secrets.STAGE_SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.STAGE_KNOWN_HOSTS }}
       - run: |
           ssh deploy@31.172.78.81 << 'EOF'
           cd /opt/venus
           git pull origin main
-          docker compose -f docker-compose.yml -f docker-compose.staging.yml up -d --build
+          docker compose -f docker-compose.yml -f docker-compose.stage.yml up -d --build
           EOF
 ```
 
 ### CD Production (`workflows/cd-production.yml`)
 
 **Triggers:**
-- Manual approval after staging deploy
+- Manual approval after stage deploy
 
 **Features:**
 - Blue-green deployment

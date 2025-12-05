@@ -511,7 +511,7 @@ class ReportService {
 - Deploy и тестирование
 - Integration tests
 - Performance benchmarks
-- Staging environment
+- Stage environment
 
 **Доступ:**
 - SSH key authentication
