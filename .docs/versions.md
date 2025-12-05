@@ -2,6 +2,8 @@
 
 ---
 
+v0.1.7 (stage) (2025-12-03 22:00): stage env rename, docker overrides, Prisma alignments
+v0.1.7 (dev)   (2025-12-03 21:45): stage env rename, docker overrides, Prisma alignments
 v0.1.6 (stage) (2025-12-03 21:35): temporary media auth bypass and Prisma init fixes
 v0.1.6 (dev)   (2025-12-03 21:25): temporary media auth bypass and Prisma init fixes
 v0.1.5 (stage) (2025-12-03 21:05): Prisma env config, role defaults, tooling cleanup
