@@ -7,126 +7,132 @@ services:
   # ==================================================
 
   postgres:
+    container_name: venus-dev-postgres
     ports:
       - "5432:5432"
     environment:
       POSTGRES_DB: venus_dev
     volumes:
       # Map local SQL scripts for hot-reload
-      - ${COMPOSE_PROJECT_DIR}/infrastructure/postgres:/docker-entrypoint-initdb.d:ro
+      - ../../infrastructure/postgres:/docker-entrypoint-initdb.d:ro
 
   redis:
+    container_name: venus-dev-redis
     ports:
       - "6379:6379"
 
   api-gateway:
+    container_name: venus-dev-api-gateway
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: services/api-gateway/Dockerfile.dev
+      context: ../..
+      dockerfile: services/api-gateway/Dockerfile
       target: development
     volumes:
       # Hot reload source code
-      - ${COMPOSE_PROJECT_DIR:-.}/services/api-gateway/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/services/api-gateway/package.json:/app/package.json:cached
-      - /app/node_modules
+      - ../../services/api-gateway/src:/workspace/services/api-gateway/src:cached
+      - ../../services/api-gateway/package.json:/workspace/services/api-gateway/package.json:cached
+      - ../../shared:/workspace/shared:cached
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
       WATCH_FILES: "true"
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   auth-service:
+    container_name: venus-dev-auth-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: services/auth-service/Dockerfile.dev
+      context: ../..
+      dockerfile: services/auth-service/Dockerfile
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/services/auth-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/services/auth-service/package.json:/app/package.json:cached
-      - /app/node_modules
+      - ../../services/auth-service/src:/workspace/services/auth-service/src:cached
+      - ../../services/auth-service/package.json:/workspace/services/auth-service/package.json:cached
+      - ../../shared:/workspace/shared:cached
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   project-service:
+    container_name: venus-dev-project-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: services/project-service/Dockerfile.dev
+      context: ../..
+      dockerfile: services/project-service/Dockerfile
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/services/project-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/services/project-service/package.json:/app/package.json:cached
-      - /app/node_modules
+      - ../../services/project-service/src:/workspace/services/project-service/src:cached
+      - ../../services/project-service/package.json:/workspace/services/project-service/package.json:cached
+      - ../../shared:/workspace/shared:cached
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   persona-service:
+    container_name: venus-dev-persona-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: services/persona-service/Dockerfile.dev
+      context: ../..
+      dockerfile: services/persona-service/Dockerfile
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/services/persona-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/services/persona-service/package.json:/app/package.json:cached
-      - /app/node_modules
+      - ../../services/persona-service/src:/workspace/services/persona-service/src:cached
+      - ../../services/persona-service/package.json:/workspace/services/persona-service/package.json:cached
+      - ../../shared:/workspace/shared:cached
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   media-service:
+    container_name: venus-dev-media-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: services/media-service/Dockerfile.dev
+      context: ../..
+      dockerfile: services/media-service/Dockerfile
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/services/media-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/services/media-service/package.json:/app/package.json:cached
-      - /app/node_modules
-      # Store uploads locally for dev
-      - ${COMPOSE_PROJECT_DIR:-.}/tmp/uploads:/tmp/uploads
+      - ../../services/media-service/src:/workspace/services/media-service/src:cached
+      - ../../services/media-service/package.json:/workspace/services/media-service/package.json:cached
+      - ../../shared:/workspace/shared:cached
+      - ../../tmp/uploads:/tmp/uploads
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   ai-cv-service:
+    container_name: venus-dev-ai-cv-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: services/ai-cv-service/Dockerfile.dev
+      context: ../..
+      dockerfile: services/ai-cv-service/Dockerfile
       target: development
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/services/ai-cv-service/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/services/ai-cv-service/package.json:/app/package.json:cached
-      - /app/node_modules
-      # Store generated PDFs locally for dev
-      - ${COMPOSE_PROJECT_DIR:-.}/tmp/cv-generated:/tmp/cv-generated
+      - ../../services/ai-cv-service/src:/workspace/services/ai-cv-service/src:cached
+      - ../../services/ai-cv-service/package.json:/workspace/services/ai-cv-service/package.json:cached
+      - ../../shared:/workspace/shared:cached
+      - ../../tmp/cv-generated:/tmp/cv-generated
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   frontend:
+    container_name: venus-dev-frontend
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
-      dockerfile: frontend/Dockerfile.dev
+      context: ../..
+      dockerfile: frontend/Dockerfile
       target: development
     volumes:
       # Hot reload Next.js
-      - ${COMPOSE_PROJECT_DIR:-.}/frontend/src:/app/src:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/frontend/public:/app/public:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/frontend/package.json:/app/package.json:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/frontend/next.config.js:/app/next.config.js:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/frontend/tsconfig.json:/app/tsconfig.json:cached
-      - ${COMPOSE_PROJECT_DIR:-.}/frontend/tailwind.config.ts:/app/tailwind.config.ts:cached
-      - /app/node_modules
-      - /app/.next
+      - ../../frontend/src:/workspace/frontend/src:cached
+      - ../../frontend/public:/workspace/frontend/public:cached
+      - ../../frontend/package.json:/workspace/frontend/package.json:cached
+      - ../../frontend/next.config.ts:/workspace/frontend/next.config.ts:cached
+      - ../../frontend/tsconfig.json:/workspace/frontend/tsconfig.json:cached
+      - ../../frontend/tailwind.config.ts:/workspace/frontend/tailwind.config.ts:cached
+      - /workspace/frontend/.next
     environment:
       NODE_ENV: development
-    command: npm run dev
+    command: ["pnpm", "dev"]
 
   # ==================================================
   # Development Tools
@@ -134,8 +140,8 @@ services:
 
   # PostgreSQL Admin UI
   pgadmin:
+    container_name: venus-dev-pgadmin
     image: dpage/pgadmin4:latest
-    container_name: venus-pgadmin
     restart: unless-stopped
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@venus.local
@@ -154,8 +160,8 @@ services:
 
   # Redis Commander UI
   redis-commander:
+    container_name: venus-dev-redis-commander
     image: rediscommander/redis-commander:latest
-    container_name: venus-redis-commander
     restart: unless-stopped
     environment:
       REDIS_HOSTS: local:redis:6379
@@ -170,8 +176,8 @@ services:
 
   # Mailhog for email testing
   mailhog:
+    container_name: venus-dev-mailhog
     image: mailhog/mailhog:latest
-    container_name: venus-mailhog
     restart: unless-stopped
     ports:
       - "1025:1025"  # SMTP

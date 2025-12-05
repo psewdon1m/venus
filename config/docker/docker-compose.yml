@@ -9,7 +9,7 @@ services:
   
   postgres:
     image: postgres:16-alpine
-    container_name: venus-postgres
+    container_name: venus-prod-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DATABASE_NAME:-venus_dev}
@@ -20,7 +20,7 @@ services:
       - "${DATABASE_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../../infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - data_net
     healthcheck:
@@ -31,7 +31,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: venus-redis
+    container_name: venus-prod-redis
     restart: unless-stopped
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-}
     ports:
@@ -52,20 +52,21 @@ services:
 
   api-gateway:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/api-gateway/Dockerfile
-    container_name: venus-api-gateway
+    container_name: venus-prod-api-gateway
     restart: unless-stopped
     ports:
       - "${API_GATEWAY_PORT:-4000}:4000"
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4000
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_INTERNAL_URL:-postgresql://postgres:password@postgres:5432/venus_dev}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
       JWT_SECRET: ${JWT_SECRET}
       RATE_LIMIT_WINDOW: ${RATE_LIMIT_WINDOW:-15m}
       RATE_LIMIT_MAX_REQUESTS: ${RATE_LIMIT_MAX_REQUESTS:-100}
+      NODE_OPTIONS: --experimental-specifier-resolution=node
     depends_on:
       postgres:
         condition: service_healthy
@@ -82,20 +83,21 @@ services:
 
   auth-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/auth-service/Dockerfile
-    container_name: venus-auth-service
+    container_name: venus-prod-auth-service
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4001
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_INTERNAL_URL:-postgresql://postgres:password@postgres:5432/venus_dev}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
       JWT_SECRET: ${JWT_SECRET}
       JWT_ACCESS_EXPIRY: ${JWT_ACCESS_EXPIRY:-15m}
       JWT_REFRESH_EXPIRY: ${JWT_REFRESH_EXPIRY:-7d}
       SESSION_SECRET: ${SESSION_SECRET}
       BCRYPT_ROUNDS: ${BCRYPT_ROUNDS:-12}
+      NODE_OPTIONS: --experimental-specifier-resolution=node
     depends_on:
       postgres:
         condition: service_healthy
@@ -112,15 +114,16 @@ services:
 
   project-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/project-service/Dockerfile
-    container_name: venus-project-service
+    container_name: venus-prod-project-service
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4002
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_INTERNAL_URL:-postgresql://postgres:password@postgres:5432/venus_dev}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
+      NODE_OPTIONS: --experimental-specifier-resolution=node
     depends_on:
       postgres:
         condition: service_healthy
@@ -137,15 +140,16 @@ services:
 
   persona-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/persona-service/Dockerfile
-    container_name: venus-persona-service
+    container_name: venus-prod-persona-service
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4003
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_INTERNAL_URL:-postgresql://postgres:password@postgres:5432/venus_dev}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
+      NODE_OPTIONS: --experimental-specifier-resolution=node
     depends_on:
       postgres:
         condition: service_healthy
@@ -162,14 +166,14 @@ services:
 
   media-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/media-service/Dockerfile
-    container_name: venus-media-service
+    container_name: venus-prod-media-service
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4004
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_INTERNAL_URL:-postgresql://postgres:password@postgres:5432/venus_dev}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
       S3_ENDPOINT: ${S3_ENDPOINT}
       S3_REGION: ${S3_REGION:-auto}
@@ -178,6 +182,7 @@ services:
       S3_SECRET_KEY: ${S3_SECRET_KEY}
       CDN_URL: ${CDN_URL}
       MAX_FILE_SIZE: ${MAX_FILE_SIZE:-10485760}
+      NODE_OPTIONS: --experimental-specifier-resolution=node
     depends_on:
       postgres:
         condition: service_healthy
@@ -194,18 +199,19 @@ services:
 
   ai-cv-service:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/ai-cv-service/Dockerfile
-    container_name: venus-ai-cv-service
+    container_name: venus-prod-ai-cv-service
     restart: unless-stopped
     environment:
       NODE_ENV: ${NODE_ENV:-development}
       PORT: 4005
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${DATABASE_INTERNAL_URL:-postgresql://postgres:password@postgres:5432/venus_dev}
       REDIS_URL: redis://:${REDIS_PASSWORD:-}@redis:6379
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       OPENAI_MODEL: ${OPENAI_MODEL:-gpt-4}
       PDF_GENERATION_TIMEOUT: ${PDF_GENERATION_TIMEOUT:-30s}
+      NODE_OPTIONS: --experimental-specifier-resolution=node
     depends_on:
       postgres:
         condition: service_healthy
@@ -226,9 +232,9 @@ services:
 
   frontend:
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: frontend/Dockerfile
-    container_name: venus-frontend
+    container_name: venus-prod-frontend
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-3000}:3000"

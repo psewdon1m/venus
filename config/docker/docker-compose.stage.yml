@@ -1,21 +1,22 @@
-# Venus Platform - Staging Override
-# Usage: docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d
+# Venus Platform - Stage Override
+# Usage: docker-compose -f docker-compose.yml -f docker-compose.stage.yml up -d
 
 services:
   # ==================================================
-  # Staging Database
+  # Stage Database
   # ==================================================
 
   postgres:
+    container_name: venus-stage-postgres
     image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_DB: ${DATABASE_NAME:-venus_staging}
+      POSTGRES_DB: ${DATABASE_NAME:-venus_stage}
       POSTGRES_USER: ${DATABASE_USER:-venus_user}
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+      - ../../infrastructure/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     # No port exposure - internal only
     networks:
       - data_net
@@ -26,6 +27,7 @@ services:
           memory: 512M
 
   redis:
+    container_name: venus-stage-redis
     image: redis:7-alpine
     restart: always
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
@@ -41,17 +43,18 @@ services:
           memory: 256M
 
   # ==================================================
-  # Staging Services
+  # Stage Services
   # ==================================================
 
   api-gateway:
+    container_name: venus-stage-api-gateway
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/api-gateway/Dockerfile
       target: production
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
       LOG_LEVEL: debug
     ports:
       - "4000:4000"  # Exposed for testing
@@ -71,13 +74,14 @@ services:
         max-file: "3"
 
   auth-service:
+    container_name: venus-stage-auth-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/auth-service/Dockerfile
       target: production
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
       LOG_LEVEL: debug
     networks:
       - backend_net
@@ -95,13 +99,14 @@ services:
         max-file: "3"
 
   project-service:
+    container_name: venus-stage-project-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/project-service/Dockerfile
       target: production
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
       LOG_LEVEL: debug
     networks:
       - backend_net
@@ -119,13 +124,14 @@ services:
         max-file: "3"
 
   persona-service:
+    container_name: venus-stage-persona-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/persona-service/Dockerfile
       target: production
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
       LOG_LEVEL: debug
     networks:
       - backend_net
@@ -143,16 +149,17 @@ services:
         max-file: "3"
 
   media-service:
+    container_name: venus-stage-media-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/media-service/Dockerfile
       target: production
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
       LOG_LEVEL: debug
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/tmp/uploads:/tmp/uploads
+      - ../../tmp/uploads:/tmp/uploads
     networks:
       - backend_net
       - data_net
@@ -169,16 +176,17 @@ services:
         max-file: "3"
 
   ai-cv-service:
+    container_name: venus-stage-ai-cv-service
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: services/ai-cv-service/Dockerfile
       target: production
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
       LOG_LEVEL: debug
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/tmp/cv-generated:/tmp/cv-generated
+      - ../../tmp/cv-generated:/tmp/cv-generated
     networks:
       - backend_net
       - data_net
@@ -195,8 +203,9 @@ services:
         max-file: "3"
 
   frontend:
+    container_name: venus-stage-frontend
     build:
-      context: ${COMPOSE_PROJECT_DIR:-.}
+      context: ../..
       dockerfile: frontend/Dockerfile
       target: production
       args:
@@ -205,7 +214,7 @@ services:
         - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
     restart: always
     environment:
-      NODE_ENV: staging
+      NODE_ENV: stage
     ports:
       - "3000:3000"  # Exposed for testing
     networks:
@@ -223,19 +232,19 @@ services:
         max-file: "3"
 
   # ==================================================
-  # Staging Nginx (SSL Termination & Reverse Proxy)
+  # Stage Nginx (SSL Termination & Reverse Proxy)
   # ==================================================
 
   nginx:
     image: nginx:alpine
-    container_name: venus-nginx-staging
+    container_name: venus-stage-nginx
     restart: always
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/nginx/staging.nginx.conf:/etc/nginx/nginx.conf:ro
-      - ${COMPOSE_PROJECT_DIR:-.}/infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ../../infrastructure/nginx/stage.nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../../infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/log/nginx:/var/log/nginx
     networks:
