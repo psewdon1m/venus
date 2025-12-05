@@ -2,6 +2,7 @@
 
 import type { LoginRequest, RegisterRequest } from '@venus/types';
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 const JWT_ACCESS_EXPIRY = process.env.JWT_ACCESS_EXPIRY || '15m';
@@ -16,15 +17,27 @@ export interface AuthTokens {
   refreshTokenExpiry: number;
 }
 
-import bcrypt from 'bcrypt';
-
 // Password utilities
 export const hashPassword = async (password: string): Promise<string> => {
-  return await bcrypt.hash(password, BCRYPT_ROUNDS);
+  return await new Promise((resolve, reject) => {
+    bcrypt.hash(password, BCRYPT_ROUNDS, (err, hash) => {
+      if (err || !hash) {
+        return reject(err || new Error('Failed to hash password'));
+      }
+      resolve(hash);
+    });
+  });
 };
 
 export const verifyPassword = async (password: string, hash: string): Promise<boolean> => {
-  return await bcrypt.compare(password, hash);
+  return await new Promise((resolve, reject) => {
+    bcrypt.compare(password, hash, (err, same) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(same);
+    });
+  });
 };
 
 // JWT utilities

@@ -38,10 +38,11 @@
     "docker:logs": "docker compose -f config/docker/docker-compose.yml logs -f",
     "docker:build": "docker compose -f config/docker/docker-compose.yml build",
     "docker:dev": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml up -d",
-    "docker:staging": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.staging.yml up -d",
+    "docker:stage": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml up -d",
     "docker:prod": "docker compose -f config/docker/docker-compose.yml -f config/docker/docker-compose.prod.yml up -d"
   },
   "devDependencies": {
+    "@prisma/client": "^5.22.0",
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "@playwright/test": "^1.40.1",
@@ -56,6 +57,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
     "markdownlint-cli": "^0.39.0",
+    "prisma": "^5.22.0",
     "prettier": "^3.1.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
@@ -73,6 +75,9 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "prisma": {
+    "schema": "infrastructure/postgres/schema.prisma"
   },
   "commitlint": {
     "extends": [

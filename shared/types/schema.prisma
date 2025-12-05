@@ -1,12 +1,12 @@
 // Venus Platform - Prisma Schema
-// Database: SQLite for development
+// Database: PostgreSQL (keeps shared types in sync with runtime DB)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

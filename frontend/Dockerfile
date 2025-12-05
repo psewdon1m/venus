@@ -24,6 +24,12 @@ ARG SERVICE_NAME
 RUN pnpm --filter @venus/types run build || true
 RUN pnpm --filter ${SERVICE_NAME} run build
 
+FROM dependencies AS development
+ARG SERVICE_PATH
+WORKDIR /workspace/${SERVICE_PATH}
+ENV NODE_ENV=development
+CMD ["sh", "-c", "pnpm dev"]
+
 FROM node:20-alpine AS production
 WORKDIR /workspace
 ENV NODE_ENV=production

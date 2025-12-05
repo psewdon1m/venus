@@ -2,13 +2,22 @@
 
 ARG SERVICE_NAME=@venus/api-gateway
 ARG SERVICE_PATH=services/api-gateway
+ARG DATABASE_URL=postgresql://postgres:password@postgres:5432/venus_dev
 
 # ==================================================
 # Base stage
 # ==================================================
 FROM node:20-alpine AS base
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 WORKDIR /workspace
 RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN apk add --no-cache python3 make g++
+RUN apk add --no-cache curl \
+    && wget -q -O /tmp/libcrypto1.1.apk https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/libcrypto1.1-1.1.1u-r1.apk \
+    && wget -q -O /tmp/libssl1.1.apk https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/libssl1.1-1.1.1u-r1.apk \
+    && apk add --no-cache --allow-untrusted /tmp/libcrypto1.1.apk /tmp/libssl1.1.apk \
+    && rm /tmp/libcrypto1.1.apk /tmp/libssl1.1.apk
 
 # ==================================================
 # Dependencies stage
@@ -16,15 +25,19 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 FROM base AS dependencies
 ARG SERVICE_NAME
 ARG SERVICE_PATH
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
 # Copy workspace manifests and scoped packages
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json .npmrc ./
 COPY shared ./shared
+COPY infrastructure ./infrastructure
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 # Install only the service and its dependencies (offline cache via BuildKit)
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
     pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
+RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
 
 # ==================================================
 # Build stage
@@ -36,6 +49,12 @@ ARG SERVICE_NAME
 RUN pnpm --filter @venus/types run build || true
 RUN pnpm --filter ${SERVICE_NAME} run build
 
+FROM dependencies AS development
+ARG SERVICE_PATH
+WORKDIR /workspace/${SERVICE_PATH}
+ENV NODE_ENV=development
+CMD ["sh", "-c", "pnpm dev"]
+
 # ==================================================
 # Production stage
 # ==================================================
@@ -43,6 +62,11 @@ FROM node:20-alpine AS production
 WORKDIR /workspace
 ENV NODE_ENV=production
 ARG SERVICE_PATH
+RUN apk add --no-cache curl \
+    && wget -q -O /tmp/libcrypto1.1.apk https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/libcrypto1.1-1.1.1u-r1.apk \
+    && wget -q -O /tmp/libssl1.1.apk https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/libssl1.1-1.1.1u-r1.apk \
+    && apk add --no-cache --allow-untrusted /tmp/libcrypto1.1.apk /tmp/libssl1.1.apk \
+    && rm /tmp/libcrypto1.1.apk /tmp/libssl1.1.apk
 
 COPY --from=dependencies /workspace/node_modules ./node_modules
 COPY --from=build /workspace/shared ./shared

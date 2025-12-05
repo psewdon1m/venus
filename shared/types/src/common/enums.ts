@@ -53,7 +53,7 @@ export enum CVTemplate {
 
 export enum Environment {
   DEVELOPMENT = 'development',
-  STAGING = 'staging',
+  STAGE = 'stage',
   PRODUCTION = 'production',
   TEST = 'test',
 }
