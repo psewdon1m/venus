@@ -57,11 +57,11 @@ const app = express();
 const PORT = process.env.API_GATEWAY_PORT || 4000;
 
 // Service URLs (using localhost for development)
-const AUTH_SERVICE_URL = 'http://localhost:4001';
-const PROJECT_SERVICE_URL = 'http://localhost:4002';
-const PERSONA_SERVICE_URL = 'http://localhost:4003';
-const MEDIA_SERVICE_URL = 'http://localhost:4004';
-const AI_CV_SERVICE_URL = 'http://localhost:4005';
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL ?? 'http://auth-service:4001';
+const PROJECT_SERVICE_URL = process.env.PROJECT_SERVICE_URL ?? 'http://project-service:4002';
+const PERSONA_SERVICE_URL = process.env.PERSONA_SERVICE_URL ?? 'http://persona-service:4003';
+const MEDIA_SERVICE_URL = process.env.MEDIA_SERVICE_URL ?? 'http://media-service:4004';
+const AI_CV_SERVICE_URL = process.env.AI_CV_SERVICE_URL ?? 'http://ai-cv-service:4005';
 
 // ==================================================
 // Middleware
