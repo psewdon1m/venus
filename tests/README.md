@@ -1,191 +1,35 @@
-# tests/ — Тестирование проекта Venus
+﻿# tests
 
-**Последнее обновление:** 2025-11-27  
-**Статус:** Базовая структура создана
+This directory hosts shared end-to-end assets for the Venus platform.
 
----
+## Structure
+- `e2e/auth-flow.test.ts` – Playwright smoke tests that cover register/login/refresh against the auth service.
+- `login.json`, `test.json`, `test2.json` – JSON payload samples used by manual QA or API clients.
 
-## Назначение папки
+## Running the Playwright suite
+1. Start the dev stack so API Gateway (port 4000) and the frontend (port 3000) are reachable, e.g.
+   ```bash
+   docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml up -d --build
+   ```
+2. Execute the tests with explicit endpoints (otherwise defaults fallback to 127.0.0.1):
+   ```bash
+   E2E_API_URL=http://127.0.0.1:4000/api \
+   E2E_TEST_PASSWORD=TestPass123! \
+   pnpm test:e2e
+   ```
 
-Папка `tests/` содержит все виды тестов для обеспечения качества кода:
+3. (Опционально) Построить HTML-отчет Allure:
+   ```bash
+   pnpm allure:report
+   npx serve allure-report  # или откройте index.html вручную
+   ```
 
-- **Unit тесты** — тестирование отдельных функций и модулей
-- **Integration тесты** — тестирование взаимодействия компонентов
-- **E2E тесты** — сквозное тестирование пользовательских сценариев
-- **Performance тесты** — нагрузочное тестирование
+### Useful environment variables
+- `E2E_API_URL` – API Gateway base URL (default `http://127.0.0.1:4000/api`).
+- `E2E_FRONTEND_URL` – kept for backward compatibility with older scripts.
+- `E2E_TEST_PASSWORD` – Password used for generated accounts (defaults to `TestPass123!`).
 
----
+## Why only E2E?
+Integration/performance suites live inside individual packages (`services/*`) and run via `pnpm test:integration` inside CI. The shared `tests/` folder now keeps only assets that benefit from being centralized; empty placeholder folders were removed to avoid confusion.
 
-## Структура папки
-
-```
-tests/
-├── e2e/                 # End-to-end тесты
-│   ├── auth.spec.ts     # Аутентификация
-│   ├── projects.spec.ts # Проекты
-│   └── personas.spec.ts # Персоны
-├── integration/         # Integration тесты
-│   ├── api/            # API endpoints
-│   └── database/       # Database operations
-├── performance/         # Performance тесты
-│   ├── load.js         # Нагрузочное тестирование
-│   └── stress.js       # Стресс-тестирование
-├── fixtures/            # Тестовые данные
-│   ├── auth/           # Auth fixtures
-│   └── projects/       # Project fixtures
-└── login.json          # Test credentials
-```
-
----
-
-## Типы тестов
-
-### 1. Unit Tests (Jest)
-```typescript
-// services/auth-service/src/utils/auth.test.ts
-describe('Password hashing', () => {
-  it('should hash password correctly', async () => {
-    const hash = await hashPassword('password123')
-    expect(await verifyPassword('password123', hash)).toBe(true)
-  })
-})
-```
-
-### 2. Integration Tests (Supertest)
-```typescript
-// tests/integration/api/auth.test.ts
-describe('Auth API', () => {
-  it('should register user', async () => {
-    const response = await request(app)
-      .post('/auth/register')
-      .send({ email: 'test@example.com', password: 'password123' })
-      .expect(201)
-  })
-})
-```
-
-### 3. E2E Tests (Playwright)
-```typescript
-// tests/e2e/auth.spec.ts
-test('user can register and login', async ({ page }) => {
-  await page.goto('/auth/register')
-  await page.fill('[name=email]', 'test@example.com')
-  await page.fill('[name=password]', 'password123')
-  await page.click('[type=submit]')
-  await expect(page).toHaveURL('/dashboard')
-})
-```
-
-### 4. Performance Tests (k6)
-```javascript
-// tests/performance/load.js
-import http from 'k6/http'
-
-export let options = {
-  vus: 10,
-  duration: '30s',
-}
-
-export default function () {
-  http.get('http://localhost:4000/health')
-}
-```
-
----
-
-## Запуск тестов
-
-### Локально
-```bash
-# Все тесты
-pnpm test
-
-# Unit тесты
-pnpm test:unit
-
-# Integration тесты
-pnpm test:integration
-
-# E2E тесты
-pnpm test:e2e
-
-# С покрытием
-pnpm test:coverage
-```
-
-### В CI/CD
-```yaml
-# .github/workflows/ci.yml
-- name: Run tests
-  run: pnpm test:coverage
-
-- name: Upload coverage
-  uses: codecov/codecov-action@v3
-```
-
----
-
-## Test Data Management
-
-### Fixtures
-```typescript
-// tests/fixtures/auth/user.ts
-export const testUser = {
-  email: 'test@example.com',
-  password: 'password123',
-  persona: {
-    slug: 'test-persona',
-    displayName: 'Test Persona'
-  }
-}
-```
-
-### Database Seeding
-```typescript
-// tests/setup.ts
-beforeAll(async () => {
-  await prisma.account.create({ data: testUser })
-})
-
-afterAll(async () => {
-  await prisma.account.deleteMany()
-})
-```
-
----
-
-## Coverage Requirements
-
-- **Overall:** >80%
-- **Critical paths:** >90%
-- **New code:** >85%
-- **Branches:** >75%
-
----
-
-## Best Practices
-
-### ✅ DO
-- Писать тесты перед кодом (TDD)
-- Использовать descriptive названия
-- Тестировать edge cases
-- Mock external dependencies
-- Поддерживать coverage >80%
-
-### ❌ DON'T
-- Тестировать implementation details
-- Зависеть от реального API
-- Использовать sleep() в тестах
-- Оставлять flaky тесты
-- Дублировать тестовую логику
-
----
-
-## Связанные документы
-
-- [Testing Guide](../.docs/stages.md#7-1-development-workflow) — стратегия тестирования
-- [CI/CD Pipeline](../.docs/ci-cd_pipeline.md) — автоматизация тестов
-
----
-
-**Последнее обновление этого файла:** 2025-11-27
+> **Heads-up:** PostgreSQL must contain the latest schema (`pnpm --filter @venus/project-service migrate:dev`) before running the suite, otherwise the auth-service will raise `accounts table does not exist`.
