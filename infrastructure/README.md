@@ -104,19 +104,28 @@ requirepass your-redis-password
 ### Domains & DNS (`cloud/domains.md`)
 
 #### Current Setup
+<<<<<<< Updated upstream
 - **Primary Domain:** `venus.app` (planned)
 - **Test Domain:** `tgcall.us` (current)
 - **Subdomains:**
   - `api.tgcall.us` — API Gateway
   - `cdn.tgcall.us` — Media CDN
   - `staging.venus.app` — Staging environment
+=======
+- **Primary Domain:** `tgcall.us`
+- **Stage Site:** `venus.tgcall.us`
+- **Stage Subdomains:**
+  - `venus-api.tgcall.us` — API Gateway
+  - `venus-cdn.tgcall.us` — Media CDN
+  - `admin.tgcall.us` — Admin panel
+>>>>>>> Stashed changes
 
 #### DNS Configuration
 ```dns
 # Cloudflare DNS
-tgcall.us     A     31.172.78.81
-api.tgcall.us CNAME tgcall.us
-cdn.tgcall.us CNAME tgcall.us
+venus.tgcall.us     A     31.172.78.81
+venus-api.tgcall.us A     31.172.78.81
+venus-cdn.tgcall.us A     31.172.78.81
 ```
 
 ### SSL/TLS Certificates
@@ -124,7 +133,10 @@ cdn.tgcall.us CNAME tgcall.us
 #### Let's Encrypt Setup
 ```bash
 # На сервере
-certbot certonly --standalone -d tgcall.us -d api.tgcall.us -d cdn.tgcall.us
+certbot certonly --standalone \
+  -d venus.tgcall.us \
+  -d venus-api.tgcall.us \
+  -d venus-cdn.tgcall.us
 
 # Автоматическое обновление
 certbot renew --quiet
@@ -132,7 +144,7 @@ certbot renew --quiet
 
 #### Certificate Locations
 ```bash
-/etc/letsencrypt/live/tgcall.us/
+/etc/letsencrypt/live/venus.tgcall.us/
 ├── cert.pem      # Certificate
 ├── chain.pem     # Intermediate certificate
 ├── fullchain.pem # Certificate + chain
@@ -253,7 +265,7 @@ scrape_configs:
 #### Health Checks
 ```bash
 # API Gateway health
-curl -f https://api.tgcall.us/health
+curl -f https://venus-api.tgcall.us/health
 
 # Database connectivity
 docker exec venus-postgres pg_isready -U postgres
@@ -334,7 +346,7 @@ systemctl restart sshd
 
 ### Current Costs (VPS)
 - **Server:** €50/month (VPS with 4GB RAM, 2 vCPU)
-- **Domains:** €10/year (tgcall.us)
+- **Domains:** €10/year (tgcall.us + venus.* stage hostnames)
 - **SSL:** Free (Let's Encrypt)
 - **Storage:** €5/month (Cloudflare R2)
 
