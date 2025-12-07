@@ -1,8 +1,9 @@
 // Health check endpoint for Auth Service
 
-import { Router, Response } from 'express';
+import { Router } from 'express';
 
 import type { HealthCheckResponse } from '@venus/types';
+import type { Response } from 'express';
 
 const router: Router = Router();
 
@@ -17,7 +18,7 @@ router.get('/', (_req, res: Response) => {
     uptime,
     checks: {
       database: true, // TODO: Actual DB check
-      redis: true,    // TODO: Actual Redis check
+      redis: true, // TODO: Actual Redis check
     },
   };
 

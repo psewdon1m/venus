@@ -7,6 +7,7 @@ import type { NextFunction, Request, Response } from 'express';
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
 // Extend Express Request to include user
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Express {
     interface Request {
@@ -19,6 +20,7 @@ declare global {
     }
   }
 }
+/* eslint-enable @typescript-eslint/no-namespace */
 
 interface AccessPayload extends JwtPayload {
   userId: string;
@@ -33,7 +35,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
   // If no header token, try to get from cookies
-  if (!token && req.cookies && req.cookies.accessToken) {
+  if (!token && typeof req.cookies?.accessToken === 'string') {
     token = req.cookies.accessToken;
   }
 
@@ -89,7 +91,7 @@ export const optionalAuth = (req: Request, _res: Response, next: NextFunction): 
   let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
   // If no header token, try to get from cookies
-  if (!token && req.cookies && req.cookies.accessToken) {
+  if (!token && typeof req.cookies?.accessToken === 'string') {
     token = req.cookies.accessToken;
   }
 
@@ -130,8 +132,8 @@ export const requireRole = (requiredRole: string) => {
 
     // Define role hierarchy: ADMIN > USER
     const roleHierarchy = {
-      'USER': 1,
-      'ADMIN': 2,
+      USER: 1,
+      ADMIN: 2,
     };
 
     const userLevel = roleHierarchy[userRole as keyof typeof roleHierarchy] || 0;

@@ -241,7 +241,6 @@ app.post(
   validateFile,
   validate(uploadFileSchema),
   asyncHandler<ValidatedFileRequest>(async (req, res) => {
-  try {
     const userId = req.user!.userId;
     const validatedFile = req.validatedFile!;
 
@@ -313,7 +312,7 @@ const server = app.listen(PORT, () => {
 process.on('SIGTERM', () => {
   prisma
     .$disconnect()
-    .catch((error) => logger.error('Prisma disconnect error', { error }))
+    .catch((error: unknown) => logger.error('Prisma disconnect error', { error }))
     .finally(() => server.close(() => process.exit(0)));
 });
 
@@ -326,7 +325,6 @@ app.get(
   '/admin/files',
   requireAdmin,
   asyncHandler<AuthenticatedRequest>(async (_req, res) => {
-
     const files = await prisma.mediaFile.findMany({
       select: {
         id: true,
@@ -351,9 +349,7 @@ app.delete(
   requireAdmin,
   validate(fileIdSchema),
   asyncHandler<AuthenticatedRequest>(async (req, res) => {
-
     const fileId = req.params.id;
-
     const file = await prisma.mediaFile.findUnique({
       where: { id: fileId },
     });

@@ -1,20 +1,22 @@
 // Authentication middleware for Project Service
 
-import { verify, type JwtPayload } from 'jsonwebtoken';
+import { verify } from 'jsonwebtoken';
 
 import type { NextFunction, Request, Response } from 'express';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
-export interface AccessTokenPayload extends JwtPayload {
+export interface AccessTokenPayload {
   userId: string;
   email: string;
   role?: string;
   type: 'access';
+  iat?: number;
+  exp?: number;
 }
 
 export interface AuthenticatedRequest extends Request {
-  user?: Omit<AccessTokenPayload, 'iat' | 'exp'>;
+  user?: AccessTokenPayload;
 }
 
 // JWT verification middleware

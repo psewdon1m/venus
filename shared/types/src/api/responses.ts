@@ -1,8 +1,7 @@
 // API Response types
 
 import type { AccountWithoutPassword } from '../entities/account';
-import type { CVGenerationResponse } from '../entities/cv';
-import type { MediaFile, MediaUploadResponse } from '../entities/media';
+import type { MediaFile } from '../entities/media';
 import type { Persona, PersonaPublic } from '../entities/persona';
 import type { Project } from '../entities/project';
 
@@ -90,11 +89,6 @@ export interface MediaListResponse {
   media: MediaFile[];
   meta: PaginationMeta;
 }
-
-export type { MediaUploadResponse };
-
-// CV responses
-  export type { CVGenerationResponse };
 
 // Health check response
 export interface HealthCheckResponse {

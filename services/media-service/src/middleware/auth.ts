@@ -1,6 +1,6 @@
 // Authentication middleware for media-service
 
-import { Request, Response, NextFunction } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 // import jwt from 'jsonwebtoken';
 
 export interface AuthenticatedRequest extends Request {
@@ -12,7 +12,11 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateToken = async (req: AuthenticatedRequest, _res: Response, next: NextFunction): Promise<void> => {
+export const authenticateToken = (
+  req: AuthenticatedRequest,
+  _res: Response,
+  next: NextFunction
+): void => {
   // TODO: Re-enable JWT authentication when jsonwebtoken dependency is installed
   // For now, allow all requests (development only)
   req.user = {
@@ -24,7 +28,11 @@ export const authenticateToken = async (req: AuthenticatedRequest, _res: Respons
   next();
 };
 
-export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const requireAdmin = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   if (!req.user) {
     res.status(401).json({
       success: false,

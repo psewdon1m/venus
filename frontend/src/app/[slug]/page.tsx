@@ -1,9 +1,11 @@
 // Public persona page - displays published personas
 
-import { apiClient, Persona, Placeholder } from '@/lib/api';
-import { Metadata } from 'next';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
+
+import { apiClient, type Persona, type Placeholder } from '@/lib/api';
+
+import type { Metadata } from 'next';
 
 interface PublicPersonaPageProps {
   params: {
@@ -39,7 +41,7 @@ type PublicPersona = Persona & {
 export async function generateMetadata({ params }: PublicPersonaPageProps): Promise<Metadata> {
   try {
     const response = await apiClient.getPublicPersona(params.slug);
-    const persona = response.data.persona;
+    const persona = response.persona;
 
     return {
       title: `${persona.displayName} - Portfolio`,
@@ -62,14 +64,16 @@ export async function generateMetadata({ params }: PublicPersonaPageProps): Prom
 async function getPersonaData(slug: string): Promise<PublicPersona | null> {
   try {
     const response = await apiClient.getPublicPersona(slug);
-    return response.data.persona;
+    return response.persona;
   } catch (error) {
     console.error('Failed to fetch persona:', error);
     return null;
   }
 }
 
-export default async function PublicPersonaPage({ params }: PublicPersonaPageProps) {
+export default async function PublicPersonaPage({
+  params,
+}: PublicPersonaPageProps): Promise<JSX.Element> {
   const persona = await getPersonaData(params.slug);
 
   if (!persona) {
@@ -82,13 +86,9 @@ export default async function PublicPersonaPage({ params }: PublicPersonaPagePro
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {persona.displayName}
-            </h1>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">{persona.displayName}</h1>
             {persona.manifest && (
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                {persona.manifest}
-              </p>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">{persona.manifest}</p>
             )}
           </div>
         </div>
@@ -136,14 +136,10 @@ export default async function PublicPersonaPage({ params }: PublicPersonaPagePro
 
                   {/* Project Info */}
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                      {project.title}
-                    </h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{project.title}</h3>
 
                     {coverPlaceholder?.content?.subtitle && (
-                      <p className="text-gray-600 mb-3">
-                        {coverPlaceholder.content.subtitle}
-                      </p>
+                      <p className="text-gray-600 mb-3">{coverPlaceholder.content.subtitle}</p>
                     )}
 
                     <div className="flex items-center justify-between">
@@ -166,7 +162,9 @@ export default async function PublicPersonaPage({ params }: PublicPersonaPagePro
       <footer className="bg-white border-t border-gray-200 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-gray-500">
-            <p>© {new Date().getFullYear()} {persona.displayName}. Powered by Venus Platform.</p>
+            <p>
+              © {new Date().getFullYear()} {persona.displayName}. Powered by Venus Platform.
+            </p>
           </div>
         </div>
       </footer>

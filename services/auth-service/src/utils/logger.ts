@@ -11,9 +11,15 @@ export const logger = createLogger({
     isDevelopment
       ? format.combine(
           format.colorize(),
-          format.printf(({ timestamp, level, message, ...meta }) => {
+          format.printf((info) => {
+            const { timestamp, level, message, ...meta } = info as {
+              timestamp: string;
+              level: string;
+              message: string;
+              [key: string]: unknown;
+            };
             const metaStr = Object.keys(meta).length ? JSON.stringify(meta, null, 2) : '';
-            return `${timestamp} [${level}]: ${message} ${metaStr}`;
+            return `${timestamp} [${level}]: ${String(message)} ${metaStr}`;
           })
         )
       : format.json()

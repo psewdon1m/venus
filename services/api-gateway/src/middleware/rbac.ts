@@ -1,15 +1,17 @@
 // RBAC (Role-Based Access Control) middleware
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
 }
 
+type RoleGuard = (req: Request, res: Response, next: NextFunction) => void;
+
 // Middleware to check if user has required role
-export const requireRole = (requiredRole: UserRole) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+export const requireRole = (requiredRole: UserRole): RoleGuard => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,
@@ -44,7 +46,7 @@ export const requireRole = (requiredRole: UserRole) => {
 export const requireAdmin = requireRole(UserRole.ADMIN);
 
 // Middleware for user or admin routes
-export const requireUserOrAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const requireUserOrAdmin = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.user) {
     res.status(401).json({
       success: false,

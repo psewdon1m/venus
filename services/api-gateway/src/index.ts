@@ -7,15 +7,13 @@ import https from 'https';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import { config } from 'dotenv';
-import express, { json, type Express, urlencoded } from 'express';
+import express, { json, type Express, type Request, type Response, urlencoded } from 'express';
 import helmet from 'helmet';
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { authenticateToken, optionalAuth, requireAdmin } from './middleware/auth';
 import { combinedRateLimit } from './middleware/rateLimit';
 import { logger } from './utils/logger';
-
-import type { Request, Response } from 'express';
 
 // ==================================================
 // Zod validation schemas
@@ -99,6 +97,10 @@ app.use((req, _res, next) => {
   next();
 });
 
+const hasJsonBody = (body: unknown): body is Record<string, unknown> => {
+  return typeof body === 'object' && body !== null && !Buffer.isBuffer(body);
+};
+
 // Helper function to proxy requests to services
 const proxyToService = (serviceUrl: string) => {
   return (req: Request, res: Response): void => {
@@ -118,25 +120,35 @@ const proxyToService = (serviceUrl: string) => {
       },
     };
 
-    logger.info(`Proxy options: ${JSON.stringify({ hostname: options.hostname, port: options.port, path: options.path, method: options.method })}`);
+    logger.info(
+      `Proxy options: ${JSON.stringify({
+        hostname: options.hostname,
+        port: options.port,
+        path: options.path,
+        method: options.method,
+      })}`
+    );
 
     const client = url.protocol === 'https:' ? https : http;
     const proxyReq = client.request(options, (proxyRes) => {
-      res.status(proxyRes.statusCode || 500);
-      Object.keys(proxyRes.headers).forEach(key => {
-        res.setHeader(key, proxyRes.headers[key] as string);
+      res.status(proxyRes.statusCode ?? 500);
+      Object.keys(proxyRes.headers).forEach((key) => {
+        const headerValue = proxyRes.headers[key];
+        if (headerValue !== undefined) {
+          res.setHeader(key, headerValue);
+        }
       });
 
       proxyRes.pipe(res);
     });
 
-    proxyReq.on('error', (err) => {
-      logger.error('Proxy request error', { error: (err as Error).message, serviceUrl });
+    proxyReq.on('error', (err: Error) => {
+      logger.error('Proxy request error', { error: err.message, serviceUrl });
       res.status(503).json({ error: 'Service unavailable' });
     });
 
     // Forward request body
-    if (req.body && Object.keys(req.body).length > 0) {
+    if (hasJsonBody(req.body) && Object.keys(req.body).length > 0) {
       const bodyData = JSON.stringify(req.body);
       proxyReq.setHeader('Content-Type', 'application/json');
       proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
@@ -152,24 +164,27 @@ const proxyToService = (serviceUrl: string) => {
 // ==================================================
 
 // Auth Service (public routes - no auth required)
-app.use('/api/auth', createProxyMiddleware({
-  target: AUTH_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/auth': '/auth' },
-  onProxyReq: (proxyReq, req, _res) => {
-    // Ensure body is properly forwarded
-    if (req.body && Object.keys(req.body).length > 0) {
-      const bodyData = JSON.stringify(req.body);
-      proxyReq.setHeader('Content-Type', 'application/json');
-      proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
-      proxyReq.write(bodyData);
-    }
-  },
-  onError: (err, _req, res) => {
-    logger.error('Auth service proxy error', { error: err.message });
-    res.status(503).json({ error: 'Auth service unavailable' });
-  },
-}));
+app.use(
+  '/api/auth',
+  createProxyMiddleware({
+    target: AUTH_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/auth': '/auth' },
+    onProxyReq: (proxyReq, req, _res) => {
+      // Ensure body is properly forwarded
+      if (hasJsonBody(req.body) && Object.keys(req.body).length > 0) {
+        const bodyData = JSON.stringify(req.body);
+        proxyReq.setHeader('Content-Type', 'application/json');
+        proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+        proxyReq.write(bodyData);
+      }
+    },
+    onError: (err, _req, res) => {
+      logger.error('Auth service proxy error', { error: err.message });
+      res.status(503).json({ error: 'Auth service unavailable' });
+    },
+  })
+);
 
 // Project Service (protected routes - auth required)
 app.use('/api/projects', authenticateToken, proxyToService(PROJECT_SERVICE_URL));
@@ -178,33 +193,45 @@ app.use('/api/projects', authenticateToken, proxyToService(PROJECT_SERVICE_URL))
 app.use('/api/personas', authenticateToken, proxyToService(PERSONA_SERVICE_URL));
 
 // Public persona access (optional auth)
-app.use('/api/public', optionalAuth, createProxyMiddleware({
-  target: PERSONA_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/public': '/public' },
-}));
+app.use(
+  '/api/public',
+  optionalAuth,
+  createProxyMiddleware({
+    target: PERSONA_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/public': '/public' },
+  })
+);
 
 // Media Service (protected routes - auth required)
-app.use('/api/media', authenticateToken, createProxyMiddleware({
-  target: MEDIA_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/media': '/media' },
-  onError: (err, _req, res) => {
-    logger.error('Media service proxy error', { error: err.message });
-    res.status(503).json({ error: 'Media service unavailable' });
-  },
-}));
+app.use(
+  '/api/media',
+  authenticateToken,
+  createProxyMiddleware({
+    target: MEDIA_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/media': '/media' },
+    onError: (err, _req, res) => {
+      logger.error('Media service proxy error', { error: err.message });
+      res.status(503).json({ error: 'Media service unavailable' });
+    },
+  })
+);
 
 // AI CV Service (protected routes - auth required)
-app.use('/api/cv', authenticateToken, createProxyMiddleware({
-  target: AI_CV_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/cv': '/cv' },
-  onError: (err, _req, res) => {
-    logger.error('AI-CV service proxy error', { error: err.message });
-    res.status(503).json({ error: 'AI-CV service unavailable' });
-  },
-}));
+app.use(
+  '/api/cv',
+  authenticateToken,
+  createProxyMiddleware({
+    target: AI_CV_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/cv': '/cv' },
+    onError: (err, _req, res) => {
+      logger.error('AI-CV service proxy error', { error: err.message });
+      res.status(503).json({ error: 'AI-CV service unavailable' });
+    },
+  })
+);
 
 // ==================================================
 // Health Check
@@ -232,29 +259,45 @@ app.get('/api/admin/health', requireAdmin, (req, res) => {
 });
 
 // Proxy admin routes to services
-app.use('/api/admin/auth', requireAdmin, createProxyMiddleware({
-  target: AUTH_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/admin/auth': '/admin' },
-}));
+app.use(
+  '/api/admin/auth',
+  requireAdmin,
+  createProxyMiddleware({
+    target: AUTH_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/admin/auth': '/admin' },
+  })
+);
 
-app.use('/api/admin/personas', requireAdmin, createProxyMiddleware({
-  target: PERSONA_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/admin/personas': '/admin/personas' },
-}));
+app.use(
+  '/api/admin/personas',
+  requireAdmin,
+  createProxyMiddleware({
+    target: PERSONA_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/admin/personas': '/admin/personas' },
+  })
+);
 
-app.use('/api/admin/projects', requireAdmin, createProxyMiddleware({
-  target: PROJECT_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/admin/projects': '/admin/projects' },
-}));
+app.use(
+  '/api/admin/projects',
+  requireAdmin,
+  createProxyMiddleware({
+    target: PROJECT_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/admin/projects': '/admin/projects' },
+  })
+);
 
-app.use('/api/admin/media', requireAdmin, createProxyMiddleware({
-  target: MEDIA_SERVICE_URL,
-  changeOrigin: true,
-  pathRewrite: { '^/api/admin/media': '/admin' },
-}));
+app.use(
+  '/api/admin/media',
+  requireAdmin,
+  createProxyMiddleware({
+    target: MEDIA_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: { '^/api/admin/media': '/admin' },
+  })
+);
 
 // 404 handler
 app.use((_req, res) => {

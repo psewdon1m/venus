@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+/* eslint-disable @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-var-requires, no-console */
 /**
  * Venus Platform - Secret Generation Script
  * Generates cryptographically secure secrets for JWT and sessions

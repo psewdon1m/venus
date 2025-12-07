@@ -62,12 +62,7 @@ export class AppError extends Error {
   public statusCode: number;
   public details?: unknown;
 
-  constructor(
-    code: ErrorCode,
-    message: string,
-    statusCode: number = 500,
-    details?: unknown
-  ) {
+  constructor(code: ErrorCode, message: string, statusCode: number = 500, details?: unknown) {
     super(message);
     this.name = 'AppError';
     this.code = code;
@@ -81,11 +76,7 @@ export class AppError extends Error {
 
 // Common error factories
 export const createNotFoundError = (resource: string, id?: string): AppError =>
-  new AppError(
-    ErrorCode.NOT_FOUND,
-    `${resource}${id ? ` with id ${id}` : ''} not found`,
-    404
-  );
+  new AppError(ErrorCode.NOT_FOUND, `${resource}${id ? ` with id ${id}` : ''} not found`, 404);
 
 export const createValidationError = (message: string, details?: unknown): AppError =>
   new AppError(ErrorCode.VALIDATION_ERROR, message, 400, details);

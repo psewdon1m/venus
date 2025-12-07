@@ -62,6 +62,27 @@ export interface PaginationMeta {
 
 type ApiResponse<T> = { data: T };
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null;
+
+const extractErrorMessage = (value: unknown): string | null => {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const message = value.message;
+  return typeof message === 'string' ? message : null;
+};
+
+const hasSerializableBody = (response: Response): boolean => {
+  if (response.status === 204) {
+    return false;
+  }
+
+  const contentLength = response.headers.get('content-length');
+  return contentLength !== '0';
+};
+
 class ApiClient {
   private baseURL: string;
 
@@ -82,93 +103,122 @@ class ApiClient {
     };
 
     const response = await fetch(url, config);
+    let payload: unknown = undefined;
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ message: 'Network error' }));
-      throw new Error(error.message || `HTTP ${response.status}`);
+    if (hasSerializableBody(response)) {
+      try {
+        payload = await response.json();
+      } catch {
+        payload = undefined;
+      }
     }
 
-    return response.json();
+    if (!response.ok) {
+      const message = extractErrorMessage(payload) ?? `HTTP ${response.status}`;
+      throw new Error(message);
+    }
+
+    return payload as T;
   }
 
   // Auth methods
-  async register(data: { email: string; password: string; confirmPassword: string }) {
-    const response = await this.request<ApiResponse<{ user: UserAccount }>>(
-      '/api/auth/register',
-      {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }
-    );
+  async register(data: {
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }): Promise<{ user: UserAccount }> {
+    const response = await this.request<ApiResponse<{ user: UserAccount }>>('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
 
     return response.data;
   }
 
-  async login(data: { email: string; password: string }) {
-    const response = await this.request<ApiResponse<{ user: UserAccount }>>(
-      '/api/auth/login',
-      {
-        method: 'POST',
-        body: JSON.stringify(data),
-      }
-    );
+  async login(data: { email: string; password: string }): Promise<{ user: UserAccount }> {
+    const response = await this.request<ApiResponse<{ user: UserAccount }>>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
 
     return response.data;
   }
 
-  async logout() {
-    return this.request('/api/auth/logout', {
+  async logout(): Promise<void> {
+    await this.request('/api/auth/logout', {
       method: 'POST',
     });
+  }
+
+  async getCurrentUser(): Promise<{ user: UserAccount }> {
+    const response = await this.request<ApiResponse<{ user: UserAccount }>>('/api/auth/me');
+    return response.data;
   }
 
   // Project methods
-  async getProjects() {
-    return this.request<ApiResponse<{ projects: Project[]; meta: PaginationMeta }>>(
-      '/api/projects'
-    );
+  async getProjects(): Promise<{ projects: Project[]; meta: PaginationMeta }> {
+    const response =
+      await this.request<ApiResponse<{ projects: Project[]; meta: PaginationMeta }>>(
+        '/api/projects'
+      );
+    return response.data;
   }
 
-  async createProject(data: { name: string; description?: string }) {
-    return this.request<ApiResponse<{ project: Project }>>('/api/projects', {
+  async createProject(data: { name: string; description?: string }): Promise<{ project: Project }> {
+    const response = await this.request<ApiResponse<{ project: Project }>>('/api/projects', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    return response.data;
   }
 
-  async getProject(id: string) {
-    return this.request<ApiResponse<{ project: Project }>>(`/api/projects/${id}`);
+  async getProject(id: string): Promise<{ project: Project }> {
+    const response = await this.request<ApiResponse<{ project: Project }>>(`/api/projects/${id}`);
+    return response.data;
   }
 
-  async updateProject(id: string, data: Partial<{ name: string; description: string }>) {
-    return this.request<ApiResponse<{ project: Project }>>(`/api/projects/${id}`, {
+  async updateProject(
+    id: string,
+    data: Partial<{ name: string; description: string }>
+  ): Promise<{ project: Project }> {
+    const response = await this.request<ApiResponse<{ project: Project }>>(`/api/projects/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
+    return response.data;
   }
 
-  async deleteProject(id: string) {
-    return this.request<ApiResponse<{ message: string }>>(`/api/projects/${id}`, {
+  async deleteProject(id: string): Promise<{ message: string }> {
+    const response = await this.request<ApiResponse<{ message: string }>>(`/api/projects/${id}`, {
       method: 'DELETE',
     });
+    return response.data;
   }
 
   // Persona methods
-  async getPersonas() {
-    return this.request<ApiResponse<{ personas: Persona[]; meta: PaginationMeta }>>(
-      '/api/personas'
-    );
+  async getPersonas(): Promise<{ personas: Persona[]; meta: PaginationMeta }> {
+    const response =
+      await this.request<ApiResponse<{ personas: Persona[]; meta: PaginationMeta }>>(
+        '/api/personas'
+      );
+    return response.data;
   }
 
-  async createPersona(data: { displayName: string; manifest?: string; slug?: string }) {
-    return this.request<ApiResponse<{ persona: Persona }>>('/api/personas', {
+  async createPersona(data: {
+    displayName: string;
+    manifest?: string;
+    slug?: string;
+  }): Promise<{ persona: Persona }> {
+    const response = await this.request<ApiResponse<{ persona: Persona }>>('/api/personas', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+    return response.data;
   }
 
-  async getPersona(id: string) {
-    return this.request<ApiResponse<{ persona: Persona }>>(`/api/personas/${id}`);
+  async getPersona(id: string): Promise<{ persona: Persona }> {
+    const response = await this.request<ApiResponse<{ persona: Persona }>>(`/api/personas/${id}`);
+    return response.data;
   }
 
   async updatePersona(
@@ -178,79 +228,94 @@ class ApiClient {
       manifest?: string;
       settings?: Record<string, unknown>;
     }>
-  ) {
-    return this.request<ApiResponse<{ persona: Persona }>>(`/api/personas/${id}`, {
+  ): Promise<{ persona: Persona }> {
+    const response = await this.request<ApiResponse<{ persona: Persona }>>(`/api/personas/${id}`, {
       method: 'PUT',
       body: JSON.stringify(data),
     });
+    return response.data;
   }
 
-  async deletePersona(id: string) {
-    return this.request<ApiResponse<{ message: string }>>(`/api/personas/${id}`, {
+  async deletePersona(id: string): Promise<{ message: string }> {
+    const response = await this.request<ApiResponse<{ message: string }>>(`/api/personas/${id}`, {
       method: 'DELETE',
     });
+    return response.data;
   }
 
   // Persona-Project assignment methods
-  async getPersonaProjects(personaId: string) {
-    return this.request<ApiResponse<{ projects: PersonaProjectAssignment[]; meta: PaginationMeta }>>(
-      `/api/personas/${personaId}/projects`
-    );
+  async getPersonaProjects(
+    personaId: string
+  ): Promise<{ projects: PersonaProjectAssignment[]; meta: PaginationMeta }> {
+    const response = await this.request<
+      ApiResponse<{ projects: PersonaProjectAssignment[]; meta: PaginationMeta }>
+    >(`/api/personas/${personaId}/projects`);
+
+    return response.data;
   }
 
   async assignProjectToPersona(
     personaId: string,
     data: { projectId: string; displayOrder?: number; isVisible?: boolean }
-  ) {
-    return this.request<ApiResponse<{ assignment: PersonaProjectAssignment }>>(
+  ): Promise<{ assignment: PersonaProjectAssignment }> {
+    const response = await this.request<ApiResponse<{ assignment: PersonaProjectAssignment }>>(
       `/api/personas/${personaId}/projects`,
       {
         method: 'POST',
         body: JSON.stringify(data),
       }
     );
+
+    return response.data;
   }
 
   async updateProjectAssignment(
     personaId: string,
     projectId: string,
     data: Partial<{ displayOrder: number; isVisible: boolean }>
-  ) {
-    return this.request<ApiResponse<{ assignment: PersonaProjectAssignment }>>(
+  ): Promise<{ assignment: PersonaProjectAssignment }> {
+    const response = await this.request<ApiResponse<{ assignment: PersonaProjectAssignment }>>(
       `/api/personas/${personaId}/projects/${projectId}`,
       {
         method: 'PUT',
         body: JSON.stringify(data),
       }
     );
+    return response.data;
   }
 
-  async removeProjectFromPersona(personaId: string, projectId: string) {
-    return this.request<ApiResponse<{ message: string }>>(
+  async removeProjectFromPersona(
+    personaId: string,
+    projectId: string
+  ): Promise<{ message: string }> {
+    const response = await this.request<ApiResponse<{ message: string }>>(
       `/api/personas/${personaId}/projects/${projectId}`,
       {
         method: 'DELETE',
       }
     );
+    return response.data;
   }
 
   // Persona public methods
-  async getPublicPersona(slug: string) {
-    return this.request<ApiResponse<{ persona: Persona }>>(`/api/public/${slug}`);
+  async getPublicPersona(slug: string): Promise<{ persona: Persona }> {
+    const response = await this.request<ApiResponse<{ persona: Persona }>>(`/api/public/${slug}`);
+    return response.data;
   }
 
-  async publishPersona(personaId: string) {
-    return this.request<ApiResponse<{ persona: Persona }>>(
+  async publishPersona(personaId: string): Promise<{ persona: Persona }> {
+    const response = await this.request<ApiResponse<{ persona: Persona }>>(
       `/api/personas/${personaId}/publish`,
       {
         method: 'POST',
       }
     );
+    return response.data;
   }
 
   // Health check
-  async healthCheck() {
-    return this.request('/health');
+  async healthCheck(): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>('/health');
   }
 }
 

@@ -1,7 +1,7 @@
 // Project entity types
 
-import { ProjectStatus, ProjectType } from '../common/enums';
 import type { PlaceholderContent, PlaceholderType } from './placeholder';
+import type { ProjectStatus, ProjectType } from '../common/enums';
 
 export interface Project {
   id: string;

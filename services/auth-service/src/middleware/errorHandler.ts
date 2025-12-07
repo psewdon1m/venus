@@ -1,9 +1,10 @@
 // Global error handling middleware
 
-import type { NextFunction, Request, Response } from 'express';
-
 import { AppError } from '@venus/types';
+
 import { logger } from '../utils/logger';
+
+import type { NextFunction, Request, Response } from 'express';
 
 export const errorHandler = (
   err: Error,
@@ -40,9 +41,7 @@ export const errorHandler = (
     success: false,
     error: {
       code: 'INTERNAL_SERVER_ERROR',
-      message: process.env.NODE_ENV === 'development'
-        ? err.message
-        : 'Internal server error',
+      message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error',
       stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
     },
     meta: {

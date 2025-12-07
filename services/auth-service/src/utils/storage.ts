@@ -2,8 +2,27 @@
 
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+import type {
+  Account as PrismaAccount,
+  CVGeneration,
+  MediaFile,
+  Persona,
+  Prisma,
+  Project as PrismaProject,
+  Session,
+} from '@prisma/client';
 import type { Account } from '@venus/types';
+
+const prisma = new PrismaClient();
+
+const mapAccount = (record: PrismaAccount): Account => ({
+  id: record.id,
+  email: record.email,
+  passwordHash: record.passwordHash,
+  role: record.role ?? 'USER',
+  createdAt: record.createdAt,
+  updatedAt: record.updatedAt,
+});
 
 class DatabaseStorage {
   // Account operations
@@ -15,14 +34,7 @@ class DatabaseStorage {
       },
     });
 
-    return {
-      id: newAccount.id,
-      email: newAccount.email,
-      passwordHash: newAccount.passwordHash,
-      role: (newAccount as any).role || 'USER',
-      createdAt: newAccount.createdAt,
-      updatedAt: newAccount.updatedAt,
-    } as Account;
+    return mapAccount(newAccount);
   }
 
   async getAccountById(id: string): Promise<Account | null> {
@@ -32,14 +44,7 @@ class DatabaseStorage {
 
     if (!account) return null;
 
-    return {
-      id: account.id,
-      email: account.email,
-      passwordHash: account.passwordHash,
-      role: (account as any).role || 'USER',
-      createdAt: account.createdAt,
-      updatedAt: account.updatedAt,
-    } as Account;
+    return mapAccount(account);
   }
 
   async getAccountByEmail(email: string): Promise<Account | null> {
@@ -49,51 +54,33 @@ class DatabaseStorage {
 
     if (!account) return null;
 
-    return {
-      id: account.id,
-      email: account.email,
-      passwordHash: account.passwordHash,
-      role: (account as any).role || 'USER',
-      createdAt: account.createdAt,
-      updatedAt: account.updatedAt,
-    } as Account;
+    return mapAccount(account);
   }
 
-  async updateAccount(id: string, updates: Partial<Pick<Account, 'email' | 'passwordHash'>>): Promise<Account | null> {
+  async updateAccount(
+    id: string,
+    updates: Partial<Pick<Account, 'email' | 'passwordHash'>>
+  ): Promise<Account | null> {
     try {
       const updatedAccount = await prisma.account.update({
         where: { id },
         data: updates,
       });
 
-      return {
-        id: updatedAccount.id,
-        email: updatedAccount.email,
-        passwordHash: updatedAccount.passwordHash,
-        role: (updatedAccount as any).role || 'USER',
-        createdAt: updatedAccount.createdAt,
-        updatedAt: updatedAccount.updatedAt,
-      } as Account;
+      return mapAccount(updatedAccount);
     } catch (error) {
       return null;
     }
   }
 
-  async updateAccountRole(id: string, role: string): Promise<Account | null> {
+  async updateAccountRole(id: string, role: NonNullable<Account['role']>): Promise<Account | null> {
     try {
       const updatedAccount = await prisma.account.update({
         where: { id },
-        data: { role: role as any },
+        data: { role },
       });
 
-      return {
-        id: updatedAccount.id,
-        email: updatedAccount.email,
-        passwordHash: updatedAccount.passwordHash,
-        role: (updatedAccount as any).role || 'USER',
-        createdAt: updatedAccount.createdAt,
-        updatedAt: updatedAccount.updatedAt,
-      } as Account;
+      return mapAccount(updatedAccount);
     } catch (error) {
       return null;
     }
@@ -111,35 +98,40 @@ class DatabaseStorage {
   }
 
   // GDPR compliance methods
-  async getPersonasByAccountId(accountId: string) {
-    return await prisma.persona.findMany({
+  async getPersonasByAccountId(accountId: string): Promise<Persona[]> {
+    return prisma.persona.findMany({
       where: { accountId },
     });
   }
 
-  async getProjectsByAccountId(accountId: string) {
-    return await prisma.project.findMany({
+  async getProjectsByAccountId(accountId: string): Promise<PrismaProject[]> {
+    return prisma.project.findMany({
       where: { accountId },
     });
   }
 
-  async getMediaFilesByAccountId(accountId: string) {
-    return await prisma.mediaFile.findMany({
+  async getMediaFilesByAccountId(accountId: string): Promise<MediaFile[]> {
+    return prisma.mediaFile.findMany({
       where: { accountId },
     });
   }
 
-  async getCVGenerationsByAccountId(accountId: string) {
-    return await prisma.cVGeneration.findMany({
+  async getCVGenerationsByAccountId(accountId: string): Promise<CVGeneration[]> {
+    return prisma.cVGeneration.findMany({
       where: { accountId },
     });
   }
 
   // Session management
-  async createSession(accountId: string, refreshToken: string, userAgent?: string, ipAddress?: string) {
+  async createSession(
+    accountId: string,
+    refreshToken: string,
+    userAgent?: string,
+    ipAddress?: string
+  ): Promise<Session> {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
-    return await prisma.session.create({
+    return prisma.session.create({
       data: {
         accountId,
         refreshToken,
@@ -150,27 +142,29 @@ class DatabaseStorage {
     });
   }
 
-  async getSessionByRefreshToken(refreshToken: string) {
-    return await (prisma.session.findUnique as any)({
+  async getSessionByRefreshToken(
+    refreshToken: string
+  ): Promise<(Session & { account: PrismaAccount }) | null> {
+    return prisma.session.findUnique({
       where: { refreshToken },
       include: { account: true },
     });
   }
 
-  async revokeSession(sessionId: string) {
-    return await prisma.session.delete({
+  async revokeSession(sessionId: string): Promise<Session> {
+    return prisma.session.delete({
       where: { id: sessionId },
     });
   }
 
-  async revokeAllUserSessions(accountId: string) {
-    return await prisma.session.deleteMany({
+  async revokeAllUserSessions(accountId: string): Promise<Prisma.BatchPayload> {
+    return prisma.session.deleteMany({
       where: { accountId },
     });
   }
 
-  async cleanupExpiredSessions() {
-    return await prisma.session.deleteMany({
+  async cleanupExpiredSessions(): Promise<Prisma.BatchPayload> {
+    return prisma.session.deleteMany({
       where: {
         expiresAt: {
           lt: new Date(),
@@ -183,14 +177,7 @@ class DatabaseStorage {
   async getAllAccounts(): Promise<Account[]> {
     const accounts = await prisma.account.findMany();
 
-    return accounts.map((account: any) => ({
-      id: account.id,
-      email: account.email,
-      passwordHash: account.passwordHash,
-      role: account.role,
-      createdAt: account.createdAt,
-      updatedAt: account.updatedAt,
-    }));
+    return accounts.map((account) => mapAccount(account));
   }
 }
 

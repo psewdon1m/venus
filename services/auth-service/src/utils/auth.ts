@@ -1,8 +1,9 @@
 // Auth utilities - Password hashing, JWT, validation
 
-import type { LoginRequest, RegisterRequest } from '@venus/types';
 import { compare, hash } from 'bcryptjs';
-import { sign, verify, type SignOptions } from 'jsonwebtoken';
+import { sign, verify, type SignOptions, type JwtPayload } from 'jsonwebtoken';
+
+import type { LoginRequest, RegisterRequest } from '@venus/types';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 const JWT_ACCESS_EXPIRY = process.env.JWT_ACCESS_EXPIRY || '15m';
@@ -50,7 +51,7 @@ export const generateRefreshToken = (payload: object): string => {
   return sign(payload, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRY } as SignOptions);
 };
 
-export const verifyToken = (token: string): any => {
+export const verifyToken = (token: string): JwtPayload | string => {
   try {
     return verify(token, JWT_SECRET);
   } catch (error) {
@@ -58,7 +59,11 @@ export const verifyToken = (token: string): any => {
   }
 };
 
-export const generateTokens = (userId: string, email: string, role: string = 'USER'): AuthTokens => {
+export const generateTokens = (
+  userId: string,
+  email: string,
+  role: string = 'USER'
+): AuthTokens => {
   const accessToken = generateAccessToken({ userId, email, role, type: 'access' });
   const refreshToken = generateRefreshToken({ userId, email, role, type: 'refresh' });
 
@@ -91,7 +96,10 @@ export const validatePassword = (password: string): { valid: boolean; errors: st
     errors.push('Password must contain at least one number');
   }
 
-  if (process.env.PASSWORD_REQUIRE_SPECIAL === 'true' && !/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+  if (
+    process.env.PASSWORD_REQUIRE_SPECIAL === 'true' &&
+    !/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password)
+  ) {
     errors.push('Password must contain at least one special character');
   }
 
@@ -106,7 +114,9 @@ export const validateEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
-export const validateRegisterData = (data: RegisterRequest): { valid: boolean; errors: string[] } => {
+export const validateRegisterData = (
+  data: RegisterRequest
+): { valid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
   if (!data.email || !validateEmail(data.email)) {

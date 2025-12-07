@@ -21,9 +21,7 @@ export interface PaginatedResult<T> {
 }
 
 // Service result wrapper
-export type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
+export type Result<T, E = Error> = { success: true; data: T } | { success: false; error: E };
 
 // Nullable and Optional helpers
 export type Nullable<T> = T | null;

@@ -9,24 +9,29 @@ const passwordSchema = z
   .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
   .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
   .regex(/\d/, 'Password must contain at least one number')
-  .regex(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/, 'Password must contain at least one special character');
+  .regex(
+    /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/,
+    'Password must contain at least one special character'
+  );
 
 // Email validation schema
 const emailSchema = z
   .string()
   .email('Valid email is required')
-  .transform(email => email.toLowerCase());
+  .transform((email) => email.toLowerCase());
 
 // Register request schema
 export const registerSchema = z.object({
-  body: z.object({
-    email: emailSchema,
-    password: passwordSchema,
-    confirmPassword: z.string(),
-  }).refine(data => data.password === data.confirmPassword, {
-    message: 'Passwords do not match',
-    path: ['confirmPassword'],
-  }),
+  body: z
+    .object({
+      email: emailSchema,
+      password: passwordSchema,
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: 'Passwords do not match',
+      path: ['confirmPassword'],
+    }),
 });
 
 // Login request schema
@@ -51,8 +56,15 @@ export const accountDeletionSchema = z.object({
   }),
 });
 
+export const roleUpdateSchema = z.object({
+  body: z.object({
+    role: z.enum(['USER', 'ADMIN']),
+  }),
+});
+
 // Type exports
 export type RegisterRequest = z.infer<typeof registerSchema>['body'];
 export type LoginRequest = z.infer<typeof loginSchema>['body'];
 export type RefreshTokenRequest = z.infer<typeof refreshTokenSchema>['body'];
 export type AccountDeletionRequest = z.infer<typeof accountDeletionSchema>['body'];
+export type RoleUpdateRequest = z.infer<typeof roleUpdateSchema>['body'];

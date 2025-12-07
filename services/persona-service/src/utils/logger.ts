@@ -4,11 +4,7 @@ const level = process.env.LOG_LEVEL || 'info';
 
 export const logger = createLogger({
   level,
-  format: format.combine(
-    format.timestamp(),
-    format.errors({ stack: true }),
-    format.json()
-  ),
+  format: format.combine(format.timestamp(), format.errors({ stack: true }), format.json()),
   defaultMeta: { service: 'persona-service' },
   transports: [
     new transports.Console({

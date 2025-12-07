@@ -1,11 +1,12 @@
 // Authentication middleware for auth-service
 
 import { verify, type JwtPayload } from 'jsonwebtoken';
-import { storage } from '../utils/storage';
-import { logger } from '../utils/logger';
 
-import type { NextFunction, Request, Response } from 'express';
+import { logger } from '../utils/logger';
+import { storage } from '../utils/storage';
+
 import type { Account } from '@venus/types';
+import type { NextFunction, Request, Response } from 'express';
 
 export interface AuthenticatedRequest extends Request {
   user?: {

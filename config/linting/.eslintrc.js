@@ -8,7 +8,12 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
-    project: ['./tsconfig.json', './services/*/tsconfig.json', './frontend/tsconfig.json'],
+    project: [
+      './tsconfig.eslint.json',
+      './tsconfig.json',
+      './services/*/tsconfig.json',
+      './frontend/tsconfig.json',
+    ],
   },
   plugins: ['@typescript-eslint', 'import', 'prettier'],
   extends: [
@@ -80,7 +85,12 @@ module.exports = {
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
-        project: ['./tsconfig.json', './services/*/tsconfig.json', './frontend/tsconfig.json'],
+        project: [
+          './tsconfig.eslint.json',
+          './tsconfig.json',
+          './services/*/tsconfig.json',
+          './frontend/tsconfig.json',
+        ],
       },
     },
   },

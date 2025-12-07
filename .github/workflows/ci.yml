@@ -39,7 +39,7 @@ jobs:
       - name: Run lint
         run: pnpm --filter ${{ matrix.service == 'frontend' && 'frontend' || format('@venus/{0}', matrix.service) }} lint
 
-  db-integration:
+  db-test:
     runs-on: ubuntu-latest
     needs: lint
     services:

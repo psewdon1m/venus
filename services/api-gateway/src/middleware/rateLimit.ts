@@ -1,6 +1,6 @@
 // Per-user and IP-based rate limiting middleware
 
-import rateLimit from 'express-rate-limit';
+import expressRateLimit from 'express-rate-limit';
 
 import type { NextFunction, Request, Response } from 'express';
 
@@ -31,11 +31,7 @@ setInterval(cleanExpiredLimits, 5 * 60 * 1000);
 const windowMs = 60 * 1000; // 1 minute
 const maxRequests = 200;
 
-export const perUserRateLimit = (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-): void => {
+export const perUserRateLimit = (req: RequestWithUser, res: Response, next: NextFunction): void => {
   const userId = req.user?.userId;
 
   if (!userId) {
@@ -72,7 +68,7 @@ export const perUserRateLimit = (
   next();
 };
 
-export const ipRateLimit = rateLimit({
+export const ipRateLimit = expressRateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: {
@@ -86,7 +82,11 @@ export const ipRateLimit = rateLimit({
   legacyHeaders: false,
 });
 
-export const combinedRateLimit = (req: RequestWithUser, res: Response, next: NextFunction): void => {
+export const combinedRateLimit = (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+): void => {
   if (req.user?.userId) {
     perUserRateLimit(req, res, next);
     return;

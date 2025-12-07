@@ -5,7 +5,7 @@ import { Dashboard } from '@/components/Dashboard';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useAuth } from '@/contexts/AuthContext';
 
-export default function Home() {
+export default function Home(): JSX.Element {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
