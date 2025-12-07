@@ -1,13 +1,22 @@
 // Project routes - CRUD operations for projects
 
-import type { CreateProjectRequest, ProjectListResponse, ProjectResponse, UpdateProjectRequest } from '@venus/types';
-import { Request, Response, Router } from 'express';
-import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
-import { authenticateToken, AuthenticatedRequest } from '../middleware/auth';
+import { PrismaClient, type Prisma } from '@prisma/client';
+import { Router } from 'express';
+import { z, type ZodTypeAny } from 'zod';
+
+import { authenticateToken } from '../middleware/auth';
 import { logger } from '../utils/logger';
 
-const prisma = new PrismaClient();
+import type { NextFunction, Request, Response } from 'express';
+import type { AuthenticatedRequest } from '../middleware/auth';
+import type {
+  CreateProjectRequest,
+  ProjectListResponse,
+  ProjectResponse,
+  UpdateProjectRequest,
+} from '@venus/types';
+
+const prisma: PrismaClient = new PrismaClient();
 const router: Router = Router();
 
 // ==================================================
@@ -41,8 +50,8 @@ const projectIdSchema = z.object({
 });
 
 // Validation middleware
-const validate = (schema: any) => {
-  return (req: Request, res: Response, next: any) => {
+const validate = (schema: ZodTypeAny) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     try {
       schema.parse(req);
       next();
@@ -68,6 +77,28 @@ const validate = (schema: any) => {
 // ==================================================
 
 // GET /projects - List user's projects
+const formatProject = (project: Prisma.Project): ProjectResponse['project'] => {
+  let content: ProjectResponse['project']['content'];
+  try {
+    content = JSON.parse(project.content) as ProjectResponse['project']['content'];
+  } catch {
+    content = { placeholders: [] };
+  }
+
+  return {
+    id: project.id,
+    accountId: project.accountId,
+    title: project.title,
+    slug: project.slug,
+    type: project.type as ProjectResponse['project']['type'],
+    content,
+    status: project.status as ProjectResponse['project']['status'],
+    createdAt: project.createdAt,
+    updatedAt: project.updatedAt,
+    publishedAt: project.publishedAt,
+  };
+};
+
 router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Response) => {
   try {
     const userId = req.user!.userId;
@@ -77,21 +108,14 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Respon
     const limitNum = Math.min(parseInt(limit as string, 10), 100);
     const offset = (pageNum - 1) * limitNum;
 
-    const where: any = { accountId: userId };
-    if (status) where.status = status;
+    const where: Prisma.ProjectWhereInput = { accountId: userId };
+    if (status) {
+      where.status = status as Prisma.ProjectWhereInput['status'];
+    }
 
     const [projects, total] = await Promise.all([
       prisma.project.findMany({
         where,
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          type: true,
-          status: true,
-          createdAt: true,
-          updatedAt: true,
-        },
         orderBy: { updatedAt: 'desc' },
         skip: offset,
         take: limitNum,
@@ -99,8 +123,10 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res: Respon
       prisma.project.count({ where }),
     ]);
 
+    const formattedProjects = projects.map(formatProject);
+
     const response: ProjectListResponse = {
-      projects: projects as any,
+      projects: formattedProjects,
       meta: {
         page: pageNum,
         limit: limitNum,
@@ -178,7 +204,14 @@ router.post('/', authenticateToken, validate(createProjectSchema), async (req: A
     }
 
     // Create default placeholders based on project type
-    const defaultPlaceholders = [];
+    type PlaceholderBlock = {
+      id: string;
+      type: string;
+      order: number;
+      content: Record<string, unknown>;
+    };
+
+    const defaultPlaceholders: PlaceholderBlock[] = [];
 
     if (data.type === 'album') {
       // Full album with all placeholder types
@@ -326,20 +359,11 @@ router.post('/', authenticateToken, validate(createProjectSchema), async (req: A
     });
 
     // Return formatted response
-    const responseProject = {
-      id: project.id,
-      title: project.title,
-      slug: project.slug,
-      type: project.type as any,
-      content: JSON.parse(project.content),
-      status: project.status as any,
-      createdAt: project.createdAt,
-      updatedAt: project.updatedAt,
-    };
+    const formattedProject = formatProject(project);
 
     logger.info('Project created', { projectId: project.id, userId });
 
-    const response: ProjectResponse = { project: responseProject as any };
+    const response: ProjectResponse = { project: formattedProject };
 
     res.status(201).json({
       success: true,
@@ -391,7 +415,7 @@ router.get('/:id', authenticateToken, validate(projectIdSchema), async (req: Aut
       return;
     }
 
-    const response: ProjectResponse = { project: project as any };
+    const response: ProjectResponse = { project: formatProject(project) };
 
     res.json({
       success: true,
@@ -456,7 +480,7 @@ router.put('/:id', authenticateToken, validate(updateProjectSchema), async (req:
 
     logger.info('Project updated', { projectId, userId });
 
-    const response: ProjectResponse = { project: updatedProject as any };
+    const response: ProjectResponse = { project: formatProject(updatedProject) };
 
     res.json({
       success: true,

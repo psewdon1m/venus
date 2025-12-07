@@ -1,15 +1,34 @@
 // Auth routes - Register, Login, Refresh Token
 
-import type { LoginResponse, RefreshTokenResponse, RegisterResponse } from '@venus/types';
-import { Router, Response, NextFunction } from 'express';
+import { Router } from 'express';
+
+import { registerSchema, loginSchema } from '../schemas/auth';
+import { requireAdmin, type AuthenticatedRequest } from '../middleware/auth';
 import { generateTokens, hashPassword, verifyPassword, verifyToken } from '../utils/auth';
 import { logger } from '../utils/logger';
 import { storage } from '../utils/storage';
-import { registerSchema, loginSchema } from '../schemas/auth';
-import { requireAdmin, AuthenticatedRequest } from '../middleware/auth';
+
+import type { NextFunction, Request, Response } from 'express';
+import type { Account } from '@venus/types';
+import type { LoginResponse, RefreshTokenResponse, RegisterResponse } from '@venus/types';
+
+type UserRole = 'USER' | 'ADMIN';
+
+interface AccessPayload {
+  userId: string;
+  email: string;
+  role?: UserRole;
+  type: 'access';
+}
+
+const resolveRole = (role?: string): UserRole => (role === 'ADMIN' ? 'ADMIN' : 'USER');
 
 // Proper JWT authentication middleware
-const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+const authenticateToken = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -22,7 +41,7 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
   }
 
   try {
-    const decoded = verifyToken(token);
+    const decoded = verifyToken(token) as AccessPayload;
     if (!decoded || decoded.type !== 'access') {
       res.status(401).json({
         success: false,
@@ -34,8 +53,8 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
     req.user = {
       userId: decoded.userId,
       email: decoded.email,
-      role: (decoded.role as 'USER' | 'ADMIN') || 'USER',
-      type: decoded.type
+      role: resolveRole(decoded.role),
+      type: decoded.type,
     };
     next();
   } catch (error) {
@@ -50,7 +69,7 @@ const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextF
 const router: Router = Router();
 
 // Registration endpoint
-router.post('/register', async (req, res) => {
+router.post('/register', async (req: Request, res: Response) => {
   try {
     // Validate input data with Zod
     const validation = registerSchema.safeParse(req);
@@ -85,13 +104,13 @@ router.post('/register', async (req, res) => {
     const passwordHash = await hashPassword(data.password);
 
     // Create account
-    const account = await storage.createAccount({
+    const account: Account = await storage.createAccount({
       email: data.email,
       passwordHash,
     });
 
     // Generate tokens for auto-login after registration
-    const tokens = generateTokens(account.id, account.email, (account as any).role || 'USER');
+    const tokens = generateTokens(account.id, account.email, resolveRole(account.role));
 
     // Create session for refresh token
     await storage.createSession(
@@ -143,7 +162,7 @@ router.post('/register', async (req, res) => {
 });
 
 // Login endpoint
-router.post('/login', async (req, res) => {
+router.post('/login', async (req: Request, res: Response) => {
   try {
     // Validate input data with Zod
     const validation = loginSchema.safeParse(req);
@@ -188,7 +207,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Generate tokens with role
-    const tokens = generateTokens(account.id, account.email, (account as any).role || 'USER');
+    const tokens = generateTokens(account.id, account.email, resolveRole(account.role));
 
     // Create session for refresh token
     await storage.createSession(
@@ -242,7 +261,7 @@ router.post('/login', async (req, res) => {
 });
 
 // Refresh token endpoint
-router.post('/refresh', async (req, res) => {
+router.post('/refresh', async (req: Request, res: Response) => {
   try {
     // Try to get refresh token from cookies first, then from body for backward compatibility
     const refreshToken = req.cookies?.refreshToken || req.body?.refreshToken;
@@ -278,7 +297,11 @@ router.post('/refresh', async (req, res) => {
     }
 
     // Generate new tokens with role
-    const tokens = generateTokens(session.account.id, session.account.email, (session.account as any).role || 'USER');
+    const tokens = generateTokens(
+      session.account.id,
+      session.account.email,
+      resolveRole(session.account.role)
+    );
 
     // Revoke old session and create new one (token rotation)
     await storage.revokeSession(session.id);
@@ -328,7 +351,7 @@ router.post('/refresh', async (req, res) => {
 });
 
 // Logout endpoint
-router.post('/logout', (_req, res) => {
+router.post('/logout', (_req: Request, res: Response) => {
   // Clear httpOnly cookies
   res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
@@ -536,7 +559,7 @@ router.post('/admin/accounts/:id/role', requireAdmin, async (req: AuthenticatedR
     }
 
     // At this point, role is guaranteed to be 'USER' or 'ADMIN'
-    const account = await (storage.updateAccountRole as any)(accountId, role);
+    const account = await storage.updateAccountRole(accountId, role);
     if (!account) {
       res.status(404).json({
         success: false,

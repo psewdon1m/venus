@@ -1,18 +1,21 @@
 // Venus Platform - API Gateway
 // Single entry point for all backend services
 
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import express, { Express } from 'express';
-import helmet from 'helmet';
-import { createProxyMiddleware } from 'http-proxy-middleware';
 import http from 'http';
 import https from 'https';
+
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import { config } from 'dotenv';
+import express, { json, type Express, urlencoded } from 'express';
+import helmet from 'helmet';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 import { authenticateToken, optionalAuth, requireAdmin } from './middleware/auth';
 import { combinedRateLimit } from './middleware/rateLimit';
 import { logger } from './utils/logger';
+
+import type { Request, Response } from 'express';
 
 // ==================================================
 // Zod validation schemas
@@ -37,12 +40,7 @@ import { logger } from './utils/logger';
 //   };
 // };
 
-// Zod schemas (keeping for future use)
-// const adminRoleUpdateSchema = {
-//   // placeholder
-// };
-
-dotenv.config();
+config();
 
 const app: Express = express();
 const PORT = process.env.API_GATEWAY_PORT || 4000;
@@ -58,32 +56,36 @@ const AI_CV_SERVICE_URL = process.env.AI_CV_SERVICE_URL ?? 'http://ai-cv-service
 // Middleware
 // ==================================================
 
-app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      scriptSrc: ["'self'"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'"],
-      frameSrc: ["'none'"],
-      objectSrc: ["'none'"],
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'"],
+        frameSrc: ["'none'"],
+        objectSrc: ["'none'"],
+      },
     },
-  },
-  hsts: {
-    maxAge: 31536000,
-    includeSubDomains: true,
-    preload: true,
-  },
-}));
-app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || 'http://localhost:3000',
-  credentials: true,
-}));
+    hsts: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+      preload: true,
+    },
+  })
+);
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGINS?.split(',') || 'http://localhost:3000',
+    credentials: true,
+  })
+);
 app.use(cookieParser());
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(json({ limit: '10mb' }));
+app.use(urlencoded({ extended: true, limit: '10mb' }));
 
 // Combined rate limiting (per-user for authenticated, IP-based for anonymous)
 app.use(combinedRateLimit);
@@ -99,7 +101,7 @@ app.use((req, _res, next) => {
 
 // Helper function to proxy requests to services
 const proxyToService = (serviceUrl: string) => {
-  return (req: express.Request, res: express.Response) => {
+  return (req: Request, res: Response): void => {
     const targetPath = req.originalUrl.replace(/^\/api/, '');
     const fullUrl = serviceUrl + targetPath;
     logger.info(`Proxying ${req.method} ${req.originalUrl} to ${fullUrl}`);

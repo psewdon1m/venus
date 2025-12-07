@@ -7,12 +7,13 @@ import { config } from 'dotenv';
 import express, { json, type Application } from 'express';
 import helmet from 'helmet';
 
-import type { HealthCheckResponse } from '@venus/types';
 import { logger } from './utils/logger';
+
+import type { HealthCheckResponse } from '@venus/types';
 
 config();
 
-const prisma = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient();
 const app: Application = express();
 const PORT = process.env.AI_CV_SERVICE_PORT || 4005;
 
@@ -20,19 +21,19 @@ app.use(helmet());
 app.use(cors());
 app.use(json());
 
-// Health check
-app.get('/health', async (_req, res) => {
+const buildHealthPayload = async (): Promise<{ payload: HealthCheckResponse; status: number }> => {
   let dbHealthy = false;
   const aiHealthy = Boolean(process.env.OPENAI_API_KEY);
 
   try {
-    await prisma.$queryRawUnsafe('SELECT 1');
+    await prisma.$queryRaw`SELECT 1`;
     dbHealthy = true;
   } catch (error) {
+    logger.warn('AI-CV health check database error', { error });
     dbHealthy = false;
   }
 
-  const health: HealthCheckResponse = {
+  const payload: HealthCheckResponse = {
     status: dbHealthy && aiHealthy ? 'healthy' : 'degraded',
     timestamp: new Date().toISOString(),
     service: 'ai-cv-service',
@@ -44,7 +45,19 @@ app.get('/health', async (_req, res) => {
     },
   };
 
-  res.status(dbHealthy && aiHealthy ? 200 : 503).json(health);
+  return {
+    payload,
+    status: dbHealthy && aiHealthy ? 200 : 503,
+  };
+};
+
+// Health check
+app.get('/health', (_req, res, next) => {
+  void buildHealthPayload()
+    .then(({ payload, status }) => {
+      res.status(status).json(payload);
+    })
+    .catch(next);
 });
 
 // CV endpoints (stubbed)
@@ -59,11 +72,18 @@ const server = app.listen(PORT, () => {
   logger.info(`AI-CV Service started on port ${PORT}`);
 });
 
+const shutdown = async (): Promise<void> => {
+  try {
+    await prisma.$disconnect();
+  } catch (error) {
+    logger.error('Prisma disconnect error', { error });
+  } finally {
+    server.close(() => process.exit(0));
+  }
+};
+
 process.on('SIGTERM', () => {
-  prisma
-    .$disconnect()
-    .catch((error) => logger.error('Prisma disconnect error', { error }))
-    .finally(() => server.close(() => process.exit(0)));
+  void shutdown();
 });
 
 export default app;

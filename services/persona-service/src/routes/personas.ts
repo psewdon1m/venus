@@ -2,12 +2,14 @@
 
 import { PrismaClient } from '@prisma/client';
 import { Router } from 'express';
-import { z } from 'zod';
+import { z, type ZodTypeAny } from 'zod';
 
 import { authenticateToken, requireAdmin, type AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
 
-const prisma = new PrismaClient();
+import type { NextFunction, Request, Response } from 'express';
+
+const prisma: PrismaClient = new PrismaClient();
 const router: Router = Router();
 
 // ==================================================
@@ -21,6 +23,8 @@ const createPersonaSchema = z.object({
     slug: z.string().min(1).max(100).optional(),
   }),
 });
+
+const placeholderContentSchema = z.record(z.string(), z.unknown());
 
 const updatePersonaSchema = z.object({
   params: z.object({
@@ -46,7 +50,7 @@ const createPlaceholderSchema = z.object({
   body: z.object({
     type: z.string().min(1),
     order: z.number().int().positive().optional(),
-    content: z.any().optional(),
+    content: placeholderContentSchema.optional(),
   }),
 });
 
@@ -56,7 +60,7 @@ const updatePlaceholderSchema = z.object({
     placeholderId: z.string(),
   }),
   body: z.object({
-    content: z.any().optional(),
+    content: placeholderContentSchema.optional(),
     order: z.number().int().positive().optional(),
     enabled: z.boolean().optional(),
   }),
@@ -108,14 +112,14 @@ const projectIdSchema = z.object({
 });
 
 // Validation middleware
-const validate = (schema: any) => {
-  return (req: any, res: any, next: any) => {
+const validate = (schema: ZodTypeAny) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     try {
       schema.parse(req);
       next();
     } catch (error) {
       if (error instanceof z.ZodError) {
-        return res.status(400).json({
+        res.status(400).json({
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -123,6 +127,7 @@ const validate = (schema: any) => {
             details: error.errors,
           },
         });
+        return;
       }
       next(error);
     }

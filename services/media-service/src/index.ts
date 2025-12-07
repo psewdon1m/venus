@@ -13,9 +13,10 @@ import express, {
   type NextFunction,
   type Request,
   type Response,
+  urlencoded,
 } from 'express';
 import helmet from 'helmet';
-import multer, { memoryStorage } from 'multer';
+import multer, { memoryStorage, type Multer } from 'multer';
 import { z, ZodError, type ZodTypeAny } from 'zod';
 
 import { authenticateToken, requireAdmin, type AuthenticatedRequest } from './middleware/auth';
@@ -79,10 +80,10 @@ const validate = (schema: ZodTypeAny) => {
 
 const app: Express = express();
 const PORT = process.env.MEDIA_SERVICE_PORT || 4004;
-const prisma = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient();
 
 // S3/R2 client configuration
-const s3Client = new S3Client({
+const s3Client: S3Client = new S3Client({
   region: process.env.AWS_REGION || 'auto',
   endpoint: process.env.S3_ENDPOINT || 'https://<account-id>.r2.cloudflarestorage.com',
   credentials: {
@@ -96,10 +97,11 @@ const BUCKET_NAME = process.env.S3_BUCKET_NAME || 'venus-media';
 app.use(helmet());
 app.use(cors());
 app.use(json({ limit: '50mb' }));
+app.use(urlencoded({ extended: true }));
 
 // Configure multer for file uploads
 const storage = memoryStorage();
-const upload = multer({
+const upload: Multer = multer({
   storage,
   limits: {
     fileSize: 50 * 1024 * 1024, // 50MB
@@ -107,11 +109,7 @@ const upload = multer({
 });
 
 // File validation middleware
-const validateFile = (
-  req: ValidatedFileRequest,
-  res: Response,
-  next: NextFunction
-): void => {
+const validateFile = (req: ValidatedFileRequest, res: Response, next: NextFunction): void => {
   const file = req.file;
 
   if (!file) {
@@ -190,8 +188,7 @@ const validateFile = (
   }
 };
 
-// Health check
-app.get('/health', async (_req, res) => {
+const buildMediaHealth = async (): Promise<{ payload: HealthCheckResponse; status: number }> => {
   let dbHealthy = false;
   const storageHealthy = true; // TODO: Actual S3/R2 check
 
@@ -199,10 +196,11 @@ app.get('/health', async (_req, res) => {
     await prisma.$queryRaw`SELECT 1`;
     dbHealthy = true;
   } catch (error) {
+    logger.warn('Media service health error', { error });
     dbHealthy = false;
   }
 
-  const health: HealthCheckResponse = {
+  const payload: HealthCheckResponse = {
     status: dbHealthy && storageHealthy ? 'healthy' : 'degraded',
     timestamp: new Date().toISOString(),
     service: 'media-service',
@@ -214,7 +212,25 @@ app.get('/health', async (_req, res) => {
     },
   };
 
-  res.status(dbHealthy && storageHealthy ? 200 : 503).json(health);
+  return {
+    payload,
+    status: dbHealthy && storageHealthy ? 200 : 503,
+  };
+};
+
+const asyncHandler =
+  <Req extends Request>(
+    handler: (req: Req, res: Response) => Promise<void>
+  ): ((req: Req, res: Response, next: NextFunction) => void) =>
+  (req, res, next) => {
+    handler(req, res).catch(next);
+  };
+
+// Health check
+app.get('/health', (_req, res, next) => {
+  buildMediaHealth()
+    .then(({ payload, status }) => res.status(status).json(payload))
+    .catch(next);
 });
 
 // Media upload endpoint with validation
@@ -224,7 +240,7 @@ app.post(
   upload.single('file'),
   validateFile,
   validate(uploadFileSchema),
-  async (req: ValidatedFileRequest, res) => {
+  asyncHandler<ValidatedFileRequest>(async (req, res) => {
   try {
     const userId = req.user!.userId;
     const validatedFile = req.validatedFile!;
@@ -287,14 +303,8 @@ app.post(
         },
       },
     });
-  } catch (error) {
-    logger.error('Upload error', { error });
-    res.status(500).json({
-      success: false,
-      error: { code: 'UPLOAD_FAILED', message: 'File upload failed' },
-    });
-  }
-});
+  })
+);
 
 const server = app.listen(PORT, () => {
   logger.info(`Media Service started on port ${PORT}`);
@@ -312,8 +322,10 @@ process.on('SIGTERM', () => {
 // ==================================================
 
 // GET /admin/files - List all media files (admin only)
-app.get('/admin/files', requireAdmin, async (_req: AuthenticatedRequest, res) => {
-  try {
+app.get(
+  '/admin/files',
+  requireAdmin,
+  asyncHandler<AuthenticatedRequest>(async (_req, res) => {
 
     const files = await prisma.mediaFile.findMany({
       select: {
@@ -330,25 +342,15 @@ app.get('/admin/files', requireAdmin, async (_req: AuthenticatedRequest, res) =>
       success: true,
       data: { files },
     });
-  } catch (error) {
-    logger.error('Admin list files error', { error });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Failed to list files',
-      },
-    });
-  }
-});
+  })
+);
 
 // DELETE /admin/files/:id - Delete any media file (admin only)
 app.delete(
   '/admin/files/:id',
   requireAdmin,
   validate(fileIdSchema),
-  async (req: AuthenticatedRequest, res): Promise<void> => {
-  try {
+  asyncHandler<AuthenticatedRequest>(async (req, res) => {
 
     const fileId = req.params.id;
 
@@ -379,16 +381,7 @@ app.delete(
         message: 'File deleted successfully',
       },
     });
-  } catch (error) {
-    logger.error('Admin delete file error', { error });
-    res.status(500).json({
-      success: false,
-      error: {
-        code: 'INTERNAL_ERROR',
-        message: 'Failed to delete file',
-      },
-    });
-  }
-});
+  })
+);
 
 export default app;

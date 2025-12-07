@@ -1,8 +1,8 @@
 // Error handling middleware for Persona Service
 
-import type { NextFunction, Request, Response } from 'express';
-
 import { logger } from '../utils/logger';
+
+import type { NextFunction, Request, Response } from 'express';
 
 export const errorHandler = (
   error: Error,

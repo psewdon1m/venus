@@ -1,7 +1,8 @@
 // JWT Authentication middleware for API Gateway
 
-import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import { verify, type JwtPayload } from 'jsonwebtoken';
+
+import type { NextFunction, Request, Response } from 'express';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
@@ -19,8 +20,15 @@ declare global {
   }
 }
 
+interface AccessPayload extends JwtPayload {
+  userId: string;
+  email: string;
+  role?: string;
+  type: 'access';
+}
+
 // JWT verification middleware
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = (req: Request, res: Response, next: NextFunction): void => {
   // Try to get token from Authorization header first
   let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
@@ -41,7 +49,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decoded = verify(token, JWT_SECRET) as AccessPayload;
 
     // Check if it's an access token
     if (decoded.type !== 'access') {
@@ -76,7 +84,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 };
 
 // Optional authentication (doesn't fail if no token)
-export const optionalAuth = (req: Request, _res: Response, next: NextFunction) => {
+export const optionalAuth = (req: Request, _res: Response, next: NextFunction): void => {
   // Try to get token from Authorization header first
   let token = req.headers.authorization && req.headers.authorization.split(' ')[1];
 
@@ -87,7 +95,7 @@ export const optionalAuth = (req: Request, _res: Response, next: NextFunction) =
 
   if (token) {
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as any;
+      const decoded = verify(token, JWT_SECRET) as AccessPayload;
       if (decoded.type === 'access') {
         req.user = {
           userId: decoded.userId,
@@ -106,7 +114,7 @@ export const optionalAuth = (req: Request, _res: Response, next: NextFunction) =
 
 // RBAC middleware
 export const requireRole = (requiredRole: string) => {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     if (!req.user) {
       res.status(401).json({
         success: false,

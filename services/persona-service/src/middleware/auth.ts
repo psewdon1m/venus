@@ -1,8 +1,9 @@
 // Authentication middleware for persona-service
 
 import { verify, type JwtPayload } from 'jsonwebtoken';
-import type { NextFunction, Request, Response } from 'express';
 import { logger } from '../utils/logger';
+
+import type { NextFunction, Request, Response } from 'express';
 
 export interface AuthenticatedRequest extends Request {
   user?: {

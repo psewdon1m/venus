@@ -1,9 +1,11 @@
 // Authentication middleware for auth-service
 
 import { verify, type JwtPayload } from 'jsonwebtoken';
-import type { NextFunction, Request, Response } from 'express';
 import { storage } from '../utils/storage';
 import { logger } from '../utils/logger';
+
+import type { NextFunction, Request, Response } from 'express';
+import type { Account } from '@venus/types';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -44,7 +46,7 @@ export const authenticateToken = async (
     const decoded = verify(token, process.env.JWT_ACCESS_SECRET as string) as AccessTokenPayload;
 
     // Get user from database to ensure they still exist and get role
-    const user = await storage.getAccountById(decoded.userId);
+    const user: Account | null = await storage.getAccountById(decoded.userId);
     if (!user) {
       res.status(401).json({
         success: false,

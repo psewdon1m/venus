@@ -1,65 +1,80 @@
-// Per-user rate limiting middleware
+// Per-user and IP-based rate limiting middleware
 
 import rateLimit from 'express-rate-limit';
-import { Request, Response } from 'express';
 
-// Store for per-user rate limiting
-const userRateLimits = new Map<string, { count: number; resetTime: number }>();
+import type { NextFunction, Request, Response } from 'express';
 
-// Clean up old entries every 5 minutes
-setInterval(() => {
+interface RequestWithUser extends Request {
+  user?: {
+    userId?: string;
+  };
+}
+
+type UserLimitState = {
+  count: number;
+  resetTime: number;
+};
+
+const userRateLimits = new Map<string, UserLimitState>();
+
+const cleanExpiredLimits = (): void => {
   const now = Date.now();
   for (const [key, data] of userRateLimits.entries()) {
     if (now > data.resetTime) {
       userRateLimits.delete(key);
     }
   }
-}, 5 * 60 * 1000);
+};
 
-// Per-user rate limiter (200 requests per minute per user)
-export const perUserRateLimit = (req: Request, res: Response, next: any) => {
-  const userId = (req as any).user?.userId;
+setInterval(cleanExpiredLimits, 5 * 60 * 1000);
+
+const windowMs = 60 * 1000; // 1 minute
+const maxRequests = 200;
+
+export const perUserRateLimit = (
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+): void => {
+  const userId = req.user?.userId;
 
   if (!userId) {
-    // If no user, fall back to IP-based limiting
-    return ipRateLimit(req, res, next);
+    ipRateLimit(req, res, next);
+    return;
   }
 
   const now = Date.now();
-  const windowMs = 60 * 1000; // 1 minute
-  const maxRequests = 200; // 200 requests per minute per user
-
   const key = `user:${userId}`;
-  const userLimit = userRateLimits.get(key);
+  const state = userRateLimits.get(key);
 
-  if (!userLimit || now > userLimit.resetTime) {
-    // First request or window expired
+  if (!state || now > state.resetTime) {
     userRateLimits.set(key, {
       count: 1,
       resetTime: now + windowMs,
     });
-    return next();
+    next();
+    return;
   }
 
-  if (userLimit.count >= maxRequests) {
-    return res.status(429).json({
+  if (state.count >= maxRequests) {
+    res.status(429).json({
       success: false,
       error: {
         code: 'RATE_LIMIT_EXCEEDED',
         message: 'Too many requests from this user',
-        retryAfter: Math.ceil((userLimit.resetTime - now) / 1000),
+        retryAfter: Math.ceil((state.resetTime - now) / 1000),
       },
     });
+    return;
   }
 
-  userLimit.count++;
+  state.count += 1;
   next();
 };
 
-// IP-based rate limiter (100 requests per 15 minutes)
 export const ipRateLimit = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // 100 requests per window
+  windowMs: 15 * 60 * 1000,
+  max: 100,
   message: {
     success: false,
     error: {
@@ -71,15 +86,11 @@ export const ipRateLimit = rateLimit({
   legacyHeaders: false,
 });
 
-// Combined rate limiter that uses per-user for authenticated requests
-export const combinedRateLimit = (req: Request, res: Response, next: any) => {
-  const userId = (req as any).user?.userId;
-
-  if (userId) {
-    // Authenticated user - use per-user limiting
-    return perUserRateLimit(req, res, next);
-  } else {
-    // Unauthenticated - use IP-based limiting
-    return ipRateLimit(req, res, next);
+export const combinedRateLimit = (req: RequestWithUser, res: Response, next: NextFunction): void => {
+  if (req.user?.userId) {
+    perUserRateLimit(req, res, next);
+    return;
   }
+
+  ipRateLimit(req, res, next);
 };
