@@ -1,37 +1,41 @@
 // Venus Platform - Media Service
 // Media processing, upload, and storage microservice
 
+import path from 'path';
+
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { PrismaClient } from '@prisma/client';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import express, { Express } from 'express';
+import { config } from 'dotenv';
+import express, {
+  json,
+  type Express,
+  type NextFunction,
+  type Request,
+  type Response,
+} from 'express';
 import helmet from 'helmet';
-import multer from 'multer';
-import path from 'path';
-// import { fileTypeFromBuffer } from 'file-type';
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { z } from 'zod';
+import multer, { memoryStorage } from 'multer';
+import { z, ZodError, type ZodTypeAny } from 'zod';
 
 import type { HealthCheckResponse } from '@venus/types';
-import { authenticateToken, requireAdmin, AuthenticatedRequest } from './middleware/auth';
+import { authenticateToken, requireAdmin, type AuthenticatedRequest } from './middleware/auth';
+import { logger } from './utils/logger';
 
-// Extend Express Request to include validatedFile
-declare global {
-  namespace Express {
-    interface Request {
-      validatedFile?: {
-        buffer: Buffer;
-        originalname: string;
-        mimetype: string;
-        size: number;
-        detectedMime: string;
-        ext: string;
-      };
-    }
-  }
+config();
+
+interface ValidatedFile {
+  buffer: Buffer;
+  originalname: string;
+  mimetype: string;
+  size: number;
+  detectedMime: string;
+  ext: string;
 }
 
-dotenv.config();
+interface ValidatedFileRequest extends AuthenticatedRequest {
+  validatedFile?: ValidatedFile;
+}
 
 // ==================================================
 // Zod validation schemas
@@ -50,15 +54,14 @@ const uploadFileSchema = z.object({
   }),
 });
 
-// Validation middleware
-const validate = (schema: any) => {
-  return (req: any, res: any, next: any) => {
+const validate = (schema: ZodTypeAny) => {
+  return (req: Request, res: Response, next: NextFunction) => {
     try {
       schema.parse(req);
       next();
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return res.status(400).json({
+      if (error instanceof ZodError) {
+        res.status(400).json({
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
@@ -66,6 +69,7 @@ const validate = (schema: any) => {
             details: error.errors,
           },
         });
+        return;
       }
       next(error);
     }
@@ -90,10 +94,10 @@ const BUCKET_NAME = process.env.S3_BUCKET_NAME || 'venus-media';
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json({ limit: '50mb' }));
+app.use(json({ limit: '50mb' }));
 
 // Configure multer for file uploads
-const storage = multer.memoryStorage();
+const storage = memoryStorage();
 const upload = multer({
   storage,
   limits: {
@@ -102,7 +106,11 @@ const upload = multer({
 });
 
 // File validation middleware
-const validateFile = async (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> => {
+const validateFile = async (
+  req: ValidatedFileRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const file = req.file;
 
   if (!file) {
@@ -198,7 +206,13 @@ app.get('/health', async (_req, res) => {
 });
 
 // Media upload endpoint with validation
-app.post('/media/upload', authenticateToken, upload.single('file'), validateFile, validate(uploadFileSchema), async (req: AuthenticatedRequest, res) => {
+app.post(
+  '/media/upload',
+  authenticateToken,
+  upload.single('file'),
+  validateFile,
+  validate(uploadFileSchema),
+  async (req: ValidatedFileRequest, res) => {
   try {
     const userId = req.user!.userId;
     const validatedFile = req.validatedFile!;
@@ -262,7 +276,7 @@ app.post('/media/upload', authenticateToken, upload.single('file'), validateFile
       },
     });
   } catch (error) {
-    console.error('Upload error:', error);
+    logger.error('Upload error', { error });
     res.status(500).json({
       success: false,
       error: { code: 'UPLOAD_FAILED', message: 'File upload failed' },
@@ -271,12 +285,14 @@ app.post('/media/upload', authenticateToken, upload.single('file'), validateFile
 });
 
 const server = app.listen(PORT, () => {
-  console.log(`Media Service started on port ${PORT}`);
+  logger.info(`Media Service started on port ${PORT}`);
 });
 
-process.on('SIGTERM', async () => {
-  await prisma.$disconnect();
-  server.close(() => process.exit(0));
+process.on('SIGTERM', () => {
+  prisma
+    .$disconnect()
+    .catch((error) => logger.error('Prisma disconnect error', { error }))
+    .finally(() => server.close(() => process.exit(0)));
 });
 
 // ==================================================
@@ -303,7 +319,7 @@ app.get('/admin/files', requireAdmin, async (_req: AuthenticatedRequest, res) =>
       data: { files },
     });
   } catch (error) {
-    console.error('Admin list files error:', error);
+    logger.error('Admin list files error', { error });
     res.status(500).json({
       success: false,
       error: {
@@ -315,7 +331,11 @@ app.get('/admin/files', requireAdmin, async (_req: AuthenticatedRequest, res) =>
 });
 
 // DELETE /admin/files/:id - Delete any media file (admin only)
-app.delete('/admin/files/:id', requireAdmin, validate(fileIdSchema), async (req: AuthenticatedRequest, res): Promise<void> => {
+app.delete(
+  '/admin/files/:id',
+  requireAdmin,
+  validate(fileIdSchema),
+  async (req: AuthenticatedRequest, res): Promise<void> => {
   try {
 
     const fileId = req.params.id;
@@ -339,7 +359,7 @@ app.delete('/admin/files/:id', requireAdmin, validate(fileIdSchema), async (req:
       where: { id: fileId },
     });
 
-    console.log('Media file deleted by admin', { adminId: req.user!.userId, fileId });
+    logger.info('Media file deleted by admin', { adminId: req.user!.userId, fileId });
 
     res.json({
       success: true,
@@ -348,7 +368,7 @@ app.delete('/admin/files/:id', requireAdmin, validate(fileIdSchema), async (req:
       },
     });
   } catch (error) {
-    console.error('Admin delete file error:', error);
+    logger.error('Admin delete file error', { error });
     res.status(500).json({
       success: false,
       error: {

@@ -1,35 +1,27 @@
 // Authentication middleware for Project Service
 
-import { NextFunction, Request, Response } from 'express';
-import jwt from 'jsonwebtoken';
+import type { NextFunction, Request, Response } from 'express';
+import { verify, type JwtPayload } from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
-// Extend Express Request to include user
-declare global {
-  namespace Express {
-    interface Request {
-      user?: {
-        userId: string;
-        email: string;
-        role?: string;
-        type: string;
-      };
-    }
-  }
+export interface AccessTokenPayload extends JwtPayload {
+  userId: string;
+  email: string;
+  role?: string;
+  type: 'access';
 }
 
 export interface AuthenticatedRequest extends Request {
-  user?: {
-    userId: string;
-    email: string;
-    role?: string;
-    type: string;
-  };
+  user?: Omit<AccessTokenPayload, 'iat' | 'exp'>;
 }
 
 // JWT verification middleware
-export const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   const authHeader = req.headers.authorization;
   const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
@@ -45,9 +37,8 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   }
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as any;
+    const decoded = verify(token, JWT_SECRET) as AccessTokenPayload;
 
-    // Check if it's an access token
     if (decoded.type !== 'access') {
       res.status(401).json({
         success: false,

@@ -1,22 +1,22 @@
 // Logger utility for Project Service
 
-import winston from 'winston';
+import { createLogger, format, transports } from 'winston';
 
 const logLevel = process.env.LOG_LEVEL || 'info';
 
-export const logger = winston.createLogger({
+export const logger = createLogger({
   level: logLevel,
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
+  format: format.combine(
+    format.timestamp(),
+    format.errors({ stack: true }),
+    format.json()
   ),
   defaultMeta: { service: 'project-service' },
   transports: [
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
+    new transports.Console({
+      format: format.combine(
+        format.colorize(),
+        format.simple()
       ),
     }),
   ],
@@ -24,19 +24,19 @@ export const logger = winston.createLogger({
 
 // Handle uncaught exceptions and unhandled rejections
 logger.exceptions.handle(
-  new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
+  new transports.Console({
+    format: format.combine(
+      format.colorize(),
+      format.simple()
     ),
   })
 );
 
 logger.rejections.handle(
-  new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize(),
-      winston.format.simple()
+  new transports.Console({
+    format: format.combine(
+      format.colorize(),
+      format.simple()
     ),
   })
 );
