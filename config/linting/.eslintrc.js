@@ -1,3 +1,8 @@
+const path = require('path');
+
+const rootDir = path.resolve(__dirname, '../..');
+const tsconfigGlobs = [path.join(rootDir, 'tsconfig.eslint.json')];
+
 module.exports = {
   root: true,
   env: {
@@ -8,12 +13,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
-    project: [
-      './tsconfig.eslint.json',
-      './tsconfig.json',
-      './services/*/tsconfig.json',
-      './frontend/tsconfig.json',
-    ],
+    project: tsconfigGlobs,
   },
   plugins: ['@typescript-eslint', 'import', 'prettier'],
   extends: [
@@ -85,12 +85,7 @@ module.exports = {
     'import/resolver': {
       typescript: {
         alwaysTryTypes: true,
-        project: [
-          './tsconfig.eslint.json',
-          './tsconfig.json',
-          './services/*/tsconfig.json',
-          './frontend/tsconfig.json',
-        ],
+        project: tsconfigGlobs,
       },
     },
   },
