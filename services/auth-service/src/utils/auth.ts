@@ -1,8 +1,8 @@
 // Auth utilities - Password hashing, JWT, validation
 
 import type { LoginRequest, RegisterRequest } from '@venus/types';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
+import { sign, verify, type SignOptions } from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 const JWT_ACCESS_EXPIRY = process.env.JWT_ACCESS_EXPIRY || '15m';
@@ -20,18 +20,19 @@ export interface AuthTokens {
 // Password utilities
 export const hashPassword = async (password: string): Promise<string> => {
   return await new Promise((resolve, reject) => {
-    bcrypt.hash(password, BCRYPT_ROUNDS, (err, hash) => {
-      if (err || !hash) {
-        return reject(err || new Error('Failed to hash password'));
+    hash(password, BCRYPT_ROUNDS, (err, hashed) => {
+      if (err || !hashed) {
+        reject(err || new Error('Failed to hash password'));
+        return;
       }
-      resolve(hash);
+      resolve(hashed);
     });
   });
 };
 
 export const verifyPassword = async (password: string, hash: string): Promise<boolean> => {
   return await new Promise((resolve, reject) => {
-    bcrypt.compare(password, hash, (err, same) => {
+    compare(password, hash, (err, same) => {
       if (err) {
         return reject(err);
       }
@@ -42,16 +43,16 @@ export const verifyPassword = async (password: string, hash: string): Promise<bo
 
 // JWT utilities
 export const generateAccessToken = (payload: object): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_ACCESS_EXPIRY } as jwt.SignOptions);
+  return sign(payload, JWT_SECRET, { expiresIn: JWT_ACCESS_EXPIRY } as SignOptions);
 };
 
 export const generateRefreshToken = (payload: object): string => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRY } as jwt.SignOptions);
+  return sign(payload, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRY } as SignOptions);
 };
 
 export const verifyToken = (token: string): any => {
   try {
-    return jwt.verify(token, JWT_SECRET);
+    return verify(token, JWT_SECRET);
   } catch (error) {
     throw new Error('Invalid token');
   }

@@ -2,8 +2,8 @@
 // Authentication and Authorization microservice
 
 import cors from 'cors';
-import dotenv from 'dotenv';
-import express, { Express } from 'express';
+import { config } from 'dotenv';
+import express, { json, type Express, urlencoded } from 'express';
 import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler';
@@ -12,7 +12,7 @@ import healthRouter from './routes/health';
 import { logger } from './utils/logger';
 
 // Load environment variables
-dotenv.config();
+config();
 
 const app: Express = express();
 const PORT = process.env.AUTH_SERVICE_PORT || 4001;
@@ -22,12 +22,14 @@ const PORT = process.env.AUTH_SERVICE_PORT || 4001;
 // ==================================================
 
 app.use(helmet());
-app.use(cors({
-  origin: process.env.CORS_ORIGINS?.split(',') || 'http://localhost:3000',
-  credentials: true,
-}));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGINS?.split(',') || 'http://localhost:3000',
+    credentials: true,
+  })
+);
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 // Request logging
 app.use((req, _res, next) => {

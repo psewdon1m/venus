@@ -2,31 +2,31 @@
 // AI-powered CV generation microservice
 
 import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 import cors from 'cors';
-import dotenv from 'dotenv';
-import express from 'express';
+import { config } from 'dotenv';
+import express, { json, type Application } from 'express';
 import helmet from 'helmet';
 
 import type { HealthCheckResponse } from '@venus/types';
+import { logger } from './utils/logger';
 
-dotenv.config();
+config();
 
-const app: express.Application = express();
+const prisma = new PrismaClient();
+const app: Application = express();
 const PORT = process.env.AI_CV_SERVICE_PORT || 4005;
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(json());
 
 // Health check
 app.get('/health', async (_req, res) => {
   let dbHealthy = false;
-  let aiHealthy = Boolean(process.env.OPENAI_API_KEY);
+  const aiHealthy = Boolean(process.env.OPENAI_API_KEY);
 
   try {
-    await prisma.$queryRaw`SELECT 1`;
+    await prisma.$queryRawUnsafe('SELECT 1');
     dbHealthy = true;
   } catch (error) {
     dbHealthy = false;
@@ -56,12 +56,14 @@ app.post('/cv/generate', (_req, res) => {
 });
 
 const server = app.listen(PORT, () => {
-  console.log(`AI-CV Service started on port ${PORT}`);
+  logger.info(`AI-CV Service started on port ${PORT}`);
 });
 
-process.on('SIGTERM', async () => {
-  await prisma.$disconnect();
-  server.close(() => process.exit(0));
+process.on('SIGTERM', () => {
+  prisma
+    .$disconnect()
+    .catch((error) => logger.error('Prisma disconnect error', { error }))
+    .finally(() => server.close(() => process.exit(0)));
 });
 
 export default app;

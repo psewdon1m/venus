@@ -18,9 +18,10 @@ import helmet from 'helmet';
 import multer, { memoryStorage } from 'multer';
 import { z, ZodError, type ZodTypeAny } from 'zod';
 
-import type { HealthCheckResponse } from '@venus/types';
 import { authenticateToken, requireAdmin, type AuthenticatedRequest } from './middleware/auth';
 import { logger } from './utils/logger';
+
+import type { HealthCheckResponse } from '@venus/types';
 
 config();
 
@@ -106,11 +107,11 @@ const upload = multer({
 });
 
 // File validation middleware
-const validateFile = async (
+const validateFile = (
   req: ValidatedFileRequest,
   res: Response,
   next: NextFunction
-): Promise<void> => {
+): void => {
   const file = req.file;
 
   if (!file) {
@@ -122,7 +123,18 @@ const validateFile = async (
   }
 
   // Check file extension
-  const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.svg', '.gif', '.mp4', '.webm', '.pdf'];
+  const allowedExtensions = [
+    '.jpg',
+    '.jpeg',
+    '.png',
+    '.webp',
+    '.avif',
+    '.svg',
+    '.gif',
+    '.mp4',
+    '.webm',
+    '.pdf',
+  ];
   const ext = path.extname(file.originalname).toLowerCase();
   if (!allowedExtensions.includes(ext)) {
     res.status(400).json({
@@ -181,7 +193,7 @@ const validateFile = async (
 // Health check
 app.get('/health', async (_req, res) => {
   let dbHealthy = false;
-  let storageHealthy = true; // TODO: Actual S3/R2 check
+  const storageHealthy = true; // TODO: Actual S3/R2 check
 
   try {
     await prisma.$queryRaw`SELECT 1`;

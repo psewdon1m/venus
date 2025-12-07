@@ -1,7 +1,8 @@
 // Authentication middleware for persona-service
 
-import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import { verify, type JwtPayload } from 'jsonwebtoken';
+import type { NextFunction, Request, Response } from 'express';
+import { logger } from '../utils/logger';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -12,7 +13,18 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
-export const authenticateToken = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+interface AccessTokenPayload extends JwtPayload {
+  userId: string;
+  email: string;
+  role?: 'USER' | 'ADMIN';
+  type: 'access';
+}
+
+export const authenticateToken = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   try {
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
@@ -28,7 +40,7 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
       return;
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET!) as any;
+    const decoded = verify(token, process.env.JWT_ACCESS_SECRET as string) as AccessTokenPayload;
 
     req.user = {
       userId: decoded.userId,
@@ -39,7 +51,7 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
 
     next();
   } catch (error) {
-    console.error('Token verification error:', error);
+    logger.error('Token verification error', { error });
     res.status(403).json({
       success: false,
       error: {
@@ -51,7 +63,11 @@ export const authenticateToken = async (req: AuthenticatedRequest, res: Response
   }
 };
 
-export const requireAdmin = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
+export const requireAdmin = (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   if (!req.user) {
     res.status(401).json({
       success: false,

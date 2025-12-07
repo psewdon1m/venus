@@ -1,7 +1,7 @@
 // Authentication middleware for Project Service
 
-import type { NextFunction, Request, Response } from 'express';
 import { verify, type JwtPayload } from 'jsonwebtoken';
+import type { NextFunction, Request, Response } from 'express';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 

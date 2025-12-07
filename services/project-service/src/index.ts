@@ -6,9 +6,10 @@ import { config } from 'dotenv';
 import express, { json, type Express, urlencoded } from 'express';
 import helmet from 'helmet';
 
-import type { HealthCheckResponse } from '@venus/types';
 import projectRouter from './routes/projects';
 import { logger } from './utils/logger';
+
+import type { HealthCheckResponse } from '@venus/types';
 
 config();
 

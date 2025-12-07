@@ -1,12 +1,13 @@
 // Persona routes - CRUD operations for personas and placeholders
 
+import { PrismaClient } from '@prisma/client';
 import { Router } from 'express';
 import { z } from 'zod';
-import { PrismaClient } from '@prisma/client';
+
+import { authenticateToken, requireAdmin, type AuthenticatedRequest } from '../middleware/auth';
+import { logger } from '../utils/logger';
 
 const prisma = new PrismaClient();
-import { authenticateToken, requireAdmin, AuthenticatedRequest } from '../middleware/auth';
-
 const router: Router = Router();
 
 // ==================================================
@@ -28,7 +29,7 @@ const updatePersonaSchema = z.object({
   body: z.object({
     displayName: z.string().min(1).max(100).optional(),
     manifest: z.string().optional(),
-    settings: z.any().optional(),
+    settings: z.record(z.unknown()).optional(),
   }),
 });
 
@@ -177,7 +178,7 @@ router.get('/', authenticateToken, async (req: AuthenticatedRequest, res) => {
       data: response,
     });
   } catch (error) {
-    console.error('List personas error:', error);
+    logger.error('List personas error', { error });
     res.status(500).json({
       success: false,
       error: {
@@ -242,7 +243,7 @@ router.post('/', authenticateToken, validate(createPersonaSchema), async (req: A
       },
     });
   } catch (error) {
-    console.error('Create persona error:', error);
+    logger.error('Create persona error', { error });
     res.status(500).json({
       success: false,
       error: {
@@ -307,7 +308,7 @@ router.get('/:id', authenticateToken, validate(personaIdSchema), async (req: Aut
     });
     return;
   } catch (error) {
-    console.error('Get persona error:', error);
+    logger.error('Get persona error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -378,7 +379,7 @@ router.put('/:id', authenticateToken, validate(updatePersonaSchema), async (req:
       },
     });
   } catch (error) {
-    console.error('Update persona error:', error);
+    logger.error('Update persona error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -423,7 +424,7 @@ router.delete('/:id', authenticateToken, validate(personaIdSchema), async (req: 
       },
     });
   } catch (error) {
-    console.error('Delete persona error:', error);
+    logger.error('Delete persona error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -474,7 +475,7 @@ router.get('/:id/placeholders', authenticateToken, validate(personaIdSchema), as
       }
     });
   } catch (error) {
-    console.error('List placeholders error:', error);
+    logger.error('List placeholders error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -556,7 +557,7 @@ router.post('/:id/placeholders', authenticateToken, validate(createPlaceholderSc
       },
     });
   } catch (error) {
-    console.error('Add placeholder error:', error);
+    logger.error('Add placeholder error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -636,7 +637,7 @@ router.put('/:id/placeholders/:placeholderId', authenticateToken, validate(updat
       },
     });
   } catch (error) {
-    console.error('Update placeholder error:', error);
+    logger.error('Update placeholder error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -705,7 +706,7 @@ router.delete('/:id/placeholders/:placeholderId', authenticateToken, validate(pl
       data: { message: 'Placeholder removed successfully' }
     });
   } catch (error) {
-    console.error('Remove placeholder error:', error);
+    logger.error('Remove placeholder error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -780,7 +781,7 @@ router.post('/:id/placeholders/reorder', authenticateToken, validate(reorderPlac
       }
     });
   } catch (error) {
-    console.error('Reorder placeholders error:', error);
+    logger.error('Reorder placeholders error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -866,7 +867,7 @@ router.get('/:id/projects', authenticateToken, validate(personaIdSchema), async 
       },
     });
   } catch (error) {
-    console.error('Get persona projects error:', error);
+    logger.error('Get persona projects error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -990,7 +991,7 @@ router.post('/:id/projects', authenticateToken, validate(assignProjectSchema), a
       },
     });
   } catch (error) {
-    console.error('Assign project to persona error:', error);
+    logger.error('Assign project to persona error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -1093,7 +1094,7 @@ router.put('/:id/projects/:projectId', authenticateToken, validate(updateProject
       },
     });
   } catch (error) {
-    console.error('Update project assignment error:', error);
+    logger.error('Update project assignment error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -1156,7 +1157,7 @@ router.delete('/:id/projects/:projectId', authenticateToken, validate(projectIdS
       },
     });
   } catch (error) {
-    console.error('Remove project from persona error:', error);
+    logger.error('Remove project from persona error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -1192,7 +1193,7 @@ router.get('/admin/personas', requireAdmin, async (_req: AuthenticatedRequest, r
       data: { personas },
     });
   } catch (error) {
-    console.error('Admin list personas error:', error);
+    logger.error('Admin list personas error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -1227,7 +1228,7 @@ router.delete('/admin/personas/:id', requireAdmin, async (req: AuthenticatedRequ
       where: { id: personaId },
     });
 
-    console.log('Persona deleted by admin', { adminId: req.user!.userId, personaId });
+    logger.info('Persona deleted by admin', { adminId: req.user!.userId, personaId });
 
     res.json({
       success: true,
@@ -1236,7 +1237,7 @@ router.delete('/admin/personas/:id', requireAdmin, async (req: AuthenticatedRequ
       },
     });
   } catch (error) {
-    console.error('Admin delete persona error:', error);
+    logger.error('Admin delete persona error:', error);
     res.status(500).json({
       success: false,
       error: {
@@ -1248,3 +1249,4 @@ router.delete('/admin/personas/:id', requireAdmin, async (req: AuthenticatedRequ
 });
 
 export default router;
+

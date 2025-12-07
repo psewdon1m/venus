@@ -2,15 +2,15 @@
 // Persona management microservice
 
 import cors from 'cors';
-import dotenv from 'dotenv';
-import express, { Express } from 'express';
+import { config } from 'dotenv';
+import express, { json, type Express, urlencoded } from 'express';
 import helmet from 'helmet';
 
 import { errorHandler } from './middleware/errorHandler';
 import personaRouter from './routes/personas';
 import { logger } from './utils/logger';
 
-dotenv.config();
+config();
 
 const app: Express = express();
 const PORT = process.env.PERSONA_SERVICE_PORT || 4003;
@@ -21,8 +21,8 @@ const PORT = process.env.PERSONA_SERVICE_PORT || 4003;
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 // Request logging
 app.use((req, _res, next) => {
