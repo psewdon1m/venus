@@ -1,7 +1,8 @@
 // Public persona page - displays published personas
 
-import { apiClient } from '@/lib/api';
+import { apiClient, Persona, Placeholder } from '@/lib/api';
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 interface PublicPersonaPageProps {
@@ -10,32 +11,29 @@ interface PublicPersonaPageProps {
   };
 }
 
-interface Project {
+type ProjectPlaceholder = Placeholder & {
+  content: Placeholder['content'] & {
+    image?: string;
+    subtitle?: string;
+  };
+};
+
+type Project = {
   id: string;
   title: string;
   slug: string;
   type: string;
   status: string;
   content: {
-    placeholders: Array<{
-      id: string;
-      type: string;
-      order: number;
-      content: any;
-    }>;
+    placeholders: ProjectPlaceholder[];
   };
   createdAt: string;
   updatedAt: string;
-}
+};
 
-interface Persona {
-  id: string;
-  slug: string;
-  displayName: string;
-  manifest: string | null;
+type PublicPersona = Persona & {
   projects: Project[];
-  createdAt: string;
-}
+};
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PublicPersonaPageProps): Promise<Metadata> {
@@ -52,7 +50,7 @@ export async function generateMetadata({ params }: PublicPersonaPageProps): Prom
         type: 'profile',
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: 'Portfolio Not Found',
       description: 'The requested portfolio could not be found.',
@@ -61,7 +59,7 @@ export async function generateMetadata({ params }: PublicPersonaPageProps): Prom
 }
 
 // Fetch persona data
-async function getPersonaData(slug: string): Promise<Persona | null> {
+async function getPersonaData(slug: string): Promise<PublicPersona | null> {
   try {
     const response = await apiClient.getPublicPersona(slug);
     return response.data.persona;
@@ -105,9 +103,8 @@ export default async function PublicPersonaPage({ params }: PublicPersonaPagePro
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {persona.projects.map((project) => {
-              // Find cover placeholder
               const coverPlaceholder = project.content.placeholders.find(
-                (p: any) => p.type === 'cover'
+                (placeholder) => placeholder.type === 'cover'
               );
 
               return (
@@ -118,9 +115,11 @@ export default async function PublicPersonaPage({ params }: PublicPersonaPagePro
                   {/* Project Cover */}
                   <div className="aspect-video bg-gray-200 flex items-center justify-center">
                     {coverPlaceholder?.content?.image ? (
-                      <img
+                      <Image
                         src={coverPlaceholder.content.image}
                         alt={project.title}
+                        width={640}
+                        height={360}
                         className="w-full h-full object-cover"
                       />
                     ) : (

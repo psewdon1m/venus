@@ -38,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           const data = await response.json();
           setUser(data.data.user);
         }
-      } catch (error) {
+      } catch {
         // User is not authenticated
       } finally {
         setIsLoading(false);

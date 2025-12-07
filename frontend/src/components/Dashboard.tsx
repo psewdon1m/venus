@@ -1,27 +1,17 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { apiClient } from '@/lib/api';
+import {
+  apiClient,
+  Persona as ApiPersona,
+  Project as ApiProject,
+  PersonaProjectAssignment,
+} from '@/lib/api';
 import { useEffect, useState } from 'react';
 
-interface Project {
-  id: string;
-  title: string;
-  slug: string;
-  type: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface Persona {
-  id: string;
-  slug: string;
-  displayName: string;
-  manifest?: string;
-  createdAt: string;
-  updatedAt: string;
-}
+type Project = ApiProject;
+type Persona = ApiPersona;
+type PersonaProject = PersonaProjectAssignment;
 
 export function Dashboard() {
   const { user, logout } = useAuth();
@@ -43,7 +33,7 @@ export function Dashboard() {
   // Project assignment modal state
   const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
   const [assigningPersona, setAssigningPersona] = useState<Persona | null>(null);
-  const [personaProjects, setPersonaProjects] = useState<any[]>([]);
+  const [personaProjects, setPersonaProjects] = useState<PersonaProject[]>([]);
   const [availableProjects, setAvailableProjects] = useState<Project[]>([]);
   const [isLoadingAssignments, setIsLoadingAssignments] = useState(false);
 
@@ -174,7 +164,9 @@ export function Dashboard() {
       setPersonaProjects(personaProjectsResponse.data.projects);
 
       // Set available projects (all projects that are not already assigned)
-      const assignedProjectIds = new Set(personaProjectsResponse.data.projects.map((pp: any) => pp.id));
+      const assignedProjectIds = new Set(
+        personaProjectsResponse.data.projects.map((assignment) => assignment.id)
+      );
       setAvailableProjects(projects.filter(p => !assignedProjectIds.has(p.id)));
     } catch (error) {
       console.error('Failed to load assignments:', error);
@@ -199,12 +191,15 @@ export function Dashboard() {
       const project = availableProjects.find(p => p.id === projectId);
       if (project) {
         setAvailableProjects(availableProjects.filter(p => p.id !== projectId));
-        setPersonaProjects([...personaProjects, {
-          ...project,
-          personaProjectId: 'temp-id', // Will be updated when reloaded
-          displayOrder: personaProjects.length,
-          isVisible: true,
-        }]);
+        setPersonaProjects([
+          ...personaProjects,
+          {
+            ...project,
+            personaProjectId: 'temp-id',
+            displayOrder: personaProjects.length,
+            isVisible: true,
+          },
+        ]);
       }
     } catch (error) {
       console.error('Failed to assign project:', error);
@@ -220,15 +215,18 @@ export function Dashboard() {
       const assignedProject = personaProjects.find(p => p.id === projectId);
       if (assignedProject) {
         setPersonaProjects(personaProjects.filter(p => p.id !== projectId));
-        setAvailableProjects([...availableProjects, {
-          id: assignedProject.id,
-          title: assignedProject.title,
-          slug: assignedProject.slug,
-          type: assignedProject.type,
-          status: assignedProject.status,
-          createdAt: assignedProject.createdAt,
-          updatedAt: assignedProject.updatedAt,
-        }]);
+        setAvailableProjects([
+          ...availableProjects,
+          {
+            id: assignedProject.id,
+            title: assignedProject.title,
+            slug: assignedProject.slug,
+            type: assignedProject.type,
+            status: assignedProject.status,
+            createdAt: assignedProject.createdAt,
+            updatedAt: assignedProject.updatedAt,
+          },
+        ]);
       }
     } catch (error) {
       console.error('Failed to remove project:', error);
