@@ -3,13 +3,13 @@
 ---
 
 v0.1.7 (stage) (2025-12-03 22:00): stage env rename, docker overrides, Prisma alignments
-v0.1.7 (dev)   (2025-12-03 21:45): stage env rename, docker overrides, Prisma alignments
+v0.1.7 (dev)   (2025-12-03 21:45): CI/CD hardening, Playwright E2E + Allure, templated env samples
 v0.1.6 (stage) (2025-12-03 21:35): temporary media auth bypass and Prisma init fixes
-v0.1.6 (dev)   (2025-12-03 21:25): temporary media auth bypass and Prisma init fixes
+v0.1.6 (dev)   (2025-12-03 21:25): CI fixes, Postgres service URLs, interim auth/media stubs
 v0.1.5 (stage) (2025-12-03 21:05): Prisma env config, role defaults, tooling cleanup
 v0.1.5 (dev)   (2025-12-03 20:55): Prisma env config, role defaults, tooling cleanup
 v0.1.4 (stage) (2025-12-03 20:45): stage-only CI/CD pipeline and service typing cleanup
-v0.1.4 (dev)   (2025-12-03 20:00): stage-only CI/CD pipeline and service typing cleanup
+v0.1.4 (dev)   (2025-12-03 20:00): frontend docker build, health endpoint, secret tooling
 v0.1.3 (stage) (2025-12-03 14:00): stage validation for dockerized frontend & secrets tooling
 v0.1.3 (dev)   (2025-12-03 10:00): frontend docker build, health endpoint, secret tooling
 v0.1.2 (dev)   (2025-12-01 12:00): admin RBAC, Zod validation, S3 media storage

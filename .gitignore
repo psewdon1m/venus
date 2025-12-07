@@ -1,5 +1,6 @@
 # Dependencies
 node_modules/
+.pnpm-store/
 .pnp
 .pnp.js
 
@@ -8,6 +9,8 @@ coverage/
 .nyc_output
 playwright-report/
 test-results/
+allure-results/
+allure-report/
 
 # Production builds
 dist/
@@ -23,7 +26,7 @@ out/
 .env.development
 .env.test
 .env.production
-.env.stage
+.env.staging
 !.env.example
 
 # Secrets
@@ -51,9 +54,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# pnpm offline store cache
-.pnpm-store/
-
 # OS
 .DS_Store
 Thumbs.db
@@ -76,6 +76,7 @@ temp/
 
 # Prisma
 prisma/migrations/*_migration.sql
+shared/types/migrations/
 
 # Generated files
 generated/
@@ -92,5 +93,5 @@ generated/
 # Local development
 .local/
 
-# logs
-stage_deploy.logs
+# local html
+tmpindex.html
