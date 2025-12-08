@@ -13,7 +13,7 @@ import type {
 } from '@prisma/client';
 import type { Account } from '@venus/types';
 
-const prisma = new PrismaClient();
+const prisma: PrismaClient = new PrismaClient();
 
 const mapAccount = (record: PrismaAccount): Account => ({
   id: record.id,
@@ -98,32 +98,32 @@ class DatabaseStorage {
   }
 
   // GDPR compliance methods
-  async getPersonasByAccountId(accountId: string): Promise<Persona[]> {
+  getPersonasByAccountId(accountId: string): Promise<Persona[]> {
     return prisma.persona.findMany({
       where: { accountId },
     });
   }
 
-  async getProjectsByAccountId(accountId: string): Promise<PrismaProject[]> {
+  getProjectsByAccountId(accountId: string): Promise<PrismaProject[]> {
     return prisma.project.findMany({
       where: { accountId },
     });
   }
 
-  async getMediaFilesByAccountId(accountId: string): Promise<MediaFile[]> {
+  getMediaFilesByAccountId(accountId: string): Promise<MediaFile[]> {
     return prisma.mediaFile.findMany({
       where: { accountId },
     });
   }
 
-  async getCVGenerationsByAccountId(accountId: string): Promise<CVGeneration[]> {
+  getCVGenerationsByAccountId(accountId: string): Promise<CVGeneration[]> {
     return prisma.cVGeneration.findMany({
       where: { accountId },
     });
   }
 
   // Session management
-  async createSession(
+  createSession(
     accountId: string,
     refreshToken: string,
     userAgent?: string,
@@ -142,7 +142,7 @@ class DatabaseStorage {
     });
   }
 
-  async getSessionByRefreshToken(
+  getSessionByRefreshToken(
     refreshToken: string
   ): Promise<(Session & { account: PrismaAccount }) | null> {
     return prisma.session.findUnique({
@@ -151,19 +151,19 @@ class DatabaseStorage {
     });
   }
 
-  async revokeSession(sessionId: string): Promise<Session> {
+  revokeSession(sessionId: string): Promise<Session> {
     return prisma.session.delete({
       where: { id: sessionId },
     });
   }
 
-  async revokeAllUserSessions(accountId: string): Promise<Prisma.BatchPayload> {
+  revokeAllUserSessions(accountId: string): Promise<Prisma.BatchPayload> {
     return prisma.session.deleteMany({
       where: { accountId },
     });
   }
 
-  async cleanupExpiredSessions(): Promise<Prisma.BatchPayload> {
+  cleanupExpiredSessions(): Promise<Prisma.BatchPayload> {
     return prisma.session.deleteMany({
       where: {
         expiresAt: {
