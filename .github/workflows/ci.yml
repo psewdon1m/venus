@@ -36,6 +36,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Generate Prisma client
+        run: pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+
       - name: Run lint
         run: pnpm --filter ${{ matrix.service == 'frontend' && 'frontend' || format('@venus/{0}', matrix.service) }} lint
 
@@ -73,6 +76,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm prisma generate --schema infrastructure/postgres/schema.prisma
 
       - name: Run database migrations
         run: pnpm --filter @venus/project-service migrate:dev
@@ -182,6 +188,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm prisma generate --schema infrastructure/postgres/schema.prisma
 
       - name: Prepare stage env file
         env:
