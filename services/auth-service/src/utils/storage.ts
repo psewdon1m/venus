@@ -24,6 +24,8 @@ const mapAccount = (record: PrismaAccount): Account => ({
   updatedAt: record.updatedAt,
 });
 
+type SessionWithAccount = Session & { account: PrismaAccount };
+
 class DatabaseStorage {
   // Account operations
   async createAccount(account: { email: string; passwordHash: string }): Promise<Account> {
@@ -142,13 +144,22 @@ class DatabaseStorage {
     });
   }
 
-  getSessionByRefreshToken(
-    refreshToken: string
-  ): Promise<(Session & { account: PrismaAccount }) | null> {
-    return prisma.session.findUnique({
+  async getSessionByRefreshToken(refreshToken: string): Promise<SessionWithAccount | null> {
+    const session = await prisma.session.findUnique({
       where: { refreshToken },
-      include: { account: true },
     });
+    if (!session) {
+      return null;
+    }
+
+    const account = await prisma.account.findUnique({
+      where: { id: session.accountId },
+    });
+    if (!account) {
+      return null;
+    }
+
+    return { ...session, account };
   }
 
   revokeSession(sessionId: string): Promise<Session> {

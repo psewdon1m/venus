@@ -601,6 +601,16 @@ router.post(
   asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
     try {
       const accountId = req.params.id;
+      if (!accountId) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ACCOUNT_ID',
+            message: 'Account id is required',
+          },
+        });
+        return;
+      }
       const roleValidation = roleUpdateSchema.safeParse(req);
       if (!roleValidation.success) {
         res.status(400).json({
