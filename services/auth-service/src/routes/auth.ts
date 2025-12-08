@@ -14,6 +14,7 @@ import { generateTokens, hashPassword, verifyPassword, verifyToken } from '../ut
 import { logger } from '../utils/logger';
 import { storage } from '../utils/storage';
 
+import type { Session as PrismaSession, Account as PrismaAccount } from '@prisma/client';
 import type { Account, LoginResponse, RefreshTokenResponse, RegisterResponse } from '@venus/types';
 import type { NextFunction, Request, Response } from 'express';
 
@@ -307,8 +308,10 @@ router.post(
         return;
       }
 
+      const typedSession = session as PrismaSession & { account: PrismaAccount };
+
       // Check if session is expired
-      if (session.expiresAt < new Date()) {
+      if (typedSession.expiresAt < new Date()) {
         res.status(401).json({
           success: false,
           error: { code: 'EXPIRED_REFRESH_TOKEN', message: 'Refresh token expired' },
@@ -318,15 +321,15 @@ router.post(
 
       // Generate new tokens with role
       const tokens = generateTokens(
-        session.account.id,
-        session.account.email,
-        resolveRole(session.account.role)
+        typedSession.account.id,
+        typedSession.account.email,
+        resolveRole(typedSession.account.role)
       );
 
       // Revoke old session and create new one (token rotation)
-      await storage.revokeSession(session.id);
+      await storage.revokeSession(typedSession.id);
       await storage.createSession(
-        session.account.id,
+        typedSession.account.id,
         tokens.refreshToken,
         req.get('user-agent'),
         req.ip
@@ -352,7 +355,7 @@ router.post(
         expiresIn: Math.floor((tokens.accessTokenExpiry - Date.now()) / 1000),
       };
 
-      logger.info('Token refreshed with rotation', { userId: session.account.id });
+      logger.info('Token refreshed with rotation', { userId: typedSession.account.id });
 
       res.status(200).json({
         success: true,
