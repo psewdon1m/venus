@@ -93,13 +93,13 @@ jobs:
       - name: Run database migrations
         run: pnpm --filter @venus/project-service migrate:dev
         env:
-          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
+          DATABASE_URL: postgresql://postgres:test@postgres:5432/test
 
       - name: Run integration tests (Postgres + Redis)
         run: pnpm test:integration
         env:
-          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
-          REDIS_URL: redis://localhost:6379
+          DATABASE_URL: postgresql://postgres:test@postgres:5432/test
+          REDIS_URL: redis://redis:6379
 
       - name: Run coverage suite
         run: pnpm test:coverage
