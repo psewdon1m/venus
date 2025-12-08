@@ -50,9 +50,6 @@ jobs:
   db-integration:
     runs-on: ubuntu-latest
     needs: lint
-    env:
-      POSTGRES_PORT: ${{ job.services.postgres.ports['5432'] }}
-      REDIS_PORT: ${{ job.services.redis.ports['6379'] }}
     services:
       postgres:
         image: postgres:16
@@ -90,7 +87,7 @@ jobs:
 
       - name: Wait for Postgres
         run: |
-          PORT="${POSTGRES_PORT:-5432}"
+          PORT="5432"
           for i in {1..60}; do
             nc -z 127.0.0.1 "$PORT" && exit 0
             echo "Waiting for Postgres on 127.0.0.1:${PORT} ($i/60)..."
@@ -113,19 +110,19 @@ jobs:
       - name: Run database migrations
         run: pnpm --filter @venus/project-service migrate:dev
         env:
-          DATABASE_URL: postgresql://postgres:test@localhost:${{ env.POSTGRES_PORT || '5432' }}/test
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
 
       - name: Run integration tests (Postgres + Redis)
         run: pnpm test:integration
         env:
-          DATABASE_URL: postgresql://postgres:test@localhost:${{ env.POSTGRES_PORT || '5432' }}/test
-          REDIS_URL: redis://localhost:${{ env.REDIS_PORT || '6379' }}
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
+          REDIS_URL: redis://localhost:6379
 
       - name: Run coverage suite
         run: pnpm test:coverage
         env:
-          DATABASE_URL: postgresql://postgres:test@localhost:${{ env.POSTGRES_PORT || '5432' }}/test
-          REDIS_URL: redis://localhost:${{ env.REDIS_PORT || '6379' }}
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
+          REDIS_URL: redis://localhost:6379
 
       - name: Upload coverage to Codecov
         if: ${{ env.CODECOV_TOKEN != '' }}
