@@ -1,51 +1,51 @@
-п»ї# Venus Platform API - Р СѓРєРѕРІРѕРґСЃС‚РІРѕ РїРѕ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЋ
+# Venus Platform API - Руководство по использованию
 
-**Р‘Р°Р·РѕРІС‹Р№ URL:** 
+**Базовый URL:** 
 `https://api.venus.app` (production) 
 `http://localhost:4000` (development)
 
-**Р¤РѕСЂРјР°С‚ РґР°РЅРЅС‹С…:** JSON
-**РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ:** JWT Bearer Token
+**Формат данных:** JSON
+**Аутентификация:** JWT Bearer Token
 
 ---
 
-## РЎРѕРґРµСЂР¶Р°РЅРёРµ
+## Содержание
 
-1. [РћР±С‰РёР№ РѕР±Р·РѕСЂ](#РѕР±С‰РёР№-РѕР±Р·РѕСЂ)
-2. [РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ](#Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ)
-3. [Р‘Р°Р·РѕРІС‹Рµ РїСЂРёРЅС†РёРїС‹](#Р±Р°Р·РѕРІС‹Рµ-РїСЂРёРЅС†РёРїС‹)
+1. [Общий обзор](#общий-обзор)
+2. [Аутентификация](#аутентификация)
+3. [Базовые принципы](#базовые-принципы)
 4. [API Endpoints](#api-endpoints)
-5. [РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє](#РѕР±СЂР°Р±РѕС‚РєР°-РѕС€РёР±РѕРє)
+5. [Обработка ошибок](#обработка-ошибок)
 6. [Rate Limiting](#rate-limiting)
-7. [РџСЂРёРјРµСЂС‹ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ](#РїСЂРёРјРµСЂС‹-РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ)
+7. [Примеры использования](#примеры-использования)
 
 ---
 
-## РћР±С‰РёР№ РѕР±Р·РѕСЂ
+## Общий обзор
 
-Venus API РїРѕСЃС‚СЂРѕРµРЅ РЅР° РјРёРєСЂРѕСЃРµСЂРІРёСЃРЅРѕР№ Р°СЂС…РёС‚РµРєС‚СѓСЂРµ СЃ РµРґРёРЅС‹Рј API Gateway. Р’СЃРµ Р·Р°РїСЂРѕСЃС‹ РїСЂРѕС…РѕРґСЏС‚ С‡РµСЂРµР· `/api/*` endpoints.
+Venus API построен на микросервисной архитектуре с единым API Gateway. Все запросы проходят через `/api/*` endpoints.
 
-### РђСЂС…РёС‚РµРєС‚СѓСЂР°
-
-```
-
-Frontend в†’ API Gateway в†’ Microservices
-
-В  В  В  В  В  В  В  В  В  В  В в†“
-
-В  В  В  В  В  В  Auth Service (4001)
-
-В  В  В  В  В  В  Project Service (4002)
-
-В  В  В  В  В  В  Persona Service (4003)
-
-В  В  В  В  В  В  Media Service (4004)
-
-В  В  В  В  В  В  AI-CV Service (4005)
+### Архитектура
 
 ```
 
-### РўРµС…РЅРѕР»РѕРіРёРё
+Frontend > API Gateway > Microservices
+
+                     v
+
+            Auth Service (4001)
+
+            Project Service (4002)
+
+            Persona Service (4003)
+
+            Media Service (4004)
+
+            AI-CV Service (4005)
+
+```
+
+### Технологии
 
 - **Runtime:** Node.js 20+
 - **Framework:** Express.js
@@ -56,15 +56,15 @@ Frontend в†’ API Gateway в†’ Microservices
 
 ---
 
-## РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ
+## Аутентификация
 
-Venus РёСЃРїРѕР»СЊР·СѓРµС‚ JWT (JSON Web Tokens) РґР»СЏ Р°СѓС‚РµРЅС‚РёС„РёРєР°С†РёРё.
+Venus использует JWT (JSON Web Tokens) для аутентификации.
 
 ---
 
-### РџРѕР»СѓС‡РµРЅРёРµ С‚РѕРєРµРЅР°
+### Получение токена
 
-**Р РµРіРёСЃС‚СЂР°С†РёСЏ:**
+**Регистрация:**
 
 ```bash
 
@@ -76,47 +76,47 @@ Content-Type: application/json
 
 {
 
-В  "email": "user@example.com",
+  "email": "user@example.com",
 
-В  "password": "SecurePass123!",
+  "password": "SecurePass123!",
 
-В  "confirmPassword": "SecurePass123!"
+  "confirmPassword": "SecurePass123!"
 
 }
 
 ```
 
-**РћС‚РІРµС‚:**
+**Ответ:**
 
 ```json
 
 {
 
-В  "success": true,
+  "success": true,
 
-В  "data": {
+  "data": {
 
-В  В  "user": {
+    "user": {
 
-В  В  В  "id": "uuid",
+      "id": "uuid",
 
-В  В  В  "email": "user@example.com",
+      "email": "user@example.com",
 
-В  В  В  "createdAt": "2025-01-01T00:00:00.000Z",
+      "createdAt": "2025-01-01T00:00:00.000Z",
 
-В  В  В  "updatedAt": "2025-01-01T00:00:00.000Z"
+      "updatedAt": "2025-01-01T00:00:00.000Z"
 
-В  В  },
+    },
 
-В  В  "message": "Account created successfully"
+    "message": "Account created successfully"
 
-В  }
+  }
 
 }
 
 ```
 
-**Р’С…РѕРґ РІ СЃРёСЃС‚РµРјСѓ:**
+**Вход в систему:**
 
 ```bash
 
@@ -128,69 +128,69 @@ Content-Type: application/json
 
 {
 
-В  "email": "user@example.com",
+  "email": "user@example.com",
 
-В  "password": "SecurePass123!"
+  "password": "SecurePass123!"
 
 }
 
 ```
 
-**РћС‚РІРµС‚:**
+**Ответ:**
 
 ```json
 
 {
 
-В  "success": true,
+  "success": true,
 
-В  "data": {
+  "data": {
 
-В  В  "accessToken": "eyJhbGciOiJIUzI1NiIs...",
+    "accessToken": "<ACCESS_TOKEN>",
 
-В  В  "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
+    "refreshToken": "<REFRESH_TOKEN>",
 
-В  В  "user": {
+    "user": {
 
-В  В  В  "id": "uuid",
+      "id": "uuid",
 
-В  В  В  "email": "user@example.com"
+      "email": "user@example.com"
 
-В  В  },
+    },
 
-В  В  "expiresIn": 900
+    "expiresIn": 900
 
-В  }
+  }
 
 }
 
 ```
 
-### РСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ С‚РѕРєРµРЅР°
+### Использование токена
 
-Р’СЃРµ Р·Р°С‰РёС‰РµРЅРЅС‹Рµ endpoints С‚СЂРµР±СѓСЋС‚ `Authorization` header:
-
-```bash
-
-Authorization: Bearer YOUR_ACCESS_TOKEN
-
-```
-
-**РџСЂРёРјРµСЂ curl:**
+Все защищенные endpoints требуют `Authorization` header:
 
 ```bash
 
-curl -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIs..." \
-
-В  В  В -H "Content-Type: application/json" \
-
-В  В  В https://api.venus.app/api/projects
+Authorization: Bearer <ACCESS_TOKEN>
 
 ```
 
-### РћР±РЅРѕРІР»РµРЅРёРµ С‚РѕРєРµРЅР°
+**Пример curl:**
 
-Access С‚РѕРєРµРЅС‹ РёСЃС‚РµРєР°СЋС‚ С‡РµСЂРµР· 15 РјРёРЅСѓС‚. РСЃРїРѕР»СЊР·СѓР№С‚Рµ refresh С‚РѕРєРµРЅ:
+```bash
+
+curl -H "Authorization: Bearer <ACCESS_TOKEN>" \
+
+     -H "Content-Type: application/json" \
+
+     https://api.venus.app/api/projects
+
+```
+
+### Обновление токена
+
+Access токены истекают через 15 минут. Используйте refresh токен:
 
 ```bash
 
@@ -202,84 +202,84 @@ Content-Type: application/json
 
 {
 
-В  "refreshToken": "your_refresh_token_here"
+  "refreshToken": "<REFRESH_TOKEN>"
 
 }
 
 ```
 
-**РћС‚РІРµС‚:**
+**Ответ:**
 
 ```json
 
 {
 
-В  "success": true,
+  "success": true,
 
-В  "data": {
+  "data": {
 
-В  В  "accessToken": "new_access_token",
+    "accessToken": "<NEW_ACCESS_TOKEN>",
 
-В  В  "expiresIn": 900
+    "expiresIn": 900
 
-В  }
+  }
 
 }
 
 ```
 
 
-## Р‘Р°Р·РѕРІС‹Рµ РїСЂРёРЅС†РёРїС‹
+## Базовые принципы
 
-### Р¤РѕСЂРјР°С‚ РѕС‚РІРµС‚РѕРІ
+### Формат ответов
 
-Р’СЃРµ API РѕС‚РІРµС‚С‹ СЃР»РµРґСѓСЋС‚ РµРґРёРЅРѕРјСѓ С„РѕСЂРјР°С‚Сѓ:
+Все API ответы следуют единому формату:
 
-**РЈСЃРїРµС€РЅС‹Р№ РѕС‚РІРµС‚:**
+**Успешный ответ:**
 
 ```json
 
 {
 
-В  "success": true,
+  "success": true,
 
-В  "data": {
+  "data": {
 
-В  В  // Р”Р°РЅРЅС‹Рµ РѕС‚РІРµС‚Р°
+    // Данные ответа
 
-В  },
+  },
 
-В  "meta": {
+  "meta": {
 
-В  В  // РњРµС‚Р°РґР°РЅРЅС‹Рµ (РїР°РіРёРЅР°С†РёСЏ, timestamp)
+    // Метаданные (пагинация, timestamp)
 
-В  }
+  }
 
 }
 
 ```
 
-**РћС€РёР±РєР°:**
+**Ошибка:**
 
 ```json
 
 {
 
-В  "success": false,
+  "success": false,
 
-В  "error": {
+  "error": {
 
-В  В  "code": "ERROR_CODE",
+    "code": "ERROR_CODE",
 
-В  В  "message": "Р§РµР»РѕРІРµРєРѕРїРѕРЅСЏС‚РЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ",
+    "message": "Человекопонятное сообщение",
 
-В  В  "details": {
+    "details": {
 
-В  В  В  // Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РёРЅС„РѕСЂРјР°С†РёСЏ
+      // Дополнительная информация
 
-В  В  }
+    }
 
-В  }
+  }
 
 }
 
@@ -287,20 +287,20 @@ Content-Type: application/json
 
 ### HTTP Status Codes
 
-- `200` - РЈСЃРїРµС€РЅС‹Р№ Р·Р°РїСЂРѕСЃ
-- `201` - Р РµСЃСѓСЂСЃ СЃРѕР·РґР°РЅ
-- `400` - РћС€РёР±РєР° РІР°Р»РёРґР°С†РёРё
-- `401` - РќРµ Р°РІС‚РѕСЂРёР·РѕРІР°РЅ
-- `403` - Р”РѕСЃС‚СѓРї Р·Р°РїСЂРµС‰РµРЅ
-- `404` - Р РµСЃСѓСЂСЃ РЅРµ РЅР°Р№РґРµРЅ
-- `409` - РљРѕРЅС„Р»РёРєС‚ (РґСѓР±Р»РёРєР°С‚)
-- `422` - РћС€РёР±РєР° Р±РёР·РЅРµСЃ-Р»РѕРіРёРєРё
-- `429` - РџСЂРµРІС‹С€РµРЅ Р»РёРјРёС‚ Р·Р°РїСЂРѕСЃРѕРІ
-- `500` - Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° СЃРµСЂРІРµСЂР°
+- `200` - Успешный запрос
+- `201` - Ресурс создан
+- `400` - Ошибка валидации
+- `401` - Не авторизован
+- `403` - Доступ запрещен
+- `404` - Ресурс не найден
+- `409` - Конфликт (дубликат)
+- `422` - Ошибка бизнес-логики
+- `429` - Превышен лимит запросов
+- `500` - Внутренняя ошибка сервера
 
-### РџР°РіРёРЅР°С†РёСЏ
+### Пагинация
 
-Р”Р»СЏ СЃРїРёСЃРєРѕРІ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ РєСѓСЂСЃРѕСЂРЅР°СЏ РїР°РіРёРЅР°С†РёСЏ:
+Для списков используется курсорная пагинация:
 
 ```bash
 
@@ -308,220 +308,220 @@ GET /api/projects?page=1&limit=20
 
 ```
 
-**РћС‚РІРµС‚ СЃ РїР°РіРёРЅР°С†РёРµР№:**
+**Ответ с пагинацией:**
 
 ```json
 
 {
 
-В  "success": true,
+  "success": true,
 
-В  "data": {
+  "data": {
 
-В  В  "projects": [...],
+    "projects": [...],
 
-В  В  "meta": {
+    "meta": {
 
-В  В  В  "page": 1,
+      "page": 1,
 
-В  В  В  "limit": 20,
+      "limit": 20,
 
-В  В  В  "total": 150,
+      "total": 150,
 
-В  В  В  "totalPages": 8
+      "totalPages": 8
 
-В  В  }
+    }
 
-В  }
+  }
 
 }
 
 ```
 
-### Р’Р°Р»РёРґР°С†РёСЏ РґР°РЅРЅС‹С…
+### Валидация данных
 
-API РёСЃРїРѕР»СЊР·СѓРµС‚ СЃС‚СЂРѕРіСѓСЋ РІР°Р»РёРґР°С†РёСЋ РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С…:
+API использует строгую валидацию входных данных:
 
-- **Email:** Р’Р°Р»РёРґРЅС‹Р№ email С„РѕСЂРјР°С‚
-- **РџР°СЂРѕР»Рё:** РњРёРЅРёРјСѓРј 12 СЃРёРјРІРѕР»РѕРІ, uppercase/lowercase/numbers/special chars
-- **UUID:** Р’Р°Р»РёРґРЅС‹Р№ UUIDv4 С„РѕСЂРјР°С‚
-- **РЎС‚СЂРѕРєРё:** РњР°РєСЃРёРјР°Р»СЊРЅР°СЏ РґР»РёРЅР°, РґРѕРїСѓСЃС‚РёРјС‹Рµ СЃРёРјРІРѕР»С‹
+- **Email:** Валидный email формат
+- **Пароли:** Минимум 12 символов, uppercase/lowercase/numbers/special chars
+- **UUID:** Валидный UUIDv4 формат
+- **Строки:** Максимальная длина, допустимые символы
 
   
 ## API Endpoints
 
-### РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ (РїСѓР±Р»РёС‡РЅС‹Рµ)
+### Аутентификация (публичные)
 
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
-
-|-------|----------|----------|
-
-| POST | `/api/auth/register` | Р РµРіРёСЃС‚СЂР°С†РёСЏ РЅРѕРІРѕРіРѕ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ |
-
-| POST | `/api/auth/login` | Р’С…РѕРґ РІ СЃРёСЃС‚РµРјСѓ |
-
-| POST | `/api/auth/refresh` | РћР±РЅРѕРІР»РµРЅРёРµ access С‚РѕРєРµРЅР° |
-
-| POST | `/api/auth/logout` | Р’С‹С…РѕРґ РёР· СЃРёСЃС‚РµРјС‹ |
-
----
-
-### РџСЂРѕРµРєС‚С‹ (Р·Р°С‰РёС‰РµРЅРЅС‹Рµ)
-
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
+| Метод | Endpoint | Описание |
 
 |-------|----------|----------|
 
-| GET | `/api/projects` | РџРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє РїСЂРѕРµРєС‚РѕРІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ |
+| POST | `/api/auth/register` | Регистрация нового пользователя |
 
-| POST | `/api/projects` | РЎРѕР·РґР°С‚СЊ РЅРѕРІС‹Р№ РїСЂРѕРµРєС‚ |
+| POST | `/api/auth/login` | Вход в систему |
 
-| GET | `/api/projects/:id` | РџРѕР»СѓС‡РёС‚СЊ РґРµС‚Р°Р»Рё РїСЂРѕРµРєС‚Р° |
+| POST | `/api/auth/refresh` | Обновление access токена |
 
-| PUT | `/api/projects/:id` | РћР±РЅРѕРІРёС‚СЊ РїСЂРѕРµРєС‚ |
-
-| DELETE | `/api/projects/:id` | РЈРґР°Р»РёС‚СЊ РїСЂРѕРµРєС‚ |
+| POST | `/api/auth/logout` | Выход из системы |
 
 ---
 
-###  РџРµСЂСЃРѕРЅС‹ (Р·Р°С‰РёС‰РµРЅРЅС‹Рµ)
+### Проекты (защищенные)
 
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
+| Метод | Endpoint | Описание |
 
 |-------|----------|----------|
 
-| GET | `/api/personas` | РџРѕР»СѓС‡РёС‚СЊ РїРµСЂСЃРѕРЅС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ |
+| GET | `/api/projects` | Получить список проектов пользователя |
 
-| POST | `/api/personas` | РЎРѕР·РґР°С‚СЊ РЅРѕРІСѓСЋ РїРµСЂСЃРѕРЅСѓ |
+| POST | `/api/projects` | Создать новый проект |
 
-| GET | `/api/personas/:id` | РџРѕР»СѓС‡РёС‚СЊ РґРµС‚Р°Р»Рё РїРµСЂСЃРѕРЅС‹ |
+| GET | `/api/projects/:id` | Получить детали проекта |
 
-| PUT | `/api/personas/:id` | РћР±РЅРѕРІРёС‚СЊ РїРµСЂСЃРѕРЅСѓ |
+| PUT | `/api/projects/:id` | Обновить проект |
 
-| DELETE | `/api/personas/:id` | РЈРґР°Р»РёС‚СЊ РїРµСЂСЃРѕРЅСѓ |
+| DELETE | `/api/projects/:id` | Удалить проект |
 
 ---
 
-### РџСѓР±Р»РёС‡РЅС‹Р№ РґРѕСЃС‚СѓРї Рє РїРµСЂСЃРѕРЅР°Рј
+###  Персоны (защищенные)
 
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
+| Метод | Endpoint | Описание |
 
 |-------|----------|----------|
 
-| GET | `/api/public/personas` | РЎРїРёСЃРѕРє РїСѓР±Р»РёС‡РЅС‹С… РїРµСЂСЃРѕРЅ |
+| GET | `/api/personas` | Получить персоны пользователя |
 
-| GET | `/api/public/personas/:slug` | РџСѓР±Р»РёС‡РЅР°СЏ СЃС‚СЂР°РЅРёС†Р° РїРµСЂСЃРѕРЅС‹ |
+| POST | `/api/personas` | Создать новую персону |
+
+| GET | `/api/personas/:id` | Получить детали персоны |
+
+| PUT | `/api/personas/:id` | Обновить персону |
+
+| DELETE | `/api/personas/:id` | Удалить персону |
 
 ---
 
-### РњРµРґРёР° (Р·Р°С‰РёС‰РµРЅРЅС‹Рµ)
+### Публичный доступ к персонам
 
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
+| Метод | Endpoint | Описание |
 
 |-------|----------|----------|
 
-| POST | `/api/media/upload` | Р—Р°РіСЂСѓР·РёС‚СЊ С„Р°Р№Р» |
+| GET | `/api/public/personas` | Список публичных персон |
 
-| GET | `/api/media` | РџРѕР»СѓС‡РёС‚СЊ РјРµРґРёР° С„Р°Р№Р»С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ |
-
-| GET | `/api/media/:id` | РџРѕР»СѓС‡РёС‚СЊ РґРµС‚Р°Р»Рё РјРµРґРёР° С„Р°Р№Р»Р° |
-
-| DELETE | `/api/media/:id` | РЈРґР°Р»РёС‚СЊ РјРµРґРёР° С„Р°Р№Р» |
+| GET | `/api/public/personas/:slug` | Публичная страница персоны |
 
 ---
 
-### AI CV (Р·Р°С‰РёС‰РµРЅРЅС‹Рµ)
+### Медиа (защищенные)
 
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
+| Метод | Endpoint | Описание |
 
 |-------|----------|----------|
 
-| POST | `/api/cv/generate` | РЎРіРµРЅРµСЂРёСЂРѕРІР°С‚СЊ CV |
+| POST | `/api/media/upload` | Загрузить файл |
 
-| GET | `/api/cv/history` | РСЃС‚РѕСЂРёСЏ РіРµРЅРµСЂР°С†РёР№ CV |
+| GET | `/api/media` | Получить медиа файлы пользователя |
 
-| GET | `/api/cv/:id/download` | РЎРєР°С‡Р°С‚СЊ СЃРіРµРЅРµСЂРёСЂРѕРІР°РЅРЅС‹Р№ CV |
+| GET | `/api/media/:id` | Получить детали медиа файла |
+
+| DELETE | `/api/media/:id` | Удалить медиа файл |
 
 ---
 
-### РњРѕРЅРёС‚РѕСЂРёРЅРі
+### AI CV (защищенные)
 
-| РњРµС‚РѕРґ | Endpoint | РћРїРёСЃР°РЅРёРµ |
+| Метод | Endpoint | Описание |
+
+|-------|----------|----------|
+
+| POST | `/api/cv/generate` | Сгенерировать CV |
+
+| GET | `/api/cv/history` | История генераций CV |
+
+| GET | `/api/cv/:id/download` | Скачать сгенерированный CV |
+
+---
+
+### Мониторинг
+
+| Метод | Endpoint | Описание |
 
 |-------|----------|----------|
 
 | GET | `/health` | Health check API Gateway |
 
-| GET | `/api/health` | РћР±С‰РёР№ health check |
+| GET | `/api/health` | Общий health check |
 
 
-## РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
+## Обработка ошибок
 
-### РўРёРїС‹ РѕС€РёР±РѕРє
+### Типы ошибок
 
-| РљРѕРґ РѕС€РёР±РєРё | HTTP Status | РћРїРёСЃР°РЅРёРµ |
+| Код ошибки | HTTP Status | Описание |
 
 |------------|-------------|----------|
 
-| `VALIDATION_ERROR` | 400 | РћС€РёР±РєР° РІР°Р»РёРґР°С†РёРё РІС…РѕРґРЅС‹С… РґР°РЅРЅС‹С… |
+| `VALIDATION_ERROR` | 400 | Ошибка валидации входных данных |
 
-| `INVALID_CREDENTIALS` | 401 | РќРµРІРµСЂРЅС‹Р№ email РёР»Рё РїР°СЂРѕР»СЊ |
+| `INVALID_CREDENTIALS` | 401 | Неверный email или пароль |
 
-| `INVALID_TOKEN` | 401 | РќРµРґРµР№СЃС‚РІРёС‚РµР»СЊРЅС‹Р№ JWT С‚РѕРєРµРЅ |
+| `INVALID_TOKEN` | 401 | Недействительный JWT токен |
 
-| `MISSING_TOKEN` | 401 | РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚ С‚РѕРєРµРЅ Р°РІС‚РѕСЂРёР·Р°С†РёРё |
+| `MISSING_TOKEN` | 401 | Отсутствует токен авторизации |
 
-| `NOT_FOUND` | 404 | Р РµСЃСѓСЂСЃ РЅРµ РЅР°Р№РґРµРЅ |
+| `NOT_FOUND` | 404 | Ресурс не найден |
 
-| `EMAIL_EXISTS` | 409 | Email СѓР¶Рµ Р·Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°РЅ |
+| `EMAIL_EXISTS` | 409 | Email уже зарегистрирован |
 
-| `SLUG_EXISTS` | 409 | Slug СѓР¶Рµ РёСЃРїРѕР»СЊР·СѓРµС‚СЃСЏ |
+| `SLUG_EXISTS` | 409 | Slug уже используется |
 
-| `INTERNAL_ERROR` | 500 | Р’РЅСѓС‚СЂРµРЅРЅСЏСЏ РѕС€РёР±РєР° СЃРµСЂРІРµСЂР° |
+| `INTERNAL_ERROR` | 500 | Внутренняя ошибка сервера |
 
 ---
 
-### РџСЂРёРјРµСЂ РѕС€РёР±РєРё РІР°Р»РёРґР°С†РёРё
+### Пример ошибки валидации
 
 ```json
 
 {
 
-В  "success": false,
+  "success": false,
 
-В  "error": {
+  "error": {
 
-В  В  "code": "VALIDATION_ERROR",
+    "code": "VALIDATION_ERROR",
 
-В  В  "message": "Invalid input data",
+    "message": "Invalid input data",
 
-В  В  "details": [
+    "details": [
 
-В  В  В  {
+      {
 
-В  В  В  В  "field": "email",
+        "field": "email",
 
-В  В  В  В  "message": "Invalid email format"
+        "message": "Invalid email format"
 
-В  В  В  },
+      },
 
-В  В  В  {
+      {
 
-В  В  В  В  "field": "password",
+        "field": "password",
 
-В  В  В  В  "message": "Password must be at least 12 characters"
+        "message": "Password must be at least 12 characters"
 
-В  В  В  }
+      }
 
-В  В  ]
+    ]
 
-В  }
+  }
 
 }
 
 ```
 
-### РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє РІ РєРѕРґРµ
+### Обработка ошибок в коде
 
 ```javascript
 
@@ -529,61 +529,61 @@ API РёСЃРїРѕР»СЊР·СѓРµС‚ СЃС‚СЂРѕРіСѓСЋ РІР°Р»РёРґР°С†РёСЋ РІС…РѕРґРЅС‹С… РґР°РЅ
 
 try {
 
-В  const response = await fetch('/api/projects', {
+  const response = await fetch('/api/projects', {
 
-В  В  headers: {
+    headers: {
 
-В  В  В  'Authorization': `Bearer ${token}`,
+      'Authorization': `Bearer ${token}`,
 
-В  В  В  'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
 
-В  В  }
+    }
 
-В  });
-
-  
-
-В  const data = await response.json();
+  });
 
   
 
-В  if (!data.success) {
+  const data = await response.json();
 
-В  В  console.error('API Error:', data.error.code, data.error.message);
+  
 
-В  В  // Handle specific error codes
+  if (!data.success) {
 
-В  В  switch (data.error.code) {
+    console.error('API Error:', data.error.code, data.error.message);
 
-В  В  В  case 'INVALID_TOKEN':
+    // Handle specific error codes
 
-В  В  В  В  // Redirect to login
+    switch (data.error.code) {
 
-В  В  В  В  break;
+      case 'INVALID_TOKEN':
 
-В  В  В  case 'VALIDATION_ERROR':
+        // Redirect to login
 
-В  В  В  В  // Show validation errors
+        break;
 
-В  В  В  В  break;
+      case 'VALIDATION_ERROR':
 
-В  В  В  default:
+        // Show validation errors
 
-В  В  В  В  // Generic error handling
+        break;
 
-В  В  }
+      default:
 
-В  } else {
+        // Generic error handling
 
-В  В  // Success handling
+    }
 
-В  В  console.log('Data:', data.data);
+  } else {
 
-В  }
+    // Success handling
+
+    console.log('Data:', data.data);
+
+  }
 
 } catch (error) {
 
-В  console.error('Network error:', error);
+  console.error('Network error:', error);
 
 }
 
@@ -592,84 +592,84 @@ try {
 
 ## Rate Limiting
 
-API РёРјРµРµС‚ РІСЃС‚СЂРѕРµРЅРЅРѕРµ РѕРіСЂР°РЅРёС‡РµРЅРёРµ Р·Р°РїСЂРѕСЃРѕРІ РґР»СЏ Р·Р°С‰РёС‚С‹ РѕС‚ abuse:
+API имеет встроенное ограничение запросов для защиты от abuse:
 
-- **РћР±С‰РёР№ Р»РёРјРёС‚:** 100 Р·Р°РїСЂРѕСЃРѕРІ Р·Р° 15 РјРёРЅСѓС‚
+- **Общий лимит:** 100 запросов за 15 минут
 
-- **РџРѕР»СЊР·РѕРІР°С‚РµР»СЊСЃРєРёР№ Р»РёРјРёС‚:** 200 Р·Р°РїСЂРѕСЃРѕРІ Р·Р° 15 РјРёРЅСѓС‚ РґР»СЏ Р°РІС‚РѕСЂРёР·РѕРІР°РЅРЅС‹С… РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№
+- **Пользовательский лимит:** 200 запросов за 15 минут для авторизованных пользователей
 
-- **Р—Р°РіРѕР»РѕРІРєРё РѕС‚РІРµС‚Р°:**
+- **Заголовки ответа:**
 
-В  - `X-RateLimit-Limit`: РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р·Р°РїСЂРѕСЃРѕРІ
+  - `X-RateLimit-Limit`: Максимальное количество запросов
 
-В  - `X-RateLimit-Remaining`: РћСЃС‚Р°РІС€РёРµСЃСЏ Р·Р°РїСЂРѕСЃС‹
+  - `X-RateLimit-Remaining`: Оставшиеся запросы
 
-В  - `X-RateLimit-Reset`: Р’СЂРµРјСЏ СЃР±СЂРѕСЃР° РІ Unix timestamp
+  - `X-RateLimit-Reset`: Время сброса в Unix timestamp
 
-### РџСЂРёРјРµСЂ РїСЂРµРІС‹С€РµРЅРёСЏ Р»РёРјРёС‚Р°
+### Пример превышения лимита
 
 ```json
 
 {
 
-В  "success": false,
+  "success": false,
 
-В  "error": {
+  "error": {
 
-В  В  "code": "RATE_LIMIT_EXCEEDED",
+    "code": "RATE_LIMIT_EXCEEDED",
 
-В  В  "message": "Too many requests, please try again later"
+    "message": "Too many requests, please try again later"
 
-В  }
+  }
 
 }
 
 ```
 
 
-## РџСЂРёРјРµСЂС‹ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ
+## Примеры использования
 
-### РџРѕР»РЅС‹Р№ С„Р»РѕСѓ: РЎРѕР·РґР°РЅРёРµ РїСЂРѕРµРєС‚Р°
+### Полный флоу: Создание проекта
 
 ```javascript
 
-// 1. Р РµРіРёСЃС‚СЂР°С†РёСЏ
+// 1. Регистрация
 
 const registerResponse = await fetch('/api/auth/register', {
 
-В  method: 'POST',
+  method: 'POST',
 
-В  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json' },
 
-В  body: JSON.stringify({
+  body: JSON.stringify({
 
-В  В  email: 'user@example.com',
+    email: 'user@example.com',
 
-В  В  password: 'SecurePass123!',
+    password: 'SecurePass123!',
 
-В  В  confirmPassword: 'SecurePass123!'
+    confirmPassword: 'SecurePass123!'
 
-В  })
+  })
 
 });
 
   
 
-// 2. Р’С…РѕРґ
+// 2. Вход
 
 const loginResponse = await fetch('/api/auth/login', {
 
-В  method: 'POST',
+  method: 'POST',
 
-В  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json' },
 
-В  body: JSON.stringify({
+  body: JSON.stringify({
 
-В  В  email: 'user@example.com',
+    email: 'user@example.com',
 
-В  В  password: 'SecurePass123!'
+    password: 'SecurePass123!'
 
-В  })
+  })
 
 });
 
@@ -679,27 +679,27 @@ const { accessToken } = await loginResponse.json().data;
 
   
 
-// 3. РЎРѕР·РґР°РЅРёРµ РїСЂРѕРµРєС‚Р°
+// 3. Создание проекта
 
 const projectResponse = await fetch('/api/projects', {
 
-В  method: 'POST',
+  method: 'POST',
 
-В  headers: {
+  headers: {
 
-В  В  'Authorization': `Bearer ${accessToken}`,
+    'Authorization': `Bearer ${accessToken}`,
 
-В  В  'Content-Type': 'application/json'
+    'Content-Type': 'application/json'
 
-В  },
+  },
 
-В  body: JSON.stringify({
+  body: JSON.stringify({
 
-В  В  title: 'My Portfolio Project',
+    title: 'My Portfolio Project',
 
-В  В  type: 'album'
+    type: 'album'
 
-В  })
+  })
 
 });
 
@@ -711,129 +711,129 @@ console.log('Created project:', project.id);
 
 ```
 
-### Р Р°Р±РѕС‚Р° СЃ РїР°РіРёРЅР°С†РёРµР№
+### Работа с пагинацией
 
 ```javascript
 
-// РџРѕР»СѓС‡РµРЅРёРµ РїСЂРѕРµРєС‚РѕРІ СЃ РїР°РіРёРЅР°С†РёРµР№
+// Получение проектов с пагинацией
 
 async function getProjects(page = 1, limit = 20) {
 
-В  const response = await fetch(
+  const response = await fetch(
 
-В  В  `/api/projects?page=${page}&limit=${limit}`,
+    `/api/projects?page=${page}&limit=${limit}`,
 
-В  В  {
+    {
 
-В  В  В  headers: {
+      headers: {
 
-В  В  В  В  'Authorization': `Bearer ${token}`
+        'Authorization': `Bearer ${token}`
 
-В  В  В  }
+      }
 
-В  В  }
+    }
 
-В  );
-
-  
-
-В  const data = await response.json();
+  );
 
   
 
-В  if (data.success) {
-
-В  В  console.log('Projects:', data.data.projects);
-
-В  В  console.log('Pagination:', data.data.meta);
+  const data = await response.json();
 
   
 
-В  В  // РЎР»РµРґСѓСЋС‰Р°СЏ СЃС‚СЂР°РЅРёС†Р°
+  if (data.success) {
 
-В  В  if (page < data.data.meta.totalPages) {
+    console.log('Projects:', data.data.projects);
 
-В  В  В  return getProjects(page + 1, limit);
+    console.log('Pagination:', data.data.meta);
 
-В  В  }
+  
 
-В  }
+    // Следующая страница
+
+    if (page < data.data.meta.totalPages) {
+
+      return getProjects(page + 1, limit);
+
+    }
+
+  }
 
 }
 
 ```
 
-### РћР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє Рё РїРѕРІС‚РѕСЂРЅС‹Рµ РїРѕРїС‹С‚РєРё
+### Обработка ошибок и повторные попытки
 
 ```javascript
 
 async function apiRequest(url, options = {}, retries = 3) {
 
-В  try {
+  try {
 
-В  В  const response = await fetch(url, {
+    const response = await fetch(url, {
 
-В  В  В  headers: {
+      headers: {
 
-В  В  В  В  'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
 
-В  В  В  В  'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
 
-В  В  В  В  ...options.headers
+        ...options.headers
 
-В  В  В  },
+      },
 
-В  В  В  ...options
+      ...options
 
-В  В  });
-
-  
-
-В  В  const data = await response.json();
+    });
 
   
 
-В  В  if (!data.success) {
-
-В  В  В  // РЎРїРµС†РёС„РёС‡РµСЃРєР°СЏ РѕР±СЂР°Р±РѕС‚РєР° РѕС€РёР±РѕРє
-
-В  В  В  if (data.error.code === 'INVALID_TOKEN' && retries > 0) {
-
-В  В  В  В  // РџРѕРїС‹С‚РєР° РѕР±РЅРѕРІРёС‚СЊ С‚РѕРєРµРЅ Рё РїРѕРІС‚РѕСЂРёС‚СЊ
-
-В  В  В  В  await refreshToken();
-
-В  В  В  В  return apiRequest(url, options, retries - 1);
-
-В  В  В  }
+    const data = await response.json();
 
   
 
-В  В  В  throw new Error(`${data.error.code}: ${data.error.message}`);
+    if (!data.success) {
 
-В  В  }
+      // Специфическая обработка ошибок
 
-  
+      if (data.error.code === 'INVALID_TOKEN' && retries > 0) {
 
-В  В  return data.data;
+        // Попытка обновить токен и повторить
 
-В  } catch (error) {
+        await refreshToken();
 
-В  В  if (retries > 0 && error.name === 'NetworkError') {
+        return apiRequest(url, options, retries - 1);
 
-В  В  В  // РџРѕРІС‚РѕСЂ РїСЂРё СЃРµС‚РµРІС‹С… РѕС€РёР±РєР°С…
-
-В  В  В  await new Promise(resolve => setTimeout(resolve, 1000));
-
-В  В  В  return apiRequest(url, options, retries - 1);
-
-В  В  }
+      }
 
   
 
-В  В  throw error;
+      throw new Error(`${data.error.code}: ${data.error.message}`);
 
-В  }
+    }
+
+  
+
+    return data.data;
+
+  } catch (error) {
+
+    if (retries > 0 && error.name === 'NetworkError') {
+
+      // Повтор при сетевых ошибках
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      return apiRequest(url, options, retries - 1);
+
+    }
+
+  
+
+    throw error;
+
+  }
 
 }
 
@@ -841,18 +841,18 @@ async function apiRequest(url, options = {}, retries = 3) {
 
 ## Related Documentation
 
-- [`docs/git_managment.md`](git_managment.md) вЂ” Git workflow Рё releases
-- [`infrastructure/cloud/secrets-management.md`](infrastructure/cloud/secrets-management.md) вЂ” Secrets handling
-- [`infrastructure/cloud/domains.md`](infrastructure/cloud/domains.md) вЂ” DNS Рё SSL setup
-- [`docs/stack.md`](stack.md) вЂ” Technology stack
-- [`docs/manifest.md`](manifest.md) вЂ” С„РёР»РѕСЃРѕС„РёСЏ Рё Р°СЂС…РёС‚РµРєС‚СѓСЂР° РїСЂРѕРµРєС‚Р°
-- [`docs/codex.md`](codex.md) вЂ” РєРѕСЂРЅРµРІС‹Рµ РїСЂР°РІРёР»Р° РїСЂРѕРµРєС‚Р°
-- [`docs/stages.md`](stages.md) вЂ” СЌС‚Р°РїС‹ СЂР°Р·СЂР°Р±РѕС‚РєРё
-- [`docs/traceability-matrix.md`](traceability-matrix.md) вЂ” С‚СЂР°СЃСЃРёСЂРѕРІРєР° С‚СЂРµР±РѕРІР°РЅРёР№
-- [`docs/directory_tree.md`](directory_tree.md) вЂ” СЃС‚СЂСѓРєС‚СѓСЂР° РїСЂРѕРµРєС‚Р°
-- [`docs/project_passport.md`](project_passport.md) вЂ” С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ РїСЂРѕРµРєС‚Р°
-- [`docs/versions.md`](versions.md) вЂ” РёСЃС‚РѕСЂРёСЏ РІРµСЂСЃРёР№
-- [`docs/api_usage.md`](api_usage.md) вЂ” РїСЂРёРјРµСЂС‹ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёСЏ API
-- [`docs/cloud_setup.md`](cloud_setup.md) вЂ” РёРЅС„СЂР°СЃС‚СЂСѓРєС‚СѓСЂР° Рё РґРѕРјРµРЅС‹
-- [`docs/secrets_management.md`](secrets_management.md) вЂ” СѓРїСЂР°РІР»РµРЅРёРµ СЃРµРєСЂРµС‚Р°РјРё
-- [`docs/constitution.md`](constitution.md) вЂ” РєРѕРЅСЃС‚РёС‚СѓС†РёСЏ РїСЂРѕРµРєС‚Р°
+- [`docs/git_managment.md`](git_managment.md) — Git workflow и releases
+- [`infrastructure/cloud/secrets-management.md`](infrastructure/cloud/secrets-management.md) — Secrets handling
+- [`infrastructure/cloud/domains.md`](infrastructure/cloud/domains.md) — DNS и SSL setup
+- [`docs/stack.md`](stack.md) — Technology stack
+- [`docs/manifest.md`](manifest.md) — философия и архитектура проекта
+- [`docs/codex.md`](codex.md) — корневые правила проекта
+- [`docs/stages.md`](stages.md) — этапы разработки
+- [`docs/traceability-matrix.md`](traceability-matrix.md) — трассировка требований
+- [`docs/directory_tree.md`](directory_tree.md) — структура проекта
+- [`docs/project_passport.md`](project_passport.md) — текущее состояние проекта
+- [`docs/versions.md`](versions.md) — история версий
+- [`docs/api_usage.md`](api_usage.md) — примеры использования API
+- [`docs/cloud_setup.md`](cloud_setup.md) — инфраструктура и домены
+- [`docs/secrets_management.md`](secrets_management.md) — управление секретами
+- [`docs/constitution.md`](constitution.md) — конституция проекта

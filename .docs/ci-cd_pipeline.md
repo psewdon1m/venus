@@ -196,18 +196,18 @@ Require branches up to date:
 
 #### Environment Secrets
 
-**Stage Environment:**
+**Stage Environment (store in GitHub Secrets):**
 ```yaml
 STAGE_HOST=31.172.78.81
-STAGE_SSH_PRIVATE_KEY=-----BEGIN OPENSSH PRIVATE KEY-----
+STAGE_SSH_PRIVATE_KEY=<stage-ssh-key-stored-in-github-secret>
 STAGE_DATABASE_URL=postgresql://venus_user:password@postgres:5432/venus_stage
 STAGE_REDIS_URL=redis://:password@redis:6379
 ```
 
-**Production Environment:**
+**Production Environment (store in GitHub Secrets):**
 ```yaml
 PRODUCTION_HOST=your-prod-server.com
-PRODUCTION_SSH_PRIVATE_KEY=-----BEGIN OPENSSH PRIVATE KEY-----
+PRODUCTION_SSH_PRIVATE_KEY=<prod-ssh-key-stored-in-github-secret>
 PRODUCTION_DATABASE_URL=postgresql://venus_user:password@postgres:5432/venus_prod
 ALB_LISTENER_ARN=arn:aws:elasticloadbalancing:...
 GREEN_TARGET_GROUP=arn:aws:elasticloadbalancing:...

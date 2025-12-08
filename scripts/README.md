@@ -52,10 +52,8 @@ scripts/
 node scripts/generate-secrets.js
 
 # Вывод:
-# JWT_SECRET=6RVP4v63py16d7uuMTlVxweQN8VkGQmSkaYq2Ko1dQ4=
-# SESSION_SECRET=neIdMSRMAKJM7qHeTRgDL4OopuxYwnrUN5V+034AdB0=
-# DATABASE_PASSWORD=hUT///qxWBGhrcDzS8Kk1w==
-# REDIS_PASSWORD=wFUMEU5vxklSi+EwTUT5zQ==
+# Outputs will include fresh JWT/Session secrets and DB/Redis passwords.
+# Copy the generated values into the appropriate .env files or GitHub secrets.
 ```
 
 **Безопасность:**
