@@ -36,8 +36,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
-        run: pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+      - name: Generate Prisma clients
+        run: |
+          pnpm --filter @venus/auth-service prisma generate
+          pnpm --filter @venus/project-service prisma generate
+          pnpm --filter @venus/persona-service prisma generate
+          pnpm --filter @venus/media-service prisma generate
+          pnpm --filter @venus/ai-cv-service prisma generate
 
       - name: Run lint
         run: pnpm --filter ${{ matrix.service == 'frontend' && 'frontend' || format('@venus/{0}', matrix.service) }} lint
@@ -77,8 +82,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
-        run: pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+      - name: Generate Prisma clients
+        run: |
+          pnpm --filter @venus/auth-service prisma generate
+          pnpm --filter @venus/project-service prisma generate
+          pnpm --filter @venus/persona-service prisma generate
+          pnpm --filter @venus/media-service prisma generate
+          pnpm --filter @venus/ai-cv-service prisma generate
 
       - name: Run database migrations
         run: pnpm --filter @venus/project-service migrate:dev
@@ -189,8 +199,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Generate Prisma client
-        run: pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+      - name: Generate Prisma clients
+        run: |
+          pnpm --filter @venus/auth-service prisma generate
+          pnpm --filter @venus/project-service prisma generate
+          pnpm --filter @venus/persona-service prisma generate
+          pnpm --filter @venus/media-service prisma generate
+          pnpm --filter @venus/ai-cv-service prisma generate
 
       - name: Prepare stage env file
         env:
