@@ -36,6 +36,8 @@ module.exports = {
     '@typescript-eslint/no-unsafe-argument': 'off',
     '@typescript-eslint/no-unsafe-enum-comparison': 'off',
     '@typescript-eslint/require-await': 'off',
+    '@typescript-eslint/no-unnecessary-type-assertion': 'off',
+    '@typescript-eslint/no-redundant-type-constituents': 'off',
 
     // TypeScript specific
     '@typescript-eslint/no-explicit-any': 'error',
