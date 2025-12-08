@@ -163,10 +163,10 @@ const validate = (schema: ZodTypeAny) => {
 };
 
 const asyncHandler = <Req extends Request>(
-  handler: (req: Req, res: Response, next: NextFunction) => Promise<void>
+  handler: (req: Req, res: Response, next: NextFunction) => Promise<void | Response>
 ) => {
   return (req: Req, res: Response, next: NextFunction): void => {
-    void handler(req, res, next);
+    void handler(req, res, next).catch((error) => next(error));
   };
 };
 
@@ -539,7 +539,7 @@ router.get(
 
       // Get placeholders from persona settings
       const settings = parsePersonaSettings(persona.settings);
-      const placeholders = settings.placeholders ?? [];
+      const placeholders: PersonaPlaceholder[] = settings.placeholders ?? [];
 
       res.json({
         success: true,
@@ -609,7 +609,7 @@ router.post(
       const placeholderId = `placeholder-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
       // Create new placeholder
-      const newPlaceholder = {
+      const newPlaceholder: PersonaPlaceholder = {
         id: placeholderId,
         type,
         order: order || placeholders.length + 1,
@@ -681,7 +681,7 @@ router.put(
 
       // Get current content
       const currentContent = parsePersonaSettings(persona.settings);
-      const placeholders = currentContent.placeholders ?? [];
+      const placeholders: PersonaPlaceholder[] = currentContent.placeholders ?? [];
 
       // Find and update placeholder
       const placeholderIndex = placeholders.findIndex(
@@ -698,11 +698,22 @@ router.put(
       }
 
       // Update placeholder
-      const updatedPlaceholder = {
-        ...placeholders[placeholderIndex],
-        content: content !== undefined ? content : placeholders[placeholderIndex].content,
-        order: order !== undefined ? order : placeholders[placeholderIndex].order,
-        enabled: enabled !== undefined ? enabled : placeholders[placeholderIndex].enabled,
+      const existingPlaceholder = placeholders[placeholderIndex];
+      if (!existingPlaceholder) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            code: 'PLACEHOLDER_NOT_FOUND',
+            message: 'Placeholder not found',
+          },
+        });
+      }
+
+      const updatedPlaceholder: PersonaPlaceholder = {
+        ...existingPlaceholder,
+        content: content !== undefined ? content : existingPlaceholder.content,
+        order: order !== undefined ? order : existingPlaceholder.order,
+        enabled: enabled !== undefined ? enabled : existingPlaceholder.enabled,
       };
 
       placeholders[placeholderIndex] = updatedPlaceholder;
@@ -767,7 +778,7 @@ router.delete(
 
       // Get current settings
       const settings = parsePersonaSettings(persona.settings);
-      const placeholders = settings.placeholders ?? [];
+      const placeholders: PersonaPlaceholder[] = settings.placeholders ?? [];
 
       // Find and remove placeholder
       const placeholderIndex = placeholders.findIndex(
@@ -852,7 +863,7 @@ router.post(
 
       // Get current settings
       const settings = parsePersonaSettings(persona.settings);
-      const placeholders = settings.placeholders ?? [];
+      const placeholders: PersonaPlaceholder[] = settings.placeholders ?? [];
 
       // Reorder placeholders based on provided order
       const reorderedPlaceholders = placeholderIds.map((id: string, index: number) => {
