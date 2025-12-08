@@ -1,7 +1,26 @@
+const fs = require('fs');
 const path = require('path');
 
 const rootDir = path.resolve(__dirname, '../..');
-const tsconfigGlobs = [path.join(rootDir, 'tsconfig.eslint.json')];
+
+const serviceTsconfigs = (() => {
+  const servicesDir = path.join(rootDir, 'services');
+  if (!fs.existsSync(servicesDir)) {
+    return [];
+  }
+  return fs
+    .readdirSync(servicesDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(servicesDir, entry.name, 'tsconfig.json'))
+    .filter((tsconfigPath) => fs.existsSync(tsconfigPath));
+})();
+
+const tsconfigGlobs = [
+  path.join(rootDir, 'tsconfig.eslint.json'),
+  path.join(rootDir, 'tsconfig.json'),
+  ...serviceTsconfigs,
+  path.join(rootDir, 'frontend', 'tsconfig.json'),
+];
 
 module.exports = {
   root: true,
@@ -13,6 +32,7 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2022,
     sourceType: 'module',
+    tsconfigRootDir: rootDir,
     project: tsconfigGlobs,
   },
   plugins: ['@typescript-eslint', 'import', 'prettier'],
