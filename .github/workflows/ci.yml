@@ -54,7 +54,9 @@ jobs:
       postgres:
         image: postgres:16
         env:
+          POSTGRES_USER: postgres
           POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -79,6 +81,16 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            nc -z localhost 5432 && exit 0
+            echo "Waiting for Postgres on localhost:5432 ($i/30)..."
+            sleep 2
+          done
+          echo "Postgres did not become ready in time" >&2
+          exit 1
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -93,13 +105,13 @@ jobs:
       - name: Run database migrations
         run: pnpm --filter @venus/project-service migrate:dev
         env:
-          DATABASE_URL: postgresql://postgres:test@postgres:5432/test
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
 
       - name: Run integration tests (Postgres + Redis)
         run: pnpm test:integration
         env:
-          DATABASE_URL: postgresql://postgres:test@postgres:5432/test
-          REDIS_URL: redis://redis:6379
+          DATABASE_URL: postgresql://postgres:test@localhost:5432/test
+          REDIS_URL: redis://localhost:6379
 
       - name: Run coverage suite
         run: pnpm test:coverage
