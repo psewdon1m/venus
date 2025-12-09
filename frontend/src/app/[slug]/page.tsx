@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation';
 import { apiClient, type Persona, type Placeholder, type Project as ApiProject } from '@/lib/api';
 
 import type { Metadata } from 'next';
+import type { ReactElement } from 'react';
 
 interface PublicPersonaPageProps {
   params: {
@@ -91,7 +92,7 @@ async function getPersonaData(slug: string): Promise<PublicPersona | null> {
 
 export default async function PublicPersonaPage({
   params,
-}: PublicPersonaPageProps): Promise<JSX.Element> {
+}: PublicPersonaPageProps): Promise<ReactElement> {
   const persona = await getPersonaData(params.slug);
 
   if (!persona) {
