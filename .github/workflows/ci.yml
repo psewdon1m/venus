@@ -267,7 +267,7 @@ jobs:
 
       - name: Start application stack
         run: |
-          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml up -d --build
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml up -d --build
 
       - name: Wait for API gateway
         run: |
@@ -279,7 +279,7 @@ jobs:
             sleep 10
           done
           echo "API gateway failed to become healthy" >&2
-          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml ps
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml ps
           exit 1
 
       - name: Apply database migrations
@@ -323,11 +323,11 @@ jobs:
 
       - name: Print docker logs on failure
         if: failure()
-        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml logs
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml logs
 
       - name: Stop application stack
         if: always()
-        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.dev.yml down -v
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml down -v
 
   publish-allure:
     needs: e2e-allure
