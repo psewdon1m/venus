@@ -3,12 +3,14 @@
 ARG SERVICE_NAME=@venus/ai-cv-service
 ARG SERVICE_PATH=services/ai-cv-service
 ARG DATABASE_URL=postgresql://postgres:password@postgres:5432/venus_dev
+ARG PNPM_VERSION=9.12.3
 
 FROM node:20-alpine AS base
+ARG PNPM_VERSION
 ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 WORKDIR /workspace
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
 RUN apk add --no-cache python3 make g++
 RUN apk add --no-cache curl \
     && wget -q -O /tmp/libcrypto1.1.apk https://dl-cdn.alpinelinux.org/alpine/v3.18/community/x86_64/libcrypto1.1-1.1.1u-r1.apk \

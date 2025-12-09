@@ -2,11 +2,13 @@
 
 ARG SERVICE_NAME=frontend
 ARG SERVICE_PATH=frontend
+ARG PNPM_VERSION=9.12.3
 
 FROM node:20-alpine AS base
+ARG PNPM_VERSION
 WORKDIR /workspace
 RUN apk add --no-cache curl && \
-    corepack enable && corepack prepare pnpm@latest --activate
+    corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
 
 FROM base AS dependencies
 ARG SERVICE_NAME
@@ -31,11 +33,12 @@ ENV NODE_ENV=development
 CMD ["sh", "-c", "pnpm dev"]
 
 FROM node:20-alpine AS production
+ARG PNPM_VERSION
 WORKDIR /workspace
 ENV NODE_ENV=production
 ARG SERVICE_PATH
 RUN apk add --no-cache curl && \
-    corepack enable && corepack prepare pnpm@latest --activate
+    corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
 
 COPY --from=dependencies /workspace/node_modules ./node_modules
 COPY --from=build /workspace/shared ./shared

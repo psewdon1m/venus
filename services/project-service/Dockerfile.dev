@@ -1,12 +1,14 @@
 # Development Dockerfile for Auth Service
 # Optimized for hot-reload
 
+ARG PNPM_VERSION=9.12.3
 FROM node:20-alpine
+ARG PNPM_VERSION
 
 WORKDIR /app
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@latest --activate
+RUN corepack enable && corepack prepare pnpm@${PNPM_VERSION} --activate
 
 # Install dependencies will be done via volume mount
 # This keeps the container light
