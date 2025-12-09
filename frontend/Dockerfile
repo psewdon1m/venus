@@ -16,6 +16,7 @@ ARG SERVICE_PATH
 
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json .npmrc ./
 COPY shared ./shared
+COPY infrastructure ./infrastructure
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
