@@ -5,7 +5,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { apiClient } from '@/lib/api';
 
 import type { UserAccount } from '@/lib/api';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 interface AuthContextValue {
   user: UserAccount | null;
@@ -22,7 +22,7 @@ interface AuthProviderProps {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
+export function AuthProvider({ children }: AuthProviderProps): ReactElement {
   const [user, setUser] = useState<UserAccount | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 

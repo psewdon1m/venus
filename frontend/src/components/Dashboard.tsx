@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent, type ReactElement } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { apiClient } from '@/lib/api';
@@ -15,7 +15,7 @@ type Project = ApiProject;
 type Persona = ApiPersona;
 type PersonaProject = PersonaProjectAssignment;
 
-export function Dashboard(): JSX.Element {
+export function Dashboard(): ReactElement {
   const { user, logout } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [personas, setPersonas] = useState<Persona[]>([]);

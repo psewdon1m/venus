@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useState, type ChangeEvent, type FormEvent, type ReactElement } from 'react';
 
 import { useAuth } from '@/contexts/AuthContext';
 
-export function AuthForm(): JSX.Element {
+export function AuthForm(): ReactElement {
   const { login, register } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
