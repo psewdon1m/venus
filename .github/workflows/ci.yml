@@ -285,7 +285,7 @@ jobs:
       - name: Apply database migrations
         run: pnpm --filter @venus/project-service migrate:dev
         env:
-          DATABASE_URL: postgresql://postgres:password@localhost:5432/venus_dev
+          DATABASE_URL: postgresql://postgres:${{ secrets.STAGE_DATABASE_PASSWORD }}@localhost:5432/venus_dev
 
       - name: Run Playwright E2E suite
         run: pnpm test:e2e
