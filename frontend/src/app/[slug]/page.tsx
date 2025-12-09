@@ -27,7 +27,7 @@ type PublicProject = Omit<ApiProject, 'content'> & {
   };
 };
 
-type PublicPersona = Persona & {
+type PublicPersona = Omit<Persona, 'projects'> & {
   projects: PublicProject[];
 };
 
