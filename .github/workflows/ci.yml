@@ -137,6 +137,8 @@ jobs:
     needs: db-integration
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Run Trivy scanner (filesystem)
         uses: aquasecurity/trivy-action@master
