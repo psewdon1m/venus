@@ -64,7 +64,10 @@ export async function generateMetadata({ params }: PublicPersonaPageProps): Prom
 async function getPersonaData(slug: string): Promise<PublicPersona | null> {
   try {
     const response = await apiClient.getPublicPersona(slug);
-    return response.persona;
+    return {
+      ...response.persona,
+      projects: response.persona.projects ?? [],
+    };
   } catch (error) {
     console.error('Failed to fetch persona:', error);
     return null;

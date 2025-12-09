@@ -8,7 +8,6 @@ import { authenticateToken } from '../middleware/auth';
 import { logger } from '../utils/logger';
 
 import type { AuthenticatedRequest } from '../middleware/auth';
-import type { Prisma } from '@prisma/client';
 import type { ProjectListResponse, ProjectResponse } from '@venus/types';
 import type { NextFunction, Request, Response } from 'express';
 
@@ -26,9 +25,20 @@ const projectSelect = {
   createdAt: true,
   updatedAt: true,
   publishedAt: true,
-} satisfies Prisma.ProjectSelect;
+};
 
-type ProjectEntity = Prisma.ProjectGetPayload<{ select: typeof projectSelect }>;
+type ProjectEntity = {
+  id: string;
+  accountId: string;
+  title: string;
+  slug: string;
+  type: string;
+  content: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+};
 
 const isProjectContent = (value: unknown): value is ProjectResponse['project']['content'] => {
   return (
@@ -144,19 +154,21 @@ router.get(
       const limitNum = Math.min(parseInt(limit as string, 10), 100);
       const offset = (pageNum - 1) * limitNum;
 
-      const where: Prisma.ProjectWhereInput = { accountId: userId };
+      const where: { accountId: string; status?: string } = { accountId: userId };
       if (status) {
-        where.status = status as Prisma.ProjectWhereInput['status'];
+        where.status = status as string;
       }
 
       const [projects, total] = await Promise.all([
-        prisma.project.findMany({
-          where,
-          orderBy: { updatedAt: 'desc' },
-          skip: offset,
-          take: limitNum,
-          select: projectSelect,
-        }),
+        prisma.project
+          .findMany({
+            where,
+            orderBy: { updatedAt: 'desc' },
+            skip: offset,
+            take: limitNum,
+            select: projectSelect,
+          })
+          .then((items) => items as ProjectEntity[]),
         prisma.project.count({ where }),
       ]);
 
@@ -443,13 +455,15 @@ router.get(
       const userId = req.user!.userId;
       const projectId = req.params.id;
 
-      const project = await prisma.project.findFirst({
-        where: {
-          id: projectId,
-          accountId: userId, // Only owner can view
-        },
-        select: projectSelect,
-      });
+      const project = await prisma.project
+        .findFirst({
+          where: {
+            id: projectId,
+            accountId: userId, // Only owner can view
+          },
+          select: projectSelect,
+        })
+        .then((record) => (record as ProjectEntity | null));
 
       if (!project) {
         res.status(404).json({
@@ -514,16 +528,18 @@ router.put(
         return;
       }
 
-      const updatedProject = await prisma.project.update({
-        where: { id: projectId },
-        data: {
-          title: data.title,
-          slug: data.slug,
-          content: data.content ? JSON.stringify(data.content) : undefined,
-          status: data.status,
-        },
-        select: projectSelect,
-      });
+      const updatedProject = await prisma.project
+        .update({
+          where: { id: projectId },
+          data: {
+            title: data.title,
+            slug: data.slug,
+            content: data.content ? JSON.stringify(data.content) : undefined,
+            status: data.status,
+          },
+          select: projectSelect,
+        })
+        .then((record) => record as ProjectEntity);
 
       logger.info('Project updated', { projectId, userId });
 

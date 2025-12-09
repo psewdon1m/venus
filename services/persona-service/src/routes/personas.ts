@@ -7,11 +7,18 @@ import { z, type ZodTypeAny } from 'zod';
 import { authenticateToken, requireAdmin, type AuthenticatedRequest } from '../middleware/auth';
 import { logger } from '../utils/logger';
 
-import type { Prisma } from '@prisma/client';
 import type { NextFunction, Request, Response } from 'express';
 
 const prisma: PrismaClient = new PrismaClient();
 const router: Router = Router();
+
+type PersonaProjectRecord = {
+  id: string;
+  personaId: string;
+  projectId: string;
+  displayOrder: number;
+  isVisible: boolean;
+};
 
 type PlaceholderContent = Record<string, unknown>;
 
@@ -26,6 +33,29 @@ interface PersonaPlaceholder {
 type PersonaSettings = {
   placeholders?: PersonaPlaceholder[];
   [key: string]: unknown;
+};
+
+type PersonaUpdateData = {
+  displayName?: string;
+  manifest?: string | null;
+  settings?: string;
+};
+
+type PersonaProjectWithProject = PersonaProjectRecord & {
+  project: {
+    id: string;
+    title: string;
+    slug: string;
+    type: string;
+    status: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
+};
+
+type PersonaProjectUpdateData = {
+  displayOrder?: number;
+  isVisible?: boolean;
 };
 
 const parsePersonaSettings = (settings: string | null | undefined): PersonaSettings => {
@@ -407,7 +437,7 @@ router.put(
         });
       }
 
-      const updateData: Prisma.PersonaUpdateInput = {};
+      const updateData: PersonaUpdateData = {};
       if (data.displayName !== undefined) {
         updateData.displayName = data.displayName.trim();
       }
@@ -948,7 +978,7 @@ router.get(
         });
       }
 
-      const personaProjects = await prisma.personaProject.findMany({
+      const personaProjects = (await prisma.personaProject.findMany({
         where: { personaId },
         include: {
           project: {
@@ -964,7 +994,7 @@ router.get(
           },
         },
         orderBy: { displayOrder: 'asc' },
-      });
+      })) as PersonaProjectWithProject[];
 
       const projects = personaProjects.map((pp) => ({
         ...pp.project,
@@ -1182,7 +1212,7 @@ router.put(
         });
       }
 
-      const updateData: Prisma.PersonaProjectUpdateInput = {};
+      const updateData: PersonaProjectUpdateData = {};
       if (displayOrder !== undefined) {
         updateData.displayOrder = displayOrder;
       }

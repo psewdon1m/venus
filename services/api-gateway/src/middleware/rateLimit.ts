@@ -4,11 +4,7 @@ import expressRateLimit from 'express-rate-limit';
 
 import type { NextFunction, Request, Response } from 'express';
 
-interface RequestWithUser extends Request {
-  user?: {
-    userId?: string;
-  };
-}
+type RequestWithUser = Request;
 
 type UserLimitState = {
   count: number;

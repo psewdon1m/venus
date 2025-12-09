@@ -2,20 +2,80 @@
 
 import { PrismaClient } from '@prisma/client';
 
-import type {
-  Account as PrismaAccount,
-  CVGeneration,
-  MediaFile,
-  Persona,
-  Prisma,
-  Project as PrismaProject,
-  Session,
-} from '@prisma/client';
 import type { Account } from '@venus/types';
+
+type AccountRecord = {
+  id: string;
+  email: string;
+  passwordHash: string;
+  role: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type SessionRecord = {
+  id: string;
+  accountId: string;
+  refreshToken: string;
+  userAgent?: string | null;
+  ipAddress?: string | null;
+  expiresAt: Date;
+  createdAt: Date;
+};
+
+type BatchResult = {
+  count: number;
+};
+
+type PersonaRecord = {
+  id: string;
+  accountId: string;
+  slug: string;
+  publicSlug: string | null;
+  displayName: string;
+  manifest: string | null;
+  settings: string;
+  isPublic: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+type ProjectRecord = {
+  id: string;
+  accountId: string;
+  title: string;
+  slug: string;
+  type: string;
+  content: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+  publishedAt: Date | null;
+};
+
+type MediaFileRecord = {
+  id: string;
+  accountId: string;
+  filename: string;
+  storagePath: string;
+  mimeType: string;
+  sizeBytes: number;
+  metadata: string;
+  createdAt: Date;
+};
+
+type CVGenerationRecord = {
+  id: string;
+  accountId: string;
+  personaId: string;
+  content: string;
+  pdfUrl: string;
+  createdAt: Date;
+};
 
 const prisma: PrismaClient = new PrismaClient();
 
-const mapAccount = (record: PrismaAccount): Account => ({
+const mapAccount = (record: AccountRecord): Account => ({
   id: record.id,
   email: record.email,
   passwordHash: record.passwordHash,
@@ -24,7 +84,7 @@ const mapAccount = (record: PrismaAccount): Account => ({
   updatedAt: record.updatedAt,
 });
 
-type SessionWithAccount = Session & { account: PrismaAccount };
+type SessionWithAccount = SessionRecord & { account: Account };
 
 class DatabaseStorage {
   // Account operations
@@ -100,28 +160,28 @@ class DatabaseStorage {
   }
 
   // GDPR compliance methods
-  getPersonasByAccountId(accountId: string): Promise<Persona[]> {
+  getPersonasByAccountId(accountId: string): Promise<PersonaRecord[]> {
     return prisma.persona.findMany({
       where: { accountId },
-    });
+    }) as Promise<PersonaRecord[]>;
   }
 
-  getProjectsByAccountId(accountId: string): Promise<PrismaProject[]> {
+  getProjectsByAccountId(accountId: string): Promise<ProjectRecord[]> {
     return prisma.project.findMany({
       where: { accountId },
-    });
+    }) as Promise<ProjectRecord[]>;
   }
 
-  getMediaFilesByAccountId(accountId: string): Promise<MediaFile[]> {
+  getMediaFilesByAccountId(accountId: string): Promise<MediaFileRecord[]> {
     return prisma.mediaFile.findMany({
       where: { accountId },
-    });
+    }) as Promise<MediaFileRecord[]>;
   }
 
-  getCVGenerationsByAccountId(accountId: string): Promise<CVGeneration[]> {
+  getCVGenerationsByAccountId(accountId: string): Promise<CVGenerationRecord[]> {
     return prisma.cVGeneration.findMany({
       where: { accountId },
-    });
+    }) as Promise<CVGenerationRecord[]>;
   }
 
   // Session management
@@ -130,7 +190,7 @@ class DatabaseStorage {
     refreshToken: string,
     userAgent?: string,
     ipAddress?: string
-  ): Promise<Session> {
+  ): Promise<SessionRecord> {
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
     return prisma.session.create({
@@ -141,7 +201,7 @@ class DatabaseStorage {
         ipAddress,
         expiresAt,
       },
-    });
+    }) as Promise<SessionRecord>;
   }
 
   async getSessionByRefreshToken(refreshToken: string): Promise<SessionWithAccount | null> {
@@ -159,29 +219,29 @@ class DatabaseStorage {
       return null;
     }
 
-    return { ...session, account };
+    return { ...(session as SessionRecord), account: mapAccount(account as AccountRecord) };
   }
 
-  revokeSession(sessionId: string): Promise<Session> {
+  revokeSession(sessionId: string): Promise<SessionRecord> {
     return prisma.session.delete({
       where: { id: sessionId },
-    });
+    }) as Promise<SessionRecord>;
   }
 
-  revokeAllUserSessions(accountId: string): Promise<Prisma.BatchPayload> {
+  revokeAllUserSessions(accountId: string): Promise<BatchResult> {
     return prisma.session.deleteMany({
       where: { accountId },
-    });
+    }) as Promise<BatchResult>;
   }
 
-  cleanupExpiredSessions(): Promise<Prisma.BatchPayload> {
+  cleanupExpiredSessions(): Promise<BatchResult> {
     return prisma.session.deleteMany({
       where: {
         expiresAt: {
           lt: new Date(),
         },
       },
-    });
+    }) as Promise<BatchResult>;
   }
 
   // Utility methods
