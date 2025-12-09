@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
-import { apiClient, type Persona, type Placeholder } from '@/lib/api';
+import { apiClient, type Persona, type Placeholder, type Project as ApiProject } from '@/lib/api';
 
 import type { Metadata } from 'next';
 
@@ -20,22 +20,37 @@ type ProjectPlaceholder = Placeholder & {
   };
 };
 
-type Project = {
-  id: string;
-  title: string;
-  slug: string;
-  type: string;
-  status: string;
+type PublicProject = Omit<ApiProject, 'content'> & {
   content: {
     placeholders: ProjectPlaceholder[];
   };
-  createdAt: string;
-  updatedAt: string;
 };
 
 type PublicPersona = Persona & {
-  projects: Project[];
+  projects: PublicProject[];
 };
+
+const normalizeProject = (project: ApiProject): PublicProject => ({
+  ...project,
+  content: {
+    placeholders: (project.content?.placeholders ?? []).map(
+      (placeholder): ProjectPlaceholder => ({
+        ...placeholder,
+        content: {
+          image:
+            placeholder.content && typeof placeholder.content.image === 'string'
+              ? placeholder.content.image
+              : undefined,
+          subtitle:
+            placeholder.content && typeof placeholder.content.subtitle === 'string'
+              ? placeholder.content.subtitle
+              : undefined,
+          ...placeholder.content,
+        },
+      })
+    ),
+  },
+});
 
 // Generate metadata for SEO
 export async function generateMetadata({ params }: PublicPersonaPageProps): Promise<Metadata> {
@@ -66,7 +81,7 @@ async function getPersonaData(slug: string): Promise<PublicPersona | null> {
     const response = await apiClient.getPublicPersona(slug);
     return {
       ...response.persona,
-      projects: response.persona.projects ?? [],
+      projects: (response.persona.projects ?? []).map((project) => normalizeProject(project)),
     };
   } catch (error) {
     console.error('Failed to fetch persona:', error);

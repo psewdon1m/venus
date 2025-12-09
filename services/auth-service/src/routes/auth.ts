@@ -12,9 +12,7 @@ import {
 } from '../schemas/auth';
 import { generateTokens, hashPassword, verifyPassword, verifyToken } from '../utils/auth';
 import { logger } from '../utils/logger';
-import { storage } from '../utils/storage';
-
-import type { Session as PrismaSession, Account as PrismaAccount } from '@prisma/client';
+import { storage, type SessionWithAccount } from '../utils/storage';
 import type { Account, LoginResponse, RefreshTokenResponse, RegisterResponse } from '@venus/types';
 import type { NextFunction, Request, Response } from 'express';
 
@@ -308,7 +306,7 @@ router.post(
         return;
       }
 
-      const typedSession = session as PrismaSession & { account: PrismaAccount };
+      const typedSession: SessionWithAccount = session;
 
       // Check if session is expired
       if (typedSession.expiresAt < new Date()) {

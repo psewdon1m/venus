@@ -84,7 +84,7 @@ const mapAccount = (record: AccountRecord): Account => ({
   updatedAt: record.updatedAt,
 });
 
-type SessionWithAccount = SessionRecord & { account: Account };
+export type SessionWithAccount = SessionRecord & { account: Account };
 
 class DatabaseStorage {
   // Account operations
@@ -248,7 +248,7 @@ class DatabaseStorage {
   async getAllAccounts(): Promise<Account[]> {
     const accounts = await prisma.account.findMany();
 
-    return accounts.map((account) => mapAccount(account));
+    return accounts.map((accountRecord: AccountRecord) => mapAccount(accountRecord));
   }
 }
 

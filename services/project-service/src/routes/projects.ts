@@ -168,7 +168,7 @@ router.get(
             take: limitNum,
             select: projectSelect,
           })
-          .then((items) => items as ProjectEntity[]),
+          .then((items: unknown[]) => items as ProjectEntity[]),
         prisma.project.count({ where }),
       ]);
 
@@ -463,7 +463,7 @@ router.get(
           },
           select: projectSelect,
         })
-        .then((record) => record as ProjectEntity | null);
+        .then((record: unknown) => record as ProjectEntity | null);
 
       if (!project) {
         res.status(404).json({
@@ -539,7 +539,7 @@ router.put(
           },
           select: projectSelect,
         })
-        .then((record) => record as ProjectEntity);
+        .then((record: unknown) => record as ProjectEntity);
 
       logger.info('Project updated', { projectId, userId });
 
