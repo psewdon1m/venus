@@ -463,7 +463,7 @@ router.get(
           },
           select: projectSelect,
         })
-        .then((record) => (record as ProjectEntity | null));
+        .then((record) => record as ProjectEntity | null);
 
       if (!project) {
         res.status(404).json({
