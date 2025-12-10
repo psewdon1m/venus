@@ -47,6 +47,9 @@ RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
 FROM dependencies AS build
 ARG SERVICE_NAME
 
+# Ensure Prisma client is generated before building dependents
+RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+
 # Build shared types (if present) and the service itself
 RUN pnpm --filter @venus/types run build || true
 RUN pnpm --filter ${SERVICE_NAME} run build

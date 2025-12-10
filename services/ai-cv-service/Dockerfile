@@ -35,6 +35,7 @@ RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
 
 FROM dependencies AS build
 ARG SERVICE_NAME
+RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
 RUN pnpm --filter @venus/types run build || true
 RUN pnpm --filter ${SERVICE_NAME} run build
 
