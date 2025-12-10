@@ -229,6 +229,14 @@ jobs:
       - name: Prepare build env file
         run: cp config/environments/.env.build.example .env
 
+      - name: Generate Prisma clients in containers
+        run: |
+          COMPOSE="docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml"
+          for service in auth-service project-service persona-service media-service ai-cv-service; do
+            echo "Generating Prisma client for ${service}"
+            $COMPOSE run --rm $service npx prisma generate --schema infrastructure/postgres/schema.prisma
+          done
+
       - name: Start application stack
         run: |
           docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d --build

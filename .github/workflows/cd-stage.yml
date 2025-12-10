@@ -9,6 +9,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   deploy-stage:
@@ -22,8 +23,9 @@ jobs:
       STAGE_SSH_USER: ${{ secrets.STAGE_SSH_USER }}
       STAGE_SSH_PRIVATE_KEY: ${{ secrets.STAGE_SSH_PRIVATE_KEY }}
       STAGE_DEPLOY_PATH: ${{ secrets.STAGE_DEPLOY_PATH }}
-      REGISTRY_USER: ${{ secrets.STAGE_REGISTRY_USER }}
-      REGISTRY_TOKEN: ${{ secrets.STAGE_REGISTRY_TOKEN }}
+      REGISTRY: ghcr.io
+      REGISTRY_USER: ${{ github.actor }}
+      REGISTRY_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -104,7 +106,7 @@ jobs:
 
           COMPOSE="docker compose --env-file .env.stage -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml"
 
-          echo "${REGISTRY_TOKEN}" | docker login ghcr.io -u "${REGISTRY_USER}" --password-stdin
+          echo "${REGISTRY_TOKEN}" | docker login ${REGISTRY:-ghcr.io} -u "${REGISTRY_USER}" --password-stdin
 
           \$COMPOSE down -v --remove-orphans || true
           docker system prune -af --volumes
