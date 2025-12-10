@@ -115,7 +115,7 @@ jobs:
 
           for service in auth-service project-service persona-service media-service ai-cv-service; do
             echo "Generating Prisma client for \$service"
-            \$COMPOSE run --rm \$service npx prisma generate --schema ../../infrastructure/postgres/schema.prisma
+            \$COMPOSE run --rm \$service pnpm dlx prisma@5.22.0 generate --schema ../../infrastructure/postgres/schema.prisma
           done
 
           \$COMPOSE up -d postgres redis

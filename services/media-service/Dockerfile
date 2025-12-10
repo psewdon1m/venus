@@ -31,11 +31,11 @@ COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
     pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
-RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
 
 FROM dependencies AS build
 ARG SERVICE_NAME
-RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
 RUN pnpm --filter @venus/types run build || true
 RUN pnpm --filter ${SERVICE_NAME} run build
 

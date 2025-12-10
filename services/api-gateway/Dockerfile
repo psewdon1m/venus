@@ -39,7 +39,7 @@ COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 # Install only the service and its dependencies (offline cache via BuildKit)
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
     pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
-RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
 
 # ==================================================
 # Build stage
@@ -48,7 +48,7 @@ FROM dependencies AS build
 ARG SERVICE_NAME
 
 # Ensure Prisma client is generated before building dependents
-RUN pnpm prisma generate --schema infrastructure/postgres/schema.prisma
+RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
 
 # Build shared types (if present) and the service itself
 RUN pnpm --filter @venus/types run build || true
