@@ -111,6 +111,11 @@ jobs:
 
           \$COMPOSE pull
 
+          for service in auth-service project-service persona-service media-service ai-cv-service; do
+            echo "Generating Prisma client for \$service"
+            \$COMPOSE run --rm \$service npx prisma generate --schema infrastructure/postgres/schema.prisma
+          done
+
           \$COMPOSE up -d postgres redis
           DB_USER=\$(grep '^DATABASE_USER=' .env.stage | cut -d'=' -f2-)
           until \$COMPOSE exec postgres pg_isready -U "\$DB_USER"; do
