@@ -55,6 +55,7 @@ RUN apk add --no-cache curl \
     && rm /tmp/libcrypto1.1.apk /tmp/libssl1.1.apk
 
 COPY --from=dependencies /workspace/node_modules ./node_modules
+COPY --from=dependencies /workspace/infrastructure ./infrastructure
 COPY --from=build /workspace/shared ./shared
 COPY --from=build /workspace/${SERVICE_PATH} ./${SERVICE_PATH}
 
