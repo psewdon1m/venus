@@ -234,7 +234,7 @@ jobs:
           COMPOSE="docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml"
           for service in auth-service project-service persona-service media-service ai-cv-service; do
             echo "Generating Prisma client for ${service}"
-            $COMPOSE run --rm $service npx prisma generate --schema infrastructure/postgres/schema.prisma
+            $COMPOSE run --rm $service npx prisma generate --schema ../../infrastructure/postgres/schema.prisma
           done
 
       - name: Start application stack
