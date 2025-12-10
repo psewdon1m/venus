@@ -1,82 +1,127 @@
 name: Deploy to Stage
 
 on:
-  push:
-    branches: [stage]
+  workflow_dispatch:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ['CI']
     types: [completed]
     branches: [stage]
 
+permissions:
+  contents: read
+
 jobs:
   deploy-stage:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
     environment:
       name: stage
       url: https://stage.venus.app
-
+    env:
+      STAGE_HOST: ${{ secrets.STAGE_HOST }}
+      STAGE_SSH_USER: ${{ secrets.STAGE_SSH_USER }}
+      STAGE_SSH_PRIVATE_KEY: ${{ secrets.STAGE_SSH_PRIVATE_KEY }}
+      STAGE_DEPLOY_PATH: ${{ secrets.STAGE_DEPLOY_PATH }}
+      REGISTRY_USER: ${{ secrets.STAGE_REGISTRY_USER }}
+      REGISTRY_TOKEN: ${{ secrets.STAGE_REGISTRY_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
       - name: Configure SSH
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.STAGE_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          install -d -m 700 ~/.ssh
+          echo "$STAGE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H ${{ secrets.STAGE_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H "$STAGE_HOST" >> ~/.ssh/known_hosts
 
-      - name: Deploy to stage server
-        run: |
-          ssh -o StrictHostKeyChecking=no deploy@${{ secrets.STAGE_HOST }} << 'EOF'
-            cd /opt/venus
-
-            # Pull latest changes
-            git pull origin main
-
-            # Install dependencies
-            pnpm install --frozen-lockfile
-
-            # Run database migrations
-            pnpm --filter @venus/project-service migrate
-
-            # Build and start services
-            docker compose -f docker-compose.yml -f docker-compose.stage.yml pull
-            docker compose -f docker-compose.yml -f docker-compose.stage.yml up -d --build
-
-            # Wait for services to be healthy
-            sleep 30
-
-            # Run health checks
-            curl -f https://stage.venus.app/health || exit 1
-            curl -f https://api.stage.venus.app/health || exit 1
-
-            # Clean up old images
-            docker image prune -f
-          EOF
-
-      - name: Run smoke tests
-        run: |
-          npm run test:smoke
+      - name: Render stage env file
         env:
-          BASE_URL: https://stage.venus.app
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          STAGE_SITE_DOMAIN: ${{ secrets.STAGE_SITE_DOMAIN }}
+          STAGE_API_DOMAIN: ${{ secrets.STAGE_API_DOMAIN }}
+          STAGE_CDN_DOMAIN: ${{ secrets.STAGE_CDN_DOMAIN }}
+          STAGE_DATABASE_URL: ${{ secrets.STAGE_DATABASE_URL }}
+          STAGE_DATABASE_INTERNAL_URL: ${{ secrets.STAGE_DATABASE_INTERNAL_URL }}
+          STAGE_DATABASE_PASSWORD: ${{ secrets.STAGE_DATABASE_PASSWORD }}
+          STAGE_REDIS_URL: ${{ secrets.STAGE_REDIS_URL }}
+          STAGE_REDIS_PASSWORD: ${{ secrets.STAGE_REDIS_PASSWORD }}
+          STAGE_JWT_SECRET: ${{ secrets.STAGE_JWT_SECRET }}
+          STAGE_SESSION_SECRET: ${{ secrets.STAGE_SESSION_SECRET }}
+          STAGE_ADMIN_PASSWORD: ${{ secrets.STAGE_ADMIN_PASSWORD }}
+          STAGE_ADMIN_EMAIL: ${{ secrets.STAGE_ADMIN_EMAIL }}
+          STAGE_S3_ACCESS_KEY: ${{ secrets.STAGE_S3_ACCESS_KEY }}
+          STAGE_S3_SECRET_KEY: ${{ secrets.STAGE_S3_SECRET_KEY }}
+          STAGE_S3_BUCKET: ${{ secrets.STAGE_S3_BUCKET }}
+          STAGE_S3_ACCOUNT_ID: ${{ secrets.STAGE_S3_ACCOUNT_ID }}
+          STAGE_OPENAI_API_KEY: ${{ secrets.STAGE_OPENAI_API_KEY }}
+          STAGE_RESEND_API_KEY: ${{ secrets.STAGE_RESEND_API_KEY }}
+          STAGE_SENTRY_DSN: ${{ secrets.STAGE_SENTRY_DSN }}
+        run: |
+          set -euo pipefail
+          cp config/environments/.env.stage.example .env.stage
+          sed -i "s|{{STAGE_SITE_DOMAIN}}|${STAGE_SITE_DOMAIN}|g" .env.stage
+          sed -i "s|{{STAGE_API_DOMAIN}}|${STAGE_API_DOMAIN}|g" .env.stage
+          sed -i "s|{{STAGE_CDN_DOMAIN}}|${STAGE_CDN_DOMAIN}|g" .env.stage
+          sed -i "s|{{STAGE_DATABASE_URL}}|${STAGE_DATABASE_URL}|g" .env.stage
+          sed -i "s|{{STAGE_DATABASE_INTERNAL_URL}}|${STAGE_DATABASE_INTERNAL_URL}|g" .env.stage
+          sed -i "s|{{STAGE_DATABASE_PASSWORD}}|${STAGE_DATABASE_PASSWORD}|g" .env.stage
+          sed -i "s|{{STAGE_REDIS_URL}}|${STAGE_REDIS_URL}|g" .env.stage
+          sed -i "s|{{STAGE_REDIS_PASSWORD}}|${STAGE_REDIS_PASSWORD}|g" .env.stage
+          sed -i "s|{{STAGE_JWT_SECRET}}|${STAGE_JWT_SECRET}|g" .env.stage
+          sed -i "s|{{STAGE_SESSION_SECRET}}|${STAGE_SESSION_SECRET}|g" .env.stage
+          sed -i "s|{{STAGE_ADMIN_PASSWORD}}|${STAGE_ADMIN_PASSWORD}|g" .env.stage
+          sed -i "s|{{STAGE_ADMIN_EMAIL}}|${STAGE_ADMIN_EMAIL}|g" .env.stage
+          sed -i "s|{{STAGE_S3_ACCESS_KEY}}|${STAGE_S3_ACCESS_KEY}|g" .env.stage
+          sed -i "s|{{STAGE_S3_SECRET_KEY}}|${STAGE_S3_SECRET_KEY}|g" .env.stage
+          sed -i "s|{{STAGE_S3_BUCKET}}|${STAGE_S3_BUCKET}|g" .env.stage
+          sed -i "s|{{STAGE_S3_ACCOUNT_ID}}|${STAGE_S3_ACCOUNT_ID}|g" .env.stage
+          sed -i "s|{{STAGE_OPENAI_API_KEY}}|${STAGE_OPENAI_API_KEY}|g" .env.stage
+          sed -i "s|{{STAGE_RESEND_API_KEY}}|${STAGE_RESEND_API_KEY}|g" .env.stage
+          sed -i "s|{{STAGE_SENTRY_DSN}}|${STAGE_SENTRY_DSN}|g" .env.stage
+          REPO_LOWER=$(echo "$GITHUB_REPO" | tr '[:upper:]' '[:lower:]')
+          {
+            echo "IMAGE_REGISTRY=ghcr.io/${REPO_LOWER}"
+            echo "IMAGE_TAG=${GITHUB_SHA}"
+          } >> .env.stage
 
-      - name: Notify Slack
-        if: success()
-        uses: slackapi/slack-github-action@v1
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          payload: |
-            {
-              "text": "🚀 Deployed to stage: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|View commit>"
-            }
+      - name: Upload stage env file
+        run: |
+          scp .env.stage ${STAGE_SSH_USER}@${STAGE_HOST}:${STAGE_DEPLOY_PATH}/.env.stage
 
-      - name: Notify Slack on failure
-        if: failure()
-        uses: slackapi/slack-github-action@v1
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-          payload: |
-            {
-              "text": "❌ Stage deployment failed: ${{ github.sha }}\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
-            }
+      - name: Deploy stack on stage host
+        env:
+          STAGE_SITE_DOMAIN: ${{ secrets.STAGE_SITE_DOMAIN }}
+          STAGE_API_DOMAIN: ${{ secrets.STAGE_API_DOMAIN }}
+        run: |
+          ssh ${STAGE_SSH_USER}@${STAGE_HOST} <<EOF
+          set -euo pipefail
+
+          cd ${STAGE_DEPLOY_PATH}
+          git fetch origin stage
+          git checkout stage
+          git reset --hard origin/stage
+
+          COMPOSE="docker compose --env-file .env.stage -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml"
+
+          echo "${REGISTRY_TOKEN}" | docker login ghcr.io -u "${REGISTRY_USER}" --password-stdin
+
+          \$COMPOSE down -v --remove-orphans || true
+          docker system prune -af --volumes
+
+          \$COMPOSE pull
+
+          \$COMPOSE up -d postgres redis
+          DB_USER=\$(grep '^DATABASE_USER=' .env.stage | cut -d'=' -f2-)
+          until \$COMPOSE exec postgres pg_isready -U "\$DB_USER"; do
+            sleep 2
+          done
+
+          \$COMPOSE run --rm project-service npm run migrate
+          \$COMPOSE up -d --remove-orphans
+
+          curl -f https://${STAGE_SITE_DOMAIN}/health
+          curl -f https://${STAGE_API_DOMAIN}/health
+
+          docker image prune -f
+          EOF

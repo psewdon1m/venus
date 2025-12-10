@@ -226,48 +226,12 @@ jobs:
           pnpm --filter @venus/media-service exec prisma generate
           pnpm --filter @venus/ai-cv-service exec prisma generate
 
-      - name: Prepare stage env file
-        env:
-          STAGE_SITE_DOMAIN: ${{ secrets.STAGE_SITE_DOMAIN }}
-          STAGE_API_DOMAIN: ${{ secrets.STAGE_API_DOMAIN }}
-          STAGE_CDN_DOMAIN: ${{ secrets.STAGE_CDN_DOMAIN }}
-          STAGE_DATABASE_URL: ${{ secrets.STAGE_DATABASE_URL }}
-          STAGE_DATABASE_INTERNAL_URL: ${{ secrets.STAGE_DATABASE_INTERNAL_URL }}
-          STAGE_DATABASE_PASSWORD: ${{ secrets.STAGE_DATABASE_PASSWORD }}
-          STAGE_REDIS_URL: ${{ secrets.STAGE_REDIS_URL }}
-          STAGE_REDIS_PASSWORD: ${{ secrets.STAGE_REDIS_PASSWORD }}
-          STAGE_JWT_SECRET: ${{ secrets.STAGE_JWT_SECRET }}
-          STAGE_SESSION_SECRET: ${{ secrets.STAGE_SESSION_SECRET }}
-          STAGE_ADMIN_PASSWORD: ${{ secrets.STAGE_ADMIN_PASSWORD }}
-          STAGE_ADMIN_EMAIL: ${{ secrets.STAGE_ADMIN_EMAIL }}
-          STAGE_S3_ACCESS_KEY: ${{ secrets.STAGE_S3_ACCESS_KEY }}
-          STAGE_S3_SECRET_KEY: ${{ secrets.STAGE_S3_SECRET_KEY }}
-          STAGE_OPENAI_API_KEY: ${{ secrets.STAGE_OPENAI_API_KEY }}
-          STAGE_RESEND_API_KEY: ${{ secrets.STAGE_RESEND_API_KEY }}
-          STAGE_SENTRY_DSN: ${{ secrets.STAGE_SENTRY_DSN }}
-        run: |
-          cp config/environments/.env.stage.example .env
-          sed -i "s|{{STAGE_SITE_DOMAIN}}|${STAGE_SITE_DOMAIN}|g" .env
-          sed -i "s|{{STAGE_API_DOMAIN}}|${STAGE_API_DOMAIN}|g" .env
-          sed -i "s|{{STAGE_CDN_DOMAIN}}|${STAGE_CDN_DOMAIN}|g" .env
-          sed -i "s|{{STAGE_DATABASE_URL}}|${STAGE_DATABASE_URL}|g" .env
-          sed -i "s|{{STAGE_DATABASE_INTERNAL_URL}}|${STAGE_DATABASE_INTERNAL_URL}|g" .env
-          sed -i "s|{{STAGE_DATABASE_PASSWORD}}|${STAGE_DATABASE_PASSWORD}|g" .env
-          sed -i "s|{{STAGE_REDIS_URL}}|${STAGE_REDIS_URL}|g" .env
-          sed -i "s|{{STAGE_REDIS_PASSWORD}}|${STAGE_REDIS_PASSWORD}|g" .env
-          sed -i "s|{{STAGE_JWT_SECRET}}|${STAGE_JWT_SECRET}|g" .env
-          sed -i "s|{{STAGE_SESSION_SECRET}}|${STAGE_SESSION_SECRET}|g" .env
-          sed -i "s|{{STAGE_ADMIN_PASSWORD}}|${STAGE_ADMIN_PASSWORD}|g" .env
-          sed -i "s|{{STAGE_ADMIN_EMAIL}}|${STAGE_ADMIN_EMAIL}|g" .env
-          sed -i "s|{{STAGE_S3_ACCESS_KEY}}|${STAGE_S3_ACCESS_KEY}|g" .env
-          sed -i "s|{{STAGE_S3_SECRET_KEY}}|${STAGE_S3_SECRET_KEY}|g" .env
-          sed -i "s|{{STAGE_OPENAI_API_KEY}}|${STAGE_OPENAI_API_KEY}|g" .env
-          sed -i "s|{{STAGE_RESEND_API_KEY}}|${STAGE_RESEND_API_KEY}|g" .env
-          sed -i "s|{{STAGE_SENTRY_DSN}}|${STAGE_SENTRY_DSN}|g" .env
+      - name: Prepare build env file
+        run: cp config/environments/.env.build.example .env
 
       - name: Start application stack
         run: |
-          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml up -d --build
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d --build
 
       - name: Wait for API gateway
         run: |
@@ -279,13 +243,13 @@ jobs:
             sleep 10
           done
           echo "API gateway failed to become healthy" >&2
-          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml ps
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml ps
           exit 1
 
       - name: Apply database migrations
         run: pnpm --filter @venus/project-service migrate:dev
         env:
-          DATABASE_URL: postgresql://venus_stage:${{ secrets.STAGE_DATABASE_PASSWORD }}@localhost:5432/venus_stage
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/venus_dev
 
       - name: Run Playwright E2E suite
         run: pnpm test:e2e
@@ -323,11 +287,11 @@ jobs:
 
       - name: Print docker logs on failure
         if: failure()
-        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml logs
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml logs
 
       - name: Stop application stack
         if: always()
-        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.stage.yml down -v
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml down -v
 
   publish-allure:
     needs: e2e-allure

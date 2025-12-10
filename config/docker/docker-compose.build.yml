@@ -1,6 +1,5 @@
 # Venus Platform - Stage Override
 # Usage: docker-compose -f docker-compose.yml -f docker-compose.stage.yml up -d
-# Requires IMAGE_REGISTRY (e.g. ghcr.io/org/venus) and IMAGE_TAG (e.g. stage-latest) to be set.
 
 services:
   # ==================================================
@@ -48,9 +47,11 @@ services:
   # ==================================================
 
   api-gateway:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/api-gateway:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-api-gateway
+    build:
+      context: ../..
+      dockerfile: services/api-gateway/Dockerfile
+      target: production
     restart: always
     environment:
       NODE_ENV: stage
@@ -73,9 +74,11 @@ services:
         max-file: "3"
 
   auth-service:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/auth-service:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-auth-service
+    build:
+      context: ../..
+      dockerfile: services/auth-service/Dockerfile
+      target: production
     restart: always
     environment:
       NODE_ENV: stage
@@ -96,9 +99,11 @@ services:
         max-file: "3"
 
   project-service:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/project-service:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-project-service
+    build:
+      context: ../..
+      dockerfile: services/project-service/Dockerfile
+      target: production
     restart: always
     environment:
       NODE_ENV: stage
@@ -119,9 +124,11 @@ services:
         max-file: "3"
 
   persona-service:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/persona-service:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-persona-service
+    build:
+      context: ../..
+      dockerfile: services/persona-service/Dockerfile
+      target: production
     restart: always
     environment:
       NODE_ENV: stage
@@ -142,9 +149,11 @@ services:
         max-file: "3"
 
   media-service:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/media-service:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-media-service
+    build:
+      context: ../..
+      dockerfile: services/media-service/Dockerfile
+      target: production
     restart: always
     environment:
       NODE_ENV: stage
@@ -167,9 +176,11 @@ services:
         max-file: "3"
 
   ai-cv-service:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/ai-cv-service:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-ai-cv-service
+    build:
+      context: ../..
+      dockerfile: services/ai-cv-service/Dockerfile
+      target: production
     restart: always
     environment:
       NODE_ENV: stage
@@ -192,9 +203,15 @@ services:
         max-file: "3"
 
   frontend:
-    image: ${IMAGE_REGISTRY:-ghcr.io/venus/venus}/frontend:${IMAGE_TAG:-stage-latest}
-    pull_policy: always
     container_name: venus-stage-frontend
+    build:
+      context: ../..
+      dockerfile: frontend/Dockerfile
+      target: production
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+        - NEXT_PUBLIC_CDN_URL=${NEXT_PUBLIC_CDN_URL}
+        - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
     restart: always
     environment:
       NODE_ENV: stage
