@@ -23,6 +23,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
     
     // Emit
     "target": "ES2022",
@@ -47,14 +48,19 @@
       "@venus/shared/*": ["./shared/*/src"],
       "@venus/types": ["./shared/types/src"],
       "@venus/utils": ["./shared/utils/src"],
-      "@venus/config": ["./shared/config/src"]
+      "@venus/config": ["./shared/config/src"],
+      "@prisma/client": [
+        "./node_modules/@prisma/client",
+        "./types/prisma-client"
+      ]
     }
   },
   "include": [
     "services/**/*",
     "shared/**/*",
     "scripts/**/*",
-    "tests/**/*"
+    "tests/**/*",
+    "types/**/*.d.ts"
   ],
   "exclude": [
     "node_modules",

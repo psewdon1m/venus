@@ -26,16 +26,21 @@ ENV DATABASE_URL=${DATABASE_URL}
 
 COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json .npmrc ./
 COPY shared ./shared
+COPY types ./types
 COPY infrastructure ./infrastructure
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
     pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
-RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
+RUN pnpm --filter ${SERVICE_NAME} exec prisma generate && \
+    PRISMA_ROOT="/workspace/node_modules/@prisma/client/.prisma" && \
+    SERVICE_CLIENT_DIR="/workspace/${SERVICE_PATH}/node_modules/@prisma/client" && \
+    mkdir -p "${SERVICE_CLIENT_DIR}" && \
+    rm -rf "${SERVICE_CLIENT_DIR}/.prisma" && \
+    ln -s "${PRISMA_ROOT}" "${SERVICE_CLIENT_DIR}/.prisma"
 
 FROM dependencies AS build
 ARG SERVICE_NAME
-RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
 RUN pnpm --filter @venus/types run build || true
 RUN pnpm --filter ${SERVICE_NAME} run build
 
@@ -59,7 +64,6 @@ COPY --from=dependencies /workspace/node_modules ./node_modules
 COPY --from=dependencies /workspace/infrastructure ./infrastructure
 COPY --from=build /workspace/shared ./shared
 COPY --from=build /workspace/${SERVICE_PATH} ./${SERVICE_PATH}
-RUN node_modules/.bin/prisma generate --schema infrastructure/postgres/schema.prisma
 
 WORKDIR /workspace/${SERVICE_PATH}
 EXPOSE 4004
