@@ -1,5 +1,6 @@
 // Auth utilities - Password hashing, JWT, validation
 
+import { randomUUID } from 'crypto';
 import { compare, hash } from 'bcryptjs';
 import { sign, verify, type SignOptions, type JwtPayload } from 'jsonwebtoken';
 
@@ -48,7 +49,15 @@ export const generateAccessToken = (payload: object): string => {
 };
 
 export const generateRefreshToken = (payload: object): string => {
-  return sign(payload, JWT_SECRET, { expiresIn: JWT_REFRESH_EXPIRY } as SignOptions);
+  const uniquePayload = {
+    ...payload,
+    tokenId: randomUUID(),
+  };
+
+  return sign(uniquePayload, JWT_SECRET, {
+    expiresIn: JWT_REFRESH_EXPIRY,
+    jwtid: randomUUID(),
+  } as SignOptions);
 };
 
 export const verifyToken = (token: string): JwtPayload | string => {
