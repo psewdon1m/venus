@@ -59,6 +59,7 @@ COPY --from=dependencies /workspace/node_modules ./node_modules
 COPY --from=dependencies /workspace/infrastructure ./infrastructure
 COPY --from=build /workspace/shared ./shared
 COPY --from=build /workspace/${SERVICE_PATH} ./${SERVICE_PATH}
+RUN node_modules/.bin/prisma generate --schema infrastructure/postgres/schema.prisma
 
 WORKDIR /workspace/${SERVICE_PATH}
 EXPOSE 4005

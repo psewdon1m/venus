@@ -11,4 +11,3 @@ export * from './entities/cv';
 export * from './entities/media';
 export * from './entities/persona';
 export * from './entities/project';
-export * from './prisma';
