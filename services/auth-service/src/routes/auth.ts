@@ -386,11 +386,7 @@ router.post(
       await storage.revokeSession(typedSession.id);
 
       // Generate new tokens and persist the rotated refresh token
-      const tokens = await issueSessionTokens(
-        typedSession.account,
-        req.get('user-agent'),
-        req.ip
-      );
+      const tokens = await issueSessionTokens(typedSession.account, req.get('user-agent'), req.ip);
 
       // Set new httpOnly cookies
       res.cookie('accessToken', tokens.accessToken, {
