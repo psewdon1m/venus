@@ -28,16 +28,18 @@ COPY package.json pnpm-lock.yaml* pnpm-workspace.yaml tsconfig.json .npmrc ./
 COPY shared ./shared
 COPY types ./types
 COPY infrastructure ./infrastructure
+COPY scripts ./scripts
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
-    pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
-RUN pnpm --filter ${SERVICE_NAME} exec prisma generate && \
-    PRISMA_ROOT="/workspace/node_modules/@prisma/client/.prisma" && \
-    SERVICE_CLIENT_DIR="/workspace/${SERVICE_PATH}/node_modules/@prisma/client" && \
-    mkdir -p "${SERVICE_CLIENT_DIR}" && \
-    rm -rf "${SERVICE_CLIENT_DIR}/.prisma" && \
-    ln -s "${PRISMA_ROOT}" "${SERVICE_CLIENT_DIR}/.prisma"
+    pnpm install \
+      --filter ${SERVICE_NAME}... \
+      --filter @venus/types... \
+      --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
+RUN PRISMA_ROOT="/workspace/node_modules/@prisma/client/.prisma" && \
+    rm -rf "${PRISMA_ROOT}" && \
+    pnpm --filter ${SERVICE_NAME} exec prisma generate && \
+    pnpm prisma:sync
 
 FROM dependencies AS build
 ARG SERVICE_NAME

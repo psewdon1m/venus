@@ -10,7 +10,13 @@ import {
   accountDeletionSchema,
   roleUpdateSchema,
 } from '../schemas/auth';
-import { generateTokens, hashPassword, verifyPassword, verifyToken } from '../utils/auth';
+import {
+  generateTokens,
+  hashPassword,
+  verifyPassword,
+  verifyToken,
+  type AuthTokens,
+} from '../utils/auth';
 import { logger } from '../utils/logger';
 import { storage } from '../utils/storage';
 
@@ -32,6 +38,69 @@ interface AccessPayload {
 }
 
 const resolveRole = (role?: string): UserRole => (role === 'ADMIN' ? 'ADMIN' : 'USER');
+
+const REFRESH_TOKEN_MAX_ATTEMPTS = 5;
+
+type PrismaUniqueError = {
+  code?: string;
+  meta?: {
+    target?: string | string[];
+    [key: string]: unknown;
+  };
+};
+
+const isRefreshTokenCollision = (error: unknown): error is PrismaUniqueError => {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const maybeError = error as PrismaUniqueError;
+  if (maybeError.code !== 'P2002') {
+    return false;
+  }
+
+  const target = maybeError.meta?.target;
+  if (!target) {
+    return false;
+  }
+
+  if (typeof target === 'string') {
+    return target === 'refreshToken';
+  }
+
+  return Array.isArray(target) && target.includes('refreshToken');
+};
+
+const issueSessionTokens = async (
+  account: Account,
+  userAgent?: string | null,
+  ipAddress?: string | null
+): Promise<AuthTokens> => {
+  for (let attempt = 1; attempt <= REFRESH_TOKEN_MAX_ATTEMPTS; attempt++) {
+    const tokens = generateTokens(account.id, account.email, resolveRole(account.role));
+    try {
+      await storage.createSession(
+        account.id,
+        tokens.refreshToken,
+        userAgent ?? undefined,
+        ipAddress ?? undefined
+      );
+      return tokens;
+    } catch (error) {
+      if (isRefreshTokenCollision(error)) {
+        logger.warn('Refresh token collision detected, retrying', {
+          accountId: account.id,
+          attempt,
+        });
+        continue;
+      }
+
+      throw error instanceof Error ? error : new Error('Failed to create session');
+    }
+  }
+
+  throw new Error('Failed to issue unique refresh token');
+};
 
 // Proper JWT authentication middleware
 const authenticateToken = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
@@ -125,11 +194,8 @@ router.post(
         passwordHash,
       });
 
-      // Generate tokens for auto-login after registration
-      const tokens = generateTokens(account.id, account.email, resolveRole(account.role));
-
-      // Create session for refresh token
-      await storage.createSession(account.id, tokens.refreshToken, req.get('user-agent'), req.ip);
+      // Generate tokens for auto-login after registration (guaranteed to persist a session)
+      const tokens = await issueSessionTokens(account, req.get('user-agent'), req.ip);
 
       // Set httpOnly cookies
       res.cookie('accessToken', tokens.accessToken, {
@@ -223,11 +289,8 @@ router.post(
         return;
       }
 
-      // Generate tokens with role
-      const tokens = generateTokens(account.id, account.email, resolveRole(account.role));
-
-      // Create session for refresh token
-      await storage.createSession(account.id, tokens.refreshToken, req.get('user-agent'), req.ip);
+      // Generate tokens with role and persist refresh token session atomically
+      const tokens = await issueSessionTokens(account, req.get('user-agent'), req.ip);
 
       // Remove password hash from response
       const { passwordHash: _, ...accountWithoutPassword } = account;
@@ -319,18 +382,12 @@ router.post(
         return;
       }
 
-      // Generate new tokens with role
-      const tokens = generateTokens(
-        typedSession.account.id,
-        typedSession.account.email,
-        resolveRole(typedSession.account.role)
-      );
-
-      // Revoke old session and create new one (token rotation)
+      // Revoke old session before issuing a new refresh token
       await storage.revokeSession(typedSession.id);
-      await storage.createSession(
-        typedSession.account.id,
-        tokens.refreshToken,
+
+      // Generate new tokens and persist the rotated refresh token
+      const tokens = await issueSessionTokens(
+        typedSession.account,
         req.get('user-agent'),
         req.ip
       );

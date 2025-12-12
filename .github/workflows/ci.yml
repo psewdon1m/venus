@@ -43,6 +43,7 @@ jobs:
           pnpm --filter @venus/persona-service exec prisma generate
           pnpm --filter @venus/media-service exec prisma generate
           pnpm --filter @venus/ai-cv-service exec prisma generate
+          pnpm prisma:sync
 
       - name: Run lint
         run: pnpm --filter ${{ matrix.service == 'frontend' && 'frontend' || format('@venus/{0}', matrix.service) }} lint
@@ -106,6 +107,7 @@ jobs:
           pnpm --filter @venus/persona-service exec prisma generate
           pnpm --filter @venus/media-service exec prisma generate
           pnpm --filter @venus/ai-cv-service exec prisma generate
+          pnpm prisma:sync
 
       - name: Run database migrations
         run: pnpm --filter @venus/project-service migrate:dev
@@ -226,6 +228,7 @@ jobs:
           pnpm --filter @venus/persona-service exec prisma generate
           pnpm --filter @venus/media-service exec prisma generate
           pnpm --filter @venus/ai-cv-service exec prisma generate
+          pnpm prisma:sync
 
       - name: Prepare build env file
         run: cp config/environments/.env.build.example .env

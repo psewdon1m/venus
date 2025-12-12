@@ -38,7 +38,10 @@ COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 # Install only the service and its dependencies (offline cache via BuildKit)
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
-    pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
+    pnpm install \
+      --filter ${SERVICE_NAME}... \
+      --filter @venus/types... \
+      --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
 RUN pnpm dlx prisma@5.22.0 generate --schema infrastructure/postgres/schema.prisma
 
 # ==================================================

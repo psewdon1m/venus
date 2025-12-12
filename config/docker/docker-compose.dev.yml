@@ -36,7 +36,12 @@ services:
       NODE_ENV: development
       DEBUG: "venus:*"
       WATCH_FILES: "true"
-    command: ["pnpm", "dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "rm -rf /workspace/node_modules/@prisma/client/.prisma && pnpm --filter @venus/api-gateway exec prisma generate --schema ../../infrastructure/postgres/schema.prisma && pnpm prisma:sync && pnpm dev",
+      ]
 
   auth-service:
     container_name: venus-dev-auth-service
@@ -51,7 +56,12 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: ["pnpm", "dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "rm -rf /workspace/node_modules/@prisma/client/.prisma && pnpm --filter @venus/auth-service exec prisma generate --schema ../../infrastructure/postgres/schema.prisma && pnpm prisma:sync && pnpm dev",
+      ]
 
   project-service:
     container_name: venus-dev-project-service
@@ -66,7 +76,12 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: ["pnpm", "dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "rm -rf /workspace/node_modules/@prisma/client/.prisma && pnpm --filter @venus/project-service exec prisma generate --schema ../../infrastructure/postgres/schema.prisma && pnpm prisma:sync && pnpm dev",
+      ]
 
   persona-service:
     container_name: venus-dev-persona-service
@@ -81,7 +96,12 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: ["pnpm", "dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "rm -rf /workspace/node_modules/@prisma/client/.prisma && pnpm --filter @venus/persona-service exec prisma generate --schema ../../infrastructure/postgres/schema.prisma && pnpm prisma:sync && pnpm dev",
+      ]
 
   media-service:
     container_name: venus-dev-media-service
@@ -97,7 +117,12 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: ["pnpm", "dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "rm -rf /workspace/node_modules/@prisma/client/.prisma && pnpm --filter @venus/media-service exec prisma generate --schema ../../infrastructure/postgres/schema.prisma && pnpm prisma:sync && pnpm dev",
+      ]
 
   ai-cv-service:
     container_name: venus-dev-ai-cv-service
@@ -113,7 +138,12 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: "venus:*"
-    command: ["pnpm", "dev"]
+    command:
+      [
+        "sh",
+        "-c",
+        "rm -rf /workspace/node_modules/@prisma/client/.prisma && pnpm --filter @venus/ai-cv-service exec prisma generate --schema ../../infrastructure/postgres/schema.prisma && pnpm prisma:sync && pnpm dev",
+      ]
 
   frontend:
     container_name: venus-dev-frontend
@@ -132,7 +162,7 @@ services:
       - /workspace/frontend/.next
     environment:
       NODE_ENV: development
-    command: ["pnpm", "dev"]
+    command: ["sh", "-c", "pnpm dev"]
 
   # ==================================================
   # Development Tools

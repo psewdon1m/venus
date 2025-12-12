@@ -20,7 +20,10 @@ COPY infrastructure ./infrastructure
 COPY ${SERVICE_PATH} ./${SERVICE_PATH}
 
 RUN --mount=type=cache,id=pnpm-store,target=/workspace/.pnpm-store \
-    pnpm install --filter ${SERVICE_NAME}... --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
+    pnpm install \
+      --filter ${SERVICE_NAME}... \
+      --filter @venus/types... \
+      --frozen-lockfile --prefer-offline --store-dir=/workspace/.pnpm-store
 
 FROM dependencies AS build
 ARG SERVICE_NAME
