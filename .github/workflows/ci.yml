@@ -251,9 +251,11 @@ jobs:
           exit 1
 
       - name: Apply database migrations
-        env:
-          DATABASE_URL: postgresql://postgres:password@localhost:5432/venus_dev
-        run: pnpm --filter @venus/project-service migrate:dev
+        run: |
+          docker compose --env-file .env \
+            -f config/docker/docker-compose.yml \
+            -f config/docker/docker-compose.build.yml \
+            exec -T project-service npm run migrate
 
       - name: Wait for API gateway
         run: |
@@ -267,6 +269,12 @@ jobs:
           echo "API gateway failed to become healthy" >&2
           docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml ps
           exit 1
+
+      - name: Run Playwright E2E suite
+        run: pnpm test:e2e
+        env:
+          E2E_API_URL: http://127.0.0.1:4000/api
+          E2E_TEST_PASSWORD: TestPass123!
 
       - name: Generate Allure report
         if: always()
