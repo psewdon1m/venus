@@ -237,6 +237,24 @@ jobs:
         run: |
           docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d --build
 
+      - name: Wait for Postgres inside stack
+        run: |
+          for attempt in {1..30}; do
+            if docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml exec -T postgres pg_isready -U postgres > /dev/null 2>&1; then
+              exit 0
+            fi
+            echo "Waiting for Postgres (attempt ${attempt})..."
+            sleep 5
+          done
+          echo "Postgres failed to become healthy" >&2
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml logs postgres
+          exit 1
+
+      - name: Apply database migrations
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/venus_dev
+        run: pnpm --filter @venus/project-service migrate:dev
+
       - name: Wait for API gateway
         run: |
           for attempt in {1..30}; do
@@ -249,9 +267,6 @@ jobs:
           echo "API gateway failed to become healthy" >&2
           docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml ps
           exit 1
-
-      - name: Apply database migrations
-        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml exec -T project-service npx prisma migrate dev
 
       - name: Run Playwright E2E suite
         run: pnpm test:e2e
