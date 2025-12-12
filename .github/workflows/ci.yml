@@ -199,3 +199,122 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  e2e-allure:
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 35
+    outputs:
+      allure_ready: ${{ steps.allure-report-status.outputs.ready }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma clients
+        run: |
+          pnpm --filter @venus/auth-service exec prisma generate
+          pnpm --filter @venus/project-service exec prisma generate
+          pnpm --filter @venus/persona-service exec prisma generate
+          pnpm --filter @venus/media-service exec prisma generate
+          pnpm --filter @venus/ai-cv-service exec prisma generate
+          pnpm prisma:sync
+
+      - name: Prepare build env file
+        run: cp config/environments/.env.build.example .env
+
+      - name: Start application stack
+        run: |
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d --build
+
+      - name: Wait for Postgres inside stack
+        run: |
+          for attempt in {1..30}; do
+            if docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml exec -T postgres pg_isready -U postgres > /dev/null 2>&1; then
+              exit 0
+            fi
+            echo "Waiting for Postgres (attempt ${attempt})..."
+            sleep 5
+          done
+          echo "Postgres failed to become healthy" >&2
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml logs postgres
+          exit 1
+
+      - name: Apply database migrations
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/venus_dev
+        run: pnpm --filter @venus/project-service migrate:dev
+
+      - name: Wait for API gateway
+        run: |
+          for attempt in {1..30}; do
+            if curl -sf http://localhost:4000/health > /dev/null; then
+              exit 0
+            fi
+            echo "Waiting for API gateway (attempt ${attempt})..."
+            sleep 10
+          done
+          echo "API gateway failed to become healthy" >&2
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml ps
+          exit 1
+
+      - name: Generate Allure report
+        if: always()
+        run: pnpm allure:report || true
+
+      - name: Check Allure report directory
+        if: always()
+        id: allure-report-status
+        run: |
+          if [ -f allure-report/index.html ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Prepare Allure Pages artifact
+        if: ${{ always() && steps.allure-report-status.outputs.ready == 'true' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: allure-report
+
+      - name: Upload Allure HTML
+        if: ${{ always() && steps.allure-report-status.outputs.ready == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+          if-no-files-found: ignore
+
+      - name: Print docker logs on failure
+        if: failure()
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml logs
+
+      - name: Stop application stack
+        if: always()
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml down -v
+
+  publish-allure:
+    needs: e2e-allure
+    if: ${{ always() && needs.e2e-allure.outputs.allure_ready == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    steps:
+      - name: Deploy Allure report to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
