@@ -251,9 +251,7 @@ jobs:
           exit 1
 
       - name: Apply database migrations
-        run: pnpm --filter @venus/project-service migrate:dev
-        env:
-          DATABASE_URL: postgresql://postgres:password@localhost:5432/venus_dev
+        run: docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml exec -T project-service npx prisma migrate dev
 
       - name: Run Playwright E2E suite
         run: pnpm test:e2e
