@@ -233,9 +233,9 @@ jobs:
       - name: Prepare build env file
         run: cp config/environments/.env.build.example .env
 
-      - name: Start application stack
+      - name: Start database services
         run: |
-          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d --build
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d postgres redis
 
       - name: Wait for Postgres inside stack
         run: |
@@ -255,7 +255,11 @@ jobs:
           docker compose --env-file .env \
             -f config/docker/docker-compose.yml \
             -f config/docker/docker-compose.build.yml \
-            exec -T project-service npm run migrate
+            run --rm project-service npm run migrate
+
+      - name: Start application stack
+        run: |
+          docker compose --env-file .env -f config/docker/docker-compose.yml -f config/docker/docker-compose.build.yml up -d --build
 
       - name: Wait for API gateway
         run: |
