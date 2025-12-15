@@ -1,11 +1,18 @@
 name: Deploy to Stage
 
 on:
+  workflow_call:
+    inputs:
+      image_tag:
+        description: Docker image tag to deploy
+        required: true
+        type: string
   workflow_dispatch:
-  workflow_run:
-    workflows: ['CI']
-    types: [completed]
-    branches: [stage]
+    inputs:
+      image_tag:
+        description: 'Docker image tag (defaults to current commit SHA)'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -13,12 +20,12 @@ permissions:
 
 jobs:
   deploy-stage:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: stage
       url: https://stage.venus.app
     env:
+      IMAGE_TAG: ${{ inputs.image_tag || github.sha }}
       STAGE_HOST: ${{ secrets.STAGE_HOST }}
       STAGE_SSH_USER: ${{ secrets.STAGE_SSH_USER }}
       STAGE_SSH_PRIVATE_KEY: ${{ secrets.STAGE_SSH_PRIVATE_KEY }}
@@ -39,7 +46,7 @@ jobs:
       - name: Render stage env file
         env:
           GITHUB_REPO: ${{ github.repository }}
-          GITHUB_SHA: ${{ github.sha }}
+          IMAGE_TAG: ${{ env.IMAGE_TAG }}
           STAGE_SITE_DOMAIN: ${{ secrets.STAGE_SITE_DOMAIN }}
           STAGE_API_DOMAIN: ${{ secrets.STAGE_API_DOMAIN }}
           STAGE_CDN_DOMAIN: ${{ secrets.STAGE_CDN_DOMAIN }}
@@ -84,7 +91,7 @@ jobs:
           REPO_LOWER=$(echo "$GITHUB_REPO" | tr '[:upper:]' '[:lower:]')
           {
             echo "IMAGE_REGISTRY=ghcr.io/${REPO_LOWER}"
-            echo "IMAGE_TAG=${GITHUB_SHA}"
+            echo "IMAGE_TAG=${IMAGE_TAG}"
           } >> .env.stage
 
       - name: Upload stage env file

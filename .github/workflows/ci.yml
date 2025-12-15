@@ -330,3 +330,11 @@ jobs:
       - name: Deploy Allure report to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  deploy-stage:
+    needs: publish-allure
+    if: github.ref == 'refs/heads/stage'
+    uses: ./.github/workflows/cd-stage.yml
+    with:
+      image_tag: ${{ github.sha }}
+    secrets: inherit
