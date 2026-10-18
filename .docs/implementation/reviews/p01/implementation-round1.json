@@ -1,0 +1,21 @@
+{
+  "reviewer_id": "/root/p01_implementation_review",
+  "source_sha": "deaac55e693db7f27de2c7645e9bdb8aa1675ba5",
+  "source_identity_sha256": "b06bcddb65f86955b01e1a965d57df0c5f0efe86502c0dbada60c2a73bec5cac",
+  "scopes": [
+    "implementation"
+  ],
+  "status": "FAIL",
+  "open_findings": [
+    {
+      "id": "P01-IMPL-001",
+      "priority": "P2",
+      "file": "apps/api/src/app.ts",
+      "summary": "Malformed URL bypasses safe error handler and reflects raw URL outside strict Error contract",
+      "reproduction": "createApp(...).inject('/%MALFORMED_SECRET') returns FST_ERR_BAD_URL with raw URL, no request_id/no-store/security headers",
+      "required_fix": "Sanitize early router errors; preserve strict error contract and response headers; add regression and rerun checks"
+    }
+  ],
+  "report_path": ".docs/implementation/reviews/p01/implementation-round1.md",
+  "report_sha256": "39584295812d2e6dc81b7343e81b3d61efe9b7528fed9f4738c7df0909a2f63e"
+}

@@ -1,0 +1,41 @@
+{
+  "reviewer_id": "/root/p01_evidence_review",
+  "source_sha": "deaac55e693db7f27de2c7645e9bdb8aa1675ba5",
+  "source_identity_sha256": "b06bcddb65f86955b01e1a965d57df0c5f0efe86502c0dbada60c2a73bec5cac",
+  "scopes": [
+    "evidence"
+  ],
+  "status": "FAIL",
+  "open_findings": [
+    {
+      "id": "EV-P01-01",
+      "priority": "P1",
+      "file": "tools/p01_gate.py",
+      "summary": "CI jobs не привязаны к принятому run/source, обязательные checks не привязаны к GitHub Actions app",
+      "required_fix": "Проверять ci repository/run URL/id; каждый job.run_id==ci.id и job.head_sha==source_sha; protection URL указывает main этого repo и required checks app_id=15368. Добавить отрицательные regression cases."
+    },
+    {
+      "id": "EV-P01-02",
+      "priority": "P2",
+      "file": "tools/p01_gate.py",
+      "summary": "Health receipt с произвольным image ID и неверным compose_sha256 принимается без проверки сопровождающих артефактов",
+      "required_fix": "Проверять health.compose_sha256 против байтов infra/venus/compose.yml; включить hash descriptors rendered Compose/logs и связать их с health receipt. Image/config digest должен быть связан с inspect/version metadata результатом, не только соответствовать regex."
+    },
+    {
+      "id": "EV-P01-03",
+      "priority": "P2",
+      "file": "tools/negative-gates.mjs",
+      "summary": "Negative receipt не доказывает исполнение на неизменённом принятом source inventory",
+      "required_fix": "Записывать проверяемую source identity, чистоту исходников или иной эквивалентный frozen source proof; gate сверяет identity с cid, before/after должны быть валидными SHA256. Сейчас оба значения arbitrary проходят."
+    },
+    {
+      "id": "EV-P01-04",
+      "priority": "P2",
+      "file": ".docs/DEVELOPER_GUIDE.md",
+      "summary": "Полный revert bootstrap удаляет обязательный workflow и блокирует собственную проверку отката",
+      "required_fix": "Зафиксировать выполнимую процедуру первого bootstrap/остановки disposable среды и subsequent runtime rollback с сохранением CI/tooling; exact files/commands, rebuild/test/review без снятия main protection."
+    }
+  ],
+  "report_path": ".docs/implementation/reviews/p01/evidence-round1.md",
+  "report_sha256": "090afa8fc12108a440bda2bf5f4a9df35e125ebf15d9327d820e36f1187be2b1"
+}

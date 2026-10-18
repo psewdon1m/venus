@@ -31,6 +31,13 @@ describe('foundation HTTP contracts and privacy', () => {
       expect(response.statusCode).toBe(404);
       expect(response.json().request_id).toMatch(/^[a-f0-9-]{36}$/);
       expect((await app.inject('/test-error')).statusCode).toBe(500);
+      const malformed = await app.inject('/%MALFORMED_SECRET');
+      expect(malformed.statusCode).toBe(400);
+      expect(malformed.json()).toEqual({code:'INVALID_REQUEST', message:'Request could not be completed',request_id:expect.stringMatching(/^[a-f0-9-]{36}$/)});
+      expect(malformed.body).not.toContain('SECRET');
+      expect(malformed.headers['cache-control']).toBe('no-store');
+      expect(malformed.headers['x-content-type-options']).toBe('nosniff');
+      expect(malformed.headers['content-security-policy']).toContain("frame-ancestors 'none'");
     } finally {await app.close();}
     expect(output).not.toMatch(/SECRET/);
     const rows = output.trim().split('\n').map(line => JSON.parse(line));

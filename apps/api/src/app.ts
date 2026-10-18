@@ -1,4 +1,4 @@
-import Fastify, {LogController, type FastifyServerOptions} from 'fastify';
+import Fastify, {LogController, type FastifyReply, type FastifyServerOptions} from 'fastify';
 import staticFiles from '@fastify/static';
 import {randomUUID} from 'node:crypto';
 import type {Version, HealthLive, HealthReady} from '@venus/contracts';
@@ -9,6 +9,14 @@ export interface AppOptions {
 }
 export async function createApp(options: AppOptions) {
   const app = Fastify({logger: options.logger ?? true, logController: new LogController({disableRequestLogging: true}),
+    frameworkErrors: (_error, request, reply) => {
+      // Router failures occur before normal hooks/errorHandler. Do not reflect raw URL.
+      // The framework hook is generic over route schemas; this response has the common Error shape.
+      const response = reply as FastifyReply;
+      response.header('X-Content-Type-Options', 'nosniff').header('Referrer-Policy', 'no-referrer')
+        .header('Cache-Control', 'no-store').header('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'");
+      response.code(400).send({code: 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
+    },
     genReqId: () => randomUUID(), requestIdHeader: false, bodyLimit: 65536});
   // A small allowlist: never log query strings, headers, bodies, names or raw exceptions.
   app.addHook('onResponse', async (request, reply) => {
