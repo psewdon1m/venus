@@ -11,7 +11,7 @@ from source_inventory import source_files
 ROOT = Path(__file__).resolve().parents[1]
 DIRECTORY = ROOT/'.docs/implementation/evidence/p01'
 DERIVED = {'FILE_MANIFEST.sha256', '.docs/implementation/status.md', '.docs/implementation/p01-registry.json'}
-PREFIXES = ('.docs/implementation/evidence/p01/', '.docs/implementation/reviews/p01/')
+PREFIXES = ('.docs/implementation/evidence/p01/', '.docs/implementation/reviews/p01/', '.history/')
 
 def included(name):
     return name not in DERIVED and not name.startswith(PREFIXES)

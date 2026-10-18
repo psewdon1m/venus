@@ -1,0 +1,66 @@
+{
+  "source_sha": "aa680b8dd29358245d4cf715ba15204106d918a9",
+  "source_dirty": false,
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "nonroot-image-labels-and-layer-secret-scan",
+      "status": "PASS"
+    },
+    {
+      "id": "loopback-only-app-private-postgres",
+      "status": "PASS"
+    },
+    {
+      "id": "runtime-isolation-no-socket",
+      "status": "PASS"
+    },
+    {
+      "id": "version-contract-web-and-ready-postgres",
+      "status": "PASS"
+    },
+    {
+      "id": "database-outage-is-not-ready-process-alive",
+      "status": "PASS"
+    },
+    {
+      "id": "database-recovery-without-app-restart",
+      "status": "PASS"
+    },
+    {
+      "id": "structured-logs-do-not-expose-payloads-or-secrets",
+      "status": "PASS"
+    }
+  ],
+  "image_id": "sha256:3b26fbbf99248afad81b4214932529b66b95f46a16bb95d570e9d7c677387d08",
+  "runtime": {
+    "image": "sha256:3b26fbbf99248afad81b4214932529b66b95f46a16bb95d570e9d7c677387d08",
+    "user": "1000:1000",
+    "privileged": false,
+    "readonly_rootfs": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "security_opt": [
+      "no-new-privileges:true"
+    ],
+    "mounts": [
+      {
+        "destination": "/run/secrets/db_password",
+        "rw": false
+      }
+    ],
+    "source_revision": "aa680b8dd29358245d4cf715ba15204106d918a9",
+    "version": "0.0.0"
+  },
+  "version": {
+    "service": "venus",
+    "version": "0.0.0",
+    "source_revision": "aa680b8dd29358245d4cf715ba15204106d918a9",
+    "image_digest": "sha256:3b26fbbf99248afad81b4214932529b66b95f46a16bb95d570e9d7c677387d08",
+    "contract_revision": "P00-2"
+  },
+  "rendered_compose_sha256": "95e953942790b6cde216198c42a92f6993bd1f3ac2e60425114574ee66c35763",
+  "logs_sha256": "71dce9085c173d565a0d91b73a8557bc001fe6eb17b72053fb99fa377ca08e15",
+  "compose_sha256": "047d703220b3a80e973663070057dadc543a0c9c42169b2a8b6b98ea38b3fe00"
+}

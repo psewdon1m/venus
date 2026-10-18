@@ -31,8 +31,8 @@ class PortableHistoryAndInventory(unittest.TestCase):
     def test_inventory_excludes_generated_files_but_includes_new_sources(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            for name in ['node_modules/a.md','.git/a.md','apps/web/dist/a.js','.artifacts/report.json','tools/__pycache__/a.pyc','apps/api/src/new.ts','new-doc.md']:
+            for name in ['node_modules/a.md','.git/a.md','apps/web/dist/a.js','.artifacts/report.json','tools/__pycache__/a.pyc','.history/example/foreign.md','.history/venus.md','apps/api/src/new.ts','new-doc.md']:
                 p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('fixture')
-            self.assertEqual(sorted(p.relative_to(root).as_posix() for p in source_files(root)), ['apps/api/src/new.ts','new-doc.md'])
+            self.assertEqual(sorted(p.relative_to(root).as_posix() for p in source_files(root)), ['.history/venus.md','apps/api/src/new.ts','new-doc.md'])
 
 if __name__ == '__main__': unittest.main()

@@ -1,6 +1,6 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED.** P01 принят как кандидат в PR, production/public release не разрешён. Ветка реализации: `feature/p01-foundation`; merge в main ещё не выполнен.
+Обновлено: 2026-10-18. **EXIT-P00 = PASSED.** P01 round2 принят на aa680b8; после поручения вести журнал добавлена инфраструктура учёта, текущая ревизия проходит round3 (`P01=REOPENED`). Production/public release не разрешён. Ветка реализации: `feature/p01-foundation`; merge в main ещё не выполнен.
 
 Созданы защищённый main и PR-процесс, TypeScript monorepo, React/Fastify/PostgreSQL foundation, exact toolchain/locks, quality и четыре отрицательные проверки, OCI smoke с настоящей БД. Реализованы только health/version/static shell на RU/EN/TR. [Developer guide и rollback](../DEVELOPER_GUIDE.md), [реестр P01](p01-registry.json), [ADR-013](../adr/ADR-013-p01-foundation.md).
 
@@ -25,7 +25,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | Этап | Статус | Следующий результат |
 |---|---|---|
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
-| P01 | PASSED | Проверенный foundation в PR #1; disposable среда после smoke удалена |
+| P01 | REOPENED | Проверка добавленной инфраструктуры журнала; round2 proof сохранён |
 | P02 | NOT_STARTED | Реальные migrations, комнаты/identity/entry-policy/ACL/retention |
 | P03 | NOT_STARTED | Production engine и consent |
 | P04 | NOT_STARTED | Reviewed production card catalogue |

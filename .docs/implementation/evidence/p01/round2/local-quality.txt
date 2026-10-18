@@ -1,0 +1,79 @@
+
+> venus@0.0.0 quality
+> npm run lint && npm run typecheck && npm test && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:negative
+
+
+> venus@0.0.0 lint
+> eslint apps packages tools/*.mjs
+
+
+> venus@0.0.0 typecheck
+> tsc -b && tsc -p apps/web/tsconfig.json
+
+
+> venus@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/.projects/venus
+
+
+ Test Files  2 passed (2)
+      Tests  3 passed (3)
+   Start at  19:17:53
+   Duration  461ms (tests 49%, import 45%, transform 3%, worker 2%)
+
+
+> venus@0.0.0 check:schemas
+> python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py
+
+PASS: JSON Schema 2020-12 and OpenAPI local references
+Checked RE-1 six labels � six = 36 directed combinations; errors=0
+PASS: policy config invariants only. Actual consent/access/inference requires app tests.
+
+> venus@0.0.0 check:i18n
+> node tools/check-i18n.mjs
+
+PASS: RU/EN/TR locale keys and nonempty strings
+
+> venus@0.0.0 test:python
+> python -B -m unittest discover -s tools -p test_*.py
+
+.......................................................................
+----------------------------------------------------------------------
+Ran 71 tests in 1.677s
+
+OK
+
+> venus@0.0.0 check:docs
+> python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/verify_manifest.py
+
+Venus docs: 65 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+PASS: required files, linked assets and snapshot hashes
+{"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
+PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
+Checked 211 packaged paths; errors=0
+PASS: packaged bytes match manifest; provenance/signatures require release verification.
+
+> venus@0.0.0 build
+> tsc -b && npm run build -w @venus/web
+
+
+> @venus/web@0.0.0 build
+> vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 19 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.39 kB │ gzip:  0.27 kB
+dist/assets/index-iSNoMDDm.css    1.80 kB │ gzip:  0.81 kB
+dist/assets/index-C1ogXRBs.js   222.80 kB │ gzip: 70.17 kB
+
+✓ built in 109ms
+
+> venus@0.0.0 test:negative
+> node tools/negative-gates.mjs
+
+PASS: schema, locale, type and unit corruption rejected; source unchanged

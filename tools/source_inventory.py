@@ -5,6 +5,8 @@ EXCLUDED = {'.git', 'node_modules', 'dist', '__pycache__', '.venv', '.artifacts'
 def source_files(root: Path):
     for directory, names, files in os.walk(root):
         names[:] = [name for name in names if name not in EXCLUDED]
+        if Path(directory) == root/'.history':
+            names[:] = [name for name in names if name != 'example']
         for name in files:
             path = Path(directory)/name
             if name.endswith(('.pyc','.tsbuildinfo','.log')) or name == '.env' or (name.startswith('.env.') and name != '.env.example'):
