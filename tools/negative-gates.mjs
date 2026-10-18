@@ -9,7 +9,7 @@ const scratch = mkdtempSync(join(tmpdir(), 'venus-negative-'));
 const paths = [...new Set(execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p => p && existsSync(p)))];
 const hash = () => createHash('sha256').update(paths.map(p => p+':'+createHash('sha256').update(readFileSync(p)).digest('hex')).join('\n')).digest('hex');
 const before = hash();
-const sourceIdentity = execFileSync('python',['-B','tools/p01_gate.py','identity'],{encoding:'utf8'}).trim();
+const sourceIdentity = execFileSync('python',['-B','tools/stage_inventory.py'],{encoding:'utf8'}).trim();
 const sourceDirty = Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim());
 const records = [];
 let sourceChanged;
@@ -21,6 +21,10 @@ function run(command, args) {
 try {
   for (const path of paths) {mkdirSync(dirname(join(scratch,path)),{recursive:true});cpSync(path,join(scratch,path));}
   symlinkSync(resolve(root,'node_modules'),join(scratch,'node_modules'),process.platform === 'win32' ? 'junction' : 'dir');
+  for(const path of paths.filter(p=>/^(apps|packages)\/[^/]+\/package\.json$/.test(p))) {
+    const modules=join(dirname(path),'node_modules');
+    if(existsSync(join(root,modules))) symlinkSync(resolve(root,modules),join(scratch,modules),process.platform==='win32'?'junction':'dir');
+  }
   const node = process.execPath;
   const cases = [
     {id:'schema',file:'.docs/contracts/projections.v1.schema.json',command:'python',args:['-B','tools/check_schemas.py'],mutate:text=>{const s=JSON.parse(text);s.type='INVALID_NEGATIVE_SCHEMA';return JSON.stringify(s);},diagnostic:/INVALID_NEGATIVE_SCHEMA/},

@@ -12,8 +12,12 @@ for path in set(paths):
     schema = json.loads(path.read_text('utf-8'))
     Draft202012Validator.check_schema(schema)
     assert not local_refs(schema), str(path)
-api = json.loads((root/'.docs/contracts/api.v1.openapi.json').read_text('utf-8'))
-assert api['openapi'] == '3.1.0' and not local_refs(api)
-for schema in api['components']['schemas'].values():
-    Draft202012Validator.check_schema(schema)
+for api_path in sorted((root/'.docs/contracts').glob('*.openapi.json')):
+    api = json.loads(api_path.read_text('utf-8'))
+    assert api['openapi'] == '3.1.0' and not local_refs(api), str(api_path)
+    for schema in api['components']['schemas'].values():
+        Draft202012Validator.check_schema(schema)
+    if 'x-base-contract' in api:
+        import hashlib
+        base=api['x-base-contract'];assert hashlib.sha256((api_path.parent/base['path']).read_bytes()).hexdigest()==base['sha256']
 print('PASS: JSON Schema 2020-12 and OpenAPI local references')

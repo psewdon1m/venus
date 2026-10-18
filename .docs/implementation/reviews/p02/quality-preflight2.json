@@ -1,0 +1,34 @@
+{
+  "reviewer_id": "/root/p02_quality_review",
+  "source_sha": "b964ab231972dfd44185c90c21ae283eca2866fd",
+  "source_identity_sha256": "6c02c3d68757bc8d64c809b2c1db514befa6c1a9190c893416fa1e14fcfe73c1",
+  "source_dirty": true,
+  "scopes": [
+    "evidence",
+    "quality"
+  ],
+  "status": "FAIL",
+  "open_findings": [
+    {
+      "id": "QA-P02-04",
+      "priority": "P2",
+      "title": "Timer boundary test lacks an independent member for host non-promotion assertion",
+      "file": "apps/api/src/p02.integration.test.ts",
+      "detail": "Presence/reservation deadline−1/at and host grace before/at/after are now asserted, but only host is created. The requested proof that a guest never becomes host still lacks an independent guest across grace."
+    },
+    {
+      "id": "QA-P02-05",
+      "priority": "P2",
+      "title": "Gate accepts contradictory FAIL narrative with PASS JSON",
+      "file": "tools/stage_gate.py",
+      "detail": "P02EvidenceTests.fixture baseline verify returns []; mutate review narrative to # FAIL / Open findings blocker unresolved, refresh narrative hash and JSON artifact descriptor, retain status PASS/open_findings[] in JSON: verify still returns []. The narrative is hashed but its result, reviewer and source metadata are never checked against the machine report."
+    }
+  ],
+  "closed_findings": [
+    "QA-P02-01",
+    "QA-P02-02",
+    "QA-P02-03"
+  ],
+  "report_path": ".docs/implementation/reviews/p02/quality-preflight2.md",
+  "report_sha256": "161c43cc6cd55db94b15f0becf38233e92483646e7ca3eb060851e64c0400ca5"
+}

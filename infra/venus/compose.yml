@@ -12,7 +12,11 @@ services:
       DB_HOST: db
       DB_PASSWORD_FILE: /run/secrets/db_password
       IMAGE_DIGEST: ${VENUS_IMAGE:?Set VENUS_IMAGE}
-    secrets: [db_password]
+      KEYRING_FILE: /run/secrets/keyring
+      DELETION_LEDGER_FILE: /var/lib/venus/deletions.jsonl
+      APP_ORIGIN: ${VENUS_ORIGIN:-https://venus.local.invalid}
+    secrets: [db_password, keyring]
+    volumes: [venus-state:/var/lib/venus]
     depends_on:
       db:
         condition: service_healthy
@@ -39,8 +43,11 @@ services:
 secrets:
   db_password:
     file: ${VENUS_DB_PASSWORD_FILE:?Set an external secret file path}
+  keyring:
+    file: ${VENUS_KEYRING_FILE:?Set an external keyring file path}
 volumes:
   postgres-data:
+  venus-state:
 networks:
   backend:
     internal: true

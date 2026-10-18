@@ -1,0 +1,47 @@
+{
+  "reviewer_id": "/root/p02_quality_review",
+  "source_sha": "b964ab231972dfd44185c90c21ae283eca2866fd",
+  "source_identity_sha256": "42eef954bca8ee25655412158e149d6097e400da3906f3b0b437fa8582d96ca1",
+  "source_dirty": true,
+  "scopes": [
+    "evidence",
+    "quality"
+  ],
+  "status": "FAIL",
+  "open_findings": [
+    {
+      "id": "QA-P02-01",
+      "priority": "P1",
+      "title": "Нет проверки upgrade/обратной совместимости предыдущего image",
+      "file": "apps/api/src/p02.integration.test.ts:56",
+      "detail": "Миграция проверяется повторным migrate на уже подготовленной generation1. В container smoke запускается только кандидат. Не выполнено условие возврата P02: предыдущий image на совместимой upgraded схеме; отсутствует доказательство перехода generation0→1 с последующим чтением данных прежним image.",
+      "required": "В disposable PostgreSQL выполнить P01→P02 migration, сохранить синтетические данные, запустить exact принятый P01 image против upgraded БД и снова P02; сравнить identity/row scope, не теряя реальные room/preferences. Отдельно отказ unsupported/checksum mutation до commit."
+    },
+    {
+      "id": "QA-P02-02",
+      "priority": "P1",
+      "title": "Restore drill не сравнивает восстановленные identity/preferences/row scope",
+      "file": "apps/api/src/p02.integration.test.ts:154",
+      "detail": "Перед pg_dump создаётся комната только с defaults. После restore проверяется лишь запрет доступа закрытого room и удаление private_preferences этого room. Тест остаётся зелёным, если все остальные восстановленные комнаты или encrypted preferences потеряны; обязательный compare identity/row scope отсутствует.",
+      "required": "Создать независимую открытую комнату с двумя identities и nondefault encrypted preferences, зафиксировать row scope/identity/revisions до backup, после restore и restart сравнить собственные настройки и identities/row scope для неё, а closed room отдельно остаётся revoked; проверить ключи/.env отсутствуют в dump."
+    },
+    {
+      "id": "QA-P02-03",
+      "priority": "P1",
+      "title": "Нет negative WS ACL с независимыми identities/unauthorized client",
+      "file": "apps/api/src/p02.integration.test.ts:117",
+      "detail": "Существующие WS assertions проверяют собственный ticket replay/expiry, duplicate socket и bad Origin. HTTP проверяет independent identities, но на WS нет чужого room, guest cookie+host ticket и отсутствующей cookie. Это не закрывает EXIT-P02.3 и заявленный реестром two identities+attacker HTTP/WS.",
+      "required": "Использовать два клиента+unauthorized connection: чужой ticket со своей cookie, ticket комнаты A на room B, valid ticket без cookie; убедиться, что до/после отказа нет room snapshot/private frames. Свой ticket после отвергнутой foreign попытки должен оставаться корректным согласно atomic consume contract."
+    },
+    {
+      "id": "QA-P02-04",
+      "priority": "P2",
+      "title": "Boundary проверки lifecycle не подтверждают принятые presence/reservation/grace",
+      "file": "apps/api/src/p02.integration.test.ts:126",
+      "detail": "Проверены reconnect после45s, reservation+1 и hostGrace+1. Не проверены границы presence45s/reservation90s до и на deadline, состояние presence после hostGrace и отсутствие promotion независимого guest. Entry-review ENTRY-03 требует timestamp и deadline±1ms.",
+      "required": "Добавить реальные PG/HTTP/WS assertions непосредственно перед и на deadline presence/reservation, hostGrace со вторым member; room остаётся open, host сохраняется и guest не повышается."
+    }
+  ],
+  "report_path": ".docs/implementation/reviews/p02/quality-round1.md",
+  "report_sha256": "92ba3976570e711635df84270609f1607c413d5daffa4048620096c85c375c06"
+}

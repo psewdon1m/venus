@@ -1,5 +1,7 @@
 # Разработка Venus · P01
 
+Этот документ сохраняет foundation P01. Текущий room runtime, тесты P02, keyring, backup scope и совместимый откат описаны в [P02 development/recovery](P02_DEVELOPMENT.md). P01 уже в main; актуальное состояние — [implementation/status](implementation/status.md).
+
 Исходный репозиторий: [psewdon1m/venus](https://github.com/psewdon1m/venus). Рабочая ветка P01: `feature/p01-foundation`; изменения идут через PR в защищённый `main`. Обязательны `quality` и `container-smoke`, актуальность относительно main, закрытые обсуждения; force push/deletion запрещены, правило действует на администратора. Техническую приёмку выполняют отдельные агенты по U-004. Нулевой порог human approvals не заменяет независимый gate report.
 
 ## Зафиксированное окружение

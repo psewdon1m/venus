@@ -2,10 +2,16 @@ import Fastify, {LogController, type FastifyReply, type FastifyServerOptions} fr
 import staticFiles from '@fastify/static';
 import {randomUUID} from 'node:crypto';
 import type {Version, HealthLive, HealthReady} from '@venus/contracts';
+import websocket from '@fastify/websocket';
+import type {Rooms} from './rooms.js';
+import {registerRooms} from './room-routes.js';
+import {DomainError} from './security.js';
 
 export interface AppOptions {
   probe: () => Promise<void>; version: Version; staticRoot?: string;
   logger?: FastifyServerOptions['logger'];
+  rooms?:Rooms;
+  schemaGeneration?:number;
 }
 export async function createApp(options: AppOptions) {
   const app = Fastify({logger: options.logger ?? true, logController: new LogController({disableRequestLogging: true}),
@@ -32,17 +38,19 @@ export async function createApp(options: AppOptions) {
   });
   app.setErrorHandler((error, request, reply) => {
     const code = error && typeof error === 'object' && 'statusCode' in error ? error.statusCode : 500;
-    const status = typeof code === 'number' && code >= 400 && code < 500 ? code : 500;
-    return reply.code(status).send({code: status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
+    const status = error instanceof DomainError ? error.statusCode : typeof code === 'number' && code >= 400 && code < 500 ? code : 500;
+    return reply.code(status).send({code: error instanceof DomainError?error.code:status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
   });
+  await app.register(websocket,{options:{maxPayload:8192,perMessageDeflate:false}});
+  if(options.rooms) await registerRooms(app,options.rooms);
   app.get('/health/live', async (): Promise<HealthLive> => ({status: 'alive'}));
   app.get('/health/ready', async (_request, reply): Promise<HealthReady> => {
     try {
       await options.probe();
-      return {status: 'ready', database: 'ready', schema_generation: 0};
+      return {status: 'ready', database: 'ready', schema_generation: options.schemaGeneration??0};
     } catch {
       reply.code(503);
-      return {status: 'unavailable', database: 'unavailable', schema_generation: 0};
+      return {status: 'unavailable', database: 'unavailable', schema_generation: options.schemaGeneration??0};
     }
   });
   app.get('/api/v1/version', async (): Promise<Version> => options.version);

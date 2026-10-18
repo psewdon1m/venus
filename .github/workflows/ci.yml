@@ -1,7 +1,7 @@
-name: P01 CI
+name: Venus CI
 on:
   push:
-    branches: [main, feature/p01-foundation]
+    branches: [main, 'feature/**']
   pull_request:
     branches: [main]
 permissions:
@@ -17,6 +17,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
@@ -34,6 +35,28 @@ jobs:
           name: negative-gates
           path: .artifacts/negative-gates.json
           if-no-files-found: error
+  p02-integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version-file: .node-version
+      - run: npm ci
+      - run: npm run build
+      - run: npm run browsers:install
+      - run: npm run test:p02
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: p02-integration
+          path: .artifacts/p02/
+          if-no-files-found: error
   container-smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
@@ -41,6 +64,7 @@ jobs:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
           persist-credentials: false
+          fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:

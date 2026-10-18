@@ -7,7 +7,7 @@ export function database() {
   if (password.length < 16) throw new Error('Database credential is too short');
   const pool = new pg.Pool({host: process.env.DB_HOST ?? '127.0.0.1',
     port: Number(process.env.DB_PORT ?? 5432), user: 'venus', database: 'venus', password,
-    connectionTimeoutMillis: 1000, query_timeout: 1000, max: 4, idleTimeoutMillis: 10000});
+    connectionTimeoutMillis: 2000, query_timeout: 5000, max: 12, idleTimeoutMillis: 10000});
   pool.on('error', () => { /* Failed idle connections are handled by the next readiness probe. */ });
-  return {probe: async () => {await pool.query('SELECT 1');}, close: () => pool.end()};
+  return {pool,probe: async () => {await pool.query('SELECT 1');}, close: () => pool.end()};
 }
