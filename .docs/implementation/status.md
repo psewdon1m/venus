@@ -1,8 +1,18 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED.** P02 принят двумя независимыми агентами после исправлений; production/public release не разрешён. Ветка: `feature/p02-rooms`, [PR #2](https://github.com/psewdon1m/venus/pull/2). P01 уже в main; исходная история сохранена тегом `p01-accepted-20261018`.
+Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = PASSED.** Технический P03 принят двумя независимыми агентами. Ветка `feature/p03-engine`, [PR #3](https://github.com/psewdon1m/venus/pull/3); упаковка доказательств проходит защищённый PR-процесс. Production/public release ещё закрыт.
 
-Созданы защищённый main и PR-процесс, TypeScript monorepo, React/Fastify/PostgreSQL foundation, exact toolchain/locks, quality и четыре отрицательные проверки, OCI smoke с настоящей БД. Реализованы только health/version/static shell на RU/EN/TR. [Developer guide и rollback](../DEVELOPER_GUIDE.md), [реестр P01](p01-registry.json), [ADR-013](../adr/ADR-013-p01-foundation.md).
+Реализованы foundation, комнаты и приватные настройки, server-side relationship engine, immutable snapshot, rounds и actor-scoped consent с повторной проверкой перед HTTP/WS delivery. [P03 guide и rollback](../P03_DEVELOPMENT.md), [реестр](p03-registry.json), [ADR-015](../adr/ADR-015-p03-engine-and-measurements.md), [ADR-016](../adr/ADR-016-p03-progressive-evidence.md).
+
+## EXIT-P03
+
+Measured source `8b6101bfeb54b00d789b58e046907af4e783cef8`, implementation identity `0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964`. [Bound gate](evidence/p03/gate-report.json), [численные результаты и ограничения](evidence/p03/measurement-summary.md), [implementation PASS](reviews/p03/final-implementation.md), [evidence PASS](reviews/p03/final-evidence.md), [единый CI 8/8](https://github.com/psewdon1m/venus/actions/runs/39156750574), [журнал P03](../../.history/2026-10-18-p03.md).
+
+Quality: 42 JS/89 Python tests и четыре negative controls; OCI9/9, P02 regression20tests/22proofs и P03 actual PostgreSQL/HTTP/WS19/19. Проверены consent/ACL/expiry/dispatch fence, stale clears, restart/pinning, encrypted restore/ledger и exact previous P02 OCI rollback с quiesce. Предыдущий Linux fixture FAIL и прерванные статистические попытки сохранены, а не заменены успешными.
+
+Полный preregistered M3: 70000 sessions (10000/N2..8), 3467600 selected rounds, zero invariant violations; 1836 safe refusals сохранены с seeds/prefixes. Fairness42cells/84000sessions: max gap0.006601145≤0.02/max session share0.5. GF1000000paired opportunities: ratio1.010119735,95%CI[1.009027905;1.011212746]. Inference126cells/3pooled models: worst upper95%CI0.605316319≤0.65, zero declared deterministic decoder. 168 progressive rows/section, early private0, cap/conditional anti-repeat проверены независимо. Все четыре Linux/local statistics совпали, исключено только elapsed_seconds.
+
+Пределы: синтетический draft pack не разрешён production loader; human review каталога остаётся P04. Inference ограничен зарегистрированным observer/classifier и этими входами; не является универсальной гарантией приватности. Production offer отсутствует, public entry fail-closed; полный G1 UX/chat остаётся P05. Публичная эксплуатация не разрешена этим техническим гейтом.
 
 ## EXIT-P02
 
@@ -35,7 +45,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
-| P03 | IMPLEMENTING | Production engine, immutable snapshot и authenticated consent; отдельный журнал P03 |
+| P03 | PASSED | Engine/snapshot/consent, full M3 measurements и два независимых PASS |
 | P04 | NOT_STARTED | Reviewed production card catalogue |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
 | P06 | NOT_STARTED | Protected signing/release, host dependencies/operator, restore/rollback |
@@ -45,6 +55,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-Текущий этап — P03: production relationship engine, immutable snapshot, rounds и consent, [журнал](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+P03 принят технически; после завершения защищённой доставки следующий этап — P04: reviewed production catalogue. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.
