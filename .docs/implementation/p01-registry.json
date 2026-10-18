@@ -2,21 +2,121 @@
   "schema_version": 1,
   "stage": "P01",
   "gate": "EXIT-P01",
-  "status": "IMPLEMENTING",
+  "status": "PASSED",
   "owner": "Codex / Engineering",
   "review_policy": "U-004: independent agents, report/fix/test/review until zero open findings",
-  "adr": ["ADR-010", "ADR-011", "ADR-013"],
+  "adr": [
+    "ADR-010",
+    "ADR-011",
+    "ADR-013"
+  ],
   "remote": "https://github.com/psewdon1m/venus.git",
   "branch": "feature/p01-foundation",
   "base": "main",
   "checks": [
-    {"id": "P01-REPRO", "exit": 1, "command": "npm ci && npm run quality", "evidence": "GitHub Actions quality on exact source SHA"},
-    {"id": "P01-NEGATIVE", "exit": 2, "command": "npm run test:negative", "evidence": "negative-gates.json: four corruptions rejected, positive controls pass, unchanged source"},
-    {"id": "P01-TRUST", "exit": 2, "command": "vitest tools/github-ci.test.ts; GitHub protection API", "evidence": "pinned actions, read-only permissions, no signing credentials; protected main"},
-    {"id": "P01-OCI", "exit": 3, "command": "npm run test:container", "evidence": "image ID, labels, all-layer secret scan, runtime inspect, sanitized rendered Compose"},
-    {"id": "P01-HEALTH", "exit": 4, "command": "npm run test:container", "evidence": "real PostgreSQL healthy/unavailable/recovered, liveness/version checks"}
+    {
+      "id": "P01-REPRO",
+      "exit": 1,
+      "command": "npm ci && npm run quality",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      },
+      "status": "PASS"
+    },
+    {
+      "id": "P01-NEGATIVE",
+      "exit": 2,
+      "command": "npm run test:negative",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      },
+      "status": "PASS"
+    },
+    {
+      "id": "P01-TRUST",
+      "exit": 2,
+      "command": "vitest tools/github-ci.test.ts; GitHub protection API",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      },
+      "status": "PASS"
+    },
+    {
+      "id": "P01-OCI",
+      "exit": 3,
+      "command": "npm run test:container",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      },
+      "status": "PASS"
+    },
+    {
+      "id": "P01-HEALTH",
+      "exit": 4,
+      "command": "npm run test:container",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      },
+      "status": "PASS"
+    }
   ],
   "historical_p00_archive_sha256": "bf2b3e8b02acf1a2904b1614049b46ae9c8f5b3c244ef1856682257825babb0d",
   "pending_user_decisions_for_P01": [],
-  "public_release": "BLOCKED_UNTIL_LATER_GATES"
+  "public_release": "BLOCKED_UNTIL_LATER_GATES",
+  "source_sha": "aa680b8dd29358245d4cf715ba15204106d918a9",
+  "source_identity_sha256": "b2a15edfbd321c193152c97f6a8a7f8f9271379cf5519f1526fad304627448dd",
+  "gate_report": {
+    "path": ".docs/implementation/evidence/p01/gate-report.json",
+    "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+  },
+  "pr": "https://github.com/psewdon1m/venus/pull/1",
+  "independent_reviewers": [
+    "/root/p01_implementation_review",
+    "/root/p01_evidence_review"
+  ],
+  "accepted_under": "U-004 independent technical acceptance",
+  "traceability_overrides": [
+    {
+      "requirement_id": "PLAN-API-GET-API-V1-VERSION",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_status": "PLANNED",
+      "current_status": "VERIFIED",
+      "source_sha": "aa680b8dd29358245d4cf715ba15204106d918a9",
+      "check_id": "P01-HEALTH",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-GET-HEALTH-LIVE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_status": "PLANNED",
+      "current_status": "VERIFIED",
+      "source_sha": "aa680b8dd29358245d4cf715ba15204106d918a9",
+      "check_id": "P01-HEALTH",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-GET-HEALTH-READY",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_status": "PLANNED",
+      "current_status": "VERIFIED",
+      "source_sha": "aa680b8dd29358245d4cf715ba15204106d918a9",
+      "check_id": "P01-HEALTH",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p01/gate-report.json",
+        "sha256": "aa2c06e9df56bb1038d930c09e0b759a6e9ebe51acd2251b8dd5e463a44fb886"
+      }
+    }
+  ],
+  "traceability_note": "Original P00 CSV/registry is an immutable historical baseline. P01 verified statuses are recorded here without rewriting accepted input hashes."
 }
