@@ -35,7 +35,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
-| P03 | NOT_STARTED | Production engine и consent |
+| P03 | IMPLEMENTING | Production engine, immutable snapshot и authenticated consent; отдельный журнал P03 |
 | P04 | NOT_STARTED | Reviewed production card catalogue |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
 | P06 | NOT_STARTED | Protected signing/release, host dependencies/operator, restore/rollback |
@@ -45,6 +45,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-Следующий этап — P03: production relationship engine, immutable snapshot, rounds и consent. Guest/operator scope зафиксирован отдельным overlay; room host не operator. U-001…005 и custom comfortable UI учтены. P02 generation1 принят; production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+Текущий этап — P03: production relationship engine, immutable snapshot, rounds и consent, [журнал](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.
