@@ -6,6 +6,7 @@ import re
 import hashlib
 import sys
 from urllib.parse import unquote
+from source_inventory import source_files
 
 ROOT=Path(__file__).resolve().parents[1]
 DOCS=ROOT/'.docs'
@@ -33,7 +34,8 @@ REQUIRED += ['tools/p00_evidence.py', '.docs/implementation/user-decisions.v1.js
 errors=[]
 for rel in REQUIRED:
  if not (ROOT/rel).is_file():errors.append(f'missing required file: {rel}')
-for p in ROOT.rglob('*.md'):
+markdown = [p for p in source_files(ROOT) if p.suffix == '.md']
+for p in markdown:
  # The supplied central Part04/05/12 snapshots are intentionally immutable
  # and contain upstream links to Part00/01/03/06/07/09/13 not supplied here.
  # Their absence must be documented as an external dependency, not repaired
@@ -80,7 +82,7 @@ if manifest.exists():
   if not f.exists():errors.append('snapshot missing: '+item['file']);continue
   sha=hashlib.sha256(f.read_bytes()).hexdigest()
   if sha!=item['sha256']:errors.append('modified normative snapshot: '+item['file'])
-print(f'Venus docs: {len(list(ROOT.rglob("*.md")))} markdown files, {len(refs)} moodboard images, {len(examples)} draft cards, {len(errors)} errors.')
+print(f'Venus docs: {len(markdown)} markdown files, {len(refs)} moodboard images, {len(examples)} draft cards, {len(errors)} errors.')
 if errors:
  for e in errors: print('ERROR',e)
  sys.exit(1)
