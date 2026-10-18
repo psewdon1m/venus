@@ -1,10 +1,12 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = PASSED.** Технический P03 принят двумя независимыми агентами. Ветка `feature/p03-engine`, [PR #3](https://github.com/psewdon1m/venus/pull/3); упаковка доказательств проходит защищённый PR-процесс. Production/public release ещё закрыт.
+Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = IMPLEMENTING.** Предыдущий source8b получил два независимых PASS; финальная доставка bc55e17 остановлена CI ceiling60min, поэтому после увеличения ceiling120 выполняется новая source-bound проверка. Ветка `feature/p03-engine`, [PR #3](https://github.com/psewdon1m/venus/pull/3); упаковка доказательств проходит защищённый PR-процесс. Production/public release ещё закрыт.
 
 Реализованы foundation, комнаты и приватные настройки, server-side relationship engine, immutable snapshot, rounds и actor-scoped consent с повторной проверкой перед HTTP/WS delivery. [P03 guide и rollback](../P03_DEVELOPMENT.md), [реестр](p03-registry.json), [ADR-015](../adr/ADR-015-p03-engine-and-measurements.md), [ADR-016](../adr/ADR-016-p03-progressive-evidence.md).
 
-## EXIT-P03
+## EXIT-P03 — предыдущий source8b и текущая повторная проверка
+
+Финальный proof CI39162076940:7/8 SUCCESS, inference остановлен после125/126 ячеек часовым лимитом. Предыдущие полные local/CI результаты не переписаны. Только ceiling workflow увеличен60→120; новая приёмка требует свежего exact-source CI и двух независимых отчётов.
 
 Measured source `8b6101bfeb54b00d789b58e046907af4e783cef8`, implementation identity `0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964`. [Bound gate](evidence/p03/gate-report.json), [численные результаты и ограничения](evidence/p03/measurement-summary.md), [implementation PASS](reviews/p03/final-implementation.md), [evidence PASS](reviews/p03/final-evidence.md), [единый CI 8/8](https://github.com/psewdon1m/venus/actions/runs/39156750574), [журнал P03](../../.history/2026-10-18-p03.md).
 
@@ -45,7 +47,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
-| P03 | PASSED | Engine/snapshot/consent, full M3 measurements и два независимых PASS |
+| P03 | IMPLEMENTING | CI-only time budget fix; prior full PASS retained, delivery revalidation required |
 | P04 | NOT_STARTED | Reviewed production card catalogue |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
 | P06 | NOT_STARTED | Protected signing/release, host dependencies/operator, restore/rollback |
@@ -55,6 +57,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-P03 принят технически; после завершения защищённой доставки следующий этап — P04: reviewed production catalogue. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+P03 повторно проверяется после недостаточного CI time budget; по поручению владельца после завершения P03 работа останавливается, P04 не начинается. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.

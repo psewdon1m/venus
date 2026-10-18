@@ -1,0 +1,466 @@
+﻿2026-10-18T20:10:16.7581478Z Current runner version: '2.337.0'
+2026-10-18T20:10:16.7609656Z ##[group]Runner Image Provisioner
+2026-10-18T20:10:16.7610610Z Hosted Compute Agent
+2026-10-18T20:10:16.7611232Z Version: 20261012.601
+2026-10-18T20:10:16.7611906Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-18T20:10:16.7612678Z Build Date: 2026-10-12T17:48:21Z
+2026-10-18T20:10:16.7613366Z Worker ID: {d19e9acb-b2ba-4cfe-afa1-7425b36ff80f}
+2026-10-18T20:10:16.7614076Z Region: eastus
+2026-10-18T20:10:16.7615092Z Cloud: Azure
+2026-10-18T20:10:16.7615684Z ##[endgroup]
+2026-10-18T20:10:16.7617430Z ##[group]Operating System
+2026-10-18T20:10:16.7618111Z Ubuntu
+2026-10-18T20:10:16.7618797Z 24.04.5
+2026-10-18T20:10:16.7619330Z LTS
+2026-10-18T20:10:16.7619876Z ##[endgroup]
+2026-10-18T20:10:16.7620801Z ##[group]Runner Image
+2026-10-18T20:10:16.7621457Z Image: ubuntu-24.04
+2026-10-18T20:10:16.7622017Z Version: 20261012.334.1
+2026-10-18T20:10:16.7623353Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-18T20:10:16.7625386Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-18T20:10:16.7626417Z ##[endgroup]
+2026-10-18T20:10:16.7627597Z ##[group]GITHUB_TOKEN Permissions
+2026-10-18T20:10:16.7629833Z Contents: read
+2026-10-18T20:10:16.7630525Z Metadata: read
+2026-10-18T20:10:16.7631277Z ##[endgroup]
+2026-10-18T20:10:16.7633415Z Secret source: Actions
+2026-10-18T20:10:16.7634979Z Cache mode: write
+2026-10-18T20:10:16.7635872Z Prepare workflow directory
+2026-10-18T20:10:16.7978580Z Prepare all required actions
+2026-10-18T20:10:16.8028676Z Getting action download info
+2026-10-18T20:10:17.0490882Z Download action repository 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-18T20:10:17.1500284Z Download action repository 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-18T20:10:17.3136373Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-18T20:10:17.3880645Z Download action repository 'actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-10-18T20:10:17.7086155Z Complete job name: p03-measurements (inference)
+2026-10-18T20:10:17.7876088Z ##[group]Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+2026-10-18T20:10:17.7877260Z with:
+2026-10-18T20:10:17.7877754Z   persist-credentials: false
+2026-10-18T20:10:17.7878301Z   fetch-depth: 0
+2026-10-18T20:10:17.7878844Z   ref: bc55e1722adf5c1ee669d42bfde7ef103ccc598d
+2026-10-18T20:10:17.7879503Z   repository: psewdon1m/venus
+2026-10-18T20:10:17.7883923Z   token: ***
+2026-10-18T20:10:17.7884884Z   ssh-strict: true
+2026-10-18T20:10:17.7885473Z   ssh-user: git
+2026-10-18T20:10:17.7886081Z   clean: true
+2026-10-18T20:10:17.7886603Z   sparse-checkout-cone-mode: true
+2026-10-18T20:10:17.7887323Z   fetch-tags: false
+2026-10-18T20:10:17.7887961Z   show-progress: true
+2026-10-18T20:10:17.7888549Z   lfs: false
+2026-10-18T20:10:17.7889147Z   submodules: false
+2026-10-18T20:10:17.7889719Z   set-safe-directory: true
+2026-10-18T20:10:17.7890482Z   allow-unsafe-pr-checkout: false
+2026-10-18T20:10:17.7891681Z ##[endgroup]
+2026-10-18T20:10:17.8949700Z Syncing repository: psewdon1m/venus
+2026-10-18T20:10:17.8952916Z ##[group]Getting Git version info
+2026-10-18T20:10:17.8954488Z Working directory is '/home/runner/work/venus/venus'
+2026-10-18T20:10:17.8956407Z [command]/usr/bin/git version
+2026-10-18T20:10:17.9023185Z git version 2.55.0
+2026-10-18T20:10:17.9049967Z ##[endgroup]
+2026-10-18T20:10:17.9066116Z Temporarily overriding HOME='/home/runner/work/_temp/5f724b6b-ca78-4ed5-ab04-8f8e21cafeb8' before making global git config changes
+2026-10-18T20:10:17.9068654Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-18T20:10:17.9072363Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-18T20:10:17.9125641Z Deleting the contents of '/home/runner/work/venus/venus'
+2026-10-18T20:10:17.9131300Z ##[group]Determining repository object format
+2026-10-18T20:10:17.9133686Z ##[endgroup]
+2026-10-18T20:10:17.9135344Z ##[group]Initializing the repository
+2026-10-18T20:10:17.9139153Z [command]/usr/bin/git init /home/runner/work/venus/venus
+2026-10-18T20:10:17.9264296Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-18T20:10:17.9266646Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-18T20:10:17.9268401Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-18T20:10:17.9269750Z hint: call:
+2026-10-18T20:10:17.9270519Z hint:
+2026-10-18T20:10:17.9271551Z hint: 	git config --global init.defaultBranch <name>
+2026-10-18T20:10:17.9272661Z hint:
+2026-10-18T20:10:17.9273688Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-18T20:10:17.9275708Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-18T20:10:17.9277177Z hint:
+2026-10-18T20:10:17.9277973Z hint: 	git branch -m <name>
+2026-10-18T20:10:17.9278819Z hint:
+2026-10-18T20:10:17.9279921Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-18T20:10:17.9281662Z Initialized empty Git repository in /home/runner/work/venus/venus/.git/
+2026-10-18T20:10:17.9283885Z [command]/usr/bin/git remote add origin https://github.com/psewdon1m/venus
+2026-10-18T20:10:17.9335575Z ##[endgroup]
+2026-10-18T20:10:17.9336478Z ##[group]Disabling automatic garbage collection
+2026-10-18T20:10:17.9339982Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-18T20:10:17.9374879Z ##[endgroup]
+2026-10-18T20:10:17.9376018Z ##[group]Setting up auth
+2026-10-18T20:10:17.9376672Z Removing SSH command configuration
+2026-10-18T20:10:17.9383519Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T20:10:17.9440102Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T20:10:17.9845448Z Removing HTTP extra header
+2026-10-18T20:10:17.9853580Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T20:10:17.9896131Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T20:10:18.0135763Z Removing includeIf entries pointing to credentials config files
+2026-10-18T20:10:18.0142148Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T20:10:18.0181179Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T20:10:18.0413169Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-18T20:10:18.0486898Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:18.0499854Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:18.0562969Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:18.0600154Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:18.0632606Z ##[endgroup]
+2026-10-18T20:10:18.0634478Z ##[group]Fetching the repository
+2026-10-18T20:10:18.0643598Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-18T20:10:18.8866174Z From https://github.com/psewdon1m/venus
+2026-10-18T20:10:18.8868800Z  * [new branch]      feature/p01-foundation -> origin/feature/p01-foundation
+2026-10-18T20:10:18.8871804Z  * [new branch]      feature/p02-rooms      -> origin/feature/p02-rooms
+2026-10-18T20:10:18.8875280Z  * [new branch]      feature/p03-engine     -> origin/feature/p03-engine
+2026-10-18T20:10:18.8878260Z  * [new branch]      main                   -> origin/main
+2026-10-18T20:10:18.8880778Z  * [new tag]         p01-accepted-20261018  -> p01-accepted-20261018
+2026-10-18T20:10:18.8883144Z  * [new tag]         p02-accepted-20261018  -> p02-accepted-20261018
+2026-10-18T20:10:18.8886019Z  * [new tag]         p03-m1-preregistered-20261018 -> p03-m1-preregistered-20261018
+2026-10-18T20:10:18.8889144Z  * [new tag]         p03-m2-preregistered-20261018 -> p03-m2-preregistered-20261018
+2026-10-18T20:10:18.8892598Z  * [new tag]         p03-m3-preregistered-20261018 -> p03-m3-preregistered-20261018
+2026-10-18T20:10:18.8897493Z [command]/usr/bin/git rev-parse --verify --quiet bc55e1722adf5c1ee669d42bfde7ef103ccc598d^{object}
+2026-10-18T20:10:18.8915344Z bc55e1722adf5c1ee669d42bfde7ef103ccc598d
+2026-10-18T20:10:18.8922628Z ##[endgroup]
+2026-10-18T20:10:18.8925179Z ##[group]Determining the checkout info
+2026-10-18T20:10:18.8927695Z ##[endgroup]
+2026-10-18T20:10:18.8929497Z [command]/usr/bin/git sparse-checkout disable
+2026-10-18T20:10:18.8984968Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-18T20:10:18.9071965Z ##[group]Checking out the ref
+2026-10-18T20:10:18.9075691Z [command]/usr/bin/git checkout --progress --force bc55e1722adf5c1ee669d42bfde7ef103ccc598d
+2026-10-18T20:10:19.0910639Z Note: switching to 'bc55e1722adf5c1ee669d42bfde7ef103ccc598d'.
+2026-10-18T20:10:19.0912864Z 
+2026-10-18T20:10:19.0914656Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-18T20:10:19.0918302Z changes and commit them, and you can discard any commits you make in this
+2026-10-18T20:10:19.0921825Z state without impacting any branches by switching back to a branch.
+2026-10-18T20:10:19.0924484Z 
+2026-10-18T20:10:19.0925929Z If you want to create a new branch to retain commits you create, you may
+2026-10-18T20:10:19.0929249Z do so (now or later) by using -c with the switch command. Example:
+2026-10-18T20:10:19.0931176Z 
+2026-10-18T20:10:19.0932020Z   git switch -c <new-branch-name>
+2026-10-18T20:10:19.0933326Z 
+2026-10-18T20:10:19.0933926Z Or undo this operation with:
+2026-10-18T20:10:19.0935033Z 
+2026-10-18T20:10:19.0935571Z   git switch -
+2026-10-18T20:10:19.0936264Z 
+2026-10-18T20:10:19.0937523Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-18T20:10:19.0939819Z 
+2026-10-18T20:10:19.0941533Z HEAD is now at bc55e17 docs(p03): bind complete M3 evidence and independent gate acceptance
+2026-10-18T20:10:19.0946562Z ##[endgroup]
+2026-10-18T20:10:19.0990355Z [command]/usr/bin/git log -1 --format=%H
+2026-10-18T20:10:19.1018988Z bc55e1722adf5c1ee669d42bfde7ef103ccc598d
+2026-10-18T20:10:19.1033491Z ##[group]Removing auth
+2026-10-18T20:10:19.1036125Z Removing SSH command configuration
+2026-10-18T20:10:19.1044898Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T20:10:19.1086266Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T20:10:19.1313063Z Removing HTTP extra header
+2026-10-18T20:10:19.1318093Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T20:10:19.1357911Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T20:10:19.1582059Z Removing includeIf entries pointing to credentials config files
+2026-10-18T20:10:19.1585561Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T20:10:19.1615069Z includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-18T20:10:19.1617467Z includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-18T20:10:19.1619587Z includeif.gitdir:/github/workspace/.git.path
+2026-10-18T20:10:19.1621472Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-18T20:10:19.1627083Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-18T20:10:19.1652471Z /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1672311Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1702402Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-18T20:10:19.1728072Z /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1738946Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1777666Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-18T20:10:19.1804639Z /github/runner_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1812288Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1854058Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-18T20:10:19.1877960Z /github/runner_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1889845Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config
+2026-10-18T20:10:19.1928184Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T20:10:19.2148932Z Removing credentials config '/home/runner/work/_temp/git-credentials-ed666bbe-73c1-4e61-aa23-babb120822ac.config'
+2026-10-18T20:10:19.2157879Z ##[endgroup]
+2026-10-18T20:10:19.2525187Z ##[group]Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+2026-10-18T20:10:19.2527097Z with:
+2026-10-18T20:10:19.2528222Z   node-version-file: .node-version
+2026-10-18T20:10:19.2529583Z   check-latest: false
+2026-10-18T20:10:19.2540522Z   token: ***
+2026-10-18T20:10:19.2541505Z   package-manager-cache: true
+2026-10-18T20:10:19.2542596Z ##[endgroup]
+2026-10-18T20:10:19.3908907Z Node version file is not JSON file
+2026-10-18T20:10:19.3911283Z Resolved .node-version as 24.22.0
+2026-10-18T20:10:19.3934879Z Attempting to download 24.22.0...
+2026-10-18T20:10:19.9185212Z Acquiring 24.22.0 - x64 from https://github.com/actions/node-versions/releases/download/24.22.0-38668177966/node-24.22.0-linux-x64.tar.gz
+2026-10-18T20:10:20.4042969Z Extracting ...
+2026-10-18T20:10:20.4174796Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/c5e71a45-b214-43e4-b932-d2616edbed41 -f /home/runner/work/_temp/31379648-abdc-4054-9c42-751ed8400e98
+2026-10-18T20:10:21.6865884Z Adding to the cache ...
+2026-10-18T20:10:23.7672250Z ##[group]Environment details
+2026-10-18T20:10:23.9927033Z node: v24.22.0
+2026-10-18T20:10:23.9927659Z npm: 11.19.1
+2026-10-18T20:10:23.9928528Z yarn: 1.22.22
+2026-10-18T20:10:23.9929391Z ##[endgroup]
+2026-10-18T20:10:23.9937870Z Detected npm as the package manager from package.json's packageManager field. Auto caching has been enabled for npm. If you want to disable it, set package-manager-cache input to false
+2026-10-18T20:10:23.9956776Z [command]/opt/hostedtoolcache/node/24.22.0/x64/bin/npm config get cache
+2026-10-18T20:10:24.0912666Z /home/runner/.npm
+2026-10-18T20:10:24.1680225Z Cache hit for: node-cache-Linux-x64-npm-43a4add182b813d569e0df0a22a83747e67a678ea8eb0b5419f41cfdcba031d5
+2026-10-18T20:10:24.2363250Z Received 676 of 676 (100.0%), 0.0 MBs/sec
+2026-10-18T20:10:24.2363791Z Cache Size: ~0 MB (676 B)
+2026-10-18T20:10:24.2391184Z [command]/usr/bin/tar -xf /home/runner/work/_temp/461d0e51-ab0d-42f9-9c6a-874d2e2df3f9/cache.tzst -P -C /home/runner/work/venus/venus --use-compress-program unzstd
+2026-10-18T20:10:24.2469110Z Cache restored successfully
+2026-10-18T20:10:24.2474822Z Cache restored from key: node-cache-Linux-x64-npm-43a4add182b813d569e0df0a22a83747e67a678ea8eb0b5419f41cfdcba031d5
+2026-10-18T20:10:24.2683910Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-18T20:10:24.2684698Z with:
+2026-10-18T20:10:24.2684927Z   python-version: 3.12.14
+2026-10-18T20:10:24.2685190Z   check-latest: false
+2026-10-18T20:10:24.2687608Z   token: ***
+2026-10-18T20:10:24.2687836Z   update-environment: true
+2026-10-18T20:10:24.2688106Z   allow-prereleases: false
+2026-10-18T20:10:24.2688366Z   freethreaded: false
+2026-10-18T20:10:24.2688598Z ##[endgroup]
+2026-10-18T20:10:24.4041914Z ##[group]Installed versions
+2026-10-18T20:10:24.4075812Z Version 3.12.14 was not found in the local cache
+2026-10-18T20:10:24.9537483Z Version 3.12.14 is available for downloading
+2026-10-18T20:10:24.9539163Z Download from "https://github.com/actions/python-versions/releases/download/3.12.14-31661455385/python-3.12.14-linux-24.04-x64.tar.gz"
+2026-10-18T20:10:25.7145105Z Extract downloaded archive
+2026-10-18T20:10:25.7278645Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/5b96834c-ecae-43da-85c4-61210b2f7062 -f /home/runner/work/_temp/f07ec7d0-d747-488d-9322-86e076b10809
+2026-10-18T20:10:27.6261507Z Execute installation script
+2026-10-18T20:10:27.6355538Z Check if Python hostedtoolcache folder exist...
+2026-10-18T20:10:27.6356493Z Create Python 3.12.14 folder
+2026-10-18T20:10:27.6370528Z Copy Python binaries to hostedtoolcache folder
+2026-10-18T20:10:28.1479365Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-10-18T20:10:28.1522224Z Upgrading pip...
+2026-10-18T20:10:30.9596017Z Collecting pip
+2026-10-18T20:10:31.0114877Z Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+2026-10-18T20:10:31.0252427Z Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
+2026-10-18T20:10:31.1519812Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 16.3 MB/s eta 0:00:00
+2026-10-18T20:10:31.1520416Z 
+2026-10-18T20:10:31.1720226Z Installing collected packages: pip
+2026-10-18T20:10:31.1720807Z Attempting uninstall: pip
+2026-10-18T20:10:31.1743416Z Found existing installation: pip 25.0.1
+2026-10-18T20:10:31.2115443Z Uninstalling pip-25.0.1:
+2026-10-18T20:10:31.2172739Z Successfully uninstalled pip-25.0.1
+2026-10-18T20:10:32.1228321Z Successfully installed pip-26.2.1
+2026-10-18T20:10:32.1823539Z Create complete file
+2026-10-18T20:10:32.1862060Z Successfully set up CPython (3.12.14)
+2026-10-18T20:10:32.1863654Z ##[endgroup]
+2026-10-18T20:10:32.2018532Z ##[group]Run npm ci
+2026-10-18T20:10:32.2018837Z [36;1mnpm ci[0m
+2026-10-18T20:10:32.2277265Z shell: /usr/bin/bash -e {0}
+2026-10-18T20:10:32.2277606Z env:
+2026-10-18T20:10:32.2277946Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:32.2278510Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T20:10:32.2279053Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:32.2279538Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:32.2280266Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:32.2280771Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T20:10:32.2281180Z ##[endgroup]
+2026-10-18T20:10:37.3104541Z 
+2026-10-18T20:10:37.3106186Z added 288 packages, and audited 295 packages in 5s
+2026-10-18T20:10:37.3124664Z 
+2026-10-18T20:10:37.3125250Z found 0 vulnerabilities
+2026-10-18T20:10:37.3739290Z ##[group]Run npm run build
+2026-10-18T20:10:37.3739622Z [36;1mnpm run build[0m
+2026-10-18T20:10:37.3810527Z shell: /usr/bin/bash -e {0}
+2026-10-18T20:10:37.3810804Z env:
+2026-10-18T20:10:37.3811092Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:37.3811579Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T20:10:37.3812061Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:37.3812484Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:37.3812937Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:37.3813378Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T20:10:37.3813740Z ##[endgroup]
+2026-10-18T20:10:37.4900819Z 
+2026-10-18T20:10:37.4901607Z > venus@0.0.0 build
+2026-10-18T20:10:37.4902445Z > tsc -b && npm run build -w @venus/web
+2026-10-18T20:10:37.4903036Z 
+2026-10-18T20:10:40.8876194Z 
+2026-10-18T20:10:40.8876873Z > @venus/web@0.0.0 build
+2026-10-18T20:10:40.8877365Z > vite build
+2026-10-18T20:10:40.8877533Z 
+2026-10-18T20:10:41.1114768Z [36mvite v8.3.4 [32mbuilding client environment for production...[36m[39m
+2026-10-18T20:10:41.1240661Z transforming...
+2026-10-18T20:10:41.1834878Z ✓ 21 modules transformed.
+2026-10-18T20:10:41.2057120Z rendering chunks...
+2026-10-18T20:10:41.2395908Z computing gzip size...
+2026-10-18T20:10:41.2439655Z dist/index.html                   0.39 kB │ gzip:  0.27 kB
+2026-10-18T20:10:41.2441167Z dist/assets/index-McaKYTmT.css    4.60 kB │ gzip:  1.62 kB
+2026-10-18T20:10:41.2442661Z dist/assets/index-eVW1xvQ1.js   245.75 kB │ gzip: 77.77 kB
+2026-10-18T20:10:41.2443492Z 
+2026-10-18T20:10:41.2444014Z [32m✓ built in 132ms[39m
+2026-10-18T20:10:41.2729472Z ##[group]Run npm run test:p03:measurements -- --section=inference
+2026-10-18T20:10:41.2729980Z [36;1mnpm run test:p03:measurements -- --section=inference[0m
+2026-10-18T20:10:41.2795792Z shell: /usr/bin/bash -e {0}
+2026-10-18T20:10:41.2796060Z env:
+2026-10-18T20:10:41.2796351Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:41.2796812Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T20:10:41.2797275Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:41.2797672Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:41.2798097Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T20:10:41.2798511Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T20:10:41.2798870Z ##[endgroup]
+2026-10-18T20:10:41.3821939Z 
+2026-10-18T20:10:41.3822615Z > venus@0.0.0 test:p03:measurements
+2026-10-18T20:10:41.3823375Z > node tools/p03-measurements.mjs --section=inference
+2026-10-18T20:10:41.3823714Z 
+2026-10-18T20:10:52.6566645Z 2026-10-18T20:10:52.656Z inference FG/2/questions/online
+2026-10-18T20:10:59.9790171Z 2026-10-18T20:10:59.978Z inference FG/2/questions/in_person
+2026-10-18T20:11:10.4319479Z 2026-10-18T20:11:10.431Z inference FG/2/truth_or_dare/online
+2026-10-18T20:11:20.9923801Z 2026-10-18T20:11:20.992Z inference FG/2/truth_or_dare/in_person
+2026-10-18T20:11:36.7123929Z 2026-10-18T20:11:36.712Z inference FG/2/yes_but/online
+2026-10-18T20:11:52.3939198Z 2026-10-18T20:11:52.393Z inference FG/2/yes_but/in_person
+2026-10-18T20:12:01.7830930Z 2026-10-18T20:12:01.782Z inference FG/3/questions/online
+2026-10-18T20:12:11.2925349Z 2026-10-18T20:12:11.292Z inference FG/3/questions/in_person
+2026-10-18T20:12:23.6152929Z 2026-10-18T20:12:23.615Z inference FG/3/truth_or_dare/online
+2026-10-18T20:12:35.9770199Z 2026-10-18T20:12:35.976Z inference FG/3/truth_or_dare/in_person
+2026-10-18T20:12:55.3562120Z 2026-10-18T20:12:55.355Z inference FG/3/yes_but/online
+2026-10-18T20:13:14.9324516Z 2026-10-18T20:13:14.932Z inference FG/3/yes_but/in_person
+2026-10-18T20:13:27.6683547Z 2026-10-18T20:13:27.667Z inference FG/4/questions/online
+2026-10-18T20:13:40.7047272Z 2026-10-18T20:13:40.704Z inference FG/4/questions/in_person
+2026-10-18T20:13:56.4871473Z 2026-10-18T20:13:56.486Z inference FG/4/truth_or_dare/online
+2026-10-18T20:14:12.4182615Z 2026-10-18T20:14:12.417Z inference FG/4/truth_or_dare/in_person
+2026-10-18T20:14:38.3283529Z 2026-10-18T20:14:38.328Z inference FG/4/yes_but/online
+2026-10-18T20:15:04.2536535Z 2026-10-18T20:15:04.253Z inference FG/4/yes_but/in_person
+2026-10-18T20:15:21.7935506Z 2026-10-18T20:15:21.793Z inference FG/5/questions/online
+2026-10-18T20:15:39.6325081Z 2026-10-18T20:15:39.632Z inference FG/5/questions/in_person
+2026-10-18T20:16:00.3641332Z 2026-10-18T20:16:00.363Z inference FG/5/truth_or_dare/online
+2026-10-18T20:16:21.3466773Z 2026-10-18T20:16:21.346Z inference FG/5/truth_or_dare/in_person
+2026-10-18T20:16:56.0280992Z 2026-10-18T20:16:56.027Z inference FG/5/yes_but/online
+2026-10-18T20:17:31.1792373Z 2026-10-18T20:17:31.178Z inference FG/5/yes_but/in_person
+2026-10-18T20:17:54.8904947Z 2026-10-18T20:17:54.890Z inference FG/6/questions/online
+2026-10-18T20:18:19.0712843Z 2026-10-18T20:18:19.070Z inference FG/6/questions/in_person
+2026-10-18T20:18:46.0439474Z 2026-10-18T20:18:46.043Z inference FG/6/truth_or_dare/online
+2026-10-18T20:19:13.3238462Z 2026-10-18T20:19:13.323Z inference FG/6/truth_or_dare/in_person
+2026-10-18T20:19:59.2665990Z 2026-10-18T20:19:59.266Z inference FG/6/yes_but/online
+2026-10-18T20:20:46.0763956Z 2026-10-18T20:20:46.076Z inference FG/6/yes_but/in_person
+2026-10-18T20:21:17.2227461Z 2026-10-18T20:21:17.222Z inference FG/7/questions/online
+2026-10-18T20:21:49.0830959Z 2026-10-18T20:21:49.082Z inference FG/7/questions/in_person
+2026-10-18T20:22:23.9262063Z 2026-10-18T20:22:23.925Z inference FG/7/truth_or_dare/online
+2026-10-18T20:22:59.2957025Z 2026-10-18T20:22:59.295Z inference FG/7/truth_or_dare/in_person
+2026-10-18T20:24:00.0710906Z 2026-10-18T20:24:00.070Z inference FG/7/yes_but/online
+2026-10-18T20:25:01.8487714Z 2026-10-18T20:25:01.848Z inference FG/7/yes_but/in_person
+2026-10-18T20:25:42.4988164Z 2026-10-18T20:25:42.498Z inference FG/8/questions/online
+2026-10-18T20:26:24.2993323Z 2026-10-18T20:26:24.299Z inference FG/8/questions/in_person
+2026-10-18T20:27:08.4425224Z 2026-10-18T20:27:08.442Z inference FG/8/truth_or_dare/online
+2026-10-18T20:27:53.5257660Z 2026-10-18T20:27:53.525Z inference FG/8/truth_or_dare/in_person
+2026-10-18T20:29:12.0557599Z 2026-10-18T20:29:12.055Z inference FG/8/yes_but/online
+2026-10-18T20:30:31.8845200Z 2026-10-18T20:30:31.884Z inference FG/8/yes_but/in_person
+2026-10-18T20:30:39.5978999Z 2026-10-18T20:30:39.597Z inference FM/2/questions/online
+2026-10-18T20:30:47.1098191Z 2026-10-18T20:30:47.109Z inference FM/2/questions/in_person
+2026-10-18T20:30:58.2179852Z 2026-10-18T20:30:58.217Z inference FM/2/truth_or_dare/online
+2026-10-18T20:31:09.2731481Z 2026-10-18T20:31:09.272Z inference FM/2/truth_or_dare/in_person
+2026-10-18T20:31:25.8279995Z 2026-10-18T20:31:25.827Z inference FM/2/yes_but/online
+2026-10-18T20:31:42.2826089Z 2026-10-18T20:31:42.282Z inference FM/2/yes_but/in_person
+2026-10-18T20:31:51.6643917Z 2026-10-18T20:31:51.664Z inference FM/3/questions/online
+2026-10-18T20:32:01.0624591Z 2026-10-18T20:32:01.062Z inference FM/3/questions/in_person
+2026-10-18T20:32:13.5011190Z 2026-10-18T20:32:13.500Z inference FM/3/truth_or_dare/online
+2026-10-18T20:32:26.0667283Z 2026-10-18T20:32:26.066Z inference FM/3/truth_or_dare/in_person
+2026-10-18T20:32:45.6384922Z 2026-10-18T20:32:45.638Z inference FM/3/yes_but/online
+2026-10-18T20:33:05.2133352Z 2026-10-18T20:33:05.213Z inference FM/3/yes_but/in_person
+2026-10-18T20:33:18.0469038Z 2026-10-18T20:33:18.046Z inference FM/4/questions/online
+2026-10-18T20:33:30.9026078Z 2026-10-18T20:33:30.902Z inference FM/4/questions/in_person
+2026-10-18T20:33:46.7189715Z 2026-10-18T20:33:46.718Z inference FM/4/truth_or_dare/online
+2026-10-18T20:34:02.6243396Z 2026-10-18T20:34:02.624Z inference FM/4/truth_or_dare/in_person
+2026-10-18T20:34:28.4697515Z 2026-10-18T20:34:28.469Z inference FM/4/yes_but/online
+2026-10-18T20:34:54.1598365Z 2026-10-18T20:34:54.159Z inference FM/4/yes_but/in_person
+2026-10-18T20:35:11.4956653Z 2026-10-18T20:35:11.495Z inference FM/5/questions/online
+2026-10-18T20:35:29.2590200Z 2026-10-18T20:35:29.258Z inference FM/5/questions/in_person
+2026-10-18T20:35:49.8409233Z 2026-10-18T20:35:49.840Z inference FM/5/truth_or_dare/online
+2026-10-18T20:36:10.8506386Z 2026-10-18T20:36:10.850Z inference FM/5/truth_or_dare/in_person
+2026-10-18T20:36:45.6091275Z 2026-10-18T20:36:45.608Z inference FM/5/yes_but/online
+2026-10-18T20:37:20.8172500Z 2026-10-18T20:37:20.817Z inference FM/5/yes_but/in_person
+2026-10-18T20:37:44.6140330Z 2026-10-18T20:37:44.613Z inference FM/6/questions/online
+2026-10-18T20:38:09.2451868Z 2026-10-18T20:38:09.244Z inference FM/6/questions/in_person
+2026-10-18T20:38:36.7998821Z 2026-10-18T20:38:36.799Z inference FM/6/truth_or_dare/online
+2026-10-18T20:39:04.2716762Z 2026-10-18T20:39:04.271Z inference FM/6/truth_or_dare/in_person
+2026-10-18T20:39:50.5581699Z 2026-10-18T20:39:50.557Z inference FM/6/yes_but/online
+2026-10-18T20:40:37.2711684Z 2026-10-18T20:40:37.270Z inference FM/6/yes_but/in_person
+2026-10-18T20:41:08.7395423Z 2026-10-18T20:41:08.739Z inference FM/7/questions/online
+2026-10-18T20:41:40.8927736Z 2026-10-18T20:41:40.892Z inference FM/7/questions/in_person
+2026-10-18T20:42:15.7911400Z 2026-10-18T20:42:15.790Z inference FM/7/truth_or_dare/online
+2026-10-18T20:42:51.1926366Z 2026-10-18T20:42:51.192Z inference FM/7/truth_or_dare/in_person
+2026-10-18T20:43:52.3171259Z 2026-10-18T20:43:52.316Z inference FM/7/yes_but/online
+2026-10-18T20:44:53.9585573Z 2026-10-18T20:44:53.958Z inference FM/7/yes_but/in_person
+2026-10-18T20:45:34.6889691Z 2026-10-18T20:45:34.688Z inference FM/8/questions/online
+2026-10-18T20:46:16.5286326Z 2026-10-18T20:46:16.528Z inference FM/8/questions/in_person
+2026-10-18T20:47:00.7232017Z 2026-10-18T20:47:00.722Z inference FM/8/truth_or_dare/online
+2026-10-18T20:47:45.9675266Z 2026-10-18T20:47:45.967Z inference FM/8/truth_or_dare/in_person
+2026-10-18T20:49:04.8761574Z 2026-10-18T20:49:04.875Z inference FM/8/yes_but/online
+2026-10-18T20:50:25.6355194Z 2026-10-18T20:50:25.635Z inference FM/8/yes_but/in_person
+2026-10-18T20:50:33.8064359Z 2026-10-18T20:50:33.806Z inference GM/2/questions/online
+2026-10-18T20:50:41.7616110Z 2026-10-18T20:50:41.761Z inference GM/2/questions/in_person
+2026-10-18T20:50:53.8594800Z 2026-10-18T20:50:53.859Z inference GM/2/truth_or_dare/online
+2026-10-18T20:51:06.1647539Z 2026-10-18T20:51:06.164Z inference GM/2/truth_or_dare/in_person
+2026-10-18T20:51:24.1222668Z 2026-10-18T20:51:24.121Z inference GM/2/yes_but/online
+2026-10-18T20:51:42.0026699Z 2026-10-18T20:51:42.002Z inference GM/2/yes_but/in_person
+2026-10-18T20:51:51.7019824Z 2026-10-18T20:51:51.701Z inference GM/3/questions/online
+2026-10-18T20:52:01.5333363Z 2026-10-18T20:52:01.533Z inference GM/3/questions/in_person
+2026-10-18T20:52:14.8112214Z 2026-10-18T20:52:14.810Z inference GM/3/truth_or_dare/online
+2026-10-18T20:52:28.0277926Z 2026-10-18T20:52:28.027Z inference GM/3/truth_or_dare/in_person
+2026-10-18T20:52:48.7278095Z 2026-10-18T20:52:48.727Z inference GM/3/yes_but/online
+2026-10-18T20:53:09.5793932Z 2026-10-18T20:53:09.579Z inference GM/3/yes_but/in_person
+2026-10-18T20:53:22.7890042Z 2026-10-18T20:53:22.788Z inference GM/4/questions/online
+2026-10-18T20:53:36.2142130Z 2026-10-18T20:53:36.213Z inference GM/4/questions/in_person
+2026-10-18T20:53:52.5756052Z 2026-10-18T20:53:52.575Z inference GM/4/truth_or_dare/online
+2026-10-18T20:54:09.1059816Z 2026-10-18T20:54:09.105Z inference GM/4/truth_or_dare/in_person
+2026-10-18T20:54:35.8991088Z 2026-10-18T20:54:35.898Z inference GM/4/yes_but/online
+2026-10-18T20:55:03.0315581Z 2026-10-18T20:55:03.031Z inference GM/4/yes_but/in_person
+2026-10-18T20:55:20.7481773Z 2026-10-18T20:55:20.747Z inference GM/5/questions/online
+2026-10-18T20:55:38.7159694Z 2026-10-18T20:55:38.715Z inference GM/5/questions/in_person
+2026-10-18T20:55:59.7245725Z 2026-10-18T20:55:59.724Z inference GM/5/truth_or_dare/online
+2026-10-18T20:56:21.2070584Z 2026-10-18T20:56:21.206Z inference GM/5/truth_or_dare/in_person
+2026-10-18T20:56:56.5631855Z 2026-10-18T20:56:56.562Z inference GM/5/yes_but/online
+2026-10-18T20:57:32.2384459Z 2026-10-18T20:57:32.238Z inference GM/5/yes_but/in_person
+2026-10-18T20:57:55.8944382Z 2026-10-18T20:57:55.894Z inference GM/6/questions/online
+2026-10-18T20:58:20.1611679Z 2026-10-18T20:58:20.160Z inference GM/6/questions/in_person
+2026-10-18T20:58:47.5240334Z 2026-10-18T20:58:47.523Z inference GM/6/truth_or_dare/online
+2026-10-18T20:59:15.3077274Z 2026-10-18T20:59:15.307Z inference GM/6/truth_or_dare/in_person
+2026-10-18T21:00:02.6995507Z 2026-10-18T21:00:02.699Z inference GM/6/yes_but/online
+2026-10-18T21:00:50.4995762Z 2026-10-18T21:00:50.499Z inference GM/6/yes_but/in_person
+2026-10-18T21:01:22.1764858Z 2026-10-18T21:01:22.176Z inference GM/7/questions/online
+2026-10-18T21:01:54.6341216Z 2026-10-18T21:01:54.633Z inference GM/7/questions/in_person
+2026-10-18T21:02:30.0258704Z 2026-10-18T21:02:30.025Z inference GM/7/truth_or_dare/online
+2026-10-18T21:03:06.0429867Z 2026-10-18T21:03:06.042Z inference GM/7/truth_or_dare/in_person
+2026-10-18T21:04:07.9006015Z 2026-10-18T21:04:07.900Z inference GM/7/yes_but/online
+2026-10-18T21:05:11.2816530Z 2026-10-18T21:05:11.281Z inference GM/7/yes_but/in_person
+2026-10-18T21:05:52.5442057Z 2026-10-18T21:05:52.543Z inference GM/8/questions/online
+2026-10-18T21:06:34.4996913Z 2026-10-18T21:06:34.499Z inference GM/8/questions/in_person
+2026-10-18T21:07:19.3748917Z 2026-10-18T21:07:19.374Z inference GM/8/truth_or_dare/online
+2026-10-18T21:08:05.2788244Z 2026-10-18T21:08:05.278Z inference GM/8/truth_or_dare/in_person
+2026-10-18T21:09:25.1017980Z 2026-10-18T21:09:25.101Z inference GM/8/yes_but/online
+2026-10-18T21:10:29.7550623Z ##[error]The operation was canceled.
+2026-10-18T21:10:29.7615546Z ##[group]Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+2026-10-18T21:10:29.7615976Z with:
+2026-10-18T21:10:29.7616195Z   name: p03-measurements-inference
+2026-10-18T21:10:29.7616480Z   path: .artifacts/p03-measurements/
+2026-10-18T21:10:29.7616766Z   if-no-files-found: error
+2026-10-18T21:10:29.7617007Z   compression-level: 6
+2026-10-18T21:10:29.7617227Z   overwrite: false
+2026-10-18T21:10:29.7617447Z   include-hidden-files: false
+2026-10-18T21:10:29.7617683Z env:
+2026-10-18T21:10:29.7617943Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:10:29.7618387Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T21:10:29.7618819Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:10:29.7619215Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:10:29.7619607Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:10:29.7620042Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T21:10:29.7620372Z ##[endgroup]
+2026-10-18T21:10:29.9326038Z With the provided path, there will be 1 file uploaded
+2026-10-18T21:10:29.9327215Z Artifact name is valid!
+2026-10-18T21:10:29.9327827Z Root directory input is valid!
+2026-10-18T21:10:30.1640107Z Beginning upload of artifact content to blob storage
+2026-10-18T21:10:30.3254408Z Uploaded bytes 4846
+2026-10-18T21:10:30.3255319Z Finished uploading artifact content to blob storage!
+2026-10-18T21:10:30.3257570Z SHA256 digest of uploaded artifact zip is 2a45d6b4eb6218cab87d8ce0e827aad8c1ae2701d1d371908ae012902660a16f
+2026-10-18T21:10:30.3258844Z Finalizing artifact upload
+2026-10-18T21:10:30.4649233Z Artifact p03-measurements-inference.zip successfully finalized. Artifact ID 12151042629
+2026-10-18T21:10:30.4650859Z Artifact p03-measurements-inference has been successfully uploaded! Final size is 4846 bytes. Artifact ID is 12151042629
+2026-10-18T21:10:30.4652659Z Artifact download URL: https://github.com/psewdon1m/venus/actions/runs/39162076940/artifacts/12151042629
+2026-10-18T21:10:30.4892171Z Post job cleanup.
+2026-10-18T21:10:30.5885111Z [command]/usr/bin/git version
+2026-10-18T21:10:30.5912088Z git version 2.55.0
+2026-10-18T21:10:30.5967628Z Temporarily overriding HOME='/home/runner/work/_temp/31c306f7-1627-4600-829c-b17ea821d551' before making global git config changes
+2026-10-18T21:10:30.5970259Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-18T21:10:30.5971279Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-18T21:10:30.6005569Z Removing SSH command configuration
+2026-10-18T21:10:30.6006536Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T21:10:30.6046325Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T21:10:30.6398683Z Removing HTTP extra header
+2026-10-18T21:10:30.6437700Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T21:10:30.6494024Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T21:10:30.6970697Z Removing includeIf entries pointing to credentials config files
+2026-10-18T21:10:30.6972019Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T21:10:30.6975772Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T21:10:30.7443269Z Cleaning up orphan processes
+2026-10-18T21:10:30.7764718Z Terminate orphan process: pid (2593) (npm run test:p03:measurements --section=inference)
+2026-10-18T21:10:30.7793681Z Terminate orphan process: pid (2604) (sh)
+2026-10-18T21:10:30.7823055Z Terminate orphan process: pid (2605) (MainThread)
