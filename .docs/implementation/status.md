@@ -1,20 +1,20 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = IMPLEMENTING.** Предыдущий source8b получил два независимых PASS; финальная доставка bc55e17 остановлена CI ceiling60min, поэтому после увеличения ceiling120 выполняется новая source-bound проверка. Ветка `feature/p03-engine`, [PR #3](https://github.com/psewdon1m/venus/pull/3); упаковка доказательств проходит защищённый PR-процесс. Production/public release ещё закрыт.
+Обновлено: 2026-10-19. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = PASSED.** Технический P03 принят двумя независимыми агентами по свежему exact-source CI. [PR #3](https://github.com/psewdon1m/venus/pull/3) проходит защищённую доставку; фактические CI/merge/main удостоверяются аннотацией immutable tag `p03-accepted-20261019` — заключительной записью журнала. После P03 работа останавливается по поручению владельца; P04 не начинается.
 
 Реализованы foundation, комнаты и приватные настройки, server-side relationship engine, immutable snapshot, rounds и actor-scoped consent с повторной проверкой перед HTTP/WS delivery. [P03 guide и rollback](../P03_DEVELOPMENT.md), [реестр](p03-registry.json), [ADR-015](../adr/ADR-015-p03-engine-and-measurements.md), [ADR-016](../adr/ADR-016-p03-progressive-evidence.md).
 
-## EXIT-P03 — предыдущий source8b и текущая повторная проверка
+## EXIT-P03
 
-Финальный proof CI39162076940:7/8 SUCCESS, inference остановлен после125/126 ячеек часовым лимитом. Предыдущие полные local/CI результаты не переписаны. Только ceiling workflow увеличен60→120; новая приёмка требует свежего exact-source CI и двух независимых отчётов.
+Measured source `8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b`, implementation identity `63a3b972c49214e52c6136204506969c4b35e99bb13b98887e7517fa5e47678a`. [Bound gate](evidence/p03/gate-report.json), [результаты и ограничения](evidence/p03/measurement-summary.md), [implementation PASS](reviews/p03/final-implementation.md), [evidence PASS](reviews/p03/final-evidence.md), [свежий CI8/8](https://github.com/psewdon1m/venus/actions/runs/39166967939), [происхождение и хеши артефактов](evidence/p03/ci-artifact-index.json), [журнал](../../.history/2026-10-18-p03.md).
 
-Measured source `8b6101bfeb54b00d789b58e046907af4e783cef8`, implementation identity `0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964`. [Bound gate](evidence/p03/gate-report.json), [численные результаты и ограничения](evidence/p03/measurement-summary.md), [implementation PASS](reviews/p03/final-implementation.md), [evidence PASS](reviews/p03/final-evidence.md), [единый CI 8/8](https://github.com/psewdon1m/venus/actions/runs/39156750574), [журнал P03](../../.history/2026-10-18-p03.md).
+Свежий Linux CI: quality42JS/89Python, четыре negative controls, OCI9/9, P02regression20tests/22proofs, P03 PostgreSQL/HTTP/WS19/19. Проверены consent/ACL/expiry/dispatch fence, stale clears, restart/pinning, encrypted restore/ledger и exact previous P02 OCI rollback с quiesce. Source8b и proofbc55 сохранены в immutable tag `p03-m3-proof-timeout-20261019`; его inference был остановлен лимитом60мин после125/126cells. Единственное последующее изменение включённых исходников — CI ceiling60→120. Все15preregistered inputs, seeds, samples, classifiers и thresholds неизменны; текущие данные получены заново на8f, прежние отчёты не переименованы.
 
-Quality: 42 JS/89 Python tests и четыре negative controls; OCI9/9, P02 regression20tests/22proofs и P03 actual PostgreSQL/HTTP/WS19/19. Проверены consent/ACL/expiry/dispatch fence, stale clears, restart/pinning, encrypted restore/ledger и exact previous P02 OCI rollback с quiesce. Предыдущий Linux fixture FAIL и прерванные статистические попытки сохранены, а не заменены успешными.
+Полный preregistered M3:70000sessions (10000/N2..8),3467600selected rounds, zero invariant violations;1836safe refusals сохранены с seeds/prefixes. Fairness42cells/84000sessions: max gap0.006601145≤0.02/max session share0.5. GF1000000paired opportunities: ratio1.010119735,95%CI[1.009027905;1.011212746]. Inference126cells/3pooled models: worst upper95%CI0.605316319≤0.65, zero declared deterministic decoder. По168progressive rows/section, early private0, cap/conditional anti-repeat проверены независимо.
 
-Полный preregistered M3: 70000 sessions (10000/N2..8), 3467600 selected rounds, zero invariant violations; 1836 safe refusals сохранены с seeds/prefixes. Fairness42cells/84000sessions: max gap0.006601145≤0.02/max session share0.5. GF1000000paired opportunities: ratio1.010119735,95%CI[1.009027905;1.011212746]. Inference126cells/3pooled models: worst upper95%CI0.605316319≤0.65, zero declared deterministic decoder. 168 progressive rows/section, early private0, cap/conditional anti-repeat проверены независимо. Все четыре Linux/local statistics совпали, исключено только elapsed_seconds.
+Пределы: синтетический draft pack не разрешён production loader; human review каталога остаётся P04. Inference ограничен зарегистрированным observer/classifier и этими входами. Production offer отсутствует, public entry fail-closed; полный G1 UX/chat остаётся P05. Этот технический гейт не разрешает публичную эксплуатацию.
 
-Пределы: синтетический draft pack не разрешён production loader; human review каталога остаётся P04. Inference ограничен зарегистрированным observer/classifier и этими входами; не является универсальной гарантией приватности. Production offer отсутствует, public entry fail-closed; полный G1 UX/chat остаётся P05. Публичная эксплуатация не разрешена этим техническим гейтом.
+Фактическое завершение защищённой доставки записывается в JSON-аннотации `p03-accepted-20261019` на merged main: `git cat-file tag p03-accepted-20261019`. Эта запись продолжает журнал без изменения проверенного дерева. Original proof HEAD и его measured8f ancestry сохраняются отдельным тегом `p03-proof-20261019`; для существующего clone явно выполнить `git fetch origin tag p03-proof-20261019`. Standalone tree ZIP не содержит Git history: проверка требует Git clone/доступного Git object database. На момент данного proof commit финальные proof CI/merge ещё не утверждаются состоявшимися. После receipt — STOP, P04 NOT_STARTED.
 
 ## EXIT-P02
 
@@ -47,7 +47,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
-| P03 | IMPLEMENTING | CI-only time budget fix; prior full PASS retained, delivery revalidation required |
+| P03 | PASSED | Fresh exact-source CI8/8 и два независимых PASS; delivery receipt в accepted tag |
 | P04 | NOT_STARTED | Reviewed production card catalogue |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
 | P06 | NOT_STARTED | Protected signing/release, host dependencies/operator, restore/rollback |
@@ -57,6 +57,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-P03 повторно проверяется после недостаточного CI time budget; по поручению владельца после завершения P03 работа останавливается, P04 не начинается. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+P03 принят технически по fresh8f CI и двум независимым PASS; фактические protected proof CI/merge удостоверяются terminal receipt в accepted tag. После доставки работа останавливается, P04 не начинается. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.

@@ -1,69 +1,81 @@
 ```venus-review
-{"reviewer_id":"/root/p03_final_evidence","source_sha":"8b6101bfeb54b00d789b58e046907af4e783cef8","source_identity_sha256":"0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964","scopes":["implementation","evidence"],"status":"PASS","open_findings":[]}
+{"reviewer_id":"/root/p03_final_evidence","source_sha":"8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b","source_identity_sha256":"63a3b972c49214e52c6136204506969c4b35e99bb13b98887e7517fa5e47678a","scopes":["implementation","evidence"],"status":"PASS","open_findings":[]}
 ```
 
-# Independent final P03 implementation and evidence review
+# Independent final P03 implementation and evidence review · 2026-10-19
 
-**Decision: PASS for this exact technical candidate; open findings:0.** This reviewer authored no production implementation, diagnostic observer, measurement protocol or acceptance-validator code. Review was read-only except this review and its hash-bound sidecar. The parent must attach both independent final reviews and execute the final acceptance validator; this review does not itself mutate the stage acceptance record.
+**PASS for the exact8f candidate; open findings:0.** Reviewer authored no production runtime, protocol, diagnostic observer or acceptance-validator code. This report and its hash-bound JSON sidecar are the only files changed by this final review. The original8b signed review remains preserved in immutable history tag `p03-m3-proof-timeout-20261019`.
 
-Reviewed source: `8b6101bfeb54b00d789b58e046907af4e783cef8`. Included implementation identity: `0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964`. The current included files match the frozen inventory and tested Git tree. M3 descriptor inputs match all15 current and preregistered tagged byte hashes. The M3 tag and descriptor existed before all four final runs. Reports preserve clean source, forced compilation before runtime imports, protocol/pack identities, and unchanged before/after source and executed-input hashes.
+## Candidate and preregistration
 
-## Scope, retained findings and contracts
+Measured source: `8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b`. Included implementation identity: `63a3b972c49214e52c6136204506969c4b35e99bb13b98887e7517fa5e47678a`. The actual Git tree, frozen inventory and current included source agree.
 
-Read scope includes implementation-plan EXIT-P03, document08 and P00 implementation contracts, M1/M2/M3 protocols and reviews, ADR015/016, production selector/eligibility/snapshot/consent/pack/projection code, Games service and migration stream, room dispatch integration, runtime test sources, acceptance validators and bound final evidence. The original frozen contracts remain unchanged; additions are versioned separately. Current effective coverage explicitly supersedes historical M2 planning labels and NOT_RUN entries without rewriting their frozen history.
+The only included change from the previous proof candidate is the CI measurement job ceiling60→120 minutes. All15 M3 raw inputs, production engine, fixture, public renderer, seed derivation, profiles, sample sizes, classifier and numerical thresholds remain byte-identical to preregistration tag `p03-m3-preregistered-20261018`. This execution-budget change does not alter the statistical design. Original M1/M2/M3 tags and unsuccessful attempts remain retained.
 
-The unsuccessful14482d2 attempt remains retained. Its required Linux CI rollback fixture failed and partial statistical sections were interrupted; those results were never promoted to acceptance. The subsequent test-harness permission/diagnostic fix preserves production nonroot operation. The initially absent progressive evidence was a real RE-016 gap, as corrected in the premeasurement review. M3 added passive counters/assertions before the new corpus; production algorithm, original numerical thresholds, seed families, profiles, fixture and public-transcript observer were preserved. No hidden seed selection, completed failed statistical result or threshold relaxation was found.
+The previous8b technical PASS is historical. Its later proof commitbc55 failed protected delivery when inference reached125/126 cells before the60-minute job limit; seven other jobs passed. That failure is recorded rather than relabeled. Every artifact accepted here was freshly produced for8f in CI39166967939. No Windows execution or old8b report is presented as a fresh8f run.
 
-The pre-freeze verifier findings are resolved: consistent all-private-zero results fail the late-eligible nondegeneracy check; session seeds/prefixes independently determine all168 stage totals; cap and private totals reconcile per session and cell; fairnessK must equal progressive pair-interaction counts,D=2K and raw invitation counts. Six Python acceptance tests and nine small diagnostic JS tests were independently executed during preregistration review, including these negative cases. Final review ran no additional corpus or Docker workload.
+Reviewed scope includes EXIT-P03 and RE-001…018/15 invariants, P00 contracts, ADR015/016, selector/eligibility/snapshot/consent/pack/projection code, Games persistence/routes and room dispatch integration, test sources, acceptance validators, M3 protocol/input descriptor, original reviews and the complete fresh evidence packet. Earlier static implementation conclusions remain applicable to the unchanged runtime and are corroborated by fresh actual runtime tests.
 
-## Implementation and actual runtime evidence
+## Fresh CI and provenance
 
-The source implements the exact36-case resolver, immutable/version-pinned snapshot, comfort/context/stage/capability guards, unused-card selection, bounded private proposals and deterministic replay. Public common-support restriction preserves original interaction types; sensitive incompatible public cards are excluded rather than silently reclassified. Production draft-pack admission remains fail-closed.
+Live read-only GitHub API independently confirmed run **39166967939**, official `.github/workflows/ci.yml`, exact8f head, completed/success and all eight required jobs successful in that one run. No failed/cancelled jobs from another run were combined. The current main protection independently matches exact eight required checks from app15368, strict checking, PR review, conversation resolution, enforced admins and disabled force pushes/deletion.
 
-Current scope authorization precedes idempotency replay. Invitation and action have separate bilateral acknowledgements, proposal revisions and deadlines; terminal refusal cannot reopen a proposal. Private outbox entries contain references. Reconstruction and synchronous WebSocket enqueue occur while holding the room lock shared with revocation, with fresh session/generation/member/actor/version/deadline checks. Stale references produce targeted clears, including previous recipients after advance. The final no-await time fence covers the previously reported invitation/action dispatch-boundary defect.
+All eight archives were independently checked through the complete chain: API artifact digest equals downloaded ZIP SHA256; ZIP members are unique; exact path/size/hash manifests equal the receipts; extracted report bytes and every copied artifact member match. All32 copied provenance files equal their original collection files, with21 archive-member copies independently matched. Actual job logs have separate copied-file hashes and source/run/job provenance; they are not claimed to be ZIP members.
 
-Bound PostgreSQL/HTTPS/WS evidence contains **19/19 P03 checks PASS**: concurrent start/duplicate advance; active/paused setting locks; host/actor/outsider ACL; condition revision invalidation; exact clock boundaries; committed-decline dispatch barrier; old-recipient clear; private HTTP/WS projection; both finish aliases; pack/restart/locale/spectator pinning; unsupported-version and safe-pool refusal; SQL scope; both serialized and concurrent decline races; transport versus safety resume; stop/leave/close; identity non-substitution; restore and rollback. Both runner records report completed cleanup.
-
-The independent invariant interpretation remains precise:
-
-| Invariants | Evidence boundary |
+| Artifact | Actual API artifact ID |
 | --- | --- |
-| I01–04,I07,I09,I15 | Per-selected-plan guards, exhaustive/golden tests, production localized renderer and separate safe refusals |
-| I05–06 | Planner and pure consent checks plus actual two-scope actor ACL, deadline, private transport and dispatch tests |
-| I08 | Immutable snapshot plus real locked settings, safety stop, reconnect and pinning tests |
-| I10,I13 | Actual nonactor-host/forged-actor denial, generic room projection and private HTTP/WS checks |
-| I11 | Timeout expires/skips consent; no physical action performance is inferred |
-| I12 | Production loader rejects synthetic/unreviewed content; human content approval remains P04 |
-| I14 | Explicitly0 pure-planner checks; real room-close revoke/wipe and external-ledger restore reconciliation supply the required evidence |
+| negative-gates |12150927958 |
+| container-smoke |12150823525 |
+| p02-integration |12150528128 |
+| p03-integration |12150713927 |
+| M3 invariants |12151967503 |
+| M3 fairness |12151169325 |
+| M3 GF |12152156956 |
+| M3 inference |12152203435 |
 
-Accepted P02 regression has22/22 proof records, OCI smoke9/9 and clean quality/negative checks PASS on this source. The previous P02 image is identified by its accepted source. Rollback stops the API before trusted quiescence, clears active Games scopes, preserves core identity/preferences, and returns without reviving consent. Its default unavailable-offer host-close503 is explicitly recorded; old close under a synthetic offer adapter is not misrepresented as production approval.
+Gate descriptors, screenshots, runtime companions, input inventory, coverage, protocol/descriptor and artifact provenance hashes were checked. Fresh report metadata consistently records8f/identity63, clean source before/after, an actual forced CLI build before runtime imports, unchanged executed-input hashes and all preregistered bytes. The collector/assembler provenance and terminal-helper guard findings were corrected and independently closed before final review. Full candidate validation also occurs before VERIFIED coverage is published.
 
-## Independently recomputed measurements
+## Implementation and actual tests
 
-Every section is a complete gating M3 run rather than a probe. Raw statistical records, stage histograms, session counts and seed prefixes were checked independently; the source-bound statistical validator also passed all four sections.
+Fresh quality logs confirm **42 JS and89 Python tests PASS**, with four negative controls. Fresh OCI smoke has9/9 checks, P02 regression20 tests/22 proof records, and actual PostgreSQL/HTTPS/WS P03 integration19/19. Runner cleanup completed. The image/version/Compose/log records remain bound to the exact candidate rather than inherited from8b.
 
-| Section | Recomputed result |
+The implementation maintains exact36-case resolution, hard eligibility guards, immutable policy/pack/seed/player snapshots, deterministic replay, unused-card selection and bounded private proposals. Common-support public repertoire excludes incompatible sensitive public cards without rewriting interaction types. Production unreviewed-pack admission remains fail-closed.
+
+Fresh runtime evidence covers concurrent start/duplicate advance, active/paused settings locks, host/actor/outsider ACL, separate invitation/action acknowledgements, proposal revision invalidation, clock boundaries, decline races, committed-decline dispatch fencing, stale-recipient clearing, public/private HTTP/WS projections, both finish aliases, pinning across restart/locale/spectator/provider changes, version/pool refusal, SQL identity scope, transport versus safety resume, identity non-substitution, stop/leave/close, encrypted restore and quiesced previous-image rollback.
+
+Authorization precedes idempotency replay. Private outbox entries contain references, and WebSocket reconstruction/enqueue is fenced by the same room lock as revocation with final clock checks. The earlier request-deadline/private responder/finish alias findings remain resolved. Rollback preserves identities/preferences and does not revive consent. The accepted P02 image's default host-close503 without an offer is explicitly retained; a synthetic adapter used to exercise its close path is not production offer approval.
+
+The15-invariant interpretation remains honest. Per-plan guards and locale checks are directly simulated. I05/I06/I08/I10/I13 additionally require the actual consent/ACL/clock/dispatch/lock/pinning/privacy tests. I14 explicitly has0 pure-planner checks and is supplied by real room-close wipe/revoke and restore-ledger reconciliation. I12 proves production rejection of draft/unreviewed packs; it does not grant human content approval. Timeout never establishes physical performance.
+
+## Independently recomputed statistics
+
+The source-bound statistical validator passed all four complete gating sections. Independent calculations also recomputed fairness raw counts/denominators and gaps, GF covariance/ratio/both bounds, and all129 inference AUC/SE/both-CI metrics from201600 stored held-out score values. These values include scores from cell and pooled models, not201600 independent held-out sessions.
+
+| Section | Verified fresh result |
 | --- | --- |
 | Invariants |70000 distinct declared sessions,10000 per N2…8;3467600 selected rounds;15 invariant records,0 violations;439703 private proposals |
-| Safe refusals |1836 retained separately with exact prefixes: N2=1684,N3=150,N4=2,N5…8=0;68164 completed sessions |
+| Safe refusal |1836 exact retained seed/prefix records: N2=1684,N3=150,N4=2,N5…8=0;68164 completed sessions |
 | Fairness |42 cells,84000 sessions,1680000 rounds; worst aggregate share gap0.0066011441983≤0.02; max individual session share0.5 |
-| GF |1000000 paired observations; counts both32906/G-only333/F-only0/neither966761; ratio1.010119735002735;95% CI[1.0090279052580886,1.0112127461737674] |
-| Inference FG/FM/GM |42 cells each plus three separately trained pooled models; all129 AUC/SE/CI metrics recomputed from201600 stored score values; worst cell upper CI0.571442450937/0.579647274065/0.605316318205≤0.65 |
+| GF |1000000 paired opportunities; both32906/G-only333/F-only0/neither966761; ratio1.010119735002735;95% CI[1.0090279052580886,1.0112127461737674] |
+| Inference FG/FM/GM |42 cells each,100 training/400 holdout observations per class/cell, independently trained pooled models; worst cell upper CI0.571442450937/0.579647274065/0.605316318205≤0.65 |
 
-Fairness stage1/2 have zero private proposals. Stage3 has92626 private proposals from420000 eligible-after-cap decisions; stage4 has162557 from406219 eligible-after-cap decisions across420000 rounds. All42 late cells are nondegenerate. Per-session private counts never exceed5 in the20-round fairness profile. Anti-repeat records show427450 decisions with alternatives,148176 private choices with alternatives, zero violations and24906 justified sole-pair exceptions. No unconditional stage4>stage3 or empirical recovery0.35 CI is claimed.
+All168 progressive rows reconcile with raw session seeds, selected prefixes and exact stage totals. Private proposals are0 at stages1/2. Fairness stage3 has92626 private proposals and stage4 has162557; eligibility before/after cap is distinguished. Every exchangeable late cell has actual eligible opportunities and private selections. Per-session cap and conditional anti-repeat assertions have zero violations; N2 sole-pair exceptions are explicit. No unconditional stage4>stage3 or empirical recovery0.35 CI is claimed.
 
-GF covariance and both confidence bounds were recomputed from the paired2×2 counts without pseudo-count substitution. Inference recomputation used tie-aware Mann–Whitney AUC and the declared Hanley–McNeil interval. All126 cells have the declared100 training and400 held-out observations per class, disjoint seed families and no recorded deterministic decoder. Pooled AUCs are0.504730185303/0.502954257015/0.498124991142; training-only orientation and independent pooled training were source-reviewed.
+GF uses the preregistered paired covariance without pseudo-count substitution. Inference recomputation uses tie-aware Mann–Whitney AUC and the declared interval, with finite scores, all126 declared cells, no recorded deterministic decoder and training-only orientation. Pooled AUCs are0.504730185303/0.502954257015/0.498124991142.
 
-All four raw Linux results from the same successful CI run exactly equal local results after excluding **only** `elapsed_seconds`. Verified artifact IDs: invariants12148846051,fairness12147848934,GF12148635853,inference12149102219. Index source/run identities and file hashes match. This is cross-platform reproducibility of the declared diagnostics, not an additional independent statistical sample.
+Fresh raw report SHA256:
 
-## Protected CI and final gate boundary
+- invariants: `7c5e5ee1a0b0d6a2940b63b7a408236a4ef409a94ed015b75649d75b71b10910`
+- fairness: `4656836a46c5c6b6d197d0437dedf4082dc420465503f21cc08aaff7f4df863b`
+- GF: `fddfccddc6b053542f5f310ce36baeb187c3d9bbda74b39ec0ee6379b1bf7514`
+- inference: `8b5e36ff9b337c1d49392315f1b567e1d7bb065fd7662897e8da7fbe5725e4f7`
 
-GitHub run **39156750574** is completed/success for this exact source. All eight required jobs succeeded in that one run: quality,container-smoke,p02-integration,p03-integration and the four measurement sections. No cancelled or failed jobs from other runs were mixed in. Main protection requires these exact eight checks from GitHub app15368, strict checking, enforced admins, PR review and conversation resolution, with force pushes/deletion disabled.
+## Acceptance, delivery and limits
 
-All gate-packet descriptors were checked. A complete validator call on an in-memory `status=PASSED` copy verified source/CI/runtime/OCI/statistical obligations; the sole remaining error before review attachment was the expected requirement for two independent final implementation/evidence reviews. This report supplies one such review. The authoritative acceptance record remains the parent's final bound gate report after attaching both reports and validating it.
+A complete validator call on an in-memory PASSED candidate verified source/CI/runtime/OCI/statistical obligations. Before attaching final reviews, its sole error was the expected requirement for two independent implementation/evidence reviews. This report supplies one; the parent performs aggregated acceptance after attaching both. No circular prerequisite of an already-accepted gate is imposed.
 
-## Limits retained
+Protected proof-commit CI and PR merge are subsequent delivery facts, not claimed by this technical PASS. The reviewed delivery scheme retains original proof/8f ancestry under `p03-proof-20261019`, then records actual proof CI/PR merge/main identities in the annotated `p03-accepted-20261019` tag on the actual merged main commit. Its annotation continues the stage journal without another tree mutation or a CI bypass. Future Git verification needs fetched proof history; a tree-only ZIP is not a standalone Git object database.
 
-Fixed linear probes, approximate confidence intervals and finite single-feature decoder checks do not prove universal privacy. Their observer model covers declared public-channel data, synthetic all-accept lifecycle/timing, fixed names/locale and common-support F/G/M profiles. Participant-owned auxiliary information, human conduct and arbitrary classifiers are outside that diagnostic. Hard veto/comfort/context/capability exclusions remain observable.
+Fixed linear probes, approximate confidence intervals and finite decoder checks do not establish universal privacy. Their scope is the declared public observer, synthetic all-accept lifecycle/timing, fixed names/locale and common-support profiles; participant-owned auxiliary information, arbitrary classifiers and human conduct remain outside that diagnostic. Hard veto/comfort/context/capability exclusions remain observable.
 
-Synthetic private-chat capability does not enable the product feature. Production approved catalogue, actual offer/public entry, complete consumer Games UI/private chat and human content/rights/RU-EN-TR review remain P04/P05 obligations. Encryption is server-side at rest with scoped transport ACL, not E2EE. This technical P03 PASS does not authorize public release, physical execution or later-stage gates.
+Synthetic chat capability does not enable a production feature. Approved catalogue and human content/rights/tri-locale review remain P04; actual offer/public entry and full G1 UX/private chat remain P05. Server-side encryption/ACL is not E2EE. Public release and physical execution are not authorized. Per the user's explicit steering, complete protected delivery of P03 and then **STOP; P04 NOT_STARTED**.

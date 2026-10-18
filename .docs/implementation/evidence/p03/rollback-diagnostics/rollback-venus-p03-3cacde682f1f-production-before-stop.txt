@@ -1,0 +1,50 @@
+{
+  "phase": "production-before-stop",
+  "image": "sha256:8baf8bed959983a9f3ec9adfdb5c61cd46b2a260760e30979cdbd47d2a4cfed2",
+  "user": "1000:1000",
+  "supplementary_groups": [
+    "12346"
+  ],
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 4305,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-18T21:17:39.031035948Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "mounts": [
+    {
+      "type": "bind",
+      "destination": "/run/secrets/db_password",
+      "rw": false
+    },
+    {
+      "type": "bind",
+      "destination": "/run/secrets/keyring",
+      "rw": false
+    },
+    {
+      "type": "volume",
+      "destination": "/var/lib/venus",
+      "rw": true
+    }
+  ]
+}
+--- captured stdout/stderr ---
+{"level":30,"time":1792358259545,"pid":1,"hostname":"1089d00b5232","msg":"Server listening at http://127.0.0.1:4300"}
+{"level":30,"time":1792358259546,"pid":1,"hostname":"1089d00b5232","msg":"Server listening at http://172.18.0.2:4300"}
+{"level":30,"time":1792358259769,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"dd2f5313-8b4f-43b5-a610-6830c0e0fe3f","route":"/health/ready","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792358259901,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"7cf1003c-440b-4523-a92a-c2c2b37fb725","route":"/api/v1/version","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792358260038,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"97727ca4-9f30-471d-a848-50e9e11eff3d","route":"/api/v1/rooms/:roomId","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792358260171,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"c638a947-cb2b-4e02-9bbd-e0a9c37470a7","route":"unmatched","method":"GET","status_code":404,"msg":"request_complete"}
+{"level":30,"time":1792358260402,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"7f8f15ce-573e-486b-8d16-ec7e7fc0281f","route":"/api/v1/rooms/:roomId/leave","method":"POST","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792358260528,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"6d0e40da-155e-42c0-bb44-c0f1e8e2b930","route":"/api/v1/rooms/:roomId","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792358260659,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"52b68458-6d77-49aa-9daf-576830651b08","route":"/api/v1/rooms/:roomId/close","method":"POST","status_code":503,"msg":"request_complete"}
+{"level":30,"time":1792358260789,"pid":1,"hostname":"1089d00b5232","event":"request_complete","request_id":"b196f034-67e8-4e3e-98c6-132f738a225c","route":"/api/v1/entry-policy","method":"GET","status_code":200,"msg":"request_complete"}
+

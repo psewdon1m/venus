@@ -1,81 +1,429 @@
-
-> venus@0.0.0 quality
-> npm run lint && npm run typecheck && npm test && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:negative
-
-
-> venus@0.0.0 lint
-> eslint apps packages tools/*.mjs tests/**/*.mjs
-
-
-> venus@0.0.0 typecheck
-> tsc -b && tsc -p apps/web/tsconfig.json
-
-
-> venus@0.0.0 test
-> vitest run
-
-
- RUN  v5.0.5 C:/.projects/venus
-
-
- Test Files  9 passed (9)
-      Tests  42 passed (42)
-   Start at  22:03:53
-   Duration  1.44s (import 61%, tests 32%, transform 6%, worker 2%)
-
-
-> venus@0.0.0 check:schemas
-> python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check
-
-PASS: JSON Schema 2020-12 and OpenAPI local references
-Checked RE-1 six labels � six = 36 directed combinations; errors=0
-PASS: policy config invariants only. Actual consent/access/inference requires app tests.
-
-> venus@0.0.0 check:i18n
-> node tools/check-i18n.mjs
-
-PASS: RU/EN/TR locale keys and nonempty strings
-
-> venus@0.0.0 test:python
-> python -B -m unittest discover -s tools -p test_*.py
-
-.........................................................................................
-----------------------------------------------------------------------
-Ran 89 tests in 26.806s
-
-OK
-
-> venus@0.0.0 check:docs
-> python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py
-
-Venus docs: 93 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
-PASS: required files, linked assets and snapshot hashes
-{"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
-PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
-PASS: EXIT-P01 source, CI, negative/container evidence and independent reports bound
-PASS: EXIT-P02 source/CI/HTTP/WS/PostgreSQL/browser/OCI and independent reviews bound
-Checked 380 packaged paths; errors=0
-PASS: packaged bytes match manifest; provenance/signatures require release verification.
-
-> venus@0.0.0 build
-> tsc -b && npm run build -w @venus/web
-
-
-> @venus/web@0.0.0 build
-> vite build
-
-vite v8.3.4 building client environment for production...
-transforming...
-✓ 21 modules transformed.
-rendering chunks...
-computing gzip size...
-dist/index.html                   0.39 kB │ gzip:  0.27 kB
-dist/assets/index-McaKYTmT.css    4.60 kB │ gzip:  1.62 kB
-dist/assets/index-eVW1xvQ1.js   245.75 kB │ gzip: 77.77 kB
-
-✓ built in 170ms
-
-> venus@0.0.0 test:negative
-> node tools/negative-gates.mjs
-
-PASS: schema, locale, type and unit corruption rejected; source unchanged
+﻿2026-10-18T21:16:20.7868356Z Current runner version: '2.337.0'
+2026-10-18T21:16:20.7893996Z ##[group]Runner Image Provisioner
+2026-10-18T21:16:20.7894910Z Hosted Compute Agent
+2026-10-18T21:16:20.7895595Z Version: 20261012.601
+2026-10-18T21:16:20.7896386Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-18T21:16:20.7897163Z Build Date: 2026-10-12T17:48:21Z
+2026-10-18T21:16:20.7898021Z Worker ID: {d23ebf33-7244-4989-b78f-9d0a592cea1e}
+2026-10-18T21:16:20.7898787Z Region: eastus
+2026-10-18T21:16:20.7899401Z Cloud: Azure
+2026-10-18T21:16:20.7899994Z ##[endgroup]
+2026-10-18T21:16:20.7901456Z ##[group]Operating System
+2026-10-18T21:16:20.7902536Z Ubuntu
+2026-10-18T21:16:20.7903132Z 24.04.5
+2026-10-18T21:16:20.7903884Z LTS
+2026-10-18T21:16:20.7904512Z ##[endgroup]
+2026-10-18T21:16:20.7905132Z ##[group]Runner Image
+2026-10-18T21:16:20.7905761Z Image: ubuntu-24.04
+2026-10-18T21:16:20.7906355Z Version: 20261012.334.1
+2026-10-18T21:16:20.7907754Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-18T21:16:20.7909377Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-18T21:16:20.7910390Z ##[endgroup]
+2026-10-18T21:16:20.7911595Z ##[group]GITHUB_TOKEN Permissions
+2026-10-18T21:16:20.7914085Z Contents: read
+2026-10-18T21:16:20.7914773Z Metadata: read
+2026-10-18T21:16:20.7915377Z ##[endgroup]
+2026-10-18T21:16:20.7917519Z Secret source: Actions
+2026-10-18T21:16:20.7918600Z Cache mode: write
+2026-10-18T21:16:20.7919336Z Prepare workflow directory
+2026-10-18T21:16:20.8249235Z Prepare all required actions
+2026-10-18T21:16:20.8297731Z Getting action download info
+2026-10-18T21:16:20.9928059Z Download action repository 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-18T21:16:21.1305052Z Download action repository 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-18T21:16:21.2100358Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-18T21:16:21.2890931Z Download action repository 'actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-10-18T21:16:21.4908538Z Complete job name: quality
+2026-10-18T21:16:21.5716877Z ##[group]Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+2026-10-18T21:16:21.5717937Z with:
+2026-10-18T21:16:21.5718379Z   persist-credentials: false
+2026-10-18T21:16:21.5718893Z   fetch-depth: 0
+2026-10-18T21:16:21.5719387Z   ref: 8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b
+2026-10-18T21:16:21.5719993Z   repository: psewdon1m/venus
+2026-10-18T21:16:21.5724188Z   token: ***
+2026-10-18T21:16:21.5724630Z   ssh-strict: true
+2026-10-18T21:16:21.5725068Z   ssh-user: git
+2026-10-18T21:16:21.5725489Z   clean: true
+2026-10-18T21:16:21.5725929Z   sparse-checkout-cone-mode: true
+2026-10-18T21:16:21.5726452Z   fetch-tags: false
+2026-10-18T21:16:21.5726917Z   show-progress: true
+2026-10-18T21:16:21.5727361Z   lfs: false
+2026-10-18T21:16:21.5727769Z   submodules: false
+2026-10-18T21:16:21.5728222Z   set-safe-directory: true
+2026-10-18T21:16:21.5728719Z   allow-unsafe-pr-checkout: false
+2026-10-18T21:16:21.5729649Z ##[endgroup]
+2026-10-18T21:16:21.6741918Z Syncing repository: psewdon1m/venus
+2026-10-18T21:16:21.6744786Z ##[group]Getting Git version info
+2026-10-18T21:16:21.6745936Z Working directory is '/home/runner/work/venus/venus'
+2026-10-18T21:16:21.6747840Z [command]/usr/bin/git version
+2026-10-18T21:16:21.6815902Z git version 2.55.0
+2026-10-18T21:16:21.6839620Z ##[endgroup]
+2026-10-18T21:16:21.6863358Z Temporarily overriding HOME='/home/runner/work/_temp/a379c727-da46-47e1-bd00-7a8349a2bf6d' before making global git config changes
+2026-10-18T21:16:21.6866526Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-18T21:16:21.6868932Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-18T21:16:21.6926160Z Deleting the contents of '/home/runner/work/venus/venus'
+2026-10-18T21:16:21.6932856Z ##[group]Determining repository object format
+2026-10-18T21:16:21.6935697Z ##[endgroup]
+2026-10-18T21:16:21.6937056Z ##[group]Initializing the repository
+2026-10-18T21:16:21.6941373Z [command]/usr/bin/git init /home/runner/work/venus/venus
+2026-10-18T21:16:21.7055023Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-18T21:16:21.7057280Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-18T21:16:21.7059010Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-18T21:16:21.7060541Z hint: call:
+2026-10-18T21:16:21.7061363Z hint:
+2026-10-18T21:16:21.7062713Z hint: 	git config --global init.defaultBranch <name>
+2026-10-18T21:16:21.7063958Z hint:
+2026-10-18T21:16:21.7065085Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-18T21:16:21.7066940Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-18T21:16:21.7068311Z hint:
+2026-10-18T21:16:21.7069105Z hint: 	git branch -m <name>
+2026-10-18T21:16:21.7069972Z hint:
+2026-10-18T21:16:21.7071565Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-18T21:16:21.7073737Z Initialized empty Git repository in /home/runner/work/venus/venus/.git/
+2026-10-18T21:16:21.7077097Z [command]/usr/bin/git remote add origin https://github.com/psewdon1m/venus
+2026-10-18T21:16:21.7128078Z ##[endgroup]
+2026-10-18T21:16:21.7129399Z ##[group]Disabling automatic garbage collection
+2026-10-18T21:16:21.7133166Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-18T21:16:21.7167130Z ##[endgroup]
+2026-10-18T21:16:21.7168525Z ##[group]Setting up auth
+2026-10-18T21:16:21.7169575Z Removing SSH command configuration
+2026-10-18T21:16:21.7176310Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T21:16:21.7215808Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T21:16:21.7641527Z Removing HTTP extra header
+2026-10-18T21:16:21.7651147Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T21:16:21.7693150Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T21:16:21.7940911Z Removing includeIf entries pointing to credentials config files
+2026-10-18T21:16:21.8013435Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T21:16:21.8023261Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T21:16:21.8232185Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-18T21:16:21.8278143Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:21.8324794Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:21.8386390Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:21.8428386Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:21.8463547Z ##[endgroup]
+2026-10-18T21:16:21.8465242Z ##[group]Fetching the repository
+2026-10-18T21:16:21.8473288Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-18T21:16:22.5647397Z From https://github.com/psewdon1m/venus
+2026-10-18T21:16:22.5649507Z  * [new branch]      feature/p01-foundation -> origin/feature/p01-foundation
+2026-10-18T21:16:22.5651576Z  * [new branch]      feature/p02-rooms      -> origin/feature/p02-rooms
+2026-10-18T21:16:22.5653612Z  * [new branch]      feature/p03-engine     -> origin/feature/p03-engine
+2026-10-18T21:16:22.5655228Z  * [new branch]      main                   -> origin/main
+2026-10-18T21:16:22.5656761Z  * [new tag]         p01-accepted-20261018  -> p01-accepted-20261018
+2026-10-18T21:16:22.5658242Z  * [new tag]         p02-accepted-20261018  -> p02-accepted-20261018
+2026-10-18T21:16:22.5659994Z  * [new tag]         p03-m1-preregistered-20261018 -> p03-m1-preregistered-20261018
+2026-10-18T21:16:22.5662042Z  * [new tag]         p03-m2-preregistered-20261018 -> p03-m2-preregistered-20261018
+2026-10-18T21:16:22.5664022Z  * [new tag]         p03-m3-preregistered-20261018 -> p03-m3-preregistered-20261018
+2026-10-18T21:16:22.5665690Z  * [new tag]         p03-m3-proof-timeout-20261019 -> p03-m3-proof-timeout-20261019
+2026-10-18T21:16:22.5669090Z [command]/usr/bin/git rev-parse --verify --quiet 8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b^{object}
+2026-10-18T21:16:22.5700097Z 8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b
+2026-10-18T21:16:22.5708256Z ##[endgroup]
+2026-10-18T21:16:22.5709746Z ##[group]Determining the checkout info
+2026-10-18T21:16:22.5711536Z ##[endgroup]
+2026-10-18T21:16:22.5713123Z [command]/usr/bin/git sparse-checkout disable
+2026-10-18T21:16:22.5768314Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-18T21:16:22.5802409Z ##[group]Checking out the ref
+2026-10-18T21:16:22.5807068Z [command]/usr/bin/git checkout --progress --force 8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b
+2026-10-18T21:16:22.7470139Z Note: switching to '8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b'.
+2026-10-18T21:16:22.7471649Z 
+2026-10-18T21:16:22.7472877Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-18T21:16:22.7475494Z changes and commit them, and you can discard any commits you make in this
+2026-10-18T21:16:22.7477672Z state without impacting any branches by switching back to a branch.
+2026-10-18T21:16:22.7478920Z 
+2026-10-18T21:16:22.7479812Z If you want to create a new branch to retain commits you create, you may
+2026-10-18T21:16:22.7481852Z do so (now or later) by using -c with the switch command. Example:
+2026-10-18T21:16:22.7483373Z 
+2026-10-18T21:16:22.7484041Z   git switch -c <new-branch-name>
+2026-10-18T21:16:22.7485029Z 
+2026-10-18T21:16:22.7485615Z Or undo this operation with:
+2026-10-18T21:16:22.7486447Z 
+2026-10-18T21:16:22.7486992Z   git switch -
+2026-10-18T21:16:22.7487660Z 
+2026-10-18T21:16:22.7488776Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-18T21:16:22.7490459Z 
+2026-10-18T21:16:22.7491671Z HEAD is now at 8f3405d ci(p03): allow complete preregistered simulations within120minutes
+2026-10-18T21:16:22.7498861Z ##[endgroup]
+2026-10-18T21:16:22.7546931Z [command]/usr/bin/git log -1 --format=%H
+2026-10-18T21:16:22.7575282Z 8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b
+2026-10-18T21:16:22.7588184Z ##[group]Removing auth
+2026-10-18T21:16:22.7589740Z Removing SSH command configuration
+2026-10-18T21:16:22.7592814Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T21:16:22.7630860Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T21:16:22.7858303Z Removing HTTP extra header
+2026-10-18T21:16:22.7862768Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T21:16:22.7902615Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T21:16:22.8129572Z Removing includeIf entries pointing to credentials config files
+2026-10-18T21:16:22.8134038Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T21:16:22.8164922Z includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-18T21:16:22.8168225Z includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-18T21:16:22.8171532Z includeif.gitdir:/github/workspace/.git.path
+2026-10-18T21:16:22.8174808Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-18T21:16:22.8181679Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-18T21:16:22.8205861Z /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8218144Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8257973Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-18T21:16:22.8283535Z /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8295627Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8333639Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-18T21:16:22.8370251Z /github/runner_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8377943Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8419838Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-18T21:16:22.8440909Z /github/runner_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8451867Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config
+2026-10-18T21:16:22.8488753Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T21:16:22.8707936Z Removing credentials config '/home/runner/work/_temp/git-credentials-db3d9d86-7c42-45b0-8961-07da94367bfd.config'
+2026-10-18T21:16:22.8716784Z ##[endgroup]
+2026-10-18T21:16:22.9060420Z ##[group]Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+2026-10-18T21:16:22.9061946Z with:
+2026-10-18T21:16:22.9063174Z   node-version-file: .node-version
+2026-10-18T21:16:22.9064267Z   cache: npm
+2026-10-18T21:16:22.9065141Z   check-latest: false
+2026-10-18T21:16:22.9074427Z   token: ***
+2026-10-18T21:16:22.9075359Z   package-manager-cache: true
+2026-10-18T21:16:22.9076393Z ##[endgroup]
+2026-10-18T21:16:23.0446981Z Node version file is not JSON file
+2026-10-18T21:16:23.0449461Z Resolved .node-version as 24.22.0
+2026-10-18T21:16:23.0476167Z Attempting to download 24.22.0...
+2026-10-18T21:16:23.4605031Z Acquiring 24.22.0 - x64 from https://github.com/actions/node-versions/releases/download/24.22.0-38668177966/node-24.22.0-linux-x64.tar.gz
+2026-10-18T21:16:23.8560707Z Extracting ...
+2026-10-18T21:16:23.8687481Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/d429ca9c-cb74-4b0b-a8a2-1f3991a1ddff -f /home/runner/work/_temp/f4d8e31f-7c1f-46ce-843b-ce26339f4d63
+2026-10-18T21:16:25.1003780Z Adding to the cache ...
+2026-10-18T21:16:27.1619833Z ##[group]Environment details
+2026-10-18T21:16:27.3843756Z node: v24.22.0
+2026-10-18T21:16:27.3844443Z npm: 11.19.1
+2026-10-18T21:16:27.3844774Z yarn: 1.22.22
+2026-10-18T21:16:27.3845534Z ##[endgroup]
+2026-10-18T21:16:27.3867047Z [command]/opt/hostedtoolcache/node/24.22.0/x64/bin/npm config get cache
+2026-10-18T21:16:27.4815940Z /home/runner/.npm
+2026-10-18T21:16:27.5519851Z Cache hit for: node-cache-Linux-x64-npm-43a4add182b813d569e0df0a22a83747e67a678ea8eb0b5419f41cfdcba031d5
+2026-10-18T21:16:27.6234757Z Received 676 of 676 (100.0%), 0.0 MBs/sec
+2026-10-18T21:16:27.6235423Z Cache Size: ~0 MB (676 B)
+2026-10-18T21:16:27.6265277Z [command]/usr/bin/tar -xf /home/runner/work/_temp/decce95f-1554-484e-aeeb-3c9d8523bd6c/cache.tzst -P -C /home/runner/work/venus/venus --use-compress-program unzstd
+2026-10-18T21:16:27.6340427Z Cache restored successfully
+2026-10-18T21:16:27.6346439Z Cache restored from key: node-cache-Linux-x64-npm-43a4add182b813d569e0df0a22a83747e67a678ea8eb0b5419f41cfdcba031d5
+2026-10-18T21:16:27.6585956Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-18T21:16:27.6586397Z with:
+2026-10-18T21:16:27.6586623Z   python-version: 3.12.14
+2026-10-18T21:16:27.6586866Z   check-latest: false
+2026-10-18T21:16:27.6589551Z   token: ***
+2026-10-18T21:16:27.6589785Z   update-environment: true
+2026-10-18T21:16:27.6590048Z   allow-prereleases: false
+2026-10-18T21:16:27.6590290Z   freethreaded: false
+2026-10-18T21:16:27.6590520Z ##[endgroup]
+2026-10-18T21:16:27.7896481Z ##[group]Installed versions
+2026-10-18T21:16:27.7924355Z Version 3.12.14 was not found in the local cache
+2026-10-18T21:16:28.2767350Z Version 3.12.14 is available for downloading
+2026-10-18T21:16:28.2768888Z Download from "https://github.com/actions/python-versions/releases/download/3.12.14-31661455385/python-3.12.14-linux-24.04-x64.tar.gz"
+2026-10-18T21:16:28.9671084Z Extract downloaded archive
+2026-10-18T21:16:28.9810074Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/4987c67f-cb14-4d35-9b6e-aa28f0689f4f -f /home/runner/work/_temp/ef7f47f6-7515-4a25-b699-de9eb68983ca
+2026-10-18T21:16:30.9191883Z Execute installation script
+2026-10-18T21:16:30.9292603Z Check if Python hostedtoolcache folder exist...
+2026-10-18T21:16:30.9293375Z Create Python 3.12.14 folder
+2026-10-18T21:16:30.9312551Z Copy Python binaries to hostedtoolcache folder
+2026-10-18T21:16:31.4076374Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-10-18T21:16:31.4118173Z Upgrading pip...
+2026-10-18T21:16:33.2008070Z Collecting pip
+2026-10-18T21:16:33.2833615Z Downloading pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+2026-10-18T21:16:33.3091084Z Downloading pip-26.2.1-py3-none-any.whl (1.8 MB)
+2026-10-18T21:16:33.4497089Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 19.7 MB/s eta 0:00:00
+2026-10-18T21:16:33.4497627Z 
+2026-10-18T21:16:33.4688185Z Installing collected packages: pip
+2026-10-18T21:16:33.4689334Z Attempting uninstall: pip
+2026-10-18T21:16:33.4711615Z Found existing installation: pip 25.0.1
+2026-10-18T21:16:33.5072313Z Uninstalling pip-25.0.1:
+2026-10-18T21:16:33.5129106Z Successfully uninstalled pip-25.0.1
+2026-10-18T21:16:34.4157587Z Successfully installed pip-26.2.1
+2026-10-18T21:16:34.4631305Z Create complete file
+2026-10-18T21:16:34.4670420Z Successfully set up CPython (3.12.14)
+2026-10-18T21:16:34.4671260Z ##[endgroup]
+2026-10-18T21:16:34.4845201Z ##[group]Run python -m pip install --require-hashes -r tools/requirements.lock
+2026-10-18T21:16:34.4845837Z [36;1mpython -m pip install --require-hashes -r tools/requirements.lock[0m
+2026-10-18T21:16:34.5202994Z shell: /usr/bin/bash -e {0}
+2026-10-18T21:16:34.5203301Z env:
+2026-10-18T21:16:34.5203610Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:34.5204122Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T21:16:34.5204609Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:34.5205356Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:34.5205794Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:34.5206245Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T21:16:34.5206591Z ##[endgroup]
+2026-10-18T21:16:35.0188922Z Collecting attrs==26.1.0 (from -r tools/requirements.lock (line 2))
+2026-10-18T21:16:35.1641357Z   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-18T21:16:35.2545440Z Collecting jsonschema==4.26.0 (from -r tools/requirements.lock (line 3))
+2026-10-18T21:16:35.3029077Z   Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+2026-10-18T21:16:35.3480321Z Collecting jsonschema-specifications==2025.9.1 (from -r tools/requirements.lock (line 4))
+2026-10-18T21:16:35.3860032Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-18T21:16:35.4302969Z Collecting referencing==0.37.0 (from -r tools/requirements.lock (line 5))
+2026-10-18T21:16:35.4666051Z   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-18T21:16:35.8077654Z Collecting rpds-py==2026.9.1 (from -r tools/requirements.lock (line 6))
+2026-10-18T21:16:35.8440522Z   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+2026-10-18T21:16:35.9433647Z Collecting typing-extensions==4.16.0 (from -r tools/requirements.lock (line 7))
+2026-10-18T21:16:35.9818793Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-18T21:16:36.0167071Z Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+2026-10-18T21:16:36.2119941Z 
+2026-10-18T21:16:36.2135583Z Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+2026-10-18T21:16:36.2716038Z ##[group]Run npm ci
+2026-10-18T21:16:36.2716312Z [36;1mnpm ci[0m
+2026-10-18T21:16:36.2781522Z shell: /usr/bin/bash -e {0}
+2026-10-18T21:16:36.2781782Z env:
+2026-10-18T21:16:36.2782074Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:36.2782814Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T21:16:36.2783271Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:36.2783684Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:36.2784081Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:36.2784483Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T21:16:36.2784813Z ##[endgroup]
+2026-10-18T21:16:41.0528700Z 
+2026-10-18T21:16:41.0544062Z added 288 packages, and audited 295 packages in 5s
+2026-10-18T21:16:41.0544392Z 
+2026-10-18T21:16:41.0544537Z found 0 vulnerabilities
+2026-10-18T21:16:41.1117534Z ##[group]Run npm run quality
+2026-10-18T21:16:41.1117854Z [36;1mnpm run quality[0m
+2026-10-18T21:16:41.1181443Z shell: /usr/bin/bash -e {0}
+2026-10-18T21:16:41.1181703Z env:
+2026-10-18T21:16:41.1181983Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:41.1182713Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T21:16:41.1183167Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:41.1183554Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:41.1183950Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:16:41.1184359Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T21:16:41.1184689Z ##[endgroup]
+2026-10-18T21:16:41.2229146Z 
+2026-10-18T21:16:41.2229690Z > venus@0.0.0 quality
+2026-10-18T21:16:41.2230994Z > npm run lint && npm run typecheck && npm test && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:negative
+2026-10-18T21:16:41.2231674Z 
+2026-10-18T21:16:41.3211902Z 
+2026-10-18T21:16:41.3212625Z > venus@0.0.0 lint
+2026-10-18T21:16:44.5325816Z > eslint apps packages tools/*.mjs tests/**/*.mjs
+2026-10-18T21:16:44.5326725Z 
+2026-10-18T21:16:44.5326736Z 
+2026-10-18T21:16:44.5326970Z > venus@0.0.0 typecheck
+2026-10-18T21:16:44.5327533Z > tsc -b && tsc -p apps/web/tsconfig.json
+2026-10-18T21:16:44.5327892Z 
+2026-10-18T21:16:49.9226313Z 
+2026-10-18T21:16:49.9226951Z > venus@0.0.0 test
+2026-10-18T21:16:49.9227419Z > vitest run
+2026-10-18T21:16:49.9227637Z 
+2026-10-18T21:16:50.2553325Z 
+2026-10-18T21:16:50.2586835Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/home/runner/work/venus/venus[39m
+2026-10-18T21:16:50.2588576Z 
+2026-10-18T21:16:50.9450581Z  [32m✓[39m packages/relationship-engine/src/consent.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+2026-10-18T21:16:51.4729692Z  [32m✓[39m tools/p03-measurements.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+2026-10-18T21:16:51.5525468Z  [32m✓[39m apps/api/src/security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 381[2mms[22m[39m
+2026-10-18T21:16:52.0507622Z  [32m✓[39m apps/api/src/games-delivery.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+2026-10-18T21:16:52.1449062Z  [32m✓[39m packages/relationship-engine/src/engine.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 1051[2mms[22m[39m
+2026-10-18T21:16:52.1494376Z    [32m✓[39m production relationship engine, explicit synthetic test pack [2m(8)[22m
+2026-10-18T21:16:52.1505118Z      [33m[2m✓[22m[39m enforces class, every actor comfort, context, stage, capability and common public support exhaustively[33m 633[2mms[22m[39m
+2026-10-18T21:16:52.3066686Z  [32m✓[39m apps/api/src/app.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 169[2mms[22m[39m
+2026-10-18T21:16:52.3624531Z  [32m✓[39m apps/web/src/api.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-18T21:16:52.5169228Z  [32m✓[39m tools/github-ci.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 25[2mms[22m[39m
+2026-10-18T21:16:52.6149220Z  [32m✓[39m apps/api/src/games-model.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-18T21:16:52.6189243Z 
+2026-10-18T21:16:52.6194942Z [2m Test Files [22m [1m[32m9 passed[39m[22m[90m (9)[39m
+2026-10-18T21:16:52.6196618Z [2m      Tests [22m [1m[32m42 passed[39m[22m[90m (42)[39m
+2026-10-18T21:16:52.6197793Z [2m   Start at [22m 21:16:50
+2026-10-18T21:16:52.6223874Z [2m   Duration [22m 2.35s[2m (import 46%, tests 34%, transform 19%, worker 1%)[22m
+2026-10-18T21:16:52.6226738Z 
+2026-10-18T21:16:52.6232823Z [2m    Isolate [22m [33m9 workers spawned[39m[2m · ~158ms startup each (spawn + environment, per file)[22m
+2026-10-18T21:16:52.6235256Z [2m            [22m [2mat least ~316ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+2026-10-18T21:16:52.6236830Z 
+2026-10-18T21:16:52.7407909Z 
+2026-10-18T21:16:52.7408449Z > venus@0.0.0 check:schemas
+2026-10-18T21:16:52.7410808Z > python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check
+2026-10-18T21:16:52.7412843Z 
+2026-10-18T21:16:53.2539228Z PASS: JSON Schema 2020-12 and OpenAPI local references
+2026-10-18T21:16:53.2934302Z Checked RE-1 six labels × six = 36 directed combinations; errors=0
+2026-10-18T21:16:53.2936009Z PASS: policy config invariants only. Actual consent/access/inference requires app tests.
+2026-10-18T21:16:53.4896770Z 
+2026-10-18T21:16:53.4897325Z > venus@0.0.0 check:i18n
+2026-10-18T21:16:53.4897907Z > node tools/check-i18n.mjs
+2026-10-18T21:16:53.4898238Z 
+2026-10-18T21:16:53.5194816Z PASS: RU/EN/TR locale keys and nonempty strings
+2026-10-18T21:16:53.6194778Z 
+2026-10-18T21:16:53.6195373Z > venus@0.0.0 test:python
+2026-10-18T21:16:53.6196202Z > python -B -m unittest discover -s tools -p test_*.py
+2026-10-18T21:16:53.6196690Z 
+2026-10-18T21:17:09.4655812Z .........................................................................................
+2026-10-18T21:17:09.4656739Z ----------------------------------------------------------------------
+2026-10-18T21:17:09.4657542Z Ran 89 tests in 15.550s
+2026-10-18T21:17:09.4657774Z 
+2026-10-18T21:17:09.4657927Z OK
+2026-10-18T21:17:09.6120556Z 
+2026-10-18T21:17:09.6120963Z > venus@0.0.0 check:docs
+2026-10-18T21:17:09.6121832Z > python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py
+2026-10-18T21:17:09.6122673Z 
+2026-10-18T21:17:09.7086824Z Venus docs: 96 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+2026-10-18T21:17:09.7087659Z PASS: required files, linked assets and snapshot hashes
+2026-10-18T21:17:10.1909956Z {"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
+2026-10-18T21:17:10.1911440Z PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
+2026-10-18T21:17:10.8067640Z PASS: EXIT-P01 source, CI, negative/container evidence and independent reports bound
+2026-10-18T21:17:11.4747617Z PASS: EXIT-P02 source/CI/HTTP/WS/PostgreSQL/browser/OCI and independent reviews bound
+2026-10-18T21:17:11.7057076Z Checked 424 packaged paths; errors=0
+2026-10-18T21:17:11.7057897Z PASS: packaged bytes match manifest; provenance/signatures require release verification.
+2026-10-18T21:17:11.8086421Z 
+2026-10-18T21:17:11.8086952Z > venus@0.0.0 build
+2026-10-18T21:17:11.8087530Z > tsc -b && npm run build -w @venus/web
+2026-10-18T21:17:11.8087759Z 
+2026-10-18T21:17:12.0188792Z 
+2026-10-18T21:17:12.0189357Z > @venus/web@0.0.0 build
+2026-10-18T21:17:12.0189714Z > vite build
+2026-10-18T21:17:12.0189847Z 
+2026-10-18T21:17:12.2309156Z [36mvite v8.3.4 [32mbuilding client environment for production...[36m[39m
+2026-10-18T21:17:12.2411816Z transforming...
+2026-10-18T21:17:12.3029942Z ✓ 21 modules transformed.
+2026-10-18T21:17:12.3245447Z rendering chunks...
+2026-10-18T21:17:12.3609889Z computing gzip size...
+2026-10-18T21:17:12.3651220Z dist/index.html                   0.39 kB │ gzip:  0.27 kB
+2026-10-18T21:17:12.3652453Z dist/assets/index-McaKYTmT.css    4.60 kB │ gzip:  1.62 kB
+2026-10-18T21:17:12.3653469Z dist/assets/index-eVW1xvQ1.js   245.75 kB │ gzip: 77.77 kB
+2026-10-18T21:17:12.3653907Z 
+2026-10-18T21:17:12.3656026Z [32m✓ built in 133ms[39m
+2026-10-18T21:17:12.4833354Z 
+2026-10-18T21:17:12.4833937Z > venus@0.0.0 test:negative
+2026-10-18T21:17:12.4834344Z > node tools/negative-gates.mjs
+2026-10-18T21:17:12.4834537Z 
+2026-10-18T21:17:21.6128870Z PASS: schema, locale, type and unit corruption rejected; source unchanged
+2026-10-18T21:17:21.6348748Z ##[group]Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+2026-10-18T21:17:21.6349193Z with:
+2026-10-18T21:17:21.6349400Z   name: negative-gates
+2026-10-18T21:17:21.6349649Z   path: .artifacts/negative-gates.json
+2026-10-18T21:17:21.6349932Z   if-no-files-found: error
+2026-10-18T21:17:21.6350181Z   compression-level: 6
+2026-10-18T21:17:21.6350399Z   overwrite: false
+2026-10-18T21:17:21.6350636Z   include-hidden-files: false
+2026-10-18T21:17:21.6350869Z env:
+2026-10-18T21:17:21.6351123Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:17:21.6351553Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-18T21:17:21.6351976Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:17:21.6352674Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:17:21.6353075Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-18T21:17:21.6353494Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-18T21:17:21.6353822Z ##[endgroup]
+2026-10-18T21:17:21.8048359Z With the provided path, there will be 1 file uploaded
+2026-10-18T21:17:21.8055877Z Artifact name is valid!
+2026-10-18T21:17:21.8056847Z Root directory input is valid!
+2026-10-18T21:17:22.0193620Z Beginning upload of artifact content to blob storage
+2026-10-18T21:17:22.0793133Z Uploaded bytes 2076
+2026-10-18T21:17:22.0935156Z Finished uploading artifact content to blob storage!
+2026-10-18T21:17:22.0936361Z SHA256 digest of uploaded artifact zip is aee92593401c9a49a964de9012127968bc945ad3de91ce7e67d6b9f98c1d528a
+2026-10-18T21:17:22.0938802Z Finalizing artifact upload
+2026-10-18T21:17:22.2982049Z Artifact negative-gates.zip successfully finalized. Artifact ID 12150927958
+2026-10-18T21:17:22.2983615Z Artifact negative-gates has been successfully uploaded! Final size is 2076 bytes. Artifact ID is 12150927958
+2026-10-18T21:17:22.2987089Z Artifact download URL: https://github.com/psewdon1m/venus/actions/runs/39166967939/artifacts/12150927958
+2026-10-18T21:17:22.3148399Z Post job cleanup.
+2026-10-18T21:17:22.4520200Z Post job cleanup.
+2026-10-18T21:17:22.5728196Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-43a4add182b813d569e0df0a22a83747e67a678ea8eb0b5419f41cfdcba031d5, not saving cache.
+2026-10-18T21:17:22.5855903Z Post job cleanup.
+2026-10-18T21:17:22.6758119Z [command]/usr/bin/git version
+2026-10-18T21:17:22.6825061Z git version 2.55.0
+2026-10-18T21:17:22.6883223Z Temporarily overriding HOME='/home/runner/work/_temp/26c15982-e10f-4a98-bc62-b307f1bb7614' before making global git config changes
+2026-10-18T21:17:22.6884757Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-18T21:17:22.6890133Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-18T21:17:22.6942398Z Removing SSH command configuration
+2026-10-18T21:17:22.6952609Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-18T21:17:22.7007816Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-18T21:17:22.7328944Z Removing HTTP extra header
+2026-10-18T21:17:22.7337266Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-18T21:17:22.7386371Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-18T21:17:22.7680472Z Removing includeIf entries pointing to credentials config files
+2026-10-18T21:17:22.7690061Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-18T21:17:22.7731426Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-18T21:17:22.8126763Z Cleaning up orphan processes
