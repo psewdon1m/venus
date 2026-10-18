@@ -14,8 +14,8 @@ export function syntheticCards() {
   }
   return cards;
 }
-export function syntheticManifest(cards,digest,policyDigest) {
-  const payload={schema_version:1,pack_id:'venus-p03-synthetic',pack_revision:1,content_contract_revision:'CARD-1',policy_revision:'RE-1',policy_sha256:policyDigest.slice(7),status:'illustrative_draft_candidate',locale_codes:['ru','en','tr'],total_cards:cards.length,reviewed_cards:0,mode_counts:Object.fromEntries(['questions','truth_or_dare','yes_but'].map(mode=>[mode,cards.filter(c=>c.mode===mode).length])),category_counts:{},eligibility_cell_counts:{},cards:cards.map(c=>({id:c.id,revision:c.revision,sha256:digest(c),status:c.status})).sort((a,b)=>a.id.localeCompare(b.id)),caveats:['SYNTHETIC MACHINE FIXTURE; never human reviewed or published']};
+export function syntheticManifest(cards,digest,policyDigest,revision=1) {
+  const payload={schema_version:1,pack_id:'venus-p03-synthetic',pack_revision:revision,content_contract_revision:'CARD-1',policy_revision:'RE-1',policy_sha256:policyDigest.slice(7),status:'illustrative_draft_candidate',locale_codes:['ru','en','tr'],total_cards:cards.length,reviewed_cards:0,mode_counts:Object.fromEntries(['questions','truth_or_dare','yes_but'].map(mode=>[mode,cards.filter(c=>c.mode===mode).length])),category_counts:{},eligibility_cell_counts:{},cards:cards.map(c=>({id:c.id,revision:c.revision,sha256:digest(c),status:c.status})).sort((a,b)=>a.id.localeCompare(b.id)),caveats:['SYNTHETIC MACHINE FIXTURE; never human reviewed or published']};
   return {...payload,canonical_payload_sha256:digest(payload)};
 }
 export const playerId=i=>String(i+1).padStart(8,'0')+'-0000-4000-8000-000000000000';

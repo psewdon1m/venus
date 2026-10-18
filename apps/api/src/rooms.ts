@@ -1,6 +1,6 @@
 import {randomUUID} from 'node:crypto';
 import type pg from 'pg';
-import type {CreateRoom,JoinRoom,Member,RoomView,SelfPreferences,PreferencesPut,ProfilePatch,ContextPatch,EntryAcceptance,WsTicket,Edge} from '@venus/contracts';
+import type {CreateRoom,JoinRoom,Member,RoomView,SelfPreferences,PreferencesPut,ProfilePatch,ContextPatch,EntryAcceptance,WsTicket,Edge,GameView} from '@venus/contracts';
 import {Keyring,DeletionLedger,requireThat,token,hash,type Cipher} from './security.js';
 
 const DAY=86400000;
@@ -14,6 +14,16 @@ interface StoredReply {body:unknown;session:string|null;memberId:string;status:n
 interface PreferenceData {comfort:number;edges:Record<string,Edge>}
 interface PrefRow {cipher:Cipher;ready:boolean;rev:string}
 export interface SocketGrant {roomId:string;memberId:string;generation:number;sessionHash:string}
+export interface PrivateDelivery {eventId:string;revision:number;type:string;payload:unknown}
+export type PrivateReference=Pick<PrivateDelivery,'eventId'|'revision'>;
+export interface RoomGameHooks {
+  locked(c:pg.PoolClient,roomId:string):Promise<boolean>;
+  memberStateChanged(c:pg.PoolClient,roomId:string):Promise<void>;
+  removing(c:pg.PoolClient,roomId:string,memberId:string):Promise<void>;
+  purge(c:pg.PoolClient,roomId:string):Promise<void>;
+  socketView(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',after:number):Promise<{game:GameView|null;privateEvents:PrivateReference[]}>;
+  privateDelivery(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',eventId:string):Promise<PrivateDelivery|null>;
+}
 export function revision(value:string|number) {const n=Number(value);requireThat(Number.isSafeInteger(n)&&n>=0,'REVISION_OVERFLOW',503);return n;}
 function name(value:string) {
   requireThat(value.trim().length>0&&!/[\p{Cc}\p{Zl}\p{Zp}\u202A-\u202E\u2066-\u2069]/u.test(value),'INVALID_NAME',400);
@@ -21,7 +31,11 @@ function name(value:string) {
 }
 export class Rooms {
   readonly now:()=>number;
+  private games:RoomGameHooks|undefined;
   constructor(readonly options:RoomOptions) {this.now=options.now??Date.now;}
+  attachGames(games:RoomGameHooks) {requireThat(!this.games,'GAME_HOOKS_ALREADY_ATTACHED',503);this.games=games;}
+  access(c:pg.PoolClient,roomId:string,session:string|undefined,safety=false,allowInactive=safety) {return this.auth(c,roomId,session,safety,allowInactive);}
+  async changed(c:pg.PoolClient,roomId:string,activity=true) {return this.emit(c,await this.room(c,roomId),activity);}
   async transaction<T>(operation:(client:pg.PoolClient)=>Promise<T>):Promise<T> {
     const c=await this.options.pool.connect();
     try {await c.query('BEGIN');const result=await operation(c);await c.query('COMMIT');return result;}
@@ -70,13 +84,13 @@ export class Rooms {
       WHERE m.room_id=$1 AND m.removed_at IS NULL AND m.slot IS NOT NULL ORDER BY m.id`,[room.id]);
     return {room_id:room.id,room_rev:revision(room.rev),state:room.state,meeting_context:room.meeting_context,members:rows.rows.map(m=>this.project(m)),features:{games:'unavailable',music:'unavailable',cinema:'unavailable',calls:'unavailable'}};
   }
-  private async boundEvents(c:pg.PoolClient,table:'audit_events'|'outbox_events',age:number) {
+  async boundEvents(c:pg.PoolClient,table:'audit_events'|'outbox_events'|'game_outbox_refs',age:number) {
     // The same transaction lock serializes insertion+hard caps across rooms.
     await c.query('SELECT pg_advisory_xact_lock(746826402)');
     await c.query(`DELETE FROM ${table} WHERE created_at<=$1`,[new Date(this.now()-age)]);
     await c.query(`DELETE FROM ${table} WHERE seq IN (SELECT seq FROM (SELECT seq,row_number() OVER(ORDER BY seq DESC) AS n,sum(pg_column_size(e)) OVER(ORDER BY seq DESC) AS bytes FROM ${table} e) bounded WHERE n>10000 OR bytes>67108864)`);
   }
-  private async audit(c:pg.PoolClient,roomId:string,memberId:string|null,action:string,requestId:string) {
+  async audit(c:pg.PoolClient,roomId:string,memberId:string|null,action:string,requestId:string) {
     await c.query('SELECT pg_advisory_xact_lock(746826402)');
     await c.query('INSERT INTO audit_events(room_id,actor_member_id,action,request_id,created_at) VALUES($1,$2,$3,$4,$5)',[roomId,memberId,action,requestId,new Date(this.now())]);
     await this.boundEvents(c,'audit_events',30*DAY);
@@ -89,7 +103,7 @@ export class Rooms {
     await this.boundEvents(c,'outbox_events',timers.idle);
     return payload;
   }
-  private async replay(c:pg.PoolClient,scope:string,key:string,input:unknown) {
+  async replay(c:pg.PoolClient,scope:string,key:string,input:unknown) {
     const r=await c.query<{request_hash:string;result_cipher:Cipher;room_id:string;member_id:string}>('SELECT * FROM idempotency_keys WHERE scope=$1 AND key=$2',[scope,key]);
     if(!r.rows[0]) return null;const row=r.rows[0];
     requireThat(this.options.keys.matchesFingerprint(input,row.request_hash),'IDEMPOTENCY_CONFLICT',409);
@@ -98,9 +112,9 @@ export class Rooms {
     if(reply.session) await this.auth(c,row.room_id,reply.session,true,true);
     return reply;
   }
-  private async remember(c:pg.PoolClient,scope:string,key:string,input:unknown,roomId:string,result:StoredReply,requestId:string) {
+  async remember(c:pg.PoolClient,scope:string,key:string,input:unknown,roomId:string,result:StoredReply,requestId:string,actionOverride?:string) {
     await c.query('INSERT INTO idempotency_keys VALUES($1,$2,$3,$4,$5,$6,$7)',[scope,key,roomId,result.memberId,this.options.keys.fingerprint(input),this.options.keys.encrypt(result,'idem:'+scope+':'+key),new Date(this.now())]);
-    const action=scope.includes(':join:')?'join':scope.split(':').at(-1)!;
+    const action=actionOverride??(scope.includes(':join:')?'join':scope.split(':').at(-1)!);
     await this.audit(c,roomId,result.memberId,action,requestId);
     return result;
   }
@@ -181,14 +195,16 @@ export class Rooms {
     const data=this.options.keys.decrypt<PreferenceData>(p.cipher,`preferences:${a.room.id}:${a.member.id}:1`);
     const members=await c.query<{id:string}>('SELECT id FROM room_members WHERE room_id=$1 AND id<>$2 AND removed_at IS NULL AND slot IS NOT NULL',[a.room.id,a.member.id]);
     const edges:Record<string,Edge>=Object.fromEntries(members.rows.map(m=>[m.id,data.edges[m.id]??{relation:'friendship' as const,explicit:false}]));
-    return {owner_member_id:a.member.id,comfort:data.comfort,edges,ready:p.ready,locked:false,rev:revision(p.rev)};
+    return {owner_member_id:a.member.id,comfort:data.comfort,edges,ready:p.ready,locked:await this.games?.locked(c,a.room.id)??false,rev:revision(p.rev)};
   }
   async preferences(roomId:string,session:string|undefined) {return this.transaction(async c=>this.preference(c,await this.auth(c,roomId,session)));}
   async mutate(roomId:string,session:string|undefined,operation:'context'|'profile'|'preferences'|'skip'|'leave'|'close',input:Record<string,unknown>,requestId:string):Promise<StoredReply> {
     return this.transaction(async c=>{
-      const a=await this.auth(c,roomId,session,operation==='leave'||operation==='skip',operation==='leave'||operation==='skip');const scope=`${roomId}:${a.member.id}:${operation}`;
+      const safety=operation==='leave'||operation==='skip'||operation==='close';
+      const a=await this.auth(c,roomId,session,safety,safety);const scope=`${roomId}:${a.member.id}:${operation}`;
       if(operation==='context'||operation==='close') requireThat(a.member.role==='host'&&a.room.host_member_id===a.member.id,'HOST_REQUIRED');
       const key=input.idempotency_key as string;const old=await this.replay(c,scope,key,input);if(old) return old;
+      if(operation==='preferences'||operation==='context') requireThat(!await this.games?.locked(c,roomId),'GAME_SETTINGS_LOCKED',409);
       const prefOperation=operation==='preferences'||operation==='skip';const prefs=prefOperation?await this.preference(c,a):null;
       if(operation!=='leave') requireThat(input.expected_rev===(prefs?.rev??revision(a.room.rev)),'REVISION_CONFLICT',409);
       let body:unknown;
@@ -208,6 +224,7 @@ export class Rooms {
         body=await this.preference(c,a);
       }
       if(operation==='leave') {
+        await this.games?.removing(c,roomId,a.member.id);
         await c.query('UPDATE room_members SET removed_at=$3,slot=NULL,presence=\'inactive\' WHERE room_id=$1 AND id=$2',[roomId,a.member.id,new Date(this.now())]);
         await c.query('UPDATE room_sessions SET revoked_at=$3 WHERE room_id=$1 AND member_id=$2',[roomId,a.member.id,new Date(this.now())]);
         await c.query('DELETE FROM private_preferences WHERE room_id=$1 AND owner_member_id=$2',[roomId,a.member.id]);
@@ -236,28 +253,45 @@ export class Rooms {
       const a=await this.auth(c,roomId,session);const t=await c.query('DELETE FROM ws_tickets WHERE token_hash=$1 AND room_id=$2 AND member_id=$3 AND session_hash=$4 AND expires_at>$5 RETURNING token_hash',[hash(ticket),roomId,a.member.id,a.sessionHash,new Date(this.now())]);
       requireThat(t.rowCount===1,'TICKET_INVALID',401);if(a.member.slot===null) await this.reserve(c,roomId,a.member.id);
       const member=await c.query<{socket_generation:string}>(`UPDATE room_members SET socket_generation=socket_generation+1,presence='online',heartbeat_at=$3,reserved_until=$4 WHERE room_id=$1 AND id=$2 RETURNING socket_generation`,[roomId,a.member.id,new Date(this.now()),new Date(this.now()+timers.reservation)]);
+      await this.games?.memberStateChanged(c,roomId);
       await this.emit(c,a.room,false);
       return {roomId,memberId:a.member.id,generation:revision(member.rows[0]!.socket_generation),sessionHash:a.sessionHash};
     });
   }
-  async liveGrant(grant:SocketGrant,heartbeat=false) {
+  async liveGrant(grant:SocketGrant,heartbeat=false) {return (await this.socketState(grant,heartbeat)).room;}
+  /** Enqueue synchronously under the same room lock used by every revoke mutation.
+   * This read-only dispatch transaction only projects previously committed state. */
+  async dispatchPrivate(grant:SocketGrant,eventId:string,enqueue:(event:PrivateDelivery,roomRev:number)=>void) {
+    return this.transaction(async c=>{
+      const room=await this.room(c,grant.roomId);
+      requireThat(room.state==='open'&&!this.options.ledger.contains(room.id)&&this.now()-room.last_activity_at.getTime()<timers.idle,'ROOM_CLOSED');
+      const member=(await c.query<MemberRow>(`SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id WHERE m.room_id=$1 AND m.id=$2 AND m.socket_generation=$3 AND m.slot IS NOT NULL AND m.removed_at IS NULL AND s.token_hash=$4 AND s.revoked_at IS NULL AND s.expires_at>$5`,[grant.roomId,grant.memberId,grant.generation,grant.sessionHash,new Date(this.now())])).rows[0];
+      requireThat(member,'SOCKET_REPLACED',401);await this.currentAcceptance(c,grant.roomId,grant.memberId);
+      const event=await this.games?.privateDelivery(c,room.id,member.id,member.locale,eventId);
+      if(event) enqueue(event,revision(room.rev));
+    });
+  }
+  async socketState(grant:SocketGrant,heartbeat=false,afterPrivate=0) {
     return this.transaction(async c=>{
       const room=await this.room(c,grant.roomId);requireThat(room.state==='open'&&!this.options.ledger.contains(room.id)&&this.now()-room.last_activity_at.getTime()<timers.idle,'ROOM_CLOSED');
       const member=await c.query<MemberRow>(`SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id WHERE m.room_id=$1 AND m.id=$2 AND m.socket_generation=$3 AND m.slot IS NOT NULL AND m.removed_at IS NULL AND s.token_hash=$4 AND s.revoked_at IS NULL AND s.expires_at>$5`,[grant.roomId,grant.memberId,grant.generation,grant.sessionHash,new Date(this.now())]);
       requireThat(member.rowCount===1,'SOCKET_REPLACED',401);await this.currentAcceptance(c,grant.roomId,grant.memberId);
-      if(heartbeat) {await c.query("UPDATE room_members SET presence='online',heartbeat_at=$3,reserved_until=$4 WHERE room_id=$1 AND id=$2",[grant.roomId,grant.memberId,new Date(this.now()),new Date(this.now()+timers.reservation)]);await c.query('UPDATE room_sessions SET expires_at=$2 WHERE token_hash=$1',[grant.sessionHash,new Date(this.now()+timers.idle)]);if(member.rows[0]!.presence!=='online') await this.emit(c,room,false);}
-      return this.view(c,room);
+      if(heartbeat) {await c.query("UPDATE room_members SET presence='online',heartbeat_at=$3,reserved_until=$4 WHERE room_id=$1 AND id=$2",[grant.roomId,grant.memberId,new Date(this.now()),new Date(this.now()+timers.reservation)]);await c.query('UPDATE room_sessions SET expires_at=$2 WHERE token_hash=$1',[grant.sessionHash,new Date(this.now()+timers.idle)]);if(member.rows[0]!.presence!=='online') {await this.games?.memberStateChanged(c,room.id);await this.emit(c,room,false);}}
+      const bundle=await this.games?.socketView(c,room.id,grant.memberId,member.rows[0]!.locale,afterPrivate);
+      return {room:await this.view(c,await this.room(c,room.id)),game:bundle?.game??null,privateEvents:bundle?.privateEvents??[]};
     });
   }
   async disconnect(grant:SocketGrant) {
     return this.transaction(async c=>{
       const room=await this.room(c,grant.roomId);
       const changed=await c.query(`UPDATE room_members SET presence='reconnecting',reserved_until=$4 WHERE room_id=$1 AND id=$2 AND socket_generation=$3 AND removed_at IS NULL AND presence='online'`,[grant.roomId,grant.memberId,grant.generation,new Date(this.now()+timers.reservation)]);
+      if(changed.rowCount&&room.state==='open') await this.games?.memberStateChanged(c,room.id);
       if(changed.rowCount&&room.state==='open') await this.emit(c,room,false);
     });
   }
   private async closeRoom(c:pg.PoolClient,room:RoomRow) {
     this.options.ledger.revoke(room.id,this.now());
+    await this.games?.purge(c,room.id);
     await c.query(`UPDATE rooms SET state='closed',closed_at=COALESCE(closed_at,$2) WHERE id=$1`,[room.id,new Date(this.now())]);
     await c.query('UPDATE room_sessions SET revoked_at=$2 WHERE room_id=$1',[room.id,new Date(this.now())]);
     await c.query('DELETE FROM ws_tickets WHERE room_id=$1',[room.id]);await c.query('DELETE FROM private_preferences WHERE room_id=$1',[room.id]);
@@ -269,9 +303,10 @@ export class Rooms {
     for(const {id} of rooms.rows) await this.transaction(async c=>{
       const room=await this.room(c,id);
       if(room.state==='open'&&this.now()-room.last_activity_at.getTime()>=timers.idle) {await this.closeRoom(c,room);await this.audit(c,id,null,'idle_close',randomUUID());}
-      if(room.state==='closed') {await c.query('DELETE FROM room_sessions WHERE room_id=$1',[id]);await c.query('DELETE FROM private_preferences WHERE room_id=$1',[id]);await c.query('DELETE FROM idempotency_keys WHERE room_id=$1',[id]);return;}
+      if(room.state==='closed') {await this.games?.purge(c,id);await c.query('DELETE FROM room_sessions WHERE room_id=$1',[id]);await c.query('DELETE FROM private_preferences WHERE room_id=$1',[id]);await c.query('DELETE FROM idempotency_keys WHERE room_id=$1',[id]);return;}
       const presence=await c.query(`UPDATE room_members SET presence='reconnecting' WHERE room_id=$1 AND presence='online' AND heartbeat_at<=$2 AND removed_at IS NULL`,[id,new Date(this.now()-timers.presence)]);
       const slots=await this.freeExpiredSlots(c,id);if(presence.rowCount||slots.rowCount) await this.emit(c,room,false);
+      await this.games?.memberStateChanged(c,id);
     });
     await this.options.pool.query('DELETE FROM rooms WHERE state=\'closed\' AND closed_at<=$1',[new Date(this.now()-timers.primaryDelete)]);
     await this.options.pool.query('DELETE FROM ws_tickets WHERE expires_at<=$1',[new Date(this.now())]);

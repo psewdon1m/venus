@@ -48,4 +48,66 @@ describe('production relationship engine, explicit synthetic test pack',()=>{
     const changed=structuredClone(cards);changed[0]!.text.ru.question+=' TAMPERED';expect(()=>FrozenPack.load(changed,manifest,true)).toThrow('HASH');
     const neutral=immutableSnapshot(input({players:[player(0,'not_a_friend',0),player(1,'in_relationships',0)],mode:'yes_but'}),pack);expect(()=>selectNextRound(neutral,[],pack)).toThrow('SAFE_POOL_EXHAUSTED');
   });
+  it('covers RE-001..009 initiative, mutual comfort, physical and going-away boundaries explicitly',()=>{
+    const variant=structuredClone(cards);
+    // A distinct valid synthetic light-flirt profile, not a reviewed catalogue claim.
+    variant.find(c=>c.id==='Q-0102')!.min_comfort=2;
+    const local=FrozenPack.load(variant,syntheticManifest(variant,digest,policyDigest),true);
+    const profile=(ab:Relation,ba:Relation,comfort:number,context:'online'|'in_person'='in_person')=>immutableSnapshot({...input(),pack_digest:local.digest,context,players:[player(0,ab,comfort),player(1,ba,comfort)]},local);
+    const allows=(id:string,s:Snapshot,stage=4)=>eligible(local.card(id),s,s.players.map(p=>p.id),stage);
+    const g=profile('crush','friendship',1);
+    expect(resolvePair(g.players[0]!,g.players[1]!).pairClass).toBe('G');
+    expect(allows('Q-0104',g,3)).toBe(true);expect(allows('Q-0101',g)).toBe(false);
+    const m=profile('crush','crush',2);expect(allows('Q-0102',m,3)).toBe(true);expect(allows('Q-0111',m)).toBe(false);
+    const couple=profile('in_relationships','in_relationships',4);
+    expect(local.card('Q-0111').requires_physical_contact).toBe(true);
+    expect(allows('Q-0111',couple)).toBe(true);expect(local.card('Q-0111').consent).toBe('bilateral');
+    expect(allows('Q-0111',couple,1)).toBe(false);
+    expect(allows('Q-0111',profile('in_relationships','in_relationships',4,'online'))).toBe(false);
+    expect(local.card('Q-0115').requires_going_away).toBe(true);expect(allows('Q-0115',couple)).toBe(true);
+    expect(local.card('Q-0115').consent).toBe('bilateral');expect(allows('Q-0115',profile('in_relationships','in_relationships',4,'online'))).toBe(false);
+    expect(allows('Q-0104',profile('not_a_friend','in_relationships',4))).toBe(false);
+    expect(resolvePair(player(0,'crush'),player(1,'just_met')).pairClass).toBe('J');
+    expect(allows('Q-0101',profile('crush','just_met',4))).toBe(false);
+    expect(allows('Q-0005',profile('in_relationships','in_relationships',0))).toBe(true);
+    expect(allows('Q-0104',profile('in_relationships','in_relationships',0))).toBe(false);
+  });
+  it('rejects placeholder expansion before admission instead of truncating accepted names or prompts',()=>{
+    const repeated='{P2}'.repeat(85),name='😀'.repeat(48),expanded=repeated.replace(/\{P2\}/g,name);
+    expect(repeated.length).toBeLessThanOrEqual(350); // Valid source-template length is not a render budget.
+    expect([...name]).toHaveLength(48);expect([...expanded].length).toBeGreaterThan(4000);
+    expect(Buffer.byteLength(JSON.stringify({offer_id:playerId(0),session_id:playerId(1),round_id:playerId(2),prompt:expanded}),'utf8')).toBeGreaterThan(16380);
+    const oversized=structuredClone(cards.filter(c=>c.id==='Q-0005'));
+    for(const locale of ['ru','en','tr'] as const) oversized[0]!.text[locale].question=repeated;
+    expect(()=>FrozenPack.load(oversized,syntheticManifest(oversized,digest,policyDigest),true)).toThrow('CARD_RENDER_BUDGET_EXCEEDED');
+
+    const safe=structuredClone(cards.filter(c=>c.id==='Q-0005'));
+    for(const locale of ['ru','en','tr'] as const) safe[0]!.text[locale].question='Ask {P1} and {P2}. Ask {P1} and {P2}.';
+    const accepted=FrozenPack.load(safe,syntheticManifest(safe,digest,policyDigest),true),template=accepted.card('Q-0005').text.en.question!;
+    const rendered=template.replace(/\{P[12]\}/g,name);
+    expect(rendered).toBe(`Ask ${name} and ${name}. Ask ${name} and ${name}.`);
+    expect([...rendered].length).toBeLessThanOrEqual(2000);
+    expect(Buffer.byteLength(JSON.stringify({prompt:rendered}),'utf8')).toBeLessThan(8000);
+    const fullName='👩🏽‍💻'.repeat(48); // 48 graphemes consume all 192 permitted code points.
+    expect([...new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(fullName)]).toHaveLength(48);
+    expect([...fullName]).toHaveLength(192);
+    const fullRendered=template.replace(/\{P[12]\}/g,fullName);
+    expect(fullRendered).toBe(`Ask ${fullName} and ${fullName}. Ask ${fullName} and ${fullName}.`);
+    expect(Buffer.byteLength(JSON.stringify({prompt:fullRendered}),'utf8')).toBeLessThan(8000);
+  });
+  it('reserves a combined Yes, But render budget and checks both truth/dare alternatives',()=>{
+    const yesBut=structuredClone(cards.filter(c=>c.id==='YB-0001'));
+    // Five substitutions fit individually, but the two simultaneous fields exceed the JSON reserve.
+    for(const locale of ['ru','en','tr'] as const) {
+      yesBut[0]!.text[locale].proposal='Ask {P2} {P2} {P2} {P2} {P2}.';
+      yesBut[0]!.text[locale].responder='Ask {P2} {P2} {P2} {P2} {P2}.';
+    }
+    expect(()=>FrozenPack.load(yesBut,syntheticManifest(yesBut,digest,policyDigest),true)).toThrow('CARD_RENDER_BUDGET_EXCEEDED');
+    const truthDare=structuredClone(cards.filter(c=>c.id==='TD-0005'));
+    for(const field of ['truth','dare'] as const) {
+      const oversized=structuredClone(truthDare);
+      for(const locale of ['ru','en','tr'] as const) oversized[0]!.text[locale][field]='{P2}'.repeat(85);
+      expect(()=>FrozenPack.load(oversized,syntheticManifest(oversized,digest,policyDigest),true)).toThrow('CARD_RENDER_BUDGET_EXCEEDED');
+    }
+  });
 });

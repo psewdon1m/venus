@@ -15,6 +15,20 @@ export function freeze<T>(value:T):T {if(value&&typeof value==='object') {Object
 const ajv=new Ajv2020({strict:false,coerceTypes:false,removeAdditional:false});addFormats.default(ajv);
 const validate=ajv.compile(schema);
 const fields={questions:['question'],truth_or_dare:['truth','dare'],yes_but:['proposal','responder']} as const;
+// Name transport permits 192 code points, independently of its 48-grapheme UI limit.
+// Reserve at least 8 KiB of the 16-KiB padded record for fixed projection/envelope data.
+const renderLimits={nameCodepoints:192,textCodepoints:2000,textUtf8Bytes:8000,textJsonBytes:8000} as const;
+function assertRenderBudget(texts:readonly string[]) {
+  let codepoints=0,utf8Bytes=0,jsonBytes=0;
+  for(const text of texts) {
+    const tokens=[...text.matchAll(/\{P[12]\}/g)].length,literal=text.replace(/\{P[12]\}/g,'');
+    codepoints+=[...literal].length+tokens*renderLimits.nameCodepoints;
+    utf8Bytes+=Buffer.byteLength(literal,'utf8')+tokens*renderLimits.nameCodepoints*4;
+    // JSON can escape a permitted lone surrogate as six ASCII bytes; UTF-8 alone is insufficient.
+    jsonBytes+=Buffer.byteLength(JSON.stringify(literal),'utf8')-2+tokens*renderLimits.nameCodepoints*6;
+  }
+  assertEngine(codepoints<=renderLimits.textCodepoints&&utf8Bytes<=renderLimits.textUtf8Bytes&&jsonBytes<=renderLimits.textJsonBytes,'CARD_RENDER_BUDGET_EXCEEDED');
+}
 export interface PackManifest {
   schema_version:1;pack_id:string;pack_revision:number;content_contract_revision:'CARD-1';policy_revision:'RE-1';policy_sha256:string;
   status:'reviewed_release_candidate'|'illustrative_draft_candidate';locale_codes:string[];total_cards:number;reviewed_cards:number;
@@ -42,6 +56,12 @@ function semantics(c:Card) {
       roles.push([...new Set(tokens)].sort().join(','));
     }
     assertEngine(new Set(roles).size===1,'CARD_LOCALE_INVALID');
+  }
+  for(const locale of ['ru','en','tr'] as const) {
+    const text=c.text[locale];
+    // Truth/dare are alternatives; Yes, But emits both fields in the same public projection.
+    if(c.mode==='truth_or_dare') {assertRenderBudget([text.truth!]);assertRenderBudget([text.dare!]);}
+    else assertRenderBudget(c.mode==='yes_but'?[text.proposal!,text.responder!]:[text.question!]);
   }
 }
 /** Constructor validates bytes and review status; synthetic drafts remain explicitly synthetic. */

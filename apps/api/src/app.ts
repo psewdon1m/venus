@@ -6,11 +6,13 @@ import websocket from '@fastify/websocket';
 import type {Rooms} from './rooms.js';
 import {registerRooms} from './room-routes.js';
 import {DomainError} from './security.js';
+import type {Games} from './games.js';
 
 export interface AppOptions {
   probe: () => Promise<void>; version: Version; staticRoot?: string;
   logger?: FastifyServerOptions['logger'];
   rooms?:Rooms;
+  games?:Games;
   schemaGeneration?:number;
 }
 export async function createApp(options: AppOptions) {
@@ -42,7 +44,7 @@ export async function createApp(options: AppOptions) {
     return reply.code(status).send({code: error instanceof DomainError?error.code:status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
   });
   await app.register(websocket,{options:{maxPayload:8192,perMessageDeflate:false}});
-  if(options.rooms) await registerRooms(app,options.rooms);
+  if(options.rooms) await registerRooms(app,options.rooms,options.games);
   app.get('/health/live', async (): Promise<HealthLive> => ({status: 'alive'}));
   app.get('/health/ready', async (_request, reply): Promise<HealthReady> => {
     try {

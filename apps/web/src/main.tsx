@@ -8,7 +8,7 @@ import './style.css';
 export type Text=ReturnType<typeof dictionary>;
 export function message(t:Text,error:unknown) {
   const code=error instanceof ApiError?error.code:'SERVICE_UNAVAILABLE';
-  const keys:Record<string,keyof Text>={ROOM_FULL:'roomFull',INVITE_EXPIRED:'roomClosed',ROOM_CLOSED:'roomClosed',AUTH_REQUIRED:'sessionEnded',NOT_FOUND:'inviteInvalid',INVITE_INVALID:'inviteInvalid',REVISION_CONFLICT:'revisionConflict',IDEMPOTENCY_CONFLICT:'revisionConflict',ENTRY_POLICY_UNAVAILABLE:'policyUnavailable',ENTRY_ACCEPTANCE_REQUIRED:'acceptanceRequired',ENTRY_REACCEPT_REQUIRED:'reacceptRequired',RATE_LIMITED:'rateLimited',INVALID_NAME:'invalidName',HOST_REQUIRED:'hostRequired',INVALID_REQUEST:'invalidInput'};
+  const keys:Record<string,keyof Text>={ROOM_FULL:'roomFull',INVITE_EXPIRED:'roomClosed',ROOM_CLOSED:'roomClosed',AUTH_REQUIRED:'sessionEnded',NOT_FOUND:'inviteInvalid',INVITE_INVALID:'inviteInvalid',REVISION_CONFLICT:'revisionConflict',IDEMPOTENCY_CONFLICT:'revisionConflict',ENTRY_POLICY_UNAVAILABLE:'policyUnavailable',ENTRY_ACCEPTANCE_REQUIRED:'acceptanceRequired',ENTRY_REACCEPT_REQUIRED:'reacceptRequired',RATE_LIMITED:'rateLimited',INVALID_NAME:'invalidName',HOST_REQUIRED:'hostRequired',INVALID_REQUEST:'invalidInput',GAME_SETTINGS_LOCKED:'gameSettingsLocked'};
   return t[keys[code]??'serviceUnavailable'];
 }
 function App() {
@@ -42,6 +42,7 @@ function App() {
   },[api,roomId]);
   async function handleError(e:unknown) {
     setError(e);
+    if(e instanceof ApiError&&e.code==='GAME_SETTINGS_LOCKED') {try {await refresh();} catch { /* Preserve the original actionable error. */ }}
     if(e instanceof ApiError&&e.code==='ENTRY_REACCEPT_REQUIRED'&&!reacceptRequested.current) {
       reacceptRequested.current=true;setNeedsReaccept(true);setAccepted(false);setAdult(false);setPolicy(null);
       try {setPolicy(await api.bootstrap());} catch {reacceptRequested.current=false; /* Retry can reload the current policy. */ }

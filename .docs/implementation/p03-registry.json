@@ -1,22 +1,55 @@
 {
-  "schema_version":1,
-  "stage":"P03",
-  "gate":"EXIT-P03",
-  "status":"IMPLEMENTING",
-  "branch":"feature/p03-engine",
-  "baseline_tag":"p02-accepted-20261018",
-  "baseline_sha":"12a028b174cc03a4a8ea1398f321d23c6a4c6e98",
-  "adr":["ADR-015"],
-  "protocol":"P03-M1",
-  "checks":[
-    {"id":"P03-RE-001-018","status":"IN_PROGRESS","required":"production engine exhaustive/property + real API evidence for all18RE scenarios"},
-    {"id":"P03-70000","status":"NOT_RUN","required":"10000synthetic sessions per group size2..8;15invariants,1..100rounds,allmodes/contexts/comforts"},
-    {"id":"P03-SNAPSHOT","status":"IN_PROGRESS","required":"golden/pinning/DBidempotence/activepausedsettingslock/safety"},
-    {"id":"P03-CONSENT-ACL","status":"NOT_RUN","required":"authenticated PostgreSQL/HTTP/WS actor/host/spectator/outsider/expiry/revoke/race tests"},
-    {"id":"P03-FAIRNESS-INFERENCE","status":"NOT_RUN","required":"preregistered thresholds+seeds;distributions+CIs;zero deterministic technical class decoder"},
-    {"id":"P03-COMPATIBILITY","status":"NOT_RUN","required":"pinned pack/policy/reconnect/locale/spectator persistence;quiesced previousP02 OCIrollback"}
+  "schema_version": 1,
+  "stage": "P03",
+  "gate": "EXIT-P03",
+  "status": "IMPLEMENTING",
+  "branch": "feature/p03-engine",
+  "baseline_tag": "p02-accepted-20261018",
+  "baseline_sha": "12a028b174cc03a4a8ea1398f321d23c6a4c6e98",
+  "adr": [
+    "ADR-015"
   ],
-  "public_games":"BLOCKED_UNTIL_REVIEWED_PACK_P04_AND_G1_P05",
-  "public_entry":"BLOCKED_UNTIL_OWNER_APPROVED_OFFER_P05",
-  "pending_user_decisions_for_local_P03":[]
+  "protocol": "P03-M2",
+  "checks": [
+    {
+      "id": "P03-RE-001-018",
+      "status": "IN_PROGRESS",
+      "required": "production engine exhaustive/property + real API evidence for all18RE scenarios"
+    },
+    {
+      "id": "P03-70000",
+      "status": "NOT_RUN",
+      "required": "10000synthetic sessions per group size2..8;15invariants,1..100rounds,allmodes/contexts/comforts"
+    },
+    {
+      "id": "P03-SNAPSHOT",
+      "status": "IN_PROGRESS",
+      "required": "golden/pinning/DBidempotence/activepausedsettingslock/safety"
+    },
+    {
+      "id": "P03-CONSENT-ACL",
+      "status": "NOT_RUN",
+      "required": "authenticated PostgreSQL/HTTP/WS actor/host/spectator/outsider/expiry/revoke/race tests"
+    },
+    {
+      "id": "P03-FAIRNESS-INFERENCE",
+      "status": "NOT_RUN",
+      "required": "preregistered thresholds+seeds;distributions+CIs;zero deterministic technical class decoder"
+    },
+    {
+      "id": "P03-COMPATIBILITY",
+      "status": "NOT_RUN",
+      "required": "pinned pack/policy/reconnect/locale/spectator persistence;quiesced previousP02 OCIrollback"
+    }
+  ],
+  "public_games": "BLOCKED_UNTIL_REVIEWED_PACK_P04_AND_G1_P05",
+  "public_entry": "BLOCKED_UNTIL_OWNER_APPROVED_OFFER_P05",
+  "pending_user_decisions_for_local_P03": [],
+  "protocol_path": ".docs/implementation/p03-measurement-protocol-v2.json",
+  "preflight_runtime": {
+    "tests": 19,
+    "status": "PASS",
+    "source_dirty": true,
+    "not_gate_acceptance": true
+  }
 }
