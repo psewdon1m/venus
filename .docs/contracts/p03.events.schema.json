@@ -1,0 +1,605 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.example.invalid/schemas/p03.events.json",
+  "title": "P03 additive safe game snapshot and own private-clear events",
+  "x-base-contract": {
+    "path": "api.v1.openapi.json",
+    "sha256": "77d4e7eeed862ac26bbd48ec96c47b62fd48c7647af4f5ea4cd930fddac410f9"
+  },
+  "x-revision-semantics": "game.snapshot stream_rev=committed room revision (monotonic across game sessions); payload.game_rev=session CAS. Private stream_rev is per-room authenticated member monotonic across sessions.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "event_id",
+        "room_id",
+        "room_rev",
+        "stream",
+        "stream_rev",
+        "type",
+        "server_time",
+        "audience",
+        "payload"
+      ],
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "room_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "room_rev": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "stream": {
+          "const": "game"
+        },
+        "stream_rev": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "const": "game.snapshot"
+        },
+        "server_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "audience": {
+          "const": "room"
+        },
+        "payload": {
+          "$ref": "#/$defs/GameView"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "event_id",
+        "room_id",
+        "room_rev",
+        "stream",
+        "stream_rev",
+        "type",
+        "server_time",
+        "audience",
+        "payload",
+        "target_member_id"
+      ],
+      "properties": {
+        "schema": {
+          "const": 1
+        },
+        "event_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "room_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "room_rev": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "stream": {
+          "const": "private"
+        },
+        "stream_rev": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "type": {
+          "const": "game.private_cleared"
+        },
+        "server_time": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "audience": {
+          "const": "member"
+        },
+        "payload": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "session_id",
+            "round_id",
+            "private_available"
+          ],
+          "properties": {
+            "session_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "round_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "private_available": {
+              "const": false
+            }
+          }
+        },
+        "target_member_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "GameView": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "game_rev": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "state": {
+          "enum": [
+            "draft",
+            "waiting",
+            "active",
+            "paused",
+            "completed",
+            "aborted"
+          ]
+        },
+        "mode": {
+          "enum": [
+            "questions",
+            "truth_or_dare",
+            "yes_but"
+          ]
+        },
+        "total_rounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "current_round": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/PublicRound"
+            }
+          ]
+        },
+        "pause_reason": {
+          "enum": [
+            null,
+            "transport",
+            "safety"
+          ]
+        }
+      },
+      "required": [
+        "session_id",
+        "game_rev",
+        "state",
+        "mode",
+        "total_rounds",
+        "current_round",
+        "pause_reason"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "state": {
+                "const": "paused"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "pause_reason": {
+                "enum": [
+                  "transport",
+                  "safety"
+                ]
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "pause_reason": {
+                "const": null
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PublicRound": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "round_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "round_index": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "state": {
+              "enum": [
+                "pending",
+                "active",
+                "completed",
+                "skipped",
+                "stopped"
+              ]
+            },
+            "kind": {
+              "const": "generic"
+            }
+          },
+          "required": [
+            "round_id",
+            "round_index",
+            "state",
+            "kind"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "round_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "round_index": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "state": {
+              "enum": [
+                "pending",
+                "active",
+                "completed",
+                "skipped",
+                "stopped"
+              ]
+            },
+            "kind": {
+              "const": "public"
+            },
+            "card_id": {
+              "type": "string",
+              "pattern": "^Q-[0-9]{4}$"
+            },
+            "card_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "actors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "maxItems": 2,
+              "uniqueItems": true
+            },
+            "response_state": {
+              "enum": [
+                "pending",
+                "accepted",
+                "condition_proposed",
+                "completed",
+                "skipped"
+              ]
+            },
+            "proposal_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "mode": {
+              "const": "questions"
+            },
+            "text": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "question": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                }
+              },
+              "required": [
+                "question"
+              ]
+            },
+            "choice": {
+              "const": null
+            }
+          },
+          "required": [
+            "round_id",
+            "round_index",
+            "state",
+            "kind",
+            "card_id",
+            "card_revision",
+            "actors",
+            "response_state",
+            "proposal_revision",
+            "mode",
+            "text",
+            "choice"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "round_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "round_index": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "state": {
+              "enum": [
+                "pending",
+                "active",
+                "completed",
+                "skipped",
+                "stopped"
+              ]
+            },
+            "kind": {
+              "const": "public"
+            },
+            "card_id": {
+              "type": "string",
+              "pattern": "^TD-[0-9]{4}$"
+            },
+            "card_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "actors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "maxItems": 2,
+              "uniqueItems": true
+            },
+            "response_state": {
+              "enum": [
+                "pending",
+                "accepted",
+                "condition_proposed",
+                "completed",
+                "skipped"
+              ]
+            },
+            "proposal_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "mode": {
+              "const": "truth_or_dare"
+            },
+            "text": {
+              "oneOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "prompt": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4000
+                    }
+                  },
+                  "required": [
+                    "prompt"
+                  ]
+                }
+              ]
+            },
+            "choice": {
+              "enum": [
+                null,
+                "truth",
+                "dare"
+              ]
+            }
+          },
+          "required": [
+            "round_id",
+            "round_index",
+            "state",
+            "kind",
+            "card_id",
+            "card_revision",
+            "actors",
+            "response_state",
+            "proposal_revision",
+            "mode",
+            "text",
+            "choice"
+          ],
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "choice": {
+                    "const": null
+                  }
+                }
+              },
+              "then": {
+                "properties": {
+                  "text": {
+                    "type": "null"
+                  }
+                }
+              },
+              "else": {
+                "properties": {
+                  "text": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "prompt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4000
+                      }
+                    },
+                    "required": [
+                      "prompt"
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "round_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "round_index": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "state": {
+              "enum": [
+                "pending",
+                "active",
+                "completed",
+                "skipped",
+                "stopped"
+              ]
+            },
+            "kind": {
+              "const": "public"
+            },
+            "card_id": {
+              "type": "string",
+              "pattern": "^YB-[0-9]{4}$"
+            },
+            "card_revision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "actors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "maxItems": 2,
+              "uniqueItems": true
+            },
+            "response_state": {
+              "enum": [
+                "pending",
+                "accepted",
+                "condition_proposed",
+                "completed",
+                "skipped"
+              ]
+            },
+            "proposal_revision": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "mode": {
+              "const": "yes_but"
+            },
+            "text": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "proposal": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                },
+                "responder": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                }
+              },
+              "required": [
+                "proposal",
+                "responder"
+              ]
+            },
+            "choice": {
+              "const": null
+            }
+          },
+          "required": [
+            "round_id",
+            "round_index",
+            "state",
+            "kind",
+            "card_id",
+            "card_revision",
+            "actors",
+            "response_state",
+            "proposal_revision",
+            "mode",
+            "text",
+            "choice"
+          ]
+        }
+      ]
+    }
+  }
+}

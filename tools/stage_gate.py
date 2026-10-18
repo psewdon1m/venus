@@ -19,10 +19,10 @@ def read_bytes(root,item):
 def read(root,item):return json.loads(read_bytes(root,item))
 def require(condition,message):
     if not condition:raise ValueError(message)
-def validate(root,report):
+def validate(root,report,stage='P02'):
     errors=[]
     try:
-        require(report['gate']=='EXIT-P02' and report['status']=='PASSED','P02 not accepted')
+        require(stage in ('P02','P03') and report['gate']=='EXIT-'+stage and report['status']=='PASSED',stage+' not accepted')
         sha=report['source_sha'];require(re.fullmatch('[a-f0-9]{40}',sha),'full source SHA required')
         current=inventory(root);cid=identity(current);frozen=read(root,report['inputs'])
         require(frozen['source_sha']==sha and frozen['source_identity_sha256']==cid and report['source_identity_sha256']==cid and frozen['files']==current,'stale/incomplete source identity')
@@ -30,6 +30,7 @@ def validate(root,report):
         full={name:digest(subprocess.check_output(['git','show',sha+':'+name],cwd=root)) for name in names}
         require({k:v for k,v in full.items() if included(k)}==current,'tested Git source differs from current implementation')
         ci=read(root,report['ci']);jobs=read(root,report['ci_jobs'])['jobs'];required_jobs={'quality','container-smoke','p02-integration'}
+        if stage=='P03':required_jobs|={'p03-integration'}|{'p03-measurements ('+section+')' for section in ('invariants','fairness','gf','inference')}
         require(isinstance(ci['id'],int) and ci['html_url']==f'https://github.com/psewdon1m/venus/actions/runs/{ci["id"]}' and ci['path']=='.github/workflows/ci.yml' and ci['head_sha']==sha and ci['status']=='completed' and ci['conclusion']=='success','CI run/source not successful')
         require(len(jobs)==len(required_jobs) and {j['name'] for j in jobs}==required_jobs and all(j['conclusion']=='success' and j['run_id']==ci['id'] and j['head_sha']==sha for j in jobs),'CI jobs/run/source mismatch')
         negative=read(root,report['negative']);snapshot=digest('\n'.join(k+':'+v for k,v in sorted(full.items())).encode())
@@ -71,7 +72,7 @@ def validate(root,report):
         for item in report['reviews']:
             review=read(root,item);reviewers.append(review['reviewer_id']);scopes.update(review['scopes'])
             require(review['reviewer_id']!='/root' and review['status']=='PASS' and review['open_findings']==[] and review['source_sha']==sha and review['source_identity_sha256']==cid,'review stale/self/unresolved')
-            require(review['report_path'].startswith('.docs/implementation/reviews/p02/'),'review narrative out of scope')
+            require(review['report_path'].startswith('.docs/implementation/reviews/'+stage.lower()+'/'),'review narrative out of scope')
             narrative=read_bytes(root,{'path':review['report_path'],'sha256':review['report_sha256']}).decode('utf-8').replace('\r\n','\n')
             header=re.match(r'\A```venus-review\n([^`]+)\n```\n',narrative)
             require(header is not None,'review narrative requires structured result/identity header')

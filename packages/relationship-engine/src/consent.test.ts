@@ -23,4 +23,45 @@ describe('production consent coordinator',()=>{
     expect(()=>consentResponse(changed,'b','accept',180501,reference)).toThrow('STALE');expect(consentResponse(changed,'b','decline',180501).state).toBe('declined');
     expect(()=>proposeConsent('bad',actors,'action',181000,181000)).toThrow('SCOPE');
   });
+  it('denies invitation and action access before the final acknowledgement after a clock rollback',()=>{
+    let invitation=proposeConsent('offer',actors,'invitation',1000);
+    invitation=consentResponse(invitation,'a','accept',2000,ref);
+    expect(()=>consentResponse(invitation,'b','accept',1999,ref)).toThrow('TIME');
+    invitation=consentResponse(invitation,'b','accept',3000,ref);
+    expect(invitation.last_ack_at).toBe(3000);expect(invitation.activated_at).toBe(3000);
+    for(const now of [0,999,1500,2999,NaN,Infinity]) expect(consentAllows(invitation,'a',now)).toBe(false);
+    expect(consentAllows(invitation,'a',3000)).toBe(true);
+    expect(consentAllows(invitation,'a',invitation.active_until!-1)).toBe(true);
+    expect(consentAllows(invitation,'a',invitation.active_until!)).toBe(false);
+    expect(()=>consentResponse(invitation,'a','accept',2999,ref)).toThrow('TIME');
+    expect(()=>consentResponse(invitation,'a','finish',2999)).toThrow('NOT_ACTIVE');
+    const replay=consentResponse(invitation,'a','accept',3100,ref);
+    expect(replay).toBe(invitation);expect(replay.active_until).toBe(183000);
+    const reference={offer_id:'action',scope:'action' as const,proposal_revision:1};
+    let action=proposeConsent('action',actors,'action',4000,invitation.active_until);
+    expect(()=>consentResponse(action,'a','accept',3999,reference)).toThrow('TIME');
+    action=consentResponse(action,'a','accept',5000,reference);
+    expect(()=>consentResponse(action,'b','accept',4999,reference)).toThrow('TIME');
+    action=consentResponse(action,'b','accept',6000,reference);
+    expect(action.last_ack_at).toBe(6000);expect(action.activated_at).toBe(6000);
+    expect(consentAllows(action,'a',4500)).toBe(false);expect(consentAllows(action,'a',5999)).toBe(false);
+    expect(consentAllows(action,'a',6000)).toBe(true);expect(consentAllows(action,'a',182999)).toBe(true);
+    expect(consentAllows(action,'a',183000)).toBe(false);
+    expect(consentResponse(action,'b','accept',7000,reference)).toBe(action);
+    expect(action.active_until).toBe(invitation.active_until);
+    // Safety refusal remains available while the local clock is behind the accepted time.
+    expect(consentResponse(action,'a','decline',4500).state).toBe('stopped');
+  });
+  it('fences the replacement condition revision in time and denies legacy activation without timestamps',()=>{
+    const reference={offer_id:'action',scope:'action' as const,proposal_revision:1};
+    const first=consentResponse(proposeConsent('action',actors,'action',1000,181000),'a','accept',2000,reference);
+    expect(()=>replacePendingAction(first,1999)).toThrow('TIME');
+    const changed=replacePendingAction(first,3000),updated={...reference,proposal_revision:2};
+    expect(changed.created_at).toBe(3000);expect(changed.last_ack_at).toBeNull();expect(changed.activated_at).toBeNull();
+    expect(()=>consentResponse(changed,'a','accept',2999,updated)).toThrow('TIME');
+    const active=consentResponse(consentResponse(changed,'a','accept',3000,updated),'b','accept',4000,updated);
+    expect(consentAllows(active,'a',3999)).toBe(false);expect(consentAllows(active,'a',4000)).toBe(true);
+    const legacy={...active,activated_at:undefined,last_ack_at:undefined} as unknown as typeof active;
+    expect(consentAllows(legacy,'a',5000)).toBe(false);
+  });
 });

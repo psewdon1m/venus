@@ -8,6 +8,8 @@ import {Rooms,revision,type SocketGrant} from './rooms.js';
 import {requireThat,token,equal,hash} from './security.js';
 import {randomUUID} from 'node:crypto';
 import type WebSocket from 'ws';
+import type {Games} from './games.js';
+import {registerGameRoutes} from './game-routes.js';
 const admissionCookie='__Host-venus-admission';
 export const roomCookie=()=>'venus_room_session';
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
@@ -20,7 +22,7 @@ function body<T>(request:FastifyRequest,schema:string):T {
   requireThat(validate(request.body),'INVALID_REQUEST',400);return request.body as T;
 }
 function roomId(request:FastifyRequest) {const id=(request.params as {roomId:string}).roomId;requireThat(uuid.test(id),'INVALID_REQUEST',400);return id.toLowerCase();}
-export async function registerRooms(app:FastifyInstance,rooms:Rooms) {
+export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games) {
   await app.register(cookie);
   const sockets=new Map<string,{socket:WebSocket;grant:SocketGrant}>();
   const pending=new Set<WebSocket>();
@@ -88,14 +90,21 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms) {
   app.post('/api/v1/rooms/:roomId/ws-ticket',async request=>{
     const id=roomId(request),session=await memberGuard(request);body(request,'SafetyStop');return rooms.newTicket(id,session);
   });
+  if(games) registerGameRoutes(app,games,{roomId,origin,credential,memberGuard,body});
   function send(socket:WebSocket,grant:SocketGrant,view:Awaited<ReturnType<Rooms['snapshot']>>) {
     if(socket.readyState!==1) return;
     socket.send(JSON.stringify({schema:1,event_id:randomUUID(),room_id:grant.roomId,room_rev:revision(view.room_rev),stream:'room',stream_rev:revision(view.room_rev),type:'room.snapshot',server_time:new Date(rooms.now()).toISOString(),audience:'room',payload:view}));
   }
+  async function sendGame(socket:WebSocket,grant:SocketGrant,bundle:Awaited<ReturnType<Rooms['socketState']>>,publicSnapshot:boolean) {
+    if(socket.readyState!==1) return;
+    const common={schema:1,room_id:grant.roomId,room_rev:bundle.room.room_rev,server_time:new Date(rooms.now()).toISOString()};
+    if(publicSnapshot&&bundle.game) socket.send(JSON.stringify({...common,event_id:randomUUID(),stream:'game',stream_rev:bundle.room.room_rev,type:'game.snapshot',audience:'room',payload:bundle.game}));
+    for(const ref of bundle.privateEvents) await rooms.dispatchPrivate(grant,ref.eventId,(event,roomRev)=>{if(socket.readyState===1) socket.send(JSON.stringify({...common,room_rev:roomRev,server_time:new Date(rooms.now()).toISOString(),event_id:event.eventId,stream:'private',stream_rev:event.revision,type:event.type,audience:'member',target_member_id:grant.memberId,payload:event.payload}));});
+  }
   app.get('/api/v1/rooms/:roomId/ws',{websocket:true,preValidation:async request=>{
     origin(request);roomId(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);await rooms.rateLimit('ws-upgrade:'+request.ip,120);
   }},(socket,request)=>{
-    pending.add(socket);let grant:SocketGrant|undefined;let chain=Promise.resolve();let lastRevision=-1;let lastPing=-Infinity;
+    pending.add(socket);let grant:SocketGrant|undefined;let chain=Promise.resolve();let lastRevision=-1,lastPrivate=0;let lastPing=-Infinity;
     const deadline=setTimeout(()=>socket.close(4401,'Authentication required'),5000);deadline.unref();
     socket.on('error',()=>{/* Never log raw frames or credentials. */});
     socket.on('message',message=>{
@@ -108,7 +117,7 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms) {
           const id=roomId(request);grant=await rooms.connect(id,credential(request),frame.ticket);
           clearTimeout(deadline);pending.delete(socket);
           const key=id+':'+grant.memberId;const old=sockets.get(key);if(old) old.socket.close(4409,'Connection replaced');
-          sockets.set(key,{socket,grant});const view=await rooms.liveGrant(grant);lastRevision=view.room_rev;send(socket,grant,view);
+          sockets.set(key,{socket,grant});const bundle=await rooms.socketState(grant);lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);await sendGame(socket,grant,bundle,true);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;
         } else {
           requireThat(frame.type==='ping'&&Object.keys(frame).length===1,'INVALID_REQUEST',400);
           const now=performance.now();requireThat(now-lastPing>=500,'RATE_LIMITED',429);lastPing=now;await rooms.liveGrant(grant,true);socket.send(JSON.stringify({type:'pong'}));
@@ -116,7 +125,7 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms) {
       }).catch(()=>{socket.close(4401,'Connection unavailable');});
     });
     const ticker=setInterval(()=>{
-      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const view=await rooms.liveGrant(grant);if(view.room_rev>lastRevision) {lastRevision=view.room_rev;send(socket,grant,view);}}).catch(()=>socket.close(4401,'Connection unavailable'));
+      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(()=>socket.close(4401,'Connection unavailable'));
     },1000);ticker.unref();
     socket.on('close',()=>{
       clearTimeout(deadline);clearInterval(ticker);pending.delete(socket);
@@ -125,5 +134,5 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms) {
   });
   let maintaining=false;
   const maintenance=setInterval(()=>{if(maintaining) return;maintaining=true;void rooms.maintain().catch(()=>app.log.warn({event:'maintenance_unavailable'},'maintenance_unavailable')).finally(()=>{maintaining=false;});},10000);maintenance.unref();
-  app.addHook('preClose',async()=>{clearInterval(maintenance);for(const socket of pending) socket.terminate();for(const {socket} of sockets.values()) socket.terminate();});
+  app.addHook('preClose',async()=>{clearInterval(maintenance);const connected=[...sockets.values()];for(const socket of pending) socket.terminate();for(const {socket} of connected) socket.terminate();await Promise.allSettled(connected.map(({grant})=>rooms.disconnect(grant)));});
 }

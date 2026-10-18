@@ -4,6 +4,7 @@ import https from 'node:https';
 import http from 'node:http';
 import {resolve} from 'node:path';
 import {once} from 'node:events';
+import {clearTimeout} from 'node:timers';
 export const cert=readFileSync('tests/fixtures/p02-test-cert.pem');
 const key=readFileSync('tests/fixtures/p02-test-key.pem');
 export async function startRuntime(extra={}) {
@@ -28,14 +29,21 @@ export async function startRuntime(extra={}) {
   edge.listen(0,'127.0.0.1');await once(edge,'listening');const origin=`https://127.0.0.1:${edge.address().port}`;
   let child;
   async function boot() {
-    child=spawn(process.execPath,['tests/p02/server.mjs'],{cwd:process.cwd(),env:{...process.env,...extra,APP_ORIGIN:origin},stdio:['ignore','pipe','pipe']});
+    child=spawn(process.execPath,['tests/p02/server.mjs'],{cwd:process.cwd(),env:{...process.env,...extra,APP_ORIGIN:origin},stdio:['ignore','pipe','pipe','ipc']});
     let errors='';child.stderr.on('data',b=>{errors+=b.toString();});
     port=await new Promise((resolve,reject)=>{
       let text='';child.stdout.on('data',b=>{text+=b.toString();for(const line of text.split('\n')) {try {const v=JSON.parse(line);if(v.test_server_port) resolve(v.test_server_port);} catch { /* Ignore incomplete stdout. */ }}});
       child.once('exit',code=>reject(new Error(`Isolated server exited ${code}: ${errors}`)));
     });
   }
-  async function stopChild() {if(child.exitCode!==null||child.signalCode!==null) {port=0;return;}const stopped=once(child,'exit');child.kill('SIGTERM');await stopped;port=0;}
+  async function stopChild() {
+    if(child.exitCode!==null||child.signalCode!==null) {port=0;return;}
+    const stopped=once(child,'exit');
+    if(child.connected) child.send({type:'shutdown'});else child.kill('SIGTERM');
+    let timer;
+    try {await Promise.race([stopped,new Promise((_resolve,reject)=>{timer=setTimeout(()=>{child.kill('SIGKILL');reject(new Error('Isolated server graceful shutdown timed out'));},15000);})]);}
+    finally {clearTimeout(timer);port=0;}
+  }
   await boot();
   return {origin,pause:stopChild,resume:boot,async restart(changes={}){Object.assign(extra,changes);await stopChild();await boot();},async close(){await stopChild();edge.closeAllConnections();await new Promise(resolve=>edge.close(resolve));}};
 }

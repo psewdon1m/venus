@@ -1,0 +1,151 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "P03 additive host game abort",
+    "version": "P03-1"
+  },
+  "x-base-contract": {
+    "path": "api.v1.openapi.json",
+    "sha256": "77d4e7eeed862ac26bbd48ec96c47b62fd48c7647af4f5ea4cd930fddac410f9"
+  },
+  "x-runtime-schema": {
+    "core_generation": 1,
+    "engine_generation": 1,
+    "readiness": "Both independently checksummed streams and all required tables must be ready"
+  },
+  "paths": {
+    "/api/v1/rooms/{room_id}/game/{session_id}/abort": {
+      "post": {
+        "operationId": "host_abort_game",
+        "summary": "Host terminates the game and revokes private scopes; does not accept for another actor",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-authorization": "host",
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-safety-no-stale-revision": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SafetyStop"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aborted or already terminal",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SafetyStop": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "request_id"
+        ]
+      },
+      "MutationResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "rev",
+          "request_id"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+$"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "RoomSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "venus_room_session"
+      }
+    }
+  }
+}
