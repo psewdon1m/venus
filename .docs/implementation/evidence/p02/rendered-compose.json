@@ -1,0 +1,143 @@
+{
+  "name": "venus-p01-00cac6eb2f",
+  "networks": {
+    "app-edge": {
+      "name": "venus-p01-00cac6eb2f_app-edge",
+      "ipam": {}
+    },
+    "backend": {
+      "name": "venus-p01-00cac6eb2f_backend",
+      "ipam": {},
+      "internal": true
+    }
+  },
+  "secrets": {
+    "db_password": {
+      "name": "venus-p01-00cac6eb2f_db_password",
+      "file": "<external-secret-file>"
+    },
+    "keyring": {
+      "name": "venus-p01-00cac6eb2f_keyring",
+      "file": "<external-keyring-file>"
+    }
+  },
+  "services": {
+    "app": {
+      "cap_drop": [
+        "ALL"
+      ],
+      "command": null,
+      "depends_on": {
+        "db": {
+          "condition": "service_healthy",
+          "required": true
+        }
+      },
+      "entrypoint": null,
+      "environment": {
+        "APP_ORIGIN": "https://venus.local.invalid",
+        "DB_HOST": "db",
+        "DB_PASSWORD_FILE": "/run/secrets/db_password",
+        "DELETION_LEDGER_FILE": "/var/lib/venus/deletions.jsonl",
+        "IMAGE_DIGEST": "sha256:3bef4edb2286052628887e18b5fa6a52b2e3d9c07e46259fa2dad4ceeb27898a",
+        "KEYRING_FILE": "/run/secrets/keyring",
+        "NODE_ENV": "production"
+      },
+      "healthcheck": {
+        "test": [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4300/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"
+        ],
+        "timeout": "3s",
+        "interval": "5s",
+        "retries": 5
+      },
+      "image": "sha256:3bef4edb2286052628887e18b5fa6a52b2e3d9c07e46259fa2dad4ceeb27898a",
+      "networks": {
+        "app-edge": null,
+        "backend": null
+      },
+      "ports": [
+        {
+          "mode": "ingress",
+          "host_ip": "127.0.0.1",
+          "target": 4300,
+          "published": "0",
+          "protocol": "tcp"
+        }
+      ],
+      "read_only": true,
+      "secrets": [
+        {
+          "source": "db_password",
+          "target": "/run/secrets/db_password"
+        },
+        {
+          "source": "keyring",
+          "target": "/run/secrets/keyring"
+        }
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "tmpfs": [
+        "/tmp:size=16m,mode=1777"
+      ],
+      "user": "1000:1000",
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "venus-state",
+          "target": "/var/lib/venus",
+          "volume": {}
+        }
+      ]
+    },
+    "db": {
+      "command": null,
+      "entrypoint": null,
+      "environment": {
+        "POSTGRES_DB": "venus",
+        "POSTGRES_PASSWORD_FILE": "/run/secrets/db_password",
+        "POSTGRES_USER": "venus"
+      },
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U venus -d venus"
+        ],
+        "timeout": "2s",
+        "interval": "2s",
+        "retries": 30
+      },
+      "image": "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "networks": {
+        "backend": null
+      },
+      "secrets": [
+        {
+          "source": "db_password",
+          "target": "/run/secrets/db_password"
+        }
+      ],
+      "volumes": [
+        {
+          "type": "volume",
+          "source": "postgres-data",
+          "target": "/var/lib/postgresql/data",
+          "volume": {}
+        }
+      ]
+    }
+  },
+  "volumes": {
+    "postgres-data": {
+      "name": "venus-p01-00cac6eb2f_postgres-data"
+    },
+    "venus-state": {
+      "name": "venus-p01-00cac6eb2f_venus-state"
+    }
+  }
+}

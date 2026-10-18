@@ -1,10 +1,18 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, P02 = IMPLEMENTING.** P01 принят двумя отдельными агентами и влит через защищённый main (`b964ab231972dfd44185c90c21ae283eca2866fd`); исходная история сохранена тегом `p01-accepted-20261018`. Production/public release не разрешён. Ветка реализации: `feature/p02-rooms`.
+Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED.** P02 принят двумя независимыми агентами после исправлений; production/public release не разрешён. Ветка: `feature/p02-rooms`, [PR #2](https://github.com/psewdon1m/venus/pull/2). P01 уже в main; исходная история сохранена тегом `p01-accepted-20261018`.
 
 Созданы защищённый main и PR-процесс, TypeScript monorepo, React/Fastify/PostgreSQL foundation, exact toolchain/locks, quality и четыре отрицательные проверки, OCI smoke с настоящей БД. Реализованы только health/version/static shell на RU/EN/TR. [Developer guide и rollback](../DEVELOPER_GUIDE.md), [реестр P01](p01-registry.json), [ADR-013](../adr/ADR-013-p01-foundation.md).
 
-## EXIT-P01
+## EXIT-P02
+
+Source `8313ddd6453bd6f01fd73e272e0ac483807456c4`, implementation identity `2cd73ce9a52af8e13484fb05536a06f7eb36ca5890563a8de5700b55323a437a`. [Gate report](evidence/p02/gate-report.json), [security PASS](reviews/p02/security-final.md), [quality PASS](reviews/p02/quality-final.md), [реальный CI exact SHA](https://github.com/psewdon1m/venus/actions/runs/39149965285), [registry с requirement overrides](p02-registry.json), [журнал](../../.history/2026-10-18-p02.md). Предыдущие FAIL/CHANGES_REQUESTED сохранены.
+
+Clean-source локально и CI: quality PASS (83 Python и8 JS tests,4 negative controls),20 actual PostgreSQL/HTTP/WS/browser tests и22 proof records, включая100 admission races; OCI9/9 PASS. Проверены private-free atomic bounded audit, HMAC fingerprints, padded preferences/replies, текущая acceptance, ACL, lifecycle boundaries, encrypted restore с identity/private-value/row-scope comparison и exact previous P01 OCI на generation1. Runtime image ID `sha256:3bef4edb2286052628887e18b5fa6a52b2e3d9c07e46259fa2dad4ceeb27898a`. Main требует quality/container-smoke/p02-integration от GitHub Actions app15368; signing/public release ещё P06/P07.
+
+Public offer отсутствует: production admission fail-closed; доказательства входа только synthetic. Room host не operator. Игра/consent API относятся к P03; исходный автоматический P00 stage assignment сохранён исторически и уточнён явными overrides. Ни public legal readiness, ни игровые функции не отмечены выполненными.
+
+## Исторический EXIT-P01
 
 Проверенный source SHA: `224fd40ffdc0696c5eb292848be63fc3bb99a3fe`. Source identity: `3383fb6fbb3fd9adf4be6af039d81e3a06a6487a6deb1b1180905f87138031f8`. Последующие изменения содержат только status/registry/proofs/reviews/журнал/consistency manifest; validator сверяет весь остальной source inventory с проверенной Git-ревизией. Derived evidence не выдаётся за новый runtime build.
 
@@ -25,8 +33,8 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | Этап | Статус | Следующий результат |
 |---|---|---|
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
-| P01 | PASSED | Foundation и журнал в PR #1; прежние FAIL/PASS proof сохранены |
-| P02 | IMPLEMENTING | Room runtime готовится к повторным тестам; независимый pre-freeze round1 выявил 10 замечаний, гейт не пройден |
+| P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
+| P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
 | P03 | NOT_STARTED | Production engine и consent |
 | P04 | NOT_STARTED | Reviewed production card catalogue |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
@@ -37,6 +45,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-Текущий этап — P02, см. [ADR-014](../adr/ADR-014-p02-room-security.md) и [журнал P02](../../.history/2026-10-18-p02.md). Guest/operator scope зафиксирован отдельным overlay; room host не operator. U-001…005 и custom comfortable UI учтены. P02 вводит schema_generation1, но не принят. Production offer отсутствует: public entry закрыт; интеграционные данные и оферта только synthetic. Следующие этапы начинаются после независимого PASS текущего. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+Следующий этап — P03: production relationship engine, immutable snapshot, rounds и consent. Guest/operator scope зафиксирован отдельным overlay; room host не operator. U-001…005 и custom comfortable UI учтены. P02 generation1 принят; production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.
