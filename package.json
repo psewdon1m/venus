@@ -17,7 +17,7 @@
     "typecheck": "tsc -b && tsc -p apps/web/tsconfig.json",
     "build": "tsc -b && npm run build -w @venus/web",
     "test": "vitest run",
-    "check:schemas": "python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check",
+    "check:schemas": "python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check",
     "check:i18n": "node tools/check-i18n.mjs",
     "check:docs": "python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py",
     "test:python": "python -B -m unittest discover -s tools -p test_*.py",
