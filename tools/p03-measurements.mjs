@@ -1,4 +1,4 @@
-/** Reproducible P03-M2 diagnostics. Full execution requires the preregistration tag.
+/** Reproducible P03-M3 diagnostics. Full execution requires the preregistration tag.
  * --probe is explicitly non-gating; no results from it are promoted to final evidence.
  */
 import {createHash} from 'node:crypto';
@@ -14,12 +14,13 @@ let buildWasActuallyForced=false;
 if(invokedAsMain&&!process.argv.includes('--probe')) {execFileSync(process.execPath,['node_modules/typescript/bin/tsc','-b','--force'],{stdio:'inherit'});buildWasActuallyForced=true;}
 const {FrozenPack,digest,policyDigest,algorithmRevision,immutableSnapshot,selectNextRound,proposeConsent,consentResponse,consentAllows,reconcileConsent}=await import('../packages/relationship-engine/dist/index.js');
 const {transcriptAccumulator,transcriptPolicy,localeMetadataInvariant,publicFeatureNames}=await import('../tests/p03/public-transcript.mjs');
+const {createPlannerDiagnostics,plannerDiagnosticDesign}=await import('../tests/p03/planner-diagnostics.mjs');
 const hash=value=>createHash('sha256').update(value).digest('hex'),modes=['questions','truth_or_dare','yes_but'],contexts=['online','in_person'],labels=['just_met','friendship','crush','situationship','in_relationships','not_a_friend'];
 const cards=syntheticCards(),manifest=syntheticManifest(cards,digest,policyDigest),pack=FrozenPack.load(cards,manifest,true);
 const rawPolicy=JSON.parse(readFileSync('.docs/contracts/relationship-policy.v1.json','utf8'));
 const matrix=rawPolicy.pair_class_matrix,order=['X','J','F','G','M','S','R'];
 export const measurementDesign={
-  revision:'P03-M2',
+  revision:'P03-M3',
   seed_to_engine:'SHA256(UTF8 declared seed string), 64 lowercase hex chars; no salt or reseeding',
   random_profile:'SHA256(UTF8(seed+":player:"+zero_based_player_index)) first8hex uint32 modulo5 -> comfort; SHA256(UTF8(seed+":edge:"+a+":"+b)) first8hex uint32 modulo6 -> [just_met,friendship,crush,situationship,in_relationships,not_a_friend]. Every generated directed edge explicit=true.',
   participants:'playerId(i), canonical lower UUID, i=0..N-1; snapshot canonical sorting; first unordered pair indices0,1',
@@ -34,11 +35,12 @@ export const measurementDesign={
   feature_serialization:'publicFeatureNames exact order: interactions4, visible_role8, ordered_first8, ordered_second8, ordered_pair64 row-major, private_stage4, round_state5, response_state5, choice3, metadata7, then public card IDs in FrozenPack canonical card order. All counts/sums divided by total committed rounds. Visible role includes actors plus literal synthetic display-name token rendered in public text. Private card ID/actors never enter features.',
   classifier:'Per-stratum and pooled diagonal LDA trained independently. Difference of class1 and class0 means divided by average unbiased within-class variance +1e-9; midpoint intercept. No holdout coefficient/orientation choice. Exact held-out scores stored in report; pooling does not combine differently scaled stratum scores.',
   structural_decoder:'Each exact single-feature value -> class dictionary learned only on train; overlap rejects decoder. Block when disjoint train dictionaries classify every held-out observation of both classes. This finite check is not a universal nonlinear privacy proof.',
+  progressive_diagnostics:plannerDiagnosticDesign,
   output:'Report contains raw section counters, deterministic seed formulas/ranges, source SHA and source inventory SHA, raw protocol/runner/adapter/fixture hashes, pack canonical digest; no seed selection after outcomes.'
 };
 export function measurementInputs() {
-  const sources=['tools/p03-measurements.mjs','tests/p03/public-transcript.mjs','tests/p03/fixtures.mjs','packages/relationship-engine/src/engine.ts','packages/relationship-engine/src/pack.ts','packages/relationship-engine/src/consent.ts','packages/relationship-engine/src/types.ts','packages/relationship-engine/src/index.ts','packages/relationship-engine/src/policy.json','packages/relationship-engine/src/card-schema.json','packages/relationship-engine/src/policy-identity.ts','apps/api/src/games-model.ts','.docs/contracts/relationship-policy.v1.json','.docs/implementation/p03-measurement-protocol-v2.json'];
-  return {schema:1,protocol_revision:'P03-M2',raw_input_sha256:Object.fromEntries(sources.map(path=>[path,hash(readFileSync(path))])),pack_digest:pack.digest,fixture_manifest_sha256:digest(manifest),feature_names_sha256:digest(publicFeatureNames(pack.cards.filter(card=>card.interaction!=='pair_private'))),measurement_design:measurementDesign};
+  const sources=['tools/p03-measurements.mjs','tests/p03/public-transcript.mjs','tests/p03/planner-diagnostics.mjs','tests/p03/fixtures.mjs','packages/relationship-engine/src/engine.ts','packages/relationship-engine/src/pack.ts','packages/relationship-engine/src/consent.ts','packages/relationship-engine/src/types.ts','packages/relationship-engine/src/index.ts','packages/relationship-engine/src/policy.json','packages/relationship-engine/src/card-schema.json','packages/relationship-engine/src/policy-identity.ts','apps/api/src/games-model.ts','.docs/contracts/relationship-policy.v1.json','.docs/implementation/p03-measurement-protocol-v3.json'];
+  return {schema:1,protocol_revision:'P03-M3',raw_input_sha256:Object.fromEntries(sources.map(path=>[path,hash(readFileSync(path))])),pack_digest:pack.digest,fixture_manifest_sha256:digest(manifest),feature_names_sha256:digest(publicFeatureNames(pack.cards.filter(card=>card.interaction!=='pair_private'))),measurement_design:measurementDesign};
 }
 function assert(ok,code) {if(!ok) throw new Error(code);}
 function measuredChanges() {return [...execFileSync('git',['diff','--name-only','HEAD'],{encoding:'utf8'}).trim().split('\n'),...execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n')].filter(Boolean).filter(name=>!name.startsWith('.history/')&&!name.startsWith('.docs/implementation/reviews/')&&!name.startsWith('.docs/implementation/evidence/')&&!/^\.docs\/implementation\/p\d{2}-registry\.json$/.test(name)&&!['FILE_MANIFEST.sha256','.docs/implementation/status.md'].includes(name));}
@@ -84,12 +86,13 @@ function consentChecks(plan,rows) {
   if(plan.interaction==='pair_private') {const invite=proposeConsent('synthetic-invitation',actors,'invitation',100);assert(!consentAllows(invite,actors[0],100),'I06_PENDING');rows[5].checks++;}
 }
 async function invariants(probe,progress) {
-  const rows=invariantDefinitions(),sizeReports=[],violations=[],refusals=[];const perSize=probe?4:10000;
+  const rows=invariantDefinitions(),sizeReports=[],violations=[],refusals=[],diagnostics=createPlannerDiagnostics(pack);const perSize=probe?4:10000;
   let draftRejected=false;try {FrozenPack.load(cards,manifest);}catch {draftRejected=true;}assert(draftRejected,'I12_DRAFT_PRODUCTION');rows[11].checks++;
   for(let size=2;size<=8;size++) {let completed=0,refused=0,rounds=0;const counts={};for(let index=0;index<perSize;index++) {
     const seed=`venus:P03-M1:test:${size}:${index}`,mode=modes[index%3],context=contexts[Math.floor(index/3)%2],snapshot=profile(seed,size,mode,context,1+index%100,'random'),snapshotHash=digest(snapshot);counts[mode+':'+context]=(counts[mode+':'+context]??0)+1;
-    const projection=transcriptAccumulator(pack,snapshot.players);let completedPrefix=0;
+    const projection=transcriptAccumulator(pack,snapshot.players),diagnosticSession=diagnostics.session(snapshot,seed);let completedPrefix=0,sessionCompleted=false;
     try {runPlans(snapshot,(plan,history)=>{
+      diagnosticSession.record(plan);
       const card=pack.card(plan.card_id),actors=snapshot.players.filter(p=>plan.actors.includes(p.id)),affected=card.interaction==='group'?snapshot.players:actors;
       const check=(i,ok)=>{rows[i-1].checks++;if(!ok) {rows[i-1].violations++;throw new Error('I'+String(i).padStart(2,'0'));}};
       const cl=actors.length===2?matrix[actors[0].edges[actors[1].id]?.relation??'friendship'][actors[1].edges[actors[0].id]?.relation??'friendship']:null;
@@ -97,19 +100,24 @@ async function invariants(probe,progress) {
       const frames=projection.add(plan);check(9,localeMetadataInvariant(pack,plan,snapshot.players));check(13,card.interaction!=='pair_private'||frames.every(frame=>!('card_id' in frame.current_round)&&!('actors' in frame.current_round)));check(15,!history.some(p=>p.card_id===plan.card_id));
       // Consent state-machine probes once per actual pair proposal; no assumed runtime ACL PASS.
       consentChecks(plan,rows);rounds++;completedPrefix++;
-    });completed++;} catch(error) {if(error.message==='SAFE_POOL_EXHAUSTED') {refused++;refusals.push({seed,reason:error.message,completed_prefix:completedPrefix});}else {violations.push({seed,size,index,error:error.message});if(violations.length>=20) throw error;}}
+    });completed++;sessionCompleted=true;} catch(error) {if(error.message==='SAFE_POOL_EXHAUSTED') {refused++;refusals.push({seed,reason:error.message,completed_prefix:completedPrefix});}else {violations.push({seed,size,index,error:error.message});if(violations.length>=20) throw error;}} finally {diagnosticSession.finish(sessionCompleted);}
   }sizeReports.push({size,sessions:perSize,completed,safe_refusals:refused,rounds,cells:counts});progress('invariants N'+size);}
-  return {status:violations.length?'FAIL':'PASS',scope:'PLANNER_AND_PURE_CONSENT_DIAGNOSTIC_ONLY',runtime_gate:'PENDING_SEPARATE_AUTHENTICATED_DB_HTTP_WS_EVIDENCE',sessions:sizeReports.reduce((s,r)=>s+r.sessions,0),sizes:sizeReports,invariants:rows,violations,safe_refusals:refusals};
+  const progressive=diagnostics.report();return {status:violations.length||progressive.status!=='PASS'?'FAIL':'PASS',scope:'PLANNER_AND_PURE_CONSENT_DIAGNOSTIC_ONLY',runtime_gate:'PENDING_SEPARATE_AUTHENTICATED_DB_HTTP_WS_EVIDENCE',sessions:sizeReports.reduce((s,r)=>s+r.sessions,0),sizes:sizeReports,invariants:rows,violations,safe_refusals:refusals,progressive_diagnostics:progressive};
 }
 async function fairness(probe,progress) {
-  const strata=[];for(let size=2;size<=8;size++) for(const mode of modes) for(const context of contexts) {
+  const strata=[],diagnostics=createPlannerDiagnostics(pack);for(let size=2;size<=8;size++) for(const mode of modes) for(const context of contexts) {
     const counts=Array(size).fill(0),sessions=probe?2:2000;let K=0,maxShare=0,zero=0;
-    for(let index=0;index<sessions;index++) {const seed=`venus:P03-M2:fairness:${size}:${mode}:${context}:${index}`,snapshot=profile(seed,size,mode,context,20),own=Array(size).fill(0);let pairs=0;
-      runPlans(snapshot,plan=>{if(plan.interaction.startsWith('pair_')) {pairs++;K++;for(const id of plan.actors) {const i=snapshot.players.findIndex(p=>p.id===id);counts[i]++;own[i]++;}}});
+    for(let index=0;index<sessions;index++) {const seed=`venus:P03-M2:fairness:${size}:${mode}:${context}:${index}`,snapshot=profile(seed,size,mode,context,20),own=Array(size).fill(0),diagnosticSession=diagnostics.session(snapshot,seed);let pairs=0;
+      runPlans(snapshot,plan=>{diagnosticSession.record(plan);if(plan.interaction.startsWith('pair_')) {pairs++;K++;for(const id of plan.actors) {const i=snapshot.players.findIndex(p=>p.id===id);counts[i]++;own[i]++;}}});diagnosticSession.finish(true);
       if(pairs===0) zero++;else maxShare=Math.max(maxShare,...own.map(n=>n/(2*pairs)));
     }
     const D=2*K,shares=counts.map(n=>D?n/D:null),gap=D?Math.max(...shares)-Math.min(...shares):null;strata.push({size,mode,context,sessions,K,D,invitation_counts:counts,individual_shares:shares,aggregate_player_share_gap:gap,max_individual_session_share:maxShare,zero_pair_sessions:zero,status:D&&maxShare<=.5&&gap<=.02?'PASS':'FAIL',limitation:size===2?'N2 necessarily .5 each; no partner variety promise':null});progress(`fairness ${size}/${mode}/${context}`);
-  }return {status:strata.every(s=>s.status==='PASS')?'PASS':'FAIL',strata};
+  }const progressive=diagnostics.report();
+  if(!probe) for(const cell of strata) {
+    const late=progressive.strata.filter(row=>row.size===cell.size&&row.mode===cell.mode&&row.context===cell.context&&row.stage>=3);
+    if(!late.some(row=>row.private_eligible_after_cap>0)||!late.some(row=>row.private_selected>0)) {progressive.violations.push({code:'DEGENERATE_EXCHANGEABLE_LATE_PRIVATE_DISTRIBUTION',size:cell.size,mode:cell.mode,context:cell.context});progressive.status='FAIL';}
+  }
+  return {status:strata.every(s=>s.status==='PASS')&&progressive.status==='PASS'?'PASS':'FAIL',strata,progressive_diagnostics:progressive};
 }
 async function gf(probe,progress) {
   const counts={both:0,g_only:0,f_only:0,neither:0},opportunities=probe?50:1000000,target=[playerId(0),playerId(1)].sort().join(':');
@@ -142,18 +150,18 @@ async function inference(probe,progress) {
   }return {status:comparisons.every(c=>c.status==='PASS')?'PASS':'FAIL',transcript_policy:transcriptPolicy,comparisons,limitations:['Fixed diagonal LDA and finite exact single-feature decoders are diagnostics, not universal privacy proof.','Equal all-accept synthetic timing; human behavior, network scheduling and refusal channels require runtime/UX assessment.','Hard X/J/comfort exclusions intentionally reveal compatibility boundaries; measured profiles are common-support F/G/M only.']};
 }
 export async function main(args=process.argv.slice(2)) {
-  const probe=args.includes('--probe'),section=args.find(a=>a.startsWith('--section='))?.split('=')[1]??'all',protocolPath='.docs/implementation/p03-measurement-protocol-v2.json';assert(['all','invariants','fairness','gf','inference'].includes(section),'UNKNOWN_SECTION');
+  const probe=args.includes('--probe'),section=args.find(a=>a.startsWith('--section='))?.split('=')[1]??'all',protocolPath='.docs/implementation/p03-measurement-protocol-v3.json';assert(['all','invariants','fairness','gf','inference'].includes(section),'UNKNOWN_SECTION');
   if(!probe) assert(invokedAsMain&&buildWasActuallyForced,'FINAL_REQUIRES_FRESH_CLI_BUILD');
   const protocol=readFileSync(protocolPath),protocolHash=hash(protocol),source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceIdentity=execFileSync('python',['-B','tools/stage_inventory.py'],{encoding:'utf8'}).trim();
   const inputDescriptor=measurementInputs();
   if(!probe) {
-    const tag='p03-m2-preregistered-20261018',preregistered=execFileSync('git',['show',tag+':'+protocolPath]);assert(hash(preregistered)===protocolHash,'PROTOCOL_NOT_PREREGISTERED');assert(JSON.parse(protocol).protocol_revision==='P03-M2','PROTOCOL_REVISION');
-    const descriptorPath='.docs/implementation/p03-measurement-inputs-v2.json',descriptorRaw=readFileSync(descriptorPath);assert(digest(JSON.parse(descriptorRaw))===digest(inputDescriptor),'INPUT_DESCRIPTOR_MISMATCH');assert(hash(execFileSync('git',['show',tag+':'+descriptorPath]))===hash(descriptorRaw),'INPUT_DESCRIPTOR_NOT_PREREGISTERED');
+    const tag='p03-m3-preregistered-20261018',preregistered=execFileSync('git',['show',tag+':'+protocolPath]);assert(hash(preregistered)===protocolHash,'PROTOCOL_NOT_PREREGISTERED');assert(JSON.parse(protocol).protocol_revision==='P03-M3','PROTOCOL_REVISION');
+    const descriptorPath='.docs/implementation/p03-measurement-inputs-v3.json',descriptorRaw=readFileSync(descriptorPath);assert(digest(JSON.parse(descriptorRaw))===digest(inputDescriptor),'INPUT_DESCRIPTOR_MISMATCH');assert(hash(execFileSync('git',['show',tag+':'+descriptorPath]))===hash(descriptorRaw),'INPUT_DESCRIPTOR_NOT_PREREGISTERED');
     for(const [path,expected] of Object.entries(inputDescriptor.raw_input_sha256)) assert(hash(execFileSync('git',['show',tag+':'+path]))===expected,'MEASUREMENT_INPUT_CHANGED_SINCE_PREREGISTRATION:'+path);
     const changed=measuredChanges();assert(changed.length===0,'DIRTY_MEASURED_SOURCE:'+changed.join(','));
   }
   const directory=resolve(args.find(a=>a.startsWith('--output='))?.slice(9)??`.artifacts/p03-measurements/${probe?'probe':'final'}-${Date.now()}-${section}`);assert(!existsSync(directory),'OUTPUT_ALREADY_EXISTS');mkdirSync(directory,{recursive:true});
-  const report={schema:1,status:'RUNNING',gating:!probe,probe,section,source_sha:source,source_identity_sha256:sourceIdentity,source_dirty:probe?null:false,protocol_sha256:protocolHash,protocol_path:protocolPath,preregistered_input_descriptor:inputDescriptor,input_sha256:Object.fromEntries(['tools/p03-measurements.mjs','tests/p03/public-transcript.mjs','tests/p03/fixtures.mjs','packages/relationship-engine/src/engine.ts','apps/api/src/games-model.ts','packages/relationship-engine/dist/index.js','packages/relationship-engine/dist/engine.js','packages/relationship-engine/dist/consent.js','packages/relationship-engine/dist/pack.js','apps/api/dist/games-model.js','apps/api/dist/rooms.js'].map(path=>[path,hash(readFileSync(path))])),fresh_build:probe?'NOT_REQUIRED_NON_GATING':'tsc -b --force BEFORE dynamic runtime imports',measurement_design:measurementDesign,algorithm_revision:algorithmRevision,policy_digest:policyDigest,pack_digest:pack.digest,fixture_manifest_sha256:digest(manifest),started_at:new Date().toISOString(),results:{}};
+  const report={schema:1,status:'RUNNING',gating:!probe,probe,section,source_sha:source,source_identity_sha256:sourceIdentity,source_dirty:probe?null:false,protocol_sha256:protocolHash,protocol_path:protocolPath,preregistered_input_descriptor:inputDescriptor,input_sha256:Object.fromEntries(['tools/p03-measurements.mjs','tests/p03/public-transcript.mjs','tests/p03/planner-diagnostics.mjs','tests/p03/fixtures.mjs','packages/relationship-engine/src/engine.ts','apps/api/src/games-model.ts','packages/relationship-engine/dist/index.js','packages/relationship-engine/dist/engine.js','packages/relationship-engine/dist/consent.js','packages/relationship-engine/dist/pack.js','apps/api/dist/games-model.js','apps/api/dist/rooms.js'].map(path=>[path,hash(readFileSync(path))])),fresh_build:probe?'NOT_REQUIRED_NON_GATING':'tsc -b --force BEFORE dynamic runtime imports',measurement_design:measurementDesign,algorithm_revision:algorithmRevision,policy_digest:policyDigest,pack_digest:pack.digest,fixture_manifest_sha256:digest(manifest),started_at:new Date().toISOString(),results:{}};
   const persist=()=>writeFileSync(resolve(directory,'report.json'),JSON.stringify(report,null,2));persist();const progress=message=>{console.log(new Date().toISOString()+' '+message);persist();};
   try {for(const [name,run] of Object.entries({invariants,fairness,gf,inference})) if(section==='all'||section===name) {const start=Date.now();report.results[name]=await run(probe,progress);report.results[name].elapsed_seconds=(Date.now()-start)/1000;persist();}report.status=probe?'NON_GATING_PROBE':Object.values(report.results).every(result=>result.status==='PASS')?'PASS':'FAIL';}
   catch(error) {report.status='FAIL';report.error={name:error.name,message:error.message,stack:error.stack};throw error;}finally {

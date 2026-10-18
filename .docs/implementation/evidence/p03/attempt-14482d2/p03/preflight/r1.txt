@@ -1,0 +1,413 @@
+P03 isolated Docker scope: venus-p03-b1b2c63e88fe; only this project and its volumes will be removed.
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.93kB done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 1.7s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 151B done
+#3 DONE 0.0s
+
+#4 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 351.67kB 0.0s done
+#5 DONE 0.1s
+
+#6 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+#6 CACHED
+
+#7 [build 10/15] RUN npm ci
+#7 CACHED
+
+#8 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#8 CACHED
+
+#9 [build 11/15] COPY tsconfig*.json ./
+#9 CACHED
+
+#10 [build 12/15] COPY apps apps
+#10 CACHED
+
+#11 [build  2/15] WORKDIR /app
+#11 CACHED
+
+#12 [build  3/15] COPY package.json package-lock.json .npmrc ./
+#12 CACHED
+
+#13 [build  4/15] COPY apps/api/package.json apps/api/
+#13 CACHED
+
+#14 [build  5/15] COPY apps/web/package.json apps/web/
+#14 CACHED
+
+#15 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+#15 CACHED
+
+#16 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#16 CACHED
+
+#17 [build 13/15] COPY packages packages
+#17 CACHED
+
+#18 [build 14/15] RUN test -n "12a028b174cc03a4a8ea1398f321d23c6a4c6e98" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+#18 0.628 
+#18 0.628 > venus@0.0.0 build
+#18 0.628 > tsc -b && npm run build -w @venus/web
+#18 0.628 
+#18 3.239 
+#18 3.239 > @venus/web@0.0.0 build
+#18 3.239 > vite build
+#18 3.239 
+#18 3.561 vite v8.3.4 building client environment for production...
+#18 3.579 transforming...
+#18 3.657 ✓ 21 modules transformed.
+#18 3.738 rendering chunks...
+#18 3.786 computing gzip size...
+#18 3.790 dist/index.html                   0.39 kB │ gzip:  0.27 kB
+#18 3.790 dist/assets/index-McaKYTmT.css    4.60 kB │ gzip:  1.62 kB
+#18 3.790 dist/assets/index-wjZi3Dn0.js   245.15 kB │ gzip: 77.56 kB
+#18 3.790 
+#18 3.791 ✓ built in 229ms
+#18 DONE 3.9s
+
+#19 [build 15/15] RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
+#19 12.42 
+#19 12.42 removed 173 packages, and audited 119 packages in 12s
+#19 12.42 
+#19 12.42 found 0 vulnerabilities
+#19 DONE 12.5s
+
+#20 [stage-1  6/11] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+#20 CACHED
+
+#21 [stage-1  3/11] COPY --from=build /app/node_modules ./node_modules
+#21 CACHED
+
+#22 [stage-1  4/11] COPY --from=build /app/packages ./packages
+#22 CACHED
+
+#23 [stage-1  7/11] COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+#23 CACHED
+
+#24 [stage-1  8/11] COPY --from=build /app/apps/api/migrations ./apps/api/migrations
+#24 CACHED
+
+#25 [stage-1  5/11] COPY --from=build /app/apps/api/dist ./apps/api/dist
+#25 CACHED
+
+#26 [stage-1  9/11] COPY --from=build /app/apps/web/dist ./apps/web/dist
+#26 CACHED
+
+#27 [stage-1 10/11] COPY --from=build /app/package.json /app/build-metadata.json ./
+#27 DONE 0.0s
+
+#28 [stage-1 11/11] RUN mkdir -p /var/lib/venus && chown node:node /var/lib/venus
+#28 DONE 0.2s
+
+#29 exporting to image
+#29 exporting layers 0.1s done
+#29 exporting manifest sha256:8c11735ecfdd5d66004d556c371dd26b60652121fe24a1d401ff718de15d77a5 0.0s done
+#29 exporting config sha256:a83fd212eebb2f820af84b7de5c6d3bb27a7ac33d9aa6c71b6255eb2a9246a5e
+#29 exporting config sha256:a83fd212eebb2f820af84b7de5c6d3bb27a7ac33d9aa6c71b6255eb2a9246a5e 0.0s done
+#29 exporting attestation manifest sha256:ffc899b29ab5c7b063252fee8c5cf8c4f651013317b00f9562303bfed3a80e2d 0.0s done
+#29 exporting manifest list sha256:69567c8b7971f08ebd95f6f0ea3d7be6f306d40667bd25a777f4af9f500d1cca 0.0s done
+#29 naming to docker.io/library/venus-p03-b1b2c63e88fe-previous:local done
+#29 unpacking to docker.io/library/venus-p03-b1b2c63e88fe-previous:local 0.0s done
+#29 DONE 0.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/j6csy265xtqlduzoraepptq1j
+ Network venus-p03-b1b2c63e88fe_default  Creating
+ Network venus-p03-b1b2c63e88fe_default  Created
+ Container venus-p03-b1b2c63e88fe-db-1  Creating
+ Container venus-p03-b1b2c63e88fe-db-1  Created
+ Container venus-p03-b1b2c63e88fe-db-1  Starting
+ Container venus-p03-b1b2c63e88fe-db-1  Started
+ Container venus-p03-b1b2c63e88fe-db-1  Waiting
+ Container venus-p03-b1b2c63e88fe-db-1  Healthy
+▶ EXIT-P03 actual PostgreSQL / HTTPS / WS
+  ✔ checks extension migration repeat/checksum/future generation and real readiness (70.0212ms)
+  ✖ serializes concurrent start and same-key duplicate advance without extra rounds (307.3542ms)
+  ✖ pins encrypted snapshot and locks preferences/context in active and safety pause (172.4987ms)
+  ✖ requires exact actors, independent invitation/action consent and terminal decline (164.9233ms)
+  ✖ keeps YesBut condition actor scoped and invalidates old proposal acknowledgements (161.6652ms)
+  ✖ denies private access on clock rollback and exact invitation/action deadline (200.4241ms)
+  ✖ revalidates a prepared private reference after committed revoke before dispatch (153.0887ms)
+  ✖ clears old actor recipients when stop and advance happen before the next WS poll (151.8732ms)
+  ✖ delivers actual WS private prompt only to selected actors and clears it after decline (152.2232ms)
+  ✖ replays the original finish alias and rejects conflicting payloads (150.8349ms)
+  ✖ retains exact old pack/snapshot across restart, refreshed pack, locale and spectator (160.6316ms)
+  ✖ enforces actual SQL actor scope, exactly two consent actors and one running game (160.8498ms)
+  ✖ quiesces with API stopped, runs accepted P02 OCI against upgraded DB and returns without reviving consent (150.3246ms)
+✖ EXIT-P03 actual PostgreSQL / HTTPS / WS (2964.463ms)
+ℹ tests 13
+ℹ suites 1
+ℹ pass 1
+ℹ fail 12
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3242.6248
+
+✖ failing tests:
+
+test at tests\p03\runtime.integration.test.mjs:105:3
+✖ serializes concurrent start and same-key duplicate advance without extra rounds (307.3542ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"a65f8433-70a4-4a1f-b05f-98629424387b"}
+  
+  409 !== 200
+  
+      at TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:108:42)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:116:3
+✖ pins encrypted snapshot and locks preferences/context in active and safety pause (172.4987ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"551956f2-c5b0-4063-9167-0e44afa234f8"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:117:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:130:3
+✖ requires exact actors, independent invitation/action consent and terminal decline (164.9233ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"5b4a127e-cbcb-4b86-8207-a3852b0b43ee"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:131:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:147:3
+✖ keeps YesBut condition actor scoped and invalidates old proposal acknowledgements (161.6652ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"4ad854d6-9667-44bc-86e8-0941143a0662"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:148:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:160:3
+✖ denies private access on clock rollback and exact invitation/action deadline (200.4241ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"8ecc2222-c6d2-4c19-bd8e-ecdb9ce8ff70"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:161:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:168:3
+✖ revalidates a prepared private reference after committed revoke before dispatch (153.0887ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"344508ff-9e54-419a-b8e3-36fcdf6c02fd"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:169:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:176:3
+✖ clears old actor recipients when stop and advance happen before the next WS poll (151.8732ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"de515af8-2382-446d-9978-e16eba8783ff"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:177:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:185:3
+✖ delivers actual WS private prompt only to selected actors and clears it after decline (152.2232ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"5e8faaa7-239b-4a8b-a325-0c3f972fa1d2"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:186:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:195:3
+✖ replays the original finish alias and rejects conflicting payloads (150.8349ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"ab853463-7fc2-43ca-b597-0d60a234468e"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:196:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:203:3
+✖ retains exact old pack/snapshot across restart, refreshed pack, locale and spectator (160.6316ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"ec2dea48-f4c4-4831-97f0-9e12e830963a"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:204:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:213:3
+✖ enforces actual SQL actor scope, exactly two consent actors and one running game (160.8498ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"4a90941c-00ba-4762-8888-c795d17281b3"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:214:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\p03\runtime.integration.test.mjs:224:3
+✖ quiesces with API stopped, runs accepted P02 OCI against upgraded DB and returns without reviving consent (150.3246ms)
+  AssertionError [ERR_ASSERTION]: {"code":"ACTORS_UNAVAILABLE","message":"Request could not be completed","request_id":"6e3c74ef-b3a2-46cf-ab82-f28feb18c7bc"}
+  
+  409 !== 200
+  
+      at ok (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:28:139)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async start (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:42:16)
+      at async fixture (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:54:12)
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/tests/p03/runtime.integration.test.mjs:225:13)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 409,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+ Container venus-p03-b1b2c63e88fe-db-1  Stopping
+ Container venus-p03-b1b2c63e88fe-db-1  Stopped
+ Container venus-p03-b1b2c63e88fe-db-1  Removing
+ Container venus-p03-b1b2c63e88fe-db-1  Removed
+ Network venus-p03-b1b2c63e88fe_default  Removing
+ Network venus-p03-b1b2c63e88fe_default  Removed

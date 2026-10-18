@@ -32,6 +32,8 @@ Compatibility limitation discovered in the accepted P02 runtime: its default pro
 
 ## Measurements
 
-The original P03-M1 preregistration is retained at `p03-m1-preregistered-20261018`. Independent pre-freeze findings require P03-M2 before the first statistical run. Its source is `implementation/p03-measurement-protocol-v2.json`; the source checkpoint, exact runner, fixture and policy bytes are pinned before measuring. Report every declared stratum, raw counts, seed ranges, safe refusals and failed attempts. Passing a fixed linear inference probe is limited evidence for the declared compatible profiles; it is not universal social privacy proof.
+The original P03-M1 preregistration is retained at `p03-m1-preregistered-20261018`. P03-M2 is retained at `p03-m2-preregistered-20261018`; its source14482d2 was not accepted after the Linux rollback fixture failure, and interrupted partial measurements remain in the attempt packet. Current M3 adds the actual progressive distributions required by RE-016, raw per-session cap and alternative-pair counters. Its source is `implementation/p03-measurement-protocol-v3.json`, with executable inputs pinned by `p03-measurement-inputs-v3.json` and a separate preregistration tag. Algorithm, seeds, profiles and original thresholds are retained. See ADR-016.
+
+Report every declared stratum, raw counts, seed ranges, safe refusals and failed attempts. Stage private eligibility before/after the session cap is reported separately; no unconditional late-frequency rise is asserted after exhaustion. Passing a fixed linear inference probe is limited evidence for the declared compatible profiles; it is not universal social privacy proof.
 
 The work journal is `.history/2026-10-18-p03.md`. Preliminary reviews in `implementation/reviews/p03/` remain available after fixes. Production content approval belongs to P04 and the actual offer/public end-to-end entry belongs to P05; synthetic tests cannot satisfy either approval.

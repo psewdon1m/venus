@@ -35,7 +35,14 @@ try {
   status=result.status??1;
   if(status!==0&&existsSync('.artifacts/p03/integration-report.json')) copyFileSync('.artifacts/p03/integration-report.json',`.artifacts/p03/failed-integration-${project}.json`);
 } finally {
-  try {if(started) docker(['down','--volumes','--remove-orphans','--timeout','10']);cleanup='completed';}
+  try {
+    // The test retains a stopped rollback container for diagnostics. Also clean its exact
+    // owned names if the child terminated before its own finally block could complete.
+    const rollback=project+'-rollback',volume=rollback+'-ledger';
+    if(spawnSync('docker',['container','inspect',rollback],{stdio:'pipe'}).status===0) execFileSync('docker',['rm','--force','--volumes',rollback],{stdio:'pipe'});
+    if(spawnSync('docker',['volume','inspect',volume],{stdio:'pipe'}).status===0) execFileSync('docker',['volume','rm',volume],{stdio:'pipe'});
+    if(started) docker(['down','--volumes','--remove-orphans','--timeout','10']);cleanup='completed';
+  }
   catch(error) {cleanup='failed';status=1;console.error('P03 Docker cleanup failed: '+error.message);}
   cleanupDirectory();
   writeFileSync('.artifacts/p03/integration-runner.json',JSON.stringify({source_sha:source,source_dirty:env.P03_SOURCE_DIRTY==='1',command:'node tools/p03-integration.mjs',synthetic:true,status:status===0&&cleanup==='completed'?'PASS':'FAIL',isolated_project:project,cleanup,previous_source:env.P03_PREVIOUS_SOURCE,previous_image:env.P03_PREVIOUS_IMAGE},null,2));

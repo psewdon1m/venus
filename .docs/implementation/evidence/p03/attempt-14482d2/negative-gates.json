@@ -1,0 +1,38 @@
+{
+  "source_sha": "14482d28b4a2d18be22f5e3939b6161f004fbfe2",
+  "source_identity_sha256": "ea6e964f16cef2cad31a48134c9e5b9be8f30808f64422a023a59a96ec2e563d",
+  "source_dirty": false,
+  "source_before": "b8a14b1bd5ae589e53ead6ab924580e98574bd0d7e264b88d162e7d6078f2456",
+  "source_after": "b8a14b1bd5ae589e53ead6ab924580e98574bd0d7e264b88d162e7d6078f2456",
+  "status": "PASS",
+  "cases": [
+    {
+      "id": "schema",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 1,
+      "diagnostic": "Traceback (most recent call last):\r\n  File \"C:\\Temp\\venus-negative-Zkfg2U\\tools\\check_schemas.py\", line 13, in <module>\r\n    Draft202012Validator.check_schema(schema)\r\n  File \"C:\\.projects\\venus\\.venv\\Lib\\site-packages\\jsonschema\\validators.py\", line 316, in check_schema\r\n    raise exceptions.SchemaError.create_from(error)\r\njsonschema.exceptions.SchemaError: 'INVALID_NEGATIVE_SCHEMA' is not valid under any of the given schemas\r\n\r\nFailed validating 'anyOf' in metaschema['allOf'][3]['properties']['type']:\r\n    {'anyOf': [{'$ref': '#/$defs/simpleTypes'},\r\n               {'type': 'array',\r\n                'items': {'$ref': '#/$defs/simpleTypes'},\r\n                'minItems': 1,\r\n                'uniqueItems': True}]}\r\n\r\nOn schema['type']:\r\n    'INVALID_NEGATIVE_SCHEMA'\r\n"
+    },
+    {
+      "id": "locale",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 1,
+      "diagnostic": "file:///C:/Temp/venus-negative-Zkfg2U/tools/check-i18n.mjs:6\r\n  if (dictionaries.some(d => Object.keys(d).sort().join(',') !== keys || Object.values(d).some(v => typeof v !== 'string' || !v.trim()))) throw new Error('Locale keys/values are incomplete');\r\n                                                                                                                                                ^\r\n\r\nError: Locale keys/values are incomplete\r\n    at checkLocales (file:///C:/Temp/venus-negative-Zkfg2U/tools/check-i18n.mjs:6:145)\r\n    at file:///C:/Temp/venus-negative-Zkfg2U/tools/check-i18n.mjs:9:1\r\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\r\n    at async node:internal/modules/esm/loader:647:26\r\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\r\n\r\nNode.js v24.22.0\r\n"
+    },
+    {
+      "id": "type",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 2,
+      "diagnostic": "packages/contracts/src/index.ts(6,14): error TS2322: Type 'string' is not assignable to type 'number'.\r\n"
+    },
+    {
+      "id": "unit",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 1,
+      "diagnostic": "\n RUN  v5.0.5 C:/Temp/venus-negative-Zkfg2U\n\n ❯ apps/api/src/app.test.ts (2 tests | 1 failed) 303ms\n   ❯ foundation HTTP contracts and privacy (2)\n     × separates live from real dependency readiness and recovers 234ms\n\n Test Files  1 failed (1)\n      Tests  1 failed | 1 passed (2)\n   Start at  21:46:28\n   Duration  1.11s (import 55%, tests 35%, transform 8%, worker 1%)\n\n\n⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯\n\n FAIL  apps/api/src/app.test.ts > foundation HTTP contracts and privacy > separates live from real dependency readiness and recovers\nAssertionError: expected { status: 'alive' } to deeply equal { status: 'NEGATIVE_UNIT' }\n\n- Expected\n+ Received\n\n  {\n-   \"status\": \"NEGATIVE_UNIT\",\n+   \"status\": \"alive\",\n  }\n\n ❯ apps/api/src/app.test.ts:11:57\n      9|     const app = await createApp({probe: async () => {if (!available) t…\n     10|     try {\n     11|       expect((await app.inject('/health/live')).json()).toEqual({statu…\n       |                                                         ^\n     12|       expect((await app.inject('/health/ready')).json()).toEqual({stat…\n     13|       available = false;\n\n⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\n\n"
+    }
+  ]
+}
