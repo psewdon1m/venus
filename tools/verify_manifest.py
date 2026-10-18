@@ -10,6 +10,7 @@ import hashlib
 from pathlib import Path
 import re
 import sys
+from source_inventory import source_files
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "FILE_MANIFEST.sha256"
@@ -42,7 +43,7 @@ for lineno, row in enumerate(MANIFEST.read_text(encoding="utf-8").splitlines(), 
 
 actual = {
     path.relative_to(ROOT).as_posix()
-    for path in ROOT.rglob("*")
+    for path in source_files(ROOT)
     if path.is_file() and path.name != "FILE_MANIFEST.sha256"
     and "__pycache__" not in path.parts and path.suffix != ".pyc"
 }

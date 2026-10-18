@@ -114,7 +114,11 @@ def check(root=ROOT):
     if registry['stages'][0]['status']=='PASSED':
         try:
             gate=json.loads(read_evidence(root,registry.get('current_gate_report')))
-            errors.extend(validate_gate(root,gate,registry.get('independent_reviewers',[])))
+            if (root/'tools/fixtures/p00-2.zip').is_file():
+                from p00_history import validate_p00_history
+                errors.extend(validate_p00_history(root))
+            else:
+                errors.extend(validate_gate(root,gate,registry.get('independent_reviewers',[])))
         except (ValueError,TypeError,OSError) as exc:errors.append('passed registry without valid gate: '+str(exc))
     text=(root/'.docs/implementation/USER_DECISIONS.md').read_text('utf-8')
     if any(uid not in text for uid in registry['pending_user_decisions']): errors.append('missing user decision')
@@ -170,6 +174,7 @@ def check(root=ROOT):
     elif registry.get('revision')=='P00-2':errors.append('central applicability matrix absent')
     receipt=json.loads((root/'.docs/implementation/evidence/baseline-receipt.json').read_text('utf-8'))
     archive=Path(receipt['archive_path'])
+    if not archive.is_file(): archive=root/'tools/fixtures/pre-p00.zip'
     if not archive.is_file() or hashlib.sha256(archive.read_bytes()).hexdigest()!=receipt['archive_sha256']:
         errors.append('baseline archive absent/digest mismatch')
     else:

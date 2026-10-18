@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "stage": "P01",
+  "gate": "EXIT-P01",
+  "status": "IMPLEMENTING",
+  "owner": "Codex / Engineering",
+  "review_policy": "U-004: independent agents, report/fix/test/review until zero open findings",
+  "adr": ["ADR-010", "ADR-011", "ADR-013"],
+  "remote": "https://github.com/psewdon1m/venus.git",
+  "branch": "feature/p01-foundation",
+  "base": "main",
+  "checks": [
+    {"id": "P01-REPRO", "exit": 1, "command": "npm ci && npm run quality", "evidence": "GitHub Actions quality on exact source SHA"},
+    {"id": "P01-NEGATIVE", "exit": 2, "command": "npm run test:negative", "evidence": "negative-gates.json: four corruptions rejected, positive controls pass, unchanged source"},
+    {"id": "P01-TRUST", "exit": 2, "command": "vitest tools/github-ci.test.ts; GitHub protection API", "evidence": "pinned actions, read-only permissions, no signing credentials; protected main"},
+    {"id": "P01-OCI", "exit": 3, "command": "npm run test:container", "evidence": "image ID, labels, all-layer secret scan, runtime inspect, sanitized rendered Compose"},
+    {"id": "P01-HEALTH", "exit": 4, "command": "npm run test:container", "evidence": "real PostgreSQL healthy/unavailable/recovered, liveness/version checks"}
+  ],
+  "historical_p00_archive_sha256": "bf2b3e8b02acf1a2904b1614049b46ae9c8f5b3c244ef1856682257825babb0d",
+  "pending_user_decisions_for_P01": [],
+  "public_release": "BLOCKED_UNTIL_LATER_GATES"
+}
