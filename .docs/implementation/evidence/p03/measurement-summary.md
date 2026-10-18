@@ -1,12 +1,12 @@
 # P03 M3: результаты измерений
 
-Измеряемый source: `8b6101bfeb54b00d789b58e046907af4e783cef8`; implementation identity: `0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964`.
+Измеряемый source: `8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b`; implementation identity: `63a3b972c49214e52c6136204506969c4b35e99bb13b98887e7517fa5e47678a`.
 
 Протокол и входные данные зафиксированы тегом `p03-m3-preregistered-20261018` до запуска. Это технические измерения на синтетическом наборе, а не допуск production-контента и не универсальная гарантия приватности. Итоговое принятие определяется только bound `gate-report.json`.
 
 ## invariants
 
-Полный отчёт: [invariants.json](measurements/invariants.json); SHA-256 `682e31aef5bb866e78abfaf098170522ecd158b75305d9e4d061e7f20ce73ecf`. Статус: PASS.
+Полный отчёт: [invariants.json](measurements/invariants.json); SHA-256 `7c5e5ee1a0b0d6a2940b63b7a408236a4ef409a94ed015b75649d75b71b10910`. Статус: PASS.
 
 Сессий: 70000; нарушений: 0.
 
@@ -22,7 +22,7 @@
 
 ## fairness
 
-Полный отчёт: [fairness.json](measurements/fairness.json); SHA-256 `90bbbb4cc8d6b686106bba79eec2d2bfc667ca39b4e97fc6bf7c1544eb80c61a`. Статус: PASS.
+Полный отчёт: [fairness.json](measurements/fairness.json); SHA-256 `4656836a46c5c6b6d197d0437dedf4082dc420465503f21cc08aaff7f4df863b`. Статус: PASS.
 
 42 ячейки: 7 размеров × 3 режима × 2 контекста; по 2000 сессий, 20 раундов. Максимальная доля в отдельной сессии: 0.5.
 
@@ -40,7 +40,7 @@
 
 ## gf
 
-Полный отчёт: [gf.json](measurements/gf.json); SHA-256 `92ed4ec477f3f9bfb6201eb66903c589fcef6ef375286319bcb2c0a39e350ad9`. Статус: PASS.
+Полный отчёт: [gf.json](measurements/gf.json); SHA-256 `fddfccddc6b053542f5f310ce36baeb187c3d9bbda74b39ec0ee6379b1bf7514`. Статус: PASS.
 
 Парных наблюдений: 1000000. Счётчики: `{"both": 32906, "g_only": 333, "f_only": 0, "neither": 966761}`.
 
@@ -48,7 +48,7 @@ G/F = 1.0101197350; 95% CI [1.0090279053; 1.0112127462]. Нижняя грани
 
 ## inference
 
-Полный отчёт: [inference.json](measurements/inference.json); SHA-256 `c504ef987edb206dbf75ef4787d2d6e5cf29586ea5ae25f50613bc8b3c9019cd`. Статус: PASS.
+Полный отчёт: [inference.json](measurements/inference.json); SHA-256 `8b5e36ff9b337c1d49392315f1b567e1d7bb065fd7662897e8da7fbe5725e4f7`. Статус: PASS.
 
 Фиксированный классификатор и публичный transcript; отдельные train/holdout, все 126 ячеек и три pooled модели. Проверяется верхняя граница CI ≤0.65 и отсутствие детерминированного декодера.
 
