@@ -9,6 +9,8 @@ const scratch = mkdtempSync(join(tmpdir(), 'venus-negative-'));
 const paths = [...new Set(execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p => p && existsSync(p)))];
 const hash = () => createHash('sha256').update(paths.map(p => p+':'+createHash('sha256').update(readFileSync(p)).digest('hex')).join('\n')).digest('hex');
 const before = hash();
+const sourceIdentity = execFileSync('python',['-B','tools/p01_gate.py','identity'],{encoding:'utf8'}).trim();
+const sourceDirty = Boolean(execFileSync('git',['status','--porcelain'],{encoding:'utf8'}).trim());
 const records = [];
 let sourceChanged;
 function run(command, args) {
@@ -43,7 +45,7 @@ try {
   if(existsSync(join(scratch,'node_modules'))) rmSync(join(scratch,'node_modules'));
   rmSync(scratch,{recursive:true,force:true});
   const after=hash();mkdirSync('.artifacts',{recursive:true});
-  writeFileSync('.artifacts/negative-gates.json',JSON.stringify({source_sha:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),source_before:before,source_after:after,status:records.length===4&&records.every(r=>r.status==='PASS')&&before===after?'PASS':'FAIL',cases:records},null,2));
+  writeFileSync('.artifacts/negative-gates.json',JSON.stringify({source_sha:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),source_identity_sha256:sourceIdentity,source_dirty:sourceDirty,source_before:before,source_after:after,status:records.length===4&&records.every(r=>r.status==='PASS')&&before===after?'PASS':'FAIL',cases:records},null,2));
   sourceChanged = before !== after;
 }
 if(sourceChanged) throw new Error('Negative checks modified source');

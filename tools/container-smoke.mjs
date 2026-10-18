@@ -78,6 +78,10 @@ try {
   started=true;compose(['up','-d','--wait','--wait-timeout','120']);
   const appId=compose(['ps','-q','app']).trim();
   const actual=JSON.parse(run('docker',['inspect',appId]))[0];
+  report.runtime={image:actual.Image,user:actual.Config.User,privileged:actual.HostConfig.Privileged,
+    readonly_rootfs:actual.HostConfig.ReadonlyRootfs,cap_drop:actual.HostConfig.CapDrop,security_opt:actual.HostConfig.SecurityOpt,
+    mounts:actual.Mounts.map(m=>({destination:m.Destination,rw:m.RW})),
+    source_revision:image.Config.Labels['org.opencontainers.image.revision'],version:image.Config.Labels['org.opencontainers.image.version']};
   assert.equal(actual.Image,image.Id);assert.equal(actual.Config.User,'1000:1000');
   assert.equal(actual.HostConfig.Privileged,false);assert.equal(actual.HostConfig.ReadonlyRootfs,true);
   assert.deepEqual(actual.HostConfig.CapDrop,['ALL']);
@@ -88,11 +92,16 @@ try {
   const base=`http://127.0.0.1:${port.HostPort}`;
   await ready(base);
   const version=await request(base,'/api/v1/version',200);
+  report.version=version;
   assert.deepEqual(version,{service:'venus',version:'0.0.0',source_revision:revision,image_digest:image.Id,contract_revision:'P00-2'});
   await request(base,'/health/live',200,{status:'alive'});
   await request(base,'/health/ready',200,{status:'ready',database:'ready',schema_generation:0});
   const web=await fetch(base);assert.equal(web.status,200);assert.match(await web.text(),/<title>Venus<\/title>/);
   await request(base,'/api/v1/rooms',404);record('version-contract-web-and-ready-postgres');
+  const malformed=await fetch(base+'/%MALFORMED_PRIVATE_CANARY');
+  assert.equal(malformed.status,400);assert.equal(malformed.headers.get('cache-control'),'no-store');
+  const badUrl=await malformed.json();assert.equal(badUrl.code,'INVALID_REQUEST');assert.match(badUrl.request_id,/^[a-f0-9-]{36}$/);
+  assert.ok(!JSON.stringify(badUrl).includes('PRIVATE_CANARY'));
   compose(['stop','db']);
   await request(base,'/health/ready',503,{status:'unavailable',database:'unavailable',schema_generation:0});
   await request(base,'/health/live',200,{status:'alive'});record('database-outage-is-not-ready-process-alive');
@@ -102,6 +111,8 @@ try {
   const logs=compose(['logs','--no-color','app']);
   assert.ok(!logs.includes(secret)&&!logs.includes(canary)&&!logs.includes(probe));
   writeFileSync(join(output,'app-logs.txt'),logs);record('structured-logs-do-not-expose-payloads-or-secrets');
+  report.rendered_compose_sha256=createHash('sha256').update(readFileSync(join(output,'compose-rendered.json'))).digest('hex');
+  report.logs_sha256=createHash('sha256').update(readFileSync(join(output,'app-logs.txt'))).digest('hex');
   report.status='PASS';
 } finally {
   if(started) {try {compose(['down','--volumes','--remove-orphans','--timeout','10']);} catch(error) {cleanupError=error;report.status='FAIL';}}

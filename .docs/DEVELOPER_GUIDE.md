@@ -45,6 +45,25 @@ Version `0.0.0` и source revision записываются при build. OCI la
 
 При изменении исходников обновить consistency manifest явно: `python -B tools/update_manifest.py`, проверить diff, выполнить `npm run quality`. В inventory исключены только зависимости, output, caches и секретные env-файлы; новые исходники без manifest вызывают ошибку. Manifest не является криптографической аттестацией издателя.
 
-Откат P01: отдельный PR с `git revert` implementation commit(s), обязательный CI, повторная сборка; запущенную disposable среду остановить её собственным Compose project. Прикладных migrations и пользовательских данных пока нет. Не снимать защиту main ради отката. Protected release/signing реализуются в P06: сейчас ни publish, ни release workflow, ни signing secrets не заведены; обычный PR/fork workflow имеет только contents:read и не использует environments/secrets/write tokens.
+Откат первого bootstrap до merge: остановить собственный disposable Compose project командой `docker compose --project-name <точное-имя> --file infra/venus/compose.yml down --volumes`, закрыть кандидатный PR при отказе от изменения; main остаётся на P00. Имя проекта берётся из rendered Compose конкретного прогона; чужие projects не перечисляются и не удаляются. Smoke сам завершает свою среду в finally. Прикладных migrations и пользовательских данных пока нет.
+
+После первого merge, когда ранее принятого runtime ещё нет, безопасное состояние возврата — остановленная disposable среда, `P01=REOPENED`, исправляющий PR и повторный gate. Код и CI остаются доступными для диагностики; запуск до PASS запрещён. Полный revert bootstrap-коммита удалил бы собственные обязательные workflow и заблокировал проверку rollback PR, поэтому он здесь неприменим. Защита main сохраняется.
+
+Когда существует предыдущий принятый P01 runtime, создайте rollback-ветку от актуального main и восстановите из полного SHA последнего PASSED gate согласованный набор runtime, зависимостей и конфигурации. Практические команды для текущей структуры:
+
+```sh
+git switch -c rollback/p01-runtime main
+git restore --source <accepted-full-sha> -- apps packages infra/venus package.json package-lock.json .node-version .npmrc tsconfig.json tsconfig.base.json
+python -B tools/update_manifest.py
+npm ci
+npm run quality
+git add .
+git commit -m "fix: restore previously accepted P01 runtime"
+npm run test:container
+```
+
+CI/workflow и verifier tooling сохраняются. Если восстановленный runtime несовместим с текущим toolchain/проверками, среда остаётся остановленной; нужен исправляющий PR, а не обход проверки. Rollback PR проходит новые GitHub Actions, отдельные reviews и source-bound gate, затем образ пересобирается из принятого SHA и запускается через тот же loopback Compose. Для P02+ нужен отдельный migration compatibility/backup rollback; приведённый порядок применим только к P01 без прикладных данных.
+
+Protected release/signing реализуются в P06: сейчас ни publish, ни release workflow, ни signing secrets не заведены; обычный PR/fork workflow имеет только contents:read и не использует environments/secrets/write tokens.
 
 Первичные источники выбора: [Node releases](https://github.com/nodejs/Release/blob/main/README.md), [Node24.22.0 checksums](https://nodejs.org/dist/v24.22.0/SHASUMS256.txt), [Vite](https://vite.dev/guide/), [Fastify logging](https://fastify.dev/docs/latest/Reference/Logging/), [GitHub branch protection](https://docs.github.com/en/rest/branches/branch-protection).
