@@ -1,0 +1,122 @@
+
+> venus@0.0.0 test:p02
+> node tools/p02-integration.mjs
+
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.68kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 145B done
+#3 DONE 0.0s
+
+#4 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.99kB done
+#5 DONE 0.0s
+
+#6 [build 12/15] COPY apps apps
+#6 CACHED
+
+#7 [build  3/15] COPY package.json package-lock.json .npmrc ./
+#7 CACHED
+
+#8 [build  4/15] COPY apps/api/package.json apps/api/
+#8 CACHED
+
+#9 [build  2/15] WORKDIR /app
+#9 CACHED
+
+#10 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#10 CACHED
+
+#11 [build 14/15] RUN test -n "934d9a1efcccfb4380e708a8f5143a43efbc3a71" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+#11 CACHED
+
+#12 [build 11/15] COPY tsconfig*.json ./
+#12 CACHED
+
+#13 [build 13/15] COPY packages packages
+#13 CACHED
+
+#14 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+#14 CACHED
+
+#15 [build 10/15] RUN npm ci
+#15 CACHED
+
+#16 [build  5/15] COPY apps/web/package.json apps/web/
+#16 CACHED
+
+#17 [build 15/15] RUN npm prune --omit=dev --ignore-scripts
+#17 CACHED
+
+#18 [stage-1 5/8] COPY --from=build /app/apps/api/dist ./apps/api/dist
+#18 CACHED
+
+#19 [stage-1 7/8] COPY --from=build /app/apps/web/dist ./apps/web/dist
+#19 CACHED
+
+#20 [stage-1 6/8] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+#20 CACHED
+
+#21 [stage-1 3/8] COPY --from=build /app/node_modules ./node_modules
+#21 CACHED
+
+#22 [stage-1 4/8] COPY --from=build /app/packages ./packages
+#22 CACHED
+
+#23 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#23 CACHED
+
+#24 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+#24 CACHED
+
+#25 [stage-1 8/8] COPY --from=build /app/package.json /app/build-metadata.json ./
+#25 CACHED
+
+#9 [build  2/15] WORKDIR /app
+#9 CACHED
+
+#26 exporting to image
+#26 exporting layers done
+#26 exporting manifest sha256:2f5bf32e243236c75ba1ddab9e78031aef99093b65c931cd0eb806354400c759 done
+#26 exporting config sha256:9f0420947ec594eeb59aeaf06be3e6479c334b4450f263580bc4877062c2b15c done
+#26 exporting attestation manifest sha256:d3ce9502e81e4f10d8f5977dfea1940ddb2da15a748d5799fddc393f5abf9b76 0.0s done
+#26 exporting manifest list sha256:53ef13bd71b36e9c4e678d08e2558778dcd937ae23999259dbd21a4f6bda509c 0.0s done
+#26 naming to docker.io/library/venus-p02-403ba7f846b0-previous:local done
+#26 unpacking to docker.io/library/venus-p02-403ba7f846b0-previous:local 0.0s done
+#26 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/wyohp7zz7iy41w8qt4m1yalgq
+ Network venus-p02-403ba7f846b0_default  Creating
+ Network venus-p02-403ba7f846b0_default  Created
+ Container venus-p02-403ba7f846b0-db-1  Creating
+ Container venus-p02-403ba7f846b0-db-1  Created
+ Container venus-p02-403ba7f846b0-db-1  Starting
+ Container venus-p02-403ba7f846b0-db-1  Started
+ Container venus-p02-403ba7f846b0-db-1  Waiting
+ Container venus-p02-403ba7f846b0-db-1  Healthy
+
+ RUN  v5.0.5 C:/.projects/venus
+
+
+ Test Files  1 passed (1)
+      Tests  20 passed (20)
+   Start at  20:34:13
+   Duration  60.45s (tests 99%, import 1%)
+
+ Container venus-p02-403ba7f846b0-db-1  Stopping
+ Container venus-p02-403ba7f846b0-db-1  Stopped
+ Container venus-p02-403ba7f846b0-db-1  Removing
+ Container venus-p02-403ba7f846b0-db-1  Removed
+ Network venus-p02-403ba7f846b0_default  Removing
+ Network venus-p02-403ba7f846b0_default  Removed
