@@ -1,6 +1,6 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED.** Расширенный результат с журналом принят двумя отдельными агентами в round3. Production/public release не разрешён. Ветка реализации: `feature/p01-foundation`; merge в main ещё не выполнен.
+Обновлено: 2026-10-18. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, P02 = IMPLEMENTING.** P01 принят двумя отдельными агентами и влит через защищённый main (`b964ab231972dfd44185c90c21ae283eca2866fd`); исходная история сохранена тегом `p01-accepted-20261018`. Production/public release не разрешён. Ветка реализации: `feature/p02-rooms`.
 
 Созданы защищённый main и PR-процесс, TypeScript monorepo, React/Fastify/PostgreSQL foundation, exact toolchain/locks, quality и четыре отрицательные проверки, OCI smoke с настоящей БД. Реализованы только health/version/static shell на RU/EN/TR. [Developer guide и rollback](../DEVELOPER_GUIDE.md), [реестр P01](p01-registry.json), [ADR-013](../adr/ADR-013-p01-foundation.md).
 
@@ -26,7 +26,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 |---|---|---|
 | P00 | PASSED | Исторический P00-2, original inputs/reviews сохранены |
 | P01 | PASSED | Foundation и журнал в PR #1; прежние FAIL/PASS proof сохранены |
-| P02 | NOT_STARTED | Реальные migrations, комнаты/identity/entry-policy/ACL/retention |
+| P02 | IMPLEMENTING | Room runtime готовится к повторным тестам; независимый pre-freeze round1 выявил 10 замечаний, гейт не пройден |
 | P03 | NOT_STARTED | Production engine и consent |
 | P04 | NOT_STARTED | Reviewed production card catalogue |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
@@ -37,6 +37,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-Следующий этап — P02; до auth реализации уточняется exact guest/operator applicability центральных требований. U-001…005 и custom comfortable UI учтены. Решений владельца, блокирующих P01, нет. Rooms/games/entry пока отсутствуют; schema_generation0 означает SQL connectivity без прикладной схемы. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+Текущий этап — P02, см. [ADR-014](../adr/ADR-014-p02-room-security.md) и [журнал P02](../../.history/2026-10-18-p02.md). Guest/operator scope зафиксирован отдельным overlay; room host не operator. U-001…005 и custom comfortable UI учтены. P02 вводит schema_generation1, но не принят. Production offer отсутствует: public entry закрыт; интеграционные данные и оферта только synthetic. Следующие этапы начинаются после независимого PASS текущего. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.

@@ -1,0 +1,17 @@
+services:
+  db:
+    image: postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8
+    environment:
+      POSTGRES_DB: venus
+      POSTGRES_USER: venus
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    ports: ["127.0.0.1::5432"]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U venus -d venus"]
+      interval: 1s
+      timeout: 2s
+      retries: 60
+secrets:
+  db_password:
+    file: ${VENUS_DB_PASSWORD_FILE:?Set test secret file}

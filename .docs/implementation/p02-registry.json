@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "stage": "P02",
+  "gate": "EXIT-P02",
+  "status": "IMPLEMENTING",
+  "owner": "Codex / Engineering",
+  "branch": "feature/p02-rooms",
+  "baseline_tag": "p01-accepted-20261018",
+  "baseline_sha": "934d9a1efcccfb4380e708a8f5143a43efbc3a71",
+  "checks": [
+    {"id":"P02-CAPACITY","status":"NOT_RUN","required":"100 real PostgreSQL admission races, exactly8 identities, reconnect fencing, host scope"},
+    {"id":"P02-LIFECYCLE","status":"NOT_RUN","required":"close/idle/presence/reservation/grace, ticket expiry/replay"},
+    {"id":"P02-ACL","status":"NOT_RUN","required":"two identities+attacker HTTP/WS, self-only preferences, Origin/CSRF/XSS"},
+    {"id":"P02-REVISION","status":"NOT_RUN","required":"idempotent replay/current auth, stale revision conflict, out-of-order recovery"},
+    {"id":"P02-PERSISTENCE","status":"NOT_RUN","required":"migration upgrade/compatibility, API restart, encryption, deletion, synthetic restore"},
+    {"id":"P02-BROWSER","status":"NOT_RUN","required":"RU/EN/TR create/join/full/closed/offline/retry on isolated synthetic offer"}
+  ],
+  "public_entry": "BLOCKED_UNTIL_APPROVED_OFFER_P05",
+  "pending_user_decisions_for_local_P02": []
+}

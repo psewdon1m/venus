@@ -1,0 +1,211 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Venus P02 additive consumer routes",
+    "version": "P02-1"
+  },
+  "x-base-contract": {
+    "path": "api.v1.openapi.json",
+    "sha256": "77d4e7eeed862ac26bbd48ec96c47b62fd48c7647af4f5ea4cd930fddac410f9",
+    "compatibility": "Original P00-2 paths/types/cookie name preserved; additions only"
+  },
+  "paths": {
+    "/api/v1/entry-policy": {
+      "get": {
+        "operationId": "get_entry_policy",
+        "x-authorization": "public",
+        "description": "Bootstrap anonymous HttpOnly/Secure/Strict admission context; approved offer or fail-closed unavailable; no entry approval invented.",
+        "responses": {
+          "200": {
+            "description": "Availability, current approved or synthetic-test offer, CSRF token scoped to anonymous context",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryPolicy"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Strict Error"
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{room_id}/invite": {
+      "get": {
+        "operationId": "get_own_room_invite",
+        "x-authorization": "host",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "description": "Current own room host only; re-exposes existing invite after reload, never grants host authority; no other preferences.",
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Host invite URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "invite_url"
+                  ],
+                  "properties": {
+                    "invite_url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Strict Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "RoomSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "venus_room_session"
+      }
+    },
+    "schemas": {
+      "ApprovedOffer": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "digest",
+          "text",
+          "synthetic"
+        ],
+        "properties": {
+          "version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "text": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ru",
+              "en",
+              "tr"
+            ],
+            "properties": {
+              "ru": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 131072
+              },
+              "en": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 131072
+              },
+              "tr": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 131072
+              }
+            }
+          },
+          "synthetic": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EntryPolicy": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "available",
+          "offer",
+          "csrf_token"
+        ],
+        "properties": {
+          "available": {
+            "type": "boolean"
+          },
+          "offer": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/ApprovedOffer"
+              }
+            ]
+          },
+          "csrf_token": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{43}$"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "available": {
+                  "const": false
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "offer": {
+                  "type": "null"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "offer": {
+                  "$ref": "#/components/schemas/ApprovedOffer"
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "x-websocket": {
+    "path": "/api/v1/rooms/{room_id}/ws",
+    "origin": "exact configured HTTPS origin",
+    "cookie": "room-scoped venus_room_session",
+    "first_frame": {
+      "type": "auth",
+      "ticket": "one-use,60s"
+    },
+    "pre_auth_timeout_ms": 5000,
+    "heartbeat_ms": 20000,
+    "max_payload_bytes": 8192,
+    "outgoing": "events.v1.schema.json room.snapshot; same ACL before each delivery; no query credentials"
+  }
+}
