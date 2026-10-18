@@ -1,0 +1,269 @@
+{
+  "source_sha": "14482d28b4a2d18be22f5e3939b6161f004fbfe2",
+  "source_dirty": false,
+  "synthetic": true,
+  "pack_digest": "sha256:f9d28982ab613b86eecf743e82520d3b2fdd9455de749b71976444a107945634",
+  "tests": [
+    {
+      "id": "P03-SCHEMA",
+      "status": "PASS",
+      "detail": {
+        "core_generation": 1,
+        "engine_generation": 1,
+        "accepted_p02_core_checksum_verified": true,
+        "concurrent_first_upgrade_calls": 3,
+        "checksum_rejection": true,
+        "future_rejection": true
+      }
+    },
+    {
+      "id": "P03-START-RACE",
+      "status": "PASS",
+      "detail": {
+        "concurrent_starts": 6,
+        "concurrent_duplicate_advances": 6,
+        "rounds": 2
+      }
+    },
+    {
+      "id": "P03-SNAPSHOT-LOCK",
+      "status": "PASS",
+      "detail": {
+        "snapshot_sha256": "9a26fcd2253dc16ad8232d6b3b06869149ee33d13f3e68d00065a0cc10b8464a",
+        "active_and_paused_locked": true,
+        "neutral_skip_available": true
+      }
+    },
+    {
+      "id": "P03-CONSENT-ACL",
+      "status": "PASS",
+      "detail": {
+        "nonactor_host_denied": true,
+        "unauth_denied": true,
+        "two_scopes": true,
+        "late_decline_revokes": true
+      }
+    },
+    {
+      "id": "P03-CONDITION-REVISION",
+      "status": "PASS",
+      "detail": {
+        "condition_private": true,
+        "old_acks_reset": true,
+        "active_condition_immutable": true
+      }
+    },
+    {
+      "id": "P03-CLOCK-DEADLINE",
+      "status": "PASS",
+      "detail": {
+        "invitation_pre_final_ack_denied": true,
+        "action_pre_final_ack_denied": true,
+        "at_final_ack_allowed": true,
+        "exact_invitation_pending_deadline_denied": true,
+        "exact_action_pending_deadline_denied": true
+      }
+    },
+    {
+      "id": "P03-DISPATCH-FENCE",
+      "status": "PASS",
+      "detail": {
+        "prepared_references": 1,
+        "committed_decline_before_dispatch": true,
+        "only_clear_delivered": true
+      }
+    },
+    {
+      "id": "P03-OLD-RECIPIENT-CLEAR",
+      "status": "PASS",
+      "detail": {
+        "old_round": "00a0355a-152d-4943-92a0-c35210ebd17d",
+        "current_round": "6998679c-51d7-4ab2-a4e5-d7e5acd192c9",
+        "clear_delivered": true
+      }
+    },
+    {
+      "id": "P03-HTTP-WS-PRIVACY",
+      "status": "PASS",
+      "detail": {
+        "two_authenticated_actor_sockets": true,
+        "independent_nonactor_host_socket": true,
+        "public_generic_only": true,
+        "revoke_clears": true
+      }
+    },
+    {
+      "id": "P03-FINISH-REPLAY",
+      "status": "PASS",
+      "detail": {
+        "same_key_replay_after_advance": true,
+        "both_alias_directions": true,
+        "cross_alias_changed_body_rejected": true
+      }
+    },
+    {
+      "id": "P03-PINNING-RESTART",
+      "status": "PASS",
+      "detail": {
+        "old_pack": "sha256:f9d28982ab613b86eecf743e82520d3b2fdd9455de749b71976444a107945634",
+        "new_provider_revision": 2,
+        "snapshot_unchanged": true,
+        "locale_and_spectator_unchanged": true
+      }
+    },
+    {
+      "id": "P03-VERSION-REFUSAL",
+      "status": "PASS",
+      "detail": {
+        "unknown_policy_rejected": true,
+        "unknown_snapshot_pack_rejected": true,
+        "pinned_pack_retained_without_current_provider": true,
+        "new_game_without_provider_rejected": true,
+        "empty_safe_pool_no_round": true,
+        "x_veto_preserved": true
+      }
+    },
+    {
+      "id": "P03-SQL-SCOPE",
+      "status": "PASS",
+      "detail": {
+        "consent_exactly_two": true,
+        "nonparticipant_actor_fk_denied": true,
+        "one_running_game": true
+      }
+    },
+    {
+      "id": "P03-DECLINE-RACES",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          {
+            "order": "accept_then_decline",
+            "statuses": [
+              200,
+              200
+            ],
+            "state": "stopped"
+          },
+          {
+            "order": "decline_then_accept",
+            "statuses": [
+              200,
+              409
+            ],
+            "state": "declined"
+          },
+          {
+            "order": "concurrent",
+            "statuses": [
+              200,
+              200
+            ],
+            "state": "stopped"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P03-TRANSPORT-RESUME",
+      "status": "PASS",
+      "detail": {
+        "same_identity": true,
+        "snapshot_unchanged": true,
+        "old_consent_not_revived": true,
+        "safety_requires_host_resume": true
+      }
+    },
+    {
+      "id": "P03-STOP-LEAVE-CLOSE",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          {
+            "operation": "stop",
+            "http_denied": true,
+            "ws_cleared_or_closed": true
+          },
+          {
+            "operation": "leave",
+            "http_denied": true,
+            "ws_cleared_or_closed": true
+          },
+          {
+            "operation": "close",
+            "http_denied": true,
+            "ws_cleared_or_closed": true,
+            "private_engine_rows_deleted": true
+          }
+        ],
+        "room_close_private_wipe": true,
+        "host_close_available_without_current_offer": true
+      }
+    },
+    {
+      "id": "P03-IDENTITY-NO-SUBSTITUTION",
+      "status": "PASS",
+      "detail": {
+        "same_name": true,
+        "new_uuid": true,
+        "old_cookie_revoked": true,
+        "new_actor_http_denied": true,
+        "no_private_ws": true,
+        "snapshot_unchanged": true
+      }
+    },
+    {
+      "id": "P03-BACKUP-RESTORE",
+      "status": "PASS",
+      "detail": {
+        "encrypted_roundtrip": true,
+        "seven_day_expiry": true,
+        "exact_snapshot_identity_preferences_preserved": true,
+        "external_closed_ledger_reapplied": true,
+        "expired_scopes_revoked_before_access": true,
+        "private_condition_erased": true
+      }
+    },
+    {
+      "id": "P03-ROLLBACK",
+      "status": "PASS",
+      "detail": {
+        "previous_source": "12a028b174cc03a4a8ea1398f321d23c6a4c6e98",
+        "previous_image": "sha256:941e9ce0310a73fd9fb4ce26e77e56608caf9c20756865214fa12c2553ea8420",
+        "api_stopped_before_quiesce": true,
+        "core_identities_preferences_unchanged": true,
+        "old_room_leave_close_work": true,
+        "old_close_requires_synthetic_offer": true,
+        "old_default_close_status": 503,
+        "old_default_close_code": "ENTRY_POLICY_UNAVAILABLE",
+        "compatibility_bootstrap": "Exact accepted P02 image/modules, explicitly synthetic offer adapter; no production approval",
+        "closed_engine_rows_purged": true,
+        "old_consent_not_revived": true,
+        "new_session_seed": true
+      }
+    }
+  ],
+  "all_expected_checks": 19,
+  "expected_checks": [
+    "P03-SCHEMA",
+    "P03-START-RACE",
+    "P03-SNAPSHOT-LOCK",
+    "P03-CONSENT-ACL",
+    "P03-CONDITION-REVISION",
+    "P03-CLOCK-DEADLINE",
+    "P03-DISPATCH-FENCE",
+    "P03-OLD-RECIPIENT-CLEAR",
+    "P03-HTTP-WS-PRIVACY",
+    "P03-FINISH-REPLAY",
+    "P03-PINNING-RESTART",
+    "P03-VERSION-REFUSAL",
+    "P03-SQL-SCOPE",
+    "P03-DECLINE-RACES",
+    "P03-TRANSPORT-RESUME",
+    "P03-STOP-LEAVE-CLOSE",
+    "P03-IDENTITY-NO-SUBSTITUTION",
+    "P03-BACKUP-RESTORE",
+    "P03-ROLLBACK"
+  ],
+  "status": "PASS"
+}

@@ -3,7 +3,7 @@ import {describe,it,before,after,beforeEach,afterEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
 import {randomUUID,createHash} from 'node:crypto';
-import {execFileSync} from 'node:child_process';
+import {execFileSync,spawnSync} from 'node:child_process';
 import {once} from 'node:events';
 import pg from 'pg';
 import WebSocket from 'ws';
@@ -352,18 +352,47 @@ describe('EXIT-P03 actual PostgreSQL / HTTPS / WS',()=>{
     const r=await fixture(),q=await fixture(),old=(await pool.query('SELECT snapshot_cipher FROM game_sessions WHERE id=$1',[r.gameId])).rows[0];
     const oldSnapshot=keys.decrypt(old.snapshot_cipher,`game-snapshot:${r.roomId}:${r.gameId}:1`),identities=(await pool.query('SELECT room_id,id,role FROM room_members WHERE room_id=$1 ORDER BY id',[r.roomId])).rows;
     const prefs=(await pool.query('SELECT owner_member_id,cipher FROM private_preferences WHERE room_id=$1 ORDER BY owner_member_id',[r.roomId])).rows;
-    const container=process.env.P03_PROJECT+'-rollback',docker=args=>execFileSync('docker',args,{encoding:'utf8',maxBuffer:4*1024*1024});let launched=false;
+    assert.match(process.env.P03_PROJECT,/^venus-p03-[a-f0-9]{12}$/);
+    const container=process.env.P03_PROJECT+'-rollback',ledgerVolume=container+'-ledger',diagnostics=[],cleanupErrors=[];
+    const docker=args=>execFileSync('docker',args,{encoding:'utf8',maxBuffer:4*1024*1024,stdio:['pipe','pipe','pipe']});
+    const privateValues=[readFileSync(process.env.DB_PASSWORD_FILE,'utf8').trim(),...Object.values(JSON.parse(readFileSync(process.env.KEYRING_FILE,'utf8')).keys),...[r,q].flatMap(room=>[...room.clients.values()].flatMap(c=>[...c.jar.values(),keys.sign('csrf:'+sessionToken(c))]))].filter(Boolean);
+    const sanitize=value=>privateValues.reduce((text,secret)=>text.split(secret).join('[REDACTED]'),String(value));
+    let phase='production',volumeCreated=false,primaryError;
+    function inspectOld() {return spawnSync('docker',['inspect',container],{encoding:'utf8',maxBuffer:4*1024*1024});}
+    function collect(phaseName) {
+      const path=`.artifacts/p03/rollback-${process.env.P03_PROJECT}-${phaseName}.txt`,inspected=inspectOld(),logs=spawnSync('docker',['logs',container],{encoding:'utf8',maxBuffer:4*1024*1024});
+      let state={inspect_status:inspected.status,inspect_error:inspected.stderr};
+      if(inspected.status===0) {const row=JSON.parse(inspected.stdout)[0];state={image:row.Image,user:row.Config.User,supplementary_groups:row.HostConfig.GroupAdd,state:row.State,mounts:row.Mounts.map(m=>({type:m.Type,destination:m.Destination,rw:m.RW}))};}
+      writeFileSync(path,sanitize(JSON.stringify({phase:phaseName,...state},null,2)+'\n--- captured stdout/stderr ---\n'+logs.stdout+'\n'+logs.stderr));diagnostics.push(path);
+    }
+    function stopRemove(phaseName) {
+      const before=inspectOld();if(before.status!==0) {if(/No such (?:object|container)/i.test(before.stderr)) return;throw new Error('Rollback inspect failed: '+sanitize(before.stderr));}
+      collect(phaseName+'-before-stop');
+      if(JSON.parse(before.stdout)[0].State.Running) {
+        const stopped=spawnSync('docker',['stop','--timeout','10',container],{encoding:'utf8'});
+        if(stopped.status!==0&&!/No such (?:object|container)/i.test(stopped.stderr)) throw new Error('Rollback stop failed: '+sanitize(stopped.stderr));
+      }
+      collect(phaseName+'-after-stop');
+      const removed=spawnSync('docker',['rm','--volumes',container],{encoding:'utf8'});
+      if(removed.status!==0&&!/No such (?:object|container)/i.test(removed.stderr)) throw new Error('Rollback remove failed: '+sanitize(removed.stderr));
+    }
     await runtime.pause();
     try {
       await service().games.quiesce();assert.equal((await pool.query("SELECT count(*)::int AS n FROM game_sessions WHERE state IN ('waiting','active','paused')")).rows[0].n,0);
       assert.equal((await pool.query('SELECT count(*)::int AS n FROM game_rounds WHERE session_id=ANY($1::uuid[])',[[r.gameId,q.gameId]])).rows[0].n,0);
-      const runArgs=['run','--detach','--rm','--name',container,'--network','container:'+process.env.P02_DB_CONTAINER,'--mount',`type=bind,src=${process.env.DB_PASSWORD_FILE},dst=/run/secrets/db_password,readonly`,'--mount',`type=bind,src=${process.env.KEYRING_FILE},dst=/run/secrets/keyring,readonly`,'--mount',`type=bind,src=${process.env.DELETION_LEDGER_FILE},dst=/var/lib/venus/deletions.jsonl`,'--env','DB_HOST=127.0.0.1','--env','DB_PASSWORD_FILE=/run/secrets/db_password','--env','KEYRING_FILE=/run/secrets/keyring','--env','DELETION_LEDGER_FILE=/var/lib/venus/deletions.jsonl','--env','APP_ORIGIN='+runtime.origin,'--env','P03_ROLLBACK_CLOCK='+clock,process.env.P03_PREVIOUS_IMAGE];
-      docker(runArgs);launched=true;
+      // Real Linux permissions even on Docker Desktop: the host-owned 0600 file stays private.
+      // This isolated metadata volume deliberately has an owner different from image UID1000.
+      docker(['volume','create','--label','venus.test-project='+process.env.P03_PROJECT,ledgerVolume]);volumeCreated=true;
+      const initialize=`import fs from 'node:fs';fs.chownSync('/var/lib/venus',1000,1000);fs.chmodSync('/var/lib/venus',0o750);const path='/var/lib/venus/deletions.jsonl';fs.writeFileSync(path,${JSON.stringify(readFileSync(process.env.DELETION_LEDGER_FILE,'utf8'))});fs.chownSync(path,12345,12346);fs.chmodSync(path,0o660);const s=fs.statSync(path);console.log(JSON.stringify({uid:s.uid,gid:s.gid,mode:s.mode&0o777}));`;
+      const permissions=JSON.parse(execFileSync('docker',['run','-i','--rm','--network','none','--user','0:0','--mount',`type=volume,src=${ledgerVolume},dst=/var/lib/venus`,process.env.P03_PREVIOUS_IMAGE,'node','--input-type=module','-'],{input:initialize,encoding:'utf8',stdio:['pipe','pipe','pipe']}));
+      assert.deepEqual(permissions,{uid:12345,gid:12346,mode:0o660});
+      const runArgs=['run','--detach','--name',container,'--group-add','12346','--network','container:'+process.env.P02_DB_CONTAINER,'--mount',`type=bind,src=${process.env.DB_PASSWORD_FILE},dst=/run/secrets/db_password,readonly`,'--mount',`type=bind,src=${process.env.KEYRING_FILE},dst=/run/secrets/keyring,readonly`,'--mount',`type=volume,src=${ledgerVolume},dst=/var/lib/venus`,'--env','DB_HOST=127.0.0.1','--env','DB_PASSWORD_FILE=/run/secrets/db_password','--env','KEYRING_FILE=/run/secrets/keyring','--env','DELETION_LEDGER_FILE=/var/lib/venus/deletions.jsonl','--env','APP_ORIGIN='+runtime.origin,'--env','P03_ROLLBACK_CLOCK='+clock,process.env.P03_PREVIOUS_IMAGE];
+      docker(runArgs);
       const fetchOld=(path,options={})=>{
         const script=`try{const r=await fetch(${JSON.stringify('http://127.0.0.1:4300'+path)},${JSON.stringify(options)});console.log(JSON.stringify({status:r.status,body:await r.json()}));}catch{console.error('Previous image request unavailable');process.exitCode=1;}`;
         return JSON.parse(execFileSync('docker',['exec','-i',container,'node','--input-type=module','-'],{input:script,encoding:'utf8',stdio:['pipe','pipe','pipe']}));
       };
-      const waitOld=async()=>{let ready=false;for(let index=0;index<50;index++) {try {if(fetchOld('/health/ready').status===200) {ready=true;break;}} catch { /* The previous image may still be starting. */ }await new Promise(resolve=>setTimeout(resolve,100));}assert.equal(ready,true);};
+      const waitOld=async()=>{let ready=false;for(let index=0;index<50;index++) {const inspected=inspectOld();if(inspected.status===0&&!JSON.parse(inspected.stdout)[0].State.Running) {collect(phase+'-startup-exit');throw new Error('Rollback '+phase+' exited before readiness; see sanitized rollback diagnostic.');}try {if(fetchOld('/health/ready').status===200) {ready=true;break;}} catch { /* The previous image may still be starting. */ }await new Promise(resolve=>setTimeout(resolve,100));}if(!ready) collect(phase+'-readiness-timeout');assert.equal(ready,true);};
       await waitOld();
       assert.equal(fetchOld('/api/v1/version').body.source_revision,process.env.P03_PREVIOUS_SOURCE);
       assert.equal(fetchOld(base(r),{headers:{cookie:r.host.cookies}}).status,200);
@@ -375,20 +404,34 @@ describe('EXIT-P03 actual PostgreSQL / HTTPS / WS',()=>{
       const qView=fetchOld(base(q),{headers:{cookie:q.host.cookies}});assert.equal(qView.status,200);
       const defaultClose=oldPost(q.host,base(q)+'/close',{expected_rev:qView.body.room_rev,idempotency_key:randomUUID()});assert.equal(defaultClose.status,503);assert.equal(defaultClose.body.code,'ENTRY_POLICY_UNAVAILABLE');
       assert.equal(fetchOld('/api/v1/entry-policy').body.available,false);
-      docker(['stop','--time','10',container]);launched=false;
+      stopRemove('production');phase='synthetic';
       // Exact accepted image/modules; only this explicit synthetic bootstrap injects a test offer.
       // The production entry point above remains fail-closed and receives no fabricated approval.
       const bootstrap=`import {createApp} from '/app/apps/api/dist/app.js';import {database} from '/app/apps/api/dist/database.js';import {Rooms} from '/app/apps/api/dist/rooms.js';import {Keyring,DeletionLedger,hash} from '/app/apps/api/dist/security.js';import {migrate,schemaProbe,schemaGeneration} from '/app/apps/api/dist/migrations.js';import {readFileSync} from 'node:fs';const db=database();await migrate(db.pool);const text={ru:'СИНТЕТИЧЕСКИЙ ТЕСТ. Не оферта.',en:'SYNTHETIC TEST. Not a public offer.',tr:'SENTETİK TEST. Kamuya açık teklif değildir.'};const offer={version:'synthetic-p02-1',digest:'sha256:'+hash(JSON.stringify(text)),text,synthetic:true};const rooms=new Rooms({pool:db.pool,keys:Keyring.fromFile(process.env.KEYRING_FILE),ledger:new DeletionLedger(process.env.DELETION_LEDGER_FILE),origin:process.env.APP_ORIGIN,now:()=>Number(process.env.P03_ROLLBACK_CLOCK),offer:()=>offer});await rooms.maintain();const metadata=JSON.parse(readFileSync('/app/build-metadata.json','utf8'));const app=await createApp({rooms,probe:()=>schemaProbe(db.pool),schemaGeneration,logger:false,version:{service:'venus',version:metadata.version,source_revision:metadata.source_revision,image_digest:'unreleased',contract_revision:'P00-2'}});process.once('SIGTERM',()=>{void app.close().then(()=>db.close());});await app.listen({host:'0.0.0.0',port:4300});`;
-      docker([...runArgs,'node','--input-type=module','-e',bootstrap]);launched=true;await waitOld();
+      docker([...runArgs,'node','--input-type=module','-e',bootstrap]);await waitOld();
       assert.equal(fetchOld('/api/v1/version').body.source_revision,process.env.P03_PREVIOUS_SOURCE);
       const enabledView=fetchOld(base(q),{headers:{cookie:q.host.cookies}});assert.equal(enabledView.status,200);
       assert.equal(oldPost(q.host,base(q)+'/close',{expected_rev:enabledView.body.room_rev,idempotency_key:randomUUID()}).status,200);
-    } finally {if(launched) docker(['stop','--time','10',container]);await runtime.resume();}
+      collect('synthetic-after-close');
+    } catch(error) {primaryError=error;try {collect(phase+'-failure');} catch(diagnosticError) {cleanupErrors.push('Diagnostic: '+sanitize(diagnosticError.message));}}
+    finally {
+      try {stopRemove(phase);} catch(error) {cleanupErrors.push('Container cleanup: '+sanitize(error.message));}
+      if(volumeCreated) {
+        try {
+          const restoredLedger=docker(['run','--rm','--network','none','--user','1000:1000','--group-add','12346','--mount',`type=volume,src=${ledgerVolume},dst=/var/lib/venus`,process.env.P03_PREVIOUS_IMAGE,'node','--input-type=module','-e',"import fs from 'node:fs';process.stdout.write(fs.readFileSync('/var/lib/venus/deletions.jsonl','utf8'));"]);
+          writeFileSync(process.env.DELETION_LEDGER_FILE,restoredLedger);
+        } catch(error) {cleanupErrors.push('Ledger synchronization: '+sanitize(error.message));}
+        try {docker(['volume','rm',ledgerVolume]);} catch(error) {cleanupErrors.push('Volume cleanup: '+sanitize(error.message));}
+      }
+      try {await runtime.resume();} catch(error) {cleanupErrors.push('Runtime resume: '+sanitize(error.message));}
+    }
+    if(primaryError) {if(cleanupErrors.length) console.error(JSON.stringify({event:'rollback_cleanup_secondary_failure',errors:cleanupErrors}));throw primaryError;}
+    assert.deepEqual(cleanupErrors,[],'Rollback cleanup must complete');
     assert.equal((await current(r)).state,'aborted');assert.equal((await pool.query('SELECT snapshot_cipher FROM game_sessions WHERE id=$1',[r.gameId])).rows[0].snapshot_cipher,null);
     assert.equal((await pool.query('SELECT count(*)::int AS n FROM game_sessions WHERE room_id=$1',[q.roomId])).rows[0].n,0);
     for(const actor of r.actors) await websocket(r,actor);
     await start(r,'questions',5);const fresh=(await pool.query('SELECT snapshot_cipher FROM game_sessions WHERE id=$1',[r.gameId])).rows[0];const next=keys.decrypt(fresh.snapshot_cipher,`game-snapshot:${r.roomId}:${r.gameId}:1`);
     assert.notEqual(next.session_id,oldSnapshot.session_id);assert.notEqual(next.seed,oldSnapshot.seed);
-    mark('P03-ROLLBACK',{previous_source:process.env.P03_PREVIOUS_SOURCE,previous_image:process.env.P03_PREVIOUS_IMAGE,api_stopped_before_quiesce:true,core_identities_preferences_unchanged:true,old_room_leave_close_work:true,old_close_requires_synthetic_offer:true,old_default_close_status:503,old_default_close_code:'ENTRY_POLICY_UNAVAILABLE',compatibility_bootstrap:'Exact accepted P02 image/modules, explicitly synthetic offer adapter; no production approval',closed_engine_rows_purged:true,old_consent_not_revived:true,new_session_seed:true});
+    mark('P03-ROLLBACK',{previous_source:process.env.P03_PREVIOUS_SOURCE,previous_image:process.env.P03_PREVIOUS_IMAGE,api_stopped_before_quiesce:true,core_identities_preferences_unchanged:true,old_room_leave_close_work:true,old_close_requires_synthetic_offer:true,old_default_close_status:503,old_default_close_code:'ENTRY_POLICY_UNAVAILABLE',compatibility_bootstrap:'Exact accepted P02 image/modules, explicitly synthetic offer adapter; no production approval',linux_ledger_permissions:{owner_uid:12345,owner_gid:12346,mode:'0660',runtime_uid:1000,supplementary_gid:12346},rollback_diagnostics:diagnostics,private_volume_cleaned:true,closed_engine_rows_purged:true,old_consent_not_revived:true,new_session_seed:true});
   });
 });

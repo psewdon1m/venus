@@ -48,13 +48,82 @@ def cells(rows,sizes):
     expected={(n,m,c) for n in sizes for m in MODES for c in CONTEXTS}
     require(len(actual)==len(expected) and set(actual)==expected,'missing/duplicate measurement stratum')
 
+def validate_progressive(result,section):
+    diag=result['progressive_diagnostics'];require(diag['status']=='PASS' and diag['violations']==[],'progressive diagnostics failed')
+    rows=diag['strata'];actual=[(r['size'],r['mode'],r['context'],r['stage']) for r in rows]
+    expected={(n,m,c,s) for n in range(2,9) for m in MODES for c in CONTEXTS for s in range(1,5)}
+    require(len(actual)==168 and set(actual)==expected,'progressive stage strata incomplete/duplicated')
+    private_total=round_total=0;row_by_cell={tuple([r['size'],r['mode'],r['context'],r['stage']]):r for r in rows}
+    for row in rows:
+        numeric=['rounds','private_eligible_before_cap','private_eligible_after_cap','private_options_before_cap_sum','private_options_after_cap_sum','private_selected']
+        require(all(type(row[k]) is int and row[k]>=0 for k in numeric),'invalid progressive counter')
+        rounds=row['rounds'];private=row['private_selected'];before=row['private_eligible_before_cap'];after=row['private_eligible_after_cap']
+        require(0<=private<=after<=before<=rounds,'private eligibility denominator inconsistent')
+        require(row['private_options_before_cap_sum']>=before and row['private_options_after_cap_sum']>=after and row['private_options_after_cap_sum']<=row['private_options_before_cap_sum'],'private option count inconsistent')
+        if row['stage']<3:require(before==after==private==0,'private proposal before stage3')
+        histogram=row['min_comfort_histogram'];interactions=row['interactions']
+        require(set(histogram)=={'0','1','2','3','4'} and set(interactions)=={'group','solo','pair_public','pair_private'},'missing raw progressive distributions')
+        require(all(type(v) is int and v>=0 for v in [*histogram.values(),*interactions.values()]) and sum(histogram.values())==sum(interactions.values())==rounds and interactions['pair_private']==private,'progressive raw histograms disagree')
+        anti=row['anti_repeat'];require(set(anti)=={'decisions_with_unused_alternative','private_choices_with_alternative','violations','same_pair_no_alternative_exceptions'} and all(type(v) is int and v>=0 for v in anti.values()),'anti-repeat counters incomplete')
+        require(anti['violations']==0 and anti['private_choices_with_alternative']<=anti['decisions_with_unused_alternative']<=after and anti['private_choices_with_alternative']<=private and anti['same_pair_no_alternative_exceptions']<=private-anti['private_choices_with_alternative'],'anti-repeat violation or invalid denominator')
+        if section=='fairness' and row['size']>=3:require(anti['same_pair_no_alternative_exceptions']==0,'exchangeable profile has an admissible alternative')
+        if section=='fairness':require(rounds==10000,'fairness stage rounds disagree with fixed sample/profile')
+        private_total+=private;round_total+=rounds
+    if section=='fairness':
+        for n in range(2,9):
+            for mode in MODES:
+                for context in CONTEXTS:
+                    late=[row_by_cell[(n,mode,context,s)] for s in (3,4)]
+                    require(sum(r['private_eligible_after_cap'] for r in late)>0 and sum(r['private_selected'] for r in late)>0,'exchangeable eligible late private distribution is degenerate')
+    sessions=diag['sessions'];expected_count=70000 if section=='invariants' else 84000
+    require(len(sessions)==expected_count,'per-session private cap evidence incomplete')
+    seeds=set();session_private=session_rounds=0;completed_by_size={n:0 for n in range(2,9)}
+    stage_expected={cell:0 for cell in expected};private_expected={cell[:3]:0 for cell in expected};repeat_expected={cell[:3]:0 for cell in expected};prefix_cache={};refused={}
+    for session in sessions:
+        seed=session['seed'];require(seed not in seeds,'duplicate diagnostic session seed');seeds.add(seed);parts=seed.split(':')
+        if section=='invariants':
+            require(len(parts)==5 and parts[:3]==['venus','P03-M1','test'],'unexpected invariant seed family')
+            n=int(parts[3]);index=int(parts[4]);require(str(n)==parts[3] and str(index)==parts[4] and 2<=n<=8 and 0<=index<10000,'invariant seed outside declared range')
+            require(session['total_rounds']==1+index%100,'changed invariant round profile')
+            mode=['questions','truth_or_dare','yes_but'][index%3];context=['online','in_person'][(index//3)%2]
+        else:
+            require(len(parts)==7 and parts[:3]==['venus','P03-M2','fairness'],'unexpected fairness seed family')
+            n=int(parts[3]);index=int(parts[6]);require(str(n)==parts[3] and str(index)==parts[6] and 2<=n<=8 and parts[4] in MODES and parts[5] in CONTEXTS and 0<=index<2000,'fairness seed outside declared range')
+            require(session['total_rounds']==20 and session['completed'] is True,'fairness profile incomplete')
+            mode=parts[4];context=parts[5]
+        require(all(type(session[k]) is int and session[k]>=0 for k in ['total_rounds','selected_rounds','private_count','private_cap']),'invalid per-session cap counter')
+        total=session['total_rounds'];require(1<=total<=100 and session['private_cap']==math.ceil(.25*total) and session['private_count']<=session['private_cap'] and session['private_count']<=session['selected_rounds']<=total,'private session cap violated')
+        require(type(session['completed']) is bool and (session['selected_rounds']==total if session['completed'] else session['selected_rounds']<total),'completed/refused session conflated')
+        session_private+=session['private_count'];session_rounds+=session['selected_rounds'];completed_by_size[n]+=int(session['completed'])
+        key=(total,session['selected_rounds'])
+        if key not in prefix_cache:
+            counts=[0]*4
+            for round_index in range(1,session['selected_rounds']+1):counts[min(4,1+(4*(round_index-1))//max(1,total-1))-1]+=1
+            prefix_cache[key]=counts
+        for stage,count in enumerate(prefix_cache[key],1):stage_expected[(n,mode,context,stage)]+=count
+        private_expected[(n,mode,context)]+=session['private_count']
+        repeat_expected[(n,mode,context)]+=max(0,session['private_count']-1)
+        if not session['completed']:refused[seed]=session['selected_rounds']
+    require(session_private==private_total and session_rounds==round_total,'session and stage totals disagree')
+    require(all(row_by_cell[cell]['rounds']==count for cell,count in stage_expected.items()),'session seeds/prefixes contradict stage distribution')
+    require(all(sum(row_by_cell[(*cell,s)]['private_selected'] for s in range(1,5))==count for cell,count in private_expected.items()),'session private counts contradict stratum distribution')
+    for cell,repeats in repeat_expected.items():
+        anti=[row_by_cell[(*cell,s)]['anti_repeat'] for s in range(1,5)]
+        if cell[0]==2:require(sum(r['private_choices_with_alternative']+r['decisions_with_unused_alternative'] for r in anti)==0 and sum(r['same_pair_no_alternative_exceptions'] for r in anti)==repeats,'N2 private repetition counter inconsistent')
+        elif section=='fairness':require(sum(r['private_choices_with_alternative'] for r in anti)==repeats,'exchangeable private alternative choices inconsistent')
+    if section=='invariants':
+        require(all(completed_by_size[r['size']]==r['completed'] for r in result['sizes']) and round_total==sum(r['rounds'] for r in result['sizes']),'invariant completed/round counters disagree')
+        require(len(result['safe_refusals'])==expected_count-sum(completed_by_size.values()),'safe refusals not separately retained')
+        require(len(result['safe_refusals'])==len(refused) and {r['seed']:r['completed_prefix'] for r in result['safe_refusals']}==refused and all(r['reason']=='SAFE_POOL_EXHAUSTED' for r in result['safe_refusals']),'safe-refusal prefixes/seeds disagree')
+    else:require(round_total==84000*20,'fairness round distribution incomplete')
+
 def validate_statistics(root,report):
     """Validate independent statistical records without trusting their top-level PASS."""
     sha=report['source_sha'];cid=report['source_identity_sha256']
     protocol=read(root,report['measurement_protocol'])
-    require(protocol['protocol_revision']=='P03-M2','unknown measurement protocol')
+    require(protocol['protocol_revision']=='P03-M3','unknown measurement protocol')
     declared=read(root,report['measurement_inputs'])
-    require(declared['protocol_revision']=='P03-M2','measurement design not pinned')
+    require(declared['protocol_revision']=='P03-M3','measurement design not pinned')
     for path,expected in declared['raw_input_sha256'].items():
         require(digest((root/path).read_bytes())==expected,'changed measured input: '+path)
         pinned=subprocess.check_output(['git','show',protocol['preregistration_tag']+':'+path],cwd=root)
@@ -74,12 +143,17 @@ def validate_statistics(root,report):
     require(len(inv['sizes'])==7 and {r['size'] for r in inv['sizes']}==set(range(2,9)) and all(r['sessions']==10000 and r['completed']+r['safe_refusals']==10000 for r in inv['sizes']),'per-size simulation coverage insufficient')
     checks=inv['invariants'];require(len(checks)==15 and {r['id'] for r in checks}=={'I'+str(n).zfill(2) for n in range(1,16)} and all(r['violations']==0 for r in checks),'fifteen independent invariant records required')
     require(all(r['checks']>0 or r['runtime_evidence_required'] for r in checks),'unexecuted invariant silently passed')
+    validate_progressive(inv,'invariants')
     fair=results['fairness'];cells(fair['strata'],range(2,9))
+    validate_progressive(fair,'fairness')
     for row in fair['strata']:
         require(row['status']=='PASS' and row['sessions']==2000 and row['K']>0 and row['D']==2*row['K'],'fairness denominator/sample invalid')
         require(row['max_individual_session_share']<=.5 and row['aggregate_player_share_gap']<=.02,'fairness threshold violated')
         counts=row['invitation_counts'];require(len(counts)==row['size'] and sum(counts)==row['D'],'fairness raw count mismatch')
+        require(all(type(v) is int and 0<=v<=row['K'] for v in counts),'individual invitation count exceeds total pair offers')
         require(math.isclose((max(counts)-min(counts))/row['D'],row['aggregate_player_share_gap'],abs_tol=1e-12),'fairness gap contradicts raw counts')
+        progressive=fair['progressive_diagnostics']['strata'];same_cell=[r for r in progressive if (r['size'],r['mode'],r['context'])==(row['size'],row['mode'],row['context'])]
+        require(row['K']==sum(r['interactions']['pair_public']+r['interactions']['pair_private'] for r in same_cell),'fairness pair denominator contradicts progressive distribution')
     gf=results['gf'];require(gf['pF']>0 and gf['pG']>0 and gf['ci95'][0]>1,'G/F paired threshold failed');verify_gf(gf)
     infer=results['inference'];require(len(infer['comparisons'])==3 and {r['comparison'] for r in infer['comparisons']}=={'FG','FM','GM'},'inference comparisons incomplete')
     for comparison in infer['comparisons']:
