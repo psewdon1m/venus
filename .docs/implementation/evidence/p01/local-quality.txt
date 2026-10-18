@@ -20,8 +20,8 @@
 
  Test Files  2 passed (2)
       Tests  3 passed (3)
-   Start at  19:11:17
-   Duration  424ms (tests 52%, import 43%, transform 3%, worker 2%)
+   Start at  19:17:53
+   Duration  461ms (tests 49%, import 45%, transform 3%, worker 2%)
 
 
 > venus@0.0.0 check:schemas
@@ -39,20 +39,20 @@ PASS: RU/EN/TR locale keys and nonempty strings
 > venus@0.0.0 test:python
 > python -B -m unittest discover -s tools -p test_*.py
 
-......................................................................
+.......................................................................
 ----------------------------------------------------------------------
-Ran 70 tests in 1.461s
+Ran 71 tests in 1.677s
 
 OK
 
 > venus@0.0.0 check:docs
 > python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/verify_manifest.py
 
-Venus docs: 63 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+Venus docs: 65 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
 PASS: required files, linked assets and snapshot hashes
 {"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
 PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
-Checked 189 packaged paths; errors=0
+Checked 211 packaged paths; errors=0
 PASS: packaged bytes match manifest; provenance/signatures require release verification.
 
 > venus@0.0.0 build
@@ -71,7 +71,7 @@ dist/index.html                   0.39 kB │ gzip:  0.27 kB
 dist/assets/index-iSNoMDDm.css    1.80 kB │ gzip:  0.81 kB
 dist/assets/index-C1ogXRBs.js   222.80 kB │ gzip: 70.17 kB
 
-✓ built in 145ms
+✓ built in 109ms
 
 > venus@0.0.0 test:negative
 > node tools/negative-gates.mjs
