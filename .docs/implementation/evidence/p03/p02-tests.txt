@@ -1,0 +1,123 @@
+
+> venus@0.0.0 test:p02
+> node tools/p02-integration.mjs
+
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 DONE 0.0s
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.68kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 1.1s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 145B done
+#3 DONE 0.0s
+
+#4 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 1.99kB 0.0s done
+#5 DONE 0.0s
+
+#6 [build 15/15] RUN npm prune --omit=dev --ignore-scripts
+#6 CACHED
+
+#7 [stage-1 5/8] COPY --from=build /app/apps/api/dist ./apps/api/dist
+#7 CACHED
+
+#8 [build 11/15] COPY tsconfig*.json ./
+#8 CACHED
+
+#9 [build  2/15] WORKDIR /app
+#9 CACHED
+
+#10 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#10 CACHED
+
+#11 [stage-1 4/8] COPY --from=build /app/packages ./packages
+#11 CACHED
+
+#12 [build  3/15] COPY package.json package-lock.json .npmrc ./
+#12 CACHED
+
+#13 [stage-1 7/8] COPY --from=build /app/apps/web/dist ./apps/web/dist
+#13 CACHED
+
+#14 [stage-1 3/8] COPY --from=build /app/node_modules ./node_modules
+#14 CACHED
+
+#15 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+#15 CACHED
+
+#16 [build 14/15] RUN test -n "934d9a1efcccfb4380e708a8f5143a43efbc3a71" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+#16 CACHED
+
+#17 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#17 CACHED
+
+#18 [build  4/15] COPY apps/api/package.json apps/api/
+#18 CACHED
+
+#19 [build 13/15] COPY packages packages
+#19 CACHED
+
+#20 [build 12/15] COPY apps apps
+#20 CACHED
+
+#21 [build  5/15] COPY apps/web/package.json apps/web/
+#21 CACHED
+
+#22 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+#22 CACHED
+
+#23 [stage-1 6/8] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+#23 CACHED
+
+#24 [build 10/15] RUN npm ci
+#24 CACHED
+
+#25 [stage-1 8/8] COPY --from=build /app/package.json /app/build-metadata.json ./
+#25 CACHED
+
+#26 exporting to image
+#26 exporting layers done
+#26 exporting manifest sha256:2f5bf32e243236c75ba1ddab9e78031aef99093b65c931cd0eb806354400c759 done
+#26 exporting config sha256:9f0420947ec594eeb59aeaf06be3e6479c334b4450f263580bc4877062c2b15c done
+#26 exporting attestation manifest sha256:aead202a87bb2dfef9b74d46f56ed5fc14d205aa3c2279603b0a8a42048f8c58 0.0s done
+#26 exporting manifest list sha256:51eb9f90d979897224d01d48e0f2450c834810fa4c430c8d755d4401e0f05514 0.0s done
+#26 naming to docker.io/library/venus-p02-cc2c110cd3ef-previous:local done
+#26 unpacking to docker.io/library/venus-p02-cc2c110cd3ef-previous:local
+#26 unpacking to docker.io/library/venus-p02-cc2c110cd3ef-previous:local 0.0s done
+#26 DONE 0.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/oyaccj7jzyik8cli0thtsolf4
+ Network venus-p02-cc2c110cd3ef_default  Creating
+ Network venus-p02-cc2c110cd3ef_default  Created
+ Container venus-p02-cc2c110cd3ef-db-1  Creating
+ Container venus-p02-cc2c110cd3ef-db-1  Created
+ Container venus-p02-cc2c110cd3ef-db-1  Starting
+ Container venus-p02-cc2c110cd3ef-db-1  Started
+ Container venus-p02-cc2c110cd3ef-db-1  Waiting
+ Container venus-p02-cc2c110cd3ef-db-1  Healthy
+
+ RUN  v5.0.5 C:/.projects/venus
+
+
+ Test Files  1 passed (1)
+      Tests  20 passed (20)
+   Start at  22:03:53
+   Duration  75.53s (tests 99%, import 1%)
+
+ Container venus-p02-cc2c110cd3ef-db-1  Stopping
+ Container venus-p02-cc2c110cd3ef-db-1  Stopped
+ Container venus-p02-cc2c110cd3ef-db-1  Removing
+ Container venus-p02-cc2c110cd3ef-db-1  Removed
+ Network venus-p02-cc2c110cd3ef_default  Removing
+ Network venus-p02-cc2c110cd3ef_default  Removed

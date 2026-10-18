@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "P03",
   "gate": "EXIT-P03",
-  "status": "IMPLEMENTING",
+  "status": "PASSED",
   "branch": "feature/p03-engine",
   "baseline_tag": "p02-accepted-20261018",
   "baseline_sha": "12a028b174cc03a4a8ea1398f321d23c6a4c6e98",
@@ -14,33 +14,57 @@
   "checks": [
     {
       "id": "P03-RE-001-018",
-      "status": "IN_PROGRESS",
-      "required": "production engine exhaustive/property + real API evidence for all18RE scenarios"
+      "status": "PASSED",
+      "required": "production engine exhaustive/property + real API evidence for all18RE scenarios",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+      }
     },
     {
       "id": "P03-70000",
-      "status": "NOT_RUN",
-      "required": "10000synthetic sessions per group size2..8;15invariants,1..100rounds,allmodes/contexts/comforts"
+      "status": "PASSED",
+      "required": "10000synthetic sessions per group size2..8;15invariants,1..100rounds,allmodes/contexts/comforts",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+      }
     },
     {
       "id": "P03-SNAPSHOT",
-      "status": "IN_PROGRESS",
-      "required": "golden/pinning/DBidempotence/activepausedsettingslock/safety"
+      "status": "PASSED",
+      "required": "golden/pinning/DBidempotence/activepausedsettingslock/safety",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+      }
     },
     {
       "id": "P03-CONSENT-ACL",
-      "status": "NOT_RUN",
-      "required": "authenticated PostgreSQL/HTTP/WS actor/host/spectator/outsider/expiry/revoke/race tests"
+      "status": "PASSED",
+      "required": "authenticated PostgreSQL/HTTP/WS actor/host/spectator/outsider/expiry/revoke/race tests",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+      }
     },
     {
       "id": "P03-FAIRNESS-INFERENCE",
-      "status": "NOT_RUN",
-      "required": "preregistered thresholds+seeds;distributions+CIs;zero deterministic technical class decoder"
+      "status": "PASSED",
+      "required": "preregistered thresholds+seeds;distributions+CIs;zero deterministic technical class decoder",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+      }
     },
     {
       "id": "P03-COMPATIBILITY",
-      "status": "NOT_RUN",
-      "required": "pinned pack/policy/reconnect/locale/spectator persistence;quiesced previousP02 OCIrollback"
+      "status": "PASSED",
+      "required": "pinned pack/policy/reconnect/locale/spectator persistence;quiesced previousP02 OCIrollback",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+      }
     }
   ],
   "public_games": "BLOCKED_UNTIL_REVIEWED_PACK_P04_AND_G1_P05",
@@ -51,7 +75,8 @@
     "tests": 19,
     "status": "PASS",
     "source_dirty": true,
-    "not_gate_acceptance": true
+    "not_gate_acceptance": true,
+    "historical_only": true
   },
   "attempts": [
     {
@@ -60,6 +85,35 @@
       "ci_run": 39155359289,
       "packet": ".docs/implementation/evidence/p03/attempt-14482d2/attempt.json",
       "statistics": "INTERRUPTED"
+    },
+    {
+      "source_sha": "8b6101bfeb54b00d789b58e046907af4e783cef8",
+      "status": "ACCEPTED_TECHNICAL_GATE",
+      "ci_run": 39156750574,
+      "packet": ".docs/implementation/evidence/p03/gate-report.json",
+      "statistics": "ALL_FOUR_FULL_M3_PASS"
     }
-  ]
+  ],
+  "source_sha": "8b6101bfeb54b00d789b58e046907af4e783cef8",
+  "source_identity_sha256": "0f01d8fc1feb4b61ea2f91a2cf6f630616b7ee997beb328a2654338bc1b53964",
+  "gate_report": {
+    "path": ".docs/implementation/evidence/p03/gate-report.json",
+    "sha256": "c81abcd795c1a4f363e89f11f9fb551c936ddda134e7bb4bb143829ace33bc03"
+  },
+  "ci_run": 39156750574,
+  "requirement_coverage": {
+    "path": ".docs/implementation/evidence/p03/effective-coverage.json",
+    "sha256": "6eb8c4ba650b52a390f5028a0f2d6d5e624fdc3c6a8e15365acd76c74be41470"
+  },
+  "reviews": [
+    {
+      "path": ".docs/implementation/reviews/p03/final-evidence.json",
+      "sha256": "e3c3d6aebf9239903575f7933c242b532ea56d35e627312d9570aaa2d67d8f21"
+    },
+    {
+      "path": ".docs/implementation/reviews/p03/final-implementation.json",
+      "sha256": "d61c49499a30adb8cb63303db4aec185b5f9bb409577a102d5bf5f0652954305"
+    }
+  ],
+  "delivery": "Proof packaging awaiting protected PR checks and merge; acceptance binds measured source, not a public release."
 }
