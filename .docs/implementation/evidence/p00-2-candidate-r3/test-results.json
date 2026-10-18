@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "revision": "P00-2",
+  "created_at_utc": "2026-10-18T15:46:27.240906+00:00",
+  "candidate_identity_sha256": "0ca44d74b5c6b46f1e475aca1d7865ff04d763eab9db0a8876472b8edbf4ceb2",
+  "status": "PASS",
+  "unit_tests": 63,
+  "checks": [
+    {
+      "check_id": "P00-INTEGRITY",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/check_p00.py"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "P00-UNIT",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "CARD-DRAFT",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/validate_cards.py",
+        ".docs/examples/cards"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "CARD-BATCH",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/validate_card_batch.py",
+        ".docs/examples/card-batch-request.json",
+        "--catalog-manifest",
+        ".docs/examples/pack-candidate-manifest.json"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "POLICY-CONFIG",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/check_relationship_policy.py"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "DOC-INTEGRITY",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/check_docs.py"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "NEGATIVE-DRAFT-RELEASE",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/validate_cards.py",
+        ".docs/examples/cards",
+        "--release",
+        "--minimum",
+        "100"
+      ],
+      "actual_exit": 1,
+      "expected_exit": 1,
+      "status": "PASS"
+    },
+    {
+      "check_id": "PACK-BUILDER",
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-B",
+        "tools/build_card_pack.py",
+        ".docs/examples/cards",
+        "--out",
+        "C:\\Temp\\venus-pack-p00-2-w2k6siki\\pack.json"
+      ],
+      "actual_exit": 0,
+      "expected_exit": 0,
+      "status": "PASS"
+    },
+    {
+      "check_id": "PACK-REPRODUCIBILITY",
+      "status": "PASS",
+      "scope": "deterministic local draft pack; no publish"
+    }
+  ],
+  "output": {
+    "path": ".docs/implementation/evidence/p00-2-candidate-r3/test-output.txt",
+    "sha256": "0dbfe8e1f23c2c13fe0a71ebe40895260ff98dfad20223ce7dd055f1d0930e25"
+  }
+}

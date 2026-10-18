@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "revision": "P00-2",
+  "accepted_at_date": "2026-10-18",
+  "source": {
+    "kind": "user_message",
+    "location": "current Venus chat",
+    "meaning": "Direct human decisions U-001..005; no independent-review result inferred"
+  },
+  "decisions": [
+    {
+      "id": "U-001",
+      "status": "ACCEPTED",
+      "decision": {
+        "g1_rooms_games": true,
+        "private_text_chat": true,
+        "future_media_separate": true
+      }
+    },
+    {
+      "id": "U-002",
+      "status": "ACCEPTED",
+      "decision": {
+        "relationship_scope": "room_only",
+        "idle_expiry_hours": 24,
+        "primary_delete_max_hours_after_close": 24,
+        "backup_max_days": 7
+      }
+    },
+    {
+      "id": "U-003",
+      "status": "ACCEPTED",
+      "decision": {
+        "entry_offer_acceptance": true,
+        "adult_declaration_required": true,
+        "minimum_age": 18,
+        "mechanism": "explicit user declaration; no document/biometric age verification claim"
+      }
+    },
+    {
+      "id": "U-004",
+      "status": "ACCEPTED",
+      "decision": {
+        "gate_review": "separate_agents",
+        "report_required": true,
+        "loop": "review -> findings -> fixes -> tests -> independent re-review until green; retain each round",
+        "author_cannot_review_self": true
+      }
+    },
+    {
+      "id": "U-005",
+      "status": "ACTION_AUTHORIZED",
+      "decision": {
+        "obtain_authoritative_norms": true,
+        "pin_byte_hashes": true,
+        "no_authority_or_divergence_approval_inferred": true
+      },
+      "execution": "COMPLETED_LOCAL_PIN",
+      "evidence": ".docs/source-snapshots/central-4449e65/provenance.json"
+    },
+    {
+      "id": "DIV-20261018-01",
+      "status": "RESOLVED_BY_USER",
+      "decision": {
+        "scope": "Venus custom comfortable visual UI; no upstream operator theme imposed",
+        "verbatim": "не используем стиль, заданный в тех документах - делаем кастомный и комфортный",
+        "upstream_repository_modified": false,
+        "security_a11y_release_recovery_rules_preserved": true
+      }
+    }
+  ]
+}

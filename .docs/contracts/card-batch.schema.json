@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.example.invalid/schemas/card-batch.v1.json",
+  "title": "Venus Card Generator Batch Request v1",
+  "description": "An explicit, validated agent request. No approval or publication permission.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "batch_id", "pack_id", "schema_version", "policy_revision", "mode", "count", "id_range",
+    "meeting_contexts", "allowed_interactions", "relationship_scope_distribution",
+    "comfort_distribution", "progression_distribution", "languages", "forbidden_categories",
+    "source_catalog_digest", "requested_by", "human_review_required"
+  ],
+  "properties": {
+    "batch_id": {"type":"string","pattern":"^[A-Z][A-Z0-9-]{6,127}$"},
+    "pack_id": {"type":"string","pattern":"^[a-z][a-z0-9-]{2,63}$"},
+    "schema_version": {"const":1},
+    "policy_revision": {"const":"RE-1"},
+    "mode": {"enum":["questions","truth_or_dare","yes_but"]},
+    "count": {"type":"integer","minimum":1,"maximum":100},
+    "id_range": {"type":"array","prefixItems":[{"type":"integer","minimum":1,"maximum":9999},{"type":"integer","minimum":1,"maximum":9999}],"items":false,"minItems":2,"maxItems":2},
+    "meeting_contexts": {"type":"array","items":{"enum":["online","in_person"]},"uniqueItems":true,"minItems":1,"maxItems":2},
+    "allowed_interactions": {"type":"array","items":{"enum":["group","solo","pair_public","pair_private"]},"uniqueItems":true,"minItems":1,"maxItems":4},
+    "relationship_scope_distribution": {"$ref":"#/$defs/relationshipDistribution"},
+    "comfort_distribution": {"$ref":"#/$defs/comfortDistribution"},
+    "progression_distribution": {"$ref":"#/$defs/stageDistribution"},
+    "languages": {"type":"array","uniqueItems":true,"minItems":3,"maxItems":3,"items":{"enum":["ru","en","tr"]}},
+    "forbidden_categories": {"type":"array","items":{"type":"string","pattern":"^[a-z][a-z0-9_]{2,63}$"},"uniqueItems":true},
+    "source_catalog_digest": {"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "requested_by": {"type":"string","minLength":3,"maxLength":128},
+    "human_review_required": {"const":true}
+  },
+  "$defs": {
+    "relationshipDistribution": {"type":"object","additionalProperties":false,"minProperties":1,"properties": {
+      "none":{"type":"integer","minimum":0},
+      "acquaintance":{"type":"integer","minimum":0},
+      "friend_or_more":{"type":"integer","minimum":0},
+      "gentle_initiative":{"type":"integer","minimum":0},
+      "mutual_romantic":{"type":"integer","minimum":0},
+      "established_couple":{"type":"integer","minimum":0}
+    }},
+    "comfortDistribution": {"type":"object","additionalProperties":false,"minProperties":1,"properties":{
+      "0":{"type":"integer","minimum":0},"1":{"type":"integer","minimum":0},
+      "2":{"type":"integer","minimum":0},"3":{"type":"integer","minimum":0},
+      "4":{"type":"integer","minimum":0}
+    }},
+    "stageDistribution": {"type":"object","additionalProperties":false,"minProperties":1,"properties":{
+      "1":{"type":"integer","minimum":0},"2":{"type":"integer","minimum":0},
+      "3":{"type":"integer","minimum":0},"4":{"type":"integer","minimum":0}
+    }}
+  }
+}

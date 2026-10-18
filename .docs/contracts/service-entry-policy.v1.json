@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "revision": "P00-2",
+  "status": "ACCEPTED_PRODUCT_POLICY_NOT_IMPLEMENTED",
+  "source_decision": "U-003",
+  "minimum_age": 18,
+  "mechanism": "explicit_declaration",
+  "requires_current_offer_acceptance": true,
+  "prechecked_controls_allowed": false,
+  "store": [
+    "offer_version",
+    "offer_digest",
+    "accepted_at_server_utc",
+    "adult_declared_at_server_utc",
+    "member_id"
+  ],
+  "do_not_collect": [
+    "date_of_birth",
+    "identity_document",
+    "biometrics"
+  ],
+  "offer": {
+    "approved_version": null,
+    "approved_sha256": null,
+    "text_location": null,
+    "readiness": "NOT_PREPARED"
+  },
+  "enforcement": "create/join/resolve require current EntryAcceptance; persisted room identity records acceptance; policy changes require reacceptance for new non-safety actions; skip/decline/stop/leave remain allowed for authenticated scope",
+  "runtime_gate": "P02 implementation + P05 review; absent/current-unapproved offer blocks public entry"
+}

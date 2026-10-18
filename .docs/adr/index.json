@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "revision": "P00-2",
+  "records": [
+    {
+      "id": "ADR-001",
+      "file": "ADR-001-sfu-host.md",
+      "title": "Размещение и сеть внешнего LiveKit",
+      "status": "DEFERRED",
+      "owner_role": "RTC / Infrastructure",
+      "owner_person": null,
+      "approver": "Оператор и RTC reviewer",
+      "gate": "EXIT-P09",
+      "dependencies": [
+        "ADR-008",
+        "ADR-009"
+      ],
+      "user_decisions": [
+        "U-005"
+      ],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-002",
+      "file": "ADR-002-android-capture.md",
+      "title": "Android: screen + разрешённый playback audio",
+      "status": "DEFERRED",
+      "owner_role": "Android / RTC",
+      "owner_person": null,
+      "approver": "Владелец mobile scope / QA",
+      "gate": "EXIT-P10",
+      "dependencies": [
+        "ADR-001"
+      ],
+      "user_decisions": [],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-003",
+      "file": "ADR-003-ios-capture.md",
+      "title": "iOS: capture и разрешённый app audio",
+      "status": "DEFERRED",
+      "owner_role": "iOS / RTC",
+      "owner_person": null,
+      "approver": "Владелец mobile scope / QA",
+      "gate": "EXIT-P10",
+      "dependencies": [
+        "ADR-001"
+      ],
+      "user_decisions": [],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-004",
+      "file": "ADR-004-music-rights.md",
+      "title": "Источник и права музыкального каталога",
+      "status": "DEFERRED",
+      "owner_role": "Product / Rights",
+      "owner_person": null,
+      "approver": "Владелец проекта / rights reviewer",
+      "gate": "EXIT-P08",
+      "dependencies": [],
+      "user_decisions": [],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-005",
+      "file": "ADR-005-retention.md",
+      "title": "Retention отношений, primary и backup",
+      "status": "ACCEPTED",
+      "owner_role": "Product / Privacy / Operations",
+      "owner_person": null,
+      "approver": "Project owner via direct user message; technical review by separate agents",
+      "gate": "EXIT-P05",
+      "dependencies": [],
+      "user_decisions": [
+        "U-002"
+      ],
+      "decision_revision": "P00-2",
+      "approval_source": "U-002"
+    },
+    {
+      "id": "ADR-006",
+      "file": "ADR-006-age-content.md",
+      "title": "Возрастная и контентная политика",
+      "status": "ACCEPTED",
+      "owner_role": "Product / Safety",
+      "owner_person": null,
+      "approver": "Project owner via direct user message; technical review by separate agents",
+      "gate": "EXIT-P04",
+      "dependencies": [],
+      "user_decisions": [
+        "U-003"
+      ],
+      "decision_revision": "P00-2",
+      "approval_source": "U-003"
+    },
+    {
+      "id": "ADR-007",
+      "file": "ADR-007-private-online-chat.md",
+      "title": "Настоящий приватный онлайн-момент в G1",
+      "status": "ACCEPTED",
+      "owner_role": "Product / Backend / Privacy",
+      "owner_person": null,
+      "approver": "Project owner via direct user message; technical review by separate agents",
+      "gate": "EXIT-P00",
+      "dependencies": [
+        "ADR-005",
+        "ADR-006"
+      ],
+      "user_decisions": [
+        "U-001"
+      ],
+      "decision_revision": "P00-2",
+      "approval_source": "U-001"
+    },
+    {
+      "id": "ADR-008",
+      "file": "ADR-008-central-agents.md",
+      "title": "Central Part13 и host dependency matrix",
+      "status": "PROPOSED",
+      "owner_role": "Infrastructure / Operator",
+      "owner_person": null,
+      "approver": "Авторитетный владелец central norms / оператор",
+      "gate": "EXIT-P06",
+      "dependencies": [],
+      "user_decisions": [
+        "U-005"
+      ],
+      "decision_revision": "P00-2",
+      "source_provenance": ".docs/source-snapshots/central-4449e65/provenance.json"
+    },
+    {
+      "id": "ADR-009",
+      "file": "ADR-009-media-quality.md",
+      "title": "RTC quality и room sound policy",
+      "status": "PROPOSED",
+      "owner_role": "RTC / QA / Product",
+      "owner_person": null,
+      "approver": "Назначенный RTC/QA reviewer",
+      "gate": "EXIT-P09",
+      "dependencies": [
+        "ADR-001"
+      ],
+      "user_decisions": [],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-010",
+      "file": "ADR-010-stack-migrations.md",
+      "title": "Технический baseline и SQL migrations",
+      "status": "DECIDED_FOR_PREPARATION",
+      "owner_role": "Engineering (исполнитель: Codex)",
+      "owner_person": "Codex",
+      "approver": "Independent gate-review agents (U-004); review pending",
+      "gate": "EXIT-P00",
+      "dependencies": [],
+      "user_decisions": [
+        "U-004"
+      ],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-011",
+      "file": "ADR-011-protocol-projections.md",
+      "title": "API/WS/DB/privacy candidate P00-1",
+      "status": "DECIDED_FOR_PREPARATION",
+      "owner_role": "Engineering / Privacy",
+      "owner_person": "Codex",
+      "approver": "Independent gate-review agents (U-004); review pending",
+      "gate": "EXIT-P00",
+      "dependencies": [
+        "ADR-005",
+        "ADR-007",
+        "ADR-010"
+      ],
+      "user_decisions": [
+        "U-001",
+        "U-004"
+      ],
+      "decision_revision": "P00-1"
+    },
+    {
+      "id": "ADR-012",
+      "file": "ADR-012-acceptance-and-external-inputs.md",
+      "title": "Принятие P00, роли и отложенные критерии",
+      "status": "ACCEPTED",
+      "owner_role": "Product / Engineering / QA / Privacy",
+      "owner_person": null,
+      "approver": "Project owner via direct user message; technical review by separate agents",
+      "gate": "EXIT-P00",
+      "dependencies": [
+        "ADR-008",
+        "ADR-010",
+        "ADR-011"
+      ],
+      "user_decisions": [
+        "U-004",
+        "U-005"
+      ],
+      "decision_revision": "P00-2",
+      "approval_source": "U-004"
+    }
+  ]
+}

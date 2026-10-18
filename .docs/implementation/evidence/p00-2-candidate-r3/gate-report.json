@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "gate_id": "EXIT-P00",
+  "gate_status": "PASSED",
+  "revision": "P00-2",
+  "created_at_utc": "2026-10-18T15:49:15.235658+00:00",
+  "candidate_identity_sha256": "0ca44d74b5c6b46f1e475aca1d7865ff04d763eab9db0a8876472b8edbf4ceb2",
+  "executor_id": "/root",
+  "inputs": {
+    "path": ".docs/implementation/evidence/p00-2-candidate-r3/input-hashes.json",
+    "sha256": "b252f0925f9d4872b60ca4f0948cf8fe2d3432ce408b33012b9e50c2819daf18"
+  },
+  "tests": {
+    "path": ".docs/implementation/evidence/p00-2-candidate-r3/test-results.json",
+    "sha256": "4dd55feb5d57991bd84555d7507c8cb65d161af8783f10befba7f82c058856a8"
+  },
+  "checks": [
+    {
+      "id": "P00-BASELINE",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "P00-INTEGRITY"
+      ]
+    },
+    {
+      "id": "P00-CONTRACTS",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "P00-UNIT",
+        "P00-INTEGRITY"
+      ]
+    },
+    {
+      "id": "P00-DECISIONS",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "P00-INTEGRITY"
+      ]
+    },
+    {
+      "id": "P00-FLOWS",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "DOC-INTEGRITY",
+        "P00-INTEGRITY"
+      ]
+    },
+    {
+      "id": "P00-NORMS",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "P00-INTEGRITY",
+        "DOC-INTEGRITY"
+      ]
+    },
+    {
+      "id": "P00-REGISTRY",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "P00-INTEGRITY"
+      ]
+    },
+    {
+      "id": "P00-RULES",
+      "status": "PASS",
+      "evidence_check_ids": [
+        "P00-UNIT",
+        "POLICY-CONFIG"
+      ]
+    }
+  ],
+  "pending_critical_decisions": [],
+  "reviewers": [
+    {
+      "path": ".docs/implementation/reviews/contracts-round3.json",
+      "sha256": "8a1122537c7aa68fa1984ed408cf6e64022f86c751c23f65ae028748e92dee93"
+    },
+    {
+      "path": ".docs/implementation/reviews/evidence-round3.json",
+      "sha256": "111b63f0e53b8802bef990e34260cf35622c003e87d739e3ebed2a61c3c90946"
+    }
+  ],
+  "decision_sources": {
+    "product": ".docs/implementation/user-decisions.v1.json",
+    "visual": ".docs/implementation/DIV-20261018-01.md",
+    "norms": ".docs/source-snapshots/central-4449e65/provenance.json"
+  },
+  "future_stage_dependencies": [
+    {
+      "stage": "P02",
+      "item": "resolve exact operator/guest applicability before affected auth implementation"
+    },
+    {
+      "stage": "P03",
+      "item": "production engine, DB races, runtime consent ACL, fairness/inference profiles"
+    },
+    {
+      "stage": "P04/P05",
+      "item": "reviewed catalog, approved actual offer text/version and real UI/entry safety tests"
+    },
+    {
+      "stage": "P06",
+      "item": "Venus host dependency declaration, operator, signing, restore/update/rollback and real deployed readiness"
+    }
+  ],
+  "product_runtime": "NOT_RUN",
+  "scope": "Documentation/contracts/flow-board/reference-rules G0 only; permits starting P01, not public release/deployment"
+}

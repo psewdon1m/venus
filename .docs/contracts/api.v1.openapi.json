@@ -1,0 +1,3622 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Venus G1 candidate contract; not implemented",
+    "version": "P00-2",
+    "description": "Technical candidate under ADR-011. Chat conditional on U-001. Semantic ACL/transaction rules in implementation/CONTRACTS.md."
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "paths": {
+    "/api/v1/rooms": {
+      "post": {
+        "operationId": "post_api_v1_rooms",
+        "summary": "POST /api/v1/rooms",
+        "security": [],
+        "x-authorization": "public",
+        "responses": {
+          "201": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoom"
+              }
+            }
+          }
+        },
+        "x-origin-check-required": true,
+        "x-csrf-required": false,
+        "x-revision-scope": "operation",
+        "x-entry-policy-required": true
+      }
+    },
+    "/api/v1/rooms/{room_id}/join": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_join",
+        "summary": "POST /api/v1/rooms/{room_id}/join",
+        "security": [],
+        "x-authorization": "invite",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JoinResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JoinRoom"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": false,
+        "x-revision-scope": "operation",
+        "x-entry-policy-required": true
+      }
+    },
+    "/api/v1/rooms/{room_id}/leave": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_leave",
+        "summary": "POST /api/v1/rooms/{room_id}/leave",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "member",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionMutation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "room"
+      }
+    },
+    "/api/v1/rooms/{room_id}": {
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id",
+        "summary": "GET /api/v1/rooms/{room_id}",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "member",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/rooms/{room_id}/context": {
+      "patch": {
+        "operationId": "patch_api_v1_rooms_room_id_context",
+        "summary": "PATCH /api/v1/rooms/{room_id}/context",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "host_no_active_game",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ContextPatch"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "room"
+      }
+    },
+    "/api/v1/rooms/{room_id}/me": {
+      "patch": {
+        "operationId": "patch_api_v1_rooms_room_id_me",
+        "summary": "PATCH /api/v1/rooms/{room_id}/me",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "self",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfilePatch"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "room"
+      }
+    },
+    "/api/v1/rooms/{room_id}/me/preferences": {
+      "put": {
+        "operationId": "put_api_v1_rooms_room_id_me_preferences",
+        "summary": "PUT /api/v1/rooms/{room_id}/me/preferences",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "self_no_active_game",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfPreferences"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreferencesPut"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "self_preferences"
+      },
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_me_preferences",
+        "summary": "GET /api/v1/rooms/{room_id}/me/preferences",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "self",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfPreferences"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/rooms/{room_id}/me/setup/skip": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_me_setup_skip",
+        "summary": "POST /api/v1/rooms/{room_id}/me/setup/skip",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "self_no_active_game",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SelfPreferences"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionMutation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "self_preferences"
+      }
+    },
+    "/api/v1/rooms/{room_id}/ws-ticket": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_ws_ticket",
+        "summary": "POST /api/v1/rooms/{room_id}/ws-ticket",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "member",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WsTicket"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SafetyStop"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "operation"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/prepare": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_prepare",
+        "summary": "POST /api/v1/rooms/{room_id}/game/prepare",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "host",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PrepareGame"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "room"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/start": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_start",
+        "summary": "POST /api/v1/rooms/{room_id}/game/start",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "host",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StartResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartGame"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game_draft"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/advance": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_round_advance",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/round/advance",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "host",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionMutation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/response": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_round_round_id_response",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/response",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "own_round_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoundResponse"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/stop": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_stop",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/stop",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "game_participant",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SafetyStop"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/current": {
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_game_current",
+        "summary": "GET /api/v1/rooms/{room_id}/game/current",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "member",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/private": {
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_game_session_id_round_round_id_private",
+        "summary": "GET /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/private",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "active_consenting_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PrivatePrompt"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/invitation": {
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_game_session_id_round_round_id_invitation",
+        "summary": "GET /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/invitation",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "offer_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairInvitation"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/rooms/{room_id}/close": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_close",
+        "summary": "POST /api/v1/rooms/{room_id}/close",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "host",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionMutation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "room"
+      }
+    },
+    "/health/live": {
+      "get": {
+        "operationId": "get_health_live",
+        "summary": "GET /health/live",
+        "security": [],
+        "x-authorization": "public",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthLive"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health/ready": {
+      "get": {
+        "operationId": "get_health_ready",
+        "summary": "GET /health/ready",
+        "security": [],
+        "x-authorization": "public",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthReady"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Process running but dependencies/schema unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthReady"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/version": {
+      "get": {
+        "operationId": "get_api_v1_version",
+        "summary": "GET /api/v1/version",
+        "security": [],
+        "x-authorization": "public",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Version"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/pair/{offer_id}/messages": {
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_game_session_id_pair_offer_id_messages",
+        "summary": "GET /api/v1/rooms/{room_id}/game/{session_id}/pair/{offer_id}/messages",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "active_consenting_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessagesPage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 50
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 256
+            }
+          }
+        ],
+        "x-required-capability": "private_text_chat"
+      },
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_pair_offer_id_messages",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/pair/{offer_id}/messages",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "active_consenting_actor",
+        "responses": {
+          "201": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairMessage"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendMessage"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "offer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-required-capability": "private_text_chat",
+        "x-revision-scope": "operation"
+      }
+    },
+    "/api/v1/invitations/resolve": {
+      "post": {
+        "operationId": "post_api_v1_invitations_resolve",
+        "summary": "Resolve valid invitation to opaque room ID without member/private data",
+        "security": [],
+        "x-authorization": "invite",
+        "x-origin-check-required": true,
+        "x-csrf-required": false,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveInvite"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Only valid invitation; capacity is rechecked atomically at join",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteResolution"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Invalid/unavailable invite; rate/body/Origin guards required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "x-revision-scope": "operation",
+        "x-entry-policy-required": true
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/choice": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_round_round_id_choice",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/choice",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "designated_truth_dare_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RoundChoice"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/condition": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_round_round_id_condition",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/condition",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "yes_but_responder",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/YesButCondition"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      },
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_game_session_id_round_round_id_condition",
+        "summary": "GET /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/condition",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "own_round_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PairCondition"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/finish": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_round_round_id_finish",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/finish",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "active_consenting_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SafetyStop"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/me/entry-acceptance": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_me_entry_acceptance",
+        "summary": "Reaccept current offer and declaration on own room identity",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "self",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MutationResult"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntryAcceptance"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "self_entry_acceptance"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/pause": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_pause",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/pause",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "game_participant",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionMutation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/resume": {
+      "post": {
+        "operationId": "post_api_v1_rooms_room_id_game_session_id_resume",
+        "summary": "POST /api/v1/rooms/{room_id}/game/{session_id}/resume",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "host",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GameView"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevisionMutation"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "x-origin-check-required": true,
+        "x-csrf-required": true,
+        "x-revision-scope": "game"
+      }
+    },
+    "/api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/action-consent": {
+      "get": {
+        "operationId": "get_api_v1_rooms_room_id_game_session_id_round_round_id_action_consent",
+        "summary": "GET /api/v1/rooms/{room_id}/game/{session_id}/round/{round_id}/action-consent",
+        "security": [
+          {
+            "RoomSession": []
+          }
+        ],
+        "x-authorization": "own_round_actor",
+        "responses": {
+          "200": {
+            "description": "Authorized success; never bypasses semantic guards",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActionConsentState"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Sanitized machine error, status per CONTRACTS.md",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "room_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "round_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "RoomSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "venus_room_session"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]+$"
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 240
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ]
+      },
+      "Member": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 192,
+            "description": "Server MUST validate 1..48 graphemes, not whitespace/control; this code-point cap is only a transport ceiling."
+          },
+          "locale": {
+            "enum": [
+              "ru",
+              "en",
+              "tr"
+            ]
+          },
+          "role": {
+            "enum": [
+              "host",
+              "member"
+            ]
+          },
+          "presence": {
+            "enum": [
+              "online",
+              "reconnecting",
+              "inactive"
+            ]
+          },
+          "setup_ready": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "display_name",
+          "locale",
+          "role",
+          "presence",
+          "setup_ready"
+        ]
+      },
+      "Features": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "games": {
+            "enum": [
+              "available",
+              "degraded",
+              "unavailable"
+            ]
+          },
+          "music": {
+            "enum": [
+              "available",
+              "degraded",
+              "unavailable"
+            ]
+          },
+          "cinema": {
+            "enum": [
+              "available",
+              "degraded",
+              "unavailable"
+            ]
+          },
+          "calls": {
+            "enum": [
+              "available",
+              "degraded",
+              "unavailable"
+            ]
+          }
+        },
+        "required": [
+          "games",
+          "music",
+          "cinema",
+          "calls"
+        ]
+      },
+      "RoomView": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "room_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "room_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "state": {
+            "enum": [
+              "open",
+              "closing",
+              "closed"
+            ]
+          },
+          "meeting_context": {
+            "enum": [
+              "online",
+              "in_person"
+            ]
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            },
+            "maxItems": 8
+          },
+          "features": {
+            "$ref": "#/components/schemas/Features"
+          }
+        },
+        "required": [
+          "room_id",
+          "room_rev",
+          "state",
+          "meeting_context",
+          "members",
+          "features"
+        ]
+      },
+      "Edge": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "relation": {
+            "enum": [
+              "just_met",
+              "friendship",
+              "crush",
+              "situationship",
+              "in_relationships",
+              "not_a_friend"
+            ]
+          },
+          "explicit": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "relation",
+          "explicit"
+        ]
+      },
+      "SelfPreferences": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "owner_member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "comfort": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "edges": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "maxProperties": 7
+          },
+          "ready": {
+            "type": "boolean"
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "owner_member_id",
+          "comfort",
+          "edges",
+          "ready",
+          "locked",
+          "rev"
+        ]
+      },
+      "PublicRound": {
+        "oneOf": [
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "round_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "round_index": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "state": {
+                "enum": [
+                  "pending",
+                  "active",
+                  "completed",
+                  "skipped",
+                  "stopped"
+                ]
+              },
+              "kind": {
+                "const": "generic"
+              }
+            },
+            "required": [
+              "round_id",
+              "round_index",
+              "state",
+              "kind"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "round_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "round_index": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "state": {
+                "enum": [
+                  "pending",
+                  "active",
+                  "completed",
+                  "skipped",
+                  "stopped"
+                ]
+              },
+              "kind": {
+                "const": "public"
+              },
+              "card_id": {
+                "type": "string",
+                "pattern": "^Q-[0-9]{4}$"
+              },
+              "card_revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "actors": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "maxItems": 2,
+                "uniqueItems": true
+              },
+              "response_state": {
+                "enum": [
+                  "pending",
+                  "accepted",
+                  "condition_proposed",
+                  "completed",
+                  "skipped"
+                ]
+              },
+              "proposal_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "mode": {
+                "const": "questions"
+              },
+              "text": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "question": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                },
+                "required": [
+                  "question"
+                ]
+              },
+              "choice": {
+                "const": null
+              }
+            },
+            "required": [
+              "round_id",
+              "round_index",
+              "state",
+              "kind",
+              "card_id",
+              "card_revision",
+              "actors",
+              "response_state",
+              "proposal_revision",
+              "mode",
+              "text",
+              "choice"
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "round_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "round_index": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "state": {
+                "enum": [
+                  "pending",
+                  "active",
+                  "completed",
+                  "skipped",
+                  "stopped"
+                ]
+              },
+              "kind": {
+                "const": "public"
+              },
+              "card_id": {
+                "type": "string",
+                "pattern": "^TD-[0-9]{4}$"
+              },
+              "card_revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "actors": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "maxItems": 2,
+                "uniqueItems": true
+              },
+              "response_state": {
+                "enum": [
+                  "pending",
+                  "accepted",
+                  "condition_proposed",
+                  "completed",
+                  "skipped"
+                ]
+              },
+              "proposal_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "mode": {
+                "const": "truth_or_dare"
+              },
+              "text": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "prompt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4000
+                      }
+                    },
+                    "required": [
+                      "prompt"
+                    ]
+                  }
+                ]
+              },
+              "choice": {
+                "enum": [
+                  null,
+                  "truth",
+                  "dare"
+                ]
+              }
+            },
+            "required": [
+              "round_id",
+              "round_index",
+              "state",
+              "kind",
+              "card_id",
+              "card_revision",
+              "actors",
+              "response_state",
+              "proposal_revision",
+              "mode",
+              "text",
+              "choice"
+            ],
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "choice": {
+                      "const": null
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "text": {
+                      "type": "null"
+                    }
+                  }
+                },
+                "else": {
+                  "properties": {
+                    "text": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "prompt": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4000
+                        }
+                      },
+                      "required": [
+                        "prompt"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "round_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "round_index": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "state": {
+                "enum": [
+                  "pending",
+                  "active",
+                  "completed",
+                  "skipped",
+                  "stopped"
+                ]
+              },
+              "kind": {
+                "const": "public"
+              },
+              "card_id": {
+                "type": "string",
+                "pattern": "^YB-[0-9]{4}$"
+              },
+              "card_revision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "actors": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "maxItems": 2,
+                "uniqueItems": true
+              },
+              "response_state": {
+                "enum": [
+                  "pending",
+                  "accepted",
+                  "condition_proposed",
+                  "completed",
+                  "skipped"
+                ]
+              },
+              "proposal_revision": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              "mode": {
+                "const": "yes_but"
+              },
+              "text": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "proposal": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  },
+                  "responder": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 4000
+                  }
+                },
+                "required": [
+                  "proposal",
+                  "responder"
+                ]
+              },
+              "choice": {
+                "const": null
+              }
+            },
+            "required": [
+              "round_id",
+              "round_index",
+              "state",
+              "kind",
+              "card_id",
+              "card_revision",
+              "actors",
+              "response_state",
+              "proposal_revision",
+              "mode",
+              "text",
+              "choice"
+            ]
+          }
+        ]
+      },
+      "PairInvitation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "round_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "invitation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "own_state": {
+            "enum": [
+              "pending",
+              "accepted"
+            ]
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "consent_scope": {
+            "const": "invitation"
+          }
+        },
+        "required": [
+          "offer_id",
+          "session_id",
+          "round_id",
+          "expires_at",
+          "invitation",
+          "own_state",
+          "proposal_revision",
+          "consent_scope"
+        ]
+      },
+      "PrivatePrompt": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "round_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "const": "active"
+          },
+          "card_id": {
+            "type": "string",
+            "pattern": "^(Q|TD|YB)-[0-9]{4}$"
+          },
+          "card_revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "actors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 2,
+            "maxItems": 2,
+            "uniqueItems": true
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "offer_id",
+          "session_id",
+          "round_id",
+          "state",
+          "card_id",
+          "card_revision",
+          "actors",
+          "prompt",
+          "expires_at",
+          "proposal_revision"
+        ]
+      },
+      "PairMessage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sender_member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "server_time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "message_id",
+          "offer_id",
+          "sender_member_id",
+          "text",
+          "server_time"
+        ]
+      },
+      "MutationResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "rev",
+          "request_id"
+        ]
+      },
+      "GameView": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "game_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "state": {
+            "enum": [
+              "draft",
+              "waiting",
+              "active",
+              "paused",
+              "completed",
+              "aborted"
+            ]
+          },
+          "mode": {
+            "enum": [
+              "questions",
+              "truth_or_dare",
+              "yes_but"
+            ]
+          },
+          "total_rounds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "current_round": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/components/schemas/PublicRound"
+              }
+            ]
+          },
+          "pause_reason": {
+            "enum": [
+              null,
+              "transport",
+              "safety"
+            ]
+          }
+        },
+        "required": [
+          "session_id",
+          "game_rev",
+          "state",
+          "mode",
+          "total_rounds",
+          "current_round",
+          "pause_reason"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "state": {
+                  "const": "paused"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "pause_reason": {
+                  "enum": [
+                    "transport",
+                    "safety"
+                  ]
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "pause_reason": {
+                  "const": null
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SafeOutcome": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "round_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "outcome": {
+            "enum": [
+              "continue",
+              "skipped",
+              "ended"
+            ]
+          }
+        },
+        "required": [
+          "round_id",
+          "outcome"
+        ]
+      },
+      "CreateRoom": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "meeting_context": {
+            "enum": [
+              "online",
+              "in_person"
+            ]
+          },
+          "locale": {
+            "enum": [
+              "ru",
+              "en",
+              "tr"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 192,
+            "description": "Server MUST validate 1..48 graphemes, not whitespace/control; this code-point cap is only a transport ceiling."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entry_acceptance": {
+            "$ref": "#/components/schemas/EntryAcceptance"
+          }
+        },
+        "required": [
+          "meeting_context",
+          "locale",
+          "name",
+          "idempotency_key",
+          "entry_acceptance"
+        ]
+      },
+      "JoinRoom": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "invite_token": {
+            "type": "string",
+            "minLength": 22,
+            "maxLength": 256
+          },
+          "locale": {
+            "enum": [
+              "ru",
+              "en",
+              "tr"
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 192,
+            "description": "Server MUST validate 1..48 graphemes, not whitespace/control; this code-point cap is only a transport ceiling."
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entry_acceptance": {
+            "$ref": "#/components/schemas/EntryAcceptance"
+          }
+        },
+        "required": [
+          "invite_token",
+          "locale",
+          "display_name",
+          "idempotency_key",
+          "entry_acceptance"
+        ]
+      },
+      "RevisionMutation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "expected_rev",
+          "idempotency_key"
+        ]
+      },
+      "ProfilePatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "locale": {
+            "enum": [
+              "ru",
+              "en",
+              "tr"
+            ]
+          },
+          "display_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 192,
+            "description": "Server MUST validate 1..48 graphemes, not whitespace/control; this code-point cap is only a transport ceiling."
+          }
+        },
+        "required": [
+          "expected_rev",
+          "idempotency_key"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "locale"
+            ]
+          },
+          {
+            "required": [
+              "display_name"
+            ]
+          }
+        ]
+      },
+      "ContextPatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "meeting_context": {
+            "enum": [
+              "online",
+              "in_person"
+            ]
+          },
+          "expected_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "meeting_context",
+          "expected_rev",
+          "idempotency_key"
+        ]
+      },
+      "PreferencesPut": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "expected_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "comfort": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "edges": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "additionalProperties": {
+              "enum": [
+                "just_met",
+                "friendship",
+                "crush",
+                "situationship",
+                "in_relationships",
+                "not_a_friend"
+              ]
+            },
+            "maxProperties": 7
+          }
+        },
+        "required": [
+          "expected_rev",
+          "idempotency_key",
+          "comfort",
+          "edges"
+        ]
+      },
+      "PrepareGame": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "mode": {
+            "enum": [
+              "questions",
+              "truth_or_dare",
+              "yes_but"
+            ]
+          },
+          "players": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "minItems": 2,
+            "maxItems": 8,
+            "uniqueItems": true
+          },
+          "round_count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "expected_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "mode",
+          "players",
+          "round_count",
+          "expected_rev",
+          "idempotency_key"
+        ]
+      },
+      "StartGame": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "draft_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "idempotency_key": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "draft_rev",
+          "idempotency_key"
+        ]
+      },
+      "RoundResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "kind": {
+            "enum": [
+              "accept",
+              "decline",
+              "skip",
+              "stop",
+              "finish"
+            ]
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "scope": {
+            "enum": [
+              "invitation",
+              "action"
+            ]
+          },
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "kind",
+          "request_id"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "const": "accept"
+                }
+              }
+            },
+            "then": {
+              "required": [
+                "scope",
+                "offer_id",
+                "proposal_revision"
+              ]
+            }
+          }
+        ]
+      },
+      "SafetyStop": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "request_id"
+        ]
+      },
+      "SendMessage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "text",
+          "request_id"
+        ]
+      },
+      "WsTicket": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "ticket": {
+            "type": "string",
+            "minLength": 22,
+            "maxLength": 2048
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "ticket",
+          "expires_at"
+        ]
+      },
+      "CreateResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "room_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invite_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "me": {
+            "$ref": "#/components/schemas/Member"
+          },
+          "room_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "room_id",
+          "invite_url",
+          "me",
+          "room_rev"
+        ]
+      },
+      "JoinResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "me": {
+            "$ref": "#/components/schemas/Member"
+          },
+          "room_view": {
+            "$ref": "#/components/schemas/RoomView"
+          },
+          "ws_ticket": {
+            "$ref": "#/components/schemas/WsTicket"
+          }
+        },
+        "required": [
+          "me",
+          "room_view",
+          "ws_ticket"
+        ]
+      },
+      "StartResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "session_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state": {
+            "const": "active"
+          },
+          "game_rev": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "snapshot_schema": {
+            "const": 1
+          }
+        },
+        "required": [
+          "session_id",
+          "state",
+          "game_rev",
+          "snapshot_schema"
+        ]
+      },
+      "MessagesPage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PairMessage"
+            },
+            "maxItems": 50
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "items",
+          "next_cursor"
+        ]
+      },
+      "HealthLive": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "enum": [
+              "alive"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "HealthReady": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "enum": [
+              "ready",
+              "unavailable"
+            ]
+          },
+          "database": {
+            "enum": [
+              "ready",
+              "unavailable"
+            ]
+          },
+          "schema_generation": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "status",
+          "database",
+          "schema_generation"
+        ]
+      },
+      "Version": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "service": {
+            "const": "venus"
+          },
+          "version": {
+            "type": "string"
+          },
+          "source_revision": {
+            "type": "string"
+          },
+          "image_digest": {
+            "type": "string"
+          },
+          "contract_revision": {
+            "const": "P00-2"
+          }
+        },
+        "required": [
+          "service",
+          "version",
+          "source_revision",
+          "image_digest",
+          "contract_revision"
+        ]
+      },
+      "ResolveInvite": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "invite_token",
+          "entry_acceptance"
+        ],
+        "properties": {
+          "invite_token": {
+            "type": "string",
+            "minLength": 22,
+            "maxLength": 256
+          },
+          "entry_acceptance": {
+            "$ref": "#/components/schemas/EntryAcceptance"
+          }
+        }
+      },
+      "InviteResolution": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "room_id",
+          "availability"
+        ],
+        "properties": {
+          "room_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "availability": {
+            "enum": [
+              "joinable",
+              "full",
+              "expired"
+            ]
+          }
+        }
+      },
+      "EntryAcceptance": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "offer_version": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "offer_digest": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "accept_offer": {
+            "const": true
+          },
+          "adult18": {
+            "const": true
+          }
+        },
+        "required": [
+          "offer_version",
+          "offer_digest",
+          "accept_offer",
+          "adult18"
+        ]
+      },
+      "RoundChoice": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "side": {
+            "enum": [
+              "truth",
+              "dare"
+            ]
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "side",
+          "request_id"
+        ]
+      },
+      "YesButCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "condition": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "condition",
+          "request_id",
+          "proposal_revision",
+          "offer_id"
+        ]
+      },
+      "PairCondition": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "round_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "author_member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "condition": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "round_id",
+          "author_member_id",
+          "condition",
+          "request_id",
+          "proposal_revision"
+        ]
+      },
+      "ActionConsentRequest": {
+        "type": "object",
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "round_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "consent_scope": {
+            "const": "action"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "own_state": {
+            "enum": [
+              "pending",
+              "accepted"
+            ]
+          }
+        },
+        "required": [
+          "offer_id",
+          "round_id",
+          "consent_scope",
+          "proposal_revision",
+          "expires_at",
+          "own_state"
+        ],
+        "additionalProperties": false
+      },
+      "ActionConsentState": {
+        "type": "object",
+        "properties": {
+          "offer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "round_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "consent_scope": {
+            "const": "action"
+          },
+          "proposal_revision": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "own_state": {
+            "enum": [
+              "pending",
+              "accepted"
+            ]
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "active",
+              "declined",
+              "expired",
+              "stopped",
+              "completed"
+            ]
+          }
+        },
+        "required": [
+          "offer_id",
+          "round_id",
+          "consent_scope",
+          "proposal_revision",
+          "expires_at",
+          "own_state",
+          "state"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

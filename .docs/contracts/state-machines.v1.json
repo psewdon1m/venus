@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "revision": "P00-2",
+  "note": "guards are semantic requirements, not runtime code; terminal states never reopen; new game gets new session_id",
+  "machines": {
+    "room": {
+      "initial": "open",
+      "terminal": [
+        "closed"
+      ],
+      "transitions": [
+        [
+          "open",
+          "close",
+          "closing",
+          "host_authenticated"
+        ],
+        [
+          "closing",
+          "revoke_and_schedule_delete",
+          "closed",
+          "access_revoked"
+        ]
+      ]
+    },
+    "game": {
+      "initial": "draft",
+      "terminal": [
+        "completed",
+        "aborted"
+      ],
+      "transitions": [
+        [
+          "draft",
+          "prepare",
+          "waiting",
+          "host_valid_config"
+        ],
+        [
+          "waiting",
+          "start",
+          "active",
+          "explicit_ready_or_skip_and_snapshot_committed"
+        ],
+        [
+          "active",
+          "advance",
+          "active",
+          "host_idempotent_commit"
+        ],
+        [
+          "active",
+          "last_round",
+          "completed",
+          "round_terminal"
+        ],
+        [
+          "active",
+          "disconnect",
+          "paused",
+          "actor_unavailable_set_pause_reason_transport"
+        ],
+        [
+          "paused",
+          "reconnect",
+          "active",
+          "pause_reason_transport_and_same_identity_current_membership_and_consent_reconciled"
+        ],
+        [
+          "active",
+          "stop",
+          "aborted",
+          "any_game_participant"
+        ],
+        [
+          "paused",
+          "stop",
+          "aborted",
+          "any_game_participant"
+        ],
+        [
+          "waiting",
+          "stop",
+          "aborted",
+          "any_selected_participant"
+        ],
+        [
+          "active",
+          "participant_pause",
+          "paused",
+          "authenticated_game_participant_set_pause_reason_safety"
+        ],
+        [
+          "paused",
+          "host_resume",
+          "active",
+          "host_and_current_membership_and_expired_consent_scopes_closed_clear_pause_reason"
+        ]
+      ]
+    },
+    "consent": {
+      "initial": "pending",
+      "terminal": [
+        "declined",
+        "expired",
+        "stopped",
+        "completed"
+      ],
+      "transitions": [
+        [
+          "pending",
+          "accept",
+          "pending",
+          "one_actor_ack"
+        ],
+        [
+          "pending",
+          "accept",
+          "active",
+          "both_independent_acks_before_deadline"
+        ],
+        [
+          "pending",
+          "decline",
+          "declined",
+          "either_actor"
+        ],
+        [
+          "pending",
+          "timeout",
+          "expired",
+          "now_gte_deadline"
+        ],
+        [
+          "active",
+          "decline",
+          "stopped",
+          "either_actor_revokes"
+        ],
+        [
+          "active",
+          "stop",
+          "stopped",
+          "either_actor"
+        ],
+        [
+          "active",
+          "revoke",
+          "stopped",
+          "membership_lost_or_room_closed"
+        ],
+        [
+          "active",
+          "finish",
+          "completed",
+          "actor_or_budget_end"
+        ],
+        [
+          "active",
+          "timeout",
+          "expired",
+          "now_gte_active_until"
+        ],
+        [
+          "pending",
+          "condition_change",
+          "pending",
+          "P2_only_same_revision_before_deadline_clear_all_acks"
+        ]
+      ]
+    }
+  },
+  "consent_scopes": {
+    "invitation": "two acks open only private prompt/channel",
+    "action": "separate offer/revision after reveal; two fresh acks authorize that action only; never records performance",
+    "binding": "private action access bounded by invitation active_until; pending condition only P2 and clears action acks"
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "gate_id": "EXIT-P00",
+  "run_id": "p00-20261018T151605Z",
+  "revision": "P00-1",
+  "created_at_utc": "2026-10-18T15:18:20.146662Z",
+  "source_identity_sha256": "ba4a64ba0c1b4a86b98cc5c04ed16753047e67ff7073ddff36697071189fe166",
+  "git_sha": null,
+  "baseline_archive_sha256": "5af21ea3c83248ab8a0337d5782e82524b142e39d6959c37c6e66815a6c32aff",
+  "contracts": {
+    "api": "P00-1",
+    "events": 1,
+    "projections": 1,
+    "card": "CARD-1",
+    "policy": "RE-1"
+  },
+  "environment": "local Windows Python; temporary isolated dependencies; synthetic fixtures only",
+  "executor": "Codex",
+  "independent_reviewers": null,
+  "gate_status": "IN_REVIEW",
+  "local_verification": "PASS",
+  "checks": [
+    {
+      "id": "P00-BASELINE",
+      "status": "PASS",
+      "scope": "original zip bytes and original manifest validated; restore verified in baseline receipt",
+      "evidence": "test-results.json / test-output.txt"
+    },
+    {
+      "id": "P00-REGISTRY",
+      "status": "PASS",
+      "scope": "244 rows, individually traced original IDs/invariants/API operations; stale/missing/false verification negative tests",
+      "evidence": "test-results.json / test-output.txt"
+    },
+    {
+      "id": "P00-CONTRACTS",
+      "status": "PASS",
+      "scope": "JSON Schema compilation, local refs, OpenAPI structure/ACL metadata; strict privacy and request negative fixtures. Not an official OpenAPI validator or runtime ACL test.",
+      "evidence": "test-results.json / test-output.txt"
+    },
+    {
+      "id": "P00-RULES",
+      "status": "PASS",
+      "scope": "36 independent matrix golden cells; all 5050 round positions for N1..100; context/comfort/stage/capability/veto; serialized consent orderings and revocation",
+      "evidence": "test-results.json / test-output.txt"
+    },
+    {
+      "id": "P00-FLOWS",
+      "status": "PASS",
+      "scope": "12 textual desktop/mobile/locale/error flows present and linked; actual UX/visual review NOT_RUN",
+      "evidence": "test-results.json / test-output.txt"
+    },
+    {
+      "id": "P00-HUMAN-ACCEPTANCE",
+      "status": "NOT_RUN",
+      "scope": "U-001 scope; U-004 named reviewers; independent contract/UX acceptance"
+    },
+    {
+      "id": "PRODUCT-RUNTIME",
+      "status": "NOT_RUN",
+      "scope": "real DB locks/HTTP-WS ACL/encryption/browser/engine fairness/device/deployment remain future stage evidence"
+    }
+  ],
+  "pending_user_decisions": [
+    "U-001",
+    "U-002",
+    "U-003",
+    "U-004",
+    "U-005"
+  ],
+  "gate_blockers": [
+    "U-001 scope decision",
+    "U-004 named acceptance owners",
+    "Independent Engineering/QA/Privacy contract and UX review"
+  ],
+  "deferred_blocks": [
+    "ADR-005/006 before real personal data/sensitive content/public Games",
+    "Authoritative central Parts and operator before P06, earlier if material conflict",
+    "Fairness/inference/RPO/RTO profiles before dependent measurements/mutations"
+  ],
+  "evidence_sha256": {
+    "input-hashes.json": "6c605b2acf4ce6ff927e653d5b780df2761a9764b859e7290f802caf6de19089",
+    "test-results.json": "c1bfe92e1061a61ab155af3d72e8990e71d3f77245780a21c6975dada9459512",
+    "test-output.txt": "2aaa98e1a2356d8f4181acdd7a63477bebe82f61024c461bcbc89eae47d2125f"
+  },
+  "allowed_next_step": "Review candidate, record decisions and acceptance; P01 not opened automatically"
+}
