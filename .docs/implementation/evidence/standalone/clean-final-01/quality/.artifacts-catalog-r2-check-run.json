@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "status": "PASS",
+  "scope": "DRAFT_CONTENT_MECHANICAL_CHECKS_NOT_HUMAN_APPROVAL",
+  "commands": [
+    {
+      "binary": "python",
+      "args": [
+        "-B",
+        "tools/validate_cards.py",
+        ".docs/content/p04-r2-full/cards",
+        "--report",
+        ".artifacts/catalog-r2-check/schema.json"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "error_code": null,
+      "log": "command-1.txt"
+    },
+    {
+      "binary": "node",
+      "args": [
+        "tools/card-catalog.mjs",
+        "draft-check",
+        ".docs/content/p04-r2-full/cards",
+        ".artifacts/catalog-r2-check/full-check"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "error_code": null,
+      "log": "command-2.txt"
+    },
+    {
+      "binary": "python",
+      "args": [
+        "-B",
+        ".docs/content/p04-r2-full/test_full_candidate.py",
+        "--coverage-dir",
+        ".artifacts/catalog-r2-check/full-check",
+        "--report",
+        ".artifacts/catalog-r2-check/content-history-tests.json"
+      ],
+      "exit_code": 0,
+      "signal": null,
+      "error_code": null,
+      "log": "command-3.txt"
+    }
+  ],
+  "files": {
+    "schema.json": "9f72503883b75cf79e070cdb5ccef785730fea8a525973d1785ca3f17d8ff570",
+    "content-history-tests.json": "5b6ea71b2dea853db6ea9bee4761d2a34f1c6ca7e1abc8e6d21deaede1bfd06b",
+    "full-check/analysis.json": "003ee13891928f86f368e45286f01eae1edee960747e876d8c268664e6d5529b",
+    "full-check/manifest.json": "9fa169c5f047d2fbfd424c1cb353893edd85e279f30a61ab5aa579f770058f31",
+    "full-check/input-index.json": "0a779d7ecd452037acac2837decf518660604d5d8ba2cbee3dbabe899ce2427c",
+    "full-check/coverage.json": "e9d8bf69d52a22f9ae037420522a581278d51325483c36ff3b7c3b7bf06e6109",
+    "full-check/coverage-private-chat.json": "fd0cec4cda307e39e57dab0c857c176d25aa5f9547567bde75402c66e7a00e8b"
+  }
+}

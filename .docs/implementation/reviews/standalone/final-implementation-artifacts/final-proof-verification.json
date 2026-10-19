@@ -1,0 +1,122 @@
+{
+  "scope": "Independent exact clean source/evidence implementation verification; no stage/human acceptance",
+  "status": "PASS",
+  "time_utc": "2026-10-19T13:15:37.438308+00:00",
+  "source_sha": "0c790881bc34257da8ee7f887e4506be6dc6d01a",
+  "source_identity_sha256": "2bd8e3cdcb2a6b4ab5d179a12301973a30bb836b70a53943047a8cae9e51bd8d",
+  "checks": {
+    "raw_index_all25_sha_and_size": 25,
+    "all4_maps_same_identity": "2bd8e3cdcb2a6b4ab5d179a12301973a30bb836b70a53943047a8cae9e51bd8d",
+    "complete_git_included_blob_map_count": 1669,
+    "current_included_bytes_match_tested_commit": true,
+    "clean_source_actual_exit_and_9pilot_checks": "PASS",
+    "catalog_hash_binding_and_14checks": "PASS",
+    "pack_digest": "sha256:c668e4e8514d6acd97904c14937787e2f67af909d4af204252efb05d8a076484",
+    "C2": [
+      {
+        "name": "coverage",
+        "cells": 5880,
+        "neutral_sessions": 4200,
+        "private_sessions": 420,
+        "private_budget_rounds": 100,
+        "private_statuses": {
+          "CAPABILITY_UNAVAILABLE": 210,
+          "PASS": 210
+        }
+      },
+      {
+        "name": "coverage-private-chat",
+        "cells": 5880,
+        "neutral_sessions": 4200,
+        "private_sessions": 420,
+        "private_budget_rounds": 100,
+        "private_statuses": {
+          "PASS": 420
+        }
+      }
+    ],
+    "quality_log_57JS_117Python_14catalog_4negative": "PASS",
+    "owned_cleanup_independently_confirmed": [
+      {
+        "command": [
+          "docker",
+          "container",
+          "inspect",
+          "venus-quality-ccb74a1dda47"
+        ],
+        "actual_exit_code": 1,
+        "stdout": "[]\n",
+        "stderr": "Error response from daemon: No such container: venus-quality-ccb74a1dda47\n",
+        "owned_resource_absent": true
+      },
+      {
+        "command": [
+          "docker",
+          "volume",
+          "inspect",
+          "venus-quality-ccb74a1dda47-workspace"
+        ],
+        "actual_exit_code": 1,
+        "stdout": "[]\n",
+        "stderr": "Error response from daemon: get venus-quality-ccb74a1dda47-workspace: no such volume\n",
+        "owned_resource_absent": true
+      },
+      {
+        "command": [
+          "docker",
+          "container",
+          "ls",
+          "-aq",
+          "--filter",
+          "label=com.docker.compose.project=venus-pilot-46489f420652"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "owned_resource_absent": true
+      },
+      {
+        "command": [
+          "docker",
+          "volume",
+          "ls",
+          "-q",
+          "--filter",
+          "label=com.docker.compose.project=venus-pilot-46489f420652"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "owned_resource_absent": true
+      },
+      {
+        "command": [
+          "docker",
+          "network",
+          "ls",
+          "-q",
+          "--filter",
+          "label=com.docker.compose.project=venus-pilot-46489f420652"
+        ],
+        "actual_exit_code": 0,
+        "stdout": "",
+        "stderr": "",
+        "owned_resource_absent": true
+      }
+    ],
+    "retained_exact_images": [
+      {
+        "image_id": "sha256:8687714d7d941e9e72e5acc674a0e099fbb086d627e1043f73a07b1372bba883",
+        "os": "linux",
+        "architecture": "amd64",
+        "user": "1000:1000"
+      },
+      {
+        "image_id": "sha256:81db2848c4fd204c5f75809b9d9f0ee044a5b6eeb5a92aeb5cd889acc79ab89e",
+        "os": "linux",
+        "architecture": "amd64",
+        "user": "1000:1000"
+      }
+    ]
+  }
+}

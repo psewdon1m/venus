@@ -1,0 +1,38 @@
+{
+  "source_sha": "0c790881bc34257da8ee7f887e4506be6dc6d01a",
+  "source_identity_sha256": "2bd8e3cdcb2a6b4ab5d179a12301973a30bb836b70a53943047a8cae9e51bd8d",
+  "source_dirty": false,
+  "source_before": "67179998e9d85f1231d9d73e2549a1555bd98d5987af7ba2b849b73a82c15157",
+  "source_after": "67179998e9d85f1231d9d73e2549a1555bd98d5987af7ba2b849b73a82c15157",
+  "status": "PASS",
+  "cases": [
+    {
+      "id": "schema",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 1,
+      "diagnostic": "Traceback (most recent call last):\n  File \"/tmp/venus-negative-SNdWb6/tools/check_schemas.py\", line 13, in <module>\n    Draft202012Validator.check_schema(schema)\n  File \"/usr/local/lib/python3.12/site-packages/jsonschema/validators.py\", line 316, in check_schema\n    raise exceptions.SchemaError.create_from(error)\njsonschema.exceptions.SchemaError: 'INVALID_NEGATIVE_SCHEMA' is not valid under any of the given schemas\n\nFailed validating 'anyOf' in metaschema['allOf'][3]['properties']['type']:\n    {'anyOf': [{'$ref': '#/$defs/simpleTypes'},\n               {'type': 'array',\n                'items': {'$ref': '#/$defs/simpleTypes'},\n                'minItems': 1,\n                'uniqueItems': True}]}\n\nOn schema['type']:\n    'INVALID_NEGATIVE_SCHEMA'\n"
+    },
+    {
+      "id": "locale",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 1,
+      "diagnostic": "file:///tmp/venus-negative-SNdWb6/tools/check-i18n.mjs:6\n  if (dictionaries.some(d => Object.keys(d).sort().join(',') !== keys || Object.values(d).some(v => typeof v !== 'string' || !v.trim()))) throw new Error('Locale keys/values are incomplete');\n                                                                                                                                                ^\n\nError: Locale keys/values are incomplete\n    at checkLocales (file:///tmp/venus-negative-SNdWb6/tools/check-i18n.mjs:6:145)\n    at file:///tmp/venus-negative-SNdWb6/tools/check-i18n.mjs:9:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)\n\nNode.js v24.22.0\n"
+    },
+    {
+      "id": "type",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 2,
+      "diagnostic": "packages/contracts/src/index.ts(6,14): error TS2322: Type 'string' is not assignable to type 'number'.\n"
+    },
+    {
+      "id": "unit",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 1,
+      "diagnostic": "\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv5.0.5 \u001b[39m\u001b[90m/tmp/venus-negative-SNdWb6\u001b[39m\n\n \u001b[31m❯\u001b[39m apps/api/src/app.test.ts \u001b[2m(\u001b[22m\u001b[2m2 tests\u001b[22m\u001b[2m | \u001b[22m\u001b[31m1 failed\u001b[39m\u001b[2m)\u001b[22m\u001b[32m 84\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[31m❯\u001b[39m foundation HTTP contracts and privacy \u001b[2m(2)\u001b[22m\n\u001b[31m     \u001b[31m×\u001b[31m separates live from real dependency readiness and recovers\u001b[39m\u001b[32m 65\u001b[2mms\u001b[22m\u001b[39m\n     \u001b[32m✓\u001b[39m never emits sensitive payload, query, header or exception; generates its own request ID\u001b[32m 18\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[1m\u001b[32m1 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m   Start at \u001b[22m 13:12:10\n\u001b[2m   Duration \u001b[22m 350ms\u001b[2m (import 50%, tests 33%, transform 17%, worker 1%)\u001b[22m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Tests 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m apps/api/src/app.test.ts\u001b[2m > \u001b[22mfoundation HTTP contracts and privacy\u001b[2m > \u001b[22mseparates live from real dependency readiness and recovers\n\u001b[31m\u001b[1mAssertionError\u001b[22m: expected { status: 'alive' } to deeply equal { status: 'NEGATIVE_UNIT' }\u001b[39m\n\n\u001b[32m- Expected\u001b[39m\n\u001b[31m+ Received\u001b[39m\n\n\u001b[2m  {\u001b[22m\n\u001b[32m-   \"status\": \"NEGATIVE_UNIT\",\u001b[39m\n\u001b[31m+   \"status\": \"alive\",\u001b[39m\n\u001b[2m  }\u001b[22m\n\n\u001b[36m \u001b[2m❯\u001b[22m apps/api/src/app.test.ts:\u001b[2m11:57\u001b[22m\u001b[39m\n    \u001b[90m  9|\u001b[39m     const app = await createApp({probe: async () => {if (!available) t…\n    \u001b[90m 10|\u001b[39m     try {\n    \u001b[90m 11|\u001b[39m       expect((await app.inject('/health/live')).json()).toEqual({statu…\n    \u001b[90m   |\u001b[39m                                                         \u001b[31m^\u001b[39m\n    \u001b[90m 12|\u001b[39m       expect((await app.inject('/health/ready')).json()).toEqual({stat…\n    \u001b[90m 13|\u001b[39m       available = false;\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m\n\n"
+    }
+  ]
+}

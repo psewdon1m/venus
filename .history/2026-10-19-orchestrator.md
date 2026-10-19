@@ -59,3 +59,19 @@ Owner: /root. Timezone: Europe/Istanbul. Each delegated agent maintains its own 
 - Независимая проверка карточек: PASS_CONTENT_CORRECTIONS_AND_LINEAGE,13тестов и1949проверок. Docker tooling round08: PREFLIGHT_PASS,18семантических и6проверок выполнения. Все предыдущие замечания и неудачные раунды сохранены.
 - Сейчас оркестратор обновляет manifest, фиксирует чистый source candidate и запускает quality:docker и test:local-pilot. До окончания прогонов журналы и evidence не меняются, чтобы git/source snapshots оставались чистыми. Обновление журналов продолжится после получения результатов; пользователю доступны commentary.
 
+
+## 2026-10-19T16:13:57.8755642+03:00 - Чистые Docker-прогоны завершены
+
+- Commit0c790881bc34257da8ee7f887e4506be6dc6d01a, includedidentity2bd8e3cdcb2a6b4ab5d179a12301973a30bb836b70a53943047a8cae9e51bd8d. Оба runner зафиксировали clean before/after и неизменные исходники.
+- quality:docker actualexit0:57JS,117Python,14content/history, schema/i18n/docs/types/lint/build и4negativePASS. Оба свежих C2 профиля проходят по5880cells/4200нейтральныхсессий. Localpilot actualexit0:9/9PASS. Cleanup обоих завершён; проверочные образы сохранены поID.
+- Raw25файлов скопированы без изменения в evidence/standalone/clean-final-01 сSHA/sizeindex. Написано пояснение границ: это component/draftcorrection, не полныйEXIT-P04/P05, неhumanapproval, неproduction/A-V.
+- Два отдельных агента получили независимый source-bound review: standalone_gate_review(implementation) иp04_evidence_review(evidence). Каждый пишет собственный журнал; manifest обновлю после завершения всех записей.
+
+
+## 2026-10-19T16:18:43.9294033+03:00 - Независимая приёмка ограниченного scope завершена
+
+- Implementation finalPASS: f04bb98bbfcae56578f9603520c6ce4dfb0b875cbaa59543b4ff5faee88a7059. Evidence finalPASS:9273aa0b497d72e894170aac3e18e6b6e2505f6836da5a7613186df2b53e27e0. Оба независимых агента подтвердили1669includedGitblobs и25rawproofs; исходникисовпадают сtested0c790881/identity2bd8e3. Все их записи закончены.
+- Собран component-gate.json: PASS_COMPONENT_ONLY, fullEXIT-P04/P05false, humanHOLD. Original450/partial379 сохранены;573контентныхдескриптора/история522IDs/816revisions/138events проверены. C2 реальныйonlineprivateUnavailable210невыданзаPASS; conditionalchat420PASSневыданзареализованныйчат.
+- Откат admission закрываетновыйвход и сохраняет комнату. Непринятыйкаталогнеактивирован; approvedregistryпуст. Единый SFU выбран архитектурно, transport/A-Vещёнеразработан. Для полногоP04нужна новая подлиннаяконтентнаяприёмка changed/newhashes; остальные локальныеинженерныезадачи иowner-deferredMusic/mobile перечислены отдельно.
+- Перед финальной фиксацией проверяю docs,manifest и неизменностьincludedidentity. ПубликацияновогоCI/remotePASSнеимитируется; кандидат ивсефактическиеDockerproofs локальны.
+
