@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "scope": "Concrete extracted requirements, not implemented UI",
+  "requirements": [
+    {
+      "id": "P04-UX-SKIP",
+      "source_card_ids": [
+        "Q-1017",
+        "Q-1086",
+        "Q-1099",
+        "Q-1146",
+        "TD-1019",
+        "TD-1093",
+        "TD-1095",
+        "TD-1122",
+        "YB-1017",
+        "YB-1019",
+        "YB-1020",
+        "YB-1087",
+        "YB-1088",
+        "YB-1093",
+        "YB-1097",
+        "YB-1122",
+        "YB-1147"
+      ],
+      "requirement": "В каждом раунде и приватном предложении доступны равноправные действия «Ответить/принять» и «Пропустить/отказаться». Отказ и пропуск не требуют причины, публичного ответа, штрафа или придумывания специальной фразы; можно пропустить несколько следующих раундов.",
+      "acceptance_scenario": "Отказаться с пустым reason, пропустить два раунда; состояние корректно, объяснение не запрошено, участникам не показывается мотив, счёт/ценность игрока не снижается.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-WAIT",
+      "source_card_ids": [
+        "Q-1020",
+        "Q-1085",
+        "Q-1090",
+        "Q-1124",
+        "TD-1087",
+        "TD-1091",
+        "TD-1099",
+        "TD-1146",
+        "YB-1018",
+        "YB-1083"
+      ],
+      "requirement": "Явное состояние «Пока не выбираю/пауза» не является согласием. Оно не создаёт обещания вернуться к сроку или обязательства участвовать позже. UI предлагает спокойный выбор без давления и автоматического принятия.",
+      "acceptance_scenario": "Оставить приглашение pending, сделать паузу, не возвращаться; выполнение не начинается, таймер/следующее событие не превращает pending в accepted.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-NO_REASON",
+      "source_card_ids": [
+        "Q-1096",
+        "Q-1148",
+        "TD-1090",
+        "YB-1092"
+      ],
+      "requirement": "Уточнение условий и отказ не требуют раскрытия личных мотивов. Приложение не объясняет отказ одного игрока другому и не публикует частные причины без его разрешения.",
+      "acceptance_scenario": "Запросить уточнение без пояснения; данные причин отсутствуют в публичных HTTP/WS проекциях и сообщениях другим игрокам.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-NO_PERSONAL_STORY",
+      "source_card_ids": [
+        "Q-1088",
+        "TD-1088",
+        "YB-1098"
+      ],
+      "requirement": "Личная история или реальный пример всегда добровольны; доступна вымышленная/общая альтернатива либо пропуск без проверки достоверности и объяснений.",
+      "acceptance_scenario": "Выбрать вымышленный ответ или пропуск; форма не требует личных данных, доказательств или публичного обоснования.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-PER_ACTION",
+      "source_card_ids": [
+        "Q-1092",
+        "Q-1100",
+        "TD-1092",
+        "YB-1094"
+      ],
+      "requirement": "Участие в комнате, игре или прошлом раунде не даёт согласия на следующий раунд или конкретное действие. Решение каждого участника сохраняется отдельно; согласие одного не заменяет другого.",
+      "acceptance_scenario": "P1 принимает, P2 pending/отказывается; переход к выполнению запрещён. Новое предложение не наследует прежнее принятие.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-DECLINE_PERSISTS",
+      "source_card_ids": [
+        "Q-1091",
+        "YB-1099"
+      ],
+      "requirement": "Первичный отказ остаётся действительным при обсуждении альтернативы. Предложенное ограничение не ослабляется автоматически и не запускает торг, повторное давление или автоматическое принятие.",
+      "acceptance_scenario": "После declined предложить альтернативу; исходное предложение остаётся declined, альтернативе нужны новые свободные решения обоих.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-SILENCE",
+      "source_card_ids": [
+        "Q-1095",
+        "TD-1094"
+      ],
+      "requirement": "Молчание и отсутствие ответа не считаются согласием или завершённым ответом. Переходы выполняются только после явного действия пользователя.",
+      "acceptance_scenario": "Не отвечать до и после таймаута; ни accepted, ни выполнение не возникают.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-WITHDRAW",
+      "source_card_ids": [
+        "Q-1097",
+        "TD-1121",
+        "TD-1125",
+        "TD-1149",
+        "TD-1150"
+      ],
+      "requirement": "Каждый может отозвать прежнее согласие, прервать действие или сменить нежелательную тему без торга, оправданий и итогового отчёта. Остановка доступна непосредственным действием UI, включая приватную беседу.",
+      "acceptance_scenario": "Отозвать согласие после принятия; дальнейшее действие блокируется и прекращается, обязательного текста в чате/отчёта нет.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-TOPIC_BOUNDARY",
+      "source_card_ids": [
+        "Q-1121",
+        "Q-1122",
+        "TD-1123",
+        "YB-1121"
+      ],
+      "requirement": "До приватной беседы доступны выбор допустимых тем и непосредственная смена вопроса. Исключённые темы не требуют объяснений и не раскрываются группе; продолжение беседы не расширяет границы автоматически.",
+      "acceptance_scenario": "Один игрок исключает тему, затем запрашивает другой вопрос; прежняя тема не выдаётся снова, её название и мотив не публикуются другим.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-IDEA_ONLY",
+      "source_card_ids": [
+        "Q-1128",
+        "Q-1144",
+        "TD-1148"
+      ],
+      "requirement": "UI различает предложенную/сохранённую идею, обсуждение её формулировки и принятое действие. Сохранение, редактирование или обсуждение текста не создаёт обязательства и не запускает выполнение.",
+      "acceptance_scenario": "Сохранить и обсудить идею без принятия; отдельные поля принятия остаются false/pending.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-READ_NOT_ACCEPT",
+      "source_card_ids": [
+        "Q-1147",
+        "TD-1147",
+        "YB-1149"
+      ],
+      "requirement": "Получение, доставка и прочтение сообщения отделены от принятия предложения; подтверждение доставки/прочтения никогда не меняет согласие.",
+      "acceptance_scenario": "Доставить и прочитать приглашение; receipt изменился, consent не изменился.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-CHANGED_CONDITION",
+      "source_card_ids": [
+        "Q-1149",
+        "TD-1100",
+        "YB-1085",
+        "YB-1125"
+      ],
+      "requirement": "Любое изменённое условие образует новую редакцию предложения и требует свободного повторного решения P1 и P2. Выполнение разрешено только после явного подтверждения обоих одной и той же редакции.",
+      "acceptance_scenario": "P2 добавляет условие; старые confirmations недействительны, P1 вправе отказаться. Разные версии условий/одно подтверждение не запускают действие.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-SHOW_SCOPE",
+      "source_card_ids": [
+        "TD-1097",
+        "YB-1089"
+      ],
+      "requirement": "Полные условия и пределы предложения доступны до принятия; можно запросить уточнение, оставаясь без согласия на действие.",
+      "acceptance_scenario": "Открыть условия и уточнить их до выбора; приложение не принимает предложение от одного открытия формы.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-ADVICE_OPT_IN",
+      "source_card_ids": [
+        "TD-1098"
+      ],
+      "requirement": "Подсказка или совет не раскрывается до разрешения адресата. Отказ оставляет совет скрытым и не требует причины.",
+      "acceptance_scenario": "Отказать в подсказке; текст совета отсутствует в проекциях адресата и комнаты.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-NEW_INVITATION",
+      "source_card_ids": [
+        "TD-1124",
+        "YB-1123",
+        "YB-1146"
+      ],
+      "requirement": "Новое приглашение или тема требует собственного явного согласования. Текущее присутствие, переписка и готовность к прежней теме не означают готовности к новой.",
+      "acceptance_scenario": "Во время активного чата создать новую тему; оба участника получают самостоятельный выбор, новое действие остаётся pending.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-NO_SOCIAL_PRESSURE",
+      "source_card_ids": [
+        "YB-1091"
+      ],
+      "requirement": "Основной UX не подталкивает к согласию фразами «все уже согласились», «только ты остался» или публичным объяснением задержки/отказа.",
+      "acceptance_scenario": "Проверить RU/EN/TR все состояния ожидания/отказа; отсутствуют сравнение с другими и сообщения о том, кто задерживает согласие.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-REVIEW_TERMS",
+      "source_card_ids": [
+        "YB-1095"
+      ],
+      "requirement": "Перед выполнением обоим показана одна актуальная редакция согласованных условий; подтверждения связаны с её идентификатором/хешем.",
+      "acceptance_scenario": "Одновременно изменить условие и подтвердить старую редакцию; старое подтверждение отклоняется, выполнение не начинается.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-NO_AGREEMENT_END",
+      "source_card_ids": [
+        "YB-1100"
+      ],
+      "requirement": "Завершить обсуждение без итогового согласия — нормальная терминальная ветвь; интерфейс не требует найти компромисс для выхода.",
+      "acceptance_scenario": "Закрыть обсуждение с несовпадающими решениями; оба могут выйти, выполнение не запускается.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    },
+    {
+      "id": "P04-UX-TASTES",
+      "source_card_ids": [
+        "Q-1049"
+      ],
+      "requirement": "Правила комнаты и модерационные подсказки допускают разные музыкальные вкусы; отсутствие совпадения не становится оценкой/штрафом игрока и не требует спора.",
+      "acceptance_scenario": "Выбрать несовпадающие вкусы и пропустить обсуждение; нет штрафа, обязательного оправдания или повторного давления.",
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CHANGE",
+      "test_status": "NOT_RUN_BY_THIS_CONTENT_PROCESSOR"
+    }
+  ]
+}

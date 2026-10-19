@@ -1,10 +1,12 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-19. **EXIT-P00–EXIT-P03 = PASSED. P04-TECHNICAL-1 = PASSED; полный EXIT-P04 = BLOCKED_EXTERNAL.** Принятый main — `579ca40a9344fd0af841ff2e2883e394321dfbe7`, delivery receipt сохранён в `p03-accepted-20261019`. Автономная работа P04–P11 возобновлена по поручению владельца; дальнейшие зависимые этапы ожидают настоящего human-reviewed каталога. [Реестр P04](p04-registry.json), [журнал](../../.history/2026-10-19-p04.md), [подготовка и внешние входы P04–P11](evidence/future-preparation/README.md).
+Текущий исправленный каталог: [450 draft-карточек p04-r2-full](../content/p04-r2-full/cards/), canonical catalog `5de601019fc8eae1c9491a610984e485e3fedce0d36d3d1326b8a589ee528bd4`. Он содержит 378 сохранённых активных карточек и 72 новые замены; 71 вынесенная в правила карточка и YB-1148 исключены. [Фиксация точных байтов](evidence/p04/review-450-full-coverage/final-card-map.json), [решения по 21 семантическому кластеру](evidence/p04/review-450-full-coverage/semantic-cluster-dispositions.json). Исправления проходят свежие проверки; reviewed registry остаётся пустым до отдельной контентной приёмки.
+
+Обновлено: 2026-10-19. **Активный профиль — standalone-local-pilot-v2.** P00–P03 и P04-TECHNICAL-1 имеют исторические принятые source revisions. Новый план v2 и mock-entry проходят отдельную приёмку; старый PASS не переносится на новые байты. Владелец предоставил полный review450 с HOLD, исправления и новый полный draft-кандидат готовятся. Exocortex/Updater, настоящие legal документы и production-host больше не блокируют локальный scope. [Решения v2](user-decisions.v2.json), [план](../10_IMPLEMENTATION_PLAN.md), [локальный компонент](../LOCAL_PILOT.md), [журнал оркестратора](../../.history/2026-10-19-orchestrator.md).
 
 Реализованы foundation, комнаты и приватные настройки, server-side relationship engine, immutable snapshot, rounds и actor-scoped consent с повторной проверкой перед HTTP/WS delivery. [P03 guide и rollback](../P03_DEVELOPMENT.md), [реестр](p03-registry.json), [ADR-015](../adr/ADR-015-p03-engine-and-measurements.md), [ADR-016](../adr/ADR-016-p03-progressive-evidence.md).
 
-## P04 · Технический результат и открытый полный гейт
+## Исторический P04 · Source4a7 до standalone v2
 
 Source `4a7d5877b7e860d152c8c49ae768b646f3cb163f`, identity `9e75a7d70a591b38dafcf40c8dbea6a7383fc97d561bd5b739d9513c70062f77` (744 included files). [Actual CI8/8](https://github.com/psewdon1m/venus/actions/runs/39183818433), [технический пакет](evidence/p04/ci/technical-gate.json), [фактические результаты обоих валидаторов](evidence/p04/ci/gate-evaluation.json), [независимый implementation PASS](reviews/p04/final-implementation.md), [независимый evidence PASS](reviews/p04/final-evidence.md), [процедура повторной проверки](evidence/p04/ci/reproduction/README.md).
 
@@ -56,17 +58,23 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
 | P03 | PASSED | Fresh exact-source CI8/8 и два независимых PASS; delivery receipt в accepted tag |
-| P04 | BLOCKED | P04-TECHNICAL-1 PASSED: CI8/8 и два independent PASS. Полный EXIT-P04 ожидает genuine human review и reviewed pack;450draft/0reviewed |
-| P05 | BLOCKED | Зависит от полного EXIT-P04; дополнительно нужны owner-approved offer/privacy RU/EN/TR. Реализация не начата |
-| P06 | PREPARATION_ONLY | [Отдельная подготовка](evidence/future-preparation/p06-preparation-handoff.json): два scoped independent PASS, clean quality42JS/49native/90Python/4negative и Linux49PASS. Protected release/Updater/restore gate не принят |
-| P07 | BLOCKED | Зависит от P05/P06 и реального target host/operator; deployment не начат |
-| P08 | NOT_STARTED | Лицензированная Music; [раннее исследование прав](evidence/future-preparation/media-research-20261019.md) выполнено, assets/rights не получены |
-| P09 | NOT_STARTED | Desktop Cinema; [исследовано ограничение self-hosted token revoke](evidence/future-preparation/media-research-20261019.md), SFU не установлен |
-| P10 | BLOCKED | Зависит от P09; [исследованы capture ограничения](evidence/future-preparation/media-research-20261019.md), device/signing gate не выполнен |
-| P11 | BLOCKED | Зависит от P09 и отдельного принятого Calls контракта; реализация не начата |
+| P04 | IN_PROGRESS | Предоставлен owner review450 HOLD;450dispositions/71MOVE→UX, отдельные r2 corrections и72новых ID восстанавливают coverage. Новый reviewed pack ещё не принят |
+| P05 | IN_PROGRESS_COMPONENT | Mock legal разрешён; отдельный18+ обязателен. Entry5unit/24independent/9DockerpreflightPASS; fullGames/privatechatE2E и reviewed pack ещё не приняты |
+| P06 | REDESIGN_IN_PROGRESS | Venus-owned updater и host-file backup по ADR019. ExternalUpdater/Part13 не нужны; старая отдельная подготовка сохранена исторически |
+| P07 | NOT_STARTED_LOCAL_SCOPE | После P05/P06: локальныйDocker install/restore/load/soak. Production target/DNS/TLS отложены и не блокируют localEXIT |
+| P08 | DEFERRED_OWNER | Владелец отложил выбор музыки; G2 не объявлен PASS |
+| P09 | DESIGN_IN_PROGRESS | Один встроенный media server вDocker на том же хосте дляCinema/Calls; Hermes audited какpairP2P reference. Media implementation/E2E ещё NOT_RUN |
+| P10 | DEFERRED_OWNER | Мобильная публикация отложена владельцем; G4 не объявлен PASS |
+| P11 | SCOPE_ACCEPTED_NOT_IMPLEMENTED | Общие8 и приватные2 Calls используют один media-server transport; разныеACL/rooms/grants, отдельнойP2Pветки нет |
 
 P03 принят технически по fresh8f CI и двум независимым PASS; фактические protected proof CI/merge удостоверяются terminal receipt в accepted tag. Доставка P03 завершена: main579ca40, terminal receipt в accepted tag. Новое поручение возобновляет P04–P11; P04 начат. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.
 
 Текущий P04: [журнал](../../.history/2026-10-19-p04.md), [реестр](p04-registry.json), [human handoff450](evidence/p04/human-handoff/README.md), [чистые локальные evidence](evidence/p04/local-4a7d587/local-check-index.json), [final implementation](reviews/p04/final-implementation.md), [draft PR4](https://github.com/psewdon1m/venus/pull/4). [Конкретные внешние входы оставшихся этапов](evidence/future-preparation/operator-inputs.json) не являются согласованиями. Ранние исследования/аудит зависимостей имеют отдельные журналы [P05](../../.history/2026-10-19-p05.md), [P07](../../.history/2026-10-19-p07.md), [P08](../../.history/2026-10-19-p08.md), [P09](../../.history/2026-10-19-p09.md), [P10](../../.history/2026-10-19-p10.md), [P11](../../.history/2026-10-19-p11.md). Журнал подготовки P06 находится в её отдельном managed checkout; окончательный release gate не заявлен.
+
+## Передача новой ревизии
+
+[Owner review450](evidence/Venus_P04_FULL_REVIEW_450_2026-10-19.md) сохранён неизменным. [Обработка450решений](../content/p04-r2/dispositions.json) и [независимый content round01](reviews/p04-r2/round-01-review450-validation.md) показывают конкретные исправления/оставшиеся findings; human approval изменённых/new карточек не выдан. [Новая применимость входов](operator-inputs.v2.json) заменяет прежние внешние блокеры.
+
+[ADR019](../adr/ADR-019-standalone-local-pilot.md), [Hermes audit](evidence/hermes-audit-20261019.md), [строгая новая source revision](source-revisions.v2.json). Независимые проверки сохраняются в reviews/standalone; каждый агент ведёт `.history/agents/`.

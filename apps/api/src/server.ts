@@ -11,16 +11,18 @@ import {Games} from './games.js';
 import {migrateCatalog,catalogSchemaProbe} from './catalog-migrations.js';
 import {Catalog} from './catalog.js';
 import {RevocationLedger,bundledPacks} from '@venus/card-catalog';
+import {entryProfile} from './entry-profile.js';
 let db:ReturnType<typeof database>|undefined;
 async function main() {
   const metadata=JSON.parse(readFileSync(new URL('../../../build-metadata.json',import.meta.url),'utf8')) as {version:string;source_revision:string};
   const version:Version={service:'venus',version:metadata.version,source_revision:metadata.source_revision,image_digest:process.env.IMAGE_DIGEST??'unreleased',contract_revision:'P00-2'};
   if(!process.env.KEYRING_FILE||!process.env.DELETION_LEDGER_FILE||!process.env.APP_ORIGIN) throw new Error('External dependencies required');
   const origin=new URL(process.env.APP_ORIGIN);if(origin.origin!==process.env.APP_ORIGIN||origin.protocol!=='https:') throw new Error('HTTPS origin required');
+  const offer=entryProfile(process.env.VENUS_DEPLOYMENT_PROFILE,origin.origin);
   db=database();const pool=db.pool;
   const keys=Keyring.fromFile(process.env.KEYRING_FILE),ledger=new DeletionLedger(process.env.DELETION_LEDGER_FILE);
   await migrate(pool);await migrateGames(pool);await migrateCatalog(pool);
-  const rooms=new Rooms({pool,keys,ledger,origin:origin.origin,offer:()=>null}),games=new Games(rooms,()=>null);rooms.attachGames(games);
+  const rooms=new Rooms({pool,keys,ledger,origin:origin.origin,offer:()=>offer}),games=new Games(rooms,()=>null);rooms.attachGames(games);
   // No approved production bundle exists yet. An operator-provisioned ledger may
   // reconcile restored state, but neither environment nor network can supply cards.
   if(process.env.CATALOG_REVOCATION_LEDGER_FILE) {

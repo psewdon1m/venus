@@ -15,6 +15,7 @@ services:
       KEYRING_FILE: /run/secrets/keyring
       DELETION_LEDGER_FILE: /var/lib/venus/deletions.jsonl
       APP_ORIGIN: ${VENUS_ORIGIN:-https://venus.local.invalid}
+      VENUS_DEPLOYMENT_PROFILE: ${VENUS_DEPLOYMENT_PROFILE:-closed}
     secrets: [db_password, keyring]
     volumes: [venus-state:/var/lib/venus]
     depends_on:

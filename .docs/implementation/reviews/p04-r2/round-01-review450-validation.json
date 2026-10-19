@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/review450_validation",
+  "result": "CHANGES_REQUESTED",
+  "scope": "P04-r2 frozen partial draft processing, not human approval or EXIT-P04",
+  "generated_at": "2026-10-19T12:44:56.101010+00:00",
+  "source_commit": "c5dac890fc32ea769971bc29cb468c5b1fa35c0e",
+  "source_dirty": true,
+  "source_inputs": [
+    {
+      "path": ".docs/implementation/evidence/Venus_P04_FULL_REVIEW_450_2026-10-19.md",
+      "raw_sha256": "e47cf986c885433e7583ad35161ba7978f72341196d3d10162ba4b1d7346601f"
+    },
+    {
+      "path": ".docs/content/p04-r2/dispositions.json",
+      "raw_sha256": "96ca2ad2ed3545acf67bfea94bc05a93b53a784c5a382aa1a6e915e6f04c6e84"
+    },
+    {
+      "path": ".docs/content/p04-r2/revision-diffs.json",
+      "raw_sha256": "c18a8a92014912f26e2c2034a35cbf34bf5041608245e68074d4b772dd290686"
+    },
+    {
+      "path": ".docs/content/p04-r2/product-ux-requirements.json",
+      "raw_sha256": "1e76c0e746c4ae757d0b086c7836b66a33467ce12cd9ef7b74f32fe99125f7ed"
+    },
+    {
+      "path": ".docs/content/p04-r2/rules-extraction.json",
+      "raw_sha256": "0eba71028a76b03124238fa58190ed80644180cc5f42e5d8204be1ef08f22af3"
+    },
+    {
+      "path": ".docs/content/p04-r2/semantic-clusters.json",
+      "raw_sha256": "5d8e077adf8052fa4b86d2cf459eb7bac8b4c57e3fd85ece80a9ae646f9ff255"
+    },
+    {
+      "path": ".docs/content/p04-r2/required-scenarios.json",
+      "raw_sha256": "56d38d81a5b79c4d011332f5811179a865daaea11e792528d05f385673529ca1"
+    },
+    {
+      "path": ".docs/implementation/evidence/p04/review-450-processing/freeze.json",
+      "raw_sha256": "8670a2dc96ffb1fd3c26c495af4d60232250287ee278ab90dbee10a9bf634f34"
+    },
+    {
+      "path": ".docs/implementation/evidence/p04/review-450-processing/frozen-card-map.json",
+      "raw_sha256": "37dfb6e63257a793733e938c1fc835024b89e82ee6763f03fab1f3d5b4a9daff"
+    },
+    {
+      "path": ".docs/implementation/evidence/p04/review-450-processing/authoring/run-02/after-export.json",
+      "raw_sha256": "074792a9ccc3882a2e34b12ec93e6d46036231912da7afe42f7c5c1728a4951a"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R450-01",
+      "priority": "P2",
+      "card_ids": [
+        "TD-1108"
+      ],
+      "paths": [
+        ".docs/content/p04-r2/cards/TD-1108.json"
+      ],
+      "field": "text.tr.dare",
+      "problem": "Owner review §5 and §7 specifically replace kesin açıklama with natural concrete wording. The truth was changed, but dare still contains bir imgesel bir de kesin açıklama oluşturun.",
+      "fix": "In the separate full candidate, correct both clauses to retain image-based versus clear/concrete caption meaning in all locales; preserve frozen r2 and record revised hash/history."
+    },
+    {
+      "id": "R450-02",
+      "priority": "P1",
+      "card_ids": [
+        "YB-1007",
+        "YB-1038",
+        "YB-1071",
+        "YB-1086",
+        "YB-1103",
+        "YB-1106",
+        "YB-1124",
+        "YB-1128",
+        "YB-1135",
+        "YB-1141",
+        "YB-1145"
+      ],
+      "paths": [
+        ".docs/content/p04-r2/cards/YB-1007.json",
+        ".docs/content/p04-r2/cards/YB-1038.json",
+        ".docs/content/p04-r2/cards/YB-1071.json",
+        ".docs/content/p04-r2/cards/YB-1086.json",
+        ".docs/content/p04-r2/cards/YB-1103.json",
+        ".docs/content/p04-r2/cards/YB-1106.json",
+        ".docs/content/p04-r2/cards/YB-1124.json",
+        ".docs/content/p04-r2/cards/YB-1128.json",
+        ".docs/content/p04-r2/cards/YB-1135.json",
+        ".docs/content/p04-r2/cards/YB-1141.json",
+        ".docs/content/p04-r2/cards/YB-1145.json"
+      ],
+      "field": "text.tr.proposal",
+      "problem": "Draft rewrite appends öner after a finite explanatory clause, colon scene, or completed question. Examples: sesleri sözcüklerle anlatabilirsiniz öner; kişisel öykü gerekmiyor öner; nereye gidiyor, ne fark ediyor? öner. This is a systematic new localization defect, including cards marked RECONTEXT.",
+      "fix": "In the separate full candidate, put öner immediately after the infinitive action and move optionality/explanations/questions into grammatically complete separate sentences. Review all 11 IDs and keep RU/EN/TR aligned; add a targeted regression for the observed malformed output patterns."
+    }
+  ],
+  "independent_mechanical_report": {
+    "path": ".docs/implementation/reviews/p04-r2/round-01-independent-checks.json",
+    "sha256": "c0b1b63e18f65ec860b161ac3a2d17361a331e857b00e63abfdddf897c6e41f3",
+    "assertions": 1841,
+    "result": "PASS_MECHANICAL_ONLY"
+  },
+  "author_tests_independently_rerun": {
+    "count": 10,
+    "result": "PASS"
+  },
+  "report_path": ".docs/implementation/reviews/p04-r2/round-01-review450-validation.md",
+  "report_sha256": "3ad4fccfce60ed13f6c1314e5b13f34ad11ff4f7251cec5c5739886fa2cb94b2",
+  "full_candidate_review_pending": true,
+  "human_approval_granted": false,
+  "stage_exit_granted": false
+}

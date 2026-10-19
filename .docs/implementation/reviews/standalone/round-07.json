@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T13:03:53.763581+00:00",
+  "outcome": "CHANGES_REQUESTED",
+  "scope": "catalog-r2-semantic-receipt-preflight",
+  "stage_acceptance": false,
+  "source_dirty": true,
+  "defect_source": {
+    "path": "tools/check-catalog-r2.mjs",
+    "sha256": "24282cc1061fba0355858b424009a9a1861ef524119180ab3e2335b2118e07ca"
+  },
+  "findings": [
+    {
+      "id": "SG-003",
+      "severity": "P2",
+      "status": "OPEN",
+      "issue": "Malformed count or skipped shapes falsely pass minimum-test receipt validation"
+    }
+  ],
+  "tests": {
+    "semantic_receipt_cases": {
+      "total": 12,
+      "expected_behavior": 7,
+      "malformed_false_pass": 5,
+      "used_actual_catalog": false
+    }
+  },
+  "supersedes": {
+    "round": "round-06",
+    "reason": "Semantic delta arrived between prior test run and report hash sampling; new guard needs fresh retest"
+  },
+  "test_artifacts": [
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-semantic-repro.mjs",
+      "sha256": "6973744dc93c9205374ebc2ceb3798543255b6237ab563756df9c03653a146f6"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-semantic-repro.json",
+      "sha256": "c39881a13b62a594d3a3fb8e1816736e13022be5af55a6c8497f25fc38271d76"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/standalone/round-07.md",
+    "sha256": "4b090e021dc026d74879abdd9d71be592356da696629a5a16aaadfd85386e1a4"
+  }
+}

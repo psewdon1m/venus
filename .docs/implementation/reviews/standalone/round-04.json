@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T12:57:41.658670+00:00",
+  "outcome": "PREFLIGHT_PASS",
+  "scope": "standalone-docker-quality-tooling-preflight",
+  "stage_acceptance": false,
+  "source_sha": "c5dac890fc32ea769971bc29cb468c5b1fa35c0e",
+  "source_dirty": true,
+  "reviewed_files": [
+    {
+      "path": "tools/docker-quality.mjs",
+      "sha256": "9d049f3ca6cfb553639c9af6f410cbb7e6ded440f37569ecaeac2f82d3b93c91"
+    },
+    {
+      "path": "tools/docker-quality-exec.mjs",
+      "sha256": "b694d14c60c84f6a5689972479e1e89ce397ec24dc8099cf725ee47b2cca1760"
+    },
+    {
+      "path": "infra/venus/Dockerfile.checks",
+      "sha256": "a2b98a23484463882780953669b193a4928c5df85838c37f1cde62a5f30ba433"
+    },
+    {
+      "path": "infra/venus/Dockerfile.checks.dockerignore",
+      "sha256": "2f5f61a227e50d32008dbbddc84559320ff9e70cacdbb6d1ab7a20db6ba6ec97"
+    },
+    {
+      "path": "package.json",
+      "sha256": "3f6492784cd19d8fcfcf80f2471b358bf978fe1dd73d42e57c710953bff12ed5"
+    },
+    {
+      "path": "tools/stage_inventory.py",
+      "sha256": "0215ada3334f8013ee03193d9d62b8934f7a57c3d44dae64d5e59e08dda40c49"
+    },
+    {
+      "path": "tools/source_inventory.py",
+      "sha256": "bbd4b2f7c51537597d84b0cec5edf2e575c22b3a8a9990e9811a7542523cf0df"
+    },
+    {
+      "path": "tools/requirements.lock",
+      "sha256": "88bb8d1f84fa3f47854fd3cb4f9df557e6a79b22b6f3864a41cadb666178d013"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SG-002",
+      "severity": "P2",
+      "status": "RESOLVED",
+      "fixed_file": {
+        "path": "tools/docker-quality.mjs",
+        "sha256": "9d049f3ca6cfb553639c9af6f410cbb7e6ded440f37569ecaeac2f82d3b93c91"
+      },
+      "retest": "4/4 actual-source wrapper fault/control cases PASS"
+    }
+  ],
+  "tests": {
+    "isolated_wrapper_faults": {
+      "passed": 4,
+      "total": 4,
+      "used_real_docker": false
+    },
+    "isolated_producer_guards": {
+      "passed": 8,
+      "total": 8,
+      "used_real_quality": false
+    },
+    "actual_dependency_runtime": {
+      "status": "PASS",
+      "actual_exit_code": 0,
+      "uid": 1000,
+      "image_short_id": "3e54a8cf449d",
+      "owned_container_absence_confirmed": true
+    }
+  },
+  "test_artifacts": [
+    {
+      "path": ".artifacts/review-standalone-gate/docker-quality-fault-retest.mjs",
+      "sha256": "395471decf4a0cfd2f918169513b7bf0d10fda34e7b360927bf4c246eb7396ef"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/docker-quality-fault-retest.json",
+      "sha256": "3f929312d32354ec986f03a512ddc0c973e05d61173d9ec2b15aac820c1a2f36"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/docker-quality-producer-faults.mjs",
+      "sha256": "116a050634af4666f266cdecb8281c3981cf945d080204d47127d392613b61b0"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/docker-quality-producer-faults.json",
+      "sha256": "602a1a27a20d20438b7786ed3e161683faa047a281d6737b199d95a462781714"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/standalone/round-04.md",
+    "sha256": "e7d3d913a41117b87fd2622f0003cbf2209dc796e0e95bf2c785a20fb05fd003"
+  },
+  "limits": [
+    "DIRTY_CANDIDATE",
+    "FINAL_DOCKER_FULL_QUALITY_NOT_RUN",
+    "FINAL_SOURCE_FREEZE_AWAITED",
+    "P04_CONTENT_HOLD"
+  ]
+}
