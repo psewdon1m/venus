@@ -98,7 +98,7 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
   async function sendGame(socket:WebSocket,grant:SocketGrant,bundle:Awaited<ReturnType<Rooms['socketState']>>,publicSnapshot:boolean) {
     if(socket.readyState!==1) return;
     const common={schema:1,room_id:grant.roomId,room_rev:bundle.room.room_rev,server_time:new Date(rooms.now()).toISOString()};
-    if(publicSnapshot&&bundle.game) socket.send(JSON.stringify({...common,event_id:randomUUID(),stream:'game',stream_rev:bundle.room.room_rev,type:'game.snapshot',audience:'room',payload:bundle.game}));
+    if(publicSnapshot) await rooms.dispatchGame(grant,(game,roomRev)=>{if(socket.readyState===1) socket.send(JSON.stringify({...common,room_rev:roomRev,server_time:new Date(rooms.now()).toISOString(),event_id:randomUUID(),stream:'game',stream_rev:roomRev,type:'game.snapshot',audience:'room',payload:game}));});
     for(const ref of bundle.privateEvents) await rooms.dispatchPrivate(grant,ref.eventId,(event,roomRev)=>{if(socket.readyState===1) socket.send(JSON.stringify({...common,room_rev:roomRev,server_time:new Date(rooms.now()).toISOString(),event_id:event.eventId,stream:'private',stream_rev:event.revision,type:event.type,audience:'member',target_member_id:grant.memberId,payload:event.payload}));});
   }
   app.get('/api/v1/rooms/:roomId/ws',{websocket:true,preValidation:async request=>{

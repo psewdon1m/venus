@@ -1,6 +1,6 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-19. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = PASSED.** Технический P03 принят двумя независимыми агентами по свежему exact-source CI. [PR #3](https://github.com/psewdon1m/venus/pull/3) проходит защищённую доставку; фактические CI/merge/main удостоверяются аннотацией immutable tag `p03-accepted-20261019` — заключительной записью журнала. После P03 работа останавливается по поручению владельца; P04 не начинается.
+Обновлено: 2026-10-19. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = PASSED.** Технический P03 принят двумя независимыми агентами по свежему exact-source CI. [PR #3](https://github.com/psewdon1m/venus/pull/3) проходит защищённую доставку; фактические CI/merge/main удостоверяются аннотацией immutable tag `p03-accepted-20261019` — заключительной записью журнала. Новое поручение владельца возобновляет автономные P04–P11. P04 IN_PROGRESS, [реестр](p04-registry.json) и [журнал](../../.history/2026-10-19-p04.md).
 
 Реализованы foundation, комнаты и приватные настройки, server-side relationship engine, immutable snapshot, rounds и actor-scoped consent с повторной проверкой перед HTTP/WS delivery. [P03 guide и rollback](../P03_DEVELOPMENT.md), [реестр](p03-registry.json), [ADR-015](../adr/ADR-015-p03-engine-and-measurements.md), [ADR-016](../adr/ADR-016-p03-progressive-evidence.md).
 
@@ -14,7 +14,7 @@ Measured source `8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b`, implementation ident
 
 Пределы: синтетический draft pack не разрешён production loader; human review каталога остаётся P04. Inference ограничен зарегистрированным observer/classifier и этими входами. Production offer отсутствует, public entry fail-closed; полный G1 UX/chat остаётся P05. Этот технический гейт не разрешает публичную эксплуатацию.
 
-Фактическое завершение защищённой доставки записывается в JSON-аннотации `p03-accepted-20261019` на merged main: `git cat-file tag p03-accepted-20261019`. Эта запись продолжает журнал без изменения проверенного дерева. Original proof HEAD и его measured8f ancestry сохраняются отдельным тегом `p03-proof-20261019`; для существующего clone явно выполнить `git fetch origin tag p03-proof-20261019`. Standalone tree ZIP не содержит Git history: проверка требует Git clone/доступного Git object database. На момент данного proof commit финальные proof CI/merge ещё не утверждаются состоявшимися. После receipt — STOP, P04 NOT_STARTED.
+Фактическое завершение защищённой доставки записывается в JSON-аннотации `p03-accepted-20261019` на merged main: `git cat-file tag p03-accepted-20261019`. Эта запись продолжает журнал без изменения проверенного дерева. Original proof HEAD и его measured8f ancestry сохраняются отдельным тегом `p03-proof-20261019`; для существующего clone явно выполнить `git fetch origin tag p03-proof-20261019`. Standalone tree ZIP не содержит Git history: проверка требует Git clone/доступного Git object database. На момент данного proof commit финальные proof CI/merge ещё не утверждаются состоявшимися. На тот момент после receipt действовал STOP; новым поручением владельца работа возобновлена с P04.
 
 ## EXIT-P02
 
@@ -48,7 +48,7 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
 | P03 | PASSED | Fresh exact-source CI8/8 и два независимых PASS; delivery receipt в accepted tag |
-| P04 | NOT_STARTED | Reviewed production card catalogue |
+| P04 | IN_PROGRESS | Authoring/review pipeline; human RU/EN/TR/rights review обязателен |
 | P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
 | P06 | NOT_STARTED | Protected signing/release, host dependencies/operator, restore/rollback |
 | P07 | NOT_STARTED | Реальный target host и ограниченный запуск |
@@ -57,6 +57,6 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P10 | NOT_STARTED | Android/iOS publisher |
 | P11 | NOT_STARTED | Calls |
 
-P03 принят технически по fresh8f CI и двум независимым PASS; фактические protected proof CI/merge удостоверяются terminal receipt в accepted tag. После доставки работа останавливается, P04 не начинается. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
+P03 принят технически по fresh8f CI и двум независимым PASS; фактические protected proof CI/merge удостоверяются terminal receipt в accepted tag. Доставка P03 завершена: main579ca40, terminal receipt в accepted tag. Новое поручение возобновляет P04–P11; P04 начат. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.

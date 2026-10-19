@@ -5,13 +5,20 @@ import {FrozenPack,immutableSnapshot,selectNextRound,preflight,policyDigest,algo
 import {Rooms,revision,type RoomGameHooks,type PrivateDelivery,type PrivateReference} from './rooms.js';
 import {requireThat,DomainError,type Cipher} from './security.js';
 import {gameView,publicRound,privateText,type GameRow,type RoundData,type RoundRow,type Draft,type NameRow,type Locale} from './games-model.js';
+import type {GameCatalog} from './catalog.js';
+import {safeAvailability} from '@venus/card-catalog';
 type Auth=Awaited<ReturnType<Rooms['access']>>;
 interface Rules {host?:boolean;safety?:boolean;sessionId?:string;roundId?:string;participant?:boolean;actor?:boolean;role?:'primary'|'secondary'}
 type Operation=(c:pg.PoolClient,a:Auth)=>Promise<unknown>;
 const DAY=86400000;
 export class Games implements RoomGameHooks {
+  private catalog:GameCatalog|undefined;
+  private catalogAttached=false;
+  attachCatalog(catalog:GameCatalog) {requireThat(!this.catalogAttached,'CATALOG_ALREADY_ATTACHED',503);this.catalog=catalog;this.catalogAttached=true;}
   private packs=new Map<string,FrozenPack>();
-  constructor(readonly rooms:Rooms,private readonly provider:()=>FrozenPack|null,readonly allowSynthetic=false) {}
+  constructor(readonly rooms:Rooms,private readonly provider:()=>FrozenPack|null,readonly allowSynthetic=false) {
+    if(!allowSynthetic) this.catalog={active:async()=>null,assertPinned:async()=>{throw new DomainError('CATALOG_LEDGER_REQUIRED',503);}};
+  }
   private get now() {return this.rooms.now();}
   private get keys() {return this.rooms.options.keys;}
   private async mapped<T>(operation:()=>Promise<T>):Promise<T> {
@@ -36,18 +43,20 @@ export class Games implements RoomGameHooks {
       await this.rooms.remember(c,scope,key,input,roomId,{body,session:null,memberId:a.member.id,status:200},requestId,action);return body;
     }));
   }
-  private async row(c:pg.PoolClient,roomId:string,id?:string):Promise<GameRow|null> {
-    const result=await c.query<GameRow>(id?'SELECT * FROM game_sessions WHERE room_id=$1 AND id=$2 FOR UPDATE':'SELECT * FROM game_sessions WHERE room_id=$1 ORDER BY seq DESC LIMIT 1 FOR UPDATE',id?[roomId,id]:[roomId]);return result.rows[0]??null;
+  private async row(c:pg.PoolClient,roomId:string,id?:string,lock=true):Promise<GameRow|null> {
+    const sql=id?'SELECT * FROM game_sessions WHERE room_id=$1 AND id=$2':'SELECT * FROM game_sessions WHERE room_id=$1 ORDER BY seq DESC LIMIT 1';
+    const result=await c.query<GameRow>(sql+(lock?' FOR UPDATE':''),id?[roomId,id]:[roomId]);return result.rows[0]??null;
   }
   private async requireGame(c:pg.PoolClient,roomId:string,id:string) {const game=await this.row(c,roomId,id);requireThat(game,'GAME_NOT_FOUND',404);return game;}
   private draft(game:GameRow) {return this.keys.decrypt<Draft>(game.draft_cipher,`game-draft:${game.room_id}:${game.id}:1`);}
-  private async current(c:pg.PoolClient,game:GameRow) {
+  private async current(c:pg.PoolClient,game:GameRow,lock=true) {
     if(!game.current_round) return null;
-    const row=(await c.query<RoundRow>('SELECT * FROM game_rounds WHERE room_id=$1 AND session_id=$2 AND round_index=$3 FOR UPDATE',[game.room_id,game.id,game.current_round])).rows[0];
+    const row=(await c.query<RoundRow>('SELECT * FROM game_rounds WHERE room_id=$1 AND session_id=$2 AND round_index=$3'+(lock?' FOR UPDATE':''),[game.room_id,game.id,game.current_round])).rows[0];
     requireThat(row,'ROUND_UNAVAILABLE',503);const data=this.keys.decrypt<RoundData>(row.cipher,`game-round:${game.room_id}:${game.id}:${row.id}:1`);
     requireThat(data.plan.round_id===row.id&&data.plan.round_index===row.round_index&&data.state===row.state,'ROUND_UNAVAILABLE',503);return {row,data};
   }
   private async pack(c:pg.PoolClient,game:GameRow) {
+    if(game.pack_digest) await this.catalog?.assertPinned(c,game.pack_digest);
     requireThat(game.pack_digest,'PACK_UNAVAILABLE',503);const old=this.packs.get(game.pack_digest);if(old) return old;
     const row=(await c.query<{manifest:Parameters<typeof FrozenPack.load>[1];cards:unknown[];synthetic:boolean}>('SELECT manifest,cards,synthetic FROM game_packs WHERE digest=$1',[game.pack_digest])).rows[0];
     requireThat(row&&(!row.synthetic||this.allowSynthetic),'PACK_UNAVAILABLE',503);const value=FrozenPack.load(row.cards,row.manifest,row.synthetic);requireThat(value.digest===game.pack_digest,'PACK_DIGEST_INVALID',503);this.packs.set(value.digest,value);return value;
@@ -60,6 +69,7 @@ export class Games implements RoomGameHooks {
   }
   private async names(c:pg.PoolClient,roomId:string) {return (await c.query<NameRow>('SELECT id,display_name FROM room_members WHERE room_id=$1',[roomId])).rows;}
   private async view(c:pg.PoolClient,game:GameRow,locale:Locale) {
+    if(game.state==='aborted') return gameView(game,null);
     const round=await this.current(c,game);if(!round) return gameView(game,null);
     return gameView(game,publicRound(await this.pack(c,game),round.data,locale,await this.names(c,game.room_id)));
   }
@@ -96,7 +106,7 @@ export class Games implements RoomGameHooks {
   async prepare(roomId:string,session:string|undefined,input:PrepareGame,requestId:string) {
     return this.mutate(roomId,session,input,requestId,'game_prepare',{host:true},async(c,a)=>{
       requireThat(input.expected_rev===revision(a.room.rev),'REVISION_CONFLICT',409);const current=await this.row(c,roomId);requireThat(!current||!['active','paused'].includes(current.state),'GAME_SETTINGS_LOCKED',409);
-      const pack=this.provider();requireThat(pack&&(!pack.synthetic||this.allowSynthetic),'PACK_UNAVAILABLE',503);
+      const pack=this.catalog?await this.catalog.active(c):this.provider();requireThat(pack&&(!pack.synthetic||this.allowSynthetic),'PACK_UNAVAILABLE',503);
       const members=await c.query('SELECT id FROM room_members WHERE room_id=$1 AND id=ANY($2::uuid[]) AND removed_at IS NULL AND slot IS NOT NULL',[roomId,input.players]);requireThat(members.rowCount===input.players.length,'INVALID_GAME_PLAYERS',400);
       let game:GameRow;
       if(current?.state==='waiting') {game=current;await c.query('UPDATE game_sessions SET mode=$2,round_count=$3,draft_cipher=$4 WHERE id=$1',[game.id,input.mode,input.round_count,this.keys.encrypt({players:[...input.players].sort()},`game-draft:${roomId}:${game.id}:1`)]);game.mode=input.mode;game.round_count=input.round_count;await this.bump(c,game,true);}
@@ -109,19 +119,31 @@ export class Games implements RoomGameHooks {
   async start(roomId:string,session:string|undefined,input:StartGame,requestId:string) {
     return this.mutate(roomId,session,input,requestId,'game_start',{host:true},async(c)=>{
       const game=await this.row(c,roomId);requireThat(game?.state==='waiting','GAME_NOT_WAITING',409);requireThat(input.draft_rev===revision(game.rev),'REVISION_CONFLICT',409);
-      const pack=this.provider();requireThat(pack&&(!pack.synthetic||this.allowSynthetic),'PACK_UNAVAILABLE',503);const ids=this.draft(game).players;
-      const rows=await c.query<{id:string;presence:string;slot:number|null;ready:boolean;cipher:Cipher;offer_version:string;offer_digest:string}>(`SELECT m.id,m.presence,m.slot,p.ready,p.cipher,e.offer_version,e.offer_digest FROM room_members m JOIN private_preferences p ON p.room_id=m.room_id AND p.owner_member_id=m.id JOIN entry_acceptances e ON e.room_id=m.room_id AND e.member_id=m.id WHERE m.room_id=$1 AND m.id=ANY($2::uuid[]) AND m.removed_at IS NULL`,[roomId,ids]);
-      requireThat(rows.rowCount===ids.length&&rows.rows.every(r=>r.presence==='online'&&r.slot!==null),'ACTORS_UNAVAILABLE',409);requireThat(rows.rows.every(r=>r.ready),'SETUP_REQUIRED',409);
-      const offer=this.rooms.options.offer();requireThat(offer&&rows.rows.every(r=>r.offer_version===offer.version&&r.offer_digest===offer.digest),'ENTRY_REACCEPT_REQUIRED',403);
-      const players:Player[]=rows.rows.map(r=>{const own=this.keys.decrypt<{comfort:number;edges:Record<string,Edge>}>(r.cipher,`preferences:${roomId}:${r.id}:1`);return {id:r.id,comfort:own.comfort,edges:Object.fromEntries(Object.entries(own.edges).filter(([id])=>ids.includes(id)&&id!==r.id))};});
-      const room=(await c.query<{meeting_context:'online'|'in_person'}>('SELECT meeting_context FROM rooms WHERE id=$1',[roomId])).rows[0]!;
-      const snapshot=immutableSnapshot({schema:1,session_id:game.id,room_id:roomId,engine_revision:algorithmRevision,policy_revision:'RE-1',policy_digest:policyDigest,pack_digest:pack.digest,seed:randomBytes(32).toString('hex'),mode:game.mode,context:room.meeting_context,total_rounds:game.round_count,players,capabilities:[]},pack);
+      const pack=this.catalog?await this.catalog.active(c):this.provider();requireThat(pack&&(!pack.synthetic||this.allowSynthetic),'PACK_UNAVAILABLE',503);const ids=this.draft(game).players;
+      const snapshot=await this.draftSnapshot(c,game,pack);
       const first=preflight(snapshot,pack)[0]!;
       await c.query('INSERT INTO game_packs VALUES($1,$2,$3,$4,$5) ON CONFLICT(digest) DO NOTHING',[pack.digest,pack.manifest,JSON.stringify(pack.cards),pack.synthetic,new Date(this.now)]);this.packs.set(pack.digest,pack);
       for(const id of ids) await c.query('INSERT INTO game_participants VALUES($1,$2,$3)',[roomId,game.id,id]);
       const cipher=this.keys.encrypt(snapshot,`game-snapshot:${roomId}:${game.id}:1`);await c.query('UPDATE game_sessions SET snapshot_cipher=$2,pack_digest=$3,state=\'active\' WHERE id=$1',[game.id,cipher,pack.digest]);game.snapshot_cipher=cipher;game.pack_digest=pack.digest;game.state='active';
       await this.newRound(c,game,first);return {session_id:game.id,state:'active',game_rev:revision(game.rev),snapshot_schema:1};
     });
+  }
+  private async draftSnapshot(c:pg.PoolClient,game:GameRow,pack:FrozenPack) {
+      const roomId=game.room_id,ids=this.draft(game).players;
+      const rows=await c.query<{id:string;presence:string;slot:number|null;ready:boolean;cipher:Cipher;offer_version:string;offer_digest:string}>(`SELECT m.id,m.presence,m.slot,p.ready,p.cipher,e.offer_version,e.offer_digest FROM room_members m JOIN private_preferences p ON p.room_id=m.room_id AND p.owner_member_id=m.id JOIN entry_acceptances e ON e.room_id=m.room_id AND e.member_id=m.id WHERE m.room_id=$1 AND m.id=ANY($2::uuid[]) AND m.removed_at IS NULL`,[roomId,ids]);
+      requireThat(rows.rowCount===ids.length&&rows.rows.every(r=>r.presence==='online'&&r.slot!==null),'ACTORS_UNAVAILABLE',409);requireThat(rows.rows.every(r=>r.ready),'SETUP_REQUIRED',409);
+      const offer=this.rooms.options.offer();requireThat(offer&&rows.rows.every(r=>r.offer_version===offer.version&&r.offer_digest===offer.digest),'ENTRY_REACCEPT_REQUIRED',403);
+      const players:Player[]=rows.rows.map(r=>{const own=this.keys.decrypt<{comfort:number;edges:Record<string,Edge>}>(r.cipher,`preferences:${roomId}:${r.id}:1`);return {id:r.id,comfort:own.comfort,edges:Object.fromEntries(Object.entries(own.edges).filter(([id])=>ids.includes(id)&&id!==r.id))};});
+      const room=(await c.query<{meeting_context:'online'|'in_person'}>('SELECT meeting_context FROM rooms WHERE id=$1',[roomId])).rows[0]!;
+      return immutableSnapshot({schema:1,session_id:game.id,room_id:roomId,engine_revision:algorithmRevision,policy_revision:'RE-1',policy_digest:policyDigest,pack_digest:pack.digest,seed:randomBytes(32).toString('hex'),mode:game.mode,context:room.meeting_context,total_rounds:game.round_count,players,capabilities:[]},pack);
+  }
+  async availability(roomId:string,session:string|undefined) {
+    return this.mapped(()=>this.rooms.transaction(async c=>{
+      const a=await this.rooms.access(c,roomId,session);requireThat(a.member.role==='host'&&a.room.host_member_id===a.member.id,'HOST_REQUIRED');
+      const game=await this.row(c,roomId);requireThat(game?.state==='waiting','GAME_NOT_WAITING',409);
+      const pack=this.catalog?await this.catalog.active(c):this.provider();requireThat(pack&&(!pack.synthetic||this.allowSynthetic),'PACK_UNAVAILABLE',503);
+      return {...safeAvailability(await this.draftSnapshot(c,game,pack),pack),draft_rev:revision(game.rev),recheck_required_at_start:true};
+    }));
   }
   async advance(roomId:string,session:string|undefined,gameId:string,input:RevisionMutation,requestId:string) {
     return this.mutate(roomId,session,input,requestId,'game_advance',{host:true,sessionId:gameId},async(c,a)=>{
@@ -244,6 +266,48 @@ export class Games implements RoomGameHooks {
       requireThat(data.condition,'NOT_FOUND',404);return data.condition;
     }));
   }
+  /** Transport entry points: mutations/reconciliation commit first; only these
+   * read-only final projectors may synchronously enqueue text under the fence. */
+  async dispatchHttpView(roomId:string,session:string|undefined,enqueue:(view:GameView)=>void) {
+    return this.mapped(()=>this.rooms.transaction(async c=>{
+      const a=await this.rooms.access(c,roomId,session,false,true);requireThat(a.member.slot!==null,'ACTORS_UNAVAILABLE',409);
+      const view=await this.publicDelivery(c,roomId,a.member.locale);
+      requireThat(view,'GAME_NOT_FOUND',404);enqueue(view);
+    }));
+  }
+  /** Preserve the committed mutation receipt and its original session/revision.
+   * Safety withdrawal may redact its optional public card, never replace the
+   * receipt with another session or turn a successful stop into a failed response. */
+  async dispatchHttpReceipt(roomId:string,session:string|undefined,body:unknown,enqueue:(view:unknown)=>void) {
+    const view=body as GameView;requireThat(view&&typeof view==='object'&&typeof view.session_id==='string'&&'current_round' in view,'GAME_RECEIPT_INVALID',503);
+    if(view.current_round?.kind!=='public') {enqueue(body);return;}
+    const redacted={...view,current_round:null};let delivered=false;
+    const send=(value:unknown)=>{if(!delivered) {delivered=true;enqueue(value);}};
+    try {
+      await this.rooms.transaction(async c=>{
+        const a=await this.rooms.access(c,roomId,session,false,true);requireThat(a.member.slot!==null,'ACTORS_UNAVAILABLE',409);
+        const game=await this.requireGame(c,roomId,view.session_id),pack=await this.pack(c,game),card=pack.card(view.current_round!.kind==='public'?view.current_round!.card_id:'');
+        requireThat(view.current_round?.kind==='public'&&card.revision===view.current_round.card_revision,'GAME_RECEIPT_STALE',409);send(body);
+      });
+    } catch {send(redacted);}
+  }
+  async dispatchHttpTarget(roomId:string,session:string|undefined,gameId:string,roundId:string,kind:'invitation'|'private'|'action'|'condition',enqueue:(view:unknown)=>void) {
+    return this.mapped(()=>this.rooms.transaction(async c=>{
+      const a=await this.rooms.access(c,roomId,session,false,true);requireThat(a.member.slot!==null,'ACTORS_UNAVAILABLE',409);
+      const game=await this.requireGame(c,roomId,gameId);
+      if(kind!=='action') requireThat(game.state==='active','GAME_NOT_ACTIVE',409);
+      const round=await this.current(c,game);requireThat(round?.row.id===roundId&&round.data.plan.actors.includes(a.member.id),'NOT_FOUND',404);
+      if(kind==='action') {const action=round.data.action;requireThat(action,'ACTION_CONSENT_UNAVAILABLE',404);enqueue(this.actionView({...round.data,action:reconcileConsent(action,this.now)},a.member.id));return;}
+      await this.snapshot(c,game);const data=round.data,names=await this.names(c,roomId),pack=await this.pack(c,game);
+      requireThat(['pending','active'].includes(data.state)&&![data.invitation,data.action].some(o=>o&&reconcileConsent(o,this.now).state==='expired'),'CONSENT_NOT_ACTIVE',404);
+      let view:unknown;
+      if(kind==='invitation') view=this.invitationView(game,data,a.member.id,a.member.locale,names);
+      else if(kind==='private') view=this.promptView(game,data,a.member.id,a.member.locale,pack,names);
+      else {requireThat(!data.invitation||consentAllows(data.invitation,a.member.id,this.now),'CONSENT_NOT_ACTIVE',404);requireThat(data.condition,'NOT_FOUND',404);view=data.condition;}
+      // No awaits after the final clock fence.
+      requireThat(![data.invitation,data.action].some(o=>o&&reconcileConsent(o,this.now).state==='expired'),'CONSENT_NOT_ACTIVE',404);enqueue(view);
+    }));
+  }
   async locked(c:pg.PoolClient,roomId:string) {return Boolean((await c.query('SELECT 1 FROM game_sessions WHERE room_id=$1 AND state IN (\'active\',\'paused\')',[roomId])).rowCount);}
   async purge(c:pg.PoolClient,roomId:string) {await c.query('DELETE FROM game_sessions WHERE room_id=$1',[roomId]);await c.query('DELETE FROM game_private_streams WHERE room_id=$1',[roomId]);}
   async removing(c:pg.PoolClient,roomId:string,memberId:string) {
@@ -291,6 +355,19 @@ export class Games implements RoomGameHooks {
     const privateEvents=refs.map(ref=>({eventId:ref.event_id,revision:revision(ref.stream_rev)}));
     return {game:await this.view(c,game,locale),privateEvents};
   }
+  /** Final committed-state public projection. Never reconcile/save/bump/queue here:
+   * synchronous enqueue precedes COMMIT and therefore must be strictly read-only. */
+  async publicDelivery(c:pg.PoolClient,roomId:string,locale:Locale):Promise<GameView|null> {
+    const game=await this.row(c,roomId,undefined,false);if(!game) return null;
+    if(game.state==='aborted') return gameView(game,null);
+    if(game.state==='active'||game.state==='paused') await this.snapshot(c,game);
+    const round=await this.current(c,game,false);if(!round) return gameView(game,null);
+    const pack=await this.pack(c,game),names=await this.names(c,roomId);
+    // Expiry changes are committed by socketState/normal mutations, never by this
+    // projector. Suppress an expired action rather than inventing a higher revision.
+    if([round.data.invitation,round.data.action].some(o=>o&&reconcileConsent(o,this.now).state==='expired')) return gameView(game,null);
+    return gameView(game,publicRound(pack,round.data,locale,names));
+  }
   /** Read-only reconstruction, called while Rooms holds the revoke/dispatch fence. */
   async privateDelivery(c:pg.PoolClient,roomId:string,memberId:string,locale:Locale,eventId:string):Promise<PrivateDelivery|null> {
     const ref=(await c.query<{event_id:string;stream_rev:string;session_id:string;round_id:string;game_rev:string;kind:string}>('SELECT event_id,stream_rev,session_id,round_id,game_rev,kind FROM game_outbox_refs WHERE room_id=$1 AND member_id=$2 AND event_id=$3 AND created_at>$4',[roomId,memberId,eventId,new Date(this.now-DAY)])).rows[0];
@@ -313,6 +390,28 @@ export class Games implements RoomGameHooks {
     return {eventId:ref.event_id,revision:revision(ref.stream_rev),type,payload};
   }
   /** Local trusted rollback primitive; never exposed on the consumer HTTP surface. */
+  async withdrawPacks(c:pg.PoolClient,digests:string[]) {
+    // Caller already owns the exclusive global catalogue fence. Lock every room
+    // before touching audit/outbox global locks, retaining one lock order.
+    const rooms=(await c.query<{room_id:string}>("SELECT DISTINCT room_id FROM game_sessions WHERE pack_digest=ANY($1::text[]) AND state IN ('active','paused') ORDER BY room_id",[digests])).rows;
+    for(const row of rooms) await c.query('SELECT id FROM rooms WHERE id=$1 FOR UPDATE',[row.room_id]);
+    for(const row of rooms) {
+      const games=(await c.query<GameRow>("SELECT * FROM game_sessions WHERE room_id=$1 AND pack_digest=ANY($2::text[]) AND state IN ('active','paused') ORDER BY seq FOR UPDATE",[row.room_id,digests])).rows;
+      for(const game of games) {
+        game.state='aborted';game.pause_reason=null;
+        const rounds=(await c.query<RoundRow>('SELECT * FROM game_rounds WHERE session_id=$1 ORDER BY round_index FOR UPDATE',[game.id])).rows;
+        await this.bump(c,game,false);
+        for(const round of rounds) {
+          const data=this.keys.decrypt<RoundData>(round.cipher,`game-round:${game.room_id}:${game.id}:${round.id}:1`);this.closeRound(data,'stopped');
+          await c.query('UPDATE game_rounds SET state=$2,cipher=$3 WHERE id=$1',[round.id,data.state,this.keys.encrypt(data,`game-round:${game.room_id}:${game.id}:${round.id}:1`)]);
+          await this.queue(c,game,data);
+        }
+        await c.query('UPDATE game_sessions SET snapshot_cipher=NULL WHERE id=$1',[game.id]);
+        await this.rooms.audit(c,game.room_id,null,'game_quiesce',randomUUID());
+      }
+    }
+  }
+  /** Process-stopped image rollback; live catalogue withdrawal uses withdrawPacks. */
   async quiesce() {
     const rooms=(await this.rooms.options.pool.query<{room_id:string}>('SELECT DISTINCT room_id FROM game_sessions WHERE state IN (\'waiting\',\'active\',\'paused\') ORDER BY room_id')).rows;
     for(const {room_id} of rooms) await this.rooms.transaction(async c=>{

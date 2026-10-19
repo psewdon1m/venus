@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "scope":"Development history only; no exact-source acceptance claimed",
+  "baseline_sha":"579ca40a9344fd0af841ff2e2883e394321dfbe7",
+  "attempts":[
+    {"id":"P04-DEV-001","result":"FAIL","check":"Initial TypeScript build","diagnostic":"card-catalog lacked node types; fixed explicit types:[node] in package tsconfig"},
+    {"id":"P04-DEV-002","result":"FAIL","check":"CLI draft-check output directory","diagnostic":"ENOENT missing .artifacts/p04 parent; fixed parent provisioning with exclusive leaf creation"},
+    {"id":"P04-DEV-003","result":"CHANGES_REQUESTED","report":".docs/implementation/reviews/p04/round-01-implementation.md","diagnostic":"Missing-ledger fallback, Prepare authority mismatch, full batch constraints missing, stale public WS dispatch; corrected"},
+    {"id":"P04-DEV-004","result":"FAIL","check":"Unit conflict fixture after adding batch distributions","diagnostic":"Expected BATCH_IDEMPOTENCY_CONFLICT but count1 retained distribution sum2. Corrected fixture changes request_sha256 while retaining valid constraints. Fresh9unit tests passed."},
+    {"id":"P04-DEV-005","result":"CHANGES_REQUESTED","report":".docs/implementation/reviews/p04/round-02-implementation.md","diagnostic":"Final public dispatcher used writing socketView; replaced with read-only committed projector and PostgreSQL READ ONLY expiry test"},
+    {"id":"P04-DEV-006","result":"FAIL","check":"quality during ongoing development","diagnostic":"51JS/89Python/schema/i18n/docs/P00 and historical P01/P02/P03 passed, manifest check failed because packages/card-catalog/src/catalog.ts changed after manifest generation. Not a source freeze; full quality must be rerun after freeze."}
+  ]
+}

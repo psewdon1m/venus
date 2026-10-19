@@ -17,6 +17,7 @@ export interface SocketGrant {roomId:string;memberId:string;generation:number;se
 export interface PrivateDelivery {eventId:string;revision:number;type:string;payload:unknown}
 export type PrivateReference=Pick<PrivateDelivery,'eventId'|'revision'>;
 export interface RoomGameHooks {
+  publicDelivery(c:pg.PoolClient,roomId:string,locale:'ru'|'en'|'tr'):Promise<GameView|null>;
   locked(c:pg.PoolClient,roomId:string):Promise<boolean>;
   memberStateChanged(c:pg.PoolClient,roomId:string):Promise<void>;
   removing(c:pg.PoolClient,roomId:string,memberId:string):Promise<void>;
@@ -36,9 +37,9 @@ export class Rooms {
   attachGames(games:RoomGameHooks) {requireThat(!this.games,'GAME_HOOKS_ALREADY_ATTACHED',503);this.games=games;}
   access(c:pg.PoolClient,roomId:string,session:string|undefined,safety=false,allowInactive=safety) {return this.auth(c,roomId,session,safety,allowInactive);}
   async changed(c:pg.PoolClient,roomId:string,activity=true) {return this.emit(c,await this.room(c,roomId),activity);}
-  async transaction<T>(operation:(client:pg.PoolClient)=>Promise<T>):Promise<T> {
+  async transaction<T>(operation:(client:pg.PoolClient)=>Promise<T>,catalogLock:'shared'|'exclusive'='shared'):Promise<T> {
     const c=await this.options.pool.connect();
-    try {await c.query('BEGIN');const result=await operation(c);await c.query('COMMIT');return result;}
+    try {await c.query('BEGIN');await c.query(catalogLock==='exclusive'?'SELECT pg_advisory_xact_lock(746826405)':'SELECT pg_advisory_xact_lock_shared(746826405)');const result=await operation(c);await c.query('COMMIT');return result;}
     catch(error) {await c.query('ROLLBACK');throw error;} finally {c.release();}
   }
   csrf(session:string) {return this.options.keys.sign('csrf:'+session);}
@@ -269,6 +270,17 @@ export class Rooms {
       requireThat(member,'SOCKET_REPLACED',401);await this.currentAcceptance(c,grant.roomId,grant.memberId);
       const event=await this.games?.privateDelivery(c,room.id,member.id,member.locale,eventId);
       if(event) enqueue(event,revision(room.rev));
+    });
+  }
+  /** Public game text needs the same final catalogue/room/generation fence as private
+   * text. Never enqueue a cached socketState projection after releasing that fence. */
+  async dispatchGame(grant:SocketGrant,enqueue:(view:GameView,roomRev:number)=>void) {
+    return this.transaction(async c=>{
+      const room=await this.room(c,grant.roomId);requireThat(room.state==='open'&&!this.options.ledger.contains(room.id)&&this.now()-room.last_activity_at.getTime()<timers.idle,'ROOM_CLOSED');
+      const member=(await c.query<MemberRow>(`SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id WHERE m.room_id=$1 AND m.id=$2 AND m.socket_generation=$3 AND m.slot IS NOT NULL AND m.removed_at IS NULL AND s.token_hash=$4 AND s.revoked_at IS NULL AND s.expires_at>$5`,[grant.roomId,grant.memberId,grant.generation,grant.sessionHash,new Date(this.now())])).rows[0];
+      requireThat(member,'SOCKET_REPLACED',401);await this.currentAcceptance(c,grant.roomId,grant.memberId);
+      const game=await this.games?.publicDelivery(c,room.id,member.locale);
+      if(game) enqueue(game,revision(room.rev));
     });
   }
   async socketState(grant:SocketGrant,heartbeat=false,afterPrivate=0) {

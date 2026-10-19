@@ -27,6 +27,7 @@ COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/migrations ./apps/api/migrations
 COPY --from=build /app/apps/api/game-migrations ./apps/api/game-migrations
+COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY --from=build /app/package.json /app/build-metadata.json ./
 RUN mkdir -p /var/lib/venus && chown node:node /var/lib/venus
