@@ -48,15 +48,17 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
 | P03 | PASSED | Fresh exact-source CI8/8 и два независимых PASS; delivery receipt в accepted tag |
-| P04 | IN_PROGRESS | Authoring/review pipeline; human RU/EN/TR/rights review обязателен |
-| P05 | NOT_STARTED | Полный G1 UX/E2E, текст оферты/version, entry18+ |
-| P06 | NOT_STARTED | Protected signing/release, host dependencies/operator, restore/rollback |
-| P07 | NOT_STARTED | Реальный target host и ограниченный запуск |
-| P08 | NOT_STARTED | Лицензированная Music |
-| P09 | NOT_STARTED | Desktop Cinema |
-| P10 | NOT_STARTED | Android/iOS publisher |
-| P11 | NOT_STARTED | Calls |
+| P04 | IN_REVIEW | Candidate4a7d587: clean local tests PASS, final implementation PASS; CI/evidence review выполняются.450draft/0reviewed; реальный human review остаётся обязательным |
+| P05 | BLOCKED | Зависит от полного EXIT-P04; дополнительно нужны owner-approved offer/privacy RU/EN/TR. Реализация не начата |
+| P06 | PREPARATION_ONLY | Независимая подготовка по плану§3 в отдельном checkout/ветке feature/p06-release-preparation; protected release/Updater/restore gate не принят |
+| P07 | BLOCKED | Зависит от P05/P06 и реального target host/operator; deployment не начат |
+| P08 | NOT_STARTED | Лицензированная Music; [раннее исследование прав](evidence/future-preparation/media-research-20261019.md) выполнено, assets/rights не получены |
+| P09 | NOT_STARTED | Desktop Cinema; [исследовано ограничение self-hosted token revoke](evidence/future-preparation/media-research-20261019.md), SFU не установлен |
+| P10 | BLOCKED | Зависит от P09; [исследованы capture ограничения](evidence/future-preparation/media-research-20261019.md), device/signing gate не выполнен |
+| P11 | BLOCKED | Зависит от P09 и отдельного принятого Calls контракта; реализация не начата |
 
 P03 принят технически по fresh8f CI и двум независимым PASS; фактические protected proof CI/merge удостоверяются terminal receipt в accepted tag. Доставка P03 завершена: main579ca40, terminal receipt в accepted tag. Новое поручение возобновляет P04–P11; P04 начат. [Журнал P03](../../.history/2026-10-18-p03.md). P02 влит в main6efcb7d37d9fe4fc43db411e1e40052301a5175d, accepted history сохранена tagp02-accepted-20261018. Guest/operator scope зафиксирован отдельным overlay; room host не operator. Production offer отсутствует, public entry закрыт. Публичный release блокируется дальнейшими гейтами; source snapshots не подменяют проверки production host, auth, age/legal и media.
 
 Журнал работы: [P01 · 2026-10-18](../../.history/2026-10-18-p01.md). Локальный образец из другого проекта не включён в Git, source inventory или image.
+
+Текущий P04: [журнал](../../.history/2026-10-19-p04.md), [реестр](p04-registry.json), [human handoff450](evidence/p04/human-handoff/README.md), [чистые локальные evidence](evidence/p04/local-4a7d587/local-check-index.json), [final implementation](reviews/p04/final-implementation.md), [draft PR4](https://github.com/psewdon1m/venus/pull/4). [Конкретные внешние входы оставшихся этапов](evidence/future-preparation/operator-inputs.json) не являются согласованиями. Ранние исследования/аудит зависимостей имеют отдельные журналы [P05](../../.history/2026-10-19-p05.md), [P07](../../.history/2026-10-19-p07.md), [P08](../../.history/2026-10-19-p08.md), [P09](../../.history/2026-10-19-p09.md), [P10](../../.history/2026-10-19-p10.md), [P11](../../.history/2026-10-19-p11.md). Журнал подготовки P06 находится в её отдельном managed checkout; окончательный release gate не заявлен.

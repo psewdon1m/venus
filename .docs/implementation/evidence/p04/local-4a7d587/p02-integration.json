@@ -1,0 +1,196 @@
+{
+  "source_sha": "4a7d5877b7e860d152c8c49ae768b646f3cb163f",
+  "source_dirty": false,
+  "synthetic": true,
+  "tests": [
+    {
+      "id": "P02-MIGRATION",
+      "status": "PASS",
+      "detail": {
+        "upgrade_from_generation": 0,
+        "to_generation": 1,
+        "repeat_noop": true,
+        "checksum_mismatch_rejected": true,
+        "unknown_generation_rejected": true
+      }
+    },
+    {
+      "id": "P02-CAPACITY",
+      "status": "PASS",
+      "detail": {
+        "races": 100,
+        "concurrent_guests": 12,
+        "successful_identities": 8
+      }
+    },
+    {
+      "id": "P02-ACL",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-IDEMPOTENCY",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-PREFERENCES-RESTART",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-WS-TICKETS",
+      "status": "PASS",
+      "detail": {
+        "guest_cookie_host_ticket_denied": true,
+        "foreign_room_cookie_denied": true,
+        "foreign_room_ticket_denied": true,
+        "unauth_denied": true,
+        "replayed_denied": true,
+        "expired_denied": true,
+        "bad_origin_denied": true
+      }
+    },
+    {
+      "id": "P02-TIMERS",
+      "status": "PASS",
+      "detail": {
+        "presence_before_at": true,
+        "reservation_before_at": true,
+        "host_grace_before_at_after": true,
+        "late_ping_online": true,
+        "heartbeat_not_activity": true
+      }
+    },
+    {
+      "id": "P02-RECONNECT",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-RESERVATION",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-CLOSE",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-BACKUP-RESTORE",
+      "status": "PASS",
+      "detail": {
+        "encrypted_roundtrip": true,
+        "expiry_rejected": true,
+        "header_tamper_rejected": true,
+        "revocations_reapplied": true,
+        "open_room_identities_preserved": true,
+        "nondefault_private_values_preserved": true,
+        "exact_scoped_rows_preserved": true,
+        "host_cannot_read_guest_values": true
+      }
+    },
+    {
+      "id": "P02-ROLLBACK",
+      "status": "PASS",
+      "detail": {
+        "previous_image": "sha256:9d6f9b39ed1f5ad58a07e05f08bd5eb1cb944129cd94d3c226755ef345130a39",
+        "previous_source": "934d9a1efcccfb4380e708a8f5143a43efbc3a71",
+        "generation": 1,
+        "exact_scoped_rows_preserved": true,
+        "candidate_resumed": true,
+        "previous_room_api_unavailable": true,
+        "proof": {
+          "ready": {
+            "status": "ready",
+            "database": "ready",
+            "schema_generation": 0
+          },
+          "version": {
+            "service": "venus",
+            "version": "0.0.0",
+            "source_revision": "934d9a1efcccfb4380e708a8f5143a43efbc3a71",
+            "image_digest": "unreleased",
+            "contract_revision": "P00-2"
+          },
+          "roomsStatus": 404
+        }
+      }
+    },
+    {
+      "id": "P02-CRYPTO-AUDIT",
+      "status": "PASS",
+      "detail": {
+        "fingerprint_keyed": true,
+        "private_cipher_bytes": 16384,
+        "reply_cipher_bytes": 16384,
+        "audit_atomic_rollback": true,
+        "audit_metadata_only": true,
+        "count_cap": 10000,
+        "byte_cap": 67108864
+      }
+    },
+    {
+      "id": "P02-RETENTION",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-ENTRY-RATE",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-REACCEPT",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-BROWSER-RU",
+      "status": "PASS",
+      "detail": {
+        "create_join": true,
+        "secure_cookies": true,
+        "reload_preferences": true,
+        "xss_escaped": true,
+        "width": 375
+      }
+    },
+    {
+      "id": "P02-BROWSER-EN",
+      "status": "PASS",
+      "detail": {
+        "create_join": true,
+        "secure_cookies": true,
+        "reload_preferences": true,
+        "xss_escaped": true,
+        "width": 375
+      }
+    },
+    {
+      "id": "P02-BROWSER-TR",
+      "status": "PASS",
+      "detail": {
+        "create_join": true,
+        "secure_cookies": true,
+        "reload_preferences": true,
+        "xss_escaped": true,
+        "width": 375
+      }
+    },
+    {
+      "id": "P02-BROWSER-FULL-CLOSED",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-BROWSER-OFFLINE-POLICY",
+      "status": "PASS"
+    },
+    {
+      "id": "P02-BROWSER-RECOVERY",
+      "status": "PASS",
+      "detail": {
+        "external_revision_conflict": true,
+        "refresh_replaces_draft": true,
+        "save_after_refresh": true,
+        "in_room_reaccept": true,
+        "explicit_adult_and_offer": true,
+        "no_reload_for_reaccept": true
+      }
+    }
+  ],
+  "all_expected_checks": 22,
+  "status": "PASS"
+}
