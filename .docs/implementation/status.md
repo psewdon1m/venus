@@ -1,8 +1,16 @@
 # Venus · Состояние реализации
 
-Обновлено: 2026-10-19. **EXIT-P00 = PASSED, EXIT-P01 = PASSED, EXIT-P02 = PASSED, EXIT-P03 = PASSED.** Технический P03 принят двумя независимыми агентами по свежему exact-source CI. [PR #3](https://github.com/psewdon1m/venus/pull/3) проходит защищённую доставку; фактические CI/merge/main удостоверяются аннотацией immutable tag `p03-accepted-20261019` — заключительной записью журнала. Новое поручение владельца возобновляет автономные P04–P11. P04 IN_PROGRESS, [реестр](p04-registry.json) и [журнал](../../.history/2026-10-19-p04.md).
+Обновлено: 2026-10-19. **EXIT-P00–EXIT-P03 = PASSED. P04-TECHNICAL-1 = PASSED; полный EXIT-P04 = BLOCKED_EXTERNAL.** Принятый main — `579ca40a9344fd0af841ff2e2883e394321dfbe7`, delivery receipt сохранён в `p03-accepted-20261019`. Автономная работа P04–P11 возобновлена по поручению владельца; дальнейшие зависимые этапы ожидают настоящего human-reviewed каталога. [Реестр P04](p04-registry.json), [журнал](../../.history/2026-10-19-p04.md), [подготовка и внешние входы P04–P11](evidence/future-preparation/README.md).
 
 Реализованы foundation, комнаты и приватные настройки, server-side relationship engine, immutable snapshot, rounds и actor-scoped consent с повторной проверкой перед HTTP/WS delivery. [P03 guide и rollback](../P03_DEVELOPMENT.md), [реестр](p03-registry.json), [ADR-015](../adr/ADR-015-p03-engine-and-measurements.md), [ADR-016](../adr/ADR-016-p03-progressive-evidence.md).
+
+## P04 · Технический результат и открытый полный гейт
+
+Source `4a7d5877b7e860d152c8c49ae768b646f3cb163f`, identity `9e75a7d70a591b38dafcf40c8dbea6a7383fc97d561bd5b739d9513c70062f77` (744 included files). [Actual CI8/8](https://github.com/psewdon1m/venus/actions/runs/39183818433), [технический пакет](evidence/p04/ci/technical-gate.json), [фактические результаты обоих валидаторов](evidence/p04/ci/gate-evaluation.json), [независимый implementation PASS](reviews/p04/final-implementation.md), [независимый evidence PASS](reviews/p04/final-evidence.md), [процедура повторной проверки](evidence/p04/ci/reproduction/README.md).
+
+Clean quality52JS/98Python/4negative, OCI9/9, P02 actual20tests/22proofs, P03 actual19tests и P04 actual11tests/13proofs — PASS. Все9 raw CI ZIP сохранены с API digest, полными member receipts и8 producer job logs. Полный M3 regression относится к прежнему зарегистрированному synthetic pack; отдельные actual/conditional C2 reports проверяют450draft и private availability. Это не доказательство редакционной, языковой или правовой пригодности.
+
+Полный validator фактически возвращает BLOCK/exit1 до genuine human approvals и реконструкции reviewed pack. [Пакет для реальных редакторов](evidence/p04/human-handoff/README.md) готов; approved registry пуст, reviewed0/450, public entry закрыт. После изменения каталога/approved registry требуются новая source identity и актуальные tests/reviews. [Draft PR4](https://github.com/psewdon1m/venus/pull/4) остаётся техническим кандидатом; merge/accepted tag/full stage PASS не выполнены. Возврат: оставить main579ca40; проверенная live withdrawal/revocation ledger продолжает запрещать отозванный контент при смене pointer или restore БД.
 
 ## EXIT-P03
 
@@ -48,9 +56,9 @@ P00-2:253 trace rows,12 исходных ADR,33 API operations,162 центра�
 | P01 | PASSED | Foundation в main; прежние FAIL/PASS proof сохранены |
 | P02 | PASSED | Rooms/private settings/retention/recovery, два независимых PASS |
 | P03 | PASSED | Fresh exact-source CI8/8 и два независимых PASS; delivery receipt в accepted tag |
-| P04 | IN_REVIEW | Candidate4a7d587: clean local tests PASS, final implementation PASS; CI/evidence review выполняются.450draft/0reviewed; реальный human review остаётся обязательным |
+| P04 | BLOCKED | P04-TECHNICAL-1 PASSED: CI8/8 и два independent PASS. Полный EXIT-P04 ожидает genuine human review и reviewed pack;450draft/0reviewed |
 | P05 | BLOCKED | Зависит от полного EXIT-P04; дополнительно нужны owner-approved offer/privacy RU/EN/TR. Реализация не начата |
-| P06 | PREPARATION_ONLY | Независимая подготовка по плану§3 в отдельном checkout/ветке feature/p06-release-preparation; protected release/Updater/restore gate не принят |
+| P06 | PREPARATION_ONLY | [Отдельная подготовка](evidence/future-preparation/p06-preparation-handoff.json): два scoped independent PASS, clean quality42JS/49native/90Python/4negative и Linux49PASS. Protected release/Updater/restore gate не принят |
 | P07 | BLOCKED | Зависит от P05/P06 и реального target host/operator; deployment не начат |
 | P08 | NOT_STARTED | Лицензированная Music; [раннее исследование прав](evidence/future-preparation/media-research-20261019.md) выполнено, assets/rights не получены |
 | P09 | NOT_STARTED | Desktop Cinema; [исследовано ограничение self-hosted token revoke](evidence/future-preparation/media-research-20261019.md), SFU не установлен |

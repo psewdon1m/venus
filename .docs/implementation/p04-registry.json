@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "P04",
   "gate": "EXIT-P04",
-  "status": "IN_REVIEW",
+  "status": "BLOCKED",
   "branch": "feature/p04-catalog",
   "baseline_tag": "p03-accepted-20261019",
   "baseline_sha": "579ca40a9344fd0af841ff2e2883e394321dfbe7",
@@ -29,8 +29,9 @@
         "CARD-004",
         "CARD-014"
       ],
-      "status": "IN_REVIEW",
-      "required": "Durable idempotent batch/ID/revision pipeline"
+      "status": "PASS",
+      "required": "Durable idempotent batch/ID/revision pipeline",
+      "technical_scope": "P04-TECHNICAL-1 on draft/synthetic inputs"
     },
     {
       "id": "P04-REVIEW",
@@ -44,24 +45,34 @@
         "CARD-011",
         "CARD-012"
       ],
-      "status": "BLOCKED_EXTERNAL",
-      "required": "100 genuinely human-reviewed originals per mode, RU/EN/TR, rights and safety evidence"
+      "status": "NOT_RUN",
+      "required": "100 genuinely human-reviewed originals per mode, RU/EN/TR, rights and safety evidence",
+      "technical_scope": "P04-TECHNICAL-1 on draft/synthetic inputs",
+      "blocker": "P04-HUMAN-REVIEW and actual reviewed pack"
     },
     {
       "id": "P04-DEDUP",
       "requirements": [
         "CARD-013"
       ],
-      "status": "IN_REVIEW",
-      "required": "Exact duplicates rejected; similarity/diversity queue resolved by human"
+      "status": "NOT_RUN",
+      "required": "Exact duplicates rejected; similarity/diversity queue resolved by human",
+      "technical_scope": "P04-TECHNICAL-1 on draft/synthetic inputs",
+      "blocker": "P04-HUMAN-REVIEW and actual reviewed pack",
+      "automated_exact_duplicate_check": "PASS",
+      "human_semantic_similarity_diversity": "NOT_RUN"
     },
     {
       "id": "P04-COVERAGE",
       "requirements": [
         "CARD-015"
       ],
-      "status": "IN_REVIEW",
-      "required": "Real P03 predicate matrix, neutral20round/no-repeat, allXrefusal, 1..100 shortage preStart"
+      "status": "NOT_RUN",
+      "required": "Real P03 predicate matrix, neutral20round/no-repeat, allXrefusal, 1..100 shortage preStart",
+      "technical_scope": "P04-TECHNICAL-1 on draft/synthetic inputs",
+      "blocker": "P04-HUMAN-REVIEW and actual reviewed pack",
+      "draft_actual_and_conditional_C2": "PASS",
+      "approved_reviewed_pack_C2": "NOT_RUN"
     },
     {
       "id": "P04-DELIVERY",
@@ -69,8 +80,9 @@
         "CARD-014",
         "CARD-015"
       ],
-      "status": "IN_REVIEW",
-      "required": "Atomic digest pointer, compatible rollback, live withdrawal and restore cannot resurrect"
+      "status": "PASS",
+      "required": "Atomic digest pointer, compatible rollback, live withdrawal and restore cannot resurrect",
+      "technical_scope": "P04-TECHNICAL-1 on draft/synthetic inputs"
     }
   ],
   "external_dependencies": [
@@ -90,6 +102,18 @@
     "full_exit_p04": "NOT_PASSED",
     "source_identity_sha256": "9e75a7d70a591b38dafcf40c8dbea6a7383fc97d561bd5b739d9513c70062f77",
     "local_evidence": ".docs/implementation/evidence/p04/local-4a7d587/local-check-index.json",
-    "ci_status": "IN_PROGRESS"
+    "ci_status": "PASS",
+    "ci_artifacts": 9,
+    "evidence_review": "PASS",
+    "technical_gate": "PASSED",
+    "technical_scope": "P04-TECHNICAL-1",
+    "technical_packet": {
+      "path": ".docs/implementation/evidence/p04/ci/technical-gate.json",
+      "sha256": "a6d529ff4b34ab6a95c546f2fe9db4f1ae9b382d341dc538d449eb55bd7039f0"
+    },
+    "actual_gate_evaluation": {
+      "path": ".docs/implementation/evidence/p04/ci/gate-evaluation.json",
+      "sha256": "66e10d405a5ca3c93d140c14c1fa168ffa8b27646c7fd3f0ce0e86fdb3fafdaf"
+    }
   }
 }

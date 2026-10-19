@@ -22,7 +22,7 @@
 - [118 активных Part12 problem IDs](known-problems-inventory-4449e65.json): applicability пока PENDING, release checks NOT_RUN. Перечень не выдаётся за пройденную проверку.
 - [Первичные исследования Music/SFU/mobile](media-research-20261019.md), [конкретные незаполненные внешние входы](operator-inputs.json).
 
-P06 implementation source: `7e1a85b3b9454b64a2c1ec50ab05c30c94c17557`, identity `91c018424c1d95a808fb49fe64b4269cdd61815bef4bdde3d5f00f23088d2bff` (246 included files). Он находится в отдельном managed checkout; перенос в P04-кандидат не выполнялся. Его проверки не являются приёмкой финального P05-приложения.
+P06 implementation source: `7e1a85b3b9454b64a2c1ec50ab05c30c94c17557`, identity `91c018424c1d95a808fb49fe64b4269cdd61815bef4bdde3d5f00f23088d2bff` (246 included files). [Передача отдельной ветки с хешами отчётов](p06-preparation-handoff.json) фиксирует два независимых scoped PASS, clean full quality и отдельный Linux49 прогон. Он находится в отдельном managed checkout; перенос в P04-кандидат не выполнялся. Его проверки не являются приёмкой финального P05-приложения.
 
 ## Возврат и продолжение
 
