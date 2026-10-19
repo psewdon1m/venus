@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "scope": "READ_ONLY_SOURCE_PREPARATION_NOT_RUNTIME_ACCEPTANCE",
+  "source_repository": "https://github.com/psewdon1m-exocortex/updater",
+  "source_sha": "17e2dcf1e72bbc6492ea5692520932d1c95a618f",
+  "qualified_tag": "updater-v0.6.17",
+  "tag_object": "8a7c1af17e28d874777d4a7e62eda5146a49c14d",
+  "files": {
+    "internal/api/server.go": {
+      "sha256": "f458791f9d9b65fcd6bd32e4dcacc7a416c62abce87d9d1a6380386696231d7a",
+      "bytes": 12820,
+      "references": [
+        {
+          "line": 68,
+          "text": "mux.HandleFunc(\"GET /v1/health\", func(w http.ResponseWriter, _ *http.Request) {"
+        },
+        {
+          "line": 96,
+          "text": "mux.HandleFunc(\"GET /v1/jobs\", func(w http.ResponseWriter, request *http.Request) {"
+        },
+        {
+          "line": 111,
+          "text": "mux.HandleFunc(\"GET /v1/jobs/{id}\", func(w http.ResponseWriter, request *http.Request) {"
+        },
+        {
+          "line": 242,
+          "text": "func (s Server) authorize(request *http.Request, headID string) error {"
+        }
+      ]
+    },
+    "internal/api/protocol.go": {
+      "sha256": "76049e1fcf223a64660398416500e6905b3db4cd371c15f767e0d72a3ee2f687",
+      "bytes": 4752,
+      "references": [
+        {
+          "line": 77,
+          "text": "func (s Server) protocol(mux *http.ServeMux) {"
+        }
+      ]
+    },
+    "internal/api/operator_socket_linux.go": {
+      "sha256": "7ef05e10926668fbffaf6ddba9842dcd97cf44b0cf37d0b9508615b60347aa98",
+      "bytes": 2711,
+      "references": [
+        {
+          "line": 38,
+          "text": "func listenOperator(path, serviceSocket string) (net.Listener, error) {"
+        }
+      ]
+    },
+    "internal/model/model.go": {
+      "sha256": "6f52f3284175044052db20aaba090eb69b4e72e852da6288f3395c07422043e5",
+      "bytes": 5118,
+      "references": [
+        {
+          "line": 22,
+          "text": "type UpdateRequest struct {"
+        },
+        {
+          "line": 81,
+          "text": "type ReleaseManifest struct {"
+        }
+      ]
+    },
+    "internal/model/protocol.go": {
+      "sha256": "e1b626a3080a60510258768a553b59535bd1e4b5799e533e2208365287aeead8",
+      "bytes": 532,
+      "references": []
+    },
+    "internal/config/config.go": {
+      "sha256": "ca2ebde5e3d1614f1d4d2519fb8d7fb3897f6c5d71b28d2bf7b76b1ead7812f8",
+      "bytes": 6719,
+      "references": [
+        {
+          "line": 161,
+          "text": "func LoadHead(runtime Runtime, headID string) (HeadConfig, error) {"
+        }
+      ]
+    },
+    "internal/component/capabilities.go": {
+      "sha256": "aa79e6fdc3db66f95d475d7736a8996d03c4c0fce6bc67984e69e873a7ca0a72",
+      "bytes": 510,
+      "references": [
+        {
+          "line": 4,
+          "text": "func ConsumesHelper(service, helper string) bool {"
+        }
+      ]
+    },
+    "internal/kernel/register.go": {
+      "sha256": "d93105af192fab4bd542bbd98d47aed8f5394f9ff7e48261e61dde57aad5208c",
+      "bytes": 8109,
+      "references": [
+        {
+          "line": 192,
+          "text": "func updaterMetadataKey(key string) bool {"
+        }
+      ]
+    },
+    "internal/releaseauth/verify.go": {
+      "sha256": "5f724b26d00ae578f78c0783790882d44af7314757145a0e1dcf2483eab9227b",
+      "bytes": 3782,
+      "references": [
+        {
+          "line": 27,
+          "text": "func VerifyBytes(manifest, envelope, publicPEM []byte) error {"
+        },
+        {
+          "line": 85,
+          "text": "func VerifyDownloaded(ctx context.Context, client *http.Client, manifestPath, signatureURL, service string) error {"
+        },
+        {
+          "line": 87,
+          "text": "case \"kernel\", \"volt\", \"saturn\", \"updater\", \"neptune\", \"gryphon\", \"chronos\", \"laboratory\", \"wyvern\", \"window\", \"mastermind\":"
+        }
+      ]
+    },
+    "internal/release/release.go": {
+      "sha256": "911225a3da8a6d105d93b6e2f3f7bfde5321d0fbde376c2f5bb75b377a419a4a",
+      "bytes": 8688,
+      "references": [
+        {
+          "line": 45,
+          "text": "func Resolve(ctx context.Context, repositoryURL, service, requestedVersion, stagingDir string) (Resolved, error) {"
+        },
+        {
+          "line": 157,
+          "text": "func versionFromServiceTag(service, tag string) (string, bool) {"
+        }
+      ]
+    },
+    "internal/release/discovery.go": {
+      "sha256": "d53c0f6dcf83499aa8f5cada32806b3724199e526b91bb6e4eb82fb6d2ec698e",
+      "bytes": 4722,
+      "references": [
+        {
+          "line": 22,
+          "text": "type Candidate struct {"
+        }
+      ]
+    },
+    "internal/engine/receipt.go": {
+      "sha256": "cd4f1463686d7c7d2e28f51007ec48963fa492ffac153b626f44e717179bf1c9",
+      "bytes": 2764,
+      "references": [
+        {
+          "line": 18,
+          "text": "type BackupReceipt struct {"
+        },
+        {
+          "line": 30,
+          "text": "func decodeBackupReceipt(request model.UpdateRequest, token string) (BackupReceipt, error) {"
+        },
+        {
+          "line": 58,
+          "text": "func VerifyBackupReceipt(request model.UpdateRequest, token string) error {"
+        }
+      ]
+    },
+    "internal/engine/engine.go": {
+      "sha256": "fb73755107792d3e5bd072584d59289c07229f5b3a474ed2d3821d6f634b0e8d",
+      "bytes": 29966,
+      "references": [
+        {
+          "line": 256,
+          "text": "func decodeBackup(backup model.Backup) ([]byte, error) {"
+        },
+        {
+          "line": 767,
+          "text": "func (e *Engine) checkHeadHealth(ctx context.Context, head config.HeadConfig, rawURL string) error {"
+        }
+      ]
+    },
+    "internal/engine/volatile_linux.go": {
+      "sha256": "d6b67bb30eceb0f89d072c07e3e0ae0dd474f7696347f03c20389956ae088811",
+      "bytes": 3304,
+      "references": [
+        {
+          "line": 80,
+          "text": "func (e *Engine) StartDownloaded(request model.UpdateRequest, token string) (model.Job, error) {"
+        },
+        {
+          "line": 88,
+          "text": "func (e *Engine) RollbackDownloaded(id string, backup model.Backup) (model.Job, error) {"
+        }
+      ]
+    },
+    "internal/engine/health_version.go": {
+      "sha256": "85930624327e225e7938975ac936fef1d0f7c6e260c833607c33026439fd8226",
+      "bytes": 2618,
+      "references": [
+        {
+          "line": 43,
+          "text": "func checkRunningVersion(ctx context.Context, endpoint, expected string) error {"
+        }
+      ]
+    },
+    "internal/engine/deployment.go": {
+      "sha256": "b1b01bbd2f65374262d9231562f73aade1b6fdde1caeac6e444deff4e43ff62d",
+      "bytes": 14264,
+      "references": [
+        {
+          "line": 29,
+          "text": "func deploymentNames(service string) map[string]bool {"
+        },
+        {
+          "line": 38,
+          "text": "func allowedDeploymentName(service, name string) bool {"
+        }
+      ]
+    },
+    "install.sh": {
+      "sha256": "d48c0a0579e201491ddc8e8c71b55440b5760ec1871223b62a0a170ec281dd01",
+      "bytes": 11439,
+      "references": [
+        {
+          "line": 45,
+          "text": "for trust_service in updater neptune gryphon wyvern window; do"
+        },
+        {
+          "line": 66,
+          "text": "trust_file=\"/etc/exocortex/release-trust/$trust_service.pem\""
+        }
+      ]
+    },
+    "bootstrap.sh": {
+      "sha256": "e7064cc086030fc0697f2becd739c177af2d3d01294baf7481f1d372b578216b",
+      "bytes": 6481,
+      "references": [
+        {
+          "line": 8,
+          "text": "trust_file=\"${EXOCORTEX_RELEASE_TRUST_FILE:-/etc/exocortex/release-trust/updater.pem}\""
+        }
+      ]
+    },
+    "scripts/build-release.sh": {
+      "sha256": "6e207c583d778fc489736d7a82e09c36d858132b1b6c5ab72a689ab927ab240b",
+      "bytes": 4345,
+      "references": []
+    },
+    "scripts/create-release-key.mjs": {
+      "sha256": "6f3545ba128eabbe15433ee6f4bce111f71ed0f2c77e0c9f576d16998730f4d1",
+      "bytes": 1193,
+      "references": []
+    },
+    ".github/workflows/release.yml": {
+      "sha256": "a7bf8db95a8e8813ffd739047688c125982afb857927442f0067997f86fe8a1c",
+      "bytes": 9685,
+      "references": [
+        {
+          "line": 89,
+          "text": "environment: release"
+        }
+      ]
+    },
+    "docs/UPDATE-PROTOCOL.md": {
+      "sha256": "a116e6878edc9d186953d284f0bebd4a645579cd2c9f5a47440e3f37df08f63c",
+      "bytes": 4781,
+      "references": []
+    },
+    "README.md": {
+      "sha256": "e613285207104753d583641b10c1176ccc7e6ccfb84146b985a2a765f77b43d7",
+      "bytes": 19764,
+      "references": []
+    },
+    "RELEASING.md": {
+      "sha256": "506234675df730440b05d53e75b34cfdf60e23c3039d577b3f9a40b6fabd791c",
+      "bytes": 3015,
+      "references": []
+    },
+    "DEPLOYMENT_READINESS.md": {
+      "sha256": "602975ab524fbdcdf78f1d0dec15518c843c3677e7cb3603ead04acce548142f",
+      "bytes": 16281,
+      "references": [
+        {
+          "line": 184,
+          "text": "Release manifests use detached RSA-PSS-SHA256 signatures with a per-project RSA key of at least 3072 bits. Keep Updater's private key only in GitHub Secrets and expose it only to the protected release-signing job. CI derives the public counterpart and embeds it in Updater's versioned `bootstrap.sh`; bootstrap creates `/etc/exocortex/release-trust/updater.pem`, verifies the manifest before downloading binaries or packages, and never replaces an existing mismatching key automatically. No `scp`, manual release-key fingerprint or separately downloaded public key is part of this trust path. Saturn also retains its Ed25519 installer signature. The six-service profile requires Updater 0.4.5 or newer for canonical Gryphon and unified Neptune release discovery."
+        }
+      ]
+    },
+    "systemd/updater.service": {
+      "sha256": "9ec2811225a4f7c90e1e8263b69ae7cd6ec816a705f5f2aec242070813a4bcbb",
+      "bytes": 1048,
+      "references": []
+    }
+  }
+}
