@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.invalid/contracts/private-chat.v1.schema.json",
+  "title": "P05 additive participant-only ephemeral chat",
+  "$defs": {
+    "PrivateChatSend": {
+      "type": "object", "additionalProperties": false, "required": ["request_id", "text"],
+      "properties": {"request_id": {"type": "string", "format": "uuid"}, "text": {"type": "string", "minLength": 1, "maxLength": 1000}},
+      "$comment": "Server additionally rejects whitespace-only text, malformed Unicode, control/bidi formatting, and UTF-8 bytes >4096. Exact fields required."
+    },
+    "PrivateChatReceipt": {
+      "type": "object", "additionalProperties": false, "required": ["request_id", "message_id", "chat_rev", "expires_at"],
+      "properties": {"request_id": {"type": "string", "format": "uuid"}, "message_id": {"type": "string", "format": "uuid"}, "chat_rev": {"type": "integer", "minimum": 1, "maximum": 128}, "expires_at": {"type": "string", "format": "date-time"}}
+    },
+    "PrivateChatMessage": {
+      "type": "object", "additionalProperties": false, "required": ["message_id", "sender_member_id", "text", "sent_at", "expires_at"],
+      "properties": {"message_id": {"type": "string", "format": "uuid"}, "sender_member_id": {"type": "string", "format": "uuid"}, "text": {"type": "string", "minLength": 1, "maxLength": 1000}, "sent_at": {"type": "string", "format": "date-time"}, "expires_at": {"type": "string", "format": "date-time"}}
+    },
+    "PrivateChatView": {
+      "type": "object", "additionalProperties": false, "required": ["session_id", "round_id", "chat_rev", "expires_at", "messages"],
+      "properties": {"session_id": {"type": "string", "format": "uuid"}, "round_id": {"type": "string", "format": "uuid"}, "chat_rev": {"type": "integer", "minimum": 0, "maximum": 128}, "expires_at": {"type": "string", "format": "date-time"}, "messages": {"type": "array", "maxItems": 32, "items": {"$ref": "#/$defs/PrivateChatMessage"}}}
+    }
+  },
+  "$comment": "GET/POST /api/v1/rooms/{roomId}/game/{sessionId}/round/{roundId}/chat. GET requires room cookie+CSRF; Origin validated when present and Sec-Fetch-Site when present must same-origin. POST always requires exact Origin+CSRF. No query parameters. All endpoints unavailable unless explicit server capability, current pair_private actors, online context, both invitation accepts and current live membership/access. TTL <=300000ms and active invitation end, 12 sends/minute/actor,128/round; independent chat_rev."
+}

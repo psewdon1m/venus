@@ -6,3 +6,5 @@ export * from './coverage.js';
 export * from './revocations.js';
 export * from './json.js';
 export * from './bundles.js';
+export * from './topic-bundles.js';
+export * from './pilot-bundle.js';

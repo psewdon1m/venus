@@ -3,20 +3,24 @@ import {FrozenPack} from '@venus/relationship-engine';
 import {RevocationLedger,emptyLedgerHead,type Withdrawal} from '@venus/card-catalog';
 import type {Rooms} from './rooms.js';
 import type {Games} from './games.js';
-import {requireThat} from './security.js';
+import {requireThat,DomainError} from './security.js';
 interface State {active_digest:string|null;generation:string;ledger_head:string}
 export interface GameCatalog {active(c:pg.PoolClient):Promise<FrozenPack|null>;assertPinned(c:pg.PoolClient,digest:string):Promise<void>}
 /** Bundles must be immutable members of the application release. No consumer endpoint
  * accepts external JSON/URLs. This trusted API has no HTTP route or shell capability. */
 export class Catalog implements GameCatalog {
   private readonly packs:ReadonlyMap<string,FrozenPack>;
-  constructor(readonly rooms:Rooms,readonly games:Games,readonly ledger:RevocationLedger,packs:readonly FrozenPack[],allowSynthetic=false) {
+  constructor(readonly rooms:Rooms,readonly games:Pick<Games,'withdrawPacks'>,readonly ledger:RevocationLedger,packs:readonly FrozenPack[],allowSynthetic=false) {
     requireThat(packs.every(p=>!p.synthetic||allowSynthetic),'CATALOG_UNREVIEWED',503);this.packs=new Map(packs.map(p=>[p.digest,p]));
     requireThat(this.packs.size===packs.length,'CATALOG_DUPLICATE',503);
   }
   private async state(c:pg.PoolClient) {const row=(await c.query<State>('SELECT * FROM venus_catalog_state WHERE singleton=true')).rows[0];requireThat(row,'CATALOG_UNAVAILABLE',503);return row;}
+  private readLedger() {
+    try {return this.ledger.read();}
+    catch {throw new DomainError('CATALOG_LEDGER_UNAVAILABLE',503);}
+  }
   private async consistent(c:pg.PoolClient) {
-    const row=await this.state(c),ledger=this.ledger.read();requireThat(row.ledger_head===ledger.head,'CATALOG_RECONCILIATION_REQUIRED',503);
+    const row=await this.state(c),ledger=this.readLedger();requireThat(row.ledger_head===ledger.head,'CATALOG_RECONCILIATION_REQUIRED',503);
     const stored=(await c.query<{card_id:string;revision:number;ledger_hash:string}>('SELECT card_id,revision,ledger_hash FROM venus_catalog_withdrawals')).rows;
     requireThat(stored.length===ledger.entries.length&&stored.every(r=>ledger.entries.some(e=>e.withdrawal.card_id===r.card_id&&e.withdrawal.revision===r.revision&&e.hash===r.ledger_hash)),'CATALOG_RECONCILIATION_REQUIRED',503);return row;
   }
@@ -50,7 +54,7 @@ export class Catalog implements GameCatalog {
   }
   async reconcile(operatorId:string) {requireThat(operatorId.trim().length>0,'OPERATOR_REQUIRED',403);return this.rooms.transaction(c=>this.reconcileLocked(c,operatorId),'exclusive');}
   private async reconcileLocked(c:pg.PoolClient,operatorId:string) {
-    const state=await this.state(c),ledger=this.ledger.read();
+    const state=await this.state(c),ledger=this.readLedger();
     requireThat(state.ledger_head===emptyLedgerHead||ledger.entries.some(e=>e.hash===state.ledger_head),'CATALOG_LEDGER_REGRESSED',503);
     for(const entry of ledger.entries) await c.query('INSERT INTO venus_catalog_withdrawals VALUES($1,$2,$3) ON CONFLICT(card_id,revision) DO NOTHING',[entry.withdrawal.card_id,entry.withdrawal.revision,entry.hash]);
     const stored=(await c.query<{card_id:string;revision:number;ledger_hash:string}>('SELECT card_id,revision,ledger_hash FROM venus_catalog_withdrawals')).rows;

@@ -3,11 +3,13 @@ import type {PrepareGame,StartGame,RevisionMutation,RoundResponse,RoundChoice,Ye
 import type {Games} from './games.js';
 import {requireThat} from './security.js';
 import {enqueueFencedJson} from './http-delivery.js';
+import {chatInput} from './private-chat.js';
 export interface GameHttpGuards {
   roomId:(request:FastifyRequest)=>string;
   origin:(request:FastifyRequest)=>void;
   credential:(request:FastifyRequest)=>string|undefined;
   memberGuard:(request:FastifyRequest)=>Promise<string|undefined>;
+  privateReadGuard:(request:FastifyRequest)=>Promise<string|undefined>;
   body:<T>(request:FastifyRequest,schema:string)=>T;
 }
 export function registerGameRoutes(app:FastifyInstance,games:Games,guard:GameHttpGuards) {
@@ -22,6 +24,11 @@ export function registerGameRoutes(app:FastifyInstance,games:Games,guard:GameHtt
   }
   app.get(prefix+'/current',async (request,reply)=>{if(request.headers.origin!==undefined) guard.origin(request);await games.getCurrent(guard.roomId(request),guard.credential(request));return sendView(request,reply);});
   app.get(prefix+'/availability',async request=>{if(request.headers.origin!==undefined) guard.origin(request);return games.availability(guard.roomId(request),guard.credential(request));});
+  app.get(prefix+'/self-actions',async(request,reply)=>{
+    const session=await guard.privateReadGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);
+    try {await games.dispatchSelfActions(guard.roomId(request),session,view=>enqueueFencedJson(reply,view));}
+    catch(error){if(!reply.sent)throw error;}return reply;
+  });
   app.post(prefix+'/prepare',async request=>games.prepare(guard.roomId(request),await guard.memberGuard(request),guard.body<PrepareGame>(request,'PrepareGame'),request.id));
   app.post(prefix+'/start',async request=>games.start(guard.roomId(request),await guard.memberGuard(request),guard.body<StartGame>(request,'StartGame'),request.id));
   app.post(prefix+'/:sessionId/round/advance',async (request,reply)=>sendReceipt(request,reply,await games.advance(guard.roomId(request),await guard.memberGuard(request),id(request,'sessionId'),guard.body<RevisionMutation>(request,'RevisionMutation'),request.id)));
@@ -31,6 +38,18 @@ export function registerGameRoutes(app:FastifyInstance,games:Games,guard:GameHtt
   app.post(prefix+'/:sessionId/round/:roundId/choice',async request=>games.choice(guard.roomId(request),await guard.memberGuard(request),id(request,'sessionId'),id(request,'roundId'),guard.body<RoundChoice>(request,'RoundChoice'),request.id));
   app.post(prefix+'/:sessionId/round/:roundId/condition',async request=>games.condition(guard.roomId(request),await guard.memberGuard(request),id(request,'sessionId'),id(request,'roundId'),guard.body<YesButCondition>(request,'YesButCondition'),request.id));
   app.post(prefix+'/:sessionId/round/:roundId/finish',async request=>games.finish(guard.roomId(request),await guard.memberGuard(request),id(request,'sessionId'),id(request,'roundId'),guard.body<SafetyStop>(request,'SafetyStop'),request.id));
+  app.get(prefix+'/:sessionId/round/:roundId/chat',async (request,reply)=>{
+    const session=await guard.privateReadGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);
+    try {await games.dispatchHttpChat(guard.roomId(request),session,id(request,'sessionId'),id(request,'roundId'),view=>enqueueFencedJson(reply,view));}
+    catch(error) {if(!reply.sent) throw error;}return reply;
+  });
+  app.post(prefix+'/:sessionId/round/:roundId/chat',{bodyLimit:8192},async (request,reply)=>{
+    const session=await guard.memberGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);
+    const room=guard.roomId(request),game=id(request,'sessionId'),round=id(request,'roundId');
+    const receipt=await games.sendChat(room,session,game,round,chatInput(request.body));
+    try {await games.dispatchChatReceipt(room,session,game,round,receipt,view=>enqueueFencedJson(reply,view));}
+    catch(error) {if(!reply.sent) throw error;}return reply;
+  });
   for(const [path,kind] of [['invitation','invitation'],['private','private'],['action-consent','action'],['condition','condition']] as const) app.get(prefix+'/:sessionId/round/:roundId/'+path,async (request,reply)=>{
     if(request.headers.origin!==undefined) guard.origin(request);await games.readTarget(guard.roomId(request),guard.credential(request),id(request,'sessionId'),id(request,'roundId'),kind);
     try {await games.dispatchHttpTarget(guard.roomId(request),guard.credential(request),id(request,'sessionId'),id(request,'roundId'),kind,view=>enqueueFencedJson(reply,view));}

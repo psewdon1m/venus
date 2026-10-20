@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "revision": "P05-OWN-EXCLUSION-UI-REFRESH-01",
+  "kind": "COMPATIBLE_APPLICATION_CORRECTION",
+  "finding": "P05-OWN-EXCLUSION-FORM-STALE-001",
+  "actual_failure": {
+    "source_identity": "6562438b8bc1b413ff717bf03ecf4d47380c71ea12a358264ba02b7675ece10e",
+    "raw_run": ".artifacts/p05-pilot-bundle-source06/.artifacts/p05/venus-topic-browser-16f273121b99",
+    "case": "P05-TB-15",
+    "status": "14PASS_15FAIL_16NOT_RUN_CLEANUP_PASS",
+    "symptom": "Successful own Other question with permanent exclusion left excluded allow checkbox checked+disabled; own record/draft was not refreshed."
+  },
+  "behavior": [
+    "Only successfully completed explicit own other_question with exclude_current_topics=true invalidates the own TopicSettings via an internal refresh token. Failed/ordinary/peer/poll/safety events do not reset own drafts.",
+    "The post-success invalidation requires current mounted identity but can survive a changed game round because permanent exclusions are room-owned, not round-owned. It never authorizes a command or copies an old response into the form.",
+    "TopicSettings invalidates old read/save generations, clears stale record/allow/exclusion draft and pending flag, and reloads authenticated own taxonomy+record. Late old responses and foreign owners remain rejected.",
+    "Fresh excluded topics render unchecked+disabled; other own topics and peer preferences are unchanged. No autosave, defaults or preselection added."
+  ],
+  "source_files": {
+    "apps/web/src/topic-games-panel.tsx": "8ff1b5709b46bbc0508b195c018f9f0f324911dd6578c20467aab84fbfba94d5",
+    "apps/web/src/topic-settings.tsx": "bfc8c41714c37c5bfa7344026975dbc2352f9a7e669c0bead8f0f74748730e19",
+    "apps/web/src/topic-own-exclusion-refresh.test.ts": "c99f8223e004f36a319b4ee753f92e653843705afb9759d1886b7f90c35918b2"
+  },
+  "validation": "Original TSX RED reproduced same checkedtrue/ownread1 mismatch; 7new actualTSX-hook/API harness regressions and all16webfiles177PASS; webtsc/lint0. Not ReactDOM/browser actual PASS.",
+  "unchanged": [
+    "HTTP/API/consent/privacy/ACL/TTL/rates/engine/map/pack/SQL/CSS",
+    "current pre-dispatch operation/auth fences and TopicSettings own owner/room/taxonomy validation",
+    "existing16browser scenarios and immutable failedattempt",
+    "six frozen API snapshot-cache authoredpaths"
+  ],
+  "compatibility": "Internal optional TopicSettings refreshToken prop only, no public/persisted contract or migration.",
+  "rollback": "Restore coherent previous frontend bundle/API-compatible tuple; backend permanent exclusions remain authoritative and must not be erased. Previous UI retains stale form until manual reload."
+}

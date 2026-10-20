@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:private-room-protocol:1",
+  "title": "Authenticated room private protocol",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "room_id", "private_protocol"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "room_id": {"type": "string", "format": "uuid"},
+    "private_protocol": {"enum": [1, 2]}
+  }
+}

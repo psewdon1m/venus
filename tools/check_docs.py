@@ -7,6 +7,7 @@ import hashlib
 import sys
 from urllib.parse import unquote
 from source_inventory import source_files
+from archived_markdown import read_markdown, archive_errors
 
 ROOT=Path(__file__).resolve().parents[1]
 DOCS=ROOT/'.docs'
@@ -31,7 +32,7 @@ REQUIRED += ['.docs/10_IMPLEMENTATION_PLAN.md', '.docs/implementation/README.md'
              'tools/check_p00.py', 'tools/p00_rules_reference.py', 'tools/test_p00.py']
 REQUIRED += ['tools/p00_evidence.py', '.docs/implementation/user-decisions.v1.json',
              '.docs/contracts/service-entry-policy.v1.json', '.docs/implementation/DIV-20261018-01.md']
-errors=[]
+errors=archive_errors(ROOT)
 for rel in REQUIRED:
  if not (ROOT/rel).is_file():errors.append(f'missing required file: {rel}')
 markdown = [p for p in source_files(ROOT) if p.suffix == '.md']
@@ -42,13 +43,17 @@ for p in markdown:
  # by editing source snapshots or faking replacement files.
  if (DOCS / "source-snapshots") in p.parents:
   continue
- text=p.read_text(encoding='utf-8')
+ try:
+  text, link_base = read_markdown(p, ROOT)
+ except (UnicodeDecodeError, ValueError) as exc:
+  errors.append(f'{p.relative_to(ROOT)}: {exc}')
+  continue
  for raw in LINKS.findall(text):
   link=raw.strip().split(' "')[0]
   if not link or link.startswith(('https://','http://','mailto:','data:','#')):continue
   path=unquote(link.split('#')[0])
   if not path:continue
-  dest=(p.parent/path).resolve()
+  dest=(link_base/path).resolve()
   if not dest.is_relative_to(ROOT.resolve()):errors.append(f'{p.relative_to(ROOT)}: escaped root {link}')
   elif not dest.exists(): errors.append(f'{p.relative_to(ROOT)}: broken link {link}')
 # Verify primary and additional visual references against their audited source map.

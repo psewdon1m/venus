@@ -4,16 +4,21 @@ export class ApiError extends Error {constructor(readonly code:string) {super(co
 export class SessionApi {
   admissionCsrf='';private roomCsrf=new Map<string,string>();
   async request<T>(path:string,body?:unknown,method=body===undefined?'GET':'POST'):Promise<T> {
-    const room=path.match(/^\/api\/v1\/rooms\/([a-f0-9-]{36})/i)?.[1];
-    const publicAction=path==='/api/v1/rooms'||path==='/api/v1/invitations/resolve'||path.endsWith('/join');
+    const room=path.match(/^\/api\/v[12]\/rooms\/([a-f0-9-]{36})/i)?.[1];
+    const publicAction=/^\/api\/v[12]\/rooms$/.test(path)||path==='/api/v1/invitations/resolve'||path.endsWith('/join');
     let response:Response;
-    try {response=await fetch(path,{method,credentials:'same-origin',signal:AbortSignal.timeout(8000),headers:body===undefined?{}:{'content-type':'application/json','x-csrf-token':publicAction?this.admissionCsrf:this.roomCsrf.get(room??'')??''},...(body===undefined?{}:{body:JSON.stringify(body)})});}
+    try {response=await fetch(path,{method,credentials:'same-origin',signal:AbortSignal.timeout(8000),headers:body===undefined?(room?{'x-csrf-token':this.roomCsrf.get(room)??''}:{}):{'content-type':'application/json','x-csrf-token':publicAction?this.admissionCsrf:this.roomCsrf.get(room??'')??''},...(body===undefined?{}:{body:JSON.stringify(body)})});}
     catch {throw new ApiError('SERVICE_UNAVAILABLE');}
     let result:unknown;try {result=await response.json();} catch {throw new ApiError('SERVICE_UNAVAILABLE');}
     if(!response.ok) throw new ApiError(result&&typeof result==='object'&&'code' in result&&typeof result.code==='string'?result.code:'SERVICE_UNAVAILABLE');
     const csrf=response.headers.get('x-csrf-token');
     if(csrf) {const id=room??(result&&typeof result==='object'&&'room_id' in result?String(result.room_id):'');this.roomCsrf.set(id,csrf);}
     return result as T;
+  }
+  async creationPath():Promise<'/api/v1/rooms'|'/api/v2/rooms'> {
+    const value=await this.request<unknown>('/api/v1/runtime-capabilities');
+    if(!value||typeof value!=='object'||Object.keys(value).sort().join(',')!=='room_creation_protocol,schema_version'||!('schema_version' in value)||value.schema_version!==1||!('room_creation_protocol' in value)||!(value.room_creation_protocol===1||value.room_creation_protocol===2)) throw new ApiError('SERVICE_UNAVAILABLE');
+    return value.room_creation_protocol===2?'/api/v2/rooms':'/api/v1/rooms';
   }
   async bootstrap() {const result=await this.request<EntryPolicy>('/api/v1/entry-policy');this.admissionCsrf=result.csrf_token;return result;}
 }

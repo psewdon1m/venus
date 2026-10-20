@@ -76,7 +76,7 @@ function App() {
       </section>);
   return <main>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
-      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{value.toUpperCase()}</button>)}</div>
+      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
     </nav>
     {error?<section className="notice error" role="alert" data-testid="error-message"><p>{message(t,error)}</p>
       <button data-testid="retry-action" onClick={()=>{void perform(async()=>{if(error instanceof ApiError&&error.code==='REVISION_CONFLICT') await refresh();else if(retry) await retry();else if(roomId) await refresh();else setPolicy(await api.bootstrap());if(roomId) setConnectionEpoch(v=>v+1);});}}>{t.retry}</button>
@@ -88,7 +88,7 @@ function App() {
       <section className="intro"><p className="eyebrow">{t.tagline}</p><h1>{t.title}</h1><p className="description">{t.description}</p><p className="stage">{t.stage}</p></section>
       {entryPanel}
       <div className="entry-grid">
-        <form onSubmit={event=>{event.preventDefault();if(!hasApproval||!policy) return;const input={name,locale,meeting_context:context,idempotency_key:crypto.randomUUID(),entry_acceptance:acceptance(policy)};void perform(async()=>{const result=await api.request<CreateResult>('/api/v1/rooms',input);enter(undefined,result.room_id);});}}>
+        <form onSubmit={event=>{event.preventDefault();if(!hasApproval||!policy) return;const input={name,locale,meeting_context:context,idempotency_key:crypto.randomUUID(),entry_acceptance:acceptance(policy)};let path:'/api/v1/rooms'|'/api/v2/rooms'|null=null;void perform(async()=>{path??=await api.creationPath();const result=await api.request<CreateResult>(path,input);enter(undefined,result.room_id);});}}>
           <h2>{t.createRoom}</h2><label>{t.yourName}<input data-testid="create-name" autoComplete="off" value={name} onChange={e=>setName(e.target.value)} required maxLength={192}/></label>
           <label>{t.meetingContext}<select value={context} onChange={e=>setContext(e.target.value as 'online'|'in_person')}><option value="online">{t.online}</option><option value="in_person">{t.inPerson}</option></select></label>
           <button className="primary" data-testid="create-room" disabled={!hasApproval||busy}>{busy?t.saving:t.createRoom}</button>

@@ -133,9 +133,10 @@ describe('EXIT-P03 actual PostgreSQL / HTTPS / WS',()=>{
     assert.equal((await r.actors[0].call(base(r)+'/me/preferences',{method:'PUT',body:input})).body.code,'GAME_SETTINGS_LOCKED');
     const room=await roomSnapshot(r);assert.equal((await r.host.call(base(r)+'/context',{method:'PATCH',body:{meeting_context:'online',expected_rev:room.room_rev,idempotency_key:randomUUID()}})).body.code,'GAME_SETTINGS_LOCKED');
     await post(r.actors[0],base(r)+'/me/setup/skip',{expected_rev:preference.rev,idempotency_key:randomUUID()});
-    const view=await current(r);assert.equal(view.pause_reason,'safety');await post(r.host,gameBase(r)+`/${r.gameId}/resume`,{expected_rev:view.game_rev,idempotency_key:randomUUID()});
+    const view=await current(r);assert.equal(view.state,'aborted');assert.equal(view.pause_reason,null);
+    assert.equal((await r.host.call(gameBase(r)+`/${r.gameId}/resume`,{method:'POST',body:{expected_rev:view.game_rev,idempotency_key:randomUUID()}})).body.code,'GAME_NOT_PAUSED');
     assert.deepEqual((await pool.query('SELECT snapshot_cipher FROM game_sessions WHERE id=$1',[r.gameId])).rows[0].snapshot_cipher,before);
-    mark('P03-SNAPSHOT-LOCK',{snapshot_sha256:createHash('sha256').update(JSON.stringify(before)).digest('hex'),active_and_paused_locked:true,neutral_skip_available:true});
+    mark('P03-SNAPSHOT-LOCK',{snapshot_sha256:createHash('sha256').update(JSON.stringify(before)).digest('hex'),active_and_paused_locked:true,neutral_skip_available:true,p05_safety_clear_aborts_before_new_snapshot:true});
   });
   it('requires exact actors, independent invitation/action consent and terminal decline',async()=>{
     const r=await fixture();await privateRound(r);const offer=await offerFor(r,r.actors[0]);

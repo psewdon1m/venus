@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "revision": "P05-TOPIC-OFFER-THROTTLE-01",
+  "kind": "COMPATIBLE_PRODUCT_CORRECTION",
+  "finding": "P05-OFFER-COOLDOWN-001",
+  "diagnosis": ".docs/implementation/reviews/p05/pilot-browser21-offer-cooldown-diagnosis-round01/INDEX.json",
+  "diagnosis_sha256": "dcb80c5a0fbd68a90ad74701b38ca24f7b7a9ca106c73667c6b7640c47b378ca",
+  "behavior": "Normal new-topic capability and early command gate enforce existing engine cooldown and attempt limit before invalidation or candidate/history mutation.",
+  "unchanged": ["5000ms topic offer interval", "3 total topic attempts", "consent/TTL/ACL", "source-independent safety commands", "planner and public RNG", "pack/map/grant bytes", "stored schema and algorithm revision"],
+  "compatibility": "No persisted schema or data migration; existing engine3 sessions remain compatible. Advertised actions may become unavailable while cooldown or limit applies; normal server polling restores capability after the existing cooldown.",
+  "rollback": "Quiesce new starts and preserve safe exits. Restore a compatible reviewed UI/API/engine tuple only; older tuples retain the known false-positive offer capability and must not be claimed to fix it. Do not rewrite or reset histories/consents."
+}

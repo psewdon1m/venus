@@ -7,7 +7,7 @@ import {canonical,digest,FrozenPack,type Card} from '@venus/relationship-engine'
 import {analyze,normalized,manifestFor,reviewedCandidate,requiredHumanChecks,type HumanReview,type HumanReviewer} from './catalog.js';
 import {AuthoringLedger,type BatchReservation} from './authoring.js';
 import {RevocationLedger} from './revocations.js';
-import {coverageSnapshot,safeAvailability} from './coverage.js';
+import {coverageSnapshot,safeAvailability,coverageReport} from './coverage.js';
 import {strictJson} from './json.js';
 import {loadReviewedBundles,bundledPacks} from './bundles.js';
 
@@ -38,6 +38,20 @@ function humanFixture(cards:Card[]) {
   return {person,review,signed};
 }
 describe('P04 catalogue authoring and independent review boundary',()=>{
+  it('distinguishes a missing required in-person channel from a real private content shortage',()=>{
+    const publicCards=fixtureCards().filter(c=>c.id.endsWith('1001'));
+    const privateCard:Card={...card(1),interaction:'pair_private',participants_required:2,consent:'bilateral',relationship_scope:'friend_or_more',min_comfort:1,min_progression_stage:3,meeting_contexts:['in_person'],safety_tags:['private'],required_capabilities:['private_text_chat'],text:{ru:{question:'{P2}, назови вымышленный цвет для тестовой пары.'},en:{question:'{P2}, name an imaginary colour for the test pair.'},tr:{question:'{P2}, deneme çifti için hayali bir renk söyle.'}}};
+    const cards=[...publicCards,privateCard],pack=FrozenPack.load(cards,manifestFor(cards),true);
+    const off=coverageReport(pack,[],[20]),on=coverageReport(pack,['private_text_chat'],[20]);
+    const eligibleProfile=(r:ReturnType<typeof coverageReport>)=>r.cells.find(c=>c.mode==='questions'&&c.context==='in_person'&&c.size===2&&c.stage===3&&c.comfort===1&&c.resolved_class==='F')!;
+    expect(eligibleProfile(off).private_profile_status).toBe('CAPABILITY_UNAVAILABLE');
+    expect(off.private_sessions.find(c=>c.mode==='questions'&&c.context==='in_person'&&c.size===2&&c.comfort===1&&c.resolved_class==='F')?.status).toBe('CAPABILITY_UNAVAILABLE');
+    expect(eligibleProfile(on).private_profile_status).toBe('CONTENT_GAP');
+    expect(eligibleProfile(on).private_baseline_card_count).toBe(1);
+    const legacyCards=[...publicCards,{...privateCard,required_capabilities:[]}];
+    const legacy=coverageReport(FrozenPack.load(legacyCards,manifestFor(legacyCards),true),[],[20]);
+    expect(eligibleProfile(legacy).private_profile_status).toBe('CONTENT_GAP');
+  });
   it('rejects nested duplicate keys, nonfinite values, excessive nesting and invalid JSON',()=>{
     for(const text of ['{"a":1,"a":2}','{"a":{"b":1,"b":2}}','{"a":1e999}','[NaN]','{"a":1,}','[1,]','[true false]','[','"unterminated','['.repeat(65)+'0'+']'.repeat(65)]) expect(()=>strictJson(text)).toThrow();
     expect(strictJson('{"a":[1,true,null,"x"],"b":{}}')).toEqual({a:[1,true,null,'x'],b:{}});

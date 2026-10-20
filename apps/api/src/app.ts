@@ -7,12 +7,18 @@ import type {Rooms} from './rooms.js';
 import {registerRooms} from './room-routes.js';
 import {DomainError} from './security.js';
 import type {Games} from './games.js';
+import type {PrivateTopicPreferences} from './private-topic-preferences.js';
+import type {TopicGames} from './topic-games.js';
+import {requestErrorDiagnostic} from './request-error-diagnostic.js';
 
 export interface AppOptions {
   probe: () => Promise<void>; version: Version; staticRoot?: string;
   logger?: FastifyServerOptions['logger'];
   rooms?:Rooms;
   games?:Games;
+  privateTopics?:PrivateTopicPreferences;
+  topicGames?:TopicGames;
+  roomCreationProtocol?:1|2;
   schemaGeneration?:number;
 }
 export async function createApp(options: AppOptions) {
@@ -41,10 +47,11 @@ export async function createApp(options: AppOptions) {
   app.setErrorHandler((error, request, reply) => {
     const code = error && typeof error === 'object' && 'statusCode' in error ? error.statusCode : 500;
     const status = error instanceof DomainError ? error.statusCode : typeof code === 'number' && code >= 400 && code < 500 ? code : 500;
+    if(status===500&&!(error instanceof DomainError))app.log.error({event:'request_failed',request_id:request.id,...requestErrorDiagnostic(error)},'request_failed');
     return reply.code(status).send({code: error instanceof DomainError?error.code:status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
   });
   await app.register(websocket,{options:{maxPayload:8192,perMessageDeflate:false}});
-  if(options.rooms) await registerRooms(app,options.rooms,options.games);
+  if(options.rooms) await registerRooms(app,options.rooms,options.games,options.privateTopics,options.topicGames,options.roomCreationProtocol??1);
   app.get('/health/live', async (): Promise<HealthLive> => ({status: 'alive'}));
   app.get('/health/ready', async (_request, reply): Promise<HealthReady> => {
     try {

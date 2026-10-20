@@ -1,3 +1,4 @@
+import {websocketErrorDiagnostic} from './request-error-diagnostic.js';
 import type {FastifyInstance,FastifyRequest,FastifyReply} from 'fastify';
 import cookie from '@fastify/cookie';
 import {Ajv2020} from 'ajv/dist/2020.js';
@@ -10,6 +11,10 @@ import {randomUUID} from 'node:crypto';
 import type WebSocket from 'ws';
 import type {Games} from './games.js';
 import {registerGameRoutes} from './game-routes.js';
+import type {PrivateTopicPreferences} from './private-topic-preferences.js';
+import {enqueueFencedJson} from './http-delivery.js';
+import type {TopicGames} from './topic-games.js';
+import {registerTopicGameRoutes} from './topic-game-routes.js';
 const admissionCookie='__Host-venus-admission';
 export const roomCookie=()=>'venus_room_session';
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
@@ -22,7 +27,9 @@ function body<T>(request:FastifyRequest,schema:string):T {
   requireThat(validate(request.body),'INVALID_REQUEST',400);return request.body as T;
 }
 function roomId(request:FastifyRequest) {const id=(request.params as {roomId:string}).roomId;requireThat(uuid.test(id),'INVALID_REQUEST',400);return id.toLowerCase();}
-export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games) {
+export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games,privateTopics?:PrivateTopicPreferences,topicGames?:TopicGames,roomCreationProtocol:1|2=1) {
+  requireThat(roomCreationProtocol===1||roomCreationProtocol===2,'ROOM_CREATION_PROTOCOL_INVALID',503);
+  requireThat(roomCreationProtocol===1||topicGames?.options.enabled===true,'ROOM_CREATION_PROTOCOL_UNAVAILABLE',503);
   await app.register(cookie);
   const sockets=new Map<string,{socket:WebSocket;grant:SocketGrant}>();
   const pending=new Set<WebSocket>();
@@ -34,6 +41,7 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
   function csrf(request:FastifyRequest,session:string|undefined) {requireThat(session,'AUTH_REQUIRED',401);requireThat(typeof request.headers['x-csrf-token']==='string'&&equal(request.headers['x-csrf-token'],rooms.csrf(session)),'CSRF_FORBIDDEN');}
   function setSession(reply:FastifyReply,id:string,session:string) {
     reply.setCookie(roomCookie(),session,{path:'/api/v1/rooms/'+id,secure:true,httpOnly:true,sameSite:'strict',maxAge:86400});
+    if(topicGames) reply.setCookie(roomCookie(),session,{path:'/api/v2/rooms/'+id,secure:true,httpOnly:true,sameSite:'strict',maxAge:86400});
     reply.header('X-CSRF-Token',rooms.csrf(session));
   }
   async function publicGuard(request:FastifyRequest) {
@@ -43,6 +51,11 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
   async function memberGuard(request:FastifyRequest) {
     origin(request);const session=credential(request);csrf(request,session);await rooms.rateLimit('member:'+hash(session!),240);return session;
   }
+  async function privateReadGuard(request:FastifyRequest) {
+    if(request.headers.origin!==undefined) origin(request);
+    requireThat(request.headers['sec-fetch-site']===undefined||request.headers['sec-fetch-site']==='same-origin','ORIGIN_FORBIDDEN');
+    const session=credential(request);csrf(request,session);await rooms.rateLimit('member:'+hash(session!),240);return session;
+  }
   app.get('/api/v1/entry-policy',async (request,reply)=>{
     if(request.headers.origin!==undefined) origin(request);
     await rooms.rateLimit('bootstrap:'+request.ip,200);
@@ -51,10 +64,24 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
     const offer=rooms.options.offer();
     return {available:Boolean(offer),offer,csrf_token:rooms.csrf(admission)};
   });
+  app.get('/api/v1/runtime-capabilities',async request=>{
+    if(request.headers.origin!==undefined) origin(request);
+    requireThat(request.headers['sec-fetch-site']===undefined||request.headers['sec-fetch-site']==='same-origin','ORIGIN_FORBIDDEN');
+    await rooms.rateLimit('bootstrap:'+request.ip,200);
+    return {schema_version:1,room_creation_protocol:roomCreationProtocol};
+  });
   app.post('/api/v1/rooms',async (request,reply)=>{
     const admission=await publicGuard(request);const result=await rooms.create(body<CreateRoom>(request,'CreateRoom'),admission,request.id);
     const value=result.body as {room_id:string};setSession(reply,value.room_id,result.session!);return reply.code(result.status).send(result.body);
   });
+  if(topicGames) {
+    requireThat(topicGames.rooms===rooms&&privateTopics?.rooms===rooms&&rooms.options.privateProtocol,'TOPIC_ROOM_SERVICE_MISMATCH',503);
+    app.post('/api/v2/rooms',async(request,reply)=>{
+      const admission=await publicGuard(request);requireThat(topicGames.options.enabled,'TOPIC_GAMES_DISABLED',503);
+      const result=await rooms.create(body<CreateRoom>(request,'CreateRoom'),admission,request.id,2),value=result.body as {room_id:string};
+      setSession(reply,value.room_id,result.session!);return reply.code(result.status).send(result.body);
+    });
+  }
   app.post('/api/v1/invitations/resolve',async request=>{
     await publicGuard(request);const input=body<ResolveInvite>(request,'ResolveInvite');return rooms.resolve(input.invite_token,input.entry_acceptance);
   });
@@ -81,7 +108,10 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
     {method:'POST',path:'/close',schema:'RevisionMutation',op:'close'}
   ] as const) app.route({method:route.method,url:'/api/v1/rooms/:roomId'+route.path,handler:async (request,reply)=>{
     const id=roomId(request),session=await memberGuard(request);const result=await rooms.mutate(id,session,route.op,body<Record<string,unknown>>(request,route.schema),request.id);
-    if(route.op==='leave') reply.clearCookie(roomCookie(),{path:'/api/v1/rooms/'+id,secure:true,httpOnly:true,sameSite:'strict'});
+    if(route.op==='leave') {
+      reply.clearCookie(roomCookie(),{path:'/api/v1/rooms/'+id,secure:true,httpOnly:true,sameSite:'strict'});
+      if(topicGames) reply.clearCookie(roomCookie(),{path:'/api/v2/rooms/'+id,secure:true,httpOnly:true,sameSite:'strict'});
+    }
     return result.body;
   }});
   app.post('/api/v1/rooms/:roomId/me/entry-acceptance',async request=>{
@@ -90,7 +120,43 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
   app.post('/api/v1/rooms/:roomId/ws-ticket',async request=>{
     const id=roomId(request),session=await memberGuard(request);body(request,'SafetyStop');return rooms.newTicket(id,session);
   });
-  if(games) registerGameRoutes(app,games,{roomId,origin,credential,memberGuard,body});
+  const gameGuards={roomId,origin,credential,memberGuard,privateReadGuard,body};
+  if(games) {
+    if(rooms.options.privateProtocol) await app.register(async scoped=>{
+      // Protocol is immutable from birth. Reject the legacy transport before it
+      // can decode or mutate any shared game rows with V1 AAD/contracts.
+      scoped.addHook('preHandler',async request=>rooms.transaction(async c=>{
+        const a=await rooms.access(c,roomId(request),credential(request),true);
+        requireThat(rooms.protocol(a.room)===1,'PRIVATE_TRANSPORT_UPGRADE_REQUIRED',409);
+      }));
+      registerGameRoutes(scoped,games,gameGuards);
+    });
+    else registerGameRoutes(app,games,gameGuards);
+  }
+  if(topicGames) registerTopicGameRoutes(app,topicGames,gameGuards);
+  app.get('/api/v1/rooms/:roomId/me/private-protocol',async(request,reply)=>{
+    const session=await privateReadGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);
+    await rooms.dispatchPrivateProtocol(roomId(request),session,view=>enqueueFencedJson(reply,view));return reply;
+  });
+  // Explicit injection only. server.ts does not activate the incomplete V2
+  // lifecycle; this adapter cannot auto-create ledgers for existing rooms.
+  if(privateTopics) {
+    requireThat(privateTopics.rooms===rooms,'TOPIC_ROOM_SERVICE_MISMATCH',503);
+    const topicPath='/api/v1/rooms/:roomId/me/private-topics';
+    const noQuery=(request:FastifyRequest)=>requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);
+    const sendTopics=async(request:FastifyRequest,reply:FastifyReply,session:string|undefined)=>{
+      try {await privateTopics.dispatch(roomId(request),session,view=>enqueueFencedJson(reply,view));}
+      catch(error) {if(!reply.sent) throw error;}return reply;
+    };
+    app.get(topicPath,async(request,reply)=>{const session=await privateReadGuard(request);noQuery(request);return sendTopics(request,reply,session);});
+    app.get('/api/v1/rooms/:roomId/me/private-topic-taxonomy',async(request,reply)=>{
+      const session=await privateReadGuard(request);noQuery(request);
+      try {await privateTopics.dispatchTaxonomy(roomId(request),session,view=>enqueueFencedJson(reply,view));}
+      catch(error) {if(!reply.sent) throw error;}return reply;
+    });
+    app.put(topicPath,{bodyLimit:8192},async(request,reply)=>{const session=await memberGuard(request);noQuery(request);await privateTopics.put(roomId(request),session,request.body);return sendTopics(request,reply,session);});
+    app.post(topicPath+'/exclusions',{bodyLimit:8192},async(request,reply)=>{const session=await memberGuard(request);noQuery(request);await privateTopics.exclude(roomId(request),session,request.body);return sendTopics(request,reply,session);});
+  }
   function send(socket:WebSocket,grant:SocketGrant,view:Awaited<ReturnType<Rooms['snapshot']>>) {
     if(socket.readyState!==1) return;
     socket.send(JSON.stringify({schema:1,event_id:randomUUID(),room_id:grant.roomId,room_rev:revision(view.room_rev),stream:'room',stream_rev:revision(view.room_rev),type:'room.snapshot',server_time:new Date(rooms.now()).toISOString(),audience:'room',payload:view}));
@@ -104,7 +170,14 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
   app.get('/api/v1/rooms/:roomId/ws',{websocket:true,preValidation:async request=>{
     origin(request);roomId(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);await rooms.rateLimit('ws-upgrade:'+request.ip,120);
   }},(socket,request)=>{
-    pending.add(socket);let grant:SocketGrant|undefined;let chain=Promise.resolve();let lastRevision=-1,lastPrivate=0;let lastPing=-Infinity;
+    pending.add(socket);let grant:SocketGrant|undefined;let chain=Promise.resolve();let lastRevision=-1,lastPrivate=0;let lastPing=-Infinity,pollPending=false,failureLogged=false;
+    function failed(error:unknown,phase:'auth_or_heartbeat'|'poll') {
+      if(!failureLogged) {failureLogged=true;try {
+        const request_id=typeof request.id==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(request.id)?request.id:undefined;
+        app.log.warn({event:'websocket_failed',phase,...(request_id?{request_id}:{}),...websocketErrorDiagnostic(error)},'websocket_failed');
+      } catch {/* Diagnostics must not suppress the existing fail-closed socket close. */}}
+      socket.close(4401,'Connection unavailable');
+    }
     const deadline=setTimeout(()=>socket.close(4401,'Authentication required'),5000);deadline.unref();
     socket.on('error',()=>{/* Never log raw frames or credentials. */});
     socket.on('message',message=>{
@@ -117,15 +190,19 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
           const id=roomId(request);grant=await rooms.connect(id,credential(request),frame.ticket);
           clearTimeout(deadline);pending.delete(socket);
           const key=id+':'+grant.memberId;const old=sockets.get(key);if(old) old.socket.close(4409,'Connection replaced');
-          sockets.set(key,{socket,grant});const bundle=await rooms.socketState(grant);lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);await sendGame(socket,grant,bundle,true);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;
+          sockets.set(key,{socket,grant});const bundle=await rooms.socketState(grant,false,0,{projection:'private'});lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);await sendGame(socket,grant,bundle,true);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;
         } else {
           requireThat(frame.type==='ping'&&Object.keys(frame).length===1,'INVALID_REQUEST',400);
           const now=performance.now();requireThat(now-lastPing>=500,'RATE_LIMITED',429);lastPing=now;await rooms.liveGrant(grant,true);socket.send(JSON.stringify({type:'pong'}));
         }
-      }).catch(()=>{socket.close(4401,'Connection unavailable');});
+      }).catch(error=>failed(error,'auth_or_heartbeat'));
     });
     const ticker=setInterval(()=>{
-      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(()=>socket.close(4401,'Connection unavailable'));
+      // Keep at most one scheduled/in-flight poll. Slow storage must not build
+      // a poll backlog ahead of the heartbeat on the same serialized chain.
+      if(!grant||socket.readyState!==1||pollPending)return;
+      pollPending=true;
+      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate,{projection:'private'}),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(error=>failed(error,'poll')).finally(()=>{pollPending=false;});
     },1000);ticker.unref();
     socket.on('close',()=>{
       clearTimeout(deadline);clearInterval(ticker);pending.delete(socket);
