@@ -1,4 +1,4 @@
-import {describe,it,expect,afterEach} from 'vitest';
+import {describe,it,expect,afterEach,vi} from 'vitest';
 import * as fs from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve,dirname} from 'node:path';
@@ -6,6 +6,8 @@ import {pathToFileURL} from 'node:url';
 import {spawn,spawnSync} from 'node:child_process';
 import ts from 'typescript';
 import {Keyring,hash,canonical} from './security.js';
+import * as ledgerModule from './private-topic-ledger.js';
+import {TopicGames} from './topic-games.js';
 import {TopicLedgerCodec,PrivateTopicLedger,type TopicNarrowing,type TopicLedgerOptions,type TopicLedgerControls,type TopicLedgerPhase} from './private-topic-ledger.js';
 
 const secrets={v1:Buffer.alloc(32,71).toString('base64'),v2:Buffer.alloc(32,72).toString('base64')};
@@ -314,5 +316,121 @@ describe.skipIf(process.platform!=='linux')('topic safety ledger real Linux file
 describe.skipIf(process.platform==='linux')('unsupported host is explicit',()=>{
   it('does not claim Windows file durability',()=>{
     expect(()=>PrivateTopicLedger.open({chainDirectory:'unused',witnessDirectory:'unused2',keys,pins},{incarnation,minimumSequence:1})).toThrow('TOPIC_LEDGER_PLATFORM_UNSUPPORTED');
+  });
+});
+
+// Portable content-memo checks use the same real codec as the native driver.
+// Before the memo exists, the fallback is exactly the old full-inspection path.
+type MemoInspection=ReturnType<TopicLedgerCodec['inspect']>;
+interface InspectionMemoSubject {
+  read(owner:object,chain:Buffer,witness:Buffer,ring:Keyring,inputPins:typeof pins,maximum:number,inspect:()=>MemoInspection):MemoInspection;
+  clear():void;
+}
+const memoSubjects:InspectionMemoSubject[]=[];
+function inspectionMemo(now:()=>number=()=>performance.now()):InspectionMemoSubject {
+  const Constructor=(ledgerModule as unknown as {TopicLedgerInspectionMemo?:new(now:()=>number)=>InspectionMemoSubject}).TopicLedgerInspectionMemo;
+  const result:InspectionMemoSubject=Constructor?new Constructor(now):{read(_owner,_chain,_witness,_ring,_pins,_maximum,inspect){return inspect();},clear(){}};
+  memoSubjects.push(result);return result;
+}
+afterEach(()=>{for(const memo of memoSubjects.splice(0))memo.clear();(ledgerModule as unknown as {clearTopicLedgerInspectionCache?:()=>void}).clearTopicLedgerInspectionCache?.();vi.restoreAllMocks();});
+describe('bounded private ledger content inspection memo',()=>{
+  it('reuses unchanged validated inspection without repeating full codec work',()=>{
+    const f=codecFixture(),memo=inspectionMemo(),owner={},ring=new Keyring('v1',{...secrets}),codec=new TopicLedgerCodec(ring,pins);let calls=0;
+    const read=()=>memo.read(owner,Buffer.from(f.chain),Buffer.from(f.nextWitness),ring,pins,1024,()=>{calls++;return codec.inspect(f.chain,f.nextWitness);});
+    const first=read(),second=read();expect(calls).toBe(1);expect(second).toBe(first);expect(codec.latest(second,scope).excluded).toEqual(['music']);
+  });
+});
+
+function memoFixture(memo:InspectionMemoSubject,ring=new Keyring('v1',{...secrets})) {
+  const f=codecFixture(),owner={};let calls=0;
+  return {f,owner,get calls(){return calls;},read(chain=f.chain,witness=f.nextWitness,identity=owner,inputPins=pins,maximum=1024){return memo.read(identity,Buffer.from(chain),Buffer.from(witness),ring,inputPins,maximum,()=>{calls++;return new TopicLedgerCodec(ring,inputPins,maximum).inspect(chain,witness);});}};
+}
+describe('inspection memo cryptography, immutability and finite retention',()=>{
+  it('deep freezes all retained private inspection fields and never borrows mutable raw buffers',()=>{
+    const p=memoFixture(inspectionMemo()),first=p.read();expect(()=>first.entries[1]!.header.sequence=99).toThrow();
+    const body=first.entries[1]!.body;if(body.kind!=='exclude')throw Error('fixture');expect(()=>body.excluded.push('food')).toThrow();
+    const different=Buffer.from(p.f.chain);different[100]^=1;expect(()=>p.read(different)).toThrow();expect(p.read().entries[1]!.header.sequence).toBe(2);expect(p.calls).toBe(3);
+  });
+  it.each(['chain','witness'] as const)('warm %s byte tamper clears the slot, never drops corrupt data, and valid reread revalidates',part=>{
+    const p=memoFixture(inspectionMemo());p.read();const chain=Buffer.from(p.f.chain),witness=Buffer.from(p.f.nextWitness);(part==='chain'?chain:witness)[100]^=1;
+    expect(()=>p.read(chain,witness)).toThrow();expect(p.read().sequence).toBe(2);expect(p.calls).toBe(3);
+  });
+  it.each(['delete','replace'] as const)('same backing map used/current key %s is checked fresh on a warm read',change=>{
+    const map={...secrets},ring=new Keyring('v1',map),p=memoFixture(inspectionMemo(),ring);p.read();if(change==='delete')delete (map as Partial<typeof map>).v1;else map.v1=secrets.v2;
+    expect(()=>p.read()).toThrow();map.v1=secrets.v1;expect(p.read().sequence).toBe(2);expect(p.calls).toBe(change==='delete'?2:3);
+  });
+  it('used noncurrent record key and witness key stay checked independently',()=>{
+    const map={...secrets},ring=new Keyring('v2',map),p=memoFixture(inspectionMemo(),ring),codec=new TopicLedgerCodec(ring,pins),witness=codec.witness({incarnation,sequence:2,digest:hash(p.f.second.toString('base64'))});
+    p.read(p.f.chain,witness);delete (map as Partial<typeof map>).v1;expect(()=>p.read(p.f.chain,witness)).toThrow(expect.objectContaining({code:'KEY_VERSION_UNAVAILABLE'}));map.v1=secrets.v1;map.v2=secrets.v1;expect(()=>p.read(p.f.chain,witness)).toThrow();
+  });
+  it('current unused material replacement misses; current removal fails closed',()=>{
+    const map={...secrets},ring=new Keyring('v2',map),p=memoFixture(inspectionMemo(),ring),first=p.read();map.v2=secrets.v1;expect(p.read()).not.toBe(first);expect(p.calls).toBe(2);delete (map as Partial<typeof map>).v2;expect(()=>p.read()).toThrow(expect.objectContaining({code:'KEY_VERSION_UNAVAILABLE'}));
+  });
+  it('current label rotation misses, but irrelevant unused noncurrent mutation preserves validation',()=>{
+    const map={...secrets},ring=new Keyring('v1',map),p=memoFixture(inspectionMemo(),ring),first=p.read();map.v2=secrets.v1;expect(p.read()).toBe(first);expect(p.calls).toBe(1);
+    Object.defineProperty(ring,'current',{value:'v2'});expect(p.read()).not.toBe(first);expect(p.calls).toBe(2);
+  });
+  it('different ledger identity, pins and maximum cannot reuse another validation',()=>{
+    const p=memoFixture(inspectionMemo()),first=p.read();expect(p.read(undefined,undefined,{})).not.toBe(first);expect(p.calls).toBe(2);
+    expect(()=>p.read(undefined,undefined,p.owner,{...pins,policy:'c'.repeat(64)})).toThrow('TOPIC_LEDGER_PINS');
+    expect(p.read(undefined,undefined,p.owner,pins,2).sequence).toBe(2);expect(p.calls).toBe(4);expect(()=>p.read(undefined,undefined,p.owner,pins,1)).toThrow();
+  });
+  it('a legitimate appended complete tail and older witness remain visible on a miss',()=>{
+    const p=memoFixture(inspectionMemo()),state=p.read(),third=p.f.codec.append(state,{...command,operationId:otherOperation,expectedRevision:1,exclude:['food']});
+    const result=p.read(Buffer.concat([p.f.chain,third]),p.f.nextWitness);expect(result.sequence).toBe(3);expect(result.witnessSequence).toBe(2);expect(p.f.codec.latest(result,scope).excluded).toEqual(['food','music']);expect(p.calls).toBe(2);
+  });
+  it('absolute30s expiry is not renewed by hits and regression/nonfinite clock disables retention',()=>{
+    let now=100;const p=memoFixture(inspectionMemo(()=>now)),first=p.read();now=30099;expect(p.read()).toBe(first);now=30100;expect(p.read()).not.toBe(first);expect(p.calls).toBe(2);
+    now=30099;p.read();p.read();expect(p.calls).toBe(4);now=NaN;p.read();p.read();expect(p.calls).toBe(6);
+  });
+  it('evicts oldest at32 entries without cross-ledger resurrection; explicit clear removes validation',()=>{
+    const memo=inspectionMemo(),p=memoFixture(memo),owners=Array.from({length:33},()=>({}));for(const owner of owners)p.read(undefined,undefined,owner);expect(p.calls).toBe(33);
+    p.read(undefined,undefined,owners[0]!);expect(p.calls).toBe(34);memo.clear();p.read(undefined,undefined,owners[0]!);expect(p.calls).toBe(35);
+  });
+  it('16MiB encoded cap evicts by retained weight and oversize results validate uncached',()=>{
+    // Synthetic oversized callback result exercises accounting only, not codec acceptance.
+    const memo=inspectionMemo(),f=codecFixture(),ring=new Keyring('v1',{...secrets});let calls=0;
+    const base=()=>f.codec.inspect(f.chain,f.nextWitness),owner={},large=()=>({...base(),budgetProbe:'x'.repeat(9*1024**2)}) as MemoInspection;
+    const take=(id:object,inspect=large)=>memo.read(id,f.chain,f.nextWitness,ring,pins,1024,()=>{calls++;return inspect();});
+    take(owner);take({});take(owner);expect(calls).toBe(3);
+    const huge=()=>({...base(),budgetProbe:'x'.repeat(17*1024**2)}) as MemoInspection;memo.clear();take(owner,huge);take(owner,huge);expect(calls).toBe(5);
+  });
+  it('validation exception clears an older slot rather than reviving it later',()=>{
+    const memo=inspectionMemo(),p=memoFixture(memo);p.read();const bad=Buffer.from(p.f.chain);bad[100]^=1;
+    expect(()=>memo.read(p.owner,bad,p.f.nextWitness,keys,pins,1024,()=>{throw Error('fixed test failure');})).toThrow('fixed test failure');p.read();expect(p.calls).toBe(2);
+  });
+});
+describe.skipIf(process.platform!=='linux')('inspection memo still runs real filesystem and high-water guards',()=>{
+  it('warm hits skip only codec work; unsafe permissions and missing witness still deny and clear',()=>{
+    const d=disk(),{ledger}=PrivateTopicLedger.initialize(d.options),spy=vi.spyOn(TopicLedgerCodec.prototype,'inspect');ledger.read(scope);const count=spy.mock.calls.length;ledger.read(scope);expect(spy.mock.calls.length).toBe(count);
+    fs.chmodSync(d.chain,0o644);expect(()=>ledger.read(scope)).toThrow('TOPIC_LEDGER_FILE_UNSAFE');fs.chmodSync(d.chain,0o600);ledger.read(scope);expect(spy.mock.calls.length).toBe(count+1);
+    const witness=fs.readFileSync(d.witness);fs.unlinkSync(d.witness);expect(()=>ledger.read(scope)).toThrow();fs.writeFileSync(d.witness,witness,{mode:0o600});ledger.read(scope);expect(spy.mock.calls.length).toBe(count+2);
+  });
+  it('required and process floors execute after a warm hit and failure drops memo, never floors',()=>{
+    const d=disk(),{ledger}=PrivateTopicLedger.initialize(d.options),spy=vi.spyOn(TopicLedgerCodec.prototype,'inspect');ledger.read(scope);const count=spy.mock.calls.length;
+    const internal=ledger as unknown as {required:{minimumSequence:number};floor:{sequence:number;digest:string}};internal.required.minimumSequence=2;expect(()=>ledger.read(scope)).toThrow('TOPIC_LEDGER_REQUIRED_REGRESSION');expect(spy.mock.calls.length).toBe(count);
+    internal.required.minimumSequence=1;ledger.read(scope);expect(spy.mock.calls.length).toBe(count+1);internal.floor.digest='f'.repeat(64);expect(()=>ledger.read(scope)).toThrow('TOPIC_LEDGER_PROCESS_REGRESSION');expect(spy.mock.calls.length).toBe(count+1);
+  });
+  it('warm lookup never masks same-object real key removal',()=>{
+    const map={...secrets},d=disk();d.options.keys=new Keyring('v1',map);const{ledger}=PrivateTopicLedger.initialize(d.options);ledger.read(scope);delete (map as Partial<typeof map>).v1;expect(()=>ledger.read(scope)).toThrow(expect.objectContaining({code:'KEY_VERSION_UNAVAILABLE'}));
+  });
+});
+
+describe('inspection memo expiry disposal',()=>{
+  it('owns one unref timer and releases expired entries without another read',()=>{
+    vi.useFakeTimers({toFake:['setTimeout','clearTimeout']});try{
+      let now=0;const memo=inspectionMemo(()=>now),p=memoFixture(memo),hidden=memo as unknown as {timer:ReturnType<typeof setTimeout>|undefined;entries:Map<object,unknown>;weight:number};
+      p.read();const timer=hidden.timer;expect(timer?.hasRef()).toBe(false);p.read(undefined,undefined,{});expect(hidden.timer).toBe(timer);expect(hidden.entries.size).toBe(2);
+      now=30000;vi.advanceTimersByTime(30000);expect(hidden.entries.size).toBe(0);expect(hidden.weight).toBe(0);expect(hidden.timer).toBeUndefined();expect(p.calls).toBe(2);
+    }finally{for(const memo of memoSubjects)memo.clear();vi.useRealTimers();}
+  });
+});
+
+describe('existing application disposal integration',()=>{
+  it('existing service-close and room-purge hooks clear global validation only',async()=>{
+    const clear=vi.spyOn(ledgerModule.TopicLedgerInspectionMemo.prototype,'clear'),games={snapshots:{clear:vi.fn(),forgetRoom:vi.fn()},histories:{clear:vi.fn(),forgetRoom:vi.fn()},dispatchFloors:new Map()} as unknown as TopicGames;
+    TopicGames.prototype.clearSnapshotCache.call(games);expect(clear).toHaveBeenCalledTimes(1);
+    const client={query:vi.fn(async()=>({rows:[],rowCount:0}))} as unknown as Parameters<TopicGames['purge']>[0];
+    await TopicGames.prototype.purge.call(games,client,scope.roomId);expect(clear).toHaveBeenCalledTimes(2);expect(client.query).toHaveBeenCalledTimes(2);
   });
 });

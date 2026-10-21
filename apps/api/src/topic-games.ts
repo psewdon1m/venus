@@ -1,3 +1,4 @@
+import {clearTopicLedgerInspectionCache} from './private-topic-ledger.js';
 /** Inactive until explicitly wired for protocol2 rooms. Never calls a legacy reader. */
 import {randomBytes,randomUUID} from 'node:crypto';
 import type pg from 'pg';
@@ -39,7 +40,7 @@ export class TopicGames implements RoomGameHooks {
  private readonly snapshots=new TopicSnapshotCache<TopicSnapshot>();
  private readonly histories=new TopicHistoryCache<TopicPlannerHistory>();
  // Existing boot/purge/service-close hooks clear both validation memos.
- clearSnapshotCache(){this.snapshots.clear();this.histories.clear();}
+ clearSnapshotCache(){this.snapshots.clear();this.histories.clear();clearTopicLedgerInspectionCache();}
  constructor(readonly rooms:Rooms,readonly options:TopicGamesOptions){requireThat(typeof options.enabled==='boolean'&&(options.privateTextChat===undefined||typeof options.privateTextChat==='boolean')&&options.safety&&options.source,'TOPIC_GAME_CONFIG_INVALID',503);}
  private privateTransportAvailable(snapshot:TopicSnapshot,data:Pick<TopicRoundData,'plan'>){return data.plan.interaction!=='pair_private'||this.options.privateTextChat===true&&['online','in_person'].includes(snapshot.baseline.context)&&snapshot.baseline.capabilities.includes('private_text_chat');}
  /** Minimal authenticated snapshot read for revocation while source/allow stores
@@ -293,7 +294,7 @@ export class TopicGames implements RoomGameHooks {
  async memberStateChanged(c:pg.PoolClient,room:string){const g=await this.row(c,room);if(!g||g.state!=='active'||await this.present(c,g))return;g.state='paused';g.pause_reason='transport';await this.clearPrivate(c,g);const r=await this.current(c,g);if(r&&r.data.plan.interaction==='pair_private'){this.close(r.data,'stopped');await this.saveRound(c,g,r.row,r.data,false);}else await this.bump(c,g,false);}
  async removing(c:pg.PoolClient,room:string,member:string){const g=await this.row(c,room);if(!g||!['waiting','active','paused'].includes(g.state))return;const selected=(await c.query('SELECT 1 FROM game_participants WHERE room_id=$1 AND session_id=$2 AND member_id=$3',[room,g.id,member])).rowCount;if(selected){g.state='aborted';g.pause_reason=null;await this.clearPrivate(c,g);await this.bump(c,g,false);}}
  async setupCleared(c:pg.PoolClient,room:string,member:string){await this.removing(c,room,member);}
- async purge(c:pg.PoolClient,room:string){this.snapshots.forgetRoom(room);this.histories.forgetRoom(room);await c.query('DELETE FROM topic_game_requests WHERE room_id=$1',[room]);await c.query('DELETE FROM game_sessions WHERE room_id=$1',[room]);this.dispatchFloors.delete(room);}
+ async purge(c:pg.PoolClient,room:string){clearTopicLedgerInspectionCache();this.snapshots.forgetRoom(room);this.histories.forgetRoom(room);await c.query('DELETE FROM topic_game_requests WHERE room_id=$1',[room]);await c.query('DELETE FROM game_sessions WHERE room_id=$1',[room]);this.dispatchFloors.delete(room);}
  /** Required startup barrier, before listen/admission. No source/allow ledger is
   * needed to revoke. Keep real immutable snapshots/history/exclusions; discard
   * private epochs, text/advice/chat/prepared refs and all pair acknowledgements. */

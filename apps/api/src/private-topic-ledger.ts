@@ -6,7 +6,8 @@
  * There is deliberately no pruning, compaction, reset or stale-lock recovery.
  */
 import * as fs from 'node:fs';
-import {randomBytes} from 'node:crypto';
+import {randomBytes,createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
 import {resolve,join,parse,sep} from 'node:path';
 import {Keyring,canonical,hash,type Cipher} from './security.js';
 
@@ -55,6 +56,60 @@ interface Exclusion extends TopicScope {
 interface Witness {schema:1;incarnation:string;sequence:number;digest:string;mac:string}
 interface Entry {header:Header;digest:string;body:Genesis|Exclusion}
 interface Inspection {incarnation:string;sequence:number;digest:string;entries:Entry[];witnessSequence:number}
+/** Only immutable codec work is memoized. The driver still reads/guards both files
+ * and checks required/process/witness floors on every call. No permission is cached. */
+export const topicLedgerInspectionMemoLimits=Object.freeze({entries:32,encodedBytes:16*1024**2,ttlMs:30000});
+interface MemoInspection {
+  chain:string;witness:string;pins:string;maximum:number;current:string;versions:readonly string[];tokens:readonly string[];
+  state:Inspection;expires:number;weight:number;
+}
+function immutableInspection<T>(value:T):T {
+  if(value&&typeof value==='object') {for(const item of Object.values(value))immutableInspection(item);if(!Object.isFrozen(value))Object.freeze(value);}
+  return value;
+}
+/** Internal bounded validation memo; exported only for portable focused controls. */
+export class TopicLedgerInspectionMemo {
+  private readonly entries=new Map<object,MemoInspection>();
+  private weight=0;
+  private lastNow=-Infinity;
+  private timer:ReturnType<typeof setTimeout>|undefined;
+  constructor(private readonly now:()=>number=()=>performance.now()) {}
+  clear(){this.entries.clear();this.weight=0;if(this.timer)clearTimeout(this.timer);this.timer=undefined;}
+  forget(owner:object){const old=this.entries.get(owner);if(old){this.entries.delete(owner);this.weight-=old.weight;}if(!this.entries.size&&this.timer){clearTimeout(this.timer);this.timer=undefined;}}
+  private clock(){const now=this.now();if(!Number.isFinite(now)||now<this.lastNow){this.clear();return undefined;}this.lastNow=now;return now;}
+  private prune(now:number){for(const [owner,entry] of this.entries)if(now>=entry.expires)this.forget(owner);}
+  private arm(now:number){if(this.timer||!this.entries.size)return;const expires=Math.min(...[...this.entries.values()].map(entry=>entry.expires));this.timer=setTimeout(()=>{this.timer=undefined;try{const fresh=this.clock();if(fresh!==undefined){this.prune(fresh);this.arm(fresh);}}catch{this.clear();}},Math.max(1,expires-now));this.timer.unref();}
+  private tokens(versions:readonly string[],keys:Keyring,current:string,currentToken:string){return [...new Set([...versions,current])].sort().map(version=>version===current?currentToken:keys.fingerprint({domain:'venus:private-topic-ledger:inspection-memo:v1',version},version));}
+  read(owner:object,chainBytes:Buffer,witnessBytes:Buffer,keys:Keyring,pins:TopicPins,maximum:number,inspect:()=>Inspection):Inspection {
+    try {
+      const now=this.clock(),current=keys.current;
+      // The current key must remain real even before it first signs these files.
+      const currentToken=keys.fingerprint({domain:'venus:private-topic-ledger:inspection-memo:v1',version:current},current);
+      if(now===undefined)return immutableInspection(inspect());
+      this.prune(now);
+      const chain=createHash('sha256').update(chainBytes).digest('hex'),witness=createHash('sha256').update(witnessBytes).digest('hex'),pinId=canonical(pins),old=this.entries.get(owner);
+      if(old&&old.chain===chain&&old.witness===witness&&old.pins===pinId&&old.maximum===maximum&&old.current===current){
+        const tokens=this.tokens(old.versions,keys,current,currentToken);
+        if(tokens.length===old.tokens.length&&tokens.every((value,index)=>value===old.tokens[index]))return old.state;
+      }
+      const state=immutableInspection(inspect());
+      // These versions come only from bytes whose complete MAC/AAD/shape/chain
+      // validation just succeeded. Unused noncurrent keys cannot affect them.
+      const versions=new Set<string>([(JSON.parse(witnessBytes.toString('utf8')) as Witness).mac.split(':')[0]!]);
+      for(let offset=0;offset<chainBytes.length;offset+=FRAME)versions.add((JSON.parse(chainBytes.subarray(offset,offset+FRAME).toString('utf8')) as RecordRow).cipher.key_version);
+      const used=Object.freeze([...versions].sort()),tokens=Object.freeze(this.tokens(used,keys,current,currentToken)),weight=64+Buffer.byteLength(JSON.stringify({chain,witness,pins:pinId,maximum,current,versions:used,tokens,state,expires:now+topicLedgerInspectionMemoLimits.ttlMs}),'utf8');
+      this.forget(owner);
+      if(weight<=topicLedgerInspectionMemoLimits.encodedBytes){
+        while(this.entries.size>=topicLedgerInspectionMemoLimits.entries||this.weight+weight>topicLedgerInspectionMemoLimits.encodedBytes)this.forget(this.entries.keys().next().value!);
+        this.entries.set(owner,{chain,witness,pins:pinId,maximum,current,versions:used,tokens,state,expires:now+topicLedgerInspectionMemoLimits.ttlMs,weight});this.weight+=weight;this.arm(now);
+      }
+      return state;
+    }catch(error){this.forget(owner);throw error;}
+  }
+}
+const inspectionMemo=new TopicLedgerInspectionMemo();
+/** Disposal only; high-water floors remain on the serving ledger instances. */
+export function clearTopicLedgerInspectionCache(){inspectionMemo.clear();}
 function scopeKey(scope:TopicScope) {return canonical({roomId:scope.roomId,ownerId:scope.ownerId});}
 function validateScope(scope:TopicScope) {demand(UUID.test(scope.roomId)&&UUID.test(scope.ownerId),'TOPIC_LEDGER_SCOPE');}
 function exists(path:string) {
@@ -294,16 +349,19 @@ export class PrivateTopicLedger {
     }
   }
   private reload(chain:string,witness:string) {
-    const state=this.codec.inspect(this.readFile(join(chain,'chain'),this.codec.maximumRecords*FRAME),this.readFile(join(witness,'witness'),WITNESS));
-    demand(state.incarnation===this.required.incarnation&&state.sequence>=this.required.minimumSequence,'TOPIC_LEDGER_REQUIRED_REGRESSION');
-    if(this.floor) demand(state.incarnation===this.floor.incarnation&&state.sequence>=this.floor.sequence&&
-      state.entries[this.floor.sequence-1]!.digest===this.floor.digest,'TOPIC_LEDGER_PROCESS_REGRESSION');
-    this.floor={incarnation:state.incarnation,sequence:state.sequence,digest:state.digest};
-    if(state.witnessSequence<state.sequence) {
-      this.withFile(join(chain,'chain'),fs.constants.O_RDONLY,fd=>this.sync(fd));
-      this.publishWitness(witness,this.floor);
-    }
-    return state;
+    try {
+      const chainBytes=this.readFile(join(chain,'chain'),this.codec.maximumRecords*FRAME),witnessBytes=this.readFile(join(witness,'witness'),WITNESS);
+      const state=inspectionMemo.read(this,chainBytes,witnessBytes,this.options.keys,this.codec.pins,this.codec.maximumRecords,()=>this.codec.inspect(chainBytes,witnessBytes));
+      demand(state.incarnation===this.required.incarnation&&state.sequence>=this.required.minimumSequence,'TOPIC_LEDGER_REQUIRED_REGRESSION');
+      if(this.floor) demand(state.incarnation===this.floor.incarnation&&state.sequence>=this.floor.sequence&&
+        state.entries[this.floor.sequence-1]!.digest===this.floor.digest,'TOPIC_LEDGER_PROCESS_REGRESSION');
+      this.floor={incarnation:state.incarnation,sequence:state.sequence,digest:state.digest};
+      if(state.witnessSequence<state.sequence) {
+        this.withFile(join(chain,'chain'),fs.constants.O_RDONLY,fd=>this.sync(fd));
+        this.publishWitness(witness,this.floor);
+      }
+      return state;
+    }catch(error){inspectionMemo.forget(this);throw error;}
   }
   private directory(path:string) {
     const root=parse(path).root;let prefix=root;
@@ -315,6 +373,7 @@ export class PrivateTopicLedger {
     } catch(error) {fs.closeSync(fd);throw error;}
   }
   private locked<T>(operation:(chain:string,witness:string)=>T):T {
+    try {
     const chainFd=this.directory(this.chainDirectory);let witnessFd:number|undefined;
     try {
       witnessFd=this.directory(this.witnessDirectory);
@@ -331,5 +390,6 @@ export class PrivateTopicLedger {
         demand(owned.ino===named.ino&&owned.dev===named.dev,'TOPIC_LEDGER_LOCK_CHANGED');fs.unlinkSync(lock);
       }
     } finally {if(witnessFd!==undefined) fs.closeSync(witnessFd);fs.closeSync(chainFd);}
+    }catch(error){inspectionMemo.forget(this);throw error;}
   }
 }
