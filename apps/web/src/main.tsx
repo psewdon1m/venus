@@ -74,7 +74,10 @@ function App() {
           {roomId?<button data-testid="reaccept-room" disabled={!hasApproval||busy} onClick={()=>{if(!policy) return;void perform(async()=>{await api.request(`/api/v1/rooms/${roomId}/me/entry-acceptance`,acceptance(policy));await refresh();reacceptRequested.current=false;setNeedsReaccept(false);setConnectionEpoch(v=>v+1);});}}>{t.acceptOffer}</button>:null}
         </>}
       </section>);
-  return <main>
+  return <main onFocus={event=>{
+    const field=event.target;
+    if(field instanceof HTMLElement&&field.matches('input,select')) field.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});
+  }}>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
       <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
     </nav>
