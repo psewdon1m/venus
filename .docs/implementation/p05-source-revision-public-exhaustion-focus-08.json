@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "revision": "P05-PUBLIC-EMPTY-PRIVATE-AND-EXPLICIT-INVITE-SELECTION-08",
+  "kind": "COMPATIBLE_PLANNER_DOMAIN_EXTENSION_AND_FRONTEND_SELECTION_FIX",
+  "parent_source_identity": "acb2945827a8961a3137df0938d6982d90c841d80d6f9fde6fe048374c397cc4",
+  "parent_source_count": 1879,
+  "selection_revision": "RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1",
+  "serialized_history_family": "RE-1.P05-TOPIC-3",
+  "ADR": ".docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md",
+  "changed_source_files": {
+    "apps/web/src/room-shell.tsx": "2bcf1f8a5835f47f7bcdaa8e935676f0433cf46d28b8484734dfdb977ec15ff9",
+    "packages/relationship-engine/src/topic-planner.ts": "14ccbb92b9daefaf2b80158ffdbc06b7f82eba0ea18afde9ee34135d46c341d1",
+    "packages/relationship-engine/src/topic-planner.test.ts": "de857fe4e81454cd6f489269847666627751677242e74437b550cdf93c7b40d7",
+    "packages/relationship-engine/src/index.ts": "4d028d0abb143dd55324604b6c17f4043b1f7b6f7a8cf713a9a50e9ed0d4e341",
+    ".docs/adr/current-index.json": "a724f729971e636cbddb44b9661399daa58f4eae4ff299a3812ffb2b6628d88e",
+    ".docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md": "3bc9785407d12162b3b27344e4fa6440d440ede4720b6c0a15f1fe3144cc7443"
+  },
+  "before_source_files": {
+    "apps/web/src/room-shell.tsx": "0b32ece8232f42a07f5c39515c574bf4c8a8a9f0a0f7498acee4acbeebc42298",
+    "packages/relationship-engine/src/topic-planner.ts": "73f1cc9696665dd5c362cd471d832fbc81b04d105810322cf9103dfb720f3c35",
+    "packages/relationship-engine/src/topic-planner.test.ts": "e56a7c0c1d06179a360855503e03e7869fe0902bb9f5689fb50ebd088f809b88",
+    "packages/relationship-engine/src/index.ts": "3702bb857f136463562c1942ba6fe17248ff7122103fe89da5106f30b92edf01",
+    ".docs/adr/current-index.json": "d0debd3e98b05549facaca9605636e17a765053cfd55ae6f141a9069ce9beaa4"
+  },
+  "planner_behavior": "Reuse the existing private branch only when public pool is empty and baseline private options/stage/original25percent cap permit. Opportunity existence never reads hidden effective topics/exclusions/candidate IDs. Existing private candidate can remain safely empty; no resampling or unsafe substitution. Normal successful paths retain RNG domains and draw order.",
+  "frontend_behavior": "Invitation selection is explicit onClick/currentTarget.select, rather than unsolicited onFocus/Tab selection. Native Ctrl+A remains. Main focus/keyup and three textarea handlers, CSS, nativeTab, all UI criteria and budgets unchanged. Trace proves late scroll rollback after correct handlers; selection/caret origin is a strong structural inference, not a traced Firefox-internal task.",
+  "failure_inputs": {
+    "inference_case": 23999,
+    "seed": "venus:P03-M2:holdout:FG:G:5:yes_but:in_person:399",
+    "R": 100,
+    "completed": 98,
+    "public_used": 93,
+    "private_used": 5,
+    "minimum_remaining_legal_private_per_pair": 30,
+    "diagnosis_INDEX_sha256": "1ee488b603b8fb901375f19749c57e0c0bc0fbea163e1892e53243cb5b13099f",
+    "original05_terminal_sha256": "16f3460e08044c9793f86c4fa1f137e96f2abe1d68fdf5ede32e4add232b8526",
+    "focus_diagnostic_project": "venus-v2-layout-0f953f18807b",
+    "focus_original_first_sha256": "76cda74d15bdbeb72005b19841a7b4d95e2746684bf78ef8f4173aa02f51a509",
+    "focus_causal_trace_sha256": "198dfb162cc2bc55ebb9215c938f51eb304573ed30062432865a36fdcdf5c927",
+    "focus_report_sha256": "0227f3cd516d23082b6a3062548f1c4ea9ac4ba44588075242ded50d630dcc70"
+  },
+  "validation": {
+    "before_planner_fix": {
+      "exit": 1,
+      "PASS": 67,
+      "FAIL": 2,
+      "scope": "Focused69 existing+3regressions; two reproduce public exhaustion"
+    },
+    "first_after_fix": {
+      "exit": 1,
+      "PASS": 68,
+      "FAIL": 1,
+      "finding": "New counterfactual test changed hidden topics without increasing safety revision; original TOPIC_SAFETY_REWIND correctly refused. Fixture corrected to revision2, production guard unchanged."
+    },
+    "corrected_focused": {
+      "exit": 0,
+      "PASS": 69
+    },
+    "compiler_exit": 0,
+    "web_typecheck_exit": 0,
+    "focused_lint_exit": 0,
+    "host_JS_exit": 0,
+    "host_JS_PASS": 1107,
+    "host_JS_platform_SKIP": 207,
+    "host_JS_files": 76,
+    "host_JS_seconds": 29.45,
+    "host_preflight_exact_four_changed_code_bytes": true,
+    "normative_ADR_revision_metadata_added_after_host_preflight": true,
+    "native_current_source_and_clean_quality_PENDING": true
+  },
+  "unchanged": [
+    "Cards470r4 and provisional owner scope/digest",
+    "Snapshot/history/round closed shapes, SQL, API/wire schemas, ACL/consent/TTL/finalfences",
+    "TOPIC_RANDOM_DOMAIN and ordinary successful-path RNG order",
+    "Original full C2/M3 case counts/seeds/thresholds, first genuine focus/layout oracle/deadlines"
+  ],
+  "compatibility": "Retain history reader family3; separate selection patch identity and exact source bind changed sampler. No new serialized fields. Full uniform new-source C2/M3 rerun, no mixed source carry. Fresh current9UI/original14OCI/quality/CI and independent gates required.",
+  "rollback": "Restore coherent B4/previous bundle; valid history remains readable and private epochs stay revoked. Earlier future public-exhaustion refusal and invite selection scroll limitation can return. Bounded read/boot/lifecycle compatibility, not identical future planning.",
+  "full_stage_PASS": false,
+  "P06_started": false
+}

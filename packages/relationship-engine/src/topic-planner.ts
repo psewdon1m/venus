@@ -12,6 +12,9 @@ import {FrozenTopicMap, type TopicReference} from './topic-map.js';
  * transactionally, and repeats all admission/consent/TTL guards at final enqueue.
  * Pure planning does not grant invitation/action consent or private delivery. */
 export const TOPIC_ALGORITHM = 'RE-1.P05-TOPIC-3' as const;
+// Compatible partial-function extension; serialized history readers remain v3.
+// Exact source + this patch identity + seed + pins identify selection behaviour.
+export const TOPIC_SELECTION_REVISION = 'RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1' as const;
 // Selection semantics are versioned separately from the retained RNG domain.
 // The exact-ID correction never makes public scheduling consume private history.
 export const TOPIC_RANDOM_DOMAIN = 'RE-1.P05-TOPIC-2' as const;
@@ -296,10 +299,10 @@ export function selectNextTopicRound(snapshot:TopicSnapshot,history:TopicPlanner
   const stage=progressionStage(index,s.total_rounds),base=options(snapshot,pack,map,stage),privates=base.filter(o=>o.kind==='pair_private');
   const publicRows=history.public_history;
   const rng=new Random(s.seed,{domain:'public-schedule',room_id:s.room_id,session_id:s.session_id,index,public_history:publicRows,pins:map.pins});
-  const opportunity=privates.length>0&&history.rounds.filter(r=>r.interaction==='pair_private').length<Math.ceil(.25*s.total_rounds)
-    &&rng.next()<(stage<3?0:stage===3?.22:.4);
+  const privateAvailable=privates.length>0&&history.rounds.filter(r=>r.interaction==='pair_private').length<Math.ceil(.25*s.total_rounds);
+  const opportunity=privateAvailable&&rng.next()<(stage<3?0:stage===3?.22:.4);
   const roundId=rng.uuid();let round:TopicRound;
-  if(opportunity){
+  const selectPrivate=():TopicRound=>{
     const privateRng=new Random(s.seed,{domain:'private-option',room_id:s.room_id,session_id:s.session_id,index,round_id:roundId,pins:map.pins,
       private_history:history.private_history,public_history:publicRows});
     let pool=privates;
@@ -308,14 +311,21 @@ export function selectNextTopicRound(snapshot:TopicSnapshot,history:TopicPlanner
       &&effectivePrivateCards(history,o.actors,o.cards,map,state).length>0))
       pool=pool.filter(o=>pairKey(o.actors)!==pairKey(previous.actors));
     const selected=pickOption(privateRng,pool,[...publicRows,...history.private_history]);
-    round={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:'pair_private',actors:[...selected.actors],
+    const selectedRound:TopicRound={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:'pair_private',actors:[...selected.actors],
       primary_member_id:selected.actors[0]!,card:null,requires_action_consent:true,disclosure:'selected',
       baseline_private_max_intensity:Math.max(...privates.flatMap(o=>o.cards.map(c=>c.min_comfort))),attempts:[]};
-    const attempt=candidate(snapshot,history,round,pack,map,state,1,0);round={...round,card:attempt.card,attempts:[attempt]};
-  }else{
+    const attempt=candidate(snapshot,history,selectedRound,pack,map,state,1,0);return {...selectedRound,card:attempt.card,attempts:[attempt]};
+  };
+  if(opportunity)round=selectPrivate();
+  else{
     let pool=base.filter(o=>o.kind!=='pair_private').map(o=>({...o,cards:o.cards.filter(c=>!blocked(c,publicRows,map))})).filter(o=>o.cards.length);
     const intensity=previousPublicIntensity(snapshot,history,pack,map);
     if(intensity>=2&&rng.next()<.35){const softer=pool.map(o=>({...o,cards:o.cards.filter(c=>c.min_comfort<intensity)})).filter(o=>o.cards.length);if(softer.length)pool=softer;}
+    // This trigger is public/baseline only. Hidden topic availability must not
+    // determine whether an opportunity exists; the unchanged private branch may
+    // still return a truthful safe-empty candidate with all consent guards.
+    if(pool.length===0&&privateAvailable)round=selectPrivate();
+    else{
     assertEngine(pool.length>0,'TOPIC_SAFE_POOL_EXHAUSTED');
     const pairs=pool.filter(o=>o.kind==='pair_public'),general=pool.filter(o=>o.kind==='group'||o.kind==='solo');
     if(pairs.length&&general.length)pool=rng.next()<[.2,.4,.6,.6][stage-1]!?pairs:general;
@@ -324,6 +334,7 @@ export function selectNextTopicRound(snapshot:TopicSnapshot,history:TopicPlanner
     const count=appearances(publicRows),primary=actors[0]??rng.weighted(s.players,p=>1/(1+(count.get(p.id)??0))).id;
     round={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:card.interaction,actors,primary_member_id:primary,card:ref(card),
       requires_action_consent:card.consent==='bilateral',disclosure:'selected',baseline_private_max_intensity:0,attempts:[]};
+    }
   }
   let next:TopicPlannerHistory={...history,revision:history.revision+1,safety_revision:state.revision,safety_digest:safetyDigest(state),rounds:[...history.rounds,round]};
   if(round.card&&round.interaction==='pair_private'){const card=pack.card(round.card.card_id);

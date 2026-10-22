@@ -59,6 +59,42 @@ function row(id:string,sequence=1,actors:string[]=[]):TopicHistoryRecord {
 }
 const mutable=<T>(v:T)=>v as unknown as Record<string,unknown>;
 const unorderedPair=(actors:readonly string[])=>[...actors].sort().join(':');
+describe('public repertoire exhaustion with remaining private opportunities',()=>{
+ function depleted(s:TopicSnapshot,completed=10){
+  const state=safety(s);let history=createTopicHistory(s,pack,map);
+  for(let n=0;n<completed;n++){
+   const next=selectNextTopicRound(s,history,pack,map,state);history=next.history;
+   if(next.round.card)history=recordTopicOutcome(s,history,pack,map,{expected_history_revision:history.revision,round_id:next.round.round_id,offer_epoch:null,card:next.round.card,outcome:'disclosed'}).history;
+  }
+  const seen=new Set(history.public_history.flatMap(r=>map.entry(r.card_id).semantic_family_ids)),prior:TopicHistoryRecord[]=[];
+  for(const card of pack.cards){
+   if(card.mode!==s.baseline.mode||card.interaction==='pair_private'||!map.allowed(card)||!card.meeting_contexts.includes(s.baseline.context)||card.participants_required>s.baseline.players.length)continue;
+   const families=map.entry(card.id).semantic_family_ids;if(families.some(id=>seen.has(id)))continue;
+   families.forEach(id=>seen.add(id));prior.push({...row(card.id,prior.length+1,s.baseline.players.slice(0,card.participants_required).map(p=>p.id)),context:s.baseline.context,stage:4});
+  }
+  return immutableTopicHistory({...history,public_history:[...prior,...history.public_history].map((r,i)=>({...r,sequence:i+1}))},s,pack,map);
+ }
+ it('uses remaining private opportunities without exceeding the existing session cap',()=>{
+  const s=snapshot('P05-PUBLIC-EMPTY-PRIVATE-1'),state=safety(s);let history=depleted(s);
+  for(let n=0;n<5;n++){
+   const next=selectNextTopicRound(s,history,pack,map,state);history=next.history;
+   expect(next.round.interaction).toBe('pair_private');expect(next.round.requires_action_consent).toBe(true);expect(next.round.card).not.toBeNull();
+  }
+  expect(history.rounds.filter(r=>r.interaction==='pair_private')).toHaveLength(5);
+  expect(()=>selectNextTopicRound(s,history,pack,map,state)).toThrow('TOPIC_SAFE_POOL_EXHAUSTED');
+ });
+ it('keeps the public opportunity independent of hidden topic allowance, including safe-empty',()=>{
+  const s=snapshot('P05-PUBLIC-EMPTY-PRIVATE-1'),history=depleted(s);
+  const allowed=selectNextTopicRound(s,history,pack,map,safety(s)),empty=selectNextTopicRound(s,history,pack,map,safety(s,[],2));
+  expect(allowed.round.card).not.toBeNull();expect(empty.round.card).toBeNull();expect(empty.round.interaction).toBe('pair_private');
+  expect(topicPublicProjection(allowed.round,allowed.history)).toEqual(topicPublicProjection(empty.round,empty.history));
+ });
+ it('still refuses without the baseline private channel or before the private progression stage',()=>{
+  const noChat=snapshot('P05-PUBLIC-EMPTY-NO-CHAT',{context:'online',capabilities:[]}),early=snapshot('P05-PUBLIC-EMPTY-EARLY');
+  expect(()=>selectNextTopicRound(noChat,depleted(noChat),pack,map,safety(noChat))).toThrow('TOPIC_SAFE_POOL_EXHAUSTED');
+  expect(()=>selectNextTopicRound(early,depleted(early,0),pack,map,safety(early))).toThrow('TOPIC_SAFE_POOL_EXHAUSTED');
+ });
+});
 describe('sessionwide private exact-card uniqueness',()=>{
  it('never reoffers an exact private ID to another pair in the same native session',()=>{
   const s=snapshot('P05-EXACT-ID-REGRESSION-1',{total_rounds:100,context:'online'},8),state=safety(s);
