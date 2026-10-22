@@ -76,7 +76,7 @@ function App() {
       </section>);
   return <main onFocus={event=>{
     const field=event.target;
-    if(field instanceof HTMLElement&&field.matches('input,select')) field.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});
+    if(field instanceof HTMLElement&&field.matches('input,select,button')) field.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'});
   }}>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
       <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
