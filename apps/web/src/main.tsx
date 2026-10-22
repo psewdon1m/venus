@@ -11,6 +11,27 @@ export function message(t:Text,error:unknown) {
   const keys:Record<string,keyof Text>={ROOM_FULL:'roomFull',INVITE_EXPIRED:'roomClosed',ROOM_CLOSED:'roomClosed',AUTH_REQUIRED:'sessionEnded',NOT_FOUND:'inviteInvalid',INVITE_INVALID:'inviteInvalid',REVISION_CONFLICT:'revisionConflict',IDEMPOTENCY_CONFLICT:'revisionConflict',ENTRY_POLICY_UNAVAILABLE:'policyUnavailable',ENTRY_ACCEPTANCE_REQUIRED:'acceptanceRequired',ENTRY_REACCEPT_REQUIRED:'reacceptRequired',RATE_LIMITED:'rateLimited',INVALID_NAME:'invalidName',HOST_REQUIRED:'hostRequired',INVALID_REQUEST:'invalidInput',GAME_SETTINGS_LOCKED:'gameSettingsLocked'};
   return t[keys[code]??'serviceUnavailable'];
 }
+type FocusCorrectionState={generation:number;frame:number|null;keyboard:boolean};
+function cancelFocusCorrection(state:FocusCorrectionState) {
+  state.generation++;
+  if(state.frame!==null) window.cancelAnimationFrame(state.frame);
+  state.frame=null;
+}
+function interruptFocusCorrection(state:FocusCorrectionState) {
+  state.keyboard=false;cancelFocusCorrection(state);
+}
+// The callback retains only a generation and bookkeeping, never a private DOM field.
+function focusCorrectionCallback(state:FocusCorrectionState,generation:number) {
+  return ()=>{
+    if(state.generation!==generation) return;
+    state.frame=null;
+    if(!document.hasFocus()) return;
+    const field=document.activeElement;
+    if(!(field instanceof HTMLElement)||!field.isConnected||!field.matches('input,select,button,textarea')||!field.matches(':focus-visible')) return;
+    const rect=field.getBoundingClientRect();
+    if(rect.width<=window.innerWidth&&rect.height<=window.innerHeight&&(rect.top<0||rect.left<0||rect.bottom>window.innerHeight||rect.right>window.innerWidth)) field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
+  };
+}
 function App() {
   const [api]=useState(()=>new SessionApi());const [locale,setLocale]=useState<Locale>('ru');
   const [policy,setPolicy]=useState<EntryPolicy|null>(null),[room,setRoom]=useState<RoomView|null>(null);
@@ -18,6 +39,8 @@ function App() {
   const [retry,setRetry]=useState<(()=>Promise<void>)|null>(null);
   const [accepted,setAccepted]=useState(false),[adult,setAdult]=useState(false);
   const reacceptRequested=useRef(false);
+  const focusCorrection=useRef<FocusCorrectionState>({generation:0,frame:null,keyboard:false});
+  useEffect(()=>{const state=focusCorrection.current;return()=>cancelFocusCorrection(state);},[]);
   const [needsReaccept,setNeedsReaccept]=useState(false),[connectionEpoch,setConnectionEpoch]=useState(0);
   const [name,setName]=useState(''),[context,setContext]=useState<'online'|'in_person'>('online');
   const [initial]=useState(()=>new URLSearchParams(location.hash.slice(1)));
@@ -75,9 +98,13 @@ function App() {
         </>}
       </section>);
   return <main onFocus={event=>{
+    const state=focusCorrection.current;cancelFocusCorrection(state);
     const field=event.target;
-    if(field instanceof HTMLElement&&field.matches('input,select,button')&&field.matches(':focus-visible')) field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
-  }} onKeyUp={event=>{
+    if(field instanceof HTMLElement&&field.matches('input,select,button,textarea')&&field.matches(':focus-visible')) {
+      field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
+      if(state.keyboard) state.frame=window.requestAnimationFrame(focusCorrectionCallback(state,state.generation));
+    }
+  }} onBlur={()=>cancelFocusCorrection(focusCorrection.current)} onPointerDownCapture={()=>interruptFocusCorrection(focusCorrection.current)} onWheelCapture={()=>interruptFocusCorrection(focusCorrection.current)} onTouchStartCapture={()=>interruptFocusCorrection(focusCorrection.current)} onKeyDownCapture={event=>{if(event.key==='Tab')focusCorrection.current.keyboard=true;else interruptFocusCorrection(focusCorrection.current);}} onKeyUp={event=>{
     if(event.key!=='Tab') return;
     const field=event.target;
     if(field instanceof HTMLElement&&field===document.activeElement&&field.matches('input,select,button,textarea')) field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
