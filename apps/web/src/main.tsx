@@ -77,6 +77,10 @@ function App() {
   return <main onFocus={event=>{
     const field=event.target;
     if(field instanceof HTMLElement&&field.matches('input,select,button')&&field.matches(':focus-visible')) field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
+  }} onKeyUp={event=>{
+    if(event.key!=='Tab') return;
+    const field=event.target;
+    if(field instanceof HTMLElement&&field===document.activeElement&&field.matches('input,select,button,textarea')) field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
   }}>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
       <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
