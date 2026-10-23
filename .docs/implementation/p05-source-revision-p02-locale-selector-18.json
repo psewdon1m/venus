@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "revision": "P05-P02-LOCALE-SELECTOR-18",
+  "kind": "CI_TEST_COMPATIBILITY_ONLY",
+  "failed_ci_head": "967d634c1ead80f5fbe186b677eaeaa09af941f1",
+  "failed_job": 120173868213,
+  "failed_log_sha256": "301e054ad97a0a838f71ba711d8df029cbbb683b0341a47c7810ada0361a0cd2",
+  "finding": "P02 original20 tests:16PASS/4FAIL in shared browser setup waiting obsolete exact EN button name. Current APP and exact967d blob expose language buttons with lang attribute and Русский/English/Türkçe labels, not a locale select.",
+  "fix": "Replace sole obsolete locale getByRole(name uppercase locale) with existing .languages button[lang=locale] click. Preserve defaultRU condition, UI click, all20 scenarios, entry/18+/locale/XSS/private/safety assertions/timeouts and existing helper.",
+  "before_source_files": {
+    "apps/api/src/p02.integration.test.ts": "7526950dc1a34be736818575b9a414b3e7b2a8b3eff11a2ae0b5f91fd12a6b24"
+  },
+  "changed_source_files": {
+    "apps/api/src/p02.integration.test.ts": "5436b2676b3d55772afb07a4212e2832aefbd8d14332ca18e9da12b89a499163"
+  },
+  "APP_correspondence": {
+    "path": "apps/web/src/main.tsx",
+    "sha256": "cf19987a458928a48cfeaf3d9c44d76aa8680862878f648a1ae43bed7bdb1f46",
+    "exact_failed_CI_blob": true,
+    "APP_changed": false
+  },
+  "root_source_revision17": "Preserved bytewise by this agent; separate CI compatibility revision, not rewritten. P03v4/tag/corpus unchanged.",
+  "validation": "Focused existing ESLint on changed test only; original actual P02/CI rerun remains root work after UI75378. No Docker/native/browser run by author. API production tsconfig excludes test.ts, so no false claim that API typecheck checks this file.",
+  "rollback": "Restore exact preceding test selector bytes; remove this revision18. ActualAPP unchanged; old EN-name setup failures return.",
+  "full_stage_PASS": false,
+  "P06_started": false
+}

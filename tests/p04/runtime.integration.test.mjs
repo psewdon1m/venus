@@ -146,7 +146,12 @@ describe('P04 actual PostgreSQL, HTTPS and WS catalogue controls',()=>{
     assert.equal((await ok(r.host,game(r)+'/current')).state,'aborted');
     for(const [index,connection] of [privateRoom.hostWs,privateRoom.guestWs].entries()) await waitFor(()=>connection.frames.some(f=>f.type==='game.private_cleared'&&f.stream_rev>lastPrompt[index]));
     const denied=await privateRoom.host.call(privateRoom.privatePath);assert.notEqual(denied.status,200);assert.equal(denied.text.includes('prompt'),false);
-    const terminal=await ok(privateRoom.host,privateRoom.privatePath.replace(/\/private$/,'/action-consent'));assert.equal(terminal.state,'stopped');
+    const deniedConsent=await privateRoom.host.call(privateRoom.privatePath.replace(/\/private$/,'/action-consent'));
+    assert.equal(deniedConsent.status,404);assert.equal(deniedConsent.body.code,'PRIVATE_CHAT_UNAVAILABLE');
+    const stoppedRow=(await pool.query('SELECT * FROM game_rounds WHERE session_id=$1 ORDER BY round_index DESC LIMIT 1',[privateRoom.gameId])).rows[0];
+    const terminal=keys.decrypt(stoppedRow.cipher,`game-round:${privateRoom.id}:${privateRoom.gameId}:${stoppedRow.id}:1`);
+    assert.equal(terminal.state,'stopped');assert.equal(terminal.invitation.state,'stopped');assert.equal(terminal.action.state,'stopped');
+    assert.deepEqual(terminal.invitation.acks,[]);assert.deepEqual(terminal.action.acks,[]);
     mark('P04-PRIVATE-REVOKE-CLEAR',{both_prior_recipients_cleared:true,monotonic_stream_revisions:true});
     await assert.rejects(operator.catalog.activate(packs[0].digest,await generation(),'SYNTHETIC-OPERATOR',true),e=>e.code==='CATALOG_WITHDRAWN');
     await activate(packs[1]);mark('P04-PUBLIC-REVOKE-FENCE',{delayed_actual_ws_projection:true,withdrawn_card:packs[0].cards[0].id});

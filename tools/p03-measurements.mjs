@@ -155,8 +155,8 @@ export async function main(args=process.argv.slice(2)) {
   const protocol=readFileSync(protocolPath),protocolHash=hash(protocol),source=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sourceIdentity=execFileSync('python',['-B','tools/stage_inventory.py'],{encoding:'utf8'}).trim();
   const inputDescriptor=measurementInputs();
   if(!probe) {
-    const tag='p03-m3-preregistered-20261018',preregistered=execFileSync('git',['show',tag+':'+protocolPath]);assert(hash(preregistered)===protocolHash,'PROTOCOL_NOT_PREREGISTERED');assert(JSON.parse(protocol).protocol_revision==='P03-M3','PROTOCOL_REVISION');
-    const descriptorPath='.docs/implementation/p03-measurement-inputs-v3.json',descriptorRaw=readFileSync(descriptorPath);assert(digest(JSON.parse(descriptorRaw))===digest(inputDescriptor),'INPUT_DESCRIPTOR_MISMATCH');assert(hash(execFileSync('git',['show',tag+':'+descriptorPath]))===hash(descriptorRaw),'INPUT_DESCRIPTOR_NOT_PREREGISTERED');
+    const tag='p03-m3-current-inputs-20261023',preregistered=execFileSync('git',['show',tag+':'+protocolPath]);assert(hash(preregistered)===protocolHash,'PROTOCOL_NOT_PREREGISTERED');assert(JSON.parse(protocol).protocol_revision==='P03-M3','PROTOCOL_REVISION');
+    const descriptorPath='.docs/implementation/p03-measurement-inputs-v4.json',descriptorRaw=readFileSync(descriptorPath);assert(digest(JSON.parse(descriptorRaw))===digest(inputDescriptor),'INPUT_DESCRIPTOR_MISMATCH');assert(hash(execFileSync('git',['show',tag+':'+descriptorPath]))===hash(descriptorRaw),'INPUT_DESCRIPTOR_NOT_PREREGISTERED');
     for(const [path,expected] of Object.entries(inputDescriptor.raw_input_sha256)) assert(hash(execFileSync('git',['show',tag+':'+path]))===expected,'MEASUREMENT_INPUT_CHANGED_SINCE_PREREGISTRATION:'+path);
     const changed=measuredChanges();assert(changed.length===0,'DIRTY_MEASURED_SOURCE:'+changed.join(','));
   }
