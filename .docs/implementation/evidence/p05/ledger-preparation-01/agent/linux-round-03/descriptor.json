@@ -1,0 +1,17 @@
+{
+  "kind": "SCOPED_SCRATCH_LINUX_PREFLIGHT",
+  "timestamp": "2026-10-19T18:56:19.5156730+03:00",
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "binds": [
+    "C:\\.projects\\venus\\.docs\\implementation\\evidence\\p05\\ledger-preparation-01\\agent\\private-topic-ledger.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\evidence\\p05\\ledger-preparation-01\\agent\\private-topic-ledger.test.ts"
+  ],
+  "volume": "venus-p05-topic-ledger-f780e214cd12",
+  "run": "venus-p05-topic-ledger-f780e214cd12-test",
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "test_sha256": "6fe653ed0478361ca4184c82bd6cef1d782ff298d52dd2e61e5c74dd7241275b",
+  "bootstrap": "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/private-topic-ledger.test.ts','apps/api/src/security.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/private-topic-ledger.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/private-topic-ledger.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);",
+  "id": "f780e214cd12",
+  "init": "venus-p05-topic-ledger-f780e214cd12-init",
+  "source_sha256": "52655c6ed3f3754bc403e8f4c9d7610e1c487d2a4c8ccab175f958612622a284"
+}

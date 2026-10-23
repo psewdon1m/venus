@@ -1,0 +1,5 @@
+# Additive operational05 binding only
+
+Predecessor04 is preserved at root .artifacts/p05-compatible-rollback-producer04, INDEX10659a29e2d60f90dfe952d991a29435f20e51f059dd6b4227a18e1b989df666. Twenty-two accepted method modules match this producer; scenarios.mjs has only the explicit new /view oracle. Overwritten04 authority files are preserved as pinned-inputs/historical04-*.bytes. Included source is genuine materialized A3; B is genuine prebundle B3. Previous04 engine2 bindings cannot be silently reused with engine3 snapshots. Full A/B root receipts,76 anchors each, dependency copies and compatibility deltas are explicit.
+
+One additive scenarios.mjs oracle covers the newly introduced /view API. No original14 assertion, legacy denial oracle, fixture, resource threshold, clock or cleanup condition changes. author-rebind-controls is a binding-only nine-control model; no ACK or actual permission is issued. Existing finite results retain their original provenance. Independent application and method review, copied exact review indexes within materialized workspace, fresh external root ACK and one actual live14 run remain pending.

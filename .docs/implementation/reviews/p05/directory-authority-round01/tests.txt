@@ -1,0 +1,74 @@
+{"kind":"exact-image-inputs","node":"v24.22.0","uid":1000,"hashes":{"apps/api/src/private-topic-ledger.ts":"cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a","apps/api/src/independent.test.ts":"ea1877bf5549390184e57ebb99abe58de6280545fbae9b631ebcba5b209976d8","apps/api/src/security.ts":"5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25","apps/api/src/topic-room-lifecycle.ts":"60c8f41b2409f23b7969d11067266ffdf651dbc648c99905111ad7dfc6a9cef4","apps/api/src/topic-room-registry.ts":"23de303a222dc9e30c6b50f86219662c9735076468ac7db4303cb8ac1b1a659e","apps/api/src/private-topic-preferences.ts":"27fbaae01d684849bb5205820d3bb6cfd52602abc4bf5b13cbad24f2ccf130ff","apps/api/src/rooms.ts":"bcd9094295d55bef75ae8483da7789bfbce299e36262689ffa326ed005663187","apps/api/src/topic-room-directories.ts":"91ff6dc131409e74746ffad6fccc5af895fd20563ecf4181559591d8ef9b7af9"}}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/app[39m
+
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mhealthy provisioner callback composition births once and permits actual metadata/content fences[32m 165[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mpersonal room-child corruption alone remains isolated with healthy allocator parents[32m 119[2mms[22m[39m
+ [31m×[39m apps/api/src/independent.test.ts[2m > [22mSAFETY-GUARD-02 missing personal ROOT parent must not disable metadata safety through allocator callback[32m 66[2mms[22m[39m
+[31m   → promise rejected "Error: ENOENT: no such file or directory,… { …(4) }" instead of resolving[39m
+ [31m×[39m apps/api/src/independent.test.ts[2m > [22mSAFETY-GUARD-02 mode personal ROOT parent must not disable metadata safety through allocator callback[32m 64[2mms[22m[39m
+[31m   → promise rejected "Error: Request could not be completed { …(2) }" instead of resolving[39m
+ [31m×[39m apps/api/src/independent.test.ts[2m > [22mSAFETY-GUARD-02 symlink personal ROOT parent must not disable metadata safety through allocator callback[32m 63[2mms[22m[39m
+[31m   → promise rejected "Error: Request could not be completed { …(2) }" instead of resolving[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mmetadata ROOT parent missing continues to deny actual safety fence[32m 62[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mmetadata ROOT parent mode continues to deny actual safety fence[32m 68[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mmetadata ROOT parent symlink continues to deny actual safety fence[32m 67[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/independent.test.ts > SAFETY-GUARD-02 missing personal ROOT parent must not disable metadata safety through allocator callback
+AssertionError: promise rejected "Error: ENOENT: no such file or directory,… { …(4) }" instead of resolving
+ ❯ apps/api/src/independent.test.ts:41:54
+     39|  // Metadata authority roots and credentials remain intact; optional p…
+     40|  // content parent availability must not prevent authenticated safety …
+     41|  await expect(f.rooms.finalAccessFence(f.c,f.a,true)).resolves.toBeTyp…
+       |                                                      ^
+     42| });
+     43| it.each(['missing','mode','symlink'])('metadata ROOT parent %s continu…
+
+Caused by: Error: ENOENT: no such file or directory, lstat '/state/directory-authority-O4wbSg/personalChainDirectory'
+ ❯ TopicRoomDirectories.openRoot apps/api/src/topic-room-directories.ts:25:117
+ ❯ TopicRoomDirectories.withRoots apps/api/src/topic-room-directories.ts:36:45
+ ❯ TopicRoomDirectories.directories apps/api/src/topic-room-directories.ts:47:15
+ ❯ Object.directories apps/api/src/independent.test.ts:17:112
+ ❯ TopicRoomLifecycle.locked apps/api/src/topic-room-lifecycle.ts:410:46
+ ❯ TopicRoomLifecycle.assertRoomAuthority apps/api/src/topic-room-lifecycle.ts:116:10
+ ❯ fence apps/api/src/topic-room-registry.ts:51:41
+ ❯ TopicRoomRegistry.guard apps/api/src/topic-room-registry.ts:52:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -2, code: 'ENOENT', syscall: 'lstat', path: '/state/directory-authority-O4wbSg/personalChainDirectory' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  apps/api/src/independent.test.ts > SAFETY-GUARD-02 mode personal ROOT parent must not disable metadata safety through allocator callback
+ FAIL  apps/api/src/independent.test.ts > SAFETY-GUARD-02 symlink personal ROOT parent must not disable metadata safety through allocator callback
+AssertionError: promise rejected "Error: Request could not be completed { …(2) }" instead of resolving
+ ❯ apps/api/src/independent.test.ts:41:54
+     39|  // Metadata authority roots and credentials remain intact; optional p…
+     40|  // content parent availability must not prevent authenticated safety …
+     41|  await expect(f.rooms.finalAccessFence(f.c,f.a,true)).resolves.toBeTyp…
+       |                                                      ^
+     42| });
+     43| it.each(['missing','mode','symlink'])('metadata ROOT parent %s continu…
+
+Caused by: Error: Request could not be completed
+ ❯ requireThat apps/api/src/security.ts:6:111
+ ❯ TopicRoomDirectories.openRoot apps/api/src/topic-room-directories.ts:29:4
+ ❯ TopicRoomDirectories.withRoots apps/api/src/topic-room-directories.ts:36:45
+ ❯ TopicRoomDirectories.directories apps/api/src/topic-room-directories.ts:47:15
+ ❯ Object.directories apps/api/src/independent.test.ts:17:112
+ ❯ TopicRoomLifecycle.locked apps/api/src/topic-room-lifecycle.ts:410:46
+ ❯ TopicRoomLifecycle.assertRoomAuthority apps/api/src/topic-room-lifecycle.ts:116:10
+ ❯ fence apps/api/src/topic-room-registry.ts:51:41
+ ❯ TopicRoomRegistry.guard apps/api/src/topic-room-registry.ts:52:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'TOPIC_ROOT_UNSAFE', statusCode: 503 }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 17:15:58
+[2m   Duration [22m 1.08s[2m (tests 72%, transform 23%, import 4%)[22m
+

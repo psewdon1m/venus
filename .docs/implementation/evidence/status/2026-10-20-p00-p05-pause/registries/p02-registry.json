@@ -1,0 +1,438 @@
+{
+  "schema_version": 1,
+  "stage": "P02",
+  "gate": "EXIT-P02",
+  "status": "PASSED",
+  "owner": "Codex / Engineering",
+  "branch": "feature/p02-rooms",
+  "baseline_tag": "p01-accepted-20261018",
+  "baseline_sha": "934d9a1efcccfb4380e708a8f5143a43efbc3a71",
+  "checks": [
+    {
+      "id": "P02-CAPACITY",
+      "status": "PASS",
+      "required": "100 real PostgreSQL admission races, exactly8 identities, reconnect fencing, host scope",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "id": "P02-LIFECYCLE",
+      "status": "PASS",
+      "required": "close/idle/presence/reservation/grace, ticket expiry/replay",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "id": "P02-ACL",
+      "status": "PASS",
+      "required": "two identities+attacker HTTP/WS, self-only preferences, Origin/CSRF/XSS",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "id": "P02-REVISION",
+      "status": "PASS",
+      "required": "idempotent replay/current auth, stale revision conflict, out-of-order recovery",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "id": "P02-PERSISTENCE",
+      "status": "PASS",
+      "required": "migration upgrade/compatibility, API restart, encryption, deletion, synthetic restore",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "id": "P02-BROWSER",
+      "status": "PASS",
+      "required": "RU/EN/TR create/join/full/closed/offline/retry on isolated synthetic offer",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    }
+  ],
+  "public_entry": "BLOCKED_UNTIL_APPROVED_OFFER_P05",
+  "pending_user_decisions_for_local_P02": [],
+  "requirement_status_overrides": [
+    {
+      "requirement_id": "CI-R-001",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-CAPACITY"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "CI-R-002",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-RECONNECT",
+        "P02-WS-TICKETS"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "CI-R-003",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED_ROOM_SCOPE",
+      "check_ids": [
+        "P02-ACL"
+      ],
+      "reason": "Room role/host scope verified; future game/music/cinema moderator APIs remain unavailable and require their later gates.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-INVITATIONS-RESOLVE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-GET-API-V1-ROOMS-ROOM-ID",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-CLOSE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-PATCH-API-V1-ROOMS-ROOM-ID-CONTEXT",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-GET-API-V1-ROOMS-ROOM-ID-GAME-CURRENT",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-GAME-PREPARE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-GAME-START",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-GAME-SESSION-ID-ROUND-ADVANCE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-GET-API-V1-ROOMS-ROOM-ID-GAME-SESSION-ID-ROUND-ROUND-ID-INVITATION",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-GET-API-V1-ROOMS-ROOM-ID-GAME-SESSION-ID-ROUND-ROUND-ID-PRIVATE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-GAME-SESSION-ID-ROUND-ROUND-ID-RESPONSE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-GAME-SESSION-ID-STOP",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P03",
+      "current_status": "PLANNED",
+      "check_ids": [],
+      "reason": "Authoritative implementation plan P03 defines game snapshot/round/consent runtime; original P00 automatic API allocation is preserved as historical baseline."
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-JOIN",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-LEAVE",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-PATCH-API-V1-ROOMS-ROOM-ID-ME",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-PUT-API-V1-ROOMS-ROOM-ID-ME-PREFERENCES",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-GET-API-V1-ROOMS-ROOM-ID-ME-PREFERENCES",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-ME-SETUP-SKIP",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-API-POST-API-V1-ROOMS-ROOM-ID-WS-TICKET",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P02",
+      "current_status": "VERIFIED",
+      "check_ids": [
+        "P02-ACL",
+        "P02-IDEMPOTENCY",
+        "P02-BROWSER-EN"
+      ],
+      "reason": "Clean-source runtime proof; final status follows independent EXIT-P02.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    },
+    {
+      "requirement_id": "PLAN-SERVICE-ENTRY",
+      "baseline": ".docs/implementation/traceability.csv",
+      "baseline_stage": "P02",
+      "effective_stage": "P05",
+      "current_status": "VERIFIED_SYNTHETIC_PUBLIC_BLOCKED",
+      "check_ids": [
+        "P02-ENTRY-RATE",
+        "P02-REACCEPT",
+        "P02-BROWSER-RECOVERY"
+      ],
+      "reason": "Production entry blocked until owner-approved versioned terms P05; only synthetic runtime acceptance verified.",
+      "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p02/gate-report.json",
+        "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+      }
+    }
+  ],
+  "traceability_note": "P00 CSV is immutable historical input. Effective stage allocation follows .docs/10_IMPLEMENTATION_PLAN.md P02/P03/P05; no deferred game/public-legal work is reported as completed.",
+  "source_sha": "8313ddd6453bd6f01fd73e272e0ac483807456c4",
+  "source_identity_sha256": "2cd73ce9a52af8e13484fb05536a06f7eb36ca5890563a8de5700b55323a437a",
+  "gate_report": {
+    "path": ".docs/implementation/evidence/p02/gate-report.json",
+    "sha256": "3390e1b7fca94f3ec3c7bd5ebf9e1cdd458a54a59e612803ba748bf9a37b46d8"
+  },
+  "pr": "https://github.com/psewdon1m/venus/pull/2",
+  "ci": "https://github.com/psewdon1m/venus/actions/runs/39149965285",
+  "independent_reviewers": [
+    "/root/p02_security_review",
+    "/root/p02_quality_review"
+  ]
+}

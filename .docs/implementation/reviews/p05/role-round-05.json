@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/p04_evidence_review",
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity_sha256": "11b47dd77b31ae9b257fb0240c79c01c24818c095a6806be83d6979ced62ebff",
+  "scopes": [
+    "ROLE006_client_correction_dirty_frozen_review",
+    "independent_actualmodule_clock_skew_counterexample",
+    "author_terminal_10case_evidence_inspection"
+  ],
+  "status": "CHANGES_REQUESTED",
+  "open_findings": [
+    "P05-ROLE-006"
+  ],
+  "reviewed_at_utc": "2026-10-19T16:01:14.149148+00:00",
+  "source_dirty": true,
+  "acceptance_scope": "ROLE006_NOT_ACCEPTED_NEGATIVE_SERVER_SKEW_GAP",
+  "stage_accepted": false,
+  "human_approved": false,
+  "clean_source_proof": false,
+  "reviewer_executed_http_pg_browser": false,
+  "findings": [
+    {
+      "id": "P05-ROLE-006",
+      "priority": "P2",
+      "status": "OPEN_REMAINING_CLOCK_SKEW_GAP",
+      "requirement": "EXIT-P05 criterion2 specificDecline duringdegradedconnection; ADR022 server-relative bound",
+      "file": "apps/web/src/games-panel.tsx",
+      "related_file": "apps/web/src/private-state.ts",
+      "source_identity_sha256": "11b47dd77b31ae9b257fb0240c79c01c24818c095a6806be83d6979ced62ebff",
+      "tested_source_sha256": "1ce9ceeaf3c83e8e1b08a912304a455f304dcb361b091098223b07c458b96fe2",
+      "title": "Seed own refusal evidence independently of renderable private-text absolute TTL",
+      "detail": "Own boolean packet has a valid5s relative lease and authenticated own invitation expires30s after server_time. With server clock360000ms behind local, scopePrivate(...Date.now()) discards its raw invitation because expires_at is in the local past before observeRefusals sees it. Fresh genericDecline exists initially from own boolean, but after5s/offline no retainedfact exists; genericDecline disappears and no POST can be attempted while actual relative offer deadline is still valid. Zero/ahead-offset controls retain genericDecline and send one declinePOST. This independently reproduces a remaining006 availability gap, not server ACL bypass.",
+      "required_fix": "Validate minimal authenticated own offer/proposal/session/round metadata separately from private render payload using fresh own packet and anchored server-relative bound; preserve30s/180s caps, no extension/skew/rewind, no late first seed, explicitfalse/changedtuple/generation/clear/removal revocation. Do not restore private text, partner, accept/choice/Finish authority. Add both clock directions and degraded positive/negative regressions, actual component evidence and fresh independent round.",
+      "reproducer": "role-round-05.clock-skew-probe.mjs",
+      "probe_scope": "Frozen actualTSX/OwnControls, explicit React/API doubles, not actualHTTP/PG/browser."
+    }
+  ],
+  "prior_scoped_closure_preserved": [
+    "P05-ROLE-001",
+    "P05-ROLE-002",
+    "P05-ROLE-003",
+    "P05-ROLE-004",
+    "P05-ROLE-005"
+  ],
+  "prior_round04_review_sha256": "f9be28614be4bed626f7e478dd8d56560efd121ed613cb89a7343663db4c4dcc",
+  "independent_controls": {
+    "actualmodule_clock_skew_cases": 3,
+    "positive_controls": 2,
+    "remaining_gap_cases": 1,
+    "whole_prior_matrix_rerun": false
+  },
+  "provider_component_run": {
+    "run_id": "28cdc5621986",
+    "status": "PASS_BOUNDED_10_CASES",
+    "image": "sha256:46d8798a32af9ffb34cb9904c81273a48ffe05b6cebe0483560e393a9b47eda1",
+    "source_identity_before_after_unchanged": true,
+    "source_files": 1737,
+    "cleanup": "completed",
+    "actualSA10server_offset_ms": 412000,
+    "SA10_WS_disconnect": false,
+    "full_browser_matrix": false
+  },
+  "source_archive_sha256": "3dcc88ceccbabe2970026e0bf92cc5b9759c4625680cf9b8c32d5409b81b9408",
+  "report_path": ".docs/implementation/reviews/p05/role-round-05.md",
+  "report_sha256": "6c0dedcb74e17bf7bcb3cae732d76bc7d009d3a0cfed7e0277e5aa5ada1d7a64",
+  "evidence_hashes": {
+    "role-round-05.clock-skew-probe.mjs": "64e40cbc82c5c5bc3d9377ce1653f7005ca5f3a7ef7daf5f149308275c6d3b1d",
+    "role-round-05.clock-skew-result.json": "36f749ba19cf284373a9ff65a91e5da93eca39dac7191bf81f0c13ac81e277db",
+    "role-round-05.inputs-before.json": "04be38465f2e34021db14c95b9d15043b29f6e9883768fc5c8269d61ae86a0b4",
+    "role-round-05.runtime-index.json": "008ae8638783389b465372e955095eb02513c0a879fd4fc5d9014d1d030752a4",
+    "role-round-05.sa06-dom-check.json": "ebe1bac019a64b352e33f5159806488c8f899cb62db611f235a402fc8fdf185c"
+  },
+  "explicit_not_accepted": [
+    "fullP05",
+    "human450review",
+    "planner4unexportedfiles/knownprivacybugs",
+    "ledgernewfiles",
+    "C2/private topic runtime",
+    "whole341hostunitapproval",
+    "production/media/native/mobile"
+  ]
+}

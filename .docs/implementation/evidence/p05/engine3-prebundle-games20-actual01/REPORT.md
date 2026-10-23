@@ -1,0 +1,3 @@
+# Engine3 prebundle Games20 actual01
+
+20/20 PASS exit0, cleanupcompleted, exact materialized sourceed18/1830 before/after. Actual image367bba5f7278634ff98a1e94ba191f2d70daa0c508404e7102811402a937bfe7,272 measured source/runtime/7SQL/UI/pg bytes bound by readonly auto-removed probe; no build metadata/app imports. Source is genuine prebundle B3; live bundle source edits are separate and not represented by this source identity. Existing20 cases byte unchanged; outer runner only absolute Python path + fixedimage guard replaces redundantbuild. This is synthetic core integration, not real470/UI/statistics/fullstage acceptance. Native counterexample and84host tests separately recorded. Independent actual acceptance pending.

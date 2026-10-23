@@ -1,0 +1,125 @@
+{
+  "status": "PASS",
+  "scope": "EXACT_AST_FUNCTIONS_INERT_VM_NO_HTTP_NO_PG",
+  "integration_sha256": "9576e0c1a1ef717c83deb0bce9c2b0791c88f367ee53bcf620bf21aad30f7cdb",
+  "checks": 17,
+  "results": [
+    {
+      "variant": "unsupported409",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "missing503",
+      "expected": "ACCEPT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "unexpected200",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "wrong_status",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "wrong_code",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "changed_state",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "changed_rev",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "changed_snapshot",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "changed_digest",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "changed_round",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "receipt_written",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 1
+    },
+    {
+      "variant": "not_waiting",
+      "expected": "REJECT",
+      "status": "PASS",
+      "http_calls": 0
+    },
+    {
+      "variant": "positive",
+      "expected": "ACCEPT",
+      "status": "PASS"
+    },
+    {
+      "variant": "zero_projection",
+      "expected": "REJECT",
+      "status": "PASS"
+    },
+    {
+      "variant": "zero_refs",
+      "expected": "REJECT",
+      "status": "PASS"
+    },
+    {
+      "variant": "P05-COMPAT-04_required_start",
+      "expected": [
+        409,
+        "TOPIC_SNAPSHOT_VERSION_UNSUPPORTED"
+      ],
+      "status": "PASS"
+    },
+    {
+      "variant": "P05-COMPAT-05_required_start",
+      "expected": [
+        503,
+        "TOPIC_HISTORY_UNAVAILABLE"
+      ],
+      "status": "PASS"
+    }
+  ],
+  "syntax": [
+    {
+      "name": "integration.mjs",
+      "exit_code": 0
+    },
+    {
+      "name": "runner.mjs",
+      "exit_code": 0
+    },
+    {
+      "name": "prepare-runner.mjs",
+      "exit_code": 0
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "status": "BOUNDED_ACTUAL_DIAGNOSIS_PASS_BROWSER_GATE_REMAINS_FAIL",
+  "actual_index_sha256": "c78abdd790091954765cc9d80166394e585b6b4431e6945e17842dd11caaafd7",
+  "actual_files_verified": 42,
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "included_files": 1813,
+  "current_source_verified": true,
+  "source_before_after_equal": true,
+  "producer_files_verified": 7,
+  "image": "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+  "actual_cases": {
+    "PASS": 5,
+    "FAIL": 1,
+    "NOT_RUN": 10
+  },
+  "cleanup": "PASS",
+  "diagnostics": {
+    "status": "COMPLETE",
+    "http": 395,
+    "ws": 254,
+    "overflow": {
+      "http": 0,
+      "ws": 0,
+      "observer_work": 0,
+      "conversation": 0
+    },
+    "pending": 0
+  },
+  "timeline": {
+    "accept_click_start_ms": 78673.969914,
+    "accepted_conversation_body_ms": 82295.480115,
+    "complete_chat_body_ms": 83346.30985,
+    "fresh_batch_ms": 2570.654204000006,
+    "action_remaining_at_latest_server_ms": 7052,
+    "precise_matcher_start_observed": false,
+    "precise_react_paint_observed": false,
+    "cache_accept_observed": false
+  },
+  "mutation_http_metadata": [
+    {
+      "locale": "ru",
+      "phase": "structured-advice-edit-revoke",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/conversation/commands",
+      "status": 200,
+      "kind": "offer_advice",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "structured-advice-edit-revoke",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/conversation/commands",
+      "status": 200,
+      "kind": "respond_advice",
+      "scope": null,
+      "decision": "accept",
+      "has_exact_offer_tuple": false
+    }
+  ],
+  "negative_guards_rejected": [
+    "false_case06_pass",
+    "duplicate_case_id",
+    "cleanup_missing",
+    "incomplete_diagnostics",
+    "pending_observer",
+    "overflow_hidden"
+  ],
+  "cause_qualification": "Confirmed producer lacks commit/coherent-own-UI precondition; exact TSX deferred-HTTP counterexample and later actual screenshot establish timing race is feasible. Actual React/cache sequence was not instrumented. No new product defect proven; action expiry does not explain first failure.",
+  "full_stage_pass": false
+}

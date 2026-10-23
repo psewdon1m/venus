@@ -1,0 +1,7 @@
+# P05 A20 WebKit native zoom diagnostic01
+
+- 2026-10-21T18:00:00Z (task receipt; actual launch timestamps below): Parent authorized ONE bounded55s constantHTML diagnostic, fresh resource04 preflight3, current5d image. Inspect original windowFor/native200 choreography; original ctrl+equal ≤14, reset ctrl0, alternative ctrl+plus ≤14; scalar-only output, exact owned cleanup. No APP/producer/Git/status writes before observations. Native result must not be labelled UI gate PASS.
+- Inputs: source17 source4d6022e5997515e00e94a48f5e6ba68b5cd5b0be1cbeebbaf093ca83d4e928fa/1874; image5d976ffbcf579bea9f9b6a51af314e2e23eee995cdaeab0dcf046c541bb63e3a. Producer a20-02 x11/probe-policy read. Prior original gate f198c08990fb NATIVE_200_NOT_MEASURED preserved; exact keymapping/DPR cause pending.
+- 2026-10-21T18:03:33.4561947Z: Correction: first entry's 18:00 timestamp was an approximate task receipt, not a clock observation. This entry is actual UTC. New bounded probe prepared; no native launched yet.
+
+- 2026-10-21T18:08:18.058910+00:00: Existing resource04 preflight FAILED exit1 at docker info: LinuxEngine named pipe unavailable. Launcher exit1 before any Docker create/inspect/start calls (calls=[]). No owned resources allocated; cleanup in saved original receipt PENDING is unexecuted finally default, NOT a retained container. Probe actual0, no zoom results, no producer change. Sent root recovery/scheduling notification. Preserve preflight stdout/stderr/exit; no automatic retry or daemon recovery by this agent. STOP pending root recovery authorization.

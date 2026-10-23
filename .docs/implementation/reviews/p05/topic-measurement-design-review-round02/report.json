@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_R03_FEATURE_ORDER",
+  "scope": "INDEPENDENT_DESIGN_ONLY_RECHECK_FIVE_P2",
+  "created_at": "2026-10-19T19:37:34.479246+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "author": "/root/p05_topic_games_review",
+  "exact_inputs": [
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/REPORT.md",
+      "sha256": "709fedaf7ce8fb7e5a10f7b5e07d41bd885921c20918ea2956ea83596e9262e9"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/PROPOSED_PREREG.json",
+      "sha256": "9128beb82b456f1ccd88bee68aec4631c3c68a3b1589d770ab6c8430dc21504d"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/expected-status.json",
+      "sha256": "33584fed927e88cdbe43b0e7b87df07d81a7f848c153abcc067fff6559846b71"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/fixture-support.json",
+      "sha256": "4f2f801beef9726ba5a0d9773d54faf2fa777a60e36d07646a64d31609e98ce6"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/lifecycle-scripts.json",
+      "sha256": "9ae13cf26c4ea4ed05102bf770d29c48f85d6631e16ac973087063572e46ea5b"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/public-features.json",
+      "sha256": "bfab34e7785c498d8d85856dfb0f7f3c35e39f13b5ab1c60ef27c4535a19814d"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/seed-contract.json",
+      "sha256": "3cde9c9f2f9088453491517df4947652f894ae855e7e3b5ad089faa7ce4a3b69"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/anti-repeat.json",
+      "sha256": "99a9ec38ca0b1f11bf8f3ad44d16996da4eb5a4803d9a17c497c0cde825a8379"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round02/INDEX.json",
+      "sha256": "ce180d746ee62f487599ae06e8842c831b0098fbbcd379602c2e2180af98a69a"
+    },
+    {
+      "path": "packages/relationship-engine/src/pack.ts",
+      "sha256": "2b9ab9ee6062b668020cd19642991f826431d3129842797b68ef0b9fe61aa1d9"
+    },
+    {
+      "path": "tests/p03/public-transcript.mjs",
+      "sha256": "3243e41d56412b851b1b56452ade3e25f137914e10c8399f23eee45c0efdaefc"
+    }
+  ],
+  "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "packet_files_verified": 44,
+  "findings": [
+    {
+      "id": "TM-DESIGN-R03-ORDER",
+      "severity": "P2",
+      "parent_finding": "TM-DESIGN-R03",
+      "problem": "Declared histogram dictionary contradicts retained FrozenPack canonical ordering. Q-9000 is last in proposed prefix but production FrozenPack sorts it before TD/YB.",
+      "counterexample": {
+        "status": "CONFIRMED_DESIGN_DICTIONARY_MISMATCH",
+        "declared_public_histogram_entries": 897,
+        "declared_Q9000_index": 896,
+        "actual_canonical_Q9000_index": 384,
+        "declared_name_hash": "db066d8d59eca9a151f2780d6dc8eb0fb233bd3a7acf5356463be3907cd4da8a",
+        "canonical_rule": "FrozenPack.load sorts card IDs lexicographically before legacy publicFeatureNames iterates pack.cards",
+        "statistical_run": false
+      },
+      "fix": "Keep original round02 immutable. New version must derive sorted public IDs exactly as FrozenPack.cards.filter(nonprivate) and regenerate names/hash plus independent order counterexample. Do not relax old-prefix requirement or change samples/thresholds."
+    }
+  ],
+  "closed_design_findings": [
+    "TM-DESIGN-R01",
+    "TM-DESIGN-R02",
+    "TM-DESIGN-R04",
+    "TM-DESIGN-R05"
+  ],
+  "partial_design_finding": "TM-DESIGN-R03 lifecycle/metadata contract addressed; exact canonical feature order remains open",
+  "checks": {
+    "guard_rows_unique_and_independently_classified": 3920,
+    "logical_expansion_count": 8232000,
+    "feature_names_unique": 1075,
+    "feature_hash_self_consistent": true,
+    "fixture_cards": 4930,
+    "fixture_families": 1057,
+    "original_samples_thresholds_retained": true
+  },
+  "implementation_prerequisites": [
+    "No statistical producer, fixture bytes, residual support certificate or actual adapter accepted.",
+    "Strict anti-repeat current-session design is explicit, TG-AR-001 product fix/unsupported old snapshot behavior still needs own fresh source gates.",
+    "Worker1CPU1536MiB/32GiB hardstop is a proposed ceiling, not completion proof. Root wallclock/encoding/chunk bounds and separately authorized bounded throughput probe remain prerequisites.",
+    "Human450 HOLD, actualbrowser failure and production/fullstage acceptance remain separate."
+  ],
+  "stats_docker_or_product_writes": false,
+  "full_stage_pass": false
+}

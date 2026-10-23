@@ -1,0 +1,142 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/request-error-diagnostic.test.ts (56 tests | 21 failed) 16ms
+   ❯ WebSocket-only literal policy failure extension (21)
+     × retains only WS literal policy code AUTH_REQUIRED 2ms
+     × retains only WS literal policy code ENTRY_REACCEPT_REQUIRED 0ms
+     × retains only WS literal policy code ROOM_CLOSED 0ms
+     × retains only WS literal policy code SOCKET_REPLACED 0ms
+     × retains only WS literal policy code ACTORS_UNAVAILABLE 0ms
+     × retains only WS literal policy code INVALID_REQUEST 0ms
+     × retains only WS literal policy code RATE_LIMITED 0ms
+     × retains only WS literal policy code TICKET_INVALID 0ms
+     × retains only WS literal policy code CONSENT_EXPIRED 0ms
+     × retains only WS literal policy code PRIVATE_CHAT_UNAVAILABLE 0ms
+     × retains only WS literal policy code PRIVATE_EVENT_CAPACITY 0ms
+     × retains only WS literal policy code TOPIC_ROOM_RETIRED 0ms
+     × retains only WS literal policy code TOPIC_ROOM_MEMBER_RETIRED 0ms
+     × retains only WS literal policy code TOPIC_ROOM_MEMBER_NOT_ADMITTED 0ms
+     × retains only WS literal policy code TOPIC_ROOM_BUSY 0ms
+     × retains only WS literal policy code TOPIC_LEDGER_BUSY 0ms
+     × retains only WS literal policy code TOPIC_STATE_CHANGED 0ms
+     × retains only WS literal policy code TOPIC_ROOM_BIRTH_UNAVAILABLE 0ms
+     × omits unknown, inherited, lookalike and accessor codes without invoking hooks 0ms
+     × rejects proxy and hostile prototype errors before getters or descriptor traps 0ms
+     × preserves existing SQL/class/location projection and default HTTP helper exactly 0ms
+ ❯ apps/api/src/room-socket-poll.test.ts (7 tests | 4 failed) 20ms
+   ❯ bounded ordinary room WS polling (7)
+     × logs one safe poll failure then still closes4401, without raw private error content 6ms
+     × logs auth failure as safe policy enum and omits invalid request IDs 1ms
+     × keeps a one-socket latch when a queued heartbeat also fails after the poll 1ms
+     × heartbeat failure is categorized while logger failure cannot prevent connection closure 1ms
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 25 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code AUTH_REQUIRED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code ENTRY_REACCEPT_REQUIRED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code ROOM_CLOSED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code SOCKET_REPLACED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code ACTORS_UNAVAILABLE
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code INVALID_REQUEST
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code RATE_LIMITED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TICKET_INVALID
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code CONSENT_EXPIRED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code PRIVATE_CHAT_UNAVAILABLE
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code PRIVATE_EVENT_CAPACITY
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_ROOM_RETIRED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_ROOM_MEMBER_RETIRED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_ROOM_MEMBER_NOT_ADMITTED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_ROOM_BUSY
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_LEDGER_BUSY
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_STATE_CHANGED
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > retains only WS literal policy code TOPIC_ROOM_BIRTH_UNAVAILABLE
+TypeError: websocketErrorDiagnostic is not a function
+ ❯ apps/api/src/request-error-diagnostic.test.ts:62:192
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/25]⎯
+
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > omits unknown, inherited, lookalike and accessor codes without invoking hooks
+TypeError: websocketErrorDiagnostic is not a function
+ ❯ apps/api/src/request-error-diagnostic.test.ts:66:251
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/25]⎯
+
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > rejects proxy and hostile prototype errors before getters or descriptor traps
+TypeError: websocketErrorDiagnostic is not a function
+ ❯ apps/api/src/request-error-diagnostic.test.ts:70:165
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/25]⎯
+
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > WebSocket-only literal policy failure extension > preserves existing SQL/class/location projection and default HTTP helper exactly
+TypeError: websocketErrorDiagnostic is not a function
+ ❯ apps/api/src/request-error-diagnostic.test.ts:72:205
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/25]⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > logs one safe poll failure then still closes4401, without raw private error content
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ apps/api/src/room-socket-poll.test.ts:69:303
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/25]⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > logs auth failure as safe policy enum and omits invalid request IDs
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ apps/api/src/room-socket-poll.test.ts:72:166
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/25]⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > keeps a one-socket latch when a queued heartbeat also fails after the poll
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ apps/api/src/room-socket-poll.test.ts:75:364
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/25]⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > heartbeat failure is categorized while logger failure cannot prevent connection closure
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ apps/api/src/room-socket-poll.test.ts:78:247
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/25]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  25 failed | 38 passed (63)
+   Start at  02:00:10
+   Duration  330ms (import 42%, transform 42%, tests 13%, worker 3%)
+

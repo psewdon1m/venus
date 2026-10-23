@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "revision": "P05-SAFE-REQUEST-DIAGNOSTIC-01",
+  "kind": "SERVER_ONLY_OBSERVABILITY_CORRECTION",
+  "problem": "OrdinaryN4 self-actions500 was redacted without a request-correlated unexpected exception category. Existing retained failure cannot be retroactively assigned a cause.",
+  "behavior": "Unexpected non-Domain500 logs request_failed with server-generatedUUID, literal nativeerrorclass and literal failurecode; optional static ownmodulelabel/numericline/column only. No error object passed to logger.",
+  "failure_codes": [
+    "40P01",
+    "40001",
+    "57014",
+    "25P02",
+    "23505",
+    "08006",
+    "QUERY_TIMEOUT",
+    "UNKNOWN"
+  ],
+  "query_timeout": "Only native Error category with no code and own data message exactly Query read timeout; no substring/near-match classification.",
+  "location": "Optional: native error only, bounded16KiB/16frames, literal ownmodule locations; no rawpath/functionname/message/stack. NativeNode24 lazy formatting only with exact captured known defaultformatter body/reference and data-only bounded name/message lookup. Customgetters/hooks/unknown/oversize omitlocation.",
+  "unchanged": [
+    "ClientHTTPstatus/errorcode/message/request_id",
+    "serverUUIDgenReqId and requestIdHeader=false",
+    "normal request_complete literal route logging",
+    "no requestbody/header/cookie/name/token/SQLparameter/rawexception logging",
+    "DBtimeouts/rate/TTL/consent/ACL/planner/cards/map/authority"
+  ],
+  "compatibility": "Additive server log event only; no publicschema/database/protocol changes. Existing event consumers should allow request_failed alongside request_complete. Absence of optional location is expected, not a new exception.",
+  "rollback": "Restore prior app.ts tuple and remove helper after quiescing/redeploying; clients/data unchanged, but unexpected500 cause will again be unavailable. Preserve actualfailure/log evidence; no blindfullmatrix rerun."
+}

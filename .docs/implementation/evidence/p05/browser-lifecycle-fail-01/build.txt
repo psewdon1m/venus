@@ -1,0 +1,77 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 7.06kB 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#5 CACHED
+
+#6 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#6 CACHED
+
+#7 [runtime 4/5] COPY tests tests
+#7 CACHED
+
+#8 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#8 CACHED
+
+#9 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#9 CACHED
+
+#10 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#10 CACHED
+
+#11 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#11 CACHED
+
+#12 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#12 CACHED
+
+#13 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#13 CACHED
+
+#14 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+#14 CACHED
+
+#15 [runtime 3/5] COPY packages packages
+#15 CACHED
+
+#16 [runtime 2/5] COPY apps apps
+#16 CACHED
+
+#17 [runtime 1/5] COPY tsconfig*.json ./
+#17 CACHED
+
+#18 [dependencies  2/12] WORKDIR /app
+#18 CACHED
+
+#19 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#19 CACHED
+
+#20 [runtime 5/5] RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+#20 CACHED
+
+#21 exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:7df7483ac81a10cbe5896bad24c78e8133806b9532bbc5cebe43ca2aeeaaa271 done
+#21 exporting config sha256:24d47159d9e2c970c3770f71c7054d52e3e1f727867b5fc9cb3c473e4ad1b4cb done
+#21 exporting attestation manifest sha256:902d1b9130f149eebf05634c6b711d41f649a78379a03b3e5c4a60ca3b5968b4
+#21 exporting attestation manifest sha256:902d1b9130f149eebf05634c6b711d41f649a78379a03b3e5c4a60ca3b5968b4 0.0s done
+#21 exporting manifest list sha256:e28a26b3fa7efeaf88ac3849ca7724c3ce343ae5227e60573261bb7aa725e77c done
+#21 naming to docker.io/library/venus-p05-2c64dc28f68f:local done
+#21 unpacking to docker.io/library/venus-p05-2c64dc28f68f:local 0.0s done
+#21 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ydzfbm7aqkzs4y0dpcjso4572

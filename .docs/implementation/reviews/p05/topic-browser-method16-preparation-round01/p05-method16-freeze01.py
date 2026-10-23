@@ -1,0 +1,23 @@
+from pathlib import Path
+import json,hashlib,shutil,datetime,subprocess,sys,difflib
+r=Path.cwd();work=r/'.artifacts/p05-private-batch-browser-producer16';out=r/'.docs/implementation/reviews/p05/topic-browser-method16-preparation-round01';assert not out.exists();out.mkdir(parents=True);sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+sys.path.insert(0,str(r/'tools'));from stage_inventory import inventory,identity
+f=inventory(r/'.artifacts/p05-recovery-source1274-01');assert identity(f)=='1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad' and len(f)==1813
+node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe';syntax=[]
+for p in work.glob('*.mjs'):
+ q=subprocess.run([node,'--check',str(p)],capture_output=True,timeout=10);assert q.returncode==0,(p,q.stderr);syntax.append({'file':p.name,'exit_code':0})
+for p in work.iterdir():
+ if p.is_file():
+  d=out/'producer'/(p.name+'.bytes' if p.suffix=='.md' else p.name);d.parent.mkdir(exist_ok=True);shutil.copyfile(p,d)
+for n in ['p05-method16-author01.py','p05-method16-freeze01.py','p05-method16-controls01.mjs','p05-method16-controls01.json','p05-method16-controls01.txt','p05-method16-lint01.txt']:shutil.copyfile(r/'.artifacts'/n,out/n)
+diff=[]
+for n in ['browser.mjs','readiness-diagnostics.mjs']:
+ prior=r/'.artifacts/p05-private-batch-browser-producer15'/n;before=prior.read_text(encoding='utf-8').splitlines(True) if prior.exists() else []
+ diff+=list(difflib.unified_diff(before,(work/n).read_text(encoding='utf-8').splitlines(True),fromfile='METHOD15/'+n,tofile='METHOD16/'+n))
+(out/'exact-diff.patch.txt').write_text(''.join(diff),encoding='utf-8',newline='\n')
+def write(n,v):(out/n).write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+write('syntax.json',syntax)
+(out/'REPORT.md').write_text('# METHOD16 — bounded bilateral action preparation\n\nAUTHOR_READY_METHOD_ONLY / independent review required / NOT_RUN. Follows actual diagnosisbb6d8758. METHOD15 actual was4PASS/05FAIL/11NOTRUN, cleanupPASS; first RU action committed200/rev31, second TR coherent private preparation did not finish within the single8s orchestration deadline. Observed chat completion was78.573ms late, with explicitly qualified passive delivery timing; exact private observer finish/cache acceptance is not recovered. No product fault or prior409 code is inferred.\n\nOne shared fixed12s action preparation deadline now spans both actors, without resetting between actors. Exact fresh private ticket deadline/250ms remaining floor, required chat, current/own/target/conversation revisions, permissions, one click and receipt validation remain unchanged. The permission TTL and server pending phase remain unchanged. No request retry or input/seed changes. All16 cases are byte-exact METHOD15; only acceptActionsUi constants and normalPrivateReady failure-evidence catch changed, plus a helper import.\n\nFailed preparation records a bounded typed projection of error.readiness and synthetic actor/expected tuple; raw DTO/error/token/text/unknown fields are dropped. Observer remains a passive model, never claims actual application cache.accept/auth generation.21 author AST/fake/privacy controls PASS, syntax all0, changed-file lint0. Existing METHOD15 UUID/status diagnostic helper remains exact. Actual409 cause remains unrecorded because this actual failed earlier. Source refers to restored historical1274/1813 and rebuiltA29e39, not evolving live P04/tooling. Fresh operational binding/root ACK and independent method acceptance required before actual repeat. Human HOLD/fullP05 unchanged.\n',encoding='utf-8',newline='\n')
+write('HANDOFF.json',{'status':'AUTHOR_READY_METHOD_ONLY_REVIEW_REQUIRED_NOT_RUN','writes':'COMPLETE','created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_identity':identity(f),'source_scope':'RESTORED_HISTORICAL1813_NOT_CURRENT_LIVE_TREE','image':'sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f','runtime_pins':{p.name:sha(p) for p in work.iterdir() if p.is_file() and (p.suffix=='.mjs' or p.name=='DESIGN.md')},'author_finite_controls':21,'syntax_checks':len(syntax),'root_run_ack':False,'actual_RUN':'NOT_RUN','diagnosis_index_sha256':'bb6d87583572e0ef4cd7d0cd169510eeefb766d0312ae7960c82a6bde8b34b18','full_P05_PASS':False})
+write('INDEX.json',{'status':'AUTHOR_READY_METHOD_ONLY_REVIEW_REQUIRED_NOT_RUN','files':[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file()]})
+print(json.dumps({'index_sha256':sha(out/'INDEX.json'),'files':len(json.loads((out/'INDEX.json').read_text())['files']),'syntax':len(syntax)}))

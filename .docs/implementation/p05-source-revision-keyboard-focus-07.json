@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "revision": "P05-NATIVE-TAB-KEYUP-VISIBILITY-07",
+  "kind": "COMPATIBLE_FRONTEND_KEYBOARD_ACCESSIBILITY_FIX",
+  "parent_source_identity": "33315685353d7950715218c29884e9013c22106bf049118a2262b48425e44910",
+  "parent_source_count": 1878,
+  "behavior": "Add main onKeyUp correction only for Tab and a still-active input/select/button/textarea target: instant center scroll after completing the native key sequence. Existing focus-visible main handler and three textarea focus handlers retained. No preventDefault, focus reassignment, custom Tab order, modality state, timers/RAF, network or selection changes. Persistent clipping is measured; native caret-ordering cause is not established.",
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "f876c32f2eb0d9e5a722db8c9eea92c899a06b9e73387e8a06afbffa23c544e1"
+  },
+  "before_source_files": {
+    "apps/web/src/main.tsx": "0019b4afc7af0699d9b45b5db7ff2bf7cbe88e2007cf1ef27a1f657459ecb082"
+  },
+  "actual_failure": {
+    "project": "venus-v2-layout-454ef760e393",
+    "engine": "firefox157",
+    "cell": "private_active/smallheight",
+    "control": "pair-chat-input",
+    "rect": {
+      "left": 91,
+      "top": 287.48333740234375,
+      "right": 933,
+      "bottom": 387.48333740234375,
+      "width": 842,
+      "height": 100
+    },
+    "viewport": {
+      "width": 1024,
+      "height": 320
+    },
+    "scroll": {
+      "top": 3105,
+      "left": 0
+    },
+    "focus_visible": true,
+    "not_occluded": true,
+    "cleanup": "PASS",
+    "raw_first_focus_sha256": "d65e32206348a2e6b26d670f33d7a819125f207b1ce91bf5c0472a99e7d7c1ff",
+    "raw_report_sha256": "101dd801ed044b7167de8031a245c7e598bc15b35a2d34715fda0ea4e5082250",
+    "qualification": "Actual original first-focus clipping. Native ordering/caret/reflow cause not established."
+  },
+  "validation": {
+    "web_typecheck_exit": 0,
+    "focused_lint_exit": 0,
+    "host_JS_exit": 0,
+    "host_JS_PASS": 1104,
+    "host_JS_platform_SKIP": 207,
+    "host_JS_max_workers": 2,
+    "host_preflight_exact_changed_APP_bytes": true,
+    "source_revision_metadata_added_after_host_preflight": true,
+    "native_UI_and_clean_quality_PENDING": true
+  },
+  "unchanged": [
+    "API/ACL/consent/TTL/storage/catalog/selectors/statistical sources and original counts/seeds/thresholds",
+    "CSS, three textarea handlers and original strict native first-sample UI oracle/deadlines"
+  ],
+  "compatibility": "Backend and durable contracts unchanged. Fresh A25 images and nine UI shards plus original14 OCI required. Historical geometry is not current A25 acceptance.",
+  "rollback": "Restore coherent A24 web bundle; backend/data unchanged, known Firefox private-editor clipping at smallheight returns. A24 pointer focus-visible guard and textarea focus centering remain."
+}

@@ -1,0 +1,39 @@
+✔ exact image source matches independent captured component pins (2.289892ms)
+✔ same exact request replays without executing a second mutation (2.621362ms)
+✔ body-changing replay conflicts rather than running another callback (1.020144ms)
+✔ operation-changing replay conflicts (0.54704ms)
+✖ TG-REV-001 replay must bind URL session and round, not just body (1.205771ms)
+✔ final credential failure rolls SQL grants and receipts back then commits only safe floor (0.720006ms)
+✔ semantic tagged failure commits kernel state and surfaces error after transaction (0.378164ms)
+✔ thrown domain failure rolls operation back and persists clock floor (0.314209ms)
+✔ exact returned Symbol fence executes after final auth and is not serialized (0.577333ms)
+✔ source or safety failure in exact receipt fence cannot commit a grant (0.563212ms)
+✔ chunk AAD rejects cross-room substitution (1.302421ms)
+✔ chunk AAD rejects cross-session substitution (2.382511ms)
+✔ chunk AAD rejects cross-id substitution (0.621777ms)
+✔ chunk AAD rejects cross-kind substitution (0.507857ms)
+✔ authenticated JSON header rejects extra key and inconsistent digest (2.396811ms)
+✔ 8MiB bound refuses large object without truncating and 16KiB chunks hide length (68.827358ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 15
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 317.91088
+
+✖ failing tests:
+
+test at ../review/probe.mjs:26:1
+✖ TG-REV-001 replay must bind URL session and round, not just body (1.205771ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///review/probe.mjs:33:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }

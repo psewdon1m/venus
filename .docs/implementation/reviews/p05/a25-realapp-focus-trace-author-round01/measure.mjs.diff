@@ -1,0 +1,44 @@
+--- acceptedA25/measure.mjs
++++ DIAGNOSTIC_ONLY/measure.mjs
+@@ -59,7 +59,17 @@
+  const result={controls:[...records.values()],tab_events:attempts,truncated:targets.some(id=>!records.has(id))};try{persistFailedKeyboard(result,targets);}catch{/* Preserve the original keyboard assertion if diagnostic persistence fails. */}assertKeyboard(result,targets);return result;
+ }
+ export async function measureRole({role,actor},scene,fixture,cell,{budget,xserver,output,screenshots,nativeMeasurement,onObservation=()=>{},onCheckpoint=()=>{}}){
+- const started=performance.now();budget.check();onCheckpoint('FOREGROUND');await windowFor(actor.page,xserver,budget);onCheckpoint('FRESH_SCOPE');
++ const started=performance.now();budget.check(); const traceEnabled=scene==='public_questions'&&cell.geometry==='smallheight'&&['primary','other'].includes(role);let traceHandle=null,traceKeys=null,traceInstallFailed=false;
++ if(traceEnabled)try{traceHandle=await bounded(budget,'diagnostic-install-readonly-events',()=>actor.page.evaluateHandle(()=>{
++  const rows=[],listeners=[],allowed=new Set(['adult18','accept-offer','create-name','join-name','join-invite','comfort','submit-preferences','topics-save','topic-allow-creative','game-neutral-reset','game-stop','game-pause','game-skip','topic-other','topic-other-exclude','topic-decline','pair-accept','pair-decline','conversation-stop','action-accept','action-withdraw','game-finish','game-dare','game-truth','game-condition-input','game-condition-submit','advice-input','pair-chat-input','offer-topic-creative']);let overflow=false;
++  const label=target=>({testID:target instanceof HTMLElement&&allowed.has(target.getAttribute('data-testid'))?target.getAttribute('data-testid'):'OTHER',tag:target instanceof HTMLElement&&['BUTTON','INPUT','SELECT','TEXTAREA','MAIN','H1','A','BODY','DIV','SECTION','SPAN','LABEL'].includes(target.tagName)?target.tagName:target===window?'WINDOW':target===document?'DOCUMENT':'OTHER'});
++  const record=(phase,event)=>{if(rows.length===512){overflow=true;return;}try{const target=event.target,main=document.querySelector('main'),propKey=main?Object.getOwnPropertyNames(main).find(k=>k.startsWith('__reactProps$')):null,props=propKey?Object.getOwnPropertyDescriptor(main,propKey)?.value:null;rows.push({sequence:rows.length,phase,type:['keydown','keyup','focusin','focus','blur'].includes(event.type)?event.type:'OTHER',key:event.key==='Tab'?'Tab':event.type==='keydown'||event.type==='keyup'?'OTHER':null,isTrusted:event.isTrusted,defaultPrevented:event.defaultPrevented,target:label(target),active:label(document.activeElement),documentHasFocus:document.hasFocus(),visibility:document.visibilityState,targetHTMLElement:target instanceof HTMLElement,targetEqualsActive:target===document.activeElement,targetOwnDocument:target?.ownerDocument===document,mainContainsTarget:Boolean(main&&target instanceof Node&&main.contains(target)),mainReactPropsPresent:Boolean(props),mainOnFocusType:typeof(props?Object.getOwnPropertyDescriptor(props,'onFocus')?.value:undefined),mainOnKeyUpType:typeof(props?Object.getOwnPropertyDescriptor(props,'onKeyUp')?.value:undefined)});}catch{rows.push({sequence:rows.length,phase,type:'READONLY_RECORD_FAILED'});}};
++  for(const type of ['keydown','keyup','focusin'])for(const capture of [true,false]){const fn=e=>record(capture?'DOCUMENT_CAPTURE':'DOCUMENT_BUBBLE',e);document.addEventListener(type,fn,capture);listeners.push([document,type,fn,capture]);}
++  for(const type of ['focus','blur']){const fn=e=>record('WINDOW',e);window.addEventListener(type,fn);listeners.push([window,type,fn,false]);}
++  return {rows,get overflow(){return overflow;},detach(){for(const[target,type,fn,capture]of listeners)target.removeEventListener(type,fn,capture);}};
++ }));}catch{traceInstallFailed=true;}
++ try{
++onCheckpoint('FOREGROUND');await windowFor(actor.page,xserver,budget);onCheckpoint('FRESH_SCOPE');
+  let required=[];if(fixture)for(;;){budget.check();try{assertFreshScope(actor.lastGameView,fixture,performance.now());required=ownControlRequirements(actor.lastSelfActions,fixture,actor,performance.now());break;}catch{await delay(Math.min(25,budget.remaining()));}}
+  onCheckpoint('POSITIVE_DOM_PREPARATION');await prepareSceneProjection(actor.page,scene,role,required,budget);
+  onCheckpoint('INITIAL_PROJECTION');if(fixture){assertFreshScope(actor.lastGameView,fixture,performance.now());required=ownControlRequirements(actor.lastSelfActions,fixture,actor,performance.now());}
+@@ -72,6 +82,7 @@
+  const isPrivate=['private_offer','private_active','truth_dare_choice','yes_but_condition'].includes(scene);let cross_private_leak=false;
+  onCheckpoint('PRIVATE_OBSERVER_GUARD');if(isPrivate&&role==='observer'){for(const id of ['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat'])if(await actor.page.getByTestId(id).count())cross_private_leak=true;assert(!cross_private_leak,'OBSERVER_PRIVATE_LEAK');}
+  onCheckpoint('TARGETS');const targets=await bounded(budget,'own-visible-targets',()=>actor.page.evaluate(visibleTargets)),keys=await keyboard(actor.page,targets,xserver,budget,true,onCheckpoint);
++ if(traceEnabled)traceKeys=keys;
+  onCheckpoint('CAPTURE');const file=cell.id.replaceAll('/','-')+'-'+role+'.png',path=join(output,file);
+  if(nativeMeasurement)await nativeScreenshot(actor.page,xserver,nativeMeasurement,path,budget);else await bounded(budget,'masked-screenshot',()=>actor.page.screenshot({path,fullPage:false,mask:[actor.page.getByTestId('room-invite'),actor.page.getByTestId('join-invite')],timeout:Math.max(1,budget.remaining())}));
+  const capture=screenshots.accept(path);
+@@ -80,6 +91,14 @@
+  onCheckpoint('FINAL_PROJECTION');
+  // Evidence is saved before any strict assertion so legitimate failures remain inspectable.
+  onObservation(outcome);assert(normalClock,'UI_CLOCK_DISCONTINUITY');assertObservation(audit);await assertSceneProjection(actor.page,scene,role,budget);if(fixture)assertFreshScope(actor.lastGameView,fixture,performance.now());budget.check();return outcome;
++ }finally{
++  if(traceEnabled)try{
++   const trace=traceHandle?await bounded(budget,'diagnostic-dump-readonly-events',()=>traceHandle.evaluate(value=>{const result={rows:value.rows,overflow:value.overflow};value.detach();return result;})):{rows:[],overflow:false};
++   const safe={scope:'ONE_REAL_APP_READONLY_FOCUS_TRACE_DIAGNOSTIC_NOT_GATE',role,scene:'public_questions',geometry:'smallheight',cap:512,installFailed:traceInstallFailed,...trace,original_first_samples:traceKeys?.controls??null};
++   const bytes=Buffer.from(JSON.stringify(safe)+'\n');assert(bytes.length<=512*1024,'DIAGNOSTIC_METADATA_CAP');writeFileSync(join(output,'public-'+role+'-focus-events.json'),bytes,{flag:'wx'});
++   try{const raw=readFileSync(join(output,'keyboard-first-failure.json'));if(raw.length<=4096)writeFileSync(join(output,'public-'+role+'-original-first-failure.json'),raw,{flag:'wx'});}catch{/* Preserve original failure and sample writer. */}
++  }catch{/* Diagnostic collection never replaces the original outcome/failure. */}finally{try{if(traceHandle)await traceHandle.dispose();}catch{/* Original outcome preserved. */}}
++ }
+ }
+ export function assertSafeMetadata(outputFile){const b=readFileSync(outputFile);assert(b.length<=25*1024*1024,'METADATA_BUDGET_EXCEEDED');}
+ export async function activateSafety(prepared,{budget,xserver,native}){

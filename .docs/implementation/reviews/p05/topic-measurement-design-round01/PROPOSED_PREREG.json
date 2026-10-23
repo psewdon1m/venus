@@ -1,0 +1,425 @@
+{
+  "schema_version": 1,
+  "revision": "PROPOSED_P05_TOPIC_M1",
+  "status": "DESIGN_ONLY_NOT_PREREGISTERED_NO_MEASUREMENT_RUN",
+  "root_ack_required_before_implementation_measurement_run": true,
+  "author_acceptor_separation_required": true,
+  "authority": [
+    ".docs/10_IMPLEMENTATION_PLAN.md v2",
+    ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+    "ADR-023",
+    "P03-M3 original numerical thresholds and sample sizes retained where applicable"
+  ],
+  "freeze_prerequisites": [
+    "TG-CHAT-001 resolved and independently rechecked before effective capability profile is frozen",
+    "precise quota compatibility decision recorded",
+    "producer, fixture, production selector, adapter, feature dictionary and verifier exact hashes independently reviewed",
+    "clean source commit/tag before final statistical measurement; dirty frozen probe labelled preflight only",
+    "no runtime-approved registries changed; actual450 remains HOLD"
+  ],
+  "effective_capability_profiles": [
+    {
+      "id": "DEFAULT_OFF",
+      "operator_private_text_chat": false,
+      "online": [],
+      "in_person": []
+    },
+    {
+      "id": "CHAT_ON",
+      "operator_private_text_chat": true,
+      "online": [
+        "private_text_chat"
+      ],
+      "in_person": []
+    }
+  ],
+  "synthetic_fixture": {
+    "classification": "SYNTHETIC_MACHINE_FIXTURE",
+    "approved": false,
+    "runtime_eligible": false,
+    "construction": "explicit isolated capability only; never rewrite candidate450 approval flags",
+    "topics": [
+      "creative",
+      "music",
+      "romance"
+    ],
+    "requirements": [
+      "all3 modes; correct capability metadata only online private chat",
+      ">=100 unique public semantic families/mode supported profile",
+      ">=75 distinct baseline common friend_or_more comfort1 nonphysical private semantic families per tested actor pair for replacement coverage; extra independent families where prior/exclusions reduce support",
+      "explicit cross-mode distinct-card shared public family; shared private family; mixed-visibility entire-family excluded; full-union multi-topic cards",
+      "one-family exhaustion microfixture separate from nondegenerate statistical fixture; fixed corpus exact digests frozen before first run"
+    ]
+  },
+  "topic_regimes": [
+    {
+      "id": "T0_ALL",
+      "allow": "all synthetic vocabulary",
+      "exclude": [],
+      "prior": "none",
+      "lifecycle": "all_accept"
+    },
+    {
+      "id": "T1_EMPTY",
+      "allow": [],
+      "exclude": [],
+      "prior": "none",
+      "lifecycle": "all_accept; generic safe-empty retained"
+    },
+    {
+      "id": "T2_COMMON",
+      "allow": [
+        "creative"
+      ],
+      "exclude": [],
+      "prior": "none",
+      "lifecycle": "all_accept"
+    },
+    {
+      "id": "T3_ASYMMETRIC_EXCLUSION",
+      "allow": "all minus own excludes",
+      "exclude": "actor0 creative; others none",
+      "prior": "none",
+      "lifecycle": "all_accept"
+    },
+    {
+      "id": "T4_PRIVATE_PRIOR",
+      "allow": "all",
+      "exclude": [],
+      "prior": "3 completed same-room sessions, one record per mode for target pair; same-family distinct cards in current modes",
+      "lifecycle": "all_accept"
+    },
+    {
+      "id": "T5_PUBLIC_AND_PRIVATE_PRIOR",
+      "allow": "all",
+      "exclude": [],
+      "prior": "T4 plus one public disclosed record per mode from earlier room sessions",
+      "lifecycle": "all_accept"
+    },
+    {
+      "id": "T6_TARGETED_CHANGES",
+      "allow": "all",
+      "exclude": "at second private opportunity actor0 excludes current full topic union",
+      "prior": "none",
+      "lifecycle": "first private opportunity: initial offer then other_question, then targeted replacement with creative; max3 attempts; accept last offer; second opportunity exclusion is durable; remaining opportunities all_accept"
+    }
+  ],
+  "source_binding": {
+    "audit_base_identity": "1d4de7ebb897bcd93f76e66f966650dfbc3b6d9c378da352dbb3a926faedf143",
+    "final_identity": "NOT_YET_FROZEN",
+    "new_producer": "tools/p05-topic-measurements.mjs (proposed, not created)",
+    "new_diagnostics": "tests/p05-topic-measurements/{fixtures,diagnostics,public-transcript,private-transcript,verify}.mjs (proposed)",
+    "historical_files_immutable": true,
+    "raw_hash_manifest": "source-pins.json"
+  },
+  "c2": {
+    "axes": {
+      "N": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "modes": [
+        "questions",
+        "truth_or_dare",
+        "yes_but"
+      ],
+      "contexts": [
+        "online",
+        "in_person"
+      ],
+      "comfort": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "classes": [
+        "X",
+        "J",
+        "F",
+        "G",
+        "M",
+        "S",
+        "R"
+      ],
+      "stages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "R": "every1..100",
+      "capability_profiles": [
+        "DEFAULT_OFF",
+        "CHAT_ON"
+      ],
+      "topic_regimes": [
+        "T0_ALL",
+        "T1_EMPTY",
+        "T2_COMMON",
+        "T3_ASYMMETRIC_EXCLUSION",
+        "T4_PRIVATE_PRIOR",
+        "T5_PUBLIC_AND_PRIVATE_PRIOR",
+        "T6_TARGETED_CHANGES"
+      ]
+    },
+    "eligibility_cells_per_cap_topic_R": 5880,
+    "logical_eligibility_rows": 8232000,
+    "row_encoding": "lossless R intervals allowed, independently expand/recount logical rows; no omitted zero cells",
+    "count_unit": "stable cardIDs and semantic-family IDs separately; actor permutations never multiply card coverage",
+    "neutral_sessions": 58800,
+    "negative_YB_all_X_cases": 196,
+    "private_sessions": 588000,
+    "private_session_axes": "C1/C4,F/G/M/S/R,N2..8,3modes,2contexts,R1..100,14cap-topic combinations",
+    "private_baseline": "ceil(.25*R) common friend_or_more C1 nonphysical/non-goingaway BEFORE topic filters; effective candidates separately counted AFTER full-union allow/exclude + semantic history",
+    "statuses": [
+      "SUPPORTED_COMPLETE",
+      "RULE_EXCLUDED_STAGE",
+      "RULE_EXCLUDED_COMFORT",
+      "RULE_EXCLUDED_CLASS",
+      "CAPABILITY_UNAVAILABLE",
+      "TOPIC_SAFE_EMPTY",
+      "SEMANTIC_EXHAUSTION",
+      "CONTENT_GAP",
+      "INVARIANT_FAIL"
+    ],
+    "all_retained": true,
+    "old_C2_transfer_forbidden": true
+  },
+  "invariants": {
+    "old_design_retained": {
+      "sessions_per_size": 10000,
+      "sizes": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "total_sessions": 70000,
+      "seed": "venus:P03-M1:test:<size>:<index>",
+      "indices": "0..9999",
+      "total_rounds": "1+(index%100)",
+      "mode": "index%3",
+      "context": "floor(index/3)%2",
+      "profile": "Exact measurementDesign random_profile byte derivation gives comfort%5 and label%6; simulated private_text_chat capability is declared for both contexts so mixed-context fixture metadata has its required capability, not production availability",
+      "max_violations": 0,
+      "max_repeated_cards_per_session": 0,
+      "fifteen_checks": "List each normative invariant independently with actual assertion and counter. Planner guards/replay and pure consent are directly simulated; authenticated transport/host ACL/room revocation require referenced real-PG tests and must not be inferred from selector output.",
+      "safe_refusals": "Report reason/seed/completed prefix separately; refusals are not completed sessions or safety violations unless safety invariant failed"
+    },
+    "profiles": 14,
+    "sessions_per_profile": 70000,
+    "total_sessions": 980000,
+    "scope": "planner+pure consent+production serializer; ACL/restore/HTTPWS separately runtime",
+    "seed": "original venus:P03-M1:test:<size>:<index>, unchanged, regime is explicit input not hidden seed mutation",
+    "additional_assertions": [
+      "full candidate topic union allowed by both, excluded by neither",
+      "targeted targets all contained in full union, extras also allowed by both",
+      "at most3 attempts/private round; replacement preserves actors/stage/round/private round budget",
+      "no room-public semantic repetition and no same-pair private semantic repetition across modes/sessions including selected/disclosed/declined/replaced attempts",
+      "no private history/exclusions consumed by public branch",
+      "immutable snapshot/no capability addition; current online/config guards runtime",
+      "safety revision rollback refused and room incarnation/history exact binding",
+      "safe-empty retains private opportunity count and generic projection; never fallback to public disclosure"
+    ]
+  },
+  "fairness": {
+    "old_design_retained": {
+      "strata": "N2..8 x questions/truth_or_dare/yes_but x in_person/online; all42 cells, no pooling-only PASS",
+      "sessions_per_stratum": 2000,
+      "total_rounds": 20,
+      "comfort": 4,
+      "relation": "friendship",
+      "capabilities": "private_text_chat in both simulated contexts; mixed-context fixture required-capability metadata applies in both. Production still unavailable until P05",
+      "seed": "venus:P03-M2:fairness:<size>:<mode>:<context>:<index>",
+      "denominators": [
+        "K=pair offers",
+        "D=2K=individual invitations"
+      ],
+      "max_individual_share": 0.5,
+      "max_aggregate_player_share_gap_per_stratum": 0.02,
+      "zero_denominator": "N/A with explicit count; cannot certify a nondegenerate expected stratum",
+      "n2_limitation": "Each actor share .5, no partner-variety promise; anti-consecutive-pair exception explicit when no alternative"
+    },
+    "profiles": 14,
+    "cells": 588,
+    "sessions_per_cell": 2000,
+    "total_sessions": 1176000,
+    "R": 20,
+    "stage_rows": 2352,
+    "seed": "original venus:P03-M2:fairness:<size>:<mode>:<context>:<index> unchanged",
+    "thresholds": {
+      "max_individual_pair_invitation_share_per_session": 0.5,
+      "max_aggregate_share_gap_each_cell": 0.02,
+      "max_cap_early_private_anti_repeat_consistency_violations": 0
+    },
+    "denominators": [
+      "K_pair_opportunity_invites",
+      "D=2*K_pair_opportunity_invites",
+      "candidate_attempts separately",
+      "accepted_topics separately",
+      "advice offers not pair invites"
+    ],
+    "anti_repeat": "report baseline-admissible alternative and effective-unused-topic+semantic alternative separately; current source avoids prior pair using baseline option pool. Do not silently equate them or relabel desired promise. Independent verifier checks both definitions and escalates contractual mismatch.",
+    "nondegeneracy": "every exchangeable expected-supported cell late-stage opportunity eligibility>0 and private_selected>0; online default-off private unavailable explicitly expected, not fake PASS. T1 empty can have generic private opportunities with no content; distinguish offers from prompts."
+  },
+  "gf": {
+    "old_design_retained": {
+      "matched_opportunities": 1000000,
+      "seed": "venus:P03-M1:gf:<index>",
+      "profile": "N4 all-FR vs first unordered pair CR/FR at equal comfort1, in_person, round1, questions, same eligible pool and seed; target affected unordered pair",
+      "positive": "X_i=1 target selected in G, Y_i=1 target selected in F",
+      "estimate": "pG/pF; report paired 2x2 counts, sample variances sG2,sF2 and covariance sGF with denominator n-1",
+      "variance_log_ratio": "(sG2/pG^2+sF2/pF^2-2*sGF/(pG*pF))/n",
+      "ci95": "exp(log(pG/pF)+/-1.96*sqrt(variance_log_ratio))",
+      "threshold_lower_exclusive": 1,
+      "invalid": "Zero positive/denominator counts, negative non-roundoff/nonfinite variance => FAIL/N/A; no continuity substitution"
+    },
+    "matched_opportunities": 1000000,
+    "scope": "T0_ALL, in_person effectivecaps[], stage1; class-prior mechanism checked once because stage1 public branch has no topic/prior dependencies; structural equality tests across cap/topic profiles required, no extra unmeasured statistical generalization",
+    "threshold_lower_exclusive": 1
+  },
+  "social_inference": {
+    "old_design_retained": {
+      "comparisons": [
+        [
+          "F",
+          "G"
+        ],
+        [
+          "F",
+          "M"
+        ],
+        [
+          "G",
+          "M"
+        ]
+      ],
+      "strata": "N2..8 selected game players x 3 modes x 2 contexts, all42 cells independently sampled",
+      "observer_membership": "With2..7 selected players, an unselected authenticated room observer can occupy an available room slot. At8 selected players the room is full: this probe uses only the public-channel projection visible to a participant outside the target pair; their own edges and targeted private frames are outside this declared classifier model. N2 remains included because an unselected third room member is possible. No ninth member is assumed.",
+      "train_per_class_per_stratum": 100,
+      "holdout_per_class_per_stratum": 400,
+      "sampling_rationale": "4200 train and16800 holdout per class/comparison pooled, plus400 balanced held-out samples/class/cell; limits CPU while checking every cell and excluding pooled cancellation",
+      "total_rounds": "1+(index%100)",
+      "comfort": 4,
+      "capabilities": "private_text_chat in both simulated contexts, satisfying mixed-context fixture metadata; not product availability",
+      "seed_train": "venus:P03-M2:train:<comparison>:<class>:<size>:<mode>:<context>:<index>",
+      "seed_holdout": "venus:P03-M2:holdout:<comparison>:<class>:<size>:<mode>:<context>:<index>",
+      "profile": "Other edges FR; target first unordered pair F=FR/FR,G=CR/FR,M=CR/CR. Same size/mode/context/round-count distribution for both classes.",
+      "observer": "Public-channel projection visible to an authenticated room member: room/game public snapshots and generic private round state, public text/roles/card ID, response state, choice/proposal revision, stream/revision/server-time/payload lengths; targeted private frames, actor-only HTTP responses, encrypted storage and raw edges are outside this probe. Membership limitations are explicit above.",
+      "transcript_adapter": "Production publicRound/gameView shape, solo primary recovered from rendered P1 name even if actors is empty. Consistent synthetic lifecycle policy supplies pending/active/terminal states, accepts/choice/finish and clock delays independent of secret class; declare generated metadata and distinguish real HTTP/WS tests. Include public text-role, card-histogram, generic counts by stage, lifecycle/revision/count/size features; never private card IDs.",
+      "classifier": "Diagonal LDA: train class1 mean minus class0 mean divided by pooled variance+1e-9, midpoint intercept, orientation fixed by train. Train pooled and per-stratum independently; no holdout orientation selection.",
+      "auc": "Mann-Whitney probability class1 score>class0 score, ties .5",
+      "ci95": "Hanley-McNeil: Q1=A/(2-A),Q2=2*A*A/(1+A); SE2=[A*(1-A)+(n1-1)*(Q1-A*A)+(n0-1)*(Q2-A*A)]/(n1*n0); clipped normal A+/-1.96SE",
+      "max_ci95_upper_pooled_and_each_stratum": 0.65,
+      "structural_blockers": "Any explicit secret transport field or unique deterministic class decoder in compatible repertoire, state/timing/size/role metadata blocks regardless of pooled AUC. Inspect all declared cells; structural production-transport tests required separately.",
+      "limitations": "Fixed linear probes and approximate CIs do not establish universal privacy against arbitrary classifiers or participant conduct. No physical action performance is simulated or guaranteed. Actual private chat comes P05."
+    },
+    "profiles": 14,
+    "comparisons": [
+      "FG",
+      "FM",
+      "GM"
+    ],
+    "cells_per_comparison_profile": 42,
+    "train_per_class_cell": 100,
+    "holdout_per_class_cell": 400,
+    "transcripts": 1764000,
+    "models_per_profile": 129,
+    "max_ci95_upper_each_cell_and_pooled": 0.65,
+    "seed": "old M3 train/holdout seed formula unchanged; each explicit cap-topic profile is separate frozen input; same seeds for matched counterfactuals, no tuning/resampling",
+    "structural_blockers": "any direct private fields, deterministic decoder learned train and exact heldout, or forbidden metadata decoder blocks independent of AUC",
+    "feature_dictionary": "retain every old M3 feature group and order prefix; add V2 public observable metadata append-only with exact names/order hash before run",
+    "source_adapter": "production topicGameView with actual TopicRoundData/history; runtime-validated room/game public envelope+stream metadata; no fake RoundPlan or handwritten sanitized subset",
+    "lifecycle": "old invitation/choice/action/finish counts retained; additionally real topic offer/two topic accepts, replacements/exclusion revocations/advice lifecycle when regime calls for them; record exact mutation/revision/clock/frame ordering and payload byte lengths including generic safe-empty/clear",
+    "observer_membership": "With2..7 selected players, an unselected authenticated room observer can occupy an available room slot. At8 selected players the room is full: this probe uses only the public-channel projection visible to a participant outside the target pair; their own edges and targeted private frames are outside this declared classifier model. N2 remains included because an unselected third room member is possible. No ninth member is assumed."
+  },
+  "exclusion_inference": {
+    "status": "proposed additive compatible-support test; not substitute for FG/FM/GM",
+    "comparisons": [
+      "E0_none_vs_E1_music_excluded",
+      "E0_none_vs_E2_romance_excluded",
+      "E1_music_excluded_vs_E2_romance_excluded"
+    ],
+    "relations": "allfriendship; all allow except explicit own excludes; designated target actor0 exclusions secret; entire common creative repertoire remains independently nonempty at all tested lengths",
+    "axes": "42cells x2capability profiles x2prior conditions(NONE,T4_PRIVATE_PRIOR)",
+    "train_per_class_cell": 100,
+    "holdout_per_class_cell": 400,
+    "transcripts": 504000,
+    "max_ci95_upper_each_cell_and_pooled": 0.65,
+    "seed": "venus:P05-TOPIC-M1:<train|holdout>:<comparison>:<class>:<size>:<mode>:<context>:<prior>:<index>",
+    "compatible_support_precheck": "fixed synthetic corpus must satisfy both classes before measuring; every refusal is retained and classified, never dropped. Unexpected support failure blocks claimed compatible result; do not change seeds or corpus after outcome.",
+    "out_of_support": "empty/disjoint allow vs all and human refusal are explicitly measured/reportable lifecycle differences, not claimed universally indistinguishable and never hidden by filtering successful sessions."
+  },
+  "private_inference": {
+    "scope": "actor-only preaccept topic/advice projections; exact offered topic labels are intended disclosure, raw peer allow/exclusion sets/reasons/counts and unaccepted prompt/advice text are not",
+    "tests": [
+      "counterfactual same full offered topic union, different peer unused allow/exclusion sets: no peer list/reason/count disclosure or derived metadata decoder",
+      "before bilateral topicaccept: no prompt/cardid/cardhash/condition/advice text, including UTF8 sizes/count/revisions",
+      "pending advice delivery contains consent affordance only; text/content hash/length/preview not sent before recipient accept; edit revokes prior accept; revoke wipes cached/current delivery",
+      "outsider/host nonactor public stream sees no topicunion/actors/privateframes; non-target actor private stream cannot receive peer delivery",
+      "multi-topic cards fullunion labels across both TD sides and YBproposal+responder+condition contract; invalid candidates failclosed",
+      "late epoch/safety/source/presence/clock fence after lastawait denies stale content; no eager bytes enqueue"
+    ]
+  },
+  "runtime_canary": {
+    "status": "NOT_RUN_DESIGN",
+    "matrix": "N2..8 x3modes x2contexts x2capability profiles =84cells, fixed R100; where online defaultoff no private transport expected, assert denial rather than inject grant",
+    "bounded_per_cell": "at most3 predeclared mode sessions and100rounds/session; missing required opportunity is FAIL_SETUP, all seeds/prefixes retained; no replacement seed search",
+    "seed": "venus:P05-TOPIC-M1:runtime:<size>:<mode>:<context>:<capability>:<session_index0..2>",
+    "cases": [
+      "distinct cards same semantic family within session",
+      "mode change +new session same room samepair blocks shared private family",
+      "same family private in different pair allowed when not in publichistory; samepair stillblocked",
+      "public distinct-card crossmode priorfamilyblocked; pairprivatehistory alone never changes public branch",
+      "mixedvisibility family removed wholesale before selection; changingprivateevent cannot conditionallyremove publichalf",
+      "selected/declined/replaced candidates retained as roompair history; >=2replacement attempts remain same private budget",
+      "targeted request alltopics subset candidate fullunion, disallowed extra union blocked; settingsrev and idempotent retries",
+      "source-bound runtime sharedRoots/external preferences actual queries confirm prior union across sessions;no scripted target fallback",
+      "actual public/actor serialization agrees with offline adapter feature extraction for each observable mutation class"
+    ]
+  },
+  "resources": {
+    "proposed_pure_worker": {
+      "cpus": 1,
+      "memory_mib": 1536,
+      "parallel_sections": 1,
+      "artifact_budget_gib": 32,
+      "execution": "stream NDJSON sessions/features/scores, online moments; no full transcript corpus retained in RAM",
+      "timeout_policy": "root ACK fixes wallclock limit before RUN; incomplete outputs retained NOT_ACCEPTED; section resume only at fixed indexed chunk boundary and identical identity"
+    },
+    "proposed_runtime": {
+      "api_cpus": 1,
+      "api_memory_mib": 768,
+      "db_memory_mib": 512,
+      "internal_network": true,
+      "cleanup": "unique compose project+label ownership verified, no global cleanup"
+    },
+    "historical_observed_only": {
+      "source": "8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b",
+      "invariants_seconds": 2122.006,
+      "fairness_seconds": 1015.793,
+      "gf_seconds": 2221.924,
+      "inference_seconds": 3009.548,
+      "artifact_bytes": {
+        "invariants": 16742957,
+        "fairness": 21603140,
+        "gf": 20245,
+        "inference": 7748278
+      }
+    },
+    "ETA": "NOT_ESTIMATED; newhistory/semantic/serializer work and14profiles invalidate extrapolated completion promise"
+  },
+  "failure_policy": "Retain initial FAIL with source/protocol identity and seeds; changed algorithm/threshold/profile requires new preregistered revision and independent review before rerun; no posthoc seed selection or hidden pooling M3 diagnostic failures are retained; any subsequent changed measured input requires a new preregistration revision before rerun.",
+  "not_stage_pass": true,
+  "human_approval": false
+}

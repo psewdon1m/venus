@@ -1,0 +1,38 @@
+{
+  "original_sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+  "derivative_sha256": "fe363d79506b6ecb71caba06ece753b95bd8baa688ce8b7ae96df5f107ad1140",
+  "semantic_replacements": [
+    {
+      "before": "export function harness(){",
+      "after": "export function harness(config){"
+    },
+    {
+      "before": "mkdtempSync(join(tmpdir(),'venus-topic-lifecycle-'))",
+      "after": "config.directory"
+    },
+    {
+      "before": "new Keyring('test',{test:randomBytes(32).toString('base64')})",
+      "after": "Keyring.fromFile(config.keyringFile)"
+    },
+    {
+      "before": "mkdirSync(p,0o700);return[n,p];",
+      "after": "assert(existsSync(p),'Existing controller-provisioned root required');return[n,p];"
+    },
+    {
+      "before": "let now=1000000,app,origin,queryHook=null;",
+      "after": "let now=config.now,app,origin,queryHook=null;"
+    },
+    {
+      "before": "async function cleanup(){await app?.close();await pool.end();const path=resolve(directory);assert(path.startsWith(resolve(tmpdir())+sep)&&path.includes('venus-topic-lifecycle-'));rmSync(path,{recursive:true,force:true});}",
+      "after": "async function close(){await app?.close();await pool.end();}"
+    },
+    {
+      "before": "withFault,cleanup,loadObject:",
+      "after": "withFault,close,loadObject:"
+    }
+  ],
+  "synthetic_content_only": true,
+  "production_or_harness_writes": false,
+  "auth_or_grant_substitution": false,
+  "child_close_preserves_authority": true
+}

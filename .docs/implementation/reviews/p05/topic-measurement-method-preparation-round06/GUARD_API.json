@@ -1,0 +1,33 @@
+{
+  "revision": "METHOD05-HOST-OUTPUT-FENCES",
+  "base": ".artifacts/p05-topic-measurements-method06",
+  "files": {
+    "host-output-guard.py": "09755f4178a5d6224a956a89c8a46c6875cae73a410a6435f401caa33a7354c8",
+    "host-output-guard.mjs": "64480d20661d1a6f5c69b4eed7c34bc9525fb5364d0ae7b6ad65d70883fdceec",
+    "owned-cleanup.mjs": "29c9fc4f9ac178e32bc9e1a3b7a945c3fa15236fae70ecaa0142fa2267df585d",
+    "r100-v3-watchdog.mjs": "5ef8e95412e4256cd1feddb59bb375c1bde0d5cb49954419eab5e31d184cff72",
+    "r100-v3-package.py": "c55784a4ba9345acbf850de050a868e3b4aee9fbc0ca05ab886b5265e899e7ba",
+    "allocated-tree.py": "63add645608bca191f3cad392530a1fd1cf3e616de3c9075f171a058fd557efe",
+    "r100-v3-launcher.mjs": "98ae8c967c3755f61270547af7862fb93c599aa15ec9d1be97db17a6ca28c185",
+    "r100-v3-volume.mjs": "4d6d570a6b3b7a21787a6516990812b8146011568b77843d8686ccca60e996fc",
+    "r100-v3-child.mjs": "4498bfd630c2653b69e1358e9c532b8a7b205bd793c420369021411df19b295b"
+  },
+  "HostOutputGuard_python": {
+    "constructor": "HostOutputGuard(root_ACK_config, *, space_probe=None, read_sample=None, clock=time.monotonic, wait=time.sleep)",
+    "before": "before(next_bytes=0): actual hostfree >=10GiB+128MiB AND liveowner counter; latches all low/unknown/stale/reordered faults",
+    "partition": "partition(exact root/export20MiB OR root/archive20MiB OR root/control/receipts8MiB).write(target,data): unbuffered<=64KiB, actual fresh guard before create/everychunk/fsync; prospective allocated+metadata cap",
+    "dependencies": [
+      "allocated-tree.py",
+      "pwsh>=7.2 onWindows for actualADS inventory"
+    ],
+    "CLI": "r100-v3-package.py --guard-config=<exact authorized rootACK> with --stage/--extract/--archive; no CLI free/counter mock switches"
+  },
+  "beforeHostAllocation_JS": "beforeHostAllocation({host_output_path,optional fixed global_owned_cap_bytes/reserve_bytes},nextBytes=0): actualstatfs prewrite check, fixed128MiB/10GiB only; does not replace allocated partition writer or fresh supervisor check",
+  "cleanupOwned_JS": "async cleanupOwned({docker,owner,image,container,volume,exportVerified,optional now}): total30s; ps -aq --no-trunc returns64lowercasehex IDs, require unique list/exact ordered inspect mapping before owner/image/exact-name validation; no logger API, unverified prefix retains volume; failed/ambiguous mapping returns retained without kill/rm",
+  "native_guard": "r100-v3-child hostGuard+nativeGuard+nativeBudget and artifact-store-v3; actualLinux statfs/st_blocks, fixed20MiB partition/128global+10GiB reserve; no independent new runtime proof",
+  "OCI_reuse": "NOT a generic512MiB/900s library. New explicit versioned adaptation/own budgets+phase deadlines+independent review required; JS rejects explicit512MiB to avoid silent128MiB reuse. Keep originalMETHOD05 constants unchanged.",
+  "capacity_fault_retention": "No furtherhostwrites afterfault. Currentfailure report over allocation-free IPC/console if newdiskreceipt unsafe. Cleanup still attempts ownedstop/removal; unverifiednativeprefix kept. Physicaldaemonfailure cannot guarantee cleanup; report retained/manual.",
+  "candidate_revision": "METHOD06-CANONICAL-CLEANUP-IDS",
+  "guard_component_revision_unchanged": "METHOD05-HOST-OUTPUT-FENCES",
+  "launcher_candidate_authority": "prep.candidate_revision and rootACK.candidate_revision must equal METHOD06-CANONICAL-CLEANUP-IDS; exact new launcher pin and relocated source mapping also reject old prepared inputs. METHOD05 writeguard authority retained intentionally; Python guard/package/allocation bytes unchanged."
+}

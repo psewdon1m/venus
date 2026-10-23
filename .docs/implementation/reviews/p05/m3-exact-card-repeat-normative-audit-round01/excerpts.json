@@ -1,0 +1,77 @@
+[
+  {
+    "path": ".docs/08_RELATIONSHIP_ENGINE.md",
+    "line": 181,
+    "text": "8. Query eligible unused card variants from exact pinned pack; fail-closed if none."
+  },
+  {
+    "path": ".docs/08_RELATIONSHIP_ENGINE.md",
+    "line": 261,
+    "text": "Session history includes card ID/revision, participants (pseudonymous), consent outcome state (without personal reasons), timestamps and engine version. Last session rerun with same settings does not copy card sequence or old consents; new PRNG seed. **No card repeats within a session when enough eligible cards; if shortage, use safe fallback/error, not relax policy.**"
+  },
+  {
+    "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+    "line": 72,
+    "text": "**Public sequence не зависит от скрытого private semantic history/exclusions.** Публичные semantic families исключаются по уже публично показанным карточкам; private selection учитывает public history и private историю конкретной пары. Private history не фильтрует будущий public pool. Это особенно важно для смешанных `SEM-17` (YB-1113 private / YB-1126 public) и `SEM-18` (YB-1133 private / YB-1005 public / TD-1005 solo): blanket room-level used-cluster создаёт decoder. Пока эти смешанные семьи не разнесены редакторски или не доказана новая схема общего support, для topic-enabled выпуска они не принимаются как закрытые: либо консервативно вывести **всю смешанную семью** из нового versioned repertoire независимо от наличия private события, либо получить новые differentiated families и review. Нельзя отключать только публичную половину после тайного private события. Исторический pack при этом не редактируется; новый repertoire/map digest и C2 обязательны."
+  },
+  {
+    "path": ".docs/adr/ADR-016-p03-progressive-evidence.md",
+    "line": 13,
+    "text": "M3 retains algorithm RE-1.P03-M1, policy RE-1, the exact M1/M2 seed strings, profiles, samples, sampler probabilities, classifiers and numerical thresholds. It adds independent observation of the unchanged production planner: stage/eligibility/interaction/comfort distributions in168cells, raw per-session private proposal counts, zero early-private and cap violations, and last-private-pair alternative decisions with explicit no-alternative exceptions. An observer computes candidate availability before anti-repeat/recovery/branch selection and never feeds a decision to the planner."
+  },
+  {
+    "path": ".docs/adr/ADR-024-p05-complete-private-opportunity-history.md",
+    "line": 9,
+    "text": "Повтор предыдущей пары запрещён, когда есть другая пара с неиспользованной допустимой карточкой после hard eligibility, полного объединения тем, разрешений/исключений обоих и semantic blocking публичной/собственной pair history. Один фильтр используется для альтернативы и кандидата. При N2 или отсутствии эффективной альтернативы повтор допустим. Private cap и запрет ранних stages сохранены. Публичный график и его RNG не потребляют приватные темы, исключения или историю."
+  },
+  {
+    "path": ".docs/implementation/p03-measurement-protocol-v3.json",
+    "line": 5,
+    "text": "  \"supersedes_measurements_only\": \"P03-M2\","
+  },
+  {
+    "path": ".docs/implementation/p03-measurement-protocol-v3.json",
+    "line": 61,
+    "text": "    \"max_repeated_cards_per_session\": 0,"
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/topic-measurement-design-round03/PROPOSED_PREREG.json",
+    "line": 209,
+    "text": "      \"max_repeated_cards_per_session\": 0,"
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/topic-measurement-design-round03/PROPOSED_PREREG.json",
+    "line": 405,
+    "text": "      \"same family private in different pair allowed when not in publichistory; samepair stillblocked\","
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/topic-measurement-design-round03/REPORT.md",
+    "line": 9,
+    "text": "All other contracts are byte-identical to round02: expected-status, fixture-support, lifecycle-scripts, seed-contract, anti-repeat and historical source-pins. Original samples, seeds, thresholds,3920guard rows/8,232,000 logical rows,4930proposedcards/1057families,1075features, clocks/advice/chat controls and strict current-session0 gate remain unchanged. No relaxed feature ordering or smaller easier corpus is introduced."
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/topic-measurement-design-round03/anti-repeat.json",
+    "line": 43,
+    "text": "  \"fix_revision\": \"Prospective engine2/support policy/ADR; unsupported old snapshot failclosed, preserve old bytes/ledgers/HOLD; private grants revoked on incompatible reader. Root authors fix, different reviewer accepts.\""
+  },
+  {
+    "path": "packages/relationship-engine/src/topic-planner.ts",
+    "line": 242,
+    "text": "function blocked(card:Card, rows:readonly TopicHistoryRecord[], map:FrozenTopicMap) {"
+  },
+  {
+    "path": "packages/relationship-engine/src/topic-planner.ts",
+    "line": 266,
+    "text": "function effectivePrivateCards(history:TopicPlannerHistory,actors:readonly string[],cards:readonly Card[],map:FrozenTopicMap,state:TopicSafetyState):Card[] {"
+  },
+  {
+    "path": "packages/relationship-engine/src/topic-planner.ts",
+    "line": 273,
+    "text": "function candidate(snapshot:TopicSnapshot,history:TopicPlannerHistory,round:TopicRound,pack:FrozenPack,map:FrozenTopicMap,state:TopicSafetyState,"
+  },
+  {
+    "path": "packages/relationship-engine/src/topic-planner.ts",
+    "line": 368,
+    "text": "export function replaceTopicCandidateForTopics(snapshot:TopicSnapshot,history:TopicPlannerHistory,pack:FrozenPack,map:FrozenTopicMap,state:TopicSafetyState,"
+  }
+]

@@ -1,0 +1,25 @@
+# P05 private conversation kernel — independent review
+
+## 2026-10-19T18:25:37.9129506+03:00 — intake
+Task: independent source audit and negative state/projection probes. Read AGENTS.md. Read-only implementation; own reports/probes under .docs/implementation/reviews/p05/kernel-round-01.* only. No API/persistence/full-stage claim.
+Inputs supplied: module SHA256 fbb3715c6d6c78999594bad1324d372d6e30c89d0e79b147799f1500dac3dbf4; tests SHA256 490829fc144a7c3f21c889a1bb089ac74efb317ec685b65bc89f71176bd8cda9. Actual-byte verification and design reading pending.
+
+## 2026-10-19T18:26:20.0335536+03:00 — inputs read and pinned
+AGENTS and entire P05_TOPIC_ADVICE_DESIGN.md read. Actual module/test hashes match supplied identities. Auditing pure in-memory guarantees separately from caller integrations. Preliminary stale-other-question intent gap under investigation; no implementation edits. Native Node import compatibility check follows actual output.
+
+## 2026-10-19T18:28:42.3552782+03:00 — independent probes and source checks
+Native Node v24.22.0 import and independent 41 state/projection checks ran against pinned bytes: 40 PASS, 1 FAIL, exit1. K30 confirms P05-KERNEL-001: an old music other_question(exclude_current_topics=true) request is accepted after fresh food bilateral acceptance and permanently excludes food. Reproducer/raw/JSON preserved as kernel-round-01.probes.*; root and author notified. Current source freeze respected; no implementation edits.
+Author unit rerun: 59/59 PASS, exit0. Scoped ESLint exit0. Strict source+test tsc --ignoreConfig --noEmit with NodeNext/ES2023/noUncheckedIndexedAccess/exactOptionalPropertyTypes exit0. These green checks do not override the independently reproduced finding. Source scope is two files only; other authors remain active. Full stage not accepted.
+
+## 2026-10-19T18:29:33.2096097+03:00 — handoff / WRITES_FINISHED
+Formal round01 CHANGES_REQUESTED saved. Report MD SHA256 562223cfd99540cead33dbdedbf43e5ac358f1697b295e645d8df7db29a372ca; JSON a07ac86e953f8984224fe21bacabe640ed3ffef8738e91963cffa370927943ff. Global docs checker exit0: 224 Markdown, 0 errors; raw kept kernel-round-01.docs-raw.txt. One open P1 P05-KERNEL-001. Original source and test bytes remained unchanged; 40/41 independent probes and 59/59 author tests, source+test lint/typecheck green. Root accepted finding and will release source freeze after actual self-actions Docker handle26be4ab8f56b terminal; no permission to author-edit was issued by reviewer. All own report/probe writes finished; further verification must use round02, preserving this failure.
+
+## 2026-10-19T18:34:05.9570376+03:00 — round02 intake
+Root requested independent READ-ONLY round02 after authorized author correction. Verified new module SHA256 57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd and tests cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db; read author's journal and correction rationale. Original round01 FAIL immutable. Own new kernel-round-02 files only; no included source writes during diagnostic Docker freeze. Intake command accidentally compared probe source against module using git diff --no-index (exit1: files differ, not a verification failure); discarded that non-comparable diff as evidence. Re-read actual updated source/tests before independent regression.
+
+## 2026-10-19T18:35:23.2638491+03:00 — round02 actual checks
+Independent native actual-module probes 86/86 PASS, exit0: original 41 controls adapted positive other_question calls to exact contract, plus 45 correction controls (stale/missing/individual mismatched references, true/false, pending/one-ack/current pending+accepted advice, expired/replaced intent, exact positives, unconditional stop and stale-command clock advancement). Full JSON state equality at equal time proves stale intent does not mutate preferences/new acks/advice. P05-KERNEL-001 no longer reproduces. Before/after module/test exact pins unchanged.
+Author rerun 68/68 PASS exit0; scoped lint exit0 and strict source+test noEmit typecheck exit0. Verified historical archive module SHA=fbb3715... before computing exact diff against current source: only other_question type binding and handler exact-reference guard changed. No exports/runtime activation. Other files/scopes remain outside acceptance.
+
+## 2026-10-19T18:36:09.5245512+03:00 — round02 handoff / WRITES_FINISHED
+PREFLIGHT_PASS for exact pure unexported kernel only; P05-KERNEL-001 closed for module57d33.../testcb77..., no new confirmed findings. Report MD SHA256 a79db7cd1b720ff1a6c1b31a3bb990a1c735e658fefc5e8cd36a86f4c3516a0c; JSON c1896792327661b10513346ec29389caa673c220b9bdbd915f92c73fba9b5fa6. Final source/test/design hashes rechecked unchanged. Docs checker exit0:225Markdown0errors, raw retained. Original round01 report/probe hashes rechecked unchanged. API/UI/persistence/ledger/restore/approvedcontent/planner/C2/fullstage still not accepted. All own round02 writes finished; no implementation/manifest/otherjournal edits.

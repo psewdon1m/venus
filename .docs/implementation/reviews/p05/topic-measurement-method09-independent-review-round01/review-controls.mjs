@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import * as fs from 'node:fs';
+import {resolve,join} from 'node:path';
+import vm from 'node:vm';
+import {createHash} from 'node:crypto';
+import {EventEmitter} from 'node:events';
+import {infrastructureError,captureProcess,snapshotDiagnostics,packageFailure} from '../p05-topic-measurements-method09/process-diagnostics.mjs';
+const base=resolve('.artifacts/p05-method09-independent01'),source=fs.readFileSync(resolve('.artifacts/p05-topic-measurements-method09/r100-v3-watchdog.mjs'),'utf8'),raw=source.slice(0,source.indexOf("if(process.argv[1]&&resolve(process.argv[1])")).replace(/^import .*;\r?\n/gm,'').replace(/^export /gm,'');
+const rows=[],observations=[];const check=(name,fn)=>{fn();rows.push({name,status:'PASS'});};
+for(const fault of ['none','rename-first','write-first','rename-terminal','stop-fails']){
+ const root=fs.mkdtempSync(join(base,'fixture-'));let clock=0,reads=0,writes=0,renames=0,dockerCalls=0;const messages=[];
+ const config={kind:'ROOT_R100_V3_OPERATIONAL_DIAGNOSTIC_ACK',method_revision:'METHOD05-HOST-OUTPUT-FENCES',status:'AUTHORIZED',independent_method_and_producer_review:'PASS',owner:'a'.repeat(32),container:'venus-r100-v3-0123456789ab',volume:'venus-r100-v3-0123456789ab-output',image:'sha256:'+'b'.repeat(64),source_identity:'c'.repeat(64),global_owned_cap_bytes:128*1024**2,reserve_bytes:10*1024**3,attempts:1,phase_limits_ms:{BOOTSTRAP:30000,PROBE:10000,RUN:300000,STOP:30000,EXPORT:60000,ARCHIVE:30000,CLEANUP:30000,DONE:0},statistics_RUN:false,control_directory:root,host_output_path:root,counter_freshness_ms:2000};
+ const osError=(code,syscall)=>Object.assign(Error('PRIVATE_PAYLOAD_MUST_NOT_APPEAR'),{code,syscall,errno:-13});
+ const ctx={...fs,assert,resolve,join,createHash,Buffer,BigInt,infrastructureError,performance:{now:()=>clock},setTimeout,clearTimeout,process:{on(){},off(){}},writeFileSync:(p,b,o)=>{writes++;if(fault==='write-first'&&writes===1)throw osError('ENOSPC','write');fs.writeFileSync(p,b,o);},renameSync:(p,t)=>{renames++;if((fault==='rename-first'||fault==='stop-fails')&&renames===1||fault==='rename-terminal'&&t.endsWith('watchdog-terminal.json'))throw osError('EPERM','rename');fs.renameSync(p,t);}};
+ const hooks={now:()=>clock,pause:async ms=>{clock+=ms;},free:()=>200n*1024n**3n,emit:x=>messages.push(x),readPhase:()=>({owner:config.owner,counter:++reads,phase:reads===1?'BOOTSTRAP':'DONE',worker_stopped:true,export_verified:true,export_verified_counter:1,owned_cleanup:'completed'}),docker:async()=>{dockerCalls++;return{code:fault==='stop-fails'?1:0,stdout:'',stderr:''};}};
+ const report=await vm.runInNewContext(raw+'\nsupervise(JSON.parse(configJSON),hooks);',vm.createContext({...ctx,configJSON:JSON.stringify(config),hooks}),{timeout:1000});
+ assert(messages.some(x=>x.type==='terminal'));assert(!JSON.stringify(report).includes('PRIVATE_PAYLOAD'));
+ if(fault==='none'){assert.equal(report.status,'SUPERVISOR_COMPLETE_NON_GATING');assert.equal(dockerCalls,0);}
+ else{assert.notEqual(report.status,'SUPERVISOR_COMPLETE_NON_GATING');assert.equal(report.terminal_receipt_written,false);assert(fs.existsSync(join(root,'host-space-next.json'))||fault==='write-first');if(['rename-first','write-first','stop-fails'].includes(fault)){assert.equal(writes,1);assert.equal(renames,fault==='write-first'?0:1);assert.equal(dockerCalls,1);assert.equal(report.io_failure.code,fault==='write-first'?'ENOSPC':'EPERM');}}
+ observations.push({fault,writes,renames,dockerCalls,report,terminal_message:messages.find(x=>x.type==='terminal')});rows.push({name:'exact supervisor '+fault,status:'PASS_OBSERVED'});
+ assert(root.startsWith(base+'\\')||root.startsWith(base+'/'));fs.rmSync(root,{recursive:true});
+}
+check('typed IO redacts unknown error message and fields',()=>{const r=infrastructureError({name:'PrivateError',code:'SECRET_CODE',message:'SECRET',errno:'SECRET',syscall:'SECRET'});assert.deepEqual(r,{name:'OTHER',code:'UNLISTED',errno:null,syscall:null});});
+for(const [stream,limit]of [['stdout',16384],['stderr',8192]]){
+ for(const extra of [0,1]){const child=new EventEmitter();child.stdout=new EventEmitter();child.stderr=new EventEmitter();let faults=0;const cap=captureProcess(child,{onFault:()=>faults++});child[stream].emit('data',Buffer.alloc(limit+extra,65));assert.equal(Buffer.byteLength(cap[stream]),limit);assert.equal(cap[stream+'_truncated'],Boolean(extra));assert.equal(faults,extra);rows.push({name:stream+' exact boundary extra='+extra,status:'PASS'});}
+}
+check('spawn failure captured redacted',()=>{const child=new EventEmitter();child.stdout=new EventEmitter();child.stderr=new EventEmitter();let fault;const cap=captureProcess(child,{onFault:v=>fault=v});child.emit('error',{code:'PRIVATE_ERROR',message:'PRIVATE'});assert.equal(cap.spawn_error,'UNLISTED_SPAWN_ERROR');assert.equal(fault,'SUPERVISOR_SPAWN_ERROR');assert(!JSON.stringify(cap).includes('PRIVATE'));});
+check('missing capture fails explicit',()=>assert.equal(snapshotDiagnostics(null).spawn_error,'SUPERVISOR_NOT_STARTED'));
+const envelope={transport:'PYTHON_PACKAGE_FAILURE_V1',status:'NOT_ACCEPTED',stage:'STAGE',exception_class:'PermissionError',reason:null,os_errno:13,winerror:5,primary:true};
+check('typed Python envelope accepted',()=>assert.deepEqual(packageFailure(JSON.stringify(envelope),'STAGE'),envelope));
+for(const [name,change]of [['raw traceback',()=> 'SECRET_TRACEBACK'],['wrong stage',()=>JSON.stringify({...envelope,stage:'ARCHIVE'})],['unknown reason',()=>JSON.stringify({...envelope,reason:'SECRET'})],['extra payload',()=>JSON.stringify({...envelope,payload:'SECRET'})],['overflow',()=> 'X'.repeat(4097)]])check('reject Python '+name,()=>assert.equal(packageFailure(change(),'STAGE').transport,'PYTHON_PACKAGE_FAILURE_UNAVAILABLE'));
+const terminalFirst=observations.find(x=>x.fault==='rename-terminal');
+const result={status:terminalFirst.report.io_failure===null?'FINDING_TERMINAL_FIRST_IO_FAILURE_NOT_COPIED_TO_REPORT':'PASS_FINITE_METHOD_ONLY',source_sha256:createHash('sha256').update(source).digest('hex'),controls:rows,observations,Docker_calls:0,statistics_RUN:false,actual_R100_RUN:false,private_payload:'ONLY_SYNTHETIC_SENTINEL_NOT_PRIVATE_DATA'};
+fs.writeFileSync(join(base,'controls-result.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,controls:rows.length,terminal_first_failure:terminalFirst.report.io_failure,terminal_capacity_fault:terminalFirst.report.capacity_fault}));

@@ -1,0 +1,19 @@
+--- prior/m3\model.mjs
++++ new/m3\model.mjs
+@@ -40,7 +40,7 @@
+   assert(current.plan.actors.every(actor=>e.consentAllows(current[scope],actor,stamp())));
+  };
+  const topicConsent=()=>{
+-  assert(current.plan.card);assert(current.invitation?.state==='active');const card=pack.card(current.plan.card.card_id),binding={...current.plan.card,candidate_ref:'candidate-'+hash(current.plan.round_id),side:current.choice,condition:null};
++  assert(current.plan.card);assert(current.invitation?.state==='active');const card=pack.card(current.plan.card.card_id),binding={...current.plan.card,candidate_ref:'candidate-'+hash(current.plan.round_id),side:current.choice,condition:current.condition?.text??null};
+   const candidate=renderer.candidateFromBinding(pack,binding,map.entry(card.id).topic_ids),scope={room_id:s.room_id,session_id:s.session_id,round_id:current.plan.round_id,actors:current.plan.actors};
+   let conversation=e.createPrivateConversation({scope,pins:{pack_digest:pack.digest,map_digest:map.pins.map_sha256,taxonomy_digest:map.pins.taxonomy_digest},topics:map.topics,candidates:[candidate],preferences:Object.fromEntries(scope.actors.map(actor=>[actor,{revision:1,allow:safety.members.find(m=>m.member_id===actor).allow_topic_ids,excluded:[]}])),now:stamp(),parent_expires_at:current.invitation.active_until});
+   const apply=(command,actor)=>{const result=e.applyPrivateConversation(conversation,command,{scope,actor,now:stamp()});conversation=result.state;assert.equal(result.error,null);};
+@@ -81,6 +81,7 @@
+    if(round.mode==='truth_or_dare'){current.choice='truth';current.content_revision++;if(!round.requires_action_consent)current.state='active';emit('choose_truth');}
+    if(round.interaction==='pair_private'){
+     if(!round.card){current.state='skipped';emit('safe_empty_skip');completed++;continue;}
++    if(round.mode==='yes_but'){current.condition={revision:1,text:'MODEL REQUIRED CONDITION'};current.content_revision++;emit('first_private_condition');}
+     topicConsent();
+    }
+    if(round.requires_action_consent){current.action=e.proposeConsent('model-action-'+round.round_id,round.actors,'action',stamp(),current.invitation?.active_until??stamp()+180000);acknowledge('action');}

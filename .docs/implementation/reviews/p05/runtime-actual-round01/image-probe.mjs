@@ -1,0 +1,6 @@
+/** Independent immutable-image content inspection only. This one-off explicitly
+ * overrides CMD for inspection; root app execution keeps its ordinary CMD. */
+import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {createHash} from 'node:crypto';
+const pins=JSON.parse(readFileSync('/review/image-all-pins.json','utf8')),checks=[];let number=0;
+for(const [path,expected] of Object.entries(pins)){const bytes=readFileSync('/app/'+path),actual=createHash('sha256').update(bytes).digest('hex');assert.equal(actual,expected,path);if(path.includes('approved-')){const registry=JSON.parse(bytes);assert.equal(registry.schema_version,1);assert.deepEqual(registry.approved,[]);}checks.push({id:'IMAGE-'+String(++number).padStart(2,'0'),status:'PASS',path,sha256:actual});}
+const metadata=JSON.parse(readFileSync('/app/build-metadata.json','utf8'));assert.equal(metadata.source_revision,'b5436cde02dd09aa049ce0103cab58d9642e8c70');checks.push({id:'IMAGE-'+String(++number).padStart(2,'0'),status:'PASS',build_source_revision:metadata.source_revision});assert.equal(checks.length,8);console.log(JSON.stringify({status:'PASS',scope:'IMAGE_CONTENT_INSPECTOR_NOT_RUNTIME_STARTUP',checks}));

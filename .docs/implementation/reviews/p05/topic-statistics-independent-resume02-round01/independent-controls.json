@@ -1,0 +1,93 @@
+{
+  "status": "PASS_FINITE_CONTROLS_WITH_TWO_CONFIRMED_FINDINGS_NOT_IMPLEMENTATION_ACCEPTANCE",
+  "controls": 15,
+  "cases": [
+    {
+      "name": "root authorization absent refuses before section loading",
+      "status": "PASS"
+    },
+    {
+      "name": "default sink fsync append, full exact replay and prefix refusal",
+      "status": "PASS"
+    },
+    {
+      "name": "exact sink permits new durable receipt after injected fsync fault: counterexample",
+      "status": "PASS"
+    },
+    {
+      "name": "exact Windows worker kill swallows taskkill failure without confirming termination: counterexample",
+      "status": "PASS"
+    },
+    {
+      "name": "already exited worker is not killed",
+      "status": "PASS"
+    },
+    {
+      "name": "fixed 32GiB ledger accepts reserve boundary",
+      "status": "PASS"
+    },
+    {
+      "name": "physical partition cap refuses payload",
+      "status": "PASS"
+    },
+    {
+      "name": "physical partition cap refuses archive",
+      "status": "PASS"
+    },
+    {
+      "name": "physical partition cap refuses inputs",
+      "status": "PASS"
+    },
+    {
+      "name": "physical partition cap refuses control",
+      "status": "PASS"
+    },
+    {
+      "name": "free reserve refuses host",
+      "status": "PASS"
+    },
+    {
+      "name": "free reserve refuses native",
+      "status": "PASS"
+    },
+    {
+      "name": "normalizer cannot hide candidate reference or revision changes",
+      "status": "PASS"
+    },
+    {
+      "name": "bounded artificial1000-row inference retains tied AUC/count denominators",
+      "status": "PASS"
+    },
+    {
+      "name": "bounded artificial1000-row inference rejects exact class decoder",
+      "status": "PASS"
+    }
+  ],
+  "findings": [
+    {
+      "id": "STATS-R02-R01-001",
+      "priority": 2,
+      "confirmed": true,
+      "first_append": "FSYNC_EIO_THROWN",
+      "second_append_receipt": {
+        "durable": true,
+        "sequence": 1
+      },
+      "seal_afterwards": "REJECTED_BYTE_LENGTH_MISMATCH",
+      "qualification": "Not a full-stage false PASS; component emits a positive durable receipt after a poisoned stream"
+    },
+    {
+      "id": "STATS-R02-R01-002",
+      "priority": 2,
+      "confirmed": true,
+      "taskkill_error": "SWALLOWED",
+      "worker_exitCode_after": null,
+      "qualification": "Inert worker object; no OS process or Docker operation"
+    }
+  ],
+  "actual_process_kills": 0,
+  "Docker_calls": 0,
+  "selector_sessions": 0,
+  "producer_writes": 0,
+  "actual_statistical_RUN": false
+}

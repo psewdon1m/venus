@@ -1,0 +1,44 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > starts empty, reads only authenticated owner and has no SQL writes 4ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > stores padded encrypted settings and no public room events 3ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > durably narrows before revoke/SQL publication; old encrypted DB state cannot remove exclusion 2ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > leaves stricter durable state after a failed DB mutation 2ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > cannot re-enable excluded topics and requires explicit removal intent 2ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > unversioned safety exclusion survives a foreign newer preferences revision 2ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > replays same request as current stricter state without repeating grant/revoke mutation 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects non-V2 protocol 1 without initializing external files 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects non-V2 protocol 0 without initializing external files 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects non-V2 protocol 3 without initializing external files 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > missing DB birth cannot auto-initialize a restored room 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects missing external storage/retired room 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rechecks auth TTL after final awaited query and synchronous external fence 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > does not durably narrow with a credential expiring during the earlier SQL reads 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > does not enqueue after final revoked invalidation 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > does not enqueue after final acceptance invalidation 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > does not enqueue after final idle invalidation 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > detects a stricter own ledger revision appearing after the awaited final read 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > cipher AAD prevents substituting a different owner or revision 1ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects malformed or expanded authority {"allow_topic_ids":["unknown"]} 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects malformed or expanded authority {"allow_topic_ids":["food","food"]} 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects malformed or expanded authority {"exclude_topic_ids":["food"],"allow_topic_ids":["food"]} 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects malformed or expanded authority {"expected_rev":-1} 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects malformed or expanded authority {"owner_member_id":"a407cc63-96d5-4d22-bfb3-7db0876aba90"} 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > rejects malformed or expanded authority {"taxonomy_digest":"wrong"} 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic settings adapter bounded preflight > does not accept another room or missing session through the typed service interface 0ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > remains unavailable without explicit lifecycle/service injection 111ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > enqueues only current own view with no-store on a guarded browser GET 6ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > rejects unauthenticated/cross-origin GET {} 4ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > rejects unauthenticated/cross-origin GET {"cookie":"venus_room_session=credential"} 4ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > rejects unauthenticated/cross-origin GET {"cookie":"venus_room_session=credential","x-csrf-token":"wrong"} 4ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > rejects unauthenticated/cross-origin GET {"cookie":"venus_room_session=credential","x-csrf-token":"csrf","origin":"https://evil.test"} 4ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > rejects unauthenticated/cross-origin GET {"cookie":"venus_room_session=credential","x-csrf-token":"csrf","sec-fetch-site":"same-site"} 4ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > rejects unauthenticated/cross-origin GET {"cookie":"venus_room_session=credential; venus_room_session=other","x-csrf-token":"csrf"} 3ms
+ ✓ apps/api/src/private-topic-preferences.test.ts > private topic HTTP adapter explicit injection > requires PUT Origin and rejects query/extra owner authority without reflection 12ms
+
+ Test Files  1 passed (1)
+      Tests  35 passed (35)
+   Start at  19:25:52
+   Duration  546ms (import 46%, tests 41%, transform 11%, worker 1%)
+

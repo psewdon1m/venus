@@ -1,0 +1,17 @@
+from pathlib import Path
+import json,hashlib,sys,shutil,datetime
+r=Path('C:/.projects/venus');sys.path.insert(0,str(r/'tools'));from stage_inventory import inventory,identity
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+review=Path(sys.argv[1]);assert sha(review)==sys.argv[2] and json.loads(review.read_text())['status'].startswith('PASS')
+author=r/'.docs/implementation/reviews/p05/own-exclusion-ui-refresh-author-round03/INDEX.json';assert sha(author)=='785201b8b6098f1bb50c92ed57bc627dfec6c367f43f4c3207fb57960ae2a122'
+a=json.loads(author.read_text());owned=a['source_files'].copy();owned['.docs/implementation/p05-source-revision-own-exclusion-ui-refresh-03.json']=a['source_revision_sha256'];owned['.docs/implementation/p05-source-revision-own-exclusion-ui-refresh-02.json']='bfa8ba29fc723fffeb235b98d06a65a235dd2de3f5e3bcff6df5c97a4cb9964f'
+old=json.loads((r/'.artifacts/p05-pilot-bundle-source-freeze10.json').read_text());before=inventory(r);changed={n for n,v in before.items()if old['files'].get(n)!=v}|(set(old['files'])-set(before));assert changed==set(owned),(changed,set(owned));assert all(before[n]==v for n,v in owned.items());assert len(before)==1865
+out=r/'.artifacts/p05-pilot-bundle-source11';assert not out.exists();out.mkdir()
+for n,v in before.items():
+ p=out/n;p.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(r/n,p);assert sha(p)==v
+assert inventory(r)==before and inventory(out)==before
+rec={'created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'label':'A14','status':'FROZEN_MATERIALIZED_FRONTEND_PARTIAL_COMMIT_REFRESH_NOT_STAGE','identity':identity(before),'included_files':len(before),'materialized_root':str(out),'parent_source_identity':old['identity'],'changed_paths':sorted(changed),'independent_app_review_path':str(review),'independent_app_review_sha256':sha(review),'backend_engine_catalogue_source_exact_A13':True,'files':before,'full_stage_PASS':False};(r/'.artifacts/p05-pilot-bundle-source-freeze11.json').write_text(json.dumps(rec,indent=2)+'\n',encoding='utf-8')
+s=(r/'.artifacts/p05-native-build10.py').read_text().replace('10','11');(r/'.artifacts/p05-native-build11.py').write_text(s,encoding='utf-8',newline='\n')
+s=(r/'.artifacts/p05-pilot-a13-image-probe01.py').read_text().replace('image-binding09','image-binding10').replace('source-freeze10','source-freeze11').replace('image10.txt','image11.txt').replace('build10','build11').replace("'label':'A13'","'label':'A14'").replace("assert web==old['web_dist_files']","assert web!=old['web_dist_files'];assert next(h for n,h in web.items()if n.endswith('.js'))!=next(h for n,h in old['web_dist_files'].items()if n.endswith('.js'))").replace('changed_compiled_from_A12','changed_compiled_from_A13').replace('MATERIALIZED_TEST_RECOVERY_ORACLE_CORRECTED_TEST_IMAGE_BOUND_NOT_STAGE','MATERIALIZED_FRONTEND_REFRESH_IMAGE_BOUND_NOT_STAGE').replace("out=r/'.artifacts/p05-pilot-bundle-image-binding10'","out=r/'.artifacts/p05-pilot-bundle-image-binding11'");(r/'.artifacts/p05-pilot-a14-image-probe01.py').write_text(s,encoding='utf-8',newline='\n')
+s=(r/'.artifacts/p05-pilot-a13-production-probe01.py').read_text().replace('image-binding10','image-binding11').replace('production-image10','production-image11').replace('production-build10','production-build11').replace("'label':'A13'","'label':'A14'");(r/'.artifacts/p05-pilot-a14-production-probe01.py').write_text(s,encoding='utf-8',newline='\n')
+print(json.dumps({k:v for k,v in rec.items()if k!='files'}))

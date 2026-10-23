@@ -1,0 +1,11 @@
+--- A30/main.tsx
++++ A31/main.tsx
+@@ -100,7 +100,7 @@
+   return <main onFocus={event=>{
+     const state=focusCorrection.current;cancelFocusCorrection(state);
+     const field=event.target;
+-    if(field instanceof HTMLElement&&field.matches('input,select,button,textarea')&&field.matches(':focus-visible')) {
++    if(state.keyboard&&field instanceof HTMLElement&&field.matches('input,select,button,textarea')&&field.matches(':focus-visible')) {
+       field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
+       if(state.keyboard) state.frame=window.requestAnimationFrame(focusCorrectionCallback(state,state.generation));
+     }

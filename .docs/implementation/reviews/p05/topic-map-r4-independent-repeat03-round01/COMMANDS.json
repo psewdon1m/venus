@@ -1,0 +1,52 @@
+{
+  "at_utc": "2026-10-20T18:08:53.716135+00:00",
+  "scope": "Existing data packaging/loader controls, no planner/C2/Docker",
+  "commands": [
+    {
+      "name": "package-check",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-B",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-03\\package_semantics.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "package-check.stdout.txt",
+      "stderr": "package-check.stderr.txt"
+    },
+    {
+      "name": "existing-loader20",
+      "argv": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-03\\check_projection.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "existing-loader20.stdout.txt",
+      "stderr": "existing-loader20.stderr.txt"
+    },
+    {
+      "name": "node-syntax",
+      "argv": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "--check",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-03\\check_projection.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "node-syntax.stdout.txt",
+      "stderr": "node-syntax.stderr.txt"
+    },
+    {
+      "name": "lint",
+      "argv": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "--no-warn-ignored",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-03\\check_projection.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "lint.stdout.txt",
+      "stderr": "lint.stderr.txt"
+    }
+  ]
+}

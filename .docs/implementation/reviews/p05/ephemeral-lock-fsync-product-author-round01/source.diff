@@ -1,0 +1,103 @@
+--- apps/api/src/private-topic-ledger.ts.A11
++++ apps/api/src/private-topic-ledger.ts
+@@ -322,11 +322,13 @@
+       const chain=`/proc/self/fd/${chainFd}`,witness=`/proc/self/fd/${witnessFd}`,lock=join(chain,'lock');let lockFd:number;
+       try {lockFd=fs.openSync(lock,fs.constants.O_CREAT|fs.constants.O_EXCL|fs.constants.O_WRONLY|fs.constants.O_NOFOLLOW,0o600);}
+       catch {throw new TopicLedgerError('TOPIC_LEDGER_BUSY');}
+-      try {this.assertFile(fs.fstatSync(lockFd));this.syncDirectory(chain);return operation(chain,witness);}
++      // The exclusive lock is an ephemeral mutex, not durable authority. Every data
++      // publication has its own file/directory barriers; crash-left locks still fail closed.
++      try {this.assertFile(fs.fstatSync(lockFd));return operation(chain,witness);}
+       finally {
+         let owned:fs.Stats,named:fs.Stats;
+         try {owned=fs.fstatSync(lockFd);named=fs.lstatSync(lock);} finally {fs.closeSync(lockFd);}
+-        demand(owned.ino===named.ino&&owned.dev===named.dev,'TOPIC_LEDGER_LOCK_CHANGED');fs.unlinkSync(lock);this.syncDirectory(chain);
++        demand(owned.ino===named.ino&&owned.dev===named.dev,'TOPIC_LEDGER_LOCK_CHANGED');fs.unlinkSync(lock);
+       }
+     } finally {if(witnessFd!==undefined) fs.closeSync(witnessFd);fs.closeSync(chainFd);}
+   }
+--- apps/api/src/topic-room-lifecycle.ts.A11
++++ apps/api/src/topic-room-lifecycle.ts
+@@ -420,10 +420,12 @@
+       const anchors={...directories,...Object.fromEntries(opened.map(({key,fd})=>[key,`/proc/self/fd/${fd}`]))} as RoomUnit['anchors'];
+       const lock=join(anchors.birthDirectory,'room.lock');let fd:number;
+       try {fd=fs.openSync(lock,fs.constants.O_WRONLY|fs.constants.O_CREAT|fs.constants.O_EXCL|fs.constants.O_NOFOLLOW,0o600);} catch {throw new TopicRoomLifecycleError('TOPIC_ROOM_BUSY');}
+-      try {this.statFile(fs.fstatSync(fd));this.syncDirectory(anchors.birthDirectory);return run({directories,anchors});}
++      // Ephemeral mutual exclusion does not publish authority. Birth/retirement/terminal
++      // and destructive cleanup retain explicit durability barriers below their mutations.
++      try {this.statFile(fs.fstatSync(fd));return run({directories,anchors});}
+       finally {
+         let own:fs.Stats,named:fs.Stats;try {own=fs.fstatSync(fd);named=fs.lstatSync(lock);} finally {fs.closeSync(fd);}
+-        demand(own.dev===named.dev&&own.ino===named.ino,'TOPIC_ROOM_LOCK_CHANGED');fs.unlinkSync(lock);this.syncDirectory(anchors.birthDirectory);
++        demand(own.dev===named.dev&&own.ino===named.ino,'TOPIC_ROOM_LOCK_CHANGED');fs.unlinkSync(lock);
+       }
+     } finally {for(const {fd} of opened.reverse()) fs.closeSync(fd);}
+   }
+--- apps/api/src/private-topic-ledger.test.ts.A11
++++ apps/api/src/private-topic-ledger.test.ts
+@@ -261,14 +261,23 @@
+     if(fault==='short-write') {const corrupt=fs.readFileSync(d.chain);expect(()=>PrivateTopicLedger.open(d.options,required)).toThrow('TOPIC_LEDGER_SIZE');expect(fs.readFileSync(d.chain).equals(corrupt)).toBe(true);}
+     else expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(fault==='rename'?['music']:[]);
+   });
+-  it.each([1,2,3,4,5,6])('injected fsync failure at durable call %s refuses acknowledgement and revalidates on reopen',target=>{
++  it('consistent authenticated reads perform no durability writes; append retains all four real barriers',()=>{
++    const barriers:string[]=[];const d=disk({sync:fd=>{barriers.push(fs.fstatSync(fd).isDirectory()?'directory':'file');fs.fsyncSync(fd);}});
++    const {ledger,required}=PrivateTopicLedger.initialize(d.options);barriers.length=0;
++    expect(ledger.read(scope).excluded).toEqual([]);expect(ledger.countExcludedScopes(scope.roomId,'music').count).toBe(0);
++    expect(barriers).toEqual([]);ledger.narrow(command);
++    expect(barriers).toEqual(['file','file','file','directory']);barriers.length=0;
++    expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(['music']);expect(barriers).toEqual([]);
++  });
++  // Actual mutation barriers only: appended chain, repair chain, witness file, witness directory.
++  it.each([1,2,3,4])('injected fsync failure at durable call %s refuses acknowledgement and revalidates on reopen',target=>{
+     let armed=false,calls=0;const controls:TopicLedgerControls={sync:fd=>{
+       if(armed&&++calls===target) throw new Error('injected:sync:'+target);fs.fsyncSync(fd);
+     }};
+     const d=disk(controls),{ledger,required}=PrivateTopicLedger.initialize(d.options);armed=true;
+     expect(()=>ledger.narrow(command)).toThrow('injected:sync:'+target);armed=false;
+     expect(calls).toBeGreaterThanOrEqual(target);
+-    expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(target===1?[]:['music']);
++    expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(['music']);
+   });
+   it.each(['before-append','after-append','after-chain-sync','after-witness-write','after-witness-sync','after-witness-rename','after-witness-directory-sync'] as TopicLedgerPhase[])('real child SIGKILL at %s retains stale lock and never silently relaxes after explicit test-operator recovery',phase=>{
+     const d=disk(),{required}=PrivateTopicLedger.initialize(d.options);
+--- apps/api/src/topic-room-lifecycle.test.ts.A11
++++ apps/api/src/topic-room-lifecycle.test.ts
+@@ -171,12 +171,24 @@
+     expect(fs.existsSync(join(f.directories.personalChainDirectory,'chain'))).toBe(true);
+     expect(()=>f.manager.cleanupPersonal(roomId,f.birth,{...proof,minimumTerminalAgeMs:0})).toThrow('TOPIC_ROOM_NOT_DURABLY_RETIRED');
+   });
+-  it.each([1,2,3,4,5,6])('injected retirement metadata fsync call %s refuses success without early unlink',target=>{
++  it('room and ledger reads keep mutexes without syncing; metadata publication barriers remain explicit',()=>{
++    const barriers:string[]=[];const controls={sync:(fd:number)=>{barriers.push(fs.fstatSync(fd).isDirectory()?'directory':'file');fs.fsyncSync(fd);}};
++    const f=fixture(controls);f.options.personalControls=controls;f.options.lifecycleControls=controls;
++    const birth=f.manager.initializeRoom(roomId,1000,proof);f.manager.admitMember(roomId,birth,owner,request,proof);barriers.length=0;
++    f.manager.assertLive(roomId,birth);f.manager.open(roomId,birth).read({roomId,ownerId:owner});expect(barriers).toEqual([]);
++    f.manager.retireRoom(roomId,birth,{operationId:request,retiredAt:9000},proof);
++    expect(barriers).toEqual(['file','directory','file','directory','file','file','file','directory']);
++    f.manager.cleanupPersonal(roomId,birth,{...proof,minimumTerminalAgeMs:0});barriers.length=0;
++    f.manager.cleanupRetiredMetadata(roomId,birth,{...proof,minimumTerminalAgeMs:0});
++    expect(barriers).toEqual(['file','directory','file','directory','directory','directory']);
++  });
++  // Metadata controls observe retirement publish file+directory and explicit reassertion file+directory.
++  it.each([1,2,3,4])('injected retirement metadata fsync call %s refuses success without early unlink',target=>{
+     let armed=false,calls=0;const f=admitted({sync:fd=>{if(armed&&++calls===target) throw new Error('injected:sync:'+target);fs.fsyncSync(fd);}});
+     armed=true;expect(()=>f.manager.retireRoom(roomId,f.birth,{operationId:request,retiredAt:9000},proof)).toThrow('injected:sync:'+target);armed=false;
+     expect(fs.existsSync(join(f.directories.personalChainDirectory,'chain'))).toBe(true);
+-    if(target<6) expect(()=>f.manager.cleanupPersonal(roomId,f.birth,{...proof,minimumTerminalAgeMs:0})).toThrow('TOPIC_ROOM_NOT_DURABLY_RETIRED');
+-    if(target>=3) expect(()=>f.manager.assertLive(roomId,f.birth)).toThrow('TOPIC_ROOM_RETIRED');
++    expect(()=>f.manager.cleanupPersonal(roomId,f.birth,{...proof,minimumTerminalAgeMs:0})).toThrow('TOPIC_ROOM_NOT_DURABLY_RETIRED');
++    if(target>=2) expect(()=>f.manager.assertLive(roomId,f.birth)).toThrow('TOPIC_ROOM_RETIRED');
+     f.manager.retireRoom(roomId,f.birth,{operationId:request,retiredAt:9000},proof);
+     expect(()=>f.manager.assertLive(roomId,f.birth)).toThrow('TOPIC_ROOM_RETIRED');
+   });
+@@ -360,7 +372,8 @@
+     const fresh=new TopicRoomLifecycle(f.options);expect(fresh.retirementStatus(roomId,f.birth)).toEqual({state:'retired',retiredAt:9000,operationId:request});
+     expect(fresh.cleanupRetiredMetadata(roomId,f.birth,{...proof,minimumTerminalAgeMs:0}).memberMetadataRemoved).toBe(true);expect(fs.readdirSync(f.directories.lifecycleChainDirectory)).toEqual([]);
+   });
+-  it.each([1,2,3,4,5,6,7,8])('terminal/unlink fsync call %s fault never acknowledges and recovery remains closed',target=>{
++  // Terminal publication, reassertion and BOTH lifecycle unlink directory barriers remain.
++  it.each([1,2,3,4,5,6])('terminal/unlink fsync call %s fault never acknowledges and recovery remains closed',target=>{
+     let armed=false,count=0;const f=closedPersonalRemoved({sync:fd=>{if(armed&&++count===target) throw new Error('injected:sync:'+target);fs.fsyncSync(fd);}});armed=true;
+     expect(()=>f.manager.cleanupRetiredMetadata(roomId,f.birth,{...proof,minimumTerminalAgeMs:0})).toThrow('injected:sync:'+target);armed=false;
+     const fresh=new TopicRoomLifecycle(f.options);expect(fresh.retirementStatus(roomId,f.birth).state).toBe('retired');

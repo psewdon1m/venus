@@ -1,0 +1,76 @@
+[
+  {
+    "name": "binding09",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01\\.artifacts\\p05-compatible-rollback-producer05\\author-rebind-controls.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01",
+    "at_utc": "2026-10-20T19:00:50.117668+00:00",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout_sha256": "7ad1cc3a7e946f97f491f54cc07b36c957614004a194fd72bb51c0933888ade4",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "describe",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01\\.artifacts\\p05-compatible-rollback-producer05\\driver.mjs",
+      "--describe"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01",
+    "at_utc": "2026-10-20T19:00:50.175840+00:00",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout_sha256": "49e3ef7299652244c1731b3ac71688b4d7482d3acf231bfe6fd531af73cd6f91",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "unauthorized-refusal",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--max-old-space-size=192",
+      "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01\\.artifacts\\p05-compatible-rollback-producer05\\driver.mjs",
+      "--run",
+      "--ack=C:\\.projects\\venus\\.artifacts\\p05-oci05-binding-author01\\unauthorized-ack.json"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01",
+    "at_utc": "2026-10-20T19:00:50.227619+00:00",
+    "exit_code": 1,
+    "expected_exit_code": 1,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "f4af390cbca9074fa1bbb022b197c32b897603dd82089238a5e6cdbc91e4746b"
+  },
+  {
+    "name": "exact-included",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--input-type=module",
+      "-e",
+      "const x=await import(\"file:///C:/.projects/venus/.artifacts/p05-engine3-bundle-source01/.artifacts/p05-compatible-rollback-producer05/source-proof.mjs\");const r=await x.verifyIncluded();console.log(JSON.stringify({identity:r.identity,files:Object.keys(r.files).length}));"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01",
+    "at_utc": "2026-10-20T19:00:50.285913+00:00",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout_sha256": "095bf4cd532c43c5fa83e736007b3fe457c899e0ecdf4c6ce2f59d066bc52565",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "name": "binding-lint",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\node_modules\\eslint\\bin\\eslint.js",
+      "--config",
+      "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01\\.artifacts\\p05-compatible-rollback-producer05\\eslint.config.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01\\.artifacts\\p05-compatible-rollback-producer05\\author-rebind-controls.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-engine3-bundle-source01",
+    "at_utc": "2026-10-20T19:00:51.756745+00:00",
+    "exit_code": 2,
+    "expected_exit_code": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "7219fbd3e75bfb180373442dcbf73986d2ee602bb6f304d92d078a0e75be6918"
+  }
+]

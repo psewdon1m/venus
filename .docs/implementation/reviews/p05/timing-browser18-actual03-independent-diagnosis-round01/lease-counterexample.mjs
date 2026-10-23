@@ -1,0 +1,44 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
+import {EventEmitter} from 'node:events';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {createRequire} from 'node:module';
+const require=createRequire(import.meta.url),ts=require('typescript');
+const run='.docs/implementation/evidence/p05/timing-poll-browser18-chromium-actual03/run';
+const {createPrivateBatchObserver}=await import(pathToFileURL(resolve(run+'/producer/private-batch-observer.mjs')));
+const raw=fs.readFileSync('apps/web/src/topic-state.ts'),sha=b=>crypto.createHash('sha256').update(b).digest('hex');
+const pins=JSON.parse(fs.readFileSync(run+'/inputs-before.json','utf8')).files;
+assert.equal(sha(raw),pins['apps/web/src/topic-state.ts']);
+let now=1000;const module={exports:{}};
+const js=ts.transpileModule(raw.toString('utf8'),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText;
+vm.runInNewContext(js,{module,exports:module.exports,require:n=>{assert.equal(n,'./presentation-clock.js');return{presentationNow:()=>now};},Date,performance});
+const {TopicCache}=module.exports,cache=new TopicCache(),scope={room:'r',member:'m',identity:0,transport:0,session:'s',round:'q',rev:3};
+const stamp=n=>new Date(n).toISOString();
+const game={session_id:'s',game_rev:3,state:'active',mode:'questions',total_rounds:20,pause_reason:null,current_round:{kind:'generic',round_id:'q',round_index:1,state:'active'}};
+const own={schema_version:2,room_id:'r',member_id:'m',session_id:'s',round_id:'q',game_rev:3,room_rev:1,server_time:stamp(100000),expires_at:stamp(105000),session_actions:Object.fromEntries(['pause','stop','abort','resume','advance','neutral_reset','neutral_reset_aborts_game'].map(k=>[k,false])),round_actions:Object.fromEntries(['finish','skip','choose_truth','choose_dare','propose_condition','accept_invitation','accept_action','decline_invitation','withdraw_action'].map(k=>[k,false])),conversation_actions:{offer_topic:true,other_question:true,respond_topic:false,offer_advice:true,chat:true}};
+const target={schema_version:2,room_id:'r',session_id:'s',round_id:'q',game_rev:3,content_revision:1,invitation:null,action:null,choice:null,condition:null};
+const conv={schema_version:2,room_id:'r',session_id:'s',round_id:'q',game_rev:3,conversation_id:'c',revision:1,epoch:1,state:'active',server_time:stamp(100000),expires_at:stamp(130000),offer:{offer_id:'o',epoch:1,proposal_revision:1,token:'t',own_accepted:true,expires_at:stamp(130000),topics:[{topic_id:'a',label:'A'}]},prompt:{text:'synthetic',condition:null,choice:null},advice:[]};
+const chat={schema_version:2,conversation_id:'c',epoch:1,revision:0,state:'active',messages:[]};
+const page=new EventEmitter(),actor={page,room:'r',id:'m'},observer=createPrivateBatchObserver({now:()=>now});observer.attach(actor);page.emit('websocket',new EventEmitter());
+function request(path){const req={method:()=> 'GET',url:()=> 'https://localhost'+path};page.emit('request',req);return req;}
+async function response(req,body){page.emit('response',{request:()=>req,status:()=>200,body:async()=>Buffer.from(JSON.stringify(body))});for(let i=0;i<30;i++)await Promise.resolve();}
+await response(request('/api/v2/rooms/r/game/current'),game);
+await response(request('/api/v2/rooms/r/game/self-actions'),own);
+await response(request('/api/v2/rooms/r/game/s/round/q/target'),target);
+await response(request('/api/v2/rooms/r/game/s/round/q/conversation'),conv);
+now=1400;await response(request('/api/v2/rooms/r/game/s/round/q/conversation/chat'),chat);
+const before=observer.snapshot(actor,{control:'advice-offer'});assert.equal(before.ready,true);assert.equal(before.lease_remaining_ms,4600);
+const read=cache.bind(scope);assert.equal(cache.accept(read,scope,target,conv,chat,own.server_time,1000,1400,own.expires_at),true);
+now=5500;
+// The actual panel starts an ordinary same-scope refresh with issue/bind;
+// it has not received any new permission denial, revoke, epoch or credential.
+cache.issue();cache.bind(scope);const productionBeforeResponse=cache.visible(now);
+await response(request('/api/v2/rooms/r/game/current'),game);
+request('/api/v2/rooms/r/game/self-actions');
+const after=observer.snapshot(actor,{control:'advice-offer'});
+assert.equal(productionBeforeResponse,true);assert.equal(cache.until,6000);assert.equal(after.ready,false);assert.equal(after.reason,'BATCH_INCOMPLETE');assert.equal(after.accepted_cycle_id,null);
+now=6000;assert.equal(cache.visible(now),false);await observer.close(actor);
+console.log(JSON.stringify({status:'PASS_EXACT_SOURCE_LEASE_COUNTEREXAMPLE',source_sha256:sha(raw),before,at_new_same_scope_own_request:{native_ms:5500,production_cache_visible:productionBeforeResponse,production_cache_until:6000,production_remaining_ms:500,observer:after},expiry_at_6000:'Production still expires normally; no extension or disclosure bypass.',qualification:'Real source TopicCache and unchanged passive observer, synthetic DTOs/scheduler; proves predicate mismatch, not actual React cache.accept or field value observation.'},null,2));

@@ -1,0 +1,82 @@
+"""Read saved metadata/JSON only. No reducer/model/native/test imports or executions."""
+from pathlib import Path
+import json,hashlib,datetime,collections,shutil
+R=Path('C:/.projects/venus');O=Path(__file__).parent;O.mkdir(exist_ok=True,parents=True)
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+load=lambda p:json.loads(p.read_text(encoding='utf8'))
+dump=lambda n,x:(O/n).write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+pins={}
+def pin(p):
+ pins[p.relative_to(R).as_posix()]={'bytes':p.stat().st_size,'sha256':sha(p)}
+ return pins[p.relative_to(R).as_posix()]['sha256']
+def packet(p):
+ d=load(p);pin(p)
+ rows=d['files'];rows=[{'path':n,**v} for n,v in rows.items()] if isinstance(rows,dict) else rows
+ for x in rows:assert sha(p.parent/x['path'])==x['sha256'] and (p.parent/x['path']).stat().st_size==x['bytes']
+ return d
+M=R/'.artifacts/p05-full-original-ranges02/MANIFEST.json';W=R/'.artifacts/p05-c2-closed-inputs-witness01.json';m=load(M);w=load(W);b=m['ack_base'];pin(M);assert pin(W)=='0c14fded52f052d333ce44a8d3ac04a33fcf08e2c7eb5b7c0cfdc90bf5eb1eca'
+methodpath=R/'.docs/implementation/reviews/p05/closed-c2-early-reducer-method-independent-round01/INDEX.json';method=packet(methodpath);assert sha(methodpath)=='d9940d6d9f7dd93c3c66f82b016f1044e3565a385372b99d132caecbf968b62a'
+staticpath=R/'.docs/implementation/reviews/p05/c2-static-full-independent-round01/INDEX.json';static=packet(staticpath)
+staticactual=R/'.docs/implementation/evidence/p05/c2-static-full-actual01/INDEX.json';assert pin(staticactual)=='6525b019fdba7f3139a98ec340f82908220031fda550ba2db41197445467d8fa'
+static_summary=load(staticpath.parent/'audit-result.json');assert static_summary['cases']==47040 and static_summary['result']['mandatory_baseline_failures']==[]
+for rel in ['.docs/implementation/reviews/p05/a18-gate-bindings-independent-round01/INDEX.json','.docs/implementation/reviews/p05/c2-first-owner-pilot-independent-round02/INDEX.json','.docs/implementation/reviews/p05/r4-v2-c2-consumer-independent-round02/INDEX.json','.docs/implementation/reviews/p05/final-p05-scope-obligations-independent-round01/INDEX.json','.docs/10_IMPLEMENTATION_PLAN.md','.docs/09_CARD_AUTHORING_AND_AUTOMATION.md','.docs/implementation/user-decisions.v4.json','.artifacts/p05-reduce-closed-c2-section04.py']:
+ pin(R/rel)
+assert sha(R/'.artifacts/p05-reduce-closed-c2-section04.py')=='f1267ac27e344f62f3dde5fb5ccc025bba0714812643c0f6439aee74a9004ad2'
+producer=Path(b['producer_root'])
+assert len(b['producer_pins'])==37
+for n,h in b['producer_pins'].items():assert pin(producer/n)==h
+sections={};hashes=0;origins=collections.Counter()
+for section,expected,ranges,output_hash,preflight in [('c2-trajectory',37072,371,'ea68baffbec31b5b71cee62dbeb32ee0d50c180c1a1e9d68ac2b312f35bfae31','p05-c2-trajectory-preflight01.json'),('c2-canary',336,4,'0a01afd5c57d822d8e23910741ce47a102213cf583012c19ee5c6e9d821d7b24','p05-c2-canary-preflight01.json')]:
+ d=R/('.artifacts/p05-reduce-closed-c2-04-'+section);host=load(d/'host-report.json');inputs=load(d/'inputs.json');report=load(d/'section-report.json');result=report['result'];savedpins=load(d/'producer-before.json');assert savedpins==load(d/'producer-after.json')==b['producer_pins']
+ for p in d.iterdir():assert p.is_file();pin(p)
+ assert sha(d/'section-report.json')==host['output_sha256']==output_hash
+ assert sha(d/'inputs.json')==host['input_manifest_sha256']==report['input_manifest_sha256']
+ assert host['native_exit']==0 and host['cleanup']=='COMPLETE' and host['producer_unchanged'] is True
+ assert host['status']=='FULL_SECTION_REDUCER_COMPLETED_PENDING_INDEPENDENT_ACCEPTANCE' and host['result_status']==result['status']=='FULL_FIXED_C2_EXECUTION_VALIDATED_NOT_STAGE'
+ assert host['driver_sha256']==sha(R/'.artifacts/p05-reduce-closed-c2-section04.py') and host['operational_review_sha256']==sha(methodpath) and host['closed_section_witness_sha256']==sha(W)
+ assert host['source_identity']==report['source_identity']==b['source_identity'] and host['image']==report['image']==b['image_id']
+ for k in ['binding_sha256','prereg_sha256']:assert inputs[k]==report[k]==b[k]
+ assert inputs['method_review_sha256']==host['method_review_sha256']==b['method_review_sha256']
+ assert result['cases']==host['original_cases']==expected and result['mandatory_baseline_failures']==[] and result['original_mode_counts']=={'questions':160,'truth_or_dare':160,'yes_but':150}
+ assert not report['actual_auth'] and report['actual_wire_parity']=='REQUIRED_SEPARATE_GATE' and not report['full_P05_PASS'] and host['batch_terminal_sha256'] is None
+ assert len(inputs['inputs'])==host['inputs']==ranges
+ closed=w['sections'][section]['inputs'];assert len(closed)==ranges
+ cursor=0;refusals=0;metadata=[]
+ for row,wi in zip(inputs['inputs'],closed):
+  assert row['owner']==wi['owner'] and row['range']==wi['range']
+  rg=row['range'];assert rg['section']==section and rg['start']==cursor and rg['end']==rg['start']+rg['count'];cursor=rg['end']
+  raw=R/'.artifacts/p05-fixedranges'/row['owner'];origins[wi['origin']]+=1
+  for n,h in wi['metadata_pins'].items():
+   if n=='batch_log_sha256':continue
+   assert pin(raw/n)==h;hashes+=1
+  h=load(raw/'host-report.json');s=load(raw/'export/summary.json');ex=load(raw/'export-pins.json')
+  assert h['owner']==s['owner']==row['owner'] and h['range']==s['range']==rg
+  assert h['worker_exit']==0 and not h['timeout'] and h['cleanup']=='COMPLETE' and h['cleanup_errors']==[] and all(h[k] for k in ['writer_stopped','export_verified','producer_unchanged'])
+  assert s==ex['summary'] and s['completed']==rg['count'] and s['raw']['records']==rg['count']+1 and s['approval_scope']=='OWNER_PROVISIONAL_LOCAL_PILOT'
+  for k in ['source_identity','image','binding_sha256','prereg_sha256']:assert s[k]==report[k]
+  assert s['method_review_sha256']==inputs['method_review_sha256']
+  assert row['summary_sha256']==sha(raw/'export/summary.json') and row['index_sha256']==s['raw']['index_sha256']
+  assert s['pack_digest']=='sha256:d1a7cb38be173c673665c30ae8e91792940438b675f8830d72503eebed9985d4'
+  refusals+=s['typed_refusals'];metadata.append({'owner':row['owner'],'range':rg,'summary_sha256':row['summary_sha256'],'index_sha256':row['index_sha256']})
+ assert cursor==expected
+ pre=R/'.artifacts'/preflight;pf=load(pre);assert pin(pre)==host['prelaunch_metadata_sha256'];age=(datetime.datetime.fromisoformat(host['created_at'])-datetime.datetime.fromisoformat(pf['observed_at'])).total_seconds();assert 0<=age<=60
+ cpu=sum(float(x['CPUPerc'].rstrip('%')) for x in pf['actual_stats'])/100;assert cpu+1+2<=pf['docker_cpus']
+ foreign=[x for x in pf['running_container_resources'] if x['owner'] is None];owned=[x for x in pf['running_container_resources'] if x['owner'] is not None];assert sorted(x['id'] for x in foreign)==method['foreign_ids_expected']
+ assert len(owned)<=8 and all(x['cpus']==1 and x['memory_bytes']==1610612736 and x['pids_limit']==64 for x in owned)
+ assert 8*1610612736+sum(x['memory_bytes'] for x in foreign)+1610612736+4294967296<=pf['docker_memory_bytes']
+ for n in ['host-report.json','host-start.json','inputs.json','producer-before.json','producer-after.json','stdout.txt','stderr.txt']:shutil.copyfile(d/n,O/(section+'-'+n))
+ sections[section]={'cases':expected,'ranges':ranges,'input_union':[0,cursor],'result_status':result['status'],'native_exit':0,'cleanup':'COMPLETE','output_sha256':output_hash,'typed_refusals_in_source_summaries':refusals,'mandatory_baseline_failures':[],'prelaunch_age_seconds':age,'observed_CPU':cpu,'CPU_plus_reducer_plus_spare':cpu+3,'docker_CPUs':pf['docker_cpus'],'original_source_identity':host['source_identity'],'image':host['image'],'started':host['created_at'],'finished':host['finished_at']}
+ if section=='c2-trajectory':
+  assert refusals==len(result['refusals'])==3248
+  counts=collections.Counter(x['cell']['profile'] for x in result['refusals']);assert counts=={'neutral_C0_F':1456,'private_R100':1680,'all_X':112};assert not any(x['cell']['profile']=='neutral_C0_F' and x['cell']['rounds']==20 for x in result['refusals'])
+  sections[section]['refusal_profiles']=dict(counts);sections[section]['refusal_codes']=dict(collections.Counter(x['error_code'] for x in result['refusals']));assert all(x['error_code']=='TOPIC_SAFE_POOL_EXHAUSTED' and x['prefix_available'] is False for x in result['refusals'])
+ else:
+  rows=result['canary_dispositions'];assert len(rows)==336 and [x['ordinal'] for x in rows]==list(range(336));sections[section]['dispositions']={k:dict(collections.Counter(x[k] for x in rows)) for k in ['cross_session_mode','targeted_change','public_planner_independence']}
+  axes={}
+  for field,value in [('targeted_change','TARGET_FOUND_FULL_UNION_CHECKED'),('targeted_change','TARGET_SAFE_EMPTY_NOT_POSITIVE_COVERAGE'),('public_planner_independence','MATCHED_DECLARED_SIMULATIONS_EQUAL_NOT_WIRE_OR_INFERABILITY_PROOF')]:
+   subset=[x for x in rows if x[field]==value];axes[value]={key:dict(collections.Counter(str(x['cell'][key]) for x in subset)) for key in ['size','mode','context','regime','cap']}
+  sections[section]['coverage_axes']=axes;dump('CANARY_DISPOSITIONS.json',rows)
+dump('SAFE_RESULT_SUMMARY.json',{'sections':sections,'reused_static_cases':47040,'original_C2_total':84448,'all_required_fixed_cases_executed':True,'full_stage_PASS':False,'positive_canary_gaps_retained':True})
+dump('PINS.json',pins)
+dump('AUDIT.json',{'status':'PASS_C2_FIXED_EXECUTION_BASELINES_AND_CONDITIONAL_COVERAGE_ONLY','metadata_hashes_verified':hashes,'closed_ranges':375,'origins':dict(origins),'producer_pins':37,'producer_before_after_exact':True,'static_independent_index_sha256':sha(staticpath),'static_original_actual_index_sha256':sha(staticactual),'current_A18_correspondence':'QUALIFIED_PURE_GRAPH_ONLY_6ba12785_NOT_WHOLE_APP','unchanged_native_reducer_performed_raw_segment_replay':True,'review_reducer_or_models_or_tests_executed':0,'review_Docker_actions':0,'raw_private_payloads_archived':False,'cleanup_basis':'SAVED_SUCCESSFUL_OWNED_RM_PATH_AND_HOST_COMPLETE_NO_NEW_DOCKER_QUERY','at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()})
+print(json.dumps({'status':'OFFLINE_ACTUAL_AUDIT_PASS','metadata_hashes':hashes,'ranges':375,'C2_cases':84448,'section_counts':{s:v['cases'] for s,v in sections.items()},'static_independent_index_sha256':sha(staticpath)}))

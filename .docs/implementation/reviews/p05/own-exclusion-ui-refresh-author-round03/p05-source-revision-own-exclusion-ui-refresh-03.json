@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "revision": "P05-OWN-EXCLUSION-UI-REFRESH-03",
+  "kind": "COMPATIBLE_FRONTEND_DRAFT_HANDOFF_CORRECTION",
+  "parent_revision": "P05-OWN-EXCLUSION-UI-REFRESH-02",
+  "parent_author_index_sha256": "15c20160bafc78396807ed8aa628c5386d29a0d954eeef58d8cb37573fec87d7",
+  "independent_finding_index": ".docs/implementation/reviews/p05/own-exclusion-refresh-independent-round02/INDEX.json",
+  "independent_finding_index_sha256": "6de16363060f35996c2f67939576dcc7750969d2a9eede4180a2e796dd25f23c",
+  "behavior": "Validated successful own settings load consumes its preserved-draft handoff exactly once. Failed reads retain it for authenticated retry. Subsequent user edits and unrelated failed Save/manual Refresh cannot replay the old consumed additions. Fresh refreshToken still captures latest own unsaved draft; all identity/generation/exclusion filters unchanged.",
+  "source_files": {
+    "apps/web/src/topic-games-panel.tsx": "b4c0d5108484ca85b37780972d8d444c64f92e04e14a1c99aac180a91055f671",
+    "apps/web/src/topic-settings.tsx": "ab29dcb05aeec564f66167e2249d68bcc18531f3f5960b76f43be0f49f3c9f19",
+    "apps/web/src/topic-own-exclusion-refresh.test.ts": "19347b30ec69688c1dcaa0560230df1e4cc5b7f0ee141f2a907f5650b17d74e6"
+  },
+  "validation": "Exact nonauthor counterexample added to existing actual-TSX harness: RED1FAIL/11PASS; fix76PASS/6web suites incl12own controls, webtsc/lint0. Not native browser proof.",
+  "unchanged": [
+    "Source revision02/author02/independentFAIL immutable.",
+    "Panel exactly accepted-author02 bytes; settings only one inserted preserved.current=null after validated generation-current load.",
+    "All1860other existing A13 files byteexact incl API/engine/catalogue/storage; no timer/case/oracle/mutation retry changes."
+  ],
+  "rollback": "Restore coherent prior frontend bundle; durable own exclusions stay authoritative. Prior02 retains known stale draft resurrection flaw; A13 also has success-only exclusion refresh flaw."
+}

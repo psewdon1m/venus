@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "policy_revision": "RE-1",
+  "status": "PROPOSED numeric baseline, requires measured fairness/privacy and safety review before production",
+  "labels": ["just_met", "friendship", "crush", "situationship", "in_relationships", "not_a_friend"],
+  "default_relation": "friendship",
+  "default_relation_is_explicit": false,
+  "max_members_in_room": 8,
+  "min_game_players": 2,
+  "max_game_players": 8,
+  "comfort": {
+    "min": 0,
+    "max": 4,
+    "default": 0,
+    "applies_globally_per_member": true,
+    "frozen_after_session_start": true,
+    "max_for_physical_contact": 4
+  },
+  "pair_class_matrix": {
+    "just_met":       {"just_met":"J", "friendship":"J", "crush":"J", "situationship":"J", "in_relationships":"J", "not_a_friend":"X"},
+    "friendship":     {"just_met":"J", "friendship":"F", "crush":"G", "situationship":"G", "in_relationships":"G", "not_a_friend":"X"},
+    "crush":          {"just_met":"J", "friendship":"G", "crush":"M", "situationship":"M", "in_relationships":"M", "not_a_friend":"X"},
+    "situationship":  {"just_met":"J", "friendship":"G", "crush":"M", "situationship":"S", "in_relationships":"S", "not_a_friend":"X"},
+    "in_relationships": {"just_met":"J", "friendship":"G", "crush":"M", "situationship":"S", "in_relationships":"R", "not_a_friend":"X"},
+    "not_a_friend":   {"just_met":"X", "friendship":"X", "crush":"X", "situationship":"X", "in_relationships":"X", "not_a_friend":"X"}
+  },
+  "pair_weight_by_class": {"X":0.0,"J":0.5,"F":1.0,"G":1.25,"M":1.7,"S":1.95,"R":2.2},
+  "relationship_scope_min_class": {
+    "none": "X",
+    "acquaintance": "J",
+    "friend_or_more": "F",
+    "gentle_initiative": "G",
+    "mutual_romantic": "M",
+    "established_couple": "R"
+  },
+  "progression": {
+    "formula": "position=(round_index-1)/max(1,total_rounds-1)",
+    "stage_boundary_positions": [0.0,0.25,0.5,0.75,1.0],
+    "stage_names": ["Icebreaker","Connection","Closer","Afterglow"],
+    "minimum_stage_for_private_pair": 3,
+    "minimum_comfort_for_private_pair": 1,
+    "minimum_stage_for_physical_contact": 3,
+    "private_target_share_by_stage": [0.0,0.08,0.22,0.4],
+    "private_hard_max_share_per_session": 0.25,
+    "soft_recovery_after_intense_card_probability": 0.35
+  },
+  "consent": {
+    "per_action": true,
+    "pair_private_requires_two_independent_acks": true,
+    "physical_contact_requires_two_independent_acks": true,
+    "decline_wins_race": true,
+    "revocable": true,
+    "consent_pending_ttl_seconds": 30,
+    "suggested_private_duration_seconds": 180
+  },
+  "fairness": {
+    "max_share_pair_invitations_per_member_when_safe_alternatives": 0.5,
+    "avoid_consecutive_identical_private_pair": true,
+    "private_relationship_information_never_in_public_events": true,
+    "published_metrics_aggregated_only": true
+  },
+  "contexts": ["online","in_person"],
+  "forbid_physical_contact_online": true,
+  "forbid_going_away_online": true,
+  "private_chat_required_for_online_private_pair": true,
+  "locale_codes": ["ru","en","tr"],
+  "modes": ["questions","truth_or_dare","yes_but"]
+}

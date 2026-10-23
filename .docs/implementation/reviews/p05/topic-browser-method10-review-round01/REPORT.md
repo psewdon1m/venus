@@ -1,0 +1,13 @@
+# Browser method10: independent static review
+
+**METHOD10_COMPONENT_STATIC_PASS_FRESH_SOURCE_IMAGE_BINDING_RUN_HOLD.** Exact HANDOFFf9bf1731/browserab4ff344/snapshot1ab00f60 and all declared snapshot/HANDOFF hashes were verified. No findings. Own13 cooperative-scheduler controls execute the exact three changed/new functions and actual read-only DOM callback with explicit time/DOM/HTTP receipt/coherence doubles. Independently rerun author36 current method controls plus77 prior controls all pass. Six syntax checks pass.
+
+The finite diff changes only acceptTopics and topicUiReady plus new topicReadinessPhase. All16case ASTs,28 other function declarations and five runtime modules remain exact09. Two exact mutation receipt/coherence barriers, all no-prompt negatives including immediately before second click, full labels, observer denial, unchanged5000 localized content assertions and5s permission leases remain. Diagnostic phase/readiness lists each cap128; only IDs/scopes/native timings/status/booleans are added.
+
+Each pre-ack phase allocates one native absolute8s bound. The third phase is created only after second exact receipt and coherent revision; both actors share its same object/deadline and start concurrently. Promise.allSettled drains both before propagating failure, so first rejection cannot leave another readiness poll alive during cleanup. Own scheduler verifies total readiness over8s succeeds across distinct phases, slow second post actor gets no new8s, wrong scope/room/disabled/changing observation and early prompt/wrong content reject, pre-ack timeouts issue zero/one ack, and first post rejection waits for other actor to settle. No source/permission lease is extended.
+
+This is a versioned functional preparation criterion, not a24s total wallclock or5s/8s end-to-end product availability claim. Original external wait timeouts remain between phases. The earlier shared8s method and actualFAIL remain immutable. Neither old archive nor this static review proves a cache bug or eventual UI availability.
+
+Current source is e9b9/1813; frontend/harness are exact prior1d source. Historical HANDOFF/runner still bind1d/a0b and an independent VM guard rejects current e9b9. Fresh source/image binding review and rootRUNACK are required before actual execution. No product/producer writes or functional Docker/browser run occurred. Human450 and full P05 remain separate.
+
+One own preparation failure was an assertion comparing cross-realm VM arrays with deepStrictEqual; host Array.from normalization corrected the assertion and final13 checks pass. It did not require a producer change.

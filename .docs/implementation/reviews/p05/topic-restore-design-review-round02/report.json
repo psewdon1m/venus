@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN04_RECEIPT_COMPATIBILITY_ACCEPTED_FOR_PRODUCER_NOT_RUN",
+  "reviewer": "/root/p05_topics_ui_review",
+  "design_author": "/root",
+  "created_at": "2026-10-19T20:04:56.991649+00:00",
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN.md",
+      "sha256": "8e4a7522c8b2f3522147a977f4205cfe37b79e9a1554e0daa86518f59dca6e6a"
+    },
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN-round02.md",
+      "sha256": "93ed0073e1fb92bb6199387c64ad627234e7862c1e877ae80ded524030eeb56b"
+    },
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN-round03.md",
+      "sha256": "62f729ced06ee0ef8cf4d00cf1d3246bf090b8036b338bab7bea95d45759a04e"
+    },
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN-round04.md",
+      "sha256": "b2ef0a6a0211cf1611741c1343cd933de9a07c5f6d4035f14d597b9736869a61"
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+    },
+    {
+      "path": "apps/api/src/topic-game-routes.ts",
+      "sha256": "bfe33e4c5b90ce60a156e1933c2356249b301649776ca2103230ef0d08d6081a"
+    },
+    {
+      "path": "apps/api/src/rooms.ts",
+      "sha256": "dc32ea80c4bd819c123a38d8579c5bff9ba9b7ce2a6bdbc954eafa875656f4e1"
+    },
+    {
+      "path": "apps/api/src/topic-game-idempotency.test.ts",
+      "sha256": "0d6fd5c5652bf947b44b09c462202abc3ba639dad3ce87d5ed7bc6ed5c1b1595"
+    }
+  ],
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "checks": {
+    "production_method_inert_probes": 3,
+    "prior14controls_and_prelisternobserver_retained": true,
+    "full_pg_restore_equality_exceptions": 0,
+    "full_stage_pass": false
+  },
+  "findings": [],
+  "interpretation": [
+    "Existing nonchat mutation cached-receipt branch checks identity fingerprint/current room auth and does not execute command fn; dispatchReceipt fences auth and returns exact retained receipt. A receipt200 alone is not evidence of a grant revival.",
+    "New request_id invokes stale command path and must fail explicit4xx, no inserted receipt; persistTimeFailure may perform revocation-only maintenance after savepoint rollback.",
+    "Chat cached receipt and dispatch use current chatReplayFence; prior receipt is not a current-policy bypass.",
+    "Admission limiter uses fixed calendar minute scope_hash/window_start/requests; only source-permitted accounting changes may be classified separately on protected HTTP, never during raw pg_restore.",
+    "Original raw all-table/sequence equality before boot and untouchedD raw boot clearing before reconcile/listen remain strict."
+  ],
+  "producer_review_obligations": [
+    "Store original synthetic receipt/request state only private0600tmpfs; compare complete canonical receipt without emitting body.",
+    "Exact receipt200 compare all relevant D rows, private refs/history/requests and game/room revisions; enumerate other changed tables and fail unapproved changes.",
+    "For fresh-ID denial, allow only identified currentD round cipher rewrite after decrypting and verifying no new grant/ack/private object/reference or semantic expansion; monotonic floor only if actual fixture scope permits. Other revocation effects require explicit source-bound check rather than generic exemption.",
+    "Admission diff oracle must verify exact scope/window/count effect, permitting source reset/new-row only if actually expected by fixture timing. No blanket admission table bypass.",
+    "Refresh producer/image/source from historical895 parents to current reviewed freeze; concrete14-case producer/gates/cleanup need independent review and root RUN ACK."
+  ],
+  "no_docker_pg_restore_product_producer_writes": true,
+  "full_stage_pass": false
+}

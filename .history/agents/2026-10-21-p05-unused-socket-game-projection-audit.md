@@ -1,0 +1,5 @@
+# Read-only V2 socketState game projection consumer audit
+
+2026-10-20T21:49:18.205412+00:00 — START rootrequested sourceconsumer audit afteractualCPUprofileb0b3faf4. APPwritesHOLD; inspectallproduction/tests/toolscallers ofsocketState/bundle.game andV2socketView fences, preservelegacy. NoAPPedit/testframework/nativeRUN. Need determineif onlyunused projectioncomputation canbeskippedwithoutprivatesource/auth/preparationfence loss.
+
+2026-10-20T21:50:58.616761+00:00 — COMPLETE. Allcurrentproduction/test/tool socketStatecallers audited; noproductionbundle.gameuse, initial/changedfreshdispatchGame; liveGrantroomonly/testrefsorwraponly. TwoV2viewreturnsredundant; keepALLprivateprep/loaded/refs/finaldelivery/legacy. Inactiveeagercontenterrorcanbedelayedbutnopayloadpublishedwithoutfreshfence; explicitcaveat. SourcepinsallA11exact. INDEXaf27e087c72ee59db4f43d4578cebfc6a7e887d986ec8575bb6e30641165edb3/2, noAPPedits/tests/nativeRUN/secondprofile, writes COMPLETE. Oneguessrooms.test.tsreadmissing, correctedexistingknownfiles; no inferencefrommissingpath.

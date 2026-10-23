@@ -1,0 +1,82 @@
+{
+  "source_sha": "4a7d5877b7e860d152c8c49ae768b646f3cb163f",
+  "source_dirty": false,
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "nonroot-image-labels-and-layer-secret-scan",
+      "status": "PASS"
+    },
+    {
+      "id": "loopback-only-app-private-postgres",
+      "status": "PASS"
+    },
+    {
+      "id": "runtime-isolation-no-socket",
+      "status": "PASS"
+    },
+    {
+      "id": "version-contract-web-and-ready-postgres",
+      "status": "PASS"
+    },
+    {
+      "id": "database-outage-is-not-ready-process-alive",
+      "status": "PASS"
+    },
+    {
+      "id": "database-recovery-without-app-restart",
+      "status": "PASS"
+    },
+    {
+      "id": "public-entry-fails-closed-without-approved-offer",
+      "status": "PASS"
+    },
+    {
+      "id": "structured-logs-do-not-expose-payloads-or-secrets",
+      "status": "PASS"
+    },
+    {
+      "id": "malformed-secret-startup-is-sanitized",
+      "status": "PASS"
+    }
+  ],
+  "image_id": "sha256:44ce38f39972d0f3577e6058318f525d4528460775e6ffc99420f50d501452dd",
+  "runtime": {
+    "image": "sha256:44ce38f39972d0f3577e6058318f525d4528460775e6ffc99420f50d501452dd",
+    "user": "1000:1000",
+    "privileged": false,
+    "readonly_rootfs": true,
+    "cap_drop": [
+      "ALL"
+    ],
+    "security_opt": [
+      "no-new-privileges:true"
+    ],
+    "mounts": [
+      {
+        "destination": "/var/lib/venus",
+        "rw": true
+      },
+      {
+        "destination": "/run/secrets/db_password",
+        "rw": false
+      },
+      {
+        "destination": "/run/secrets/keyring",
+        "rw": false
+      }
+    ],
+    "source_revision": "4a7d5877b7e860d152c8c49ae768b646f3cb163f",
+    "version": "0.0.0"
+  },
+  "version": {
+    "service": "venus",
+    "version": "0.0.0",
+    "source_revision": "4a7d5877b7e860d152c8c49ae768b646f3cb163f",
+    "image_digest": "sha256:44ce38f39972d0f3577e6058318f525d4528460775e6ffc99420f50d501452dd",
+    "contract_revision": "P00-2"
+  },
+  "rendered_compose_sha256": "aab5a86eaaef77d9a909417197b1112c8057a720a99c787fcc54d54ea84d936c",
+  "logs_sha256": "62c8393ab235bf468e5a6cc392b7e3a2cc9b2817addacdb5cff6b5dccd4ae49a",
+  "compose_sha256": "482d6173cebd8a7ba30d1d5f8e21d141d42ff250e719e773cac3e2435e45e21a"
+}

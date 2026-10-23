@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "revision": "P05-KEYBOARD-FIELD-VISIBILITY-02",
+  "kind": "COMPATIBLE_FRONTEND_KEYBOARD_ACCESSIBILITY_FIX",
+  "parent_source_identity": "d1804e3e560e9879a19914ea1eccdc77cc69c1f9547808100d3849f4296c81b2",
+  "parent_source_count": 1873,
+  "behavior": "Common main shell handles bubbled focus on existing input/select fields with instant nearest scrolling of the complete element box. Actual event.target is used after child handlers; existing room-invite select() and three textarea focus handlers are preserved. No extra focus, text/selection mutation, state/request/timer/permission changes.",
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "23af5ea2a3080da6f4efddb6e82a4a121ef12b5a563318a43b018503bdcd0a85"
+  },
+  "before_source_files": {
+    "apps/web/src/main.tsx": "93f671d05f3d3a990689b1de50f954b01ca590a2dab3b6b46753bb08cde0f486"
+  },
+  "actual_failure": {
+    "project": "venus-v2-layout-01469562c377",
+    "diagnosis_index_sha256": "76311bfb916733a1b3eab7a90d2a3313347726b87f97d5b450510d9e3d9e39c8",
+    "cell": "webkit/ru/entry/w320",
+    "control": "join-invite",
+    "first_focus_bottom": 584.890625,
+    "viewport_height": 568,
+    "cause_qualification": "First-sample field viewport failure established. Exact UA/caret ordering and permanent clipping not claimed."
+  },
+  "validation": {
+    "web_typecheck_exit": 0,
+    "focused_lint_exit": 0,
+    "host_JS_exit": 0,
+    "host_JS_PASS": 1104,
+    "host_JS_platform_SKIP": 207,
+    "host_JS_max_workers": 2,
+    "host_preflight_tests_exact_changed_APP_bytes": true,
+    "this_source_revision_metadata_added_after_host_preflight": true,
+    "new_native_UI_and_clean_quality_PENDING": true
+  },
+  "unchanged": [
+    "All API/protocol/consent/TTL/storage/catalog/selector and statistical sources",
+    "CSS, Tab order, existing child focus handlers and original keyboard/layout oracles/deadlines",
+    "Historical source contracts, raw native proofs, original cases/seeds/thresholds"
+  ],
+  "compatibility": "A19 durable/backend contracts and all pure statistical inputs unchanged. Fresh current images/native geometry required; old A19 Chromium geometry is not automatically accepted for the changed APP focus path.",
+  "rollback": "Restore coherent A19 web bundle. Backend/durable state unchanged; known WebKit entry focused-field viewport failure returns."
+}

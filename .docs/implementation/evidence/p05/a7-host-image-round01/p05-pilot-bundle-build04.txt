@@ -1,0 +1,98 @@
+2026/10/20 23:06:07 http2: server: error reading preface from client //./pipe/dockerDesktopLinuxEngine: file has already been closed
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 1.2s
+
+#3 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 929.43kB 0.1s
+#4 transferring context: 4.45MB 0.3s done
+#4 DONE 0.3s
+
+#5 [dependencies  2/12] WORKDIR /app
+#5 CACHED
+
+#6 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#6 CACHED
+
+#7 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#7 CACHED
+
+#8 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#8 CACHED
+
+#9 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#9 CACHED
+
+#10 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#10 CACHED
+
+#11 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#12 CACHED
+
+#13 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#13 CACHED
+
+#14 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#14 CACHED
+
+#15 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#15 CACHED
+
+#16 [runtime 1/5] COPY tsconfig*.json ./
+#16 CACHED
+
+#17 [runtime 2/5] COPY apps apps
+#17 DONE 0.0s
+
+#18 [runtime 3/5] COPY packages packages
+#18 DONE 0.0s
+
+#19 [runtime 4/5] COPY tests tests
+#19 DONE 0.0s
+
+#20 [runtime 5/5] RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+#20 0.283 
+#20 0.283 > venus@0.0.0 build
+#20 0.283 > tsc -b && npm run build -w @venus/web
+#20 0.283 
+#20 4.359 
+#20 4.359 > @venus/web@0.0.0 build
+#20 4.359 > vite build
+#20 4.359 
+#20 4.535 vite v8.3.4 building client environment for production...
+#20 4.545 transforming...
+#20 4.596 ✓ 35 modules transformed.
+#20 4.632 rendering chunks...
+#20 4.666 computing gzip size...
+#20 4.671 dist/index.html                   0.39 kB │ gzip:   0.27 kB
+#20 4.671 dist/assets/index-BYYvUAH4.css    7.38 kB │ gzip:   2.29 kB
+#20 4.671 dist/assets/index-Off85NLk.js   342.93 kB │ gzip: 103.83 kB
+#20 4.671 
+#20 4.672 ✓ built in 135ms
+#20 DONE 4.7s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 0.3s done
+#21 exporting manifest sha256:deb38d02b0cc5455105ed41dd71e5e023cfd5b529c252d0cea1e91b3e0343df4 0.0s done
+#21 exporting config sha256:f09e96fd64034b3ceef00094ca66c9a38a3743414af3748fb2430e7b30b6080a done
+#21 exporting attestation manifest sha256:2bd19ef3b894650293727cef4a05c9dc94c5b24ef868c31d331ff8a4984fa24c 0.0s done
+#21 exporting manifest list sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937 done
+#21 naming to moby-dangling@sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937 done
+#21 unpacking to moby-dangling@sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937
+#21 unpacking to moby-dangling@sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937 0.2s done
+#21 DONE 0.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/lcyn8xcr55u2jdt0es0xox47b

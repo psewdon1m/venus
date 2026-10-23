@@ -1,7 +1,7 @@
 name: Venus CI
 on:
   push:
-    branches: [main, 'feature/**']
+    branches: [main]
   pull_request:
     branches: [main]
 permissions:
@@ -72,11 +72,18 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npm run test:p03
+      - run: npm run test:p04
       - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         if: always()
         with:
           name: p03-integration
           path: .artifacts/p03/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: p04-integration
+          path: .artifacts/p04/
           if-no-files-found: error
   p03-measurements:
     runs-on: ubuntu-24.04

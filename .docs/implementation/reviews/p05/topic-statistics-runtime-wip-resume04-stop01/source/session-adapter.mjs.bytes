@@ -1,0 +1,37 @@
+import assert from 'node:assert/strict';
+import {consumeSession} from '../p05-topic-measurements-method06/consume-session.mjs';
+import {makeSnapshot,makeHistory,makeSafety} from '../p05-topic-measurements/profiles.mjs';
+import {certificate,hardEligible} from '../p05-topic-measurements/support.mjs';
+import {eligible} from '../../packages/relationship-engine/dist/index.js';
+import {featureRecord,sha} from './protocol.mjs';
+import {readFileSync} from 'node:fs';
+const guardRows=JSON.parse(readFileSync(new URL('../p05-topic-measurements/contracts/expected-status.json',import.meta.url))).guard_table;
+const guards=new Map(guardRows.map(g=>[[g.capability,g.topic_regime,g.context,g.stage,g.comfort,g.class].join('/'),g.private_status]));
+export async function sessionRecord(f,d,{onRaw=()=>{},shouldStop=()=>false}={}){
+ const invitations=Array(d.size).fill(0),privateInvitations=Array(d.size).fill(0),stages={},seen=new Set();let K=0,Kprivate=0,earlyPrivate=0;
+ const result=await consumeSession(f,d,{shouldStop,onPublic:r=>onRaw({descriptor:d,...r}),onRound:e=>{
+  if(e.phase!=='selected')return;const p=e.current.data.plan;if(seen.has(p.round_id))return;seen.add(p.round_id);const stage=stages[p.stage]??={rounds:0,pair_rounds:0,private_rounds:0};stage.rounds++;
+  if(p.interaction.startsWith('pair_')){assert.equal(p.actors.length,2);K++;stage.pair_rounds++;for(const id of p.actors){const i=e.session.snapshot.baseline.players.findIndex(x=>x.id===id);assert(i>=0);invitations[i]++;if(p.interaction==='pair_private')privateInvitations[i]++;}}
+  if(p.interaction==='pair_private'){Kprivate++;stage.private_rounds++;if(p.stage<3)earlyPrivate++;}
+ }});
+ assert.equal(invitations.reduce((a,b)=>a+b,0),2*K);assert.equal(privateInvitations.reduce((a,b)=>a+b,0),2*Kprivate);
+ return{descriptor:d,...result,counts:{K,D:2*K,Kprivate,Dprivate:2*Kprivate,invitations,privateInvitations,earlyPrivate,stages},feature_record:featureRecord(d,result)};
+}
+/** One exact logical row, exhaustive actor choices; no actor permutations counted as rows. */
+export function eligibilityRecord(f,d){
+ const snapshot=makeSnapshot(f,d),history=makeHistory(f,snapshot,d.regime),safety=makeSafety(snapshot,d.regime),players=snapshot.baseline.players;
+ const publicUsed=new Set(history.public_history.flatMap(r=>f.map.entry(r.card_id).semantic_family_ids));
+ const reachable=Array.from({length:d.rounds},(_,i)=>Math.min(4,1+Math.floor(4*i/Math.max(1,d.rounds-1)))).includes(d.stage),cards=f.pack.cards.filter(c=>c.mode===d.mode&&!f.map.excluded_card_ids.includes(c.id)),sets={group:new Set(),solo:new Set(),pair_public:new Set(),pair_private:new Set()},families=new Set();let parity_checks=0;
+ for(const card of cards){const options=card.interaction==='group'?[[]]:card.interaction==='solo'?players.map(p=>[p.id]):players.flatMap((a,i)=>players.slice(i+1).map(b=>[a.id,b.id]));
+  for(const actors of options){const own=hardEligible(card,snapshot,actors,d.stage),production=eligible(card,snapshot.baseline,actors,d.stage);assert.equal(own,production,'HARD_ELIGIBILITY_PARITY:'+card.id);parity_checks++;if(own&&card.interaction!=='pair_private'&&f.map.entry(card.id).semantic_family_ids.every(x=>!publicUsed.has(x)))sets[card.interaction].add(card.id);}
+ }
+ let baseline_options=0,effective_options=0;
+ for(let a=0;a<players.length;a++)for(let b=a+1;b<players.length;b++){
+  const c=certificate(f,snapshot,history,safety,[players[a].id,players[b].id],d.stage,d.regime==='T6_TARGETED_CHANGES'?['creative']:[]);
+  if(c.baseline_common>=Math.ceil(.25*d.rounds))baseline_options++;if(c.baseline_common>=Math.ceil(.25*d.rounds)&&c.after_targeted_topics.length)effective_options++;
+  for(const id of c.after_targeted_topics){sets.pair_private.add(id);for(const family of f.map.entry(id).semantic_family_ids)families.add(family);}
+ }
+ const positive=Object.values(sets).some(s=>s.size),status=!reachable?'NA_UNREACHABLE_STAGE':positive?'ELIGIBLE':'SAFE_REFUSAL_NO_ELIGIBLE_CONTENT';
+ const private_status=reachable?guards.get([d.capability,d.regime,d.context,d.stage,d.comfort,d.class_profile].join('/')):'NA_UNREACHABLE_STAGE';assert(private_status,'MISSING_PREREGISTERED_GUARD');
+ return{descriptor:d,status,private_status,reachable,parity_checks,baseline_private_options_before_cap:baseline_options,effective_private_options_before_cap:effective_options,counts:Object.fromEntries(Object.entries(sets).map(([k,s])=>[k,s.size])),private_distinct_family_count:families.size,card_sets_sha256:sha(Object.fromEntries(Object.entries(sets).map(([k,s])=>[k,[...s].sort()]))) ,history_revision:history.revision,safety_revision:safety.revision,scope:'PURE_ELIGIBILITY_INITIAL_PRIOR_STATE_NOT_RUNTIME_CAPACITY'};
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "name": "controls02",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--test",
+      ".artifacts\\p05-ordinary-real470-probe01\\controls.test.mjs"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "syntax-probe02",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      ".artifacts\\p05-ordinary-real470-probe01\\probe.mjs"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "syntax-outer02",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      ".artifacts\\p05-ordinary-real470-probe01\\outer.mjs"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "lint02",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "node_modules/eslint/bin/eslint.js",
+      "--no-ignore",
+      ".artifacts\\p05-ordinary-real470-probe01\\probe.mjs",
+      ".artifacts\\p05-ordinary-real470-probe01\\outer.mjs",
+      ".artifacts\\p05-ordinary-real470-probe01\\controls.test.mjs"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "pilot-binding-cold01",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--input-type=module",
+      "-e",
+      "import assert from 'node:assert/strict';import fs from 'node:fs';import {ownerProvisionalPilot} from './packages/card-catalog/dist/index.js';const ack=JSON.parse(fs.readFileSync('.artifacts/p05-ordinary-real470-probe01/ROOT-ACK.template.json'));assert.deepEqual(ack.map_pins,ownerProvisionalPilot.map.pins);assert.deepEqual(ack.owner_authority,ownerProvisionalPilot.pack.owner_provisional);console.log('Exact current compiled pilot map+owner tuple PASS; not actual image/application');"
+    ],
+    "exit_code": 0
+  }
+]

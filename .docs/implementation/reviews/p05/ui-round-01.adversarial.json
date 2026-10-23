@@ -1,0 +1,27 @@
+{
+  "scope": "ADVERSARIAL_ACTUAL_GAMES_PANEL_CODE_WITH_FAKE_REACT_HOOKS_AND_API_NOT_BROWSER_E2E",
+  "status": "REPRODUCED",
+  "cases": [
+    {
+      "id": "UI-001",
+      "reproduced": true,
+      "before": "[\"Yes, but…\",\" · \",\"Waiting for the host to start\"]",
+      "after": "[\"Questions\",\" · \",\"Game in progress\"]",
+      "calls": [
+        "/api/v1/rooms/room/game/current",
+        "/api/v1/rooms/room/game/prepare",
+        "/api/v1/rooms/room/game/availability",
+        "/api/v1/rooms/room/game/old/round/round-old/invitation",
+        "/api/v1/rooms/room/game/old/round/round-old/private",
+        "/api/v1/rooms/room/game/old/round/round-old/action-consent"
+      ]
+    },
+    {
+      "id": "UI-002",
+      "reproduced": true,
+      "private_ui_hidden_after_expiry": true,
+      "post_count_after_expired_retry": 2,
+      "synthetic_payload_retained": true
+    }
+  ]
+}

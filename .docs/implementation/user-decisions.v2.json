@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "revision": "STANDALONE-LOCAL-PILOT-20261019",
+  "source": {
+    "kind": "direct_user_messages",
+    "location": "current Venus chat, 2026-10-19",
+    "observed_at": "2026-10-19T15:29:05.084014+03:00"
+  },
+  "prior_decisions_preserved": ".docs/implementation/user-decisions.v1.json",
+  "decisions": [
+    {
+      "id": "U-006",
+      "decision": "Process supplied450-card owner review as corrective disposition; overall HOLD is preserved",
+      "evidence": {
+        "path": ".docs/implementation/evidence/Venus_P04_FULL_REVIEW_450_2026-10-19.md",
+        "sha256": "e47cf986c885433e7583ad35161ba7978f72341196d3d10162ba4b1d7346601f"
+      }
+    },
+    {
+      "id": "U-007",
+      "decision": "Invited-friends testpilot: mock legal/operator values permitted, explicit18+ remains mandatory; no final public/legal readiness claim"
+    },
+    {
+      "id": "U-008",
+      "decision": "Venus is standalone; Exocortex central dependency requirements and external Updater integration superseded for active scope; no Neptune/Gryphon/Wyvern/Window synchronization"
+    },
+    {
+      "id": "U-009",
+      "decision": "Build updates into Venus; necessary mechanisms internal; export backup file on host; external mechanism backs up that file outsideVenus"
+    },
+    {
+      "id": "U-010",
+      "decision": "Owner can provide repository keys when needed; actual production signing material not yetcreated"
+    },
+    {
+      "id": "U-011",
+      "decision": "All current acceptance tests localDocker infrastructure; productiontarget notprovided and notcurrentblocker"
+    },
+    {
+      "id": "U-012",
+      "decision": "Prospective domainvenus.shmoza.net/Cloudflare/notbound; certbotdefaultcertificatepaths planned; no DNS/TLS readiness inferred"
+    },
+    {
+      "id": "U-013",
+      "decision": "Music catalogue deferred byowner; no music release acceptance inferred"
+    },
+    {
+      "id": "U-014",
+      "decision": "Onehost deployment; no SFU currentlyplanned. Embeddedmediaserver vsstrictnoSFU clarification pending; mobile deferred"
+    },
+    {
+      "id": "U-015",
+      "decision": "Calls scope publicroom+privatepair; Hermes permittedasreference and reuseifuseful"
+    },
+    {
+      "id": "U-016",
+      "decision": "Root maintains orchestratorjournal; everyspawnedagent maintains its own journal under.history"
+    },
+    {
+      "id": "U-017",
+      "decision": "Owner explicitly accepts embedded media server in Venus Docker on the same single host",
+      "verbatim": "Встроенный медиасервер на том же хосте",
+      "source": "direct asynchronous user reply in current chat,2026-10-19"
+    }
+  ],
+  "unchanged": [
+    "room-only relationships",
+    "idle24h",
+    "primarydelete<=24hafterclose",
+    "backupretention<=7d",
+    "explicit consent/ACL/withdrawal",
+    "separateindependent gateagents and report/fix/test/review loop"
+  ],
+  "not_inferred": [
+    "HOLD report is not final reviewed-pack approval",
+    "new production legal approval",
+    "production server provisioning",
+    "public DNS/TLS proof",
+    "keys ownership/signing setup completed",
+    "RPO/RTO accepted"
+  ],
+  "engineering_followup": {
+    "media_transport": "one embedded media-server path for Cinema, publicroomCalls and privatepairCalls; no separate1-to-1P2P implementation",
+    "basis": "Owner follow-up asks to use media server always; consistent with U-017 and both Calls variants",
+    "access_boundary": "public8 and private2 have distinct server-authorized media rooms/grants; room host is not automatically a private-call participant"
+  }
+}

@@ -1,0 +1,2 @@
+import base from '../../../../../vitest.config.ts';
+export default {...base,test:{...base.test,include:['C:/.projects/venus/.docs/implementation/reviews/p05/cache-own-exclusion-app-independent-round01/warm-aes-fences.test.ts','apps/api/src/topic-snapshot-cache.test.ts','apps/api/src/topic-snapshot-cache-integration.test.ts','apps/web/src/topic-own-exclusion-refresh.test.ts','apps/web/src/topic-settings.test.ts','apps/web/src/topic-panel.test.ts']}};

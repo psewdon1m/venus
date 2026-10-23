@@ -1,0 +1,19 @@
+import hashlib,json,subprocess,sys,shutil
+from pathlib import Path
+from datetime import datetime,timezone
+work=Path('.artifacts/p05-topic-statistics-resume01');out=Path('.docs/implementation/reviews/p05/topic-statistics-author-resume01');node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+commands=[]
+for name,args in [('finite-final',[node,str(work/'finite-controls.mjs')]),('eslint-final',[node,'node_modules/eslint/bin/eslint.js','--config',str(work/'eslint.config.mjs'),str(work)]),('cold-describe',[node,str(work/'section-runner.mjs'),'--describe'])]:
+ r=subprocess.run(args,capture_output=True);(out/'raw'/f'{name}.stdout.txt').write_bytes(r.stdout);(out/'raw'/f'{name}.stderr.txt').write_bytes(r.stderr);commands.append({'name':name,'exit_code':r.returncode,'command':args})
+syntax=[]
+for p in work.glob('*.mjs'):
+ r=subprocess.run([node,'--check',str(p)],capture_output=True);syntax.append({'path':str(p),'exit_code':r.returncode,'stderr':r.stderr.decode()})
+(out/'validation.json').write_text(json.dumps({'commands':commands,'syntax':syntax},indent=2)+'\n')
+for p in work.iterdir():
+ if p.is_file():dest=out/'exact-author-source'/(p.name+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+report={'created_at':datetime.now(timezone.utc).isoformat(),'status':'AUTHOR_COHERENT_WIP_NOT_ACCEPTED_NOT_RUN','reason':'Root reprioritized independent METHOD07 Windows extraction correction; consumer code frozen before role change.','source_identity':'1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad','implemented':['Exact fixed descriptor order/count/seed rejection; C2/invariant/fairness/GF aggregators','Sparse1075 fixed feature dictionary; original cell LDA/AUC and separate streaming pooled LDA; exact single-feature decoder','Session actual-mutator adapter; eligibility hard predicate/production parity; common exclusion support helper','Fail-closed guarded section dispatch with exact original cleanprereg/rootACK authorization','Runtime84 receipt schema and supplied-transcript parity checks with role-bound actor mapping'],'remaining':['Independent author code review, integration and corrections','Source-bound reviewed external 32GiB supervisor + synchronous durable immutable hash-chain/replay sink (dispatch requires supplied interface)','Full exclusion support table before outcomes; GF stage1 across-profile structural proof; register exact statuses','Actual PG/HTTP/WS84cell canary executor/raw receipts and actual serializer/mutation parity, not receipt-only claims','Freeze final producer in committed/tagged prereg inputs; exact wall budgets/source/rootACK before full statistics','Complete independently recomputed raw coverage/count/seed/score/denominator verifier; full stats runs never executed'],'finite_validation':commands,'syntax_checks':len(syntax),'selector_invocations':0,'actual_mutator_sessions':0,'Docker_calls':0,'statistics_RUN':False,'human470':'HOLD_UNCHANGED','full_P05_PASS':False,'operationalR100':'METHOD06 worker100/100code0 only; wholeattemptNOT_ACCEPTED exportHOST_EXTRACT_GUARD_FAILED; rootauthoringMETHOD07; nofeasibilityclaim'}
+(out/'HANDOFF.json').write_text(json.dumps(report,indent=2)+'\n')
+files=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file() and p.name!='INDEX.json']
+(out/'INDEX.json').write_text(json.dumps({'schema_version':1,'scope':'STATS_AUTHOR_COHERENT_WIP_NOT_RUN','files':files},indent=2)+'\n')
+print(json.dumps({'INDEX_sha256':sha(out/'INDEX.json'),'HANDOFF_sha256':sha(out/'HANDOFF.json'),'children':len(files),'commands':commands,'syntax_failures':[x for x in syntax if x['exit_code']]}))

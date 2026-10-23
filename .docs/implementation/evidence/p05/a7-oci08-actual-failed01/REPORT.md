@@ -1,0 +1,5 @@
+# OCI08 actual setup FAIL, original cleanup FAIL retained
+
+Exact A7/B4 synthetic compatibility14 attempt stopped in setup before initializer or any app boots/control. Docker inspect canonical CAP_CHOWN versus literal CHOWN assertion confirmed independently e6718101; inherited setup/export/cleanup shared validator rejected. Original raw status FAIL/cleanup failed_retained_manual_cleanup_required is preserved. No14PASS.
+
+Root separately inspected exact owner2921a958/project92449ca2/images, proved initializer neverstarted and allfour native dirs EMPTY, then stopped/removed only owned2containers/4volumes/network; manualafter PASS does not rewrite failed automaticcleanup. Two initial read attempts encountered EACCES (DBdir uid999); raw script revisions retained, corrected controlledreadonly999 listing succeeded. Secret material was never provisioned; no user private data. Later minimal OCI09 correction requires independent acceptance and new actual. Original Markdown captures use .bytes with PATH-MAP exacthash. Fullstage false.

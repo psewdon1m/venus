@@ -1,0 +1,69 @@
+from pathlib import Path
+import json,hashlib,zipfile,datetime,subprocess,sys
+sys.path.insert(0,'tools')
+from stage_inventory import inventory,identity
+base=Path('.docs/implementation/evidence/p05/ordinary-runtime-preflight-02');run=base/'run';out=Path('.docs/implementation/reviews/p05/runtime-actual-round02')
+def j(p):return json.loads(Path(p).read_text(encoding='utf-8'))
+def one(p):
+ d=j(p);return d[0] if isinstance(d,list) else d
+def stamp(s):return datetime.datetime.fromisoformat(s.replace('Z','+00:00'))
+raw=(base/'index.json').read_bytes();assert hashlib.sha256(raw).hexdigest()=='4b11ab0ba648a8e2f37751506a0315442b86048e4d60924143239f1e98a6c84e';idx=json.loads(raw);assert len(idx['files'])==52
+for row in idx['files']:
+ b=(base/row['path']).read_bytes();assert len(b)==row['bytes'] and hashlib.sha256(b).hexdigest()==row['sha256'],row['path']
+receipt=j(base/'receipt.json');report=j(run/'report.json');expected='895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04';image='sha256:495de503501615d438a6530b792418a2a58230bf5586c86a0c35d27106ef7786';project='venus-runtime-a0764950e2a9'
+assert receipt['source_identity']==report['source_identity']==expected and receipt['exit_code']==0 and receipt['handle']==8360 and receipt['cleanup']==report['cleanup']=='completed' and report['image']==receipt['image']==image and report['project']==project
+assert report['status']=='PASS' and report['cleanup_errors']==[] and len(report['checks'])==8 and set(c['id'] for c in report['checks'])=={'P05-RT-'+str(i).zfill(2) for i in range(1,9)} and all(c['status']=='PASS' for c in report['checks'])
+assert all(receipt[k] is False for k in ['full_stage_acceptance','positive_v2_serving','browser_cookie_jar_proof','absolute_no_listen_proof','full_database_equality_proof'])
+checks={x['id']:x['detail'] for x in report['checks']}
+files=inventory();assert identity(files)==expected and len(files)==1808
+before=j(run/'inputs-before.json');after=j(run/'inputs-after.json');assert before==after and before['identity']==expected and before['files']==files and identity(before['files'])==expected
+archive=(base/receipt['source_archive']).resolve();archivehash=hashlib.sha256(archive.read_bytes()).hexdigest();assert archivehash==receipt['source_archive_sha256']=='9627fb299dbb42feae8955bb765140acdaf168054c159cae7c87a599f6a23a5b'
+with zipfile.ZipFile(archive) as z:
+ assert set(z.namelist())==set(files) and len(z.namelist())==1808
+ for name,sha in files.items():assert hashlib.sha256(z.read(name)).hexdigest()==sha
+ testpins=j(run/'test-input-pins.json')
+ for name,sha in testpins.items():assert hashlib.sha256(z.read(name)).hexdigest()==files[name]==sha
+ for name in testpins:
+  dest=out/'exact-source'/(name+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(z.read(name))
+config=j(run/'compose.json');appconfig=config['services']['app'];assert appconfig['image']==image and 'command' not in appconfig and 'entrypoint' not in appconfig and config['networks']['isolated']['internal'] is True
+archived_image=one(run/'image-inspect.json');current_image=json.loads(subprocess.check_output(['docker','image','inspect',image],text=True))[0];assert current_image['Id']==archived_image['Id']==image and current_image['Config']==archived_image['Config'];assert current_image['Config']['Cmd']==['node','apps/api/dist/server.js']
+appfacts={}
+for phase in ['default','invalid-flag','hold-enabled','restored-v2-disabled']:
+ d=one(run/(phase+'-app-inspect.json'));assert d['Image']==image and d['Config']['Cmd']==current_image['Config']['Cmd'] and d['Config']['Entrypoint']==current_image['Config']['Entrypoint'];assert d['Config']['User']=='1000:1000' and d['HostConfig']['ReadonlyRootfs'] and not d['HostConfig']['Privileged'];assert d['HostConfig']['Memory']<=768*1024*1024 and d['HostConfig']['NanoCpus']<=1000000000
+ env=dict(v.split('=',1) for v in d['Config']['Env']);assert 'NODE_OPTIONS' not in env and 'NODE_PATH' not in env;assert all(not m['Destination'].startswith('/app') for m in d['Mounts']);assert not any('docker.sock' in m['Destination'] for m in d['Mounts']);assert d['Config']['Labels']['com.docker.compose.project']==project
+ if phase=='default':assert 'VENUS_PRIVATE_TOPICS' not in env and d['State']['Running'] and d['State']['Pid']>0 and d['State']['Health']['Status']=='healthy'
+ else:assert not d['State']['Running'] and d['State']['ExitCode']==1
+ appfacts[phase]={'image':d['Image'],'cmd':d['Config']['Cmd'],'entrypoint':d['Config']['Entrypoint'],'running_at_inspect':d['State']['Running'],'exit_code':d['State']['ExitCode'],'flag':env.get('VENUS_PRIVATE_TOPICS')}
+rootset={'topic-births','topic-personal','topic-personal-witness','topic-lifecycle','topic-lifecycle-witness'};roots=j(run/'probe-roots.json');assert roots['status']=='PASS' and set(roots['result'])==rootset
+for d in roots['result'].values():assert d=={'exists':True,'uid':1000,'gid':1000,'mode':'700','directory':True,'children':[]}
+for name in ['image','schema','baseline','read-no-repair','restore-v2-metadata','snapshot']:
+ d=j(run/('probe-'+name+'.json'));assert d['status']=='PASS'
+assert j(run/'probe-schema.json')['result']=={'migration_generations':[1,2,3],'checksums_match_image':True,'private_tables':8}
+pi=j(run/'probe-image.json')['result'];assert pi['approved_packs']==0 and pi['approved_topic_sources']==0 and pi['synthetic_content_injection'] is False and pi['server_entrypoint']=='apps/api/dist/server.js';assert pi==checks['P05-RT-01']['production_image']
+for name,sha in pi['files'].items():
+ assert Path(name).is_file() and hashlib.sha256(Path(name).read_bytes()).hexdigest()==sha,name
+b=checks['P05-RT-03'];assert b['explicit18_required'] and b['offer_acceptance_required'] and b['refused_creates_no_rows'] and b['accepted_create'] and b['private_protocol']==1 and b['topic_birth_rows']==0 and b['protocol_update_denied'] and b['manual_cookie_transport'] and b['browser_cookie_jar_proof'] is False
+nr=checks['P05-RT-04'];assert nr['before']==nr['after'] and nr['no_root_repair'] and nr['p1_reads_only'] and nr['protocol2_read_proof'] is False
+rest=checks['P05-RT-07'];assert rest['restored_v2_metadata_rows']==1 and rest['fixture_sql_only'] and rest['real_v2_admission'] is False and rest['full_backup_restore'] is False and rest['external_birth_provisioned'] is False and rest['sessions']==0
+positive=j(run/'monitor-default.json');assert positive['connections']>0 and positive['attempts']>positive['connections'] and positive['absolute_no_listen_proof'] is False
+observations={};monitor_ids=set();monitor_pids=set()
+for phase,cid,flag in [('invalid-flag','P05-RT-05','TRUE'),('hold-enabled','P05-RT-06','true'),('restored-v2-disabled','P05-RT-08','false')]:
+ d=checks[cid];m=j(run/('monitor-'+phase+'.json'));a=one(run/(phase+'-app-inspect.json'));live=one(run/(phase+'-monitor-inspect.json'));monitor_ids.add(live['Id']);monitor_pids.add(live['State']['Pid'])
+ assert d['flag']==appfacts[phase]['flag']==flag and d['exit_code']==a['State']['ExitCode']==1 and d['generic_startup_failure'] and d['unchanged_server_cmd'] and d['observed_connections']==m['connections']==0 and m['first_connection_at'] is None
+ assert d['pre_start_attempts']>=3 and d['observed_attempts']>=d['pre_start_attempts']+5 and m['attempts']>=d['observed_attempts']
+ assert stamp(m['started_at'])<=stamp(d['pre_start_observation_at'])<stamp(a['State']['StartedAt'])==stamp(d['app_started_at'])<stamp(a['State']['FinishedAt'])==stamp(d['app_finished_at'])<=stamp(d['post_exit_observation_at'])<=stamp(m['last_observation_at'])
+ assert live['State']['Running'] and live['State']['Pid']>0 and live['Config']['Labels']['com.docker.compose.project']==project and live['Config']['Cmd']==['node','/app/runtime-monitor.mjs'];assert stamp(live['State']['StartedAt'])<stamp(m['started_at'])
+ assert d['observer_live'] and d['absolute_no_listen_proof'] is False and d['sampled_state_unchanged'] and d['full_database_equality_proof'] is False and d['max_observation_gap_ms']>0 and m['max_observation_gap_ms']>=d['max_observation_gap_ms']
+ log=(run/(phase+'-logs.txt')).read_text(encoding='utf-8').strip().splitlines();events=[json.loads(s) for s in log if s.startswith('{')];assert events and all(e.get('event')=='startup_failed' and e.get('code')=='STARTUP_UNAVAILABLE' for e in events)
+ observations[phase]={'pre_attempts':d['pre_start_attempts'],'post_attempts':d['observed_attempts'],'phase_final_attempts':m['attempts'],'pre_observation_at':d['pre_start_observation_at'],'post_observation_at':d['post_exit_observation_at'],'started_at':d['app_started_at'],'finished_at':d['app_finished_at'],'post_exit_live':True,'max_gap_at_post_check_ms':d['max_observation_gap_ms'],'phase_final_max_gap_ms':m['max_observation_gap_ms'],'connections':0}
+assert len(monitor_ids)==len(monitor_pids)==1
+resources={}
+for category,args in [('containers',['ps','-aq']),('networks',['network','ls','-q']),('volumes',['volume','ls','-q'])]:
+ found=subprocess.check_output(['docker',*args,'--filter','label=com.docker.compose.project='+project],text=True).split();assert not found;resources[category]=found
+ for d in j(run/('cleanup-'+category+'-inspect.json')):assert (d.get('Config',{}).get('Labels') or d.get('Labels'))['com.docker.compose.project']==project
+assert all(not v for v in j(run/'resources-after-cleanup.json').values())
+secretfacts={}
+for key,v in config['secrets'].items():
+ path=Path(v['file']);assert not path.exists() and not path.parent.exists();secretfacts[key]={'file_exists':False,'parent_exists':False}
+r={'schema_version':1,'status':'BOUNDED_ORDINARY_RUNTIME_EVIDENCE_PASS','reviewer':'/root/p05_topic_games_review','created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_identity':expected,'source_entries':1808,'source_archive_sha256':archivehash,'indexed_files_verified':52,'image':image,'project':project,'root_handle':8360,'root_exit_code':0,'unique_runtime_checks_pass':8,'app_cmd_unchanged':True,'app_source_mounts':False,'approved_registry_entries':0,'producer_pins':testpins,'app_facts':appfacts,'negative_observations':observations,'observer_pid':next(iter(monitor_pids)),'fresh_cleanup':resources,'secret_temp_absent':secretfacts,'new_functional_docker_runs':0,'scope':'Fresh ordinary production CMD defaultP1 and HOLD-negativeV2 startup; manualcookie HTTP; source/config/roots/migrations; sampled TCP/selected-state observations only','limitations':['not absolute no-listen','not full database equality or fullPGdumprestore','not positive approvedV2','not ordinarybrowsercookiejar','not clean-source/fullP05','no old1d4de7 PASS transferred','chatpolicy12 remains separate']}
+(out/'verification.json').write_text(json.dumps(r,indent=2)+'\n',encoding='utf-8');(out/'current-inventory.json').write_text(json.dumps({'identity':expected,'files':files},indent=2)+'\n',encoding='utf-8');print(json.dumps({'status':r['status'],'indexed_files':52,'source_entries':1808,'runtime_checks':8,'observer_pid':r['observer_pid'],'observations':observations,'cleanup':resources}))

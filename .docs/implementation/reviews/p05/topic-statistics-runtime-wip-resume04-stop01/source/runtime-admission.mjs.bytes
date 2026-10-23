@@ -1,0 +1,19 @@
+/** Actual entry-policy/18+/cookie/CSRF/preferences; never SQL-granted actors. */
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createTopicHistory} from '../../packages/relationship-engine/dist/index.js';
+import {literalHash} from './runtime-plan.mjs';
+function cookie(response){const values=response.headers.getSetCookie().map(v=>v.match(/^venus_room_session=([^;]+)/)).filter(Boolean);assert(values.length&&values.every(v=>v[1]===values[0][1]));return decodeURIComponent(values[0][1]);}
+export async function admitRuntimeRoom(h,cell,{onRaw,guard}){
+ const f=await h.create(2,{context:cell.context});f.members=[f.host];const total=Math.min(8,cell.size+1);
+ for(let i=1;i<total;i++){guard();const a=await h.admission(),response=await h.call(a,h.roomPath(f)+'/join','POST',{invite_token:f.invite,display_name:'SYNTHETIC PUBLIC ROLE '+i,locale:'en',idempotency_key:randomUUID(),entry_acceptance:h.acceptance});assert.equal(response.status,200);f.members.push({id:response.body.me.id,credential:cookie(response)});}
+ f.players=f.members.slice(0,cell.size);f.observer=f.members.length>cell.size?f.members.at(-1):f.players[2];assert(f.observer);assert.equal(new Set(f.members.map(a=>a.id)).size,total);
+ onRaw({kind:'actual-entry-admission',requested_players:cell.size,admitted_members:total,observer_id:f.observer.id,players:f.players.map(a=>a.id),adult18:true,policy_version:h.offer.version,policy_digest:h.offer.digest,no_credentials_retained:true});return f;
+}
+export async function setupRuntimePlayers(h,f,{onRaw,guard}){for(const actor of f.players){guard();const p=await h.ok(actor,h.roomPath(f)+'/me/preferences');const next=await h.ok(actor,h.roomPath(f)+'/me/preferences','PUT',{expected_rev:p.rev,idempotency_key:randomUUID(),comfort:4,edges:Object.fromEntries(f.players.filter(m=>m.id!==actor.id).map(m=>[m.id,'in_relationships']))});await h.putTopics(f,actor);onRaw({kind:'actual-player-setup',member:actor.id,comfort:next.comfort,relationships:'R_ALL_SELECTED',topics:3});}}
+export async function prepareRuntimeSession(h,f,descriptor,{onRaw,guard}){
+ guard();assert.equal(descriptor.rounds,100);h.topics.__fixtureSeedHex=literalHash(descriptor.seed_literal);const view=await h.roomView(f),prepared=await h.ok(f.host,h.base(f)+'/prepare','POST',{request_id:randomUUID(),expected_rev:view.room_rev,mode:descriptor.mode,round_count:100,players:f.players.map(a=>a.id)});const g=(await h.pool.query('SELECT * FROM game_sessions WHERE room_id=$1 ORDER BY seq DESC LIMIT 1',[f.room])).rows[0];assert(g&&g.state==='waiting');
+ // Capture actual persisted prior before real start, including earlier sessions.
+ const snapshot=await h.topics.draftSnapshot(h.pool,g,h.source.pack,h.source.map),prior=await h.topics.prior(h.pool,g,h.source.pack,h.source.map);assert.equal(snapshot.baseline.seed,h.topics.__fixtureSeedHex);f.preStartHistory=createTopicHistory(snapshot,h.source.pack,h.source.map,prior);f.preStartSnapshot=snapshot;
+ onRaw({kind:'actual-prestart-snapshot-history',descriptor,snapshot,history:f.preStartHistory,origin:'REAL_PG_PREPARED_DRAFT_AND_PRIOR_BEFORE_HTTP_START'});await h.ok(f.host,h.base(f)+'/start','POST',{request_id:randomUUID(),draft_rev:prepared.game_rev});await h.current(f);assert.equal(f.game,g.id);return f;
+}

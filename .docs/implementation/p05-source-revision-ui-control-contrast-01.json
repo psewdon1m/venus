@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "revision": "P05-UI-CONTROL-CONTRAST-01",
+  "kind": "APPLICATION_CSS_ACCESSIBILITY_CORRECTION",
+  "created_at_utc": "2026-10-21T01:05:12.450407+00:00",
+  "parent_source_identity": "c92110576ecaa7d9e6a56b74d79f51ee3d86f071134e760435adb9750350ed13",
+  "parent_included_files": 1870,
+  "scope": [
+    "apps/web/src/style.css",
+    ".docs/implementation/p05-source-revision-ui-control-contrast-01.json"
+  ],
+  "before_css_sha256": "56348a705e4be481d854f168894b55d3fef15caff0433c997ad68f2a29b29f6f",
+  "after_css_sha256": "fea314792c7cd6b064f4e876ded77272f15a149038795114d42d7191bcf6fec7",
+  "actual_failure_input": {
+    "path": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source13\\.artifacts\\p05\\venus-v2-layout-70eee6a09494\\layout-report.json",
+    "sha256": "ca5d62bec27ebe0b84088ec7fafe0269a08db05b23d90faee84bfcc3eb147d31",
+    "status": "FAIL0PASS1FAIL50NOTRUN_CLEANUP_PASS",
+    "failure": "RENDERED_CONTRAST_FAILURE",
+    "observed": "four input/select boundaries ratio2.1779<3; two native checkbox boundaries unresolved"
+  },
+  "behavior": [
+    "Warm-light palette remains fixed; explicit color-scheme:light avoids OS-native dark/light form-paint mismatch without adding a theme switch.",
+    "Real input/select/textarea boundaries are visible 2px solid with stronger existing palette color; focus outline retained.",
+    "Actual HTML checkbox rendering uses CSS appearance:none, explicit checked/indeterminate marker and disabled/focus paint. Type/labels/Space/default change events and separate18+acceptance remain unchanged. Label rows have44px target height.",
+    "Actual range input keeps browser-native value/keyboard semantics while explicit bordered field, track and thumb remove unmeasured native paint."
+  ],
+  "unchanged": [
+    "TS/JS/API/contracts/cards/policies and18+logic",
+    "All layout audit thresholds, focus/keyboard/native200/459 matrix and original bounds"
+  ],
+  "compatibility": "CSS-only application correction; DOM contracts and persisted state unchanged. Independent review and new source/image-bound actual layout still required.",
+  "rollback": "Restore exact before_css_sha256 bytes from parent source13 style.css through a new explicit source revision; do not rewrite this historical record.",
+  "native_layout_after_fix": "NOT_RUN",
+  "stage_PASS": false
+}

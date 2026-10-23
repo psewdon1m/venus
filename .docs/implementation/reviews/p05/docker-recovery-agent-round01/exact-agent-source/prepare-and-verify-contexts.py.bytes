@@ -1,0 +1,23 @@
+from pathlib import Path,PurePosixPath
+import hashlib,json,zipfile,sys,shutil,datetime
+workspace=Path.cwd();out=workspace/'.docs/implementation/reviews/p05/docker-recovery-agent-round01';sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+contexts={}
+sys.path.insert(0,str(workspace/'.artifacts/p05-recovery-source1274-01/tools'));from stage_inventory import inventory,identity
+for label,directory,freeze,receiptname,wanted,archivewanted in [('A','.artifacts/p05-recovery-source1274-01','renewal-source-freeze-01','p05-renewal-image-build-receipt01.json','1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad','82fac3944a024439ddce48f98263e96fe1f67568205d18e93d540acc3c00109e'),('B','.artifacts/p05-recovery-source13b-01','grant-phase-source-freeze-01','p05-grant-phase-image-build-receipt01.json','13b24714f3dd2d6e2ea08e911042defb4ce0161b956a9bcc74af533d3795120e','bf5a870a5438449c6e34710f7ece298546fdf45e3e205989bd349f41b6f2c17e')]:
+ base=workspace/directory;proof=workspace/'.docs/implementation/evidence/p05'/freeze;manifest=json.loads((proof/'inputs.json').read_bytes());index=json.loads((proof/'index.json').read_bytes());archive=proof/'included-source.zip';assert manifest['identity']==wanted;assert sha(archive)==archivewanted==index['archive_sha256']
+ receipt=json.loads((workspace/'.artifacts'/receiptname).read_bytes());assert receipt['source_identity']==wanted
+ with zipfile.ZipFile(archive)as z:
+  names=z.namelist();assert len(names)==len(set(names))==1813;assert set(names)==set(manifest['files'])
+  for n in names:
+   p=PurePosixPath(n);assert not p.is_absolute()and'..'not in p.parts and':'not in n and'\\'not in n;assert hashlib.sha256(z.read(n)).hexdigest()==manifest['files'][n]
+  if label=='B':
+   assert not base.exists(),'B destination already exists; never overwrite';base.mkdir()
+   for n in names:
+    target=base/n;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(z.read(n))
+   for n,h in receipt['host_compiled_files_sha256'].items():
+    src=workspace/n;assert sha(src)==h;target=base/n;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,target)
+ actual=inventory(base);assert actual==manifest['files'];assert identity(actual)==wanted
+ for n,h in receipt['host_compiled_files_sha256'].items():assert sha(base/n)==h
+ contexts[label]={'root':str(base),'qualification':'INDEPENDENT_VERIFIED_ROOT_A_CONTEXT'if label=='A'else'AUTHOR_PREPARED_B_CONTEXT_REQUIRES_SEPARATE_REVIEW','source_identity':wanted,'included_files':len(actual),'archive_sha256':archivewanted,'legacy_image':receipt['image'],'compiled64_copied_and_verified_not_fresh_build':len(receipt['host_compiled_files_sha256']),'dockerfile_sha256':sha(base/'infra/venus/Dockerfile.p05-tests'),'dockerignore_sha256':sha(base/'infra/venus/Dockerfile.p05-tests.dockerignore'),'immutable_archive_verified_every_entry':True,'build_or_pull_executed_by_agent':False}
+ plan={'created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'HISTORICAL_BUILD_CONTEXTS_VERIFIED_NO_NEW_IMAGE_PROOF','contexts':contexts,'new_images_must_get_new_digests_and_receipts':True,'current_live_stage_qualification':False,'no_stage_inventory_change':True,'Docker_calls':0}
+(out/'contexts-verification-and-B-preparation.json').write_text(json.dumps(plan,indent=2)+'\n');(workspace/'.artifacts/p05-recovery-source13b-preparation01.json').write_text(json.dumps(contexts['B'],indent=2)+'\n');print(json.dumps(plan,indent=2))

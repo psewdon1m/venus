@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED",
+  "reviewer": "/root/p05_topics_ui_review",
+  "created_at": "2026-10-19T21:58:46.839656+00:00",
+  "handoff_sha256": "c58b3420c484675877385ef2ec25adbaacebfcd9141da04c1edbebc3fb1ce6c1",
+  "browser_sha256": "70abacfc3dc3fdb560d9fd21b197ce849a3622984789886c8a3d0fdfdc751df0",
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "included_files": 1813,
+  "findings": [
+    {
+      "id": "M11-R01",
+      "severity": "P2",
+      "scope": "producer",
+      "title": "Action setup precedes mandatory topic consent"
+    },
+    {
+      "id": "M11-R02",
+      "severity": "P2",
+      "scope": "producer",
+      "title": "Finish helper reaccepts the newly preaccepted action"
+    }
+  ],
+  "independent_controls": {
+    "status": "PASS_FINDINGS_REPRODUCED",
+    "checks": 17,
+    "results": [
+      {
+        "name": "exact_receipt_tuple_coherent_minrev",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongStatus",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongSchema",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongRequest",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_badRev",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongKind",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongMethod",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongPath",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongAdvice",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongEpoch",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongProposal",
+        "status": "PASS"
+      },
+      {
+        "name": "reject_wrongDecision",
+        "status": "PASS"
+      },
+      {
+        "name": "recipient_waits_share_one_stage_and_drain_on_failure",
+        "status": "PASS"
+      },
+      {
+        "name": "actual_TSX_pending_topic_disables_action_then_active_topic_enables",
+        "status": "PASS"
+      },
+      {
+        "name": "exact_acceptActionsUi_blocks_case04_before_topic",
+        "status": "PASS"
+      },
+      {
+        "name": "actual_TSX_active_action_finish_visible_and_accept_disabled",
+        "status": "PASS"
+      },
+      {
+        "name": "exact_actionAndFinish_rejects_already_accepted_setup",
+        "status": "PASS"
+      }
+    ],
+    "ui": {
+      "pendingTopicDisabled": true,
+      "noPromptBefore": true,
+      "afterTopicActionEnabled": true
+    },
+    "activeActionUi": {
+      "finishVisible": true,
+      "actionDisabled": true
+    },
+    "finiteDiff": {
+      "caseChanges": [
+        4,
+        6
+      ],
+      "unchangedCases": 14,
+      "addedFunctions": [
+        "adviceMutation",
+        "adviceUiReady",
+        "receivedPendingAdvice"
+      ],
+      "changedFunctions": [
+        "topicUiReady"
+      ],
+      "topicUiChange": "advice locator allowlist only"
+    },
+    "scope": "EXACT_FROZEN_PRODUCER_FUNCTIONS_PLUS_UNMODIFIED_CURRENT_TSX_WITH_EXPLICIT_OWN_PERMISSION_FIXTURES_NO_DOCKER"
+  },
+  "functional_run": false,
+  "full_stage_pass": false
+}

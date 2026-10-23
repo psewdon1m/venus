@@ -1,0 +1,13 @@
+--- a/tools/docker-quality.mjs
++++ b/tools/docker-quality.mjs
+@@ -18,8 +18,8 @@
+   report.image_id=JSON.parse(checked('docker',['image','inspect',name+':local']))[0].Id;
+   checked('docker',['volume','create',volume]);ownedVolume=true;
+   attemptedContainer=true;
+-  const run=command('docker',['run','--rm','--name',name,'--platform','linux/amd64','--network','none','--user','1000:1000','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','2g','--cpus','2',
+-    '--tmpfs','/tmp:rw,exec,size=512m,mode=1777','--tmpfs','/home/node:rw,size=64m,uid=1000,gid=1000,mode=700','--mount',`type=volume,source=${volume},target=/workspace`,
++  const run=command('docker',['run','--rm','--name',name,'--platform','linux/amd64','--network','none','--user','1000:1000','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','4g','--cpus','2',
++    '--tmpfs','/tmp:rw,exec,size=2g,mode=1777','--tmpfs','/home/node:rw,size=64m,uid=1000,gid=1000,mode=700','--mount',`type=volume,source=${volume},target=/workspace`,
+     '--mount',`type=bind,source=${git},target=/repo-git,readonly`,'-e','GIT_DIR=/repo-git','-e','GIT_WORK_TREE=/workspace','-e','GIT_OPTIONAL_LOCKS=0','-e','GIT_CONFIG_COUNT=1','-e','GIT_CONFIG_KEY_0=safe.directory','-e','GIT_CONFIG_VALUE_0=/workspace','-e','PYTHONUTF8=1',report.image_id]);
+   writeFileSync(join(output,'quality.txt'),(run.stdout||'')+(run.stderr||''));report.actual_exit_code=run.status;
+   console.log(((run.stdout||'')+(run.stderr||'')).slice(-7000));

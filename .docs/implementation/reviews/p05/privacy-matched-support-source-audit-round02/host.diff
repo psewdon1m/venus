@@ -1,0 +1,31 @@
+--- accepted-matched-host01
++++ constructive-host01
+@@ -4,22 +4,22 @@
+ import path from 'node:path';
+ import {spawnSync} from 'node:child_process';
+ import {createHash} from 'node:crypto';
+-import {producerPins,verifyRangeExport} from './p05-fixedrange-host03.mjs';
++import {producerPins,verifyRangeExport} from '../p05-fixedrange-host03.mjs';
+ import {fileURLToPath} from 'node:url';
+ const sha=b=>createHash('sha256').update(b).digest('hex');
+ export function validateMatchedAuthority(ack,bindingRaw,preregRaw,reviewRaw,pins,parentPins,runnerHash){
+- assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'PILOT_PRIVACY_MATCHED_01');assert.match(ack.owner,/^[a-f0-9]{32}$/);assert.equal(ack.no_actual_approval,false);
+- assert.equal(ack.host_runner_sha256,runnerHash);assert.equal(ack.method_review_sha256,sha(reviewRaw));assert.match(JSON.parse(reviewRaw).verdict,/^PASS_PROSPECTIVE_MATCHED_DOMAIN_METHOD_ONLY/);
++ assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'PILOT_PRIVACY_SUPPORT_CONSTRUCTIVE_01');assert.match(ack.owner,/^[a-f0-9]{32}$/);assert.equal(ack.no_actual_approval,false);
++ assert.equal(ack.host_runner_sha256,runnerHash);assert.equal(ack.method_review_sha256,sha(reviewRaw));assert.match(JSON.parse(reviewRaw).verdict,/^PASS_PROSPECTIVE_PRIVACY_SUPPORT_CONSTRUCTIVE_METHOD_ONLY/);
+  assert.equal(ack.binding_sha256,sha(bindingRaw));assert.equal(ack.prereg_sha256,sha(preregRaw));assert.deepEqual(ack.producer_pins,pins);assert.deepEqual(ack.range_producer_pins,parentPins);
+  const binding=JSON.parse(bindingRaw),prereg=JSON.parse(preregRaw);assert.equal(binding.image,ack.image_id);assert.equal(binding.source_identity,ack.source_identity);assert.deepEqual(binding.range02_producer_pins,parentPins);assert.equal(binding.shared_host_sha256,ack.shared_host_sha256);assert.equal(binding.range02_binding_sha256,parentPins['binding.json']);
+- assert.equal(sha(fs.readFileSync(fileURLToPath(new URL('./p05-fixedrange-host03.mjs',import.meta.url)))),ack.shared_host_sha256);
+- assert.equal(pins['binding.json'],ack.binding_sha256);assert.equal(pins['PREREG.json'],ack.prereg_sha256);assert.equal(prereg.cases,84);assert.equal(prereg.worker_ms,3600000);assert.deepEqual(ack.range,{section:'privacy-matched',start:0,count:84,end:84});assert.match(ack.source_identity,/^[a-f0-9]{64}$/);assert.match(ack.image_id,/^sha256:[a-f0-9]{64}$/);return ack.range;
++ assert.equal(sha(fs.readFileSync(fileURLToPath(new URL('../p05-fixedrange-host03.mjs',import.meta.url)))),ack.shared_host_sha256);
++ assert.equal(pins['binding.json'],ack.binding_sha256);assert.equal(pins['PREREG.json'],ack.prereg_sha256);assert.equal(prereg.cases,7);assert.equal(prereg.worker_ms,3600000);assert.deepEqual(ack.range,{section:'privacy-support-constructive',start:0,count:7,end:7});assert.match(ack.source_identity,/^[a-f0-9]{64}$/);assert.match(ack.image_id,/^sha256:[a-f0-9]{64}$/);return ack.range;
+ }
+ export function main(argv=process.argv.slice(2)){
+  assert.equal(argv.length,2);const [ackPath,reviewPath]=argv.map(p=>path.resolve(p)),ack=JSON.parse(fs.readFileSync(ackPath));
+  assert.equal(typeof ack.producer_root,'string');const producer=path.resolve(ack.producer_root),parentProducer=path.resolve(ack.range_producer_root),parentBefore=producerPins(parentProducer),pinsBefore=producerPins(producer),bindingRaw=fs.readFileSync(path.join(producer,'binding.json')),preregRaw=fs.readFileSync(path.join(producer,'PREREG.json'));
+  const range=validateMatchedAuthority(ack,bindingRaw,preregRaw,fs.readFileSync(reviewPath),pinsBefore,parentBefore,sha(fs.readFileSync(fileURLToPath(import.meta.url))));
+- const name='venus-matched-'+ack.owner,init=name+'-init',volume='venus-matched-raw-'+ack.owner,output=path.resolve('C:/.projects/venus/.artifacts/p05-privacy-matched-runs01/'+ack.owner);assert(!fs.existsSync(output));fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'producer-before.json'),JSON.stringify(pinsBefore,null,2)+'\n');fs.writeFileSync(path.join(output,'range-producer-before.json'),JSON.stringify(parentBefore,null,2)+'\n');
++ const name='venus-support-'+ack.owner,init=name+'-init',volume='venus-support-raw-'+ack.owner,output=path.resolve('C:/.projects/venus/.artifacts/p05-privacy-support-constructive-runs01/'+ack.owner);assert(!fs.existsSync(output));fs.mkdirSync(output,{recursive:true});fs.writeFileSync(path.join(output,'producer-before.json'),JSON.stringify(pinsBefore,null,2)+'\n');fs.writeFileSync(path.join(output,'range-producer-before.json'),JSON.stringify(parentBefore,null,2)+'\n');
+ const report={status:'FAIL',name,volume,owner:ack.owner,source_identity:ack.source_identity,image:ack.image_id,worker_exit:null,timeout:false,writer_stopped:false,export_verified:false,cleanup:'NOT_RUN',range,full_section_PASS:false,full_C2_PASS:false,full_P05_PASS:false};let volumeOwned=false,containerOwned=false,initAttempted=false;
+ function run(args,timeout=60000){return spawnSync('docker',args,{encoding:'utf8',timeout,maxBuffer:32*1024**2});}
+ function ok(args,timeout){const r=run(args,timeout);assert(!r.error&&r.status===0,'OWNED_DOCKER_OPERATION_FAILED');return r.stdout;}

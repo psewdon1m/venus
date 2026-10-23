@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "revision": "P05-EPHEMERAL-LOCK-FSYNC-01",
+  "at_utc": "2026-10-20T22:00:01.452293+00:00",
+  "parent_source_identity": "597f1a35ff33d1d242e889949445aa1320f9c0d9b1aa9a754b1115d13d131264",
+  "profile_index_sha256": "b0b3faf4dd1faa5ca9c78a3884401b0b5e2ddf2735f013bb04660780bc0671ad",
+  "status": "AUTHOR_COMPLETE_PENDING_NONAUTHOR_AND_NATIVE_FS_AND_SAME_N4",
+  "problem": "Owned seven-second actual Node profile attributes 74.367% of sampled wall time to native fsync; verified stacks include consistent ledger/lifecycle reads syncing temporary mutex directory entries. This is interval attribution, not proof of whole-run cause or measured improvement.",
+  "change": "Remove only directory fsync immediately after ephemeral exclusive mutex creation and unlink in two locked wrappers. All actual chain append/repair, witness, birth/retirement/terminal publication, durability reassertion and destructive unlink barriers remain.",
+  "retained_fences": [
+    "O_CREAT|O_EXCL|O_NOFOLLOW and mode 0600",
+    "verified owner/mode/link-count",
+    "opened-directory ownership/identity checks",
+    "owned inode/device verification before unlink",
+    "stale/busy locks fail closed, no automatic stale removal",
+    "authenticated fresh ledger/room/member/source/safety checks"
+  ],
+  "crash_semantics": "Mutex is not durable authority. Crash may retain or resurrect a stale lock, including an unlink not directory-synced; explicit known-owner/operator recovery is still required. Availability after crash is not guaranteed; no permission follows from missing lock. Actual data has separate file+directory barriers.",
+  "compatibility": "No persisted format, DB schema, API, wire, engine, RNG, consent, rate, clock or SQL timeout changes. Rolling back these two wrappers restores lock fsync; no data migration.",
+  "test_qualification": {
+    "baseline_red_exit": 1,
+    "baseline_red_failed": 4,
+    "baseline_red_passed": 6,
+    "targeted_host_pass": 148,
+    "targeted_host_skipped_linux": 185,
+    "api_typecheck_exit": 0,
+    "changed_lint_exit": 0,
+    "native_fs_run": false,
+    "actual_N4_latency_improvement": "NOT_MEASURED",
+    "note": "Portable controls execute actual production private methods with syscall/metadata doubles. Existing Linux SIGKILL, durability, stale-lock and process tests retained; native sequence/fault tests need Linux run. API tsconfig excludes tests; fixture argument issue caught in source inspection and corrected before final handoff."
+  },
+  "files": {
+    "apps/api/src/private-topic-ledger.ts": "de1bac5a3cc1e932242500571a2439e92a9e30ffc05010f1ecf758b523a51340",
+    "apps/api/src/topic-room-lifecycle.ts": "5f7114c1ea69ef3c126c8b0a1b6a8b0a88a3ab3ff6923212e7272f0391531770",
+    "apps/api/src/private-topic-ledger.test.ts": "af1f843a0b99a7e01b57a5d312c2eadb3f9e5744146c24ef8621d646292fcdcf",
+    "apps/api/src/topic-room-lifecycle.test.ts": "c81e0dea24137e8bee221ba16b52532fbc061df4ec86b86e4039a11e6ad85d3f",
+    "apps/api/src/topic-ephemeral-lock.test.ts": "a41a6c3495d2655bbdb17def54fa366d7188861397ff74c3f9755b540a4786f9"
+  },
+  "not_claimed": [
+    "whole-stage PASS",
+    "actual speedup",
+    "old A4 unknown500 cause",
+    "A10 QUERY_TIMEOUT sufficiency",
+    "native Linux filesystem PASS"
+  ]
+}

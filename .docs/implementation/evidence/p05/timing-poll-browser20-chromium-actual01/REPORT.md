@@ -1,0 +1,3 @@
+# METHOD20 Chromium actual01: FAIL
+
+6 PASS, case07 FAIL (OBSERVER_READY_DEADLINE before second action accept after Other question), 9 NOT_RUN; cleanup PASS. All16 fixed scenarios retained. Game remains active at failure (round12/rev39), EN/TR are private actors, RU is outsider. First new action acceptance succeeded; second readiness is MODEL_REJECTED with complete200 batch. Exact cause requires independent diagnosis. Source aa1205/1823 and image ef5 are unchanged before/after. Runtime METHOD20 and all previous failures are preserved. No full stage or browser-matrix acceptance inferred. Raw metadata, screenshots, inputs, ACK and before/after maps retained.

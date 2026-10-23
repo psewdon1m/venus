@@ -1,0 +1,30 @@
+from pathlib import Path
+import json,hashlib,subprocess
+R=Path('C:/.projects/venus');O=Path(__file__).parent;A=R/'.docs/implementation/reviews/p05/a20-layout02-webkit-text-key-author-round01';S=R/'.artifacts/p05-pilot-bundle-source17';P=S/'.artifacts/p05-v2-layout-producer-a20-02';Q=S/'.artifacts/p05-v2-layout-producer-a20-01'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();load=lambda p:json.loads(p.read_text(encoding='utf-8-sig'));dump=lambda n,x:(O/n).write_text(json.dumps(x,indent=2)+'\n',encoding='utf8');pins={}
+def pin(p,h=None):
+ v=sha(p)
+ if h:assert v==h,(str(p),v,h)
+ pins[p.relative_to(R).as_posix()]={'bytes':p.stat().st_size,'sha256':v};return v
+pin(A/'INDEX.json','9411e09d46478de231ceb0e6464124a026f9babbb64a13fa8a3c9d82f4ca7937')
+for n,v in load(A/'INDEX.json')['files'].items():assert sha(A/n)==v['sha256']and(A/n).stat().st_size==v['bytes']
+for n,v in load(A/'INPUT-PINS.json').items():pin(R/n,v['sha256'])
+parent=R/'.docs/implementation/reviews/p05/a20-two-gates-binding-independent-round01/INDEX.json';pin(parent,'0c0afaccd3251b810008bf6bf8491bb5d44a98d2cc862564a7428e18dbfa612b');pin(R/'.docs/implementation/reviews/p05/a20-layout-actual-independent-round01/INDEX.json','69ed25f12909ccfb6781649a0cb4ab702205473e193ff746cbf15d4aab82212d')
+pin(P/'INDEX.json','e1231905743628e630a5de195505e58a8b49b5b2f6a1d974420749b49c781329');pin(P/'ROOT_RUN_ACK.json','69f1c2b65d9df3f847686c96b5b6cd1aca4bb6797460ae231b766ee861ba4b55')
+for n,v in load(P/'INDEX.json')['files'].items():assert sha(P/n)==v['sha256']and(P/n).stat().st_size==v['bytes']
+mjs=[p.name for p in P.glob('*.mjs')];assert len(mjs)==27 and sorted(n for n in mjs if(P/n).read_bytes()!=(Q/n).read_bytes())==['real-text-probe.mjs','run.mjs']
+assert(P/'run.mjs').read_bytes().replace(b'p05-v2-layout-producer-a20-02',b'p05-v2-layout-producer-a20-01')==(Q/'run.mjs').read_bytes()
+new=b"page.keyboard.press(page.context().browser().browserType().name()==='webkit'?'End':'Control+End')";old=b"page.keyboard.press('Control+End')";text=(P/'real-text-probe.mjs').read_bytes();assert text.count(new)==1 and text.replace(new,old)==(Q/'real-text-probe.mjs').read_bytes()
+assert(P/'binding.json').read_bytes()==(Q/'binding.json').read_bytes();b=load(P/'binding.json');assert b['source_identity']=='4d6022e5997515e00e94a48f5e6ba68b5cd5b0be1cbeebbaf093ca83d4e928fa'and b['included_files']==1874 and b['image']=='sha256:5d976ffbcf579bea9f9b6a51af314e2e23eee995cdaeab0dcf046c541bb63e3a'
+ack=load(P/'ROOT_RUN_ACK.json');assert not ack['root_run_ack']and ack['issued_at']is None and ack['producer_runtime_digest']is None
+D=R/'.artifacts/p05-webkit-text-scroll-diagnostic04';d=load(D/'report.json');ex=load(D/'exit.json');proof=load(D/'OWNED-RESOURCE-PROOF.json');prior=R/'.artifacts/p05-webkit-text-scroll-diagnostic03';assert(prior/'probe.mjs').read_bytes()==(D/'probe.mjs').read_bytes();assert load(prior/'exit.json')['exit_code']==1 and ex['exit_code']==0 and ex['cleanup']=='COMPLETE_OWNED_CONTAINER_ABSENT'
+assert d['status']=='CONSTANT_END_AND_ORIGINAL_AWAIT_PASS_NOT_GATE'and d['cleanup']=='COMPLETE'and d['version']=='27.2'and d['original_budget_ms']==10000 and d['budget_elapsed_ms']==293.019405<10000
+assert d['before']=={'active_tag':'BODY','heading_tabindex':None,'scroll_top':0,'last_bottom':2841.4375,'viewport':568}and d['after']=={'active_tag':'BODY','heading_tabindex':None,'scroll_top':2289,'last_bottom':552.4375,'viewport':568};assert len(d['steps'])==1 and d['steps'][0]['name']=='ONE_PROTOCOL_END'
+code=(D/'probe.mjs').read_text(encoding='utf8');assert "page.keyboard.press('End')"in code and 'await awaitTextBottom(page,budget)'in code and "page.locator('h1').first().click()"in code and 'PageDown'not in code and 'scrollTo('not in code and '.tabIndex='not in code and 'await delay('not in code
+assert proof['image']==b['image']and proof['pids']==512 and proof['NanoCpus']==2000000000 and proof['memory']==3221225472 and proof['readonly']and proof['network']=='none';assert ex['calls'][-2]['args'][:2]==['container','rm']and ex['calls'][-2]['exit']==0 and ex['calls'][-1]['exit']==1
+node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe';commands=[]
+for name,cmd,cwd,expected in [('runtime',[node,str(A/'runtime.mjs')],R,0),('falseACK',[node,str(P/'run.mjs')],S,1)]:
+ result=subprocess.run(cmd,cwd=cwd,capture_output=True,timeout=30);(O/(name+'.stdout.txt')).write_bytes(result.stdout);(O/(name+'.stderr.txt')).write_bytes(result.stderr);assert result.returncode==expected,(name,result.stderr.decode());commands.append({'name':name,'exit':result.returncode,'expected':expected})
+ if name=='runtime':assert json.loads(result.stdout)['producer_runtime_digest']=='49cb512fa14ef509b3f91c9ab93f8778bcb261177c40519060cce111a1506248'
+ if name=='falseACK':assert b'ROOT_RUN_ACK_REQUIRED'in result.stderr
+dump('PINS.json',pins);dump('AUDIT.json',{'status':'PASS_METHOD_ONLY_NARROW_KEY_ADDENDUM','author_children':20,'source_binding_raw_exact_parent01':True,'changed_MJS':['real-text-probe.mjs','run.mjs'],'other25MJS_raw_exact':True,'single_engine_key_and_runpath_complete_inverses_exact':True,'WK_derived_actual_engine_End_others_original_ControlEnd':True,'one_original_keyboard_action_no_fallback_retry_wait_JSscroll_or_focus_fixture_mutation':True,'original_h1_RAF_geometry_clipping_text_zoom_contrast_fixture_cleanup_budget_counts_limits_exact':True,'diagnostic04':{'exit':0,'version':'27.2','BODY_original_h1_no_tabindex':True,'one_End_plus_original_RAF':True,'within_original_10s':True,'elapsed_ms':293.019405,'last_bottom':552.4375,'viewport':568,'same_current_image_resource_proof':True,'owned_cleanup_complete':True,'not_card_typography_or_actual_gate_acceptance':True},'diagnostic03_setupFAIL_before_browser_preserved':True,'parent0c0a_component_qualifications_OCI31_unchanged':True,'all9fresh459_324_manual_new_candidate_single_attempt_stopFAIL_required':True,'checks':commands,'new_reviewer_native_Docker_model_APP_source_producer_ACK_Git_actions':0});print(json.dumps({'status':'PASS_METHOD_ONLY','runtime':'49cb512fa14ef509b3f91c9ab93f8778bcb261177c40519060cce111a1506248','checks':commands,'raw_exact_MJS':25}))

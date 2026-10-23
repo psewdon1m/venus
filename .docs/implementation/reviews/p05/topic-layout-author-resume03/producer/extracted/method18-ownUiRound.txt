@@ -1,0 +1,1 @@
+async function ownUiRound(a,f,control){await expect.poll(()=>uiRoundMatches(a.lastGameView,f),{timeout:8000,intervals:[50,100,250]}).toBe(true);await expect(a.page.getByTestId('game-round')).toContainText(new RegExp('\\b'+f.plan.round_index+'\\s*/'));await expect(a.page.getByTestId(control)).toBeVisible();await expect(a.page.getByTestId(control)).toBeEnabled();}

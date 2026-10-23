@@ -1,0 +1,40 @@
+from pathlib import Path
+import hashlib,json,subprocess,uuid,sys,datetime,shutil
+workspace=Path.cwd();out=workspace/'.docs/implementation/reviews/p05/recovery-image-binding-independent-round01';out.mkdir(parents=True,exist_ok=True);sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest();docker=r'C:\Program Files\Docker\Docker\resources\bin\docker.exe'
+owner=uuid.uuid4().hex;prefix='venus-image-rebind-'+uuid.uuid4().hex[:12];records=[];results=[];created={};cleanup=[]
+assert shutil.disk_usage(workspace).free>=10*1024**3
+def call(args,timeout=30):
+ r=subprocess.run([docker,'--context','desktop-linux',*args],capture_output=True,timeout=timeout);assert len(r.stdout)+len(r.stderr)<=256*1024
+ records.append({'args':args,'exit_code':r.returncode,'stdout':r.stdout.decode('utf8','replace'),'stderr':r.stderr.decode('utf8','replace')});assert r.returncode==0,records[-1];return r.stdout.decode().strip()
+expanded=json.loads((workspace/'.artifacts/p05-oci-rollback-producer-resume02/actual-image-maps.json').read_bytes())
+assert sha(workspace/'.artifacts/p05-oci-rollback-producer-resume02/actual-image-maps.json')=='0a195804991397c8cc58ecfd44d3fa93ac737a80d432b676db7892c9bca18c3a'
+sys.path.insert(0,str(workspace/'.artifacts/p05-recovery-source1274-01/tools'));from stage_inventory import inventory,identity
+specs=[('A','a','eb994713042617b6e9bcc567062e502b18e5330b54759ee85b33ab1459ae0f7c'),('B','b','eead495908593a27644d096cb94df8cc54e7db2e722e9fdd26178eddcf9c5b77')]
+error=None
+try:
+ for key,lower,h in specs:
+  receipt_path=workspace/f'.artifacts/p05-recovery-image-{lower}-receipt01.json';assert sha(receipt_path)==h
+  r=json.loads(receipt_path.read_bytes());source=Path(r['source_root']);manifest=json.loads((workspace/'.docs/implementation/evidence/p05'/('renewal-source-freeze-01'if key=='A'else'grant-phase-source-freeze-01')/'inputs.json').read_bytes());assert inventory(source)==manifest['files'];assert identity(inventory(source))==r['source_identity'];assert len(manifest['files'])==1813
+  assert sha(workspace/f'.artifacts/p05-recovery-build-{lower}01.txt')==r['build_log_sha256']
+  assert len(r['host_compiled_files_sha256'])==64
+  for name,pin in r['host_compiled_files_sha256'].items():assert sha(source/name)==pin
+  expected=dict(r['image_files_sha256']);oldExpanded=expanded['maps'][key]['files']
+  for name,pin in oldExpanded.items():assert name not in expected or expected[name]==pin;expected[name]=pin
+  code="const f=require('fs'),c=require('crypto'),a=require('assert/strict');a(!f.readFileSync('/proc/self/mountinfo','utf8').split('\\n').some(l=>l.split(' ')[4]==='/dev/shm'));const names="+json.dumps(sorted(expected))+";const files={};for(const n of names){const p='/app/'+n;a(f.lstatSync(p).isFile());a.equal(f.realpathSync(p),p);files[n]=c.createHash('sha256').update(f.readFileSync(p)).digest('hex');}console.log(JSON.stringify({files,node:process.version,playwright:require('playwright/package.json').version,os:f.readFileSync('/etc/os-release','utf8'),production_metadata_absent:!f.existsSync('/app/build-metadata.json')}));"
+  name=prefix+'-'+lower;args=['create','--name',name,'--label','com.venus.image.rebind.owner='+owner,'--label','com.venus.image.rebind.role='+key,'--network','none','--ipc','none','--read-only','--user','1000:1000','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','256m','--cpus','1','--pids-limit','32','--log-driver','none','--entrypoint','node',r['image'],'-e',code];call(args);created[name]=r['image']
+  before=json.loads(call(['inspect',name]))[0];assert before['Image']==r['image']and before['Config']['Labels']['com.venus.image.rebind.owner']==owner;assert before['Mounts']==[]and before['HostConfig']['IpcMode']=='none'and before['HostConfig']['ReadonlyRootfs']
+  observed=json.loads(call(['start','-a',name],60));after=json.loads(call(['inspect',name]))[0];assert after['State']['Running']is False and after['State']['ExitCode']==0;assert observed['files']==expected;assert observed['production_metadata_absent']is True
+  assert inventory(source)==manifest['files'];assert sha(receipt_path)==h
+  results.append({'key':key,'new_image':r['image'],'historical_source':r['source_identity'],'included_files':1813,'receipt_sha256':h,'receipt73pins':len(r['image_files_sha256']),'expanded74pins':len(oldExpanded),'union_pins':len(expected),'union_files':observed['files'],'compiled64':64,'observed_runtime':{k:v for k,v in observed.items()if k!='files'},'actual_container_id':after['Id'],'actual_probe_exit_code':after['State']['ExitCode'],'context_source_before_after_exact':True,'current_live_stage_acceptance':False})
+ pg='postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8';p=json.loads(call(['image','inspect',pg]))[0];assert any(x.endswith('@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8')for x in p['RepoDigests']);pgProof={'requested':pg,'resolved_image':p['Id'],'repo_digests':p['RepoDigests']}
+except Exception as e:error={'name':type(e).__name__,'message':str(e)}
+finally:
+ try:
+  ids=call(['ps','-aq','--no-trunc','--filter','label=com.venus.image.rebind.owner='+owner]).split()
+  for cid in ids:
+   p=json.loads(call(['inspect',cid]))[0];assert p['Config']['Labels']['com.venus.image.rebind.owner']==owner and p['Name'].removeprefix('/')in created;assert p['Image']==created[p['Name'].removeprefix('/')];call(['rm','-f',cid]);cleanup.append(cid)
+  assert call(['ps','-aq','--no-trunc','--filter','label=com.venus.image.rebind.owner='+owner])==''
+ except Exception as e:error=error or{'cleanup_error':str(e)}
+status='PASS_EXACT_REBUILT_HISTORICAL_IMAGE_BINDING_NOT_CURRENT_STAGE'if not error and len(results)==2else'NOT_ACCEPTED'
+report={'created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':status,'owner':owner,'images':results,'PG':locals().get('pgProof'),'cleanup_removed_ids':cleanup,'owned_container_inventory_empty':not error,'commands':records,'error':error,'actual_resource_feasibility':False,'actual_OCI_switches':0,'statistics_RUN':False,'human470':'HOLD_UNCHANGED','full_P05_PASS':False}
+(out/'actual-image-review.json').write_text(json.dumps(report,indent=2)+'\n');print(json.dumps({'status':status,'images':[{k:r[k]for k in ['key','new_image','historical_source','union_pins']}for r in results],'cleanup_removed':len(cleanup),'error':error}));sys.exit(0if error is None else1)

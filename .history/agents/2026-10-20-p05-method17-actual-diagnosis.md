@@ -1,0 +1,5 @@
+# METHOD17 actual browser audit and diagnosis
+
+2026-10-20T16:25:33.916421+00:00 UTC — Nonauthor actual17 3PASS/04FAIL/12NOTRUN cleanupPASS audit of frozen83d8ccf9/43. Ownnewreport/journal only. NoDocker/fullrun/blindrerun/assertiondrop/20bound/seed/TTL changes. Verify rawpins/source/coverage and exact seekPrivate eligibility/fixtures; no unproved productionfault or randomseed explanation.
+
+2026-10-20T16:31:29.422582+00:00 UTC — Read-only audit exit0:43children/34raworiginals/1813historicalsource/10runtimepins exact;39real200mutations=20skip+19advance;3PASS/04FAIL/12NOTRUN/cleanupPASS. P2method precondition: production random opportunity has no minimum private guarantee; actual seed/earlier eligibility unrecorded, no product defect established. Six source-predicate controls, no Docker/RUN/seed changes. Owner priority narrowed; stats03b not started. Frozen INDEX 1e9fb8d28322bacf2334f4a1c2f3b7b071de889618fda5ca6d6822357d7cf75e /4children; HANDOFF 102ae1f4265f609dce146b47b8e6ede94d315a9846273173f9a780eea1bbbf52. Writes COMPLETE; no producer/historical/source writes.

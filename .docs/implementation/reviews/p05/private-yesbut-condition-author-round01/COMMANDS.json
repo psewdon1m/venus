@@ -1,0 +1,67 @@
+{
+  "red01": {
+    "command": "node node_modules/vitest/vitest.mjs run apps/api/src/topic-condition-lifecycle.test.ts",
+    "source": "original exactA6 API",
+    "exit": 1,
+    "tests": {
+      "fail": 6,
+      "pass": 2
+    }
+  },
+  "focused01": {
+    "exit": 1,
+    "fail": 2,
+    "pass": 35,
+    "cause": "own fixture omitted snapshot; corrected; not product failure"
+  },
+  "focused02": {
+    "exit": 0,
+    "pass": 37
+  },
+  "focused03": {
+    "exit": 0,
+    "pass": 40
+  },
+  "focused04": {
+    "exit": 0,
+    "pass": 110
+  },
+  "focused05": {
+    "exit": 1,
+    "fail": 1,
+    "pass": 110,
+    "cause": "own negative test expected EXPIRED; actual native expiry closes state and returns CLOSED; correction preserves throw assertion"
+  },
+  "focused06": {
+    "command": "node node_modules/vitest/vitest.mjs run apps/api/src/topic-condition-lifecycle.test.ts apps/api/src/topic-round-view.test.ts apps/api/src/topic-action-consent.test.ts apps/api/src/topic-offer-throttle.test.ts packages/relationship-engine/src/private-conversation.test.ts",
+    "exit": 0,
+    "pass": 111,
+    "files": 5
+  },
+  "lint01": {
+    "exit": 0
+  },
+  "lint02": {
+    "command": "node node_modules/eslint/bin/eslint.js apps/api/src/topic-games.ts apps/api/src/topic-condition-lifecycle.test.ts apps/api/src/topic-round-view.test.ts tests/p05-topic-games/integration.mjs tests/p05-topic-games/cases.mjs",
+    "exit": 0
+  },
+  "tsc01": {
+    "command": "node node_modules/typescript/bin/tsc -b",
+    "exit": 0
+  },
+  "tsc02": {
+    "command": "node node_modules/typescript/bin/tsc -b",
+    "exit": 0
+  },
+  "syntax": {
+    "commands": [
+      "node --check tests/p05-topic-games/integration.mjs",
+      "node --check tests/p05-topic-games/cases.mjs"
+    ],
+    "exits": [
+      0,
+      0
+    ]
+  },
+  "actualDocker": "NOT_RUN_BY_AUTHOR"
+}

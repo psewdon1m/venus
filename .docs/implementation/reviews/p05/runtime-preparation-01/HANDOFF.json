@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-19T17:57:10.033174+00:00",
+  "author": "/root/p05_topic_lifecycle_review",
+  "status": "WRITES_FINISHED_RUNTIME_NOT_RUN",
+  "design_approved_by": "/root",
+  "files": {
+    "tests/p05-runtime/probe.mjs": "12959fd5ca669b9a3b0f7e6cde52432c991d4aeaa7e7cd916988869505fa8e88",
+    "tests/p05-runtime/monitor.mjs": "1dabaff6442ebc8a76aadd2513b9bd57e99c76718f4c1371436d98634da66245",
+    "tools/p05-runtime.mjs": "99cefbfc303b5d6acb20bf7940c61f6f3906e3fdd040150ce7ede99dc5db77df"
+  },
+  "checks": [
+    {
+      "command": "node --check tests/p05-runtime/probe.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "node --check tests/p05-runtime/monitor.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "node --check tools/p05-runtime.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "npx.cmd eslint tests/p05-runtime/*.mjs tools/p05-runtime.mjs",
+      "exit_code": 0
+    }
+  ],
+  "docker_executed": false,
+  "runtime_tests_status": "NOT_RUN_WAIT_ROOT_FREEZE",
+  "source_freeze_claim": false,
+  "expected_fixed_controls": 8,
+  "run_command": "node tools/p05-runtime.mjs --allow-dirty",
+  "app_command": "UNCHANGED image CMD node apps/api/dist/server.js",
+  "notes": [
+    "Production Dockerfile is used without test source/approval injection",
+    "No positive V2 serving under current empty approved registries/HOLD",
+    "Internal HTTP with exact HTTPS Origin and manually carried cookies is not browser/TLS proof",
+    "Monitor starts before app in shared namespace; TCP sampling supplements source startup ordering, not absolute no-listen proof",
+    "SQL restored-V2 metadata fixture is not real admission/full pg_dump restore",
+    "Author cannot independently accept this producer; root must arrange separate review"
+  ]
+}

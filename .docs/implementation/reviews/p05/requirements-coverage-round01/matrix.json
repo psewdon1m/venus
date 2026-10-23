@@ -1,0 +1,3759 @@
+{
+  "schema_version": 1,
+  "review_id": "P05-REQUIREMENTS-COVERAGE-ROUND01",
+  "status": "COVERAGE_AUDIT_COMPLETE_NOT_STAGE_ACCEPTANCE",
+  "source_head_context": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "dirty_source": true,
+  "source_archive": ".docs/implementation/evidence/p05/engine2-source-freeze-01/included-source.zip",
+  "source_archive_sha256": "5a622f20a18c427cde591b0f0f78a61f52b892b7dec3fff5ff14833d532b82af",
+  "work_map": {
+    "path": ".docs/implementation/p05-work-map.json",
+    "bytes": 40392,
+    "sha256": "09c27b472843d964b52ea49ee8833cdd8ed55ec92ca6741aac9bc5ebef71cac6"
+  },
+  "rows": [
+    {
+      "id": "P04-UX-SKIP",
+      "requirement": "В каждом раунде и приватном предложении доступны равноправные действия «Ответить/принять» и «Пропустить/отказаться». Отказ и пропуск не требуют причины, публичного ответа, штрафа или придумывания специальной фразы; можно пропустить несколько следующих раундов.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1017",
+        "Q-1086",
+        "Q-1099",
+        "Q-1146",
+        "TD-1019",
+        "TD-1093",
+        "TD-1095",
+        "TD-1122",
+        "YB-1017",
+        "YB-1019",
+        "YB-1020",
+        "YB-1087",
+        "YB-1088",
+        "YB-1093",
+        "YB-1097",
+        "YB-1122",
+        "YB-1147"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Per-round skip/decline and own Pause/Stop exist without a reason field. Repeated manual skips are permitted; no automatic skip-N promise is inferred.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-controls.test.ts",
+          "bytes": 3272,
+          "sha256": "627b89c13c09a3620552b4d1ca600ff556d3d1fea336d9599a3325095cc00c7e",
+          "line": 11,
+          "anchor": "loses all ordinary conversation permissions on reconnect",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-03",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_pg_http_rounds": 100,
+            "history_real_runtime": true,
+            "history_bytes": 145456,
+            "padded_chunks": 14,
+            "no_truncation": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Current ordinary/V2 browser coverage must confirm repeated refusal and button parity; the old SA10/11 proof is byte-bounded.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-WAIT",
+      "requirement": "Явное состояние «Пока не выбираю/пауза» не является согласием. Оно не создаёт обещания вернуться к сроку или обязательства участвовать позже. UI предлагает спокойный выбор без давления и автоматического принятия.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1020",
+        "Q-1085",
+        "Q-1090",
+        "Q-1124",
+        "TD-1087",
+        "TD-1091",
+        "TD-1099",
+        "TD-1146",
+        "YB-1018",
+        "YB-1083"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Own Pause is an explicit non-consent alternative. Pending silence expires closed, never as accept; c.wait is copy, not an independently wired wait command.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 379,
+          "anchor": "pending invitation expires at exactly 30s",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-controls.test.ts",
+          "bytes": 3272,
+          "sha256": "627b89c13c09a3620552b4d1ca600ff556d3d1fea336d9599a3325095cc00c7e",
+          "line": 11,
+          "anchor": "loses all ordinary conversation permissions on reconnect",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Verify final UI pause/wait language without deadlines or implied return obligations; do not equate timeout with agreement.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-NO_REASON",
+      "requirement": "Уточнение условий и отказ не требуют раскрытия личных мотивов. Приложение не объясняет отказ одного игрока другому и не публикует частные причины без его разрешения.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1096",
+        "Q-1148",
+        "TD-1090",
+        "YB-1092"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Decline/stop wire shapes contain no required motive, and public projection keeps private pair state generic.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 227,
+          "anchor": "keeps full public projections identical across private settings",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "quiet_bilateral_private": true,
+            "no_internal_candidate_transport": true,
+            "public_remains_generic": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "bilateral_ordinary_private_prompt": true,
+            "spectator_private_frames": 0,
+            "shared_private_round_generic": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final browser/private-role audit must preserve no motive disclosure; edited card language remains HOLD-bound.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-NO_PERSONAL_STORY",
+      "requirement": "Личная история или реальный пример всегда добровольны; доступна вымышленная/общая альтернатива либо пропуск без проверки достоверности и объяснений.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1088",
+        "TD-1088",
+        "YB-1098"
+      ],
+      "implementation_assessment": "COPY_AND_REFUSAL_PARTIAL",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Consumer safety copy explicitly permits written or fictional answers and refusal; no truth-verification API is present.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "No exact reviewed real-story card acceptance is proven by synthetic tests. Verify edited content and actual RU/EN/TR meaning.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-PER_ACTION",
+      "requirement": "Участие в комнате, игре или прошлом раунде не даёт согласия на следующий раунд или конкретное действие. Решение каждого участника сохраняется отдельно; согласие одного не заменяет другого.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1092",
+        "Q-1100",
+        "TD-1092",
+        "YB-1094"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Room identity, invitation, topic consent and bilateral action consent have separate current scope/revision checks.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 238,
+          "anchor": "new candidate creates new epoch",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "quiet_bilateral_private": true,
+            "no_internal_candidate_transport": true,
+            "public_remains_generic": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-06",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_private_td": true,
+            "side_locked": true,
+            "replay_does_not_reset_topic": true,
+            "action_separate_from_topic": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final UI must demonstrate independent actors and fresh next-round decisions on the reviewed pack.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-DECLINE_PERSISTS",
+      "requirement": "Первичный отказ остаётся действительным при обсуждении альтернативы. Предложенное ограничение не ослабляется автоматически и не запускает торг, повторное давление или автоматическое принятие.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1091",
+        "YB-1099"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Decline/stop ends current round; terminal consent cannot be revived by accept or a changed proposal.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "The exact alternative-after-decline user path needs final UI corroboration; existing terminal unit controls cover the invariant.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-SILENCE",
+      "requirement": "Молчание и отсутствие ответа не считаются согласием или завершённым ответом. Переходы выполняются только после явного действия пользователя.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1095",
+        "TD-1094"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "One acknowledgement is insufficient. Time expiry closes delivery; it never creates a completed answer or acceptance.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 379,
+          "anchor": "pending invitation expires at exactly 30s",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "quiet_bilateral_private": true,
+            "no_internal_candidate_transport": true,
+            "public_remains_generic": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final browser checks must distinguish timeout/closed from agreed/completed.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-WITHDRAW",
+      "requirement": "Каждый может отозвать прежнее согласие, прервать действие или сменить нежелательную тему без торга, оправданий и итогового отчёта. Остановка доступна непосредственным действием UI, включая приватную беседу.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1097",
+        "TD-1121",
+        "TD-1125",
+        "TD-1149",
+        "TD-1150"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        },
+        {
+          "path": "apps/api/src/private-topic-preferences.ts",
+          "bytes": 18474,
+          "sha256": "f5caae8aa2035a2e7bf6efa513bd6a2b6bdb6559fe2f74465a85809b3d9e4cdb"
+        }
+      ],
+      "observation": "Own Stop, round refusal, Other question, explicit topic exclusion and conversation Stop are available without reasons.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 132,
+          "anchor": "other question immediately removes prompt",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 22,
+          "anchor": "disconnect drops private text immediately",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-controls.test.ts",
+          "bytes": 3272,
+          "sha256": "627b89c13c09a3620552b4d1ca600ff556d3d1fea336d9599a3325095cc00c7e",
+          "line": 11,
+          "anchor": "loses all ordinary conversation permissions on reconnect",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_targeted_planner": true,
+            "full_multitag_union": true,
+            "encrypted_request_replay_bound_to_target": true,
+            "durable_exclusion_is_explicit_fixture_seam": true,
+            "current_scope_reloaded_after_callback": true,
+            "new_candidate_respects_own_exclusions": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-09",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_owner_exclusion": true,
+            "protected_ledger_exclusion": true,
+            "successful_durable_narrow_observed": true,
+            "epoch_revoked": true,
+            "old_actual_refs": 1,
+            "old_refs_enqueued": 0,
+            "ordinary_old_prompt_not_delivered": true,
+            "observation_started_before_transition": true,
+            "actual_enqueue_boundary_observed": true,
+            "post_boundary_private_callbacks": 7,
+            "baseline_private_frames_consumed": 5,
+            "received_full_window_private_frames": 7,
+            "received_known_pre_boundary_queued_frames": 0,
+            "received_fresh_pending_frames": 7,
+            "full_payload_sha_and_exact_acl_headers": true,
+            "distinct_enqueue_per_received_frame": true,
+            "raw_unknown_private_frames": 0,
+            "forbidden_post_boundary_private_callbacks": 0,
+            "grant_observed_from_actual_ws_pg_generation": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Await current browser degradation and restore proofs; historical controls do not cover every new byte automatically.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-TOPIC_BOUNDARY",
+      "requirement": "До приватной беседы доступны выбор допустимых тем и непосредственная смена вопроса. Исключённые темы не требуют объяснений и не раскрываются группе; продолжение беседы не расширяет границы автоматически.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1121",
+        "Q-1122",
+        "TD-1123",
+        "YB-1121"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "apps/web/src/topic-settings.tsx",
+          "bytes": 5330,
+          "sha256": "83ed8f539de9ff2e2e343f0500b735e7e4982ff87c959a62995a21c1035aca92"
+        },
+        {
+          "path": "apps/api/src/private-topic-preferences.ts",
+          "bytes": 18474,
+          "sha256": "f5caae8aa2035a2e7bf6efa513bd6a2b6bdb6559fe2f74465a85809b3d9e4cdb"
+        }
+      ],
+      "observation": "Own allow/exclude picker, full multi-tag offer and Other question are distinct; external exclusions remain monotonic.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 132,
+          "anchor": "other question immediately removes prompt",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 4,
+          "anchor": "shows the full topic union before accept",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_targeted_planner": true,
+            "full_multitag_union": true,
+            "encrypted_request_replay_bound_to_target": true,
+            "durable_exclusion_is_explicit_fixture_seam": true,
+            "current_scope_reloaded_after_callback": true,
+            "new_candidate_respects_own_exclusions": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-lifecycle-preflight-01/run/topic-lifecycle-report.json",
+            "bytes": 4674,
+            "sha256": "86709111d30fb77dd4aac54dd1fac30229b48fc681449ced4661fabec06d891f"
+          },
+          "check_id": "P05-TLC-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_owner_only_http": true,
+            "actual_encrypted_pg_preferences": true,
+            "padded_bytes": 16384
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-lifecycle-preflight-01/run/topic-lifecycle-report.json",
+            "bytes": 4674,
+            "sha256": "86709111d30fb77dd4aac54dd1fac30229b48fc681449ced4661fabec06d891f"
+          },
+          "check_id": "P05-TLC-05",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_old_encrypted_own_row_rollback": true,
+            "durable_external_exclusion_preserved": true,
+            "full_database_restore": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-09",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_owner_exclusion": true,
+            "protected_ledger_exclusion": true,
+            "successful_durable_narrow_observed": true,
+            "epoch_revoked": true,
+            "old_actual_refs": 1,
+            "old_refs_enqueued": 0,
+            "ordinary_old_prompt_not_delivered": true,
+            "observation_started_before_transition": true,
+            "actual_enqueue_boundary_observed": true,
+            "post_boundary_private_callbacks": 7,
+            "baseline_private_frames_consumed": 5,
+            "received_full_window_private_frames": 7,
+            "received_known_pre_boundary_queued_frames": 0,
+            "received_fresh_pending_frames": 7,
+            "full_payload_sha_and_exact_acl_headers": true,
+            "distinct_enqueue_per_received_frame": true,
+            "raw_unknown_private_frames": 0,
+            "forbidden_post_boundary_private_callbacks": 0,
+            "grant_observed_from_actual_ws_pg_generation": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Finish new source-bound UI/lifecycle/restore acceptance; semantic taxonomy and content approval remain separate.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-IDEA_ONLY",
+      "requirement": "UI различает предложенную/сохранённую идею, обсуждение её формулировки и принятое действие. Сохранение, редактирование или обсуждение текста не создаёт обязательства и не запускает выполнение.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1128",
+        "Q-1144",
+        "TD-1148"
+      ],
+      "implementation_assessment": "PARTIAL_DOMAIN_COVERAGE",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Advice composition/editing and proposal conditions do not execute an action. Execution remains behind exact bilateral action consent.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 306,
+          "anchor": "editing accepted text revokes old ID",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 16,
+          "anchor": "receiver pending advice has generic opt-in",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-05",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http": true,
+            "pending_recipient_no_text": true,
+            "exact_optin_delivers": true,
+            "edit_requires_new_accept": true,
+            "revoke_clears": true,
+            "v2_epoch_chat": true,
+            "free_chat_not_claimed_topic_filtered": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "No separate saved-idea domain/entity is implemented or tested. Confirm the intended card workflow and copy; do not claim all idea/save/edit scenarios from consent invariants.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-READ_NOT_ACCEPT",
+      "requirement": "Получение, доставка и прочтение сообщения отделены от принятия предложения; подтверждение доставки/прочтения никогда не меняет согласие.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1147",
+        "TD-1147",
+        "YB-1149"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "GET/poll/chat receipt is distinct from respond_topic/respond_advice and action acceptance.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 277,
+          "anchor": "withholds text, preview, hash and length",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 286,
+          "anchor": "only exact recipient acceptance exposes",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-05",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http": true,
+            "pending_recipient_no_text": true,
+            "exact_optin_delivers": true,
+            "edit_requires_new_accept": true,
+            "revoke_clears": true,
+            "v2_epoch_chat": true,
+            "free_chat_not_claimed_topic_filtered": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-14",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_polls": 111,
+            "latest_ref_count": 1,
+            "recipient_revision_unaffected_by_other_actor": true,
+            "no_global_sequence_wire": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "exact_retry_same_receipt": true,
+            "quota_and_text_sequence_unchanged": true,
+            "changed_body_conflicts": true,
+            "lone_high_low_embedded_surrogate_denied400": true,
+            "invalid_unicode_no_quota_or_receipt": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "No read-receipt UI is claimed. Actual repeated-poll proof is not proof of a separate delivery/read-marker feature.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-CHANGED_CONDITION",
+      "requirement": "Любое изменённое условие образует новую редакцию предложения и требует свободного повторного решения P1 и P2. Выполнение разрешено только после явного подтверждения обоих одной и той же редакции.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1149",
+        "TD-1100",
+        "YB-1085",
+        "YB-1125"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "A changed condition invalidates old topic/action acknowledgements and binds fresh exact offer/proposal revisions.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 34,
+          "anchor": "secondary condition uses the exact V2 shape",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 238,
+          "anchor": "new candidate creates new epoch",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Use final browser condition/replay flow and real localized reviewed conditions before full row acceptance.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-SHOW_SCOPE",
+      "requirement": "Полные условия и пределы предложения доступны до принятия; можно запросить уточнение, оставаясь без согласия на действие.",
+      "expected": null,
+      "source_card_ids": [
+        "TD-1097",
+        "YB-1089"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Both actors receive current private condition and permitted topic labels; private prompt precedes separate action acceptance.",
+      "current_test_refs": [
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 4,
+          "anchor": "shows the full topic union before accept",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 34,
+          "anchor": "secondary condition uses the exact V2 shape",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "A topic-label invitation is not an action agreement. Verify complete actual action wording in final UI/content review.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-ADVICE_OPT_IN",
+      "requirement": "Подсказка или совет не раскрывается до разрешения адресата. Отказ оставляет совет скрытым и не требует причины.",
+      "expected": null,
+      "source_card_ids": [
+        "TD-1098"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Recipient gets generic pending advice without text/hash/preview/length; exact opt-in reveals text and edit requires new opt-in.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 277,
+          "anchor": "withholds text, preview, hash and length",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 286,
+          "anchor": "only exact recipient acceptance exposes",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 306,
+          "anchor": "editing accepted text revokes old ID",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 16,
+          "anchor": "receiver pending advice has generic opt-in",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-05",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http": true,
+            "pending_recipient_no_text": true,
+            "exact_optin_delivers": true,
+            "edit_requires_new_accept": true,
+            "revoke_clears": true,
+            "v2_epoch_chat": true,
+            "free_chat_not_claimed_topic_filtered": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-15",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_ws_bytes": true,
+            "production_rooms_ticket_generation_and_dispatch": true,
+            "wire_route_is_explicit_fixture_adapter": true,
+            "pending_advice_not_delivered": true,
+            "accepted_advice_delivered": true,
+            "queued_old_epoch_ref_not_delivered": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Await current real-browser advice paths; author actual WS adapter is explicitly not the ordinary browser WS route.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-NEW_INVITATION",
+      "requirement": "Новое приглашение или тема требует собственного явного согласования. Текущее присутствие, переписка и готовность к прежней теме не означают готовности к новой.",
+      "expected": null,
+      "source_card_ids": [
+        "TD-1124",
+        "YB-1123",
+        "YB-1146"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Replacement topic gets a new epoch/token and zero acknowledgements; previous participation cannot accept it.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 238,
+          "anchor": "new candidate creates new epoch",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 4,
+          "anchor": "shows the full topic union before accept",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_targeted_planner": true,
+            "full_multitag_union": true,
+            "encrypted_request_replay_bound_to_target": true,
+            "durable_exclusion_is_explicit_fixture_seam": true,
+            "current_scope_reloaded_after_callback": true,
+            "new_candidate_respects_own_exclusions": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final UI must show renewed choice in both locales/actors; no retained old callbacks may activate a new topic.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-NO_SOCIAL_PRESSURE",
+      "requirement": "Основной UX не подталкивает к согласию фразами «все уже согласились», «только ты остался» или публичным объяснением задержки/отказа.",
+      "expected": null,
+      "source_card_ids": [
+        "YB-1091"
+      ],
+      "implementation_assessment": "COPY_AND_PRIVACY_PARTIAL",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "The room gets generic private state, not refusal actor/motive. Private own acknowledgement feedback is not a room-wide count.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 227,
+          "anchor": "keeps full public projections identical across private settings",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "quiet_bilateral_private": true,
+            "no_internal_candidate_transport": true,
+            "public_remains_generic": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "ordinary_ws_route": true,
+            "real_http_ticket_authframe": true,
+            "pending_own_envelopes": true,
+            "no_prompt_before_topic_consent": true,
+            "spectator_private_frames": 0
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "bilateral_ordinary_private_prompt": true,
+            "spectator_private_frames": 0,
+            "shared_private_round_generic": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Mechanical checks cannot certify absence of coercion in all edited card/UI wording; genuine language/comfort review remains open.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-REVIEW_TERMS",
+      "requirement": "Перед выполнением обоим показана одна актуальная редакция согласованных условий; подтверждения связаны с её идентификатором/хешем.",
+      "expected": null,
+      "source_card_ids": [
+        "YB-1095"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Current condition is pair-only and acceptance carries exact offer ID/proposal revision; stale final Finish is rejected.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 34,
+          "anchor": "secondary condition uses the exact V2 shape",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final content/UI acceptance must check identical displayed terms, not merely matching wire IDs.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-NO_AGREEMENT_END",
+      "requirement": "Завершить обсуждение без итогового согласия — нормальная терминальная ветвь; интерфейс не требует найти компромисс для выхода.",
+      "expected": null,
+      "source_card_ids": [
+        "YB-1100"
+      ],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Round decline, conversation Stop and session Stop are terminal exits without a compromise or reason input.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final UI acceptance should exercise unresolved discussion exit rather than only successful agreement.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-UX-TASTES",
+      "requirement": "Правила комнаты и модерационные подсказки допускают разные музыкальные вкусы; отсутствие совпадения не становится оценкой/штрафом игрока и не требует спора.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1049"
+      ],
+      "implementation_assessment": "DEFERRED_MEDIA_AND_CONTENT",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Generic refusal and no-penalty safety copy apply, but no music moderation/taste-specific product flow is implemented in P05.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Owner deferred Music scope; retain this obligation for applicable reviewed cards/media stage. Do not call it implemented from a generic Skip button.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-COMFORT",
+      "requirement": "Check the independent global comfort level of both players. It is not a per-pair value and is not copied from P1 to P2.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/api/src/rooms.ts",
+          "bytes": 43430,
+          "sha256": "dc32ea80c4bd819c123a38d8579c5bff9ba9b7ce2a6bdbc954eafa875656f4e1"
+        }
+      ],
+      "observation": "Each snapshot player has own scalar comfort; eligibility checks every affected player. Active preferences are locked; explicit neutral withdrawal aborts participant game.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.test.ts",
+          "bytes": 10509,
+          "sha256": "c949d1d7f79e4ec06458eb2e41f94f5649dd8fa42716a3aa97271298ac2f7a66",
+          "line": 24,
+          "anchor": "enforces class, every actor comfort, context, stage",
+          "independently_executed_in_173_suite": false
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 328,
+          "anchor": "runs base guard/cap/progression profiles for2..8",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 335,
+          "anchor": "preserves veto and comfort/context guards",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-lifecycle-preflight-01/run/topic-lifecycle-report.json",
+            "bytes": 4674,
+            "sha256": "86709111d30fb77dd4aac54dd1fac30229b48fc681449ced4661fabec06d891f"
+          },
+          "check_id": "P05-TLC-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_setup_prepare_start_invitation_topic_bilateral_release": true,
+            "source_card_map_only_synthetic": true,
+            "presence_setup": "HTTP ws-ticket plus actual Rooms.connect; no websocket transport claim"
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Card-specific V01 and changed-comfort UI acceptance must respect immutable-session/neutral-reset policy, not mutate old snapshot.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-DIRECTED-RELATIONS",
+      "requirement": "P1→P2 and P2→P1 are independent private directed relations. Selection or refusal must not reveal a relation or its asymmetry to participants or the room.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Directed edges stay per owner; common public support/generic private projection and independent public RNG avoid direct relation exposure.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 227,
+          "anchor": "keeps full public projections identical across private settings",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/public-pair-opt-in.test.ts",
+          "bytes": 2924,
+          "sha256": "8e56065a38ba93b511cfb46d1f309e48fb4de1b240bb7aa0bb004dcdcebda752",
+          "line": 9,
+          "anchor": "withholds the pair before either or both",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "quiet_bilateral_private": true,
+            "no_internal_candidate_transport": true,
+            "public_remains_generic": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "bilateral_ordinary_private_prompt": true,
+            "spectator_private_frames": 0,
+            "shared_private_round_generic": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "New ENGINE2 C2/fairness/inference is pending; deterministic noninterference units are not statistical leakage acceptance.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-QUIET-PUBLIC-OPT-IN",
+      "requirement": "Before publicly addressing a pair, offer P2 a quiet way to decline. Publish neither the private refusal nor its motive; public wording alone is insufficient.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Quiet public pair invitation requires exact bilateral opt-in before public addressed content; observer condition read is denied.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/public-pair-opt-in.test.ts",
+          "bytes": 2924,
+          "sha256": "8e56065a38ba93b511cfb46d1f309e48fb4de1b240bb7aa0bb004dcdcebda752",
+          "line": 9,
+          "anchor": "withholds the pair before either or both",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 227,
+          "anchor": "keeps full public projections identical across private settings",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Exact eight-player V03 ordinary-browser acceptance is still needed; historical QUIET-PUBLIC-ACK-REVOKE is scoped to older bytes.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-YB-CONFIRMATION",
+      "requirement": "A changed yes_but condition requires a fresh free decision by P1 and explicit confirmation by both for the identical final terms. Either can withdraw; one player's rejection is sufficient to stop.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Secondary-owned condition resets both acknowledgements; old action refs and stale Finish cannot execute the changed condition.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 34,
+          "anchor": "secondary condition uses the exact V2 shape",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Real YB1111 veto meaning/TR competence remains a separate content gate.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-PRIVATE-CHANNEL",
+      "requirement": "Private in-person cards remain S3/C1 with bilateral eligible relations. Online private cards require a functioning private text chat for both devices. Offline chat-only cards are unavailable without that chat. Never silently send their answers to the room.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/api/src/topic-chat-policy.ts",
+          "bytes": 2188,
+          "sha256": "a3e60602ae1591f91ea2054954f8ec81ed4ed55a91df9c4fbfbb6aee50ba861f"
+        }
+      ],
+      "observation": "Online private eligibility needs immutable/live chat capability and current pair consent; in-person verbal private remains separately eligible without chat.",
+      "current_test_refs": [
+        {
+          "path": "apps/api/src/topic-context-fixture.test.ts",
+          "bytes": 3021,
+          "sha256": "a566a53e7ef9cbbca4d6b5c0f3ab881f5e46db498adbca27c1432124f5a6c9ee",
+          "line": 12,
+          "anchor": "needs enabled chat for any online private opportunity",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 328,
+          "anchor": "runs base guard/cap/progression profiles for2..8",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-01",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_online_bilateral_chat": true,
+            "snapshot_capability": true,
+            "own_permission": true,
+            "actor_projections": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": true,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-03",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": false,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_rounds": 20,
+            "distinct_round_ids": 20,
+            "distinct_ordered_indexes_1_to_20": true,
+            "actual_database_round_count20": true,
+            "final_round_terminal": true,
+            "private_opportunities": 0,
+            "immutable_snapshot_bytes_unchanged": true,
+            "capless_after_reenable": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-05",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_rounds": 20,
+            "distinct_round_ids": 20,
+            "distinct_ordered_indexes_1_to_20": true,
+            "actual_database_round_count20": true,
+            "final_round_terminal": true,
+            "private_opportunities": 0,
+            "immutable_snapshot_bytes_unchanged": true,
+            "capless_after_reenable": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-06",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "live_flag_off_revokes_prompt_and_chat": true,
+            "own_permission_false": true,
+            "exact_successful_replay_denied": true,
+            "no_quota_charge_on_denials": true,
+            "reenable_does_not_revive": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-12",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "scope_GET_AND_POST_FINAL_FENCE": true,
+            "get": {
+              "actual_final_chat_pg_wait": true,
+              "same_client_chat_object_then_final_credentials": true,
+              "flag_off_during_await": true,
+              "actual_http_denied_without_text": true
+            },
+            "post": {
+              "actual_mutation_final_pg_wait": true,
+              "exact_room_member_request_insert_observed": true,
+              "same_client_insert_then_final_credentials": true,
+              "flag_off_during_await": true,
+              "actual_http_policy_denial": true,
+              "quota_unchanged": true,
+              "messages_unchanged": true,
+              "exact_new_request_receipts": 0,
+              "no_sent_canary": true
+            }
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Production registry is empty and V2 startup is intentionally closed under HOLD. Positive synthetic transport is not release acceptance.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-TEXT-ACCESSIBILITY",
+      "requirement": "TD-1001, TD-1009, TD-1011 and YB-1009 offer an equivalent written alternative. Text-only players are never forced to use camera, gesture or voice.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "COPY_AND_CONTENT_PARTIAL",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        }
+      ],
+      "observation": "UI says camera/microphone optional and permits written/fictional answers; transport does not require AV.",
+      "current_test_refs": [
+        {
+          "path": "apps/api/src/topic-context-fixture.test.ts",
+          "bytes": 3021,
+          "sha256": "a566a53e7ef9cbbca4d6b5c0f3ab881f5e46db498adbca27c1432124f5a6c9ee",
+          "line": 12,
+          "anchor": "needs enabled chat for any online private opportunity",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": true,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-03",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": false,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "No exact TD1001/1009/1011/YB1009 reviewed-pack browser execution or competent equivalence acceptance exists in the current synthetic packets.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-STAGE-INHERITANCE",
+      "requirement": "min_progression_stage is a minimum threshold: stage 2 can use otherwise eligible stage-1 cards. Private eligibility is still excluded before stage 3. No content-only change may lower private thresholds.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        }
+      ],
+      "observation": "eligible rejects only min_stage greater than current stage; private remains stage3+ with bilateral/comfort thresholds.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.test.ts",
+          "bytes": 10509,
+          "sha256": "c949d1d7f79e4ec06458eb2e41f94f5649dd8fa42716a3aa97271298ac2f7a66",
+          "line": 24,
+          "anchor": "enforces class, every actor comfort, context, stage",
+          "independently_executed_in_173_suite": false
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 328,
+          "anchor": "runs base guard/cap/progression profiles for2..8",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_three_modes": [
+              "questions",
+              "truth_or_dare",
+              "yes_but"
+            ],
+            "actual_finish_and_advance": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Synthetic profiles verify the rule; final full sessions on approved revised pack remain blocked.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-SEMANTIC-EXCLUSION",
+      "requirement": "Bind the 21 explicit semantic clusters to scheduling and test cross-mode/same-pair/same-session repetition. A zero token-Jaccard queue is not semantic completeness or scheduling enforcement.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Planner binds semantic families to public and same-pair private history across modes/sessions; prior runtime history is retained.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 249,
+          "anchor": "binds public semantic history across mode and session",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 255,
+          "anchor": "filters same-pair private semantic history across modes/sessions",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 63,
+          "anchor": "keeps the previous actual pair across public rounds",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-09",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_cross_mode_session": true,
+            "original_runtime_prior_preserved": true,
+            "new_session_id": true,
+            "no_fake_legacy_plan": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "The 21-cluster authoritative map, mixed-family exclusions, reviewed pool viability and new ENGINE2 C2/fairness/inference need their own final acceptance.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-PRIVACY-PROMISE",
+      "requirement": "YB-1148 may describe a voluntary agreement not to quote messages. It must not promise to prevent screenshots, copying or retelling. Corrected text remains quarantined under the authoritative HOLD until verified.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Consumer copy disclaims technical prevention of screenshots/copying/retelling; no prevention mechanism is claimed.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 277,
+          "anchor": "withholds text, preview, hash and length",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "YB1148 exact revised RU/EN/TR text remains quarantined under owner HOLD; code cannot human-approve it.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "P04-GLOBAL-TEMPLATE-AND-LANGUAGE",
+      "requirement": "Shorten fixed addressing/private prefixes only alongside an actual UX contract preserving context and consent. Verify the edited RU/EN/TR meanings, Turkish individual veto and Unicode with competent reviewers. No human approval is inferred for new hashes.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        }
+      ],
+      "observation": "Prefix/context handling and explicit consent are represented by UI/contracts; Unicode input controls are mechanical only.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 371,
+          "anchor": "accepts exactly 1000 Unicode scalars",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 4,
+          "anchor": "shows the full topic union before accept",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Competent genuine RU/EN/TR edited meaning, Turkish individual veto and new content hashes have no human acceptance in these proofs.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V01",
+      "requirement": "P1 допускает приватную пару, P2 не допускает по своему глобальному комфорту.",
+      "expected": "Не показывать `pair_private`; комфорт не копируется от P1 к P2.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Independent participant comfort is enforced by eligibility/snapshot; lower peer comfort cannot be copied from P1.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.test.ts",
+          "bytes": 10509,
+          "sha256": "c949d1d7f79e4ec06458eb2e41f94f5649dd8fa42716a3aa97271298ac2f7a66",
+          "line": 24,
+          "anchor": "enforces class, every actor comfort, context, stage",
+          "independently_executed_in_173_suite": false
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 335,
+          "anchor": "preserves veto and comfort/context guards",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-lifecycle-preflight-01/run/topic-lifecycle-report.json",
+            "bytes": 4674,
+            "sha256": "86709111d30fb77dd4aac54dd1fac30229b48fc681449ced4661fabec06d891f"
+          },
+          "check_id": "P05-TLC-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_setup_prepare_start_invitation_topic_bilateral_release": true,
+            "source_card_map_only_synthetic": true,
+            "presence_setup": "HTTP ws-ticket plus actual Rooms.connect; no websocket transport claim"
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Run exact contrasting-comfort reviewed-card UI scenario; current actual suite is synthetic, not card-specific acceptance.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V02",
+      "requirement": "Направленное отношение P1→P2 положительно, P2→P1 не совпадает.",
+      "expected": "Публичные и приватные предложения не раскрывают это несоответствие; участие только взаимно.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Private directed relations remain separate and do not appear in shared payload; pair eligibility uses both directions.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 227,
+          "anchor": "keeps full public projections identical across private settings",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/public-pair-opt-in.test.ts",
+          "bytes": 2924,
+          "sha256": "8e56065a38ba93b511cfb46d1f309e48fb4de1b240bb7aa0bb004dcdcebda752",
+          "line": 9,
+          "anchor": "withholds the pair before either or both",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-04",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "bilateral_ordinary_private_prompt": true,
+            "spectator_private_frames": 0,
+            "shared_private_round_generic": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "New inference and source-bound browser scenario needed; a stronger relationship mismatch can map to an allowed common class without revealing it.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V03",
+      "requirement": "`pair_public` адресует P2 в комнате из восьми игроков.",
+      "expected": "P2 вправе тихо отклонить до показа группе, без объяснений и штрафов.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        }
+      ],
+      "observation": "Bilateral quiet opt-in precedes public addressed pair content; observer cannot read pair conditions.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/public-pair-opt-in.test.ts",
+          "bytes": 2924,
+          "sha256": "8e56065a38ba93b511cfb46d1f309e48fb4de1b240bb7aa0bb004dcdcebda752",
+          "line": 9,
+          "anchor": "withholds the pair before either or both",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "This exact eight-player case is not asserted by the three-member ordinaryWS packet. Historical eight-member proof stays older-source bounded.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V04",
+      "requirement": "P2 отвечает «да, но» новым условием.",
+      "expected": "P1 может свободно не принять; выполнение начинается только после двух подтверждений.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "New condition resets both decisions and one actor cannot execute it by accepting alone.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 34,
+          "anchor": "secondary condition uses the exact V2 shape",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-13",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "own_pair_condition_delivered": true,
+            "no_room_or_observer_condition": true,
+            "old_action_and_old_finish_revision_denied": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final browser evidence for both free choices must be accepted on current bytes.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V05",
+      "requirement": "`YB-1111`: любой из двоих не принимает конкретную формулировку шутки.",
+      "expected": "Личное вето действует независимо от мнения другого; TR соответствует RU/EN.",
+      "source_card_ids": [],
+      "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Generic individual veto and condition reset exist.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/consent.test.ts",
+          "bytes": 6233,
+          "sha256": "2cfe8c6da99a06045c50262f7a5b76baa78797f0f4f9cc51863df6452842327d",
+          "line": 19,
+          "anchor": "bounds action lifetime to the parent",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_yes_but_condition": true,
+            "new_epoch_zero_acks": true,
+            "old_topic_and_action_cannot_reactivate": true,
+            "reviewed_responder_preserved": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Actual YB1111 individual-veto RU/EN/TR equivalence, especially Turkish, requires competent review of exact new hashes; synthetic tests do not satisfy it.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V06",
+      "requirement": "`YB-1148`: один участник хочет договориться не цитировать переписку.",
+      "expected": "Текст описывает добровольное правило, но не гарантирует блокировку чужих снимков/пересказов.",
+      "source_card_ids": [],
+      "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "UI explicitly disclaims screenshot/copy/retelling prevention.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 277,
+          "anchor": "withholds text, preview, hash and length",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "YB1148 wording is a voluntary agreement only and remains HOLD-bound; no exact content approval inferred.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V07",
+      "requirement": "Онлайн-сеанс без камеры/голоса получает `TD-1001`, `TD-1009` или `YB-1009`.",
+      "expected": "Есть текстовая равноправная альтернатива либо карточка фильтруется.",
+      "source_card_ids": [],
+      "implementation_assessment": "COPY_AND_CONTENT_PARTIAL",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "The game transport has no mandatory AV and generic copy allows text alternatives.",
+      "current_test_refs": [
+        {
+          "path": "apps/api/src/topic-context-fixture.test.ts",
+          "bytes": 3021,
+          "sha256": "a566a53e7ef9cbbca4d6b5c0f3ab881f5e46db498adbca27c1432124f5a6c9ee",
+          "line": 12,
+          "anchor": "needs enabled chat for any online private opportunity",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": true,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-03",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": false,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Execute actual TD1001/1009/YB1009 revised cards or prove filtering; current synthetic pack cannot establish those exact alternatives.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V08",
+      "requirement": "Оффлайн-встреча: у пары нет рабочего личного текстового чата.",
+      "expected": "Карточки `PV-C` не выдаются; устная приватная альтернатива только как отдельный согласованный вариант.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/api/src/topic-chat-policy.ts",
+          "bytes": 2188,
+          "sha256": "a3e60602ae1591f91ea2054954f8ec81ed4ed55a91df9c4fbfbb6aee50ba861f"
+        }
+      ],
+      "observation": "PV-C/chat-capability cards are filtered without chat; separate in-person verbal synthetic cards carry no chat requirement.",
+      "current_test_refs": [
+        {
+          "path": "apps/api/src/topic-context-fixture.test.ts",
+          "bytes": 3021,
+          "sha256": "a566a53e7ef9cbbca4d6b5c0f3ab881f5e46db498adbca27c1432124f5a6c9ee",
+          "line": 12,
+          "anchor": "needs enabled chat for any online private opportunity",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 328,
+          "anchor": "runs base guard/cap/progression profiles for2..8",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": true,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-03",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "context": "in_person",
+            "flag": false,
+            "private_verbal_prompt_allowed": true,
+            "chat_get_post_denied": true,
+            "snapshot_chat_capability": false
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Exact reviewed capability metadata/alternative acceptance remains blocked; a generic verbal card is not silently substituted as the same card.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V09",
+      "requirement": "Stage 2 между ранними и поздними раундами.",
+      "expected": "Определено, наследуются ли stage-1 карточки; сдерживается резкий переход к stage 3.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.ts",
+          "bytes": 12530,
+          "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a"
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        }
+      ],
+      "observation": "Stage1 is a minimum threshold and inherits into stage2; private does not enter before stage3.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/engine.test.ts",
+          "bytes": 10509,
+          "sha256": "c949d1d7f79e4ec06458eb2e41f94f5649dd8fa42716a3aa97271298ac2f7a66",
+          "line": 24,
+          "anchor": "enforces class, every actor comfort, context, stage",
+          "independently_executed_in_173_suite": false
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 328,
+          "anchor": "runs base guard/cap/progression profiles for2..8",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_three_modes": [
+              "questions",
+              "truth_or_dare",
+              "yes_but"
+            ],
+            "actual_finish_and_advance": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Approve current pool/session coverage through new C2 and reviewed-pack gate.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V10",
+      "requirement": "Комфорт изменён в ходе уже предложенного задания.",
+      "expected": "Доступность пересчитана перед действием; при снижении комфорта действие не продолжается.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED_WITH_LOCKED_SNAPSHOT_POLICY",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/rooms.ts",
+          "bytes": 43430,
+          "sha256": "dc32ea80c4bd819c123a38d8579c5bff9ba9b7ce2a6bdbc954eafa875656f4e1"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Ordinary comfort edits are locked in active sessions; explicit neutral reset aborts the participant game and revokes old scope rather than widening/mutating the snapshot.",
+      "current_test_refs": [
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 22,
+          "anchor": "disconnect drops private text immediately",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-lifecycle-preflight-01/run/topic-lifecycle-report.json",
+            "bytes": 4674,
+            "sha256": "86709111d30fb77dd4aac54dd1fac30229b48fc681449ced4661fabec06d891f"
+          },
+          "check_id": "P05-TLC-08",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_setup_prepare_start_invitation_topic_bilateral_release": true,
+            "source_card_map_only_synthetic": true,
+            "presence_setup": "HTTP ws-ticket plus actual Rooms.connect; no websocket transport claim"
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final scenario should use the accepted ADR021 withdrawal path. No evidence claims arbitrary active comfort editing or continuation after a lower setting.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V11",
+      "requirement": "Во время пары один участник отказывается либо отзывает согласие.",
+      "expected": "Остановка без пояснений группе; приватные сообщения не показываются другим.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        }
+      ],
+      "observation": "Own withdrawal clears private refs/chat/acks and ordinary WS denies retired/expired recipients; group payload stays generic.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 22,
+          "anchor": "disconnect drops private text immediately",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-07",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_leave": true,
+            "protected_retirement": true,
+            "ordinary_ws_close_code": 4401,
+            "old_http_credential_denied": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-ordinary-ws-preflight-01/run/ordinary-ws-report.json",
+            "bytes": 5071,
+            "sha256": "d4cbb42c3a907fb9bd1150d09612e4a7143b9da9c00304f6dff183bcedf26918"
+          },
+          "check_id": "P05-OWS-09",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_owner_exclusion": true,
+            "protected_ledger_exclusion": true,
+            "successful_durable_narrow_observed": true,
+            "epoch_revoked": true,
+            "old_actual_refs": 1,
+            "old_refs_enqueued": 0,
+            "ordinary_old_prompt_not_delivered": true,
+            "observation_started_before_transition": true,
+            "actual_enqueue_boundary_observed": true,
+            "post_boundary_private_callbacks": 7,
+            "baseline_private_frames_consumed": 5,
+            "received_full_window_private_frames": 7,
+            "received_known_pre_boundary_queued_frames": 0,
+            "received_fresh_pending_frames": 7,
+            "full_payload_sha_and_exact_acl_headers": true,
+            "distinct_enqueue_per_received_frame": true,
+            "raw_unknown_private_frames": 0,
+            "forbidden_post_boundary_private_callbacks": 0,
+            "grant_observed_from_actual_ws_pg_generation": true
+          }
+        },
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-chat-policy-preflight-01/run/chat-policy-report.json",
+            "bytes": 8553,
+            "sha256": "86866047f4615b918ecdce51c443d8a7bd20443b3b730f9d2c6764fd9e4b80cb"
+          },
+          "check_id": "P05-TCP-06",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "live_flag_off_revokes_prompt_and_chat": true,
+            "own_permission_false": true,
+            "exact_successful_replay_denied": true,
+            "no_quota_charge_on_denials": true,
+            "reenable_does_not_revive": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final current browser/restore evidence remains needed; no prior private message may return after rollback/restart.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V12",
+      "requirement": "Одной паре выпадают 3 последовательные приватные возможности.",
+      "expected": "Работает fairness и разведение повторов, не вытесняя пожелания остальных.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Planner keeps previous actual private pair and avoids it when an effective alternative exists; N2 recurrence is explicitly legitimate.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 63,
+          "anchor": "keeps the previous actual pair across public rounds",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 255,
+          "anchor": "filters same-pair private semantic history across modes/sessions",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-09",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_cross_mode_session": true,
+            "original_runtime_prior_preserved": true,
+            "new_session_id": true,
+            "no_fake_legacy_plan": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Await new ENGINE2 fairness/C2 long-session distribution proof; do not promote older TOPIC1 statistical measurements.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V13",
+      "requirement": "В соседних раундах предлагаются `TD-1016`/`YB-1013` и `TD-1007`/`YB-1007`.",
+      "expected": "Семантически повторяющиеся механики разнесены в очереди.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
+      "implementation_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.ts",
+          "bytes": 42212,
+          "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Cross-mode semantic-family history is checked rather than token-Jaccard or ID-only dedupe.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 249,
+          "anchor": "binds public semantic history across mode and session",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "packages/relationship-engine/src/topic-planner.test.ts",
+          "bytes": 43904,
+          "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52",
+          "line": 255,
+          "anchor": "filters same-pair private semantic history across modes/sessions",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-09",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_cross_mode_session": true,
+            "original_runtime_prior_preserved": true,
+            "new_session_id": true,
+            "no_fake_legacy_plan": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Exact named TD/YB cluster mapping, viable approved repertoire and new ENGINE2 statistical gate remain open.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V14",
+      "requirement": "RU/EN/TR переключаются для `YB-1111`, `YB-1054`, `TD-1130`, `YB-1145`.",
+      "expected": "Смысл, число реплик, право отказа и роли P1/P2 совпадают.",
+      "source_card_ids": [],
+      "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
+      "implementation_refs": [
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "apps/web/src/game-copy.ts",
+          "bytes": 14582,
+          "sha256": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+        },
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        }
+      ],
+      "observation": "Locale-dependent projection uses the same bound card identity; no silent locale fallback is intended.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 371,
+          "anchor": "accepts exactly 1000 Unicode scalars",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-panel.test.ts",
+          "bytes": 16147,
+          "sha256": "f2ced7873463a787f6456a7748a4b546e58096d7ac50647c1b33caa51877e1b2",
+          "line": 4,
+          "anchor": "shows the full topic union before accept",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-02",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_http_three_modes": [
+              "questions",
+              "truth_or_dare",
+              "yes_but"
+            ],
+            "actual_finish_and_advance": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Exact YB1111/YB1054/TD1130/YB1145 role/count/veto meanings need genuine RU/EN/TR competent acceptance, not equal key sets or synthetic strings.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    },
+    {
+      "id": "V15",
+      "requirement": "Пользователь отказывается отвечать на любую boundary-карточку.",
+      "expected": "Никакого объяснения, расспроса или повторной санкции; право доступно вне карточек.",
+      "source_card_ids": [],
+      "implementation_assessment": "MECHANISM_IMPLEMENTED",
+      "implementation_refs": [
+        {
+          "path": "apps/api/src/topic-games.ts",
+          "bytes": 86978,
+          "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+        },
+        {
+          "path": "apps/web/src/topic-games-panel.tsx",
+          "bytes": 32644,
+          "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+        },
+        {
+          "path": "packages/relationship-engine/src/private-conversation.ts",
+          "bytes": 25358,
+          "sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd"
+        }
+      ],
+      "observation": "Outside-card safety controls offer reason-free refusal/Stop; no response reason field is required.",
+      "current_test_refs": [
+        {
+          "path": "packages/relationship-engine/src/private-conversation.test.ts",
+          "bytes": 32758,
+          "sha256": "cb77d6b23143e75f5df10bdb10f303f80e2871f40c9c7097b5be64104e9dc1db",
+          "line": 114,
+          "anchor": "makes decline terminal",
+          "independently_executed_in_173_suite": true
+        },
+        {
+          "path": "apps/web/src/topic-controls.test.ts",
+          "bytes": 3272,
+          "sha256": "627b89c13c09a3620552b4d1ca600ff556d3d1fea336d9599a3325095cc00c7e",
+          "line": 11,
+          "anchor": "loses all ordinary conversation permissions on reconnect",
+          "independently_executed_in_173_suite": true
+        }
+      ],
+      "current_actual_evidence_refs": [
+        {
+          "packet_report": {
+            "path": ".docs/implementation/evidence/p05/engine2-topic-games-preflight-01/run/topic-games-report.json",
+            "bytes": 5771,
+            "sha256": "d1afe3d570cdf65adbc184eb195489157dc98ac488cd3396ca7eccca494ec356"
+          },
+          "check_id": "P05-TG-10",
+          "observed_status": "PASS",
+          "reviewer_executed": false,
+          "scope": "AUTHOR_ACTUAL_SYNTHETIC_COMPONENT_PREFLIGHT_INSPECTED",
+          "detail": {
+            "actual_source_failure": true,
+            "ordinary_disabled": true,
+            "own_pause_and_stop_authoritative": true
+          }
+        }
+      ],
+      "independent_accepted": {
+        "full_requirement": false,
+        "scope": "COVERAGE_REVIEW_NOT_PRODUCT_HUMAN_OR_STAGE_ACCEPTANCE",
+        "current_mechanism_source_reviewed": true,
+        "exact_current_unit_subset_executed": true,
+        "actual_runtime_cases_reexecuted_by_this_reviewer": false
+      },
+      "remaining_gap": "Final browser must prove repeated boundary-card refusal under current bytes and acceptable content; no penalty/pressure may be inferred from silence.",
+      "required_action": "Complete row-specific gap and reviewed-pack dependency; obtain independent gate acceptance without fabricating owner/language approval."
+    }
+  ],
+  "global_open_inputs": [
+    "OWNER450_HOLD_AND_NO_REVIEWED_PACK",
+    "GENUINE_COMPETENT_RU_EN_TR_ACCEPTANCE",
+    "CURRENT_ENGINE2_BROWSER_AND_M3_AND_RESTORE_ACCEPTANCE_PENDING",
+    "CLEAN_SOURCE_FINAL_FREEZE_AND_COMPLETE_G1_GATE_PENDING"
+  ],
+  "confirmed_new_source_findings": [],
+  "full_exit_p05": false
+}

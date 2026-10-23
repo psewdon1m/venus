@@ -1,0 +1,17 @@
+# P05 current CI P02 locale-selector correction
+
+Agent `/root/p05_resume05_author`; UTC. Owned `apps/api/src/p02.integration.test.ts` obsolete locale selectors only, new source revision18CI-test-only, own journal and compact author packet. No APP/helpers/framework/timeouts/assertion removal, source revision17 rewrite, P03v4/corpus/metadata, actual P02/Docker/native runs or Git mutations. Root retries originalCI after currentUI75378 slot; root owns final Q09 preparation.
+
+## 2026-10-23T01:10:49Z — start
+
+Root current967d CI now7FAIL/1PASS; P02 original suite16PASS/4FAIL in shared setup page() line285, waiting obsolete buttonEN. Log `.artifacts/p05-ci-head967d-p02-log02/120173868213.txt` requested SHA301e054ad97a0a838f71ba711d8df029cbbb683b0341a47c7810ada0361a0cd2. Root initially described a locale select; this assumption needed checking (corrected below before editing). Before test file7526950dc1a34be736818575b9a414b3e7b2a8b3eff11a2ae0b5f91fd12a6b24. Reading whole test selector inventory before narrow replacement; no scenario removal or pass claimed.
+
+## 2026-10-23T01:13:37Z — actual DOM correction, fix and handoff
+
+Corrected initial root/user-facing select assumption **before edit**: current main.tsx113 is `.languages` buttons `lang={value}` with Русский/English/Türkçe names, not select/data-testid=locale. Verified entire current main file equals `git show 967d634c1ead80f5fbe186b677eaeaa09af941f1:apps/web/src/main.tsx` bytes. All getByRole/locale uses in original P02 file inspected: sole getByRole is uppercase-locale-name helper at285; other locales occur data/scenario/assertions, no additional obsolete buttons. Separate meeting-context select was not targeted. Root/gate22 notified of decisive current/failed-CI source correspondence.
+
+Replaced exactly `page.getByRole('button',{name:locale.toUpperCase(),exact:true}).click()` with `page.locator('.languages button[lang="'+locale+'"]').click()`. Original `if(locale!=='ru')` condition and all20 scenarios, actions/assertions/timeouts/helpers/entry18+/XSS/private/locale-persistence/safety behavior remain byte-exact under inverse. Test SHA `5436b2676b3d55772afb07a4212e2832aefbd8d14332ca18e9da12b89a499163`. New source revision18 `.docs/implementation/p05-source-revision-p02-locale-selector-18.json` `4a044c0847d42c4eaa7310ffd8232f7d948a088165695fca0b75e2ef57fa7b09`, CI_TEST_COMPATIBILITY_ONLY/beforehash/currentAPP/rollback and actualCIpending. Source17 F724... remains unchanged; no P03v4/tag/corpus/metadata modifications.
+
+Focused existing ESLint exact changed test command exit0. No API typecheck claim: production API tsconfig excludes test.ts; lint parses changed TS. Original P02 runtime/Playwright/Docker suite not run while rootUI75378 active. Original16PASS4FAIL stays failed historical evidence until root retries actualCI.
+
+Frozen compact packet `.docs/implementation/reviews/p05/p02-locale-selector-author-round01/INDEX.json` `c12db44e3556fa158a852f3ff24ea4fff66ed5477136cebd23c1d80f5cce1570` /6children: before test bytes, exact hunk, failed log/currentAPP/gitblob pins, actual focused lint logs and AUTHOR. Root/gate22 notified; root Q09 can account changedtest+newcore revision18. No APP/newhelper/framework/timeouts/assertion-removal/native/Docker/Git changes. Index remainsa4bb6d5150e4fc2e8beb8bb14bd4aa13aba7e4b419b8c4e40c85e6708ac89093. Source/evidence writes COMPLETE_STOP, journal STOP; fullstagePASS/P06 not claimed.

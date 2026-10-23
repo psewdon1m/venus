@@ -1,0 +1,87 @@
+from pathlib import Path
+import json,hashlib,shutil
+R=Path('C:/.projects/venus');O=Path(__file__).resolve().parent
+raw=R/'.artifacts/p05-pilot-bundle-source14/.artifacts/p05/venus-topic-browser-4db308580d32'
+read=lambda p:json.loads(p.read_text(encoding='utf-8-sig'))
+sha=lambda b:hashlib.sha256(b).hexdigest();pin=lambda p:{'bytes':p.stat().st_size,'sha256':sha(p.read_bytes())}
+q=read(raw/'topic-browser-report.json');d=read(raw/'delivery-metadata.json');runner=read(raw/'runner.json')
+assert pin(raw/'runner.json')['sha256']=='ac804b70609c4de1e96e02bcfecdb7d675b24636010e2ab4cbcf8c0e64910d08'
+assert q['status']=='PASS' and q['cleanup']=='PASS' and [r['id'] for r in q['records']]==['P05-TB-'+str(i).zfill(2) for i in range(1,17)]
+assert all(r['status']=='PASS' for r in q['records']) and q['page_errors']==[]
+for flag in ['page_errors_overflow','request_metadata_overflow','private_ticket_failure_overflow','topic_readiness_overflow']:assert not q.get(flag,False)
+assert not q.get('private_ticket_failures',[])
+assert runner['status']=='PASS' and runner['cleanup']=='PASS' and runner['error'] is None and runner['source_and_producer_unchanged']
+ackpath=R/'.artifacts/p05-browser24-a17-root-ack01.json';ack=read(ackpath)
+assert ack['status']=='ROOT_RUN_ACK' and pin(ackpath)['sha256'].startswith('373f89')
+assert ack['runner_sha256']==sha((R/'.artifacts/p05-browser24-a17-run01.mjs').read_bytes())=='59fb691af0d8fc83beaf98f9667eb0fd5d41cbab13f532c4da4a6cdee8ff0205'
+assert ack['independent_review_index_sha256']=='54ac80a6e7ff7c74bec0bde4909cc9f71e09a1b110f10702d01fab0d2f280e4d'
+for name in ['independent_review_index','rebinding_review_index','image_receipt','application_review_index']:assert sha(Path(ack[name]).read_bytes())==ack[name+'_sha256']
+for name,h in ack['application_reviews'].items():assert sha(Path(name).read_bytes())==h
+f=read(R/'.artifacts/p05-pilot-bundle-source-freeze14.json');before=read(raw/'inputs-before.json');after=read(raw/'inputs-after.json')
+assert before==after and before['files']==f['files'] and len(before['files'])==1871
+assert before['source_identity_sha256']==runner['source_identity']==runner['source_identity_after']==ack['source_identity']==f['identity']=='93221ba482331e3916e56f2e1866b5c7743fa72ad29320f2819a7a6fd1a2951d'
+assert ack['image']==runner['image']==(raw/'image-id.txt').read_text().strip()=='sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2'
+pins=read(raw/'producer-pins.json');assert len(pins)==9 and pins==ack['runtime_pins']
+for name,h in pins.items():assert sha((raw/'producer'/name).read_bytes())==h==sha((R/'.artifacts/p05-private-batch-browser-producer24'/name).read_bytes())
+old=R/'.artifacts/p05-private-batch-browser-producer23';new=raw/'producer'
+for name in pins:
+ if name!='browser.mjs':assert (new/name).read_bytes()==(old/name).read_bytes()
+a=(old/'browser.mjs').read_bytes();b=(new/'browser.mjs').read_bytes();s=a.index(b' await check(9,');e=a.index(b' await check(10,',s);ns=b.index(b' await check(9,');ne=b.index(b' await check(10,',ns)
+assert a[:s]==b[:ns] and a[e:]==b[ne:]
+assert read(R/'.artifacts/p05-browser24-a17-run01.exit.json')['exit_code']==0
+for name in ['remaining-containers.txt','remaining-volumes.txt','remaining-networks.txt']:assert (raw/name).read_bytes()==b''
+fixture=read(raw/'fixture-diff.json');original=(raw/'harness-original.mjs').read_bytes();derivative=(raw/'harness-derivative.mjs').read_bytes()
+assert sha(original)==fixture['original_sha256']==f['files']['tests/p05-topic-lifecycle/harness.mjs']
+transformed=original
+for change in fixture['exact_semantic_replacements']:
+ x=change['before'].encode();assert transformed.count(x)==1;transformed=transformed.replace(x,change['after'].encode())
+assert transformed==derivative and sha(derivative)==fixture['derivative_sha256'] and len(fixture['exact_semantic_replacements'])==2
+assert q['fixture']==fixture and fixture['synthetic_source_only'] and not fixture['production_approval']
+assert q['synthetic_fixture_only'] and not q['production_approval'] and not q['real_devices'] and not q['full_matrix']
+assert d['status']==q['delivery_diagnostics']['status']=='COMPLETE' and not d['observer_truncated']
+assert d['pending']==d['diagnostic_errors']==d['cancelled_observers']==d['native_body_cancellations']==0
+assert d['failure_counts']=={'HTTP_BODY':0,'VALIDATOR':0,'WS_PARSE':0}
+assert d['overflow']=={'http':1485,'ws':1323,'observer_work':0,'conversation':0}
+assert len(d['http'])==1024 and len(d['ws'])==256 and d['overflow']==q['delivery_diagnostics']['overflow']
+mutations=q['mutation_dispatches'];assert len(mutations)==266 and all(x['result']=='EXACT_RECEIPT_VERIFIED' and x['response_status']==200 for x in mutations)
+assert len(q['request_metadata'])==315<=2048 and len(mutations)<=2048
+assert len(q['private_preparation'])==112<=256 and all(x['status']=='READY' for x in q['private_preparation'])
+assert len(q['topic_readiness'])==50<=128 and all(x['result']=='READY' for x in q['topic_readiness'])
+assert len(q['topic_preparation_phases'])==39<=128 and len(q['action_preparation_phases'])==5<=32
+for phase in q['action_preparation_phases']:assert phase['status']=='READY' and phase['budget_ms']==12000 and phase['finished_monotonic_ms']<phase['deadline_monotonic_ms']
+for x in mutations:
+ if x.get('readiness'):
+  ready=x['readiness'];assert ready['ready'] and not ready['observer_overflow'] and ready['pending_observers']==ready['body_errors']==0
+  assert ready['observer_model_only'] and not ready['cache_accept_observed']
+  assert x['request_observed_monotonic_ms']<ready['deadline_monotonic_ms']<=ready['phase_deadline_monotonic_ms']
+condition=[x for x in mutations if x['control']=='game-condition-submit'];assert len(condition)==2
+second=condition[-1];prep=[x for x in q['private_preparation'] if x['control'] in ['game-condition-input','game-condition-submit'] and condition[0]['request_observed_monotonic_ms']<x['started_monotonic_ms']<second['request_observed_monotonic_ms']]
+assert len(prep)==2 and prep[0]['phase_deadline_monotonic_ms']==prep[1]['phase_deadline_monotonic_ms']==second['readiness']['phase_deadline_monotonic_ms']
+assert 0<prep[0]['phase_deadline_monotonic_ms']-prep[0]['started_monotonic_ms']<=8000
+previous_actions=[x for x in q['action_preparation_phases'] if x['finished_monotonic_ms']<prep[0]['started_monotonic_ms']]
+prior=previous_actions[-1];assert prior['actors'][-1]['game_rev']==47
+next_actions=[x for x in q['action_preparation_phases'] if x['started_monotonic_ms']>second['request_observed_monotonic_ms']];assert next_actions[0]['actors'][-1]['game_rev']==52
+case=q['records'][8]['detail'];assert case=={'mode':'yes_but','secondary_condition_edit':True,'fresh_topic_and_action_consent':True,'requires_action_consent':True,'preaccepted_action_validated':False,'primary_finish_ui':True}
+post=[x for x in q['request_metadata'] if x['phase']=='yes-but-condition-fresh-consent'];lastcondition=max(i for i,x in enumerate(post) if x['path'].endswith('/condition'))
+following=post[lastcondition+1:];assert [x['kind'] for x in following[:4]]==['respond_topic','respond_topic','accept','accept'] and all(x['status']==200 for x in following)
+assert following[4]['path'].endswith('/finish')
+assert len(q['private_setup_sessions'])==8 and all(x['attempt']==1 and x['max_sessions']==3 and x['round_bound']==20 and x['outcome']=='PRIVATE_SELECTED' for x in q['private_setup_sessions'])
+events=[]
+for line in (raw/'browser-tests.txt').read_text().splitlines():
+ try:events.append(json.loads(line))
+ except json.JSONDecodeError:pass
+passed=[x for x in events if x.get('id','').startswith('P05-TB-') and x.get('status')=='PASS']
+assert [x['id'] for x in passed]==['P05-TB-'+str(i).zfill(2) for i in range(1,17)]
+assert events[-1]['status']=='PASS' and events[-1]['cleanup']=='PASS' and events[-1]['executed']==events[-1]['planned']==16
+export=O/'raw';export.mkdir(exist_ok=True)
+for name in ['topic-browser-report.json','delivery-metadata.json','runner.json','browser-tests.txt','compose-cleanup.txt','remaining-containers.txt','remaining-networks.txt','remaining-volumes.txt','fixture-diff.json']:
+ shutil.copyfile(raw/name,export/name)
+for name in ['p05-browser24-a17-run01.txt','p05-browser24-a17-run01.exit.json']:shutil.copyfile(R/'.artifacts'/name,export/name)
+locations={'raw_root':str(raw),'files':{p.relative_to(raw).as_posix():pin(p) for p in sorted(raw.rglob('*')) if p.is_file()},'ACK_path':str(ackpath),'ACK':pin(ackpath),'wrapper':pin(R/'.artifacts/p05-browser24-a17-run01.mjs')}
+(O/'RAW-LOCATIONS.json').write_text(json.dumps(locations,indent=2)+'\n',encoding='utf-8')
+result={'status':'PASS_A17_BROWSER24_ACTUAL_16_CASE_COMPONENT_NOT_STAGE','source_identity':f['identity'],'included_files':1871,'image':runner['image'],'ACK':pin(ackpath),'method_review':'54ac80a6e7ff7c74bec0bde4909cc9f71e09a1b110f10702d01fab0d2f280e4d','records':16,'PASS':16,'cleanup':'PASS_EMPTY_OWNED','source_producer_before_after_exact':True,'other15_cases_and8MJS_exact23':True,
+ 'case09':{'strict_second_condition200':True,'final_action_floor_before_edit':47,'input_submit_shared_deadline':prep[0]['phase_deadline_monotonic_ms'],'dispatch_at_ms':second['request_observed_monotonic_ms'],'fresh_bilateral_after_edit':True,'new_action_commit_rev':52,'primary_finish':True},
+ 'request_metadata':315,'exact_mutation_receipts':266,'private_preparations_READY':112,'topic_readiness_READY':50,'action_phases_READY':5,'ticket_failures_retained':0,'private_setups':8,
+ 'diagnostics':{'status':'COMPLETE','HTTP_tail':1024,'WS_tail':256,'history_evictions':d['overflow'],'errors':0,'pending':0,'cancellations':0,'cache_accept_observed':False},
+ 'synthetic_fixture_only':True,'browser':'Chromium156.0.8078.4','participant_locales':['ru','en','tr'],'new_native_actions':0,'APP_method_ACK_edits':False,'full_layout_or_stage_PASS':False}
+(O/'AUDIT.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');print(json.dumps(result))

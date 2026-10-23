@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_NULL_SUSPENSION_PHASE_FLOOR_RETENTION",
+  "created_at": "2026-10-19T21:29:41.153088+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "candidate_author": "/root",
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-grant-phase-candidate01/HANDOFF.json",
+      "sha256": "a33d5bb1d50730dc329ad01a5075491a4b63a933daade0b918c27bd1a6f1c96a"
+    },
+    {
+      "path": ".artifacts/p05-grant-phase-candidate01/topic-state.ts",
+      "sha256": "1c3e28d0f9ac9f789559571d737a112d4d1c974ed433c58d9a22d900fe9e47ed"
+    },
+    {
+      "path": ".artifacts/p05-grant-phase-candidate01/topic-state.test.ts",
+      "sha256": "3a3632f17b2c705b3d3d6fecc3a9b4fd8f685569a07d1e561df75b8d3776dc31"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "a04cc196ae20773acd179b33ecb413918f9628bb6b0a723c4714f2255becaf1a"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "apps/web/src/topic-test-harness.ts",
+      "sha256": "b40944c141bf4beae788ff1c069d7a53862deaeb2d1d82ea51cd4a67cd1aff7f"
+    }
+  ],
+  "findings": [
+    {
+      "id": "GRANT-PHASE-CANDIDATE-R01-NULL-GAP",
+      "severity": "P2",
+      "problem": "bind(null) clears phaseFloors/deadlines and replaces scope with null. Real TopicGamesPanel passes null while connection is offline; reconnecting same identity/session/round resets again. Thus requested retention across transport loss fails despite direct transport-only unit control.",
+      "reproduction": "accept active invitation\u2192clear\u2192bind(null)\u2192bind(same identity/session/round,transport2,rev4)\u2192fresh valid pending projection same offer/proposal returns true. Direct transport change without null returns false.",
+      "scope": "Defense against phase regression, not evidence of server ACL bypass or actual secret leak. Candidate fixes original availability counterexample prospectively, but does not yet satisfy retention requirement.",
+      "correction": "Retain an immutable copy of last non-null room/member/identity/session/round reset anchor through null suspension. Null must still clear private values and invalidate generations; keep nonsecret floor/deadline history until next actual scope differs at a real reset boundary."
+    }
+  ],
+  "checks": {
+    "unique_exact_candidate_Vitest": 39,
+    "own_original_bug_positive_exact_harness_and_candidate_TSX_loader": "PASS",
+    "own_exact_nullgap_counterexample": "CONFIRMED",
+    "validators_and_postclass_bytes_unchanged": true,
+    "source_e9_1813_unchanged": true
+  },
+  "limits": [
+    "Vitest panel harness ordinarily reads included source through node:fs; no claim that its39 tests all execute prospective candidate TSX. Separate own SHA-hardchecked read-only harness loader proves original availability counterexample with candidate cache.",
+    "Counterexample uses valid synthetic DTOs and explicit cache sequence; no actual browser/Docker functional run or server leak claim.",
+    "Candidate01 and included e9 remain untouched. Root candidate02 prepared separately after finding notification; not accepted by this report."
+  ],
+  "full_stage_pass": false
+}

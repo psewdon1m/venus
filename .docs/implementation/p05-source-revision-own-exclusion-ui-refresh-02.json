@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "revision": "P05-OWN-EXCLUSION-UI-REFRESH-02",
+  "kind": "COMPATIBLE_FRONTEND_PARTIAL_COMMIT_CORRECTION",
+  "parent_revision": "P05-OWN-EXCLUSION-UI-REFRESH-01",
+  "parent_source_identity": "5be635651557399fb9ef865ebd17c813fdf0c0eda8fc96f76a3840894cef039a",
+  "finding": "B23-OWNREFRESH-409-001",
+  "diagnosis": ".docs/implementation/reviews/p05/a13-browser23-case15-actual-diagnosis-round01/INDEX.json",
+  "diagnosis_sha256": "04babacf9f848cd7522d71ee2051034bdc494391f257ab16dd6cee7e29441652",
+  "actual_result": "14PASS_15FAIL_16NOT_RUN_CLEANUP_PASS_DIAGNOSTICS_COMPLETE_0",
+  "behavior": [
+    "Actually dispatched explicit own permanent exclusion invalidates authenticated own settings in finally on success/error/uncertain completion; alive and identity guards retained. Non-dispatched/nonexclude/foreign-identity operations do not refresh.",
+    "Same-identity refresh preserves only unsaved allow additions and pending exclusion selections; fresh authoritative own permissions and permanent exclusions decide display and submitted state. Newly permanent IDs cannot remain checked or be submitted as allowed.",
+    "Identity/API transition clears preserved draft. Old read/save generations remain rejected; failed reload hides stale form and retains own draft for authenticated retry. No autosave or mutation retry."
+  ],
+  "source_files": {
+    "apps/web/src/topic-games-panel.tsx": "b4c0d5108484ca85b37780972d8d444c64f92e04e14a1c99aac180a91055f671",
+    "apps/web/src/topic-settings.tsx": "38a1d8c8e525146686d64f1c52205eead7468d700b295c791f1fd091140b4727",
+    "apps/web/src/topic-own-exclusion-refresh.test.ts": "024e8b963741bac5ac18acddbe4ccab4a3bbac3aab53721d904ea37716fd1c62"
+  },
+  "validation": {
+    "baseline": "Existing actual-TSX harness: 3FAIL/7PASS before implementation, native vitest exit1; actual A13 FAIL immutable.",
+    "final": "11own refresh regressions plus six relevant web suites total75PASS; webtsc and lint exit0. No native/browser rerun."
+  },
+  "unchanged": [
+    "All A13 API/engine/catalogue/source files other than3listed frontend/test files remain byteexact across1863parent paths.",
+    "API/HTTP/storage/ACL/consent/TTL/rates/SQL/maps/cards/productionapproval/browser16oracles unchanged."
+  ],
+  "compatibility": "No public/persisted schema change. Current internal refreshToken remains. Frontend-only compatible with A13 backend.",
+  "rollback": "Deploy coherent previous frontend bundle; retain durable own exclusions. Old UI success-only invalidation defect returns until reload. No server state rollback."
+}

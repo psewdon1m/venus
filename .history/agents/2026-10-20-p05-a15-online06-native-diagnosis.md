@@ -1,0 +1,5 @@
+# Independent A15 online Questions cohort06 native diagnosis
+
+2026-10-20T23:46:25.2602287Z UTC — Root P1 priority session71127 nativeFAIL/cleanupPASS projectvenus-pilot470-6c3e78ffa8a8 underprobe06. Inspect firstWSfault+safe servercorrelation/sourceonly, no APP/method/native edits or newruns; otherinflightnotkilled. Originalfailurepreserved,no deadline/rate/pool guessing.
+
+2026-10-20T23:49:26.7461253Z UTC — Savedaudit0 exactACK54aebcf7/source1869prod123/method122d+criticalsourcecompiled. NativeNOT WSfailure: firstFaultnull, PROFILE_OR_TOTAL_DEADLINE global1760753<4600000 implies N7profile600s. N2–6each20PASS/N7completed13 round14finishnotdispatched beforefetchguard/N8NOTRUN;113finishes2905req27WS/clientcomplete6closed/cleanupPASS. Lastsuccesscurrent2002509ms notfailedHTTP; posterrorclose200cleanup. SixROOM_CLOSEDWSgenericsecurity13/4poll2auth no timestamp/actor mapping; compatiblecleanupnotprovedinitiator. Cause latencyunknown noCPU/PG/storagecausalproof, nofixorbudgetwaiver. InitialsummarystraybraceSyntaxErrorread corrected journalretained, no producttestfail. Originalraw preserved, noAPP/method/nativewrites. Ownpacket COMPLETE_STOP; rootnotified.

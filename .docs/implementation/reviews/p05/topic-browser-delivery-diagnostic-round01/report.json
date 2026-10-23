@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "status": "DIAGNOSIS_INCONCLUSIVE_EXACT_EVIDENCE_PRESERVED",
+  "scope": "INDEPENDENT_BROWSER05_SOURCE_AND_SAVED_EVIDENCE_DIAGNOSTIC_ONLY",
+  "created_at": "2026-10-19T19:33:47.141225+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "included_files": 1808,
+  "source_copies": [
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "a04cc196ae20773acd179b33ecb413918f9628bb6b0a723c4714f2255becaf1a"
+    },
+    {
+      "path": "apps/web/src/presentation-clock.ts",
+      "sha256": "f9a1120a1fbff31454eafdfac269ea8163d9e7ef99d916f6ceeecb2f4cceccb0"
+    },
+    {
+      "path": "apps/web/src/game-operations.ts",
+      "sha256": "50fc1aab56bdc9d327a228af817ee90a10409f6d5df655ed96c297b6434a20a4"
+    },
+    {
+      "path": "apps/web/src/game-controls.ts",
+      "sha256": "21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c"
+    },
+    {
+      "path": "apps/web/src/game-state.ts",
+      "sha256": "5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46"
+    },
+    {
+      "path": "apps/web/src/room-shell.tsx",
+      "sha256": "0b32ece8232f42a07f5c39515c574bf4c8a8a9f0a0f7498acee4acbeebc42298"
+    },
+    {
+      "path": "apps/web/src/main.tsx",
+      "sha256": "93f671d05f3d3a990689b1de50f954b01ca590a2dab3b6b46753bb08cde0f486"
+    },
+    {
+      "path": "apps/web/src/api.ts",
+      "sha256": "17a9cc35c0ebee4766ed1266265b4745be1deb01a1e6df0a76bc92f712e2bc1e"
+    },
+    {
+      "path": "apps/web/src/topic-test-harness.ts",
+      "sha256": "b40944c141bf4beae788ff1c069d7a53862deaeb2d1d82ea51cd4a67cd1aff7f"
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "a5a6c6cb3da9b4beb75ce36be708c49bbdfecfcab9ce34523ad5a76fdfa6a36e"
+    },
+    {
+      "path": "apps/api/src/room-games.ts",
+      "sha256": "93a4ca8c1dccdb5c07ced22e7f38b6c182e6a22ddc873182915e0637f5b00ab7"
+    },
+    {
+      "path": "apps/api/src/room-routes.ts",
+      "sha256": "91d566bea3426b5851cef8b3c09d718469b26a6ef4555e27d055bc599c7f1ce1"
+    }
+  ],
+  "actual_packet_index_sha256": "121e6512da5e5d6ab3780e150b6b8ccaf7d7e8144d296bdcce9ef9b37f21940c",
+  "actual_packet_files_verified": 34,
+  "actual_result": {
+    "status": "FAIL",
+    "passed": 4,
+    "case05": "PRIVATE_PROMPT_NOT_FOUND_AFTER_BILATERAL_RESPOND_TOPIC200",
+    "not_run": 11,
+    "cleanup": "PASS",
+    "page_errors": 0
+  },
+  "known_observations": [
+    "Both RU/TR last authenticated self-actions have chat/offer_advice/accept_action true and respond_topic false for current session/round rev36; own UI prompt/conversation/action accept absent while refusal/safety controls remain.",
+    "Actual05 error specifically misses getByTestId(private-prompt) SYNTHETIC RU within5s; WS live in failure snapshot.",
+    "Saved diagnostics do not include private GET status/DTO/timing or last frame metadata, so valid active server own booleans do not prove accepted current client content cache."
+  ],
+  "inert_probes": {
+    "status": "PASS",
+    "scope": "INDEPENDENT_ACTUAL_TSX_INERT_SCHEDULER_NOT_BROWSER_OR_DOCKER",
+    "checks": 3,
+    "rows": [
+      {
+        "name": "auth_object_identity_stable_without_transport_change",
+        "status": "PASS",
+        "result": {
+          "same": true
+        }
+      },
+      {
+        "name": "stable_clear_frame_is_not_recleared_on_every_tick",
+        "status": "PASS",
+        "result": {
+          "before": true,
+          "recovered": true,
+          "stillVisible": true
+        }
+      },
+      {
+        "name": "complete_batch_beyond_lease_is_fail_closed_even_valid_payload",
+        "status": "PASS",
+        "result": {
+          "accepted": false,
+          "targetAbsent": true,
+          "conversationAbsent": true
+        }
+      }
+    ],
+    "actual05_cause_confirmed": false
+  },
+  "rejected_or_unconfirmed_hypotheses": [
+    "AuthBoundary.bind returns same object without identity/transport change; Object.freeze does not copy. Same-auth-per-render premise rejected.",
+    "Actual unmodified TSX recovers after one stable game.private_cleared frame and remains visible through repeated250ms renders with stable deps; repeated clearing hypothesis not reproduced under that condition.",
+    "Valid target/conversation/chat delivered as a complete batch after5100ms is rejected by intended5s lease, reproducing absent cache symptom with no product error. Actual02 timings missing; this is an alternative, not confirmed actual cause."
+  ],
+  "findings": [],
+  "no_product_bug_confirmed": true,
+  "next_probe_proposal": {
+    "status": "PROPOSED_DIAGNOSTIC_ONLY_REQUIRES_AUTHOR_PRODUCER_FREEZE_AND_ROOT_ACK",
+    "product_edits": false,
+    "runtime_reseed_or_retry_now": false,
+    "scope": "Keep original16 scenarios/assertions; add bounded readonly metadata, no weakened lease/timeout or automatic retries. May be applied to next source revision with exact proof boundaries; it cannot retroactively diagnose actual895 with certainty.",
+    "metadata": [
+      "Per actor private target/conversation/chat request method/path, browser request timing start/responseEnd, status/error code, received scope session/round/game_rev/epoch/revision and expected last observed UI scope at request/response.",
+      "Only state/offer-own-accepted/prompt-present/advice-count/chat-count booleans, server_time/expires_at/duration and full body digest; never token, text, cookie, CSRF or raw target body in evidence.",
+      "Record bounded last WS metadata including type/schema/stream/audience/target-match/stream_rev/room_rev/payload session/game_rev/round/epoch where present, no payload text. Record overflow explicitly.",
+      "Record UI requestfailed/error counters, actual native elapsed and independent monotonic timing. Compare serial self-actions\u2192target\u2192conversation\u2192chat wall span to5s without extending it.",
+      "Validate captured synthetic response shapes with exact pinned frontend validators in an excluded readonly module; report booleans/scope mismatches, not sanitized invented positive DTOs."
+    ],
+    "gate": "Producer remains author-disjoint reviewed and exact-pinned; root ACK before RUN. Diagnostic failure retained; no actual/release/stage PASS from metadata-only results. If these do not distinguish generation/effect clears, a separately declared client trace instrumentation proposal is needed; do not silently patch the delivered bundle."
+  },
+  "product_or_browser_producer_edits": false,
+  "docker_or_browser_run_by_reviewer": false,
+  "source_read_checkpoint": "Source895 copies complete and hashes stable; current live895 reads no longer needed. Root may coordinate unfreeze; any later evidence must bind to its new revision.",
+  "full_stage_pass": false,
+  "human450": "HOLD_UNCHANGED"
+}

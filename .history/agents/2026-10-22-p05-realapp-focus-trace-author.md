@@ -1,0 +1,5 @@
+# One current A25 real APP observational trace clone
+
+2026-10-22T20:57:13.411051+00:00 Constant synthetic trace completed0/cleanup/no causalreproduction per root; no APP/nativegate credit. Root authorizes preparation ONLY cloneUIa25→a25-focus-trace01, exactlyrunselfpath+boundedreadonlymeasure instrumentation for public_questions/smallheight primary+other. Originalkeyboardloop/focusAudit/oracles/budgets unchanged. No APP/sourceversion/framework/oldcontrols/Docker untilreview+rootoneoffACK+freshguard.
+
+2026-10-22T20:58:47.794358+00:00 Prepare exit0; unfrozen refinement retained original role start before logging and explicit undefined Reacthandler type when absent. Changedmodule syntax0/coldruntime0/inactiveACKexpected1; wholemeasure inverse3blocks and originalkeyboard exact, other25MJS exact. No native/Docker/APP. Frozen INDEX 734efcbb1e97679d5a4d0ebc1943cc7c7e65dd8c9403f32229e29d2d4a4047dd runtime af3784be3f0fd0ef05742e3292caa2d72948cbe3504675ac6c56c577ea8744f3. Root one-off admission/review pending; COMPLETE_STOP.

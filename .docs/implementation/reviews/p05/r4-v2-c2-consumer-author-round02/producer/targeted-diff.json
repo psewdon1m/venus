@@ -1,0 +1,27 @@
+{
+  "status": "AUTHOR_NARROW_DIFF_ONLY",
+  "parent01_consumer_sha256": "2f3468cd3fef0b737dd6ee1f461cda9c2afbc3f54f4ed7fa4be90ad02083f62e",
+  "consumer02_sha256": "c8cb8ead9f29b3955f85aac6f2d8f68935a17f4498e08fa11b01d86012a5f249",
+  "outside_runPreflight_byteexact": true,
+  "binding_byteexact_parent01": true,
+  "private_counter_checks": "safe integer/nonnegative + actual round.card nonnull/null exactparity",
+  "other_runtime_functions_unchanged": true,
+  "diff": [
+    "--- consumer01",
+    "+++ consumer02",
+    "@@ -57,9 +57,13 @@",
+    "   assert.notEqual(cell.profile,'all_X','yes_but all-X must refuse');",
+    "   assert.equal(result.simulation_only,true);assert.equal(result.history.provenance,'SIMULATION_ONLY');",
+    "   assert.equal(result.planned_rounds,cell.rounds);assert.equal(result.history.rounds.length,cell.rounds);",
+    "+  for(const name of ['private_opportunities','private_playable','private_safe_empty'])assert(Number.isSafeInteger(result[name])&&result[name]>=0,'nonnegative safe integer '+name);",
+    "   const privateRounds=result.history.rounds.filter(r=>r.interaction==='pair_private');",
+    "+  assert(privateRounds.every(r=>r.card===null||r.card&&typeof r.card==='object'&&!Array.isArray(r.card)&&typeof r.card.card_id==='string'),'explicit null or card reference');",
+    "   assert.equal(privateRounds.length,result.private_opportunities);assert(privateRounds.length<=Math.ceil(.25*cell.rounds));",
+    "   assert(privateRounds.every(r=>r.stage>=3));",
+    "+  assert.equal(result.private_playable,privateRounds.filter(r=>r.card!==null).length,'playable count equals actual non-null private cards');",
+    "+  assert.equal(result.private_safe_empty,privateRounds.filter(r=>r.card===null).length,'safe-empty count equals actual null private cards');",
+    "   assert.equal(result.private_playable+result.private_safe_empty,privateRounds.length);",
+    "   if(cell.cap==='OFF')assert.equal(privateRounds.length,0);",
+    "   const publicFamilies=new Set(result.history.public_history.flatMap(r=>env.map.entry(r.card_id).semantic_family_ids));"
+  ]
+}

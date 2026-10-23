@@ -29,7 +29,7 @@ export async function startRuntime(extra={}) {
   edge.listen(0,'127.0.0.1');await once(edge,'listening');const origin=`https://127.0.0.1:${edge.address().port}`;
   let child;
   async function boot() {
-    child=spawn(process.execPath,['tests/p02/server.mjs'],{cwd:process.cwd(),env:{...process.env,...extra,APP_ORIGIN:origin},stdio:['ignore','pipe','pipe','ipc']});
+    child=spawn(process.execPath,[extra.P04_TEST_SERVER==='1'?'tests/p04/server.mjs':'tests/p02/server.mjs'],{cwd:process.cwd(),env:{...process.env,...extra,APP_ORIGIN:origin},stdio:['ignore','pipe','pipe','ipc']});
     let errors='';child.stderr.on('data',b=>{errors+=b.toString();});
     port=await new Promise((resolve,reject)=>{
       let text='';child.stdout.on('data',b=>{text+=b.toString();for(const line of text.split('\n')) {try {const v=JSON.parse(line);if(v.test_server_port) resolve(v.test_server_port);} catch { /* Ignore incomplete stdout. */ }}});

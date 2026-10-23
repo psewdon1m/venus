@@ -1,0 +1,32 @@
+{
+  "metadata_audit_exit": 0,
+  "binding_read_exit": 0,
+  "false_ACK_exits": {
+    "browser": 1,
+    "layout": 1,
+    "OCI": 1
+  },
+  "false_ACK_allocation": false,
+  "resource_check_attempts": [
+    {
+      "attempt": 1,
+      "exit": 1,
+      "reason": "Checker incorrectly expected created_at unchanged across new authority revision; assertion before any mutation."
+    },
+    {
+      "attempt": 2,
+      "exit": 1,
+      "reason": "Checker also expected resource_policy_changes unchanged; actual02 appends the resolved finding. Original prefix preserved."
+    },
+    {
+      "attempt": 3,
+      "exit": 0,
+      "reason": "Explicitly allow new revision timestamp and exactly one appended resolution; all other old fields exact except deliberate per-job prestart guard."
+    }
+  ],
+  "read_path_corrections": [
+    "Guessed prod-image-binding16 absent; INPUT-PINS resolved production-image-binding16.",
+    "Guessed expanded image-map filename absent; producer inventory/BINDING resolved actual-image-maps.json."
+  ],
+  "new_runtime_tests_frameworks_native_Docker_model_runs": 0
+}

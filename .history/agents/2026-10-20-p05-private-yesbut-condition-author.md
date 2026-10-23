@@ -1,0 +1,7 @@
+# P05 private YesBut condition lifecycle correction
+
+2026-10-20T19:55:11.770962+00:00 UTC — Root authorizes narrow correction following independent diagnosis f4ba8c0f. Own API topic-games.ts, new focused condition test, existing round-view test, relevant tracked transport fixture helper/case only if required, additive source revision. FrozenA6 remains unchanged. No Docker. First private condition deferred conversation; edits early5s/3 binding gate; coherent view must keep required-content input available; safety/public unchanged.
+
+2026-10-20T19:58:01.506727+00:00 UTC — RED exact originalA6 API plus new native-method tests:6FAIL/2PASS exit1; fixed lifecycle. Firstfocused01 2FAIL/35PASS exit1 due omitted snapshot in own explicit double; correctedfixture, focused02 37PASS, focused03 after bundle negativefences40PASS. tsc-b exit0. API edits onlycondition/binding/start/finish/capabilities/coherentview; unchanged FSM5s/3. Existing Games20 helpers now supply requiredfirstYBcondition; TG07 adds409no-sideeffects before existing freshconsent test. NoDockerRUN.
+
+2026-10-20T19:59:59.575919+00:00 UTC — Final111PASS/5files, lint02exit0,tsc02exit0,2syntax0. Negativecontrol focused05 expected EXPIRED incorrectly; native returns CLOSED after parent expiry, exact CLOSED throw now tested, no error suppression. Original8RED and fixtureFAIL preserved. Parentbytes for4existingfiles equal exactA6snapshot. Frozen authorpacket source6paths; SOURCE WRITES COMPLETE; noDockeractual, no fullstage claim. Root must independently review/build/actual.

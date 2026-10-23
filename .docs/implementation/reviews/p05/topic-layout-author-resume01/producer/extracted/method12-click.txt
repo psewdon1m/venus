@@ -1,0 +1,5 @@
+async function click(a,id,prepared=null){
+ const ticket=normalPrivateControls.has(id)?prepared??await preparePrivateClick(a,id):null;
+ if(ticket)a.privateReady?.delete(id);
+ report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);await expect(l).toBeVisible();await expect(l).toBeEnabled();if(ticket)assertPrivateTicket(a,id,ticket);await l.click(ticket?{timeout:Math.max(1,Math.min(15000,ticket.deadline_monotonic_ms-performance.now()))}:{});
+}

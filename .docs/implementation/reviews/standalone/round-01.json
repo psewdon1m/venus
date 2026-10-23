@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T12:37:31.667744+00:00",
+  "outcome": "CHANGES_REQUESTED",
+  "scope": "standalone-source-transition-and-local-mock-entry-preflight",
+  "stage_acceptance": false,
+  "source_sha": "c5dac890fc32ea769971bc29cb468c5b1fa35c0e",
+  "source_dirty": true,
+  "reviewed_files": [
+    {
+      "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+      "sha256": "8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9"
+    },
+    {
+      "path": ".docs/adr/ADR-019-standalone-local-pilot.md",
+      "sha256": "056fe00e29e117f6e1ef7e4884e1f6d3d6ca61fa9a1a27e22a4b9fc17de26dca"
+    },
+    {
+      "path": ".docs/STANDALONE_PILOT.md",
+      "sha256": "d6339c03561835e2f447aa0d22608e24f0c5a93de8b14a0f28615cf57c63c607"
+    },
+    {
+      "path": ".docs/implementation/user-decisions.v2.json",
+      "sha256": "965ae74e75bc778cd8c66d86cb7505e34ade38a3b7d388246b2e4c75f453cfe9"
+    },
+    {
+      "path": ".docs/implementation/source-revisions.v2.json",
+      "sha256": "de15000772bfc1bc6b4dedb683daff5462366f911e4ba993527c431ae8c9430b"
+    },
+    {
+      "path": "tools/source_revisions.py",
+      "sha256": "1477a613c0ac98530440a4d3790dd96a1af8fc7a9b44eeb76c6d4f279c255d74"
+    },
+    {
+      "path": "tools/test_source_revisions.py",
+      "sha256": "2234475b54bfc70c3b1131e74a67abf72ae931fa4dbbcdd454904be7dfe076fb"
+    },
+    {
+      "path": "tools/check_p00.py",
+      "sha256": "d84ffcfd2225186142f715f91317a3426caf728cc1d40b7e115afe34e3b78ba2"
+    },
+    {
+      "path": "tools/p00_history.py",
+      "sha256": "357d7e1dc259f208fb630ab327e48fe66199c33968b4d4310e0608998ea05bfb"
+    },
+    {
+      "path": "apps/api/src/entry-profile.ts",
+      "sha256": "331b4ff73a70078bde4abc164ee7954e680bd487d46df1d99ce2127820446332"
+    },
+    {
+      "path": "apps/api/src/entry-profile.test.ts",
+      "sha256": "cd81ef025dbe2e13c110fd970d82bf335708353ee58db82717e21ce717add600"
+    },
+    {
+      "path": "apps/api/src/server.ts",
+      "sha256": "a958da19f6c6a83108b9b4bbf3ca9b9b41522589c2dcb7de1bca5978436e96bf"
+    },
+    {
+      "path": "infra/venus/compose.yml",
+      "sha256": "2b33b4b3ba9d1fc2bf7d7576433a762060de4e4f0716bd5b36a15bb6a3f960c6"
+    },
+    {
+      "path": "infra/venus/compose.local-pilot.yml",
+      "sha256": "27eee58bc4a323b581c045d94bc57f8d0d5e2da7db5d4186cc5e81be40c65452"
+    },
+    {
+      "path": "tools/local-pilot-proxy.mjs",
+      "sha256": "b0506794650be654921aacdc90f3b395f5886648c9b409f0e7ae9be55af870a2"
+    },
+    {
+      "path": "tools/local-pilot-smoke.mjs",
+      "sha256": "200bdffd00eef88e757c355ffbb1e1cafd2dc3b0b24e44d287d646a2460f7d19"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SG-001",
+      "severity": "P2",
+      "file": "tools/local-pilot-smoke.mjs",
+      "issue": "Required cleanup failure leaves durable report.status PASS",
+      "status": "OPEN"
+    }
+  ],
+  "tests": {
+    "source_revisions": {
+      "passed": 19,
+      "total": 19
+    },
+    "entry_profile": {
+      "passed": 5,
+      "total": 5
+    },
+    "cleanup_fault": {
+      "reproduced": true,
+      "level": "actual-source-finalizer-fault-injection"
+    }
+  },
+  "test_artifacts": [
+    {
+      "path": ".artifacts/review-standalone-gate/source-revisions-tests.txt",
+      "sha256": "0bcb997cbbd44a208e87a087d99cfa526d05ddb27bbaa78a12391fc6da4c1d1c"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/entry-results.json",
+      "sha256": "1afbe8d80b8aa38b30261c9e8fef2d491707d4f319b9c3f270be3167351764ff"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/cleanup-fault-repro.mjs",
+      "sha256": "eb0a92265133589aa1606834df1f439e38c2d8a7133fb44663784f46129d9aab"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/cleanup-fault-repro.json",
+      "sha256": "548b1731232139c514952ea6abb93531732103d2d426e62615f4742835ad7804"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/standalone/round-01.md",
+    "sha256": "22e8f796892d5f9714938f35d7c1d72fb460634edea3ac2bfc335934d914e0c6"
+  }
+}

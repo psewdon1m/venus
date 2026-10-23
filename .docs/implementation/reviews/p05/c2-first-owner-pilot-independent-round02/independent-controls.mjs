@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {validatePlan,requiredBaselineFailures} from 'file:///C:/.projects/venus/.artifacts/p05-c2-m3-pilot-rebind02/worker.mjs';
+import {runPreflight} from 'file:///C:/.projects/venus/.artifacts/p05-c2-m3-pilot-rebind02/c2/consumer.mjs';
+import {safeError} from 'file:///C:/.projects/venus/.artifacts/p05-c2-m3-pilot-rebind02/raw/safe-metadata.mjs';
+let checks=0;const test=(f)=>{f();checks++;};
+const plan=JSON.parse(fs.readFileSync('.artifacts/p05-c2-m3-pilot-rebind02/C2-FIRST-PREREG.json')),clone=()=>structuredClone(plan),summary={neutral20_failures:[],private_baseline_shortages:[],original_mode_counts:{questions:100,truth_or_dare:100,yes_but:100}};
+test(()=>assert.equal(requiredBaselineFailures({...summary,refusals:[{classification:'EXPECTED_SAFE_PRESTART_REFUSAL'}],R100_upper_bound_diagnostics:[{operation_slots:19}]}),0));
+test(()=>assert.equal(requiredBaselineFailures({...summary,neutral20_failures:[{}]}),1));
+test(()=>assert.equal(requiredBaselineFailures({...summary,private_baseline_shortages:[{}]}),1));
+for(const key of ['neutral_static','private_static','neutral_R20','neutral_R100'])test(()=>{const p=clone();p[key][1]=structuredClone(p[key][0]);assert.throws(()=>validatePlan(p));});
+const cell=plan.neutral_R100[0].cell,env={snapshot:()=>({baseline:{room_id:'machine',players:[]}}),map:{topics:[{topic_id:'creative_expression'},{topic_id:'music_sound'}]},preflightTopics:()=>{throw Object.assign(Error('NOT_EXPORTED_PRIVATE_CANARY'),{code:'TOPIC_SAFE_POOL_EXHAUSTED'});}};
+test(()=>{const r=runPreflight(cell,env);assert.equal(r.status,'SAFE_REFUSAL');assert.equal(r.prefix_available,false);assert.equal(r.history,null);assert.equal(r.planned_rounds,null);assert(!JSON.stringify(r).includes('PRIVATE_CANARY'));});
+test(()=>{const err=Object.assign(Error('NOT_EXPORTED_PRIVATE_CANARY'),{code:'UNEXPECTED_MACHINE_FAILURE'});assert.throws(()=>runPreflight(cell,{...env,preflightTopics:()=>{throw err;}}),e=>e===err);});
+test(()=>{let called=false;const err={};Object.defineProperty(err,'code',{get(){called=true;throw Error('CANARY');}});const safe=safeError(err);assert.equal(called,false);assert(!JSON.stringify(safe).includes('CANARY'));});
+test(()=>{const safe=safeError(Object.assign(Error('CANARY_PRIVATE_BODY'),{name:'CANARY_PRIVATE_NAME',code:'CANARY_PRIVATE_CODE',stack:'CANARY_PRIVATE_STACK'}));assert(!JSON.stringify(safe).includes('CANARY'));assert.equal(safe.metadata_unlisted,true);});
+console.log(JSON.stringify({status:'PASS_INDEPENDENT_FINITE_BASELINE_PREREG_REFUSAL_PRIVACY_ONLY',checks,actual470_selector_calls:0,Docker:false,RUN:false}));

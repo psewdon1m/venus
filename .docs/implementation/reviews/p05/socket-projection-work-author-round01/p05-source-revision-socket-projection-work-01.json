@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "revision": "P05-SOCKET-PROJECTION-WORK-01",
+  "kind": "COMPATIBLE_INTERNAL_V2_UNUSED_WORK_CORRECTION",
+  "parent_source_identity": "c481761fbecfadf77883c5ab4c8a851ab201c092b57e6994ced431dccefd4193",
+  "source_audit": ".docs/implementation/reviews/p05/a14-ws-hotpath-code-audit-round01/INDEX.json",
+  "source_audit_sha256": "3aaf21cff53906f82e0674400e5f759f9713a34fe25e87d06b80a9cfb6904ae9",
+  "problem": "Ordinary socketState eagerly projected a game DTO that production sendGame never consumes; heartbeat liveGrant also discarded all child events. Previous N7 WS_FAILURE cause remains unknown.",
+  "behavior": [
+    "Optional internal Rooms.socketState projection mode defaults full; effective only forV2. Production V2auth/poll requests private-only child preparation, retaining loaded/prepareProjection/refquery and current dispatch.",
+    "V2heartbeat skips unused child projection/events but retains room/member/session/entry checks, heartbeat renewals, roomview, initial/final authority and original credential expiry. V1 heartbeat and all default/direct behavior unchanged.",
+    "RoomGames forwards optional includePublicGame onlyV2. TopicGames only omits unused public view; fresh dispatchGame/private delivery source/ACL/epoch/TTL checks remain."
+  ],
+  "source_files": {
+    "apps/api/src/rooms.ts": "a3c455d8a6feafb5a0e8cff6b3d24b70017de8f428c1f9aa6e12d490689d44ed",
+    "apps/api/src/room-routes.ts": "e326479f4a948d87904d326aa3613eb277b4e4b0e07fb212cc102d7f4441e3b4",
+    "apps/api/src/room-games.ts": "0efbc44d68bbcca2ad20ecd7bc28082e7eae1f2d62139e8b91d59667ec5c9e85",
+    "apps/api/src/topic-games.ts": "5131787e0a69d1edb0bc80b21d77054c31f3e108fcee3b60328691d2573e9a69",
+    "apps/api/src/room-games.test.ts": "39324939a867fcc3adfc4004a5299afaf5ecc3089d0867c95b7bc5cb7b1b03d6",
+    "apps/api/src/room-socket-poll.test.ts": "0ca5120d2770a94f4bdbf0564756d228020704cba2c30ad87625c5b4ec191c13",
+    "apps/api/src/room-socket-projection.test.ts": "a5f9ab56e8eb0e7f58010dd31e9773897bc8256a55e9c3be8054438312a1c2cd",
+    "apps/api/src/topic-games-socket-projection.test.ts": "2c159fbf99bc18574c30cdab3a06cc5582e9abcb4dd514ad981bb5e4fd5a0bda"
+  },
+  "validation": "RED6FAIL/46PASS before implementation. GREEN88PASS/7files; APItsc-b/lint0. Real class paths with SQL/hook doubles and registered handler scheduling tests; not actualPG/native transport/performance proof.",
+  "unchanged": [
+    "No timers/rates/poll queue/auth cache/DBpool/ledger/retention/storage/maintenance/engine/cards/publicHTTPschemas change.",
+    "No actualpoll privateprepare or revocation/finaldispatch fence removed.",
+    "ExistingA14/earlier actual failures and source snapshots immutable."
+  ],
+  "measurement_qualification": "New ownedA13 7s profile reports93.938%idle/0.666%fsync, notCPU/fsync dominated inthatinterval. This correction doesnot claim tofix N7 failure or improve measuredlatency.",
+  "rollback": "Restore coherent prior compatible API image/source. No persisted schema or migration change; previous eager unused work returns. No safety state rollback."
+}

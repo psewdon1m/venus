@@ -1,0 +1,86 @@
+{
+  "services": {
+    "db": {
+      "image": "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "environment": {
+        "POSTGRES_DB": "venus",
+        "POSTGRES_USER": "venus",
+        "POSTGRES_PASSWORD_FILE": "/run/secrets/db_password"
+      },
+      "secrets": [
+        "db_password"
+      ],
+      "volumes": [
+        "postgres-data:/var/lib/postgresql/data"
+      ],
+      "networks": [
+        "isolated"
+      ],
+      "mem_limit": "512m",
+      "cpus": 1,
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U venus -d venus"
+        ],
+        "interval": "1s",
+        "timeout": "2s",
+        "retries": 60
+      }
+    },
+    "api": {
+      "image": "sha256:25311e4177c8358b7fb43e0b046cbc77ed72b954f07be00b0c60598b85eeef2a",
+      "user": "1000:1000",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "mem_limit": "768m",
+      "cpus": 1,
+      "pids_limit": 96,
+      "tmpfs": [
+        "/tmp:size=128m,mode=1777",
+        "/home/node:size=32m,uid=1000,gid=1000"
+      ],
+      "environment": {
+        "DB_HOST": "db",
+        "DB_PASSWORD_FILE": "/run/secrets/db_password",
+        "VENUS_P05_ISOLATED_FIXTURE": "1",
+        "P05_ARTIFACT_DIRECTORY": "/artifacts"
+      },
+      "secrets": [
+        "db_password"
+      ],
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "C:\\.projects\\venus\\.artifacts\\p05\\venus-topic-lifecycle-ea471f5a2ffe",
+          "target": "/artifacts"
+        }
+      ],
+      "networks": [
+        "isolated"
+      ],
+      "command": [
+        "node",
+        "tests/p05-topic-lifecycle/integration.mjs"
+      ]
+    }
+  },
+  "secrets": {
+    "db_password": {
+      "file": "C:\\Temp\\venus-topics-secret-qihk7x\\password"
+    }
+  },
+  "volumes": {
+    "postgres-data": {}
+  },
+  "networks": {
+    "isolated": {
+      "internal": true
+    }
+  }
+}

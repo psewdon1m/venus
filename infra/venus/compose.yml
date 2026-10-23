@@ -14,7 +14,11 @@ services:
       IMAGE_DIGEST: ${VENUS_IMAGE:?Set VENUS_IMAGE}
       KEYRING_FILE: /run/secrets/keyring
       DELETION_LEDGER_FILE: /var/lib/venus/deletions.jsonl
+      CATALOG_REVOCATION_LEDGER_FILE: ${CATALOG_REVOCATION_LEDGER_FILE:-}
       APP_ORIGIN: ${VENUS_ORIGIN:-https://venus.local.invalid}
+      VENUS_DEPLOYMENT_PROFILE: ${VENUS_DEPLOYMENT_PROFILE:-closed}
+      VENUS_PRIVATE_TEXT_CHAT: ${VENUS_PRIVATE_TEXT_CHAT:-false}
+      VENUS_PRIVATE_TOPICS: ${VENUS_PRIVATE_TOPICS:-false}
     secrets: [db_password, keyring]
     volumes: [venus-state:/var/lib/venus]
     depends_on:

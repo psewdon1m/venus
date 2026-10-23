@@ -1,0 +1,85 @@
+/** Separate host monotonic supervisor. Default is inert; no Docker before exact ACK. */
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,renameSync,existsSync,lstatSync,statfsSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {performance} from 'node:perf_hooks';
+import {createHash} from 'node:crypto';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+const sha=b=>createHash('sha256').update(b).digest('hex'),wait=ms=>new Promise(r=>setTimeout(r,ms));
+export const phaseLimits={BOOTSTRAP:30000,PROBE:10000,RUN:300000,STOP:30000,EXPORT:60000,ARCHIVE:30000,CLEANUP:30000,DONE:0};
+export function validateConfig(c){
+ assert.equal(c.kind,'ROOT_R100_V3_OPERATIONAL_DIAGNOSTIC_ACK');assert.equal(c.method_revision,'METHOD05-HOST-OUTPUT-FENCES');assert.equal(c.status,'AUTHORIZED');assert.equal(c.independent_method_and_producer_review,'PASS');assert(/^[a-f0-9]{32}$/.test(c.owner));assert(/^venus-r100-v3-[a-f0-9]{12}$/.test(c.container));assert.equal(c.volume,c.container+'-output');assert(/^sha256:[a-f0-9]{64}$/.test(c.image));assert(/^[a-f0-9]{64}$/.test(c.source_identity));assert.equal(c.global_owned_cap_bytes,128*1024**2);assert.equal(c.reserve_bytes,10*1024**3);assert.equal(c.attempts,1);assert.deepEqual(c.phase_limits_ms,phaseLimits);assert.equal(c.statistics_RUN,false);
+ const dir=resolve(c.control_directory);assert.equal(dir,resolve(c.control_directory));assert(!lstatSync(dir).isSymbolicLink());assert(lstatSync(dir).isDirectory());assert.equal(c.counter_freshness_ms,2000);return true;
+}
+export function nextPhase(previous,row,now){
+ assert(row&&Number.isSafeInteger(row.counter)&&row.counter>0);assert(Object.hasOwn(phaseLimits,row.phase),'UNKNOWN_SUPERVISOR_PHASE');
+ if(previous){assert(row.counter>=previous.counter,'PHASE_COUNTER_REORDER');if(row.phase!==previous.phase){assert(row.counter>previous.counter,'PHASE_TRANSITION_REQUIRES_NEW_COUNTER');assert(Object.keys(phaseLimits).indexOf(row.phase)>Object.keys(phaseLimits).indexOf(previous.phase),'PHASE_DEADLINE_RESET_OR_REORDER');return{counter:row.counter,phase:row.phase,start:now};}return{...previous,counter:row.counter};}
+ assert.equal(row.phase,'BOOTSTRAP');return{counter:row.counter,phase:row.phase,start:now};
+}
+function docker(args,timeout){return new Promise((done,reject)=>{
+ const child=spawn('docker',args,{windowsHide:true}),out=[],err=[];let bytes=0,settled=false;
+ const finish=(error,value)=>{if(settled)return;settled=true;clearTimeout(timer);error?reject(error):done(value);},timer=setTimeout(()=>{child.kill('SIGKILL');finish(Error('SUPERVISOR_DOCKER_COMMAND_DEADLINE'));},timeout);
+ for(const [stream,target]of [[child.stdout,out],[child.stderr,err]])stream.on('data',b=>{bytes+=b.length;if(bytes>65536){child.kill('SIGKILL');finish(Error('SUPERVISOR_DOCKER_CAPTURE_CAP'));}else target.push(b);});
+ child.on('error',error=>finish(error));child.on('close',(code,signal)=>finish(null,{code,signal,stdout:Buffer.concat(out).toString('utf8'),stderr:Buffer.concat(err).toString('utf8')}));
+ });}
+export async function supervise(config,hooks={}){
+ validateConfig(config);const root=resolve(config.control_directory),phaseFile=join(root,'phase.json'),guardFile=join(root,'host-space.json'),guardTemp=join(root,'host-space-next.json'),ackFile=join(root,'supervisor-ack.json'),terminalFile=join(root,'watchdog-terminal.json');
+ const now=hooks.now??(()=>performance.now()),pause=hooks.pause??wait,runDocker=hooks.docker??docker;
+ const free=hooks.free??(()=>{const s=statfsSync(config.host_output_path,{bigint:true});return s.bavail*s.bsize;});
+ const emit=hooks.emit??(value=>{if(typeof process.send==='function')try{process.send(value,()=>{});}catch{}});
+ let incomingPhase=null;const onMessage=value=>{if(value?.type==='phase'&&value.owner===config.owner)incomingPhase=value;};if(!hooks.readPhase)process.on('message',onMessage);
+ const readPhase=hooks.readPhase??(()=>incomingPhase??(existsSync(phaseFile)?JSON.parse(readFileSync(phaseFile)):null));
+ const rawAtomic=hooks.writeAtomic??((target,value)=>{assert(!existsSync(guardTemp));const b=Buffer.from(JSON.stringify(value)+'\n');assert(b.length<=65536);sample();if(capacityFault)return false;writeFileSync(guardTemp,b,{flag:'wx',mode:0o600});if(existsSync(target))assert(!lstatSync(target).isSymbolicLink());sample();if(capacityFault)return false;renameSync(guardTemp,target);return true;});
+ if(!hooks.writeAtomic)for(const p of [guardFile,guardTemp,ackFile,terminalFile])assert(!existsSync(p),'FRESH_SUPERVISOR_OUTPUT_REQUIRED');
+ const start=now(),events=[];let phase,phaseSeen=start,counter=0,minimumFree=null,lastSample,reason,status='SUPERVISOR_NOT_ACCEPTED',stopConfirmed=false,stopRequested=false,capacityFault=null,samplesAfterStop=0;
+ function latch(why){if(!capacityFault)capacityFault={reason:why,counter:counter+1,at_elapsed_ms:now()-start};emit({type:'capacity-fault',owner:config.owner,capacity_fault:capacityFault});}
+ function sample(){
+  let available=null;try{available=free();assert(typeof available==='bigint'&&available>=0n,'HOST_SPACE_METRIC_INVALID');minimumFree=minimumFree===null||available<minimumFree?available:minimumFree;if(available<BigInt(config.reserve_bytes+config.global_owned_cap_bytes))latch('ACTUAL_HOST_C_SPACE_LOW');}catch(e){latch('ACTUAL_HOST_C_SPACE_UNKNOWN:'+e.message);}
+  lastSample={owner:config.owner,counter:++counter,available_bytes:(available??0n).toString(),reserve_bytes:config.reserve_bytes,global_cap_bytes:config.global_owned_cap_bytes,host_output_allowed:capacityFault===null,capacity_fault:capacityFault,stop_requested:stopRequested,host_output_path:resolve(config.host_output_path),host_filesystem_metric:'actual host statfs bavail*bsize',UTC_diagnostic_only:new Date().toISOString()};
+  if(stopRequested)samplesAfterStop++;emit({type:'space',owner:config.owner,sample:lastSample});return lastSample;
+ }
+ function guardedAtomic(target,value){sample();if(capacityFault)return false;const b=Buffer.byteLength(JSON.stringify(value));assert(b<=65536,'SUPERVISOR_RECEIPT_CAP');return rawAtomic(target,value)!==false;}
+ function publishSpace(){const value=sample();if(!capacityFault)guardedAtomic(guardFile,value);}
+ function phaseAck(row,failure=false){const value={owner:config.owner,phase:row.phase,phase_counter:row.counter,supervisor_counter:counter,armed:true,failure_latched:failure,host_output_allowed:capacityFault===null};emit({type:'phase-ack',owner:config.owner,...value});guardedAtomic(ackFile,value);}
+ function done(row,failed){
+  assert.equal(row.worker_stopped,true);stopConfirmed=true;
+  const exported=row.export_verified===true&&(!capacityFault||(Number.isSafeInteger(row.export_verified_counter)&&row.export_verified_counter>0&&row.export_verified_counter<capacityFault.counter));
+  if(!failed&&!capacityFault){assert(exported&&row.owned_cleanup==='completed','DONE_REQUIRES_EXPORT_AND_CLEANUP_RECEIPT');status='SUPERVISOR_COMPLETE_NON_GATING';}
+  else{status=capacityFault?'CAPACITY_FAULT_RETAINED_NOT_ACCEPTED':'STOPPED_NOT_ACCEPTED';if(exported&&row.owned_cleanup==='completed')events.push({phase:'FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED',elapsed_ms:now()-start});else events.push({phase:'PREFIX_NOT_EXPORTED_OR_RETAINED_NOT_ACCEPTED',elapsed_ms:now()-start});}
+  return true;
+ }
+ try{
+  while(true){const t=now();assert(t-start<=520000,'SUPERVISOR_TOTAL_HARD_LIMIT');publishSpace();assert(!capacityFault,'CAPACITY_FAULT:'+capacityFault?.reason);const row=readPhase();
+   if(row){assert.equal(row.owner,config.owner);const next=nextPhase(phase,row,t);if(!phase||next.phase!==phase.phase){
+    if(next.phase==='RUN'){const probe=hooks.readProbe?hooks.readProbe():JSON.parse(readFileSync(join(root,'native-write-probe.json')));assert.equal(probe.owner,config.owner);assert.equal(probe.volume,config.volume);assert.equal(probe.image,config.image);assert.equal(probe.uid,1000);assert.equal(probe.gid,1000);assert.equal(probe.status,'WRITE_FSYNC_READ_DELETE_EMPTY_PASS');assert(BigInt(probe.native_available_bytes)>=BigInt(config.reserve_bytes+config.global_owned_cap_bytes));}
+    events.push({phase:next.phase,elapsed_ms:t-start});phaseAck(row);
+   }if(!phase||row.counter>phase.counter)phaseSeen=t;phase=next;assert(t-phaseSeen<=2000,'MAIN_LAUNCHER_HEARTBEAT_STALE');if(phase.phase==='DONE'){done(row,false);break;}assert(t-phase.start<phaseLimits[phase.phase],'EXTERNAL_'+phase.phase+'_MONOTONIC_DEADLINE');
+   }else assert(t-start<=2000,'INITIAL_PHASE_HEARTBEAT_MISSING');await pause(250);
+  }
+ }catch(e){reason=e.message;stopRequested=true;const stopStart=now(),remaining=()=>Math.max(1,30000-(now()-stopStart));
+  try{
+   const listed=await runDocker(['ps','-aq','--filter','label=com.venus.measurement.owner='+config.owner],Math.min(10000,remaining()));assert.equal(listed.code,0);const ids=listed.stdout.trim().split(/\s+/).filter(Boolean);
+   if(ids.length){const result=await runDocker(['inspect',...ids],Math.min(10000,remaining()));assert.equal(result.code,0);const workers=JSON.parse(result.stdout),roles=['','-bootstrap','-probe','-volume-inspect','-export'];assert.equal(workers.length,ids.length);for(const w of workers){assert(roles.some(r=>w.Name==='/'+config.container+r));assert.equal(w.Config?.Labels?.['com.venus.measurement.owner'],config.owner);assert.equal(w.Image,config.image);}const running=workers.filter(w=>w.State.Running).map(w=>w.Id);if(running.length){const killed=await runDocker(['kill',...running],remaining());assert.equal(killed.code,0);}const final=await runDocker(['inspect',...ids],remaining());assert.equal(final.code,0);for(const w of JSON.parse(final.stdout)){assert.equal(w.Config?.Labels?.['com.venus.measurement.owner'],config.owner);assert.equal(w.State.Running,false);}}
+   stopConfirmed=true;status='STOPPED_NOT_ACCEPTED';
+  }catch(stopError){reason+='; '+stopError.message;status='KILL_FAILED_RETAINED_NOT_ACCEPTED';}
+  const state={owner:config.owner,status,reason,worker_stop_confirmed:stopConfirmed,stop_requested:true};emit({type:'failure-state',...state});guardedAtomic(join(root,'watchdog-state.json'),state);
+  const postStart=now();let postPhase,postSeen=postStart,postCounter=phase?.counter??0,completed=false;
+  while(now()-postStart<180000&&now()-start<550000){
+   publishSpace();const t=now();let row;
+   try{row=readPhase();assert(row&&row.owner===config.owner);assert(Number.isSafeInteger(row.counter)&&row.counter>=postCounter,'POST_STOP_COUNTER_REORDER');if(row.counter>postCounter){postCounter=row.counter;postSeen=t;}assert(t-postSeen<=2000,'POST_STOP_MAIN_HEARTBEAT_STALE');
+    if(row.phase==='DONE'){done(row,true);completed=true;break;}
+    assert(Object.hasOwn(phaseLimits,row.phase));if(!postPhase||postPhase.phase!==row.phase){if(postPhase)assert(Object.keys(phaseLimits).indexOf(row.phase)>Object.keys(phaseLimits).indexOf(postPhase.phase));postPhase={phase:row.phase,start:t};phaseAck(row,true);}
+    const limit=['BOOTSTRAP','PROBE','RUN'].includes(row.phase)?30000:phaseLimits[row.phase];assert(t-postPhase.start<limit,'POST_STOP_PHASE_DEADLINE');
+   }catch(postError){if(!reason.includes(postError.message))reason+='; '+postError.message;emit({type:'post-stop-fault',owner:config.owner,reason:postError.message});}
+   await pause(250);
+  }if(!completed)status='CLEANUP_FAILED_RETAINED_NOT_ACCEPTED';
+ }
+ if(capacityFault){reason=(reason??'')+'; CAPACITY_FAULT:'+capacityFault.reason;if(status==='SUPERVISOR_COMPLETE_NON_GATING')status='CAPACITY_FAULT_RETAINED_NOT_ACCEPTED';}
+ const report={status,owner:config.owner,container:config.container,volume:config.volume,phase:phase?.phase,events,reason,capacity_fault:capacityFault,last_actual_host_sample:lastSample,actual_space_samples_after_stop:samplesAfterStop,worker_stop_confirmed:stopConfirmed,elapsed_monotonic_ms:now()-start,minimum_actual_host_free_bytes:minimumFree?.toString(),guard_counter:counter,manual_cleanup_required:status.includes('RETAINED'),statistics_RUN:false,full_P05_PASS:false};
+ const terminalWritten=guardedAtomic(terminalFile,report);if(capacityFault){report.capacity_fault=capacityFault;report.last_actual_host_sample=lastSample;report.minimum_actual_host_free_bytes=minimumFree?.toString();report.actual_space_samples_after_stop=samplesAfterStop;report.guard_counter=counter;if(report.status==='SUPERVISOR_COMPLETE_NON_GATING')report.status='CAPACITY_FAULT_RETAINED_NOT_ACCEPTED';report.reason=(report.reason??'')+'; CAPACITY_FAULT:'+capacityFault.reason;report.manual_cleanup_required=true;}report.terminal_receipt_written=terminalWritten;emit({type:'terminal',owner:config.owner,report});if(!hooks.readPhase)process.off('message',onMessage);return report;
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
+ const arg=process.argv.find(a=>a.startsWith('--config=')),expected=process.argv.find(a=>a.startsWith('--sha='))?.slice(6);
+ if(!arg)console.log(JSON.stringify({status:'NOT_RUN',separate_monotonic_supervisor:true,requires_exact_ROOT_ACK:true,Docker_calls:0}));else{const raw=readFileSync(arg.slice(9));assert.equal(sha(raw),expected,'EXACT_ROOT_CONFIG_SHA_REQUIRED');const result=await supervise(JSON.parse(raw));console.log(JSON.stringify(result));if(result.status!=='SUPERVISOR_COMPLETE_NON_GATING')process.exitCode=1;}
+}

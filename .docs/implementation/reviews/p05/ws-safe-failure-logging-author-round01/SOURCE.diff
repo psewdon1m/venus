@@ -1,0 +1,149 @@
+--- acceptedprojection/apps/api/src/request-error-diagnostic.ts
++++ WS-safe-log/apps/api/src/request-error-diagnostic.ts
+@@ -78,3 +78,12 @@
+   error_kind==='Error'&&code===undefined&&data(error,'message')==='Query read timeout'?'QUERY_TIMEOUT':'UNKNOWN';
+  return {error_kind,failure_code,...location(error)};
+ }
++
++const websocketDomainCodes=new Set(['AUTH_REQUIRED','ENTRY_REACCEPT_REQUIRED','ROOM_CLOSED','SOCKET_REPLACED','ACTORS_UNAVAILABLE','INVALID_REQUEST','RATE_LIMITED','TICKET_INVALID','CONSENT_EXPIRED','PRIVATE_CHAT_UNAVAILABLE','PRIVATE_EVENT_CAPACITY','TOPIC_ROOM_RETIRED','TOPIC_ROOM_MEMBER_RETIRED','TOPIC_ROOM_MEMBER_NOT_ADMITTED','TOPIC_ROOM_BUSY','TOPIC_LEDGER_BUSY','TOPIC_STATE_CHANGED','TOPIC_ROOM_BIRTH_UNAVAILABLE']);
++/** WS operator diagnostic only. The default HTTP projection remains unchanged. */
++export function websocketErrorDiagnostic(error:unknown):RequestErrorDiagnostic&{domain_code?:string}{
++ const diagnostic=requestErrorDiagnostic(error);
++ if(!safePrototypeChain(error)||!types.isNativeError(error))return diagnostic;
++ const code=data(error,'code');
++ return typeof code==='string'&&websocketDomainCodes.has(code)?{...diagnostic,domain_code:code}:diagnostic;
++}
+--- acceptedprojection/apps/api/src/room-routes.ts
++++ WS-safe-log/apps/api/src/room-routes.ts
+@@ -1,3 +1,4 @@
++import {websocketErrorDiagnostic} from './request-error-diagnostic.js';
+ import type {FastifyInstance,FastifyRequest,FastifyReply} from 'fastify';
+ import cookie from '@fastify/cookie';
+ import {Ajv2020} from 'ajv/dist/2020.js';
+@@ -169,7 +170,14 @@
+   app.get('/api/v1/rooms/:roomId/ws',{websocket:true,preValidation:async request=>{
+     origin(request);roomId(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);await rooms.rateLimit('ws-upgrade:'+request.ip,120);
+   }},(socket,request)=>{
+-    pending.add(socket);let grant:SocketGrant|undefined;let chain=Promise.resolve();let lastRevision=-1,lastPrivate=0;let lastPing=-Infinity,pollPending=false;
++    pending.add(socket);let grant:SocketGrant|undefined;let chain=Promise.resolve();let lastRevision=-1,lastPrivate=0;let lastPing=-Infinity,pollPending=false,failureLogged=false;
++    function failed(error:unknown,phase:'auth_or_heartbeat'|'poll') {
++      if(!failureLogged) {failureLogged=true;try {
++        const request_id=typeof request.id==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(request.id)?request.id:undefined;
++        app.log.warn({event:'websocket_failed',phase,...(request_id?{request_id}:{}),...websocketErrorDiagnostic(error)},'websocket_failed');
++      } catch {/* Diagnostics must not suppress the existing fail-closed socket close. */}}
++      socket.close(4401,'Connection unavailable');
++    }
+     const deadline=setTimeout(()=>socket.close(4401,'Authentication required'),5000);deadline.unref();
+     socket.on('error',()=>{/* Never log raw frames or credentials. */});
+     socket.on('message',message=>{
+@@ -187,14 +195,14 @@
+           requireThat(frame.type==='ping'&&Object.keys(frame).length===1,'INVALID_REQUEST',400);
+           const now=performance.now();requireThat(now-lastPing>=500,'RATE_LIMITED',429);lastPing=now;await rooms.liveGrant(grant,true);socket.send(JSON.stringify({type:'pong'}));
+         }
+-      }).catch(()=>{socket.close(4401,'Connection unavailable');});
++      }).catch(error=>failed(error,'auth_or_heartbeat'));
+     });
+     const ticker=setInterval(()=>{
+       // Keep at most one scheduled/in-flight poll. Slow storage must not build
+       // a poll backlog ahead of the heartbeat on the same serialized chain.
+       if(!grant||socket.readyState!==1||pollPending)return;
+       pollPending=true;
+-      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate,{projection:'private'}),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(()=>socket.close(4401,'Connection unavailable')).finally(()=>{pollPending=false;});
++      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate,{projection:'private'}),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(error=>failed(error,'poll')).finally(()=>{pollPending=false;});
+     },1000);ticker.unref();
+     socket.on('close',()=>{
+       clearTimeout(deadline);clearInterval(ticker);pending.delete(socket);
+--- acceptedprojection/apps/api/src/request-error-diagnostic.test.ts
++++ WS-safe-log/apps/api/src/request-error-diagnostic.test.ts
+@@ -1,5 +1,5 @@
+ import {describe,it,expect} from 'vitest';
+-import {requestErrorDiagnostic} from './request-error-diagnostic.js';
++import {requestErrorDiagnostic,websocketErrorDiagnostic} from './request-error-diagnostic.js';
+ 
+ const secret='PRIVATE_MESSAGE_BODY_COOKIE_TOKEN_SQL_PARAMS_CANARY';
+ const known=new URL('./topic-games.ts',import.meta.url).href;
+@@ -56,3 +56,18 @@
+   for(const indirect of [false,true]){let calls=0;const proxy=new Proxy(Error.prototype,{getOwnPropertyDescriptor(){calls++;return undefined;},getPrototypeOf(){calls++;return Error.prototype;}}),error=new Error(secret);Object.setPrototypeOf(error,indirect?Object.create(proxy):proxy);expect(requestErrorDiagnostic(error)).toEqual({error_kind:'UNKNOWN',failure_code:'UNKNOWN'});expect(calls).toBe(0);}
+  });
+ });
++
++describe('WebSocket-only literal policy failure extension',()=>{
++ const codes=['AUTH_REQUIRED','ENTRY_REACCEPT_REQUIRED','ROOM_CLOSED','SOCKET_REPLACED','ACTORS_UNAVAILABLE','INVALID_REQUEST','RATE_LIMITED','TICKET_INVALID','CONSENT_EXPIRED','PRIVATE_CHAT_UNAVAILABLE','PRIVATE_EVENT_CAPACITY','TOPIC_ROOM_RETIRED','TOPIC_ROOM_MEMBER_RETIRED','TOPIC_ROOM_MEMBER_NOT_ADMITTED','TOPIC_ROOM_BUSY','TOPIC_LEDGER_BUSY','TOPIC_STATE_CHANGED','TOPIC_ROOM_BIRTH_UNAVAILABLE'];
++ for(const code of codes)it('retains only WS literal policy code '+code,()=>{const error=Object.assign(new Error(secret),{code,body:secret,cookie:secret,query:secret,frames:[secret]});expect(websocketErrorDiagnostic(error)).toMatchObject({error_kind:'Error',failure_code:'UNKNOWN',domain_code:code});expect(requestErrorDiagnostic(error)).not.toHaveProperty('domain_code');expect(JSON.stringify(websocketErrorDiagnostic(error))).not.toContain(secret);});
++ it('omits unknown, inherited, lookalike and accessor codes without invoking hooks',()=>{
++  let calls=0;const accessor=new Error(secret);Object.defineProperty(accessor,'code',{get(){calls++;throw Error(secret);}});
++  const inherited=new Error(secret);Object.setPrototypeOf(inherited,Object.assign(Object.create(Error.prototype),{code:'AUTH_REQUIRED'}));
++  for(const error of [Object.assign(new Error(secret),{code:secret}),Object.assign(new Error(secret),{code:'AUTH_REQUIRED\n'+secret}),Object.assign(new Error(secret),{code:'TOPIC_BIRTH_UNAVAILABLE'}),{code:'AUTH_REQUIRED'},accessor,inherited])expect(websocketErrorDiagnostic(error)).not.toHaveProperty('domain_code');expect(calls).toBe(0);
++ });
++ it('rejects proxy and hostile prototype errors before getters or descriptor traps',()=>{
++  let calls=0;const proxy=new Proxy(Error.prototype,{getOwnPropertyDescriptor(){calls++;throw Error(secret);},getPrototypeOf(){calls++;throw Error(secret);}}),native=new Error(secret);Object.setPrototypeOf(native,proxy);
++  for(const error of [proxy,native,new Proxy({}, {getOwnPropertyDescriptor(){calls++;throw Error(secret);},getPrototypeOf(){calls++;throw Error(secret);}})])expect(websocketErrorDiagnostic(error)).toEqual({error_kind:'UNKNOWN',failure_code:'UNKNOWN'});expect(calls).toBe(0);
++ });
++ it('preserves existing SQL/class/location projection and default HTTP helper exactly',()=>{const error=Object.assign(withStack(`TypeError: ${secret}\n    at fn (${known}:321:45)`),{code:'40P01'});expect(websocketErrorDiagnostic(error)).toEqual(requestErrorDiagnostic(error));expect(websocketErrorDiagnostic(error)).toMatchObject({error_kind:'TypeError',failure_code:'40P01',source_module:'topic-games',source_line:321,source_column:45});});
++});
+--- acceptedprojection/apps/api/src/room-socket-poll.test.ts
++++ WS-safe-log/apps/api/src/room-socket-poll.test.ts
+@@ -8,33 +8,33 @@
+ /** Execute the registered production WS handler with slow service doubles.
+  * This proves scheduling/failure behavior, not SQL, upgrade authentication or
+  * the unobserved cause of a historical browser disconnect. */
+-async function fixture() {
++async function fixture(input:{connectError?:unknown;heartbeatError?:unknown;loggerError?:boolean;requestId?:string}={}) {
+  vi.useFakeTimers();
+  let handler:((socket:WebSocket,request:FastifyRequest)=>void)|undefined;
+  let closeHook:(()=>Promise<void>)|undefined,releasePoll:()=>void=()=>{};
+- let calls=0,failPoll=false;
++ let calls=0,failPoll=false;let pollError:unknown=Error('fixture storage unavailable');const events:Record<string,unknown>[]=[];
+  const wait=new Promise<void>(resolve=>{releasePoll=resolve;});
+  const order:string[]=[],grant={roomId:'11111111-1111-4111-8111-111111111111',memberId:'actor',generation:1,sessionHash:'fixture'};
+  const socketState=vi.fn(async()=>{
+   calls++;order.push('poll:'+calls);
+   if(calls===2)await wait;
+-  if(failPoll&&calls>1)throw Error('fixture storage unavailable');
++  if(failPoll&&calls>1)throw pollError;
+   return {room:{room_rev:calls},privateEvents:[]};
+  });
+- const service={options:{origin:'https://localhost'},now:()=>1000,connect:vi.fn(async()=>grant),socketState,
+-  liveGrant:vi.fn(async()=>{order.push('heartbeat');}),dispatchGame:vi.fn(async()=>{}),
++ const service={options:{origin:'https://localhost'},now:()=>1000,connect:vi.fn(async()=>{if('connectError'in input)throw input.connectError;return grant;}),socketState,
++  liveGrant:vi.fn(async()=>{order.push('heartbeat');if('heartbeatError'in input)throw input.heartbeatError;}),dispatchGame:vi.fn(async()=>{}),
+   dispatchPrivate:vi.fn(async()=>{}),disconnect:vi.fn(async()=>{}),maintain:vi.fn(async()=>{})};
+  const app={register:async()=>{},route:()=>{},post:()=>{},put:()=>{},get:(path:string,...args:unknown[])=>{
+   if(path.endsWith('/ws'))handler=args.at(-1) as typeof handler;
+- },addHook:(_name:string,hook:()=>Promise<void>)=>{closeHook=hook;},log:{warn:()=>{}}};
++ },addHook:(_name:string,hook:()=>Promise<void>)=>{closeHook=hook;},log:{warn:(event:Record<string,unknown>)=>{events.push(event);if(input.loggerError)throw Error('logger unavailable');}}};
+  await registerRooms(app as unknown as FastifyInstance,service as unknown as Rooms);
+  const socket=Object.assign(new EventEmitter(),{readyState:1,send:vi.fn(),close:vi.fn(()=>{
+   socket.readyState=3;socket.emit('close');
+  }),terminate:()=>{socket.readyState=3;socket.emit('close');}});
+- handler!(socket as unknown as WebSocket,{params:{roomId:grant.roomId},headers:{cookie:'venus_room_session=fixture'},cookies:{venus_room_session:'fixture'}} as unknown as FastifyRequest);
++ handler!(socket as unknown as WebSocket,{id:input.requestId??'11111111-1111-4111-8111-111111111111',params:{roomId:grant.roomId},headers:{cookie:'venus_room_session=fixture'},cookies:{venus_room_session:'fixture'}} as unknown as FastifyRequest);
+  socket.emit('message',Buffer.from(JSON.stringify({type:'auth',ticket:'fixture'})));
+  await vi.advanceTimersByTimeAsync(0);
+- return {socket,service,order,releasePoll,setFailure:()=>{failPoll=true;},async close(){releasePoll();await vi.advanceTimersByTimeAsync(0);await closeHook!();}};
++ return {socket,service,order,events,releasePoll,setFailure:(error:unknown=Error('fixture storage unavailable'))=>{failPoll=true;pollError=error;},async close(){releasePoll();await vi.advanceTimersByTimeAsync(0);await closeHook!();}};
+ }
+ 
+ afterEach(()=>{vi.useRealTimers();});
+@@ -64,4 +64,21 @@
+    expect(f.service.liveGrant).not.toHaveBeenCalled();
+   }finally{await f.close();}
+  });
++
++ it('logs one safe poll failure then still closes4401, without raw private error content',async()=>{
++  const secret='WS_PRIVATE_BODY_COOKIE_TOKEN_MESSAGE\nCANARY',f=await fixture();try{await vi.advanceTimersByTimeAsync(1000);f.setFailure(Object.assign(new TypeError(secret),{code:'40P01',cookie:secret,body:secret,frames:[secret]}));f.releasePoll();await vi.advanceTimersByTimeAsync(0);expect(f.events).toHaveLength(1);expect(f.events[0]).toMatchObject({event:'websocket_failed',phase:'poll',request_id:'11111111-1111-4111-8111-111111111111',error_kind:'TypeError',failure_code:'40P01'});expect(JSON.stringify(f.events)).not.toContain('WS_PRIVATE');expect(Object.keys(f.events[0]).every(k=>['event','phase','request_id','error_kind','failure_code','domain_code','source_module','source_line','source_column'].includes(k))).toBe(true);expect(f.socket.close).toHaveBeenCalledWith(4401,'Connection unavailable');}finally{await f.close();}
++ });
++ it('logs auth failure as safe policy enum and omits invalid request IDs',async()=>{
++  const f=await fixture({connectError:Object.assign(new Error('private cookie'),{code:'AUTH_REQUIRED'}),requestId:'private-cookie-invalid-id'});try{expect(f.events).toHaveLength(1);expect(f.events[0]).toMatchObject({event:'websocket_failed',phase:'auth_or_heartbeat',domain_code:'AUTH_REQUIRED'});expect(f.events[0]).not.toHaveProperty('request_id');expect(JSON.stringify(f.events)).not.toContain('private');expect(f.socket.close).toHaveBeenCalledWith(4401,'Connection unavailable');}finally{await f.close();}
++ });
++ it('keeps a one-socket latch when a queued heartbeat also fails after the poll',async()=>{
++  const f=await fixture({heartbeatError:Object.assign(new Error('private'),{code:'CONSENT_EXPIRED'})});try{await vi.advanceTimersByTimeAsync(1000);f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));f.setFailure(Object.assign(new Error('private'),{code:'ACTORS_UNAVAILABLE'}));f.releasePoll();await vi.advanceTimersByTimeAsync(0);expect(f.events).toHaveLength(1);expect(f.events[0]).toMatchObject({phase:'poll',domain_code:'ACTORS_UNAVAILABLE'});expect(f.service.liveGrant).toHaveBeenCalledOnce();expect(f.socket.close).toHaveBeenCalledWith(4401,'Connection unavailable');}finally{await f.close();}
++ });
++ it('heartbeat failure is categorized while logger failure cannot prevent connection closure',async()=>{
++  const f=await fixture({heartbeatError:Object.assign(new Error('private'),{code:'SOCKET_REPLACED'}),loggerError:true});try{f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));await vi.advanceTimersByTimeAsync(0);expect(f.events).toHaveLength(1);expect(f.events[0]).toMatchObject({phase:'auth_or_heartbeat',domain_code:'SOCKET_REPLACED'});expect(f.socket.close).toHaveBeenCalledWith(4401,'Connection unavailable');}finally{await f.close();}
++ });
++ it('normal auth, polls and heartbeat emit no failure events',async()=>{const f=await fixture();try{f.releasePoll();await vi.advanceTimersByTimeAsync(1000);f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));await vi.advanceTimersByTimeAsync(0);expect(f.events).toEqual([]);expect(f.socket.send).toHaveBeenCalledWith(JSON.stringify({type:'pong'}));expect(f.socket.close).not.toHaveBeenCalled();}finally{await f.close();}});
++ it('does not invoke hostile error Proxy hooks in the actual handler diagnostic path',async()=>{
++  let calls=0;const error=new Proxy({}, {getOwnPropertyDescriptor(){calls++;throw Error('private');},getPrototypeOf(){calls++;throw Error('private');}}),f=await fixture({heartbeatError:error});try{f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));await vi.advanceTimersByTimeAsync(0);expect(f.events).toHaveLength(1);expect(f.events[0]).toEqual({event:'websocket_failed',phase:'auth_or_heartbeat',request_id:'11111111-1111-4111-8111-111111111111',error_kind:'UNKNOWN',failure_code:'UNKNOWN'});expect(calls).toBe(0);expect(f.socket.close).toHaveBeenCalledWith(4401,'Connection unavailable');}finally{await f.close();}
++ });
+ });

@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_APPROVED_NOT_A_RELEASE",
+  "created_at": "2026-10-19T01:45:49.956996+00:00",
+  "upstream_repository": "https://github.com/psewdon1m-exocortex/updater",
+  "upstream_sha": "17e2dcf1e72bbc6492ea5692520932d1c95a618f",
+  "foreign_checkout_unchanged": true,
+  "patch": {
+    "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/venus-allowlists.patch",
+    "sha256": "dec8a40ec7f7f8b85cd46ee3d5c92deceb1bda5e6b83537a4e477e14ca699d64"
+  },
+  "input_files_before": {
+    "go.mod": "64e49bfc5ec1123101f2553f34b247b39c618c6e8c2fb1bcd21acee25ac927c7",
+    "go.sum": "2ddecec0b8fbb329698b85d9562fc610797468fbeaeeb560ea4e56dc5eb5a0da",
+    "internal/kernel/register.go": "0ef57c31add9a31d86fc4a44ea9eeb764e4c41149392dcf2efa0ce2a6b7fd30d",
+    "internal/kernel/register_test.go": "5bd03b52ec761618da1d3ae77de93c2476590a72eb8460e89b2e6366d6222add",
+    "internal/releaseauth/testdata/manifest.json": "ffc888941d09f1be499cc57c924ba558d085c582a72e20608d7ed95960e5af7f",
+    "internal/releaseauth/testdata/manifest.json.sig.json": "b506e186db61a1ab4d5fcaf95108e3d11daa898adc204488053730c40aeb2231",
+    "internal/releaseauth/testdata/public.pem": "3a3c093f84d8abbc22731de41ed2a4ea3273066e44dea393a708e91c6533179b",
+    "internal/releaseauth/verify.go": "6933bd74c5cc923cddd5136900d4855e1849716947fe5a161fe2cd3deba690f2",
+    "internal/releaseauth/verify_test.go": "a5e9f5eeeda3979119cc3fce01fc4791e7f90af05ab405984183d107226d51df"
+  },
+  "input_files_after": {
+    "go.mod": "6fb9f6e40d2d4a67453d9031d5844c5ed9c0f708e9fdd4c795d908956bb4d8fc",
+    "go.sum": "71dc2fab22daa0b80493116aec9aeb9b1a2a8b255429a4cac1a66c48c2aea963",
+    "internal/kernel/register.go": "dd128b221b0864a2cc0b98890b1b4f1cc55a196759273987a4818f12f4f81569",
+    "internal/kernel/register_test.go": "2b382a21a103a3f23e5a41e916a54ba7f15fa61ea9a8cee09f2a6cae237ac4e6",
+    "internal/releaseauth/testdata/manifest.json": "ffc888941d09f1be499cc57c924ba558d085c582a72e20608d7ed95960e5af7f",
+    "internal/releaseauth/testdata/manifest.json.sig.json": "4fbb27cea55aa5d746cd818e5033731d1178db4d078750411fa12258c9cfa0b1",
+    "internal/releaseauth/testdata/public.pem": "e55c1c9aa6b0a7c529df13c70aa3ba5e14eb8761bde834e9c7c18e3408886b7c",
+    "internal/releaseauth/verify.go": "e6cfd0daa3b6f50f1412eb1c87222c272bf4da811bf66f6cde67566713272a84",
+    "internal/releaseauth/verify_test.go": "de2b5d8d799710b1f5ef262ebb90650a61642f9b49a929e2399e7f78822f92c4",
+    "internal/kernel/venus_proposal_test.go": "2ccd54e99e8f96861b21edc4c2b2d6f60b15ea7718e9860cf56fba015a01ab36",
+    "internal/releaseauth/venus_proposal_test.go": "1e01d3f808e11348259d516b046f8c8b7892cea174fd68dfcab1151e3ef3aa2b"
+  },
+  "tests": {
+    "baseline_expected_failures": 2,
+    "patched_primary_tests_passed": 10,
+    "redirect_subcases_passed": 2,
+    "scope": "Only two actual packages and one additional public-vector interoperability harness; not the full Updater suite",
+    "node_to_go_signature_interop": "PASS: actual Go VerifyBytes accepts captured Node RSA manifest; byte tamper rejected",
+    "environment_attempt_1": "FAILED before cases: tmpfs noexec; retained separately, not claimed as baseline proof"
+  },
+  "isolation": {
+    "image": "golang:1.24.13-bookworm@sha256:98d673f18a1aac43da744209873cb79323e11706f909251bcfb131828b95559d",
+    "platform": "linux/amd64",
+    "user": "1000:1000",
+    "network": "none",
+    "source_mount": "owned subset read-only",
+    "rootfs": "read-only",
+    "tmpfs": "/tmp:1GiB,mode1777,exec required for Go test binaries",
+    "cap_drop": "ALL",
+    "no_new_privileges": true,
+    "goproxy": "off",
+    "gosumdb": "off",
+    "toolchain": "local",
+    "memory": "2GiB",
+    "cpus": 2,
+    "owned_container_removed": true
+  },
+  "files": {
+    "baseline-negative.txt": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/baseline-negative.txt",
+      "bytes": 523,
+      "sha256": "c6b6ab169e446d0beaaa15e04347b3dcc2269938659d4975b97d08fae30ad3ad"
+    },
+    "patched-tests.txt": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/patched-tests.txt",
+      "bytes": 1689,
+      "sha256": "9f906a2ead0e062639c99d68e9ef8bb0c4ff06d570b47efe3126d7bbf6d7438f"
+    },
+    "environment-attempt-1.txt": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/environment-attempt-1.txt",
+      "bytes": 230,
+      "sha256": "0963895d1ce3ddb166ede7f749c99ad9c9b39bba654a529fffbe9b57d8c4bc33"
+    },
+    "go-version.txt": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/go-version.txt",
+      "bytes": 33,
+      "sha256": "07b0d66d21bcdfdc8456adcb17203f3af8656dc11549da62e6940f99b8d45444"
+    },
+    "proposal-origin.json": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/proposal-origin.json",
+      "bytes": 1167,
+      "sha256": "806dc593fbbb968136fdef0f65d92aa80062ff5f604cb6fae5ac6dbc96bbe17e"
+    },
+    "p06-interop-harness.go": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/p06-interop-harness.go",
+      "bytes": 834,
+      "sha256": "1001ab96f22bdac82ef81c710bd6c551ff0bf63afb3b129edb67e7d1abceebb0"
+    },
+    "public-vector/venus-release.json": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/public-vector/venus-release.json",
+      "bytes": 2384,
+      "sha256": "c7d303bae689d268efefb3a1a7776207baddd8844eb302fb4c5ce67ddfc0c822"
+    },
+    "public-vector/venus-release.json.sig.json": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/public-vector/venus-release.json.sig.json",
+      "bytes": 675,
+      "sha256": "3ace34a2893f7ce81ea8f94e982baaed299821dc68a0e290a54b47591a2d6a2c"
+    },
+    "public-vector/test-only-public.pem": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/public-vector/test-only-public.pem",
+      "bytes": 625,
+      "sha256": "7b92cd075e8ac1236518249d668d68edf331b34f5eb3e2986ff257e187a1325d"
+    },
+    "public-vector/context.json": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/public-vector/context.json",
+      "bytes": 2157,
+      "sha256": "f072399773822b0ba0f93e825bf963c829919bf05796a09df4d94665c8e131f3"
+    },
+    "public-vector/compose-fixture.tar.gz": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/public-vector/compose-fixture.tar.gz",
+      "bytes": 117,
+      "sha256": "a94437b8933370b422f445c9f26533e791a7d60db7a579b20dfa9ec03872eb3f"
+    },
+    "public-vector/receipt.json": {
+      "path": ".docs/implementation/evidence/future-preparation/updater-venus-proposal/public-vector/receipt.json",
+      "bytes": 2164,
+      "sha256": "e661d3a4120d7f7fb535eaa5f978f49ab96b943751ef9652cee117932926ae64"
+    }
+  },
+  "full_upstream_suite_run": false,
+  "release_built": false,
+  "release_published": false,
+  "runtime_installed": false,
+  "maintainer_approval": null,
+  "approved_dependency_matrix": null,
+  "limitations": [
+    "This opens two admission primitives only; typed Venus manifest/restore guards, full regression, owner declaration and a new signed compatible Updater release are still required.",
+    "Canonical Venus Node profile is a subset of Go raw-byte signature acceptance; no claim that every Go JSON serialization is accepted by Venus.",
+    "Public fixture key is test-only and never a host trust anchor. No private key was written.",
+    "Original Updater and central/general repositories were not modified."
+  ]
+}

@@ -1,0 +1,31 @@
+/** Exact-source filesystem I/O fault injection; no selector/Docker/process kill. */
+import assert from 'node:assert/strict';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as zlib from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {tmpdir} from 'node:os';
+import vm from 'node:vm';
+import {confirmStop,waitBounded} from './owned-worker.mjs';
+import {failureLedger} from './failure-ledger.mjs';
+import {safeError} from './safe-metadata.mjs';
+const directory=fs.mkdtempSync(path.join(tmpdir(),'venus-stats03-fault-')),owner='e'.repeat(32),source=fs.readFileSync(new URL('./durable-sink.mjs',import.meta.url),'utf8'),code=source.replace(/^import .*;\r?\n/gm,'').replace(/^export /gm,''),results=[];
+const check=async(name,fn)=>{await fn();results.push({name,status:'PASS'});};
+try{
+ for(const name of ['write-before','write-partial','write-after','fsync-data','fsync-after','fsync-seal','rename-seal','rename-after','write-manifest','rename-manifest','manifest-after','write-final-index'])await check('sticky first I/O fault '+name,async()=>{
+  let writes=0,syncs=0;const error=Object.assign(Error('INJECTED_'+name),{code:'EIO'}),scope={...fs,...path,...zlib,assert,createHash,Buffer,safeError};
+  scope.writeSync=(fd,b,o,n)=>{writes++;if(name==='write-before'&&writes===1)throw error;if(name==='write-partial'){if(writes===1)return fs.writeSync(fd,b,o,Math.max(1,Math.floor(n/2)));if(writes===2)throw error;}const value=fs.writeSync(fd,b,o,n);if(name==='write-after'&&writes===1)throw error;return value;};
+  scope.fsyncSync=fd=>{syncs++;if(name==='fsync-data'&&syncs===1||name==='fsync-seal'&&syncs===2)throw error;fs.fsyncSync(fd);if(name==='fsync-after'&&syncs===1)throw error;};
+  scope.renameSync=(a,b)=>{if(name==='rename-seal'&&b.endsWith('.gz')||name==='rename-manifest'&&b.endsWith('manifest-current.json'))throw error;fs.renameSync(a,b);if(name==='rename-after'&&b.endsWith('.gz')||name==='manifest-after'&&b.endsWith('manifest-current.json'))throw error;};
+  scope.openSync=(p,...args)=>{if(name==='write-manifest'&&p.endsWith('manifest-current.json.next')||name==='write-final-index'&&p.endsWith('FINAL_INDEX.json'))throw error;return fs.openSync(p,...args);};
+  const factory=vm.runInNewContext(code+'\ndurableSink;',vm.createContext(scope)),sink=factory(path.join(directory,name),{owner,guard:()=>{}});let actual;
+  try{sink.append('features',{first:true});if(name==='write-final-index')await sink.finish({status:'CONTROL_ONLY'});else sink.seal();}catch(e){actual=e;}
+  assert.equal(actual,error,'first cause retained');assert.equal(sink.fault,error);const before=sink.manifest();assert.throws(()=>sink.append('features',{second:true}),e=>e.message==='DURABLE_SINK_POISONED'&&e.cause===error);await assert.rejects(()=>sink.finish({status:'SHOULD_NEVER_CLOSE'}),e=>e.message==='DURABLE_SINK_POISONED'&&e.cause===error);await assert.rejects(async()=>{for await(const ignored of sink.replay('features'))assert.fail(String(ignored));},e=>e.message==='DURABLE_SINK_POISONED'&&e.cause===error);assert.equal(sink.manifest().last_sequence,before.last_sequence);const receipt=sink.abort();assert.equal(receipt.status,'NOT_ACCEPTED_PREFIX_RETAINED');assert.equal(receipt.poisoned,true);assert.equal(receipt.first_error.code,'EIO');
+ });
+ await check('confirmed job terminal requires matching owner, zero active and successful manager',()=>{const terminal={owner,status:'STOP_CONFIRMED',active_processes:0},result={code:0,error:null,terminal};assert.equal(confirmStop(result,owner),terminal);for(const change of [{code:1},{error:Error('protocol')},{terminal:null},{terminal:{...terminal,owner:'f'.repeat(32)}},{terminal:{...terminal,active_processes:1}},{terminal:{...terminal,status:'STOP_FAILED',worker_unconfirmed:true}}])assert.throws(()=>confirmStop({...result,...change},owner));});
+ await check('descendant survival/delayed close cannot be treated as confirmed',()=>{for(const terminal of [{owner,status:'STOP_CONFIRMED',active_processes:2},{owner,status:'EXIT_CONFIRMED',active_processes:null},{owner,status:'STOP_CONFIRMED',active_processes:0,worker_unconfirmed:true}])assert.throws(()=>confirmStop({code:0,error:null,terminal},owner));});
+ await check('stop timeout rejects an unresolved close rather than reporting success',async()=>{await assert.rejects(()=>waitBounded(new Promise(()=>{}),5,'OWNED_STOP_TIMEOUT'),/OWNED_STOP_TIMEOUT/);const terminal={owner,status:'STOP_CONFIRMED',active_processes:0};assert.throws(()=>confirmStop({code:null,error:null,terminal},owner));assert.equal(await waitBounded(Promise.resolve('CLOSE_CONFIRMED'),20,'timeout'),'CLOSE_CONFIRMED');});
+ await check('no taskkill dependency or swallowed taskkill rejection remains',()=>{const text=fs.readFileSync(new URL('./supervisor32.mjs',import.meta.url),'utf8');assert(!text.includes("bounded('taskkill'"));assert(text.includes('launchOwnedWorker'));assert(text.includes("status:'STOP_FAILED',worker_unconfirmed:true"));assert(text.includes('ledger.emit(status,workerStop)'));assert(text.includes("fault(writeError,'failure-receipt-write')"));});
+ await check('disk receipt fault cannot replace first failure or suppress independent terminal',()=>{const sent=[],ledger=failureLedger(owner,{send:x=>sent.push(x)}),first=Error('PRIVATE_FIRST_CANARY'),disk=Object.assign(Error('PRIVATE_DISK_CANARY'),{code:'ENOSPC'});ledger.record(first,'execution');try{throw disk;}catch(e){ledger.record(e,'failure-receipt-write');}ledger.record(Error('PRIVATE_STOP_CANARY'),'worker-stop');ledger.emit('STOP_FAILED',{status:'STOP_FAILED',worker_unconfirmed:true});assert.equal(ledger.firstError,first);const row=JSON.parse(sent[0]);assert.equal(row.first_failure.stage,'execution');assert.equal(row.secondary_failures.length,2);assert.equal(row.secondary_failures[0].code,'ENOSPC');assert.equal(row.worker_stop.worker_unconfirmed,true);assert(!sent[0].includes('PRIVATE_'));});
+}finally{assert(path.resolve(directory).startsWith(path.resolve(tmpdir())+path.sep));fs.rmSync(directory,{recursive:true,force:true});}
+console.log(JSON.stringify({status:'PASS_AUTHOR_FAILURE_CONTROLS_ONLY',count:results.length,results,Docker_calls:0,actual_process_kills:0,statistics_RUN:false},null,2));

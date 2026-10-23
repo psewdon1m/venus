@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+const root='C:/.projects/venus',out=fileURLToPath(new URL('.',import.meta.url)),hash=b=>createHash('sha256').update(b).digest('hex'),pins=JSON.parse(readFileSync(join(out,'INPUT_PINS.json'))),checks=JSON.parse(readFileSync(join(out,'CHECKS.json')));
+for(const [path,want]of Object.entries(pins)){const b=readFileSync(join(root,path));assert.equal(b.length,want.bytes,path);assert.equal(hash(b),want.sha256,path);}
+const current=JSON.parse(readFileSync(join(out,'current-source.stdout.txt')));assert.equal(current.source_identity,checks.source_identity);assert.equal(current.included_files,1871);assert(readFileSync(join(out,'pendingACK.stderr.txt'),'utf8').includes('ROOT_RUN_ACK_REQUIRED'));
+const files={};for(const name of readdirSync(out).sort()){if(name==='INDEX.json')continue;const b=readFileSync(join(out,name));files[name]={bytes:b.length,sha256:hash(b)};}
+const index={status:'PASS_METHOD_ONLY',source_identity:checks.source_identity,source_count:1871,image:checks.image,producer_runtime_digest:checks.producer_runtime_digest,operational_resource_profile:'LAYOUT21_BROWSER_PID512',browser_pids_limit:512,producer_INDEX_sha256:'f50552828c48ed1dd304bbad810edd28624170893fe94cdebd2a92b63d34a398',author_INDEX_sha256:'db49e34a4fdc20c478a8c15be278be534932e23a4740053f9a06e970e4a02a1b',diagnosis_INDEX_sha256:'5bc7254cc9bd87bc27f6b6cb57b7170de4bbdcc73aef6aa014289bd2d1d7c71d',root_run_ack:false,actual_acceptance:false,native_operations:0,old_PID256_actual:'FAIL_RETAINED_31PASS_1FAIL_19NOTRUN',old_EAGAIN_cgroup_cause_and_remedy:'UNKNOWN',owned_writes:'COMPLETE_STOP',files};const bytes=JSON.stringify(index,null,2)+'\n';writeFileSync(join(out,'INDEX.json'),bytes);console.log(JSON.stringify({status:index.status,sha256:hash(bytes),children:Object.keys(files).length,final_inputs_rehashed:Object.keys(pins).length,operational_resource_profile:index.operational_resource_profile,browser_pids_limit:512,owned_writes:'COMPLETE_STOP'}));

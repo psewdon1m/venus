@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "revision": "P05-LEDGER-INSPECTION-MEMO-01",
+  "kind": "APPLICATION_PURE_VALIDATION_WORK_REUSE_NOT_AUTHORIZATION_CACHE",
+  "parent_source_identity": "658b710bdca35b678421a51c1c276028305f28362901b2c065a3867aa754f4de",
+  "selected_scope_proposal_index_sha256": "5b8ffbc2c671e46a52086f6aefc94b4a51dde20a5d0ee0933bdfb4092406e956",
+  "independent_profile_review_index_sha256": "f46ce137c38fdcea0429787c07bd90dd0e1ad630d4cbf84f7c717095620f5870",
+  "behavior": [
+    "Memoize only fully validated private Inspection after original fresh bounded filesystem reads, with exact content digests/ledger identity/pins/maxRecords and fresh existing Keyring fingerprints for all used record/witness versions plus current version/label.",
+    "Used versions collected only after successful full codec.inspect; unchanged unused noncurrent key material does not affect verification of these exact bytes. Missing/replaced used/current key invalidates or fails closed; security.ts and stored crypto formats unchanged.",
+    "Required incarnation/minSequence, process digest floors, stale-witness tail repair and actual publication barriers execute on every call outside memo. All reload/locked failures drop the validation slot and propagate.",
+    "One global32-entry/16MiB encoded full-entry accounting+64byte overhead store, absolute30s performance.now expiry, one unref timer; clock regression/nonfinite time clears and validates uncached. Deep frozen private Inspection, no raw buffer or key storage; oversize validates uncached.",
+    "Existing TopicGames boot/service-close clearSnapshotCache and purge clear validation memo only. Trusted process high-water floors and lifecycle contexts are never evicted/reset by this memo."
+  ],
+  "source_files": {
+    "apps/api/src/private-topic-ledger.ts": "77e5ba9143f232ef0b15b591fa7c1f23717928f9ef6fff3f00b6a3b746d5786f",
+    "apps/api/src/private-topic-ledger.test.ts": "af77cacf4dc87bca5095fe06093a9dd6d6ac2937de6c0c38a214852794f71f13",
+    "apps/api/src/topic-games.ts": "45d2484238b9096de91df3d7ccfb5e97754e46ceabcfee3d35b4bc2c46295b8e"
+  },
+  "parent_file_hashes": {
+    "apps/api/src/private-topic-ledger.ts": "de1bac5a3cc1e932242500571a2439e92a9e30ffc05010f1ecf758b523a51340",
+    "apps/api/src/private-topic-ledger.test.ts": "2bbd39dc86bc713ebd3dd332683da630e0b03020e7cf5e89bb16642e8dfbbaee",
+    "apps/api/src/topic-games.ts": "5131787e0a69d1edb0bc80b21d77054c31f3e108fcee3b60328691d2573e9a69"
+  },
+  "unchanged": [
+    "security.ts/canonical/Keyring API, lifecycle/storage format/locks/durable barriers",
+    "room pool/query limits, timers/rates/consent/ACL/5s leases/application deadlines",
+    "engine/planner/catalog/map/frontend/SQL, no new cache or test framework"
+  ],
+  "validation": "Author focused133PASS/47LinuxSKIP across8existing suites; originaluncachedRED1FAIL retained, intermediate2genericDomainError fixtureFAIL corrected to typedcode. API typecheck/lint passed, finalexactrepeat recorded authorpacket. New17portable+3Linuxcases; Linux real-storage suites and native performance require independent review/rootcoordinated run.",
+  "limits": "Encoded retained-entry budget is not an OS/JS heap hard limit or secure memory erasure promise; timer cleanup assumes running event loop.",
+  "acceptance": "Author only; independent code review, native Linux faults, coherent finalsource/image binding and unchanged600s ordinary measurement still required. No measured speedup/oldcause/stagePASS asserted.",
+  "rollback": "Restore coherent A15 API/source image; no data/schema/key/crypto migration or high-water rollback. Filesystem authority and stricter exclusions remain current."
+}

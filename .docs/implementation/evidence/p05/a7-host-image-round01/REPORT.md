@@ -1,0 +1,7 @@
+# Coordinated A7 host regression and image bindings
+
+All code writers stopped. Exact implementation b2100207d12e90615fb0a62f4b5e410d9a4c8c20fc2db2bc1eae4bc409dca5b6 /1846:before/after globalhost identical and equal coordinated materialized source04.67files944PASS/208WindowsplatformSKIP, API/webtypecheck+lint exit0. Expected BATCH-001 negative-schema stdout is part of passing controls, not a failure. Previous failed attempts remain separate.
+
+A7 combines independently accepted private YesBut lifecycle correction3463a581(111+6PASS) and exactarchiveorigin1325f878e4(7PASS). No other source deltas beyond declared8paths fromA6. Testimage9f5a417c/284 measured pins; exactlyone compiledAPI topic-games delta fromA6, allUI/7SQL/PG/engine/planner/provider/card data unchanged. Ordinaryproductionimage3d051bb9/119measured pins plus explicit dirty-source buildmetadata:compiled/runtime counterparts exact. Both builds/probes0, read-only/no-network/0appimports/autoremoved. This is not actualstartup, privatebrowser, Games20, rollback, layout, Linux/clean-source/fullquality or stagePASS.
+
+Actual C2baseline on historicalA4 is independently acceptedc0f37622; currentAPI/private-lifecycle and changedmodel require exact subsequent source qualification, not blanket inheritance. Normalreal47042stillrunningA4 public branch scope. Root will run accepted newGames20/browser and operational checks onA7 after independent rebind. P06 not started.

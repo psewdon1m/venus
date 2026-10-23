@@ -1,0 +1,103 @@
+/** Passive test observer/model. It NEVER observes the application's actual cache.accept or authorizes a mutation.
+ * Import is inert. attach before navigation; sourceRoot is /app in the approved worker.
+ * Full raw private DTOs are transient bounded inputs to exact source validators/model, never returned as evidence. */
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {setTimeout as delay} from 'node:timers/promises';
+import {setTimeout,clearTimeout} from 'node:timers';
+import vm from 'node:vm';
+import ts from 'typescript';
+/* global document */
+const sourcePins={'apps/web/src/topic-state.ts':'04c18ef53573590c7ffee1c5ff4fdc891d1a6e8f14c0f98cc080f14721cb1678','apps/web/src/presentation-clock.ts':'f9a1120a1fbff31454eafdfac269ea8163d9e7ef99d916f6ceeecb2f4cceccb0','apps/web/src/game-controls.ts':'21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c','apps/web/src/game-state.ts':'5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46'};
+const hash=b=>createHash('sha256').update(b).digest('hex');
+const optionalCodes=new Set(['ROUND_ACTOR_REQUIRED','ROUND_STALE','ROUND_NOT_ACTIVE','CONVERSATION_UNAVAILABLE','PRIVATE_CONVERSATION_REQUIRED','CONSENT_NOT_ACTIVE','CONSENT_EXPIRED','CONVERSATION_STALE','TOPIC_DELIVERY_EXPIRED','TOPIC_DELIVERY_STALE']);
+const actionKeys={session_actions:['pause','stop','abort','resume','advance','neutral_reset','neutral_reset_aborts_game'],round_actions:['finish','skip','choose_truth','choose_dare','propose_condition','accept_invitation','accept_action','decline_invitation','withdraw_action'],conversation_actions:['offer_topic','other_question','respond_topic','offer_advice','chat']};
+const permissions={'pair-accept':['round_actions','accept_invitation'],'action-accept':['round_actions','accept_action'],'game-truth':['round_actions','choose_truth'],'game-dare':['round_actions','choose_dare'],'game-condition-input':['round_actions','propose_condition'],'game-condition-submit':['round_actions','propose_condition'],'game-finish':['round_actions','finish'],'topic-accept':['conversation_actions','respond_topic'],'topic-new':['conversation_actions','offer_topic'],'advice-input':['conversation_actions','offer_advice'],'advice-offer':['conversation_actions','offer_advice'],'advice-accept':['conversation_actions','offer_advice'],'advice-edit':['conversation_actions','offer_advice'],'pair-chat-input':['conversation_actions','chat'],'pair-chat-send':['conversation_actions','chat']};
+export const isProtectedControl=control=>typeof control==='string'&&(Object.hasOwn(permissions,control)||control.startsWith('offer-topic-'));
+const readonlyProjections=new Set(['private-prompt','advice-text','pair-chat-messages']);
+export const isReadonlyProjection=control=>readonlyProjections.has(control);
+function loadProduction(root){
+ const proof={source_inputs:{},compiled:{},observer_model_only:true,cache_accept_observed:false,auth_generation_observed:false};
+ function load(path,imports){const raw=readFileSync(resolve(root,path));assert.equal(hash(raw),sourcePins[path],'OBSERVER_SOURCE_PIN_MISMATCH');proof.source_inputs[path]=hash(raw);const t=ts.transpileModule(raw.toString('utf8'),{fileName:path,compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS},reportDiagnostics:true});assert(!(t.diagnostics??[]).some(d=>d.category===ts.DiagnosticCategory.Error));proof.compiled[path]=hash(t.outputText);const m={exports:{}};vm.runInNewContext(t.outputText,{module:m,exports:m.exports,require:name=>{assert(Object.hasOwn(imports,name));return imports[name];},Date,performance},{timeout:1000,filename:path});return m.exports;}
+ const clock=load('apps/web/src/presentation-clock.ts',{}),state=load('apps/web/src/topic-state.ts',{'./presentation-clock.js':clock}),controls=load('apps/web/src/game-controls.ts',{}),game=load('apps/web/src/game-state.ts',{});return {state,controls,game,proof};
+}
+function route(url){const p=new URL(url).pathname,m=p.match(/^\/api\/v2\/rooms\/([^/]+)\/game\/(current|self-actions)$/);if(m)return {room:m[1],kind:m[2]==='current'?'current':'own'};const r=p.match(/^\/api\/v2\/rooms\/([^/]+)\/game\/([^/]+)\/round\/([^/]+)\/(target|conversation|conversation\/chat)$/);return r?{room:r[1],session:r[2],round:r[3],kind:r[4]==='conversation/chat'?'chat':r[4]}:null;}
+const same=(a,b)=>Boolean(a&&b&&['room','member','session','round','rev'].every(k=>a[k]===b[k]));
+const gameScope=(actor,v)=>v?.state==='active'&&v.current_round&&['pending','active'].includes(v.current_round.state)?{room:actor.room,member:actor.id,session:v.session_id,round:v.current_round.round_id,rev:v.game_rev}:null;
+export function createPrivateBatchObserver({sourceRoot=process.cwd(),now=()=>performance.now(),onProjection=()=>{},maxPending=16}={}){
+ assert(Number.isInteger(maxPending)&&maxPending>0&&maxPending<=16);const {state:production,controls,game,proof}=loadProduction(sourceRoot),actors=new WeakMap();
+ function invalidate(s){s.generation++;s.batch=null;s.model.clear();s.invalidations++;}
+ function currentScope(s){return s.current?gameScope(s.actor,s.current.body):null;}
+ function ownProjection(body,part){const projected={schema_version:body.schema_version,room_id:body.room_id,member_id:body.member_id,session_id:body.session_id,round_id:body.round_id,game_rev:body.game_rev,server_time:body.server_time,expires_at:body.expires_at,started_monotonic_ms:part.started,received_monotonic_ms:part.received};for(const [group,keys]of Object.entries(actionKeys))projected[group]=Object.fromEntries(keys.map(key=>[key,body[group][key]]));return projected;}
+ function finish(s,b){
+  if(s.closed||s.batch!==b||b.generation!==s.generation||!b.own||!b.target||!b.conversation)return;
+  const c=b.conversation.body;if(c?.state==='active'&&!b.chat)return;
+  const observedCurrent=b.currentRequest?.part;if(!observedCurrent){b.reason='CURRENT_UNAVAILABLE';return;}if(b.currentRequest.generation!==b.generation){b.reason='CURRENT_STALE';return;}
+  const scope=gameScope(s.actor,observedCurrent.body);if(!scope||!same(scope,currentScope(s))){b.reason='SCOPE_MISMATCH';return;}b.scope=scope;
+  const own=b.own.body;if(!controls.validSelfActions(own,2)||b.own.route.room!==scope.room||own.room_id!==scope.room||own.member_id!==scope.member||own.session_id!==scope.session||own.round_id!==scope.round||own.game_rev!==scope.rev){b.reason='OWN_INVALID';return;}
+  const validatorScope={...scope,identity:0,transport:0}; // Placeholder fields unused by DTO validators; never application auth evidence.
+  const target=b.target.body;if(!target||!production.validTopicTarget(target,validatorScope)){b.reason='TARGET_INVALID';return;}
+  if(c!==null&&!production.validTopicConversation(c,validatorScope)){b.reason='CONVERSATION_INVALID';return;}
+  if(b.chat?.body!==null&&b.chat?.body!==undefined&&(!c||!production.validTopicChat(b.chat.body,c))){b.reason='CHAT_INVALID';return;}
+  for(const part of [b.target,b.conversation,b.chat].filter(Boolean))if(part.route.room!==scope.room||part.route.session!==scope.session||part.route.round!==scope.round){b.reason='ROUTE_SCOPE_MISMATCH';return;}
+  const received=now(),read=s.model.bind(validatorScope),accepted=s.model.accept(read,validatorScope,target,c,b.chat?.body??null,own.server_time,b.own.started,received,own.expires_at);
+  b.complete=true;b.modelAccepted=accepted;b.reason=accepted?'READY':'MODEL_REJECTED';b.completedAt=received;b.received=received;s.accepted=accepted?b:null;
+ }
+ function attach(actor){
+  assert(actor?.page);assert(!actors.has(actor),'OBSERVER_ALREADY_ATTACHED');const s={actor,generation:0,sequence:0,current:null,currentRequest:null,batch:null,accepted:null,model:new production.TopicCache(),starts:new WeakMap(),pending:new Set(),sockets:new Set(),invalidations:0,closed:false,overflow:false,dropped:0,bodyErrors:0};actors.set(actor,s);
+  const request=request=>{if(s.closed||request.method()!=='GET')return;const r=route(request.url());if(!r)return;const record={route:r,started:now(),generation:s.generation,batch:r.kind==='current'?null:s.batch,part:null};if(r.kind==='current')s.currentRequest=record;if(r.kind==='own'){const b={id:++s.sequence,generation:s.generation,currentRequest:s.currentRequest,scope:null,own:null,target:null,conversation:null,chat:null,complete:false,ownResponseArrived:false,reason:'BATCH_INCOMPLETE'};s.batch=b;record.batch=b;}s.starts.set(request,record);};
+  const response=response=>{
+   const request=response.request(),record=s.starts.get(request);if(!record||s.closed)return;if(s.pending.size>=maxPending){s.overflow=true;s.dropped++;return;}
+   if(record.route.kind==='own'&&record.batch){record.batch.ownResponseArrived=true;if(record.batch===s.batch)s.accepted=null;}
+   const work=(async()=>{
+    const raw=await response.body();if(raw.length>1024*1024){s.overflow=true;s.dropped++;return;}const body=JSON.parse(raw.toString('utf8'));if(s.closed||record.generation!==s.generation){s.dropped++;return;}
+    const part={body,status:response.status(),started:record.started,received:now(),route:record.route},kind=record.route.kind;
+    if(kind==='current'){
+     if(response.status()!==200||record.route.room!==actor.room||!game.validGame(body))return;record.part=part;if(s.current&&s.current.started>part.started){if(s.batch)finish(s,s.batch);return;}
+     s.current=part;onProjection(actor,{kind:'current',value:{session_id:body.session_id,game_rev:body.game_rev,state:body.state,round_id:body.current_round?.round_id??null,round_index:body.current_round?.round_index??null,round_state:body.current_round?.state??null,started_monotonic_ms:part.started,received_monotonic_ms:part.received}});if(s.batch)finish(s,s.batch);return;
+    }
+    const b=record.batch;if(!b||s.batch!==b){s.dropped++;return;}
+    if(response.status()!==200){if(['target','conversation','chat'].includes(kind)&&response.status()>=400&&response.status()<500&&optionalCodes.has(body?.code)){part.body=null;part.optional_code=body.code;}else{b.reason='HTTP_REJECTED';return;}}
+    if(kind==='own'&&record.route.room===actor.room&&controls.validSelfActions(body,2)&&body.room_id===actor.room&&body.member_id===actor.id)onProjection(actor,{kind:'own',value:ownProjection(body,part)});
+    b[kind]=part;finish(s,b);
+   })();s.pending.add(work);work.catch(()=>{if(!s.closed)s.bodyErrors++;}).finally(()=>s.pending.delete(work));
+  };
+  const websocket=socket=>{s.sockets.add(socket);const close=()=>{s.sockets.delete(socket);if(!s.closed)invalidate(s);};socket.on('close',close);socket.on('framereceived',event=>{try{const f=JSON.parse(String(event.payload));if(f.schema===1&&f.room_id===actor.room&&(f.type==='game.private_cleared'&&f.stream==='private'&&f.audience==='member'&&f.target_member_id===actor.id||f.type==='game.snapshot'&&f.stream==='game'&&f.audience==='room'&&f.payload&&(!s.current||f.payload.session_id!==s.current.body.session_id||f.payload.game_rev!==s.current.body.game_rev))){invalidate(s);}}catch{/* Non-JSON transport frame is not evidence. */}});};
+  const close=()=>{s.closed=true;invalidate(s);};s.handlers={request,response,websocket,close};for(const[name,fn]of Object.entries(s.handlers))actor.page.on(name,fn);return proof;
+ }
+ function snapshot(actor,{minRemainingMs=250,expectedScope=null,control=null}={}){
+  const s=actors.get(actor);assert(s,'OBSERVER_NOT_ATTACHED');const scope=currentScope(s),b=s.accepted&&(!s.batch||s.batch===s.accepted||!s.batch.ownResponseArrived&&s.batch.reason!=='HTTP_REJECTED')&&same(scope,s.accepted.scope)&&s.model.visible(now())?s.accepted:s.batch,remaining=Math.max(0,s.model.until-now());let reason=s.closed?'CLOSED':s.overflow?'OVERFLOW':!s.sockets.size?'NO_LIVE_WS':!s.current?'NO_CURRENT':!b?'NO_CYCLE':!b.complete?b.reason:'READY';
+  if(reason==='READY'&&(!same(scope,b.scope)||s.accepted!==b))reason=b.reason??'MODEL_REJECTED';
+  if(reason==='READY'&&expectedScope&&!['room','member','session','round','rev'].every(k=>expectedScope[k]===undefined||expectedScope[k]===scope[k]))reason='EXPECTED_SCOPE_MISMATCH';
+  if(reason==='READY'&&(!s.model.visible(now())||!Number.isFinite(remaining)||remaining<minRemainingMs))reason='LEASE_TOO_SHORT';
+  if(reason==='READY'&&control){
+   if(isReadonlyProjection(control)){if(control==='private-prompt'&&!s.model.conversation?.prompt||control==='advice-text'&&!s.model.conversation?.advice.some(a=>typeof a.text==='string')||control==='pair-chat-messages'&&(!s.model.chat||s.model.chat.state!=='active'))reason='PROJECTION_UNAVAILABLE';}
+   else{const permission=permissions[control]??(control.startsWith('offer-topic-')?['conversation_actions','offer_topic']:null);if(!permission||b.own.body[permission[0]]?.[permission[1]]!==true)reason='CONTROL_FORBIDDEN';}
+  }
+  return {ready:reason==='READY',reason,cycle_id:b?.id??null,accepted_cycle_id:s.accepted?.id??null,scope_sha256:scope?hash(Buffer.from(JSON.stringify(scope))):null,lease_remaining_ms:remaining,minimum_remaining_ms:minRemainingMs,pending_observers:s.pending.size,observer_overflow:s.overflow,dropped:s.dropped,body_errors:s.bodyErrors,invalidations:s.invalidations,complete:Boolean(b?.complete),parts:{own:Boolean(b?.own),target:Boolean(b?.target),conversation:Boolean(b?.conversation),chat:Boolean(b?.chat),chat_required:b?.conversation?.body?.state==='active'},http:{own:b?.own?.status??null,target:b?.target?.status??null,conversation:b?.conversation?.status??null,chat:b?.chat?.status??null},observer_model_only:true,cache_accept_observed:false,auth_generation_observed:false};
+ }
+ async function requireReady(actor,{control,deadline,expectedScope=null,intendedValue=null,minRemainingMs=250,focus=true}={}){
+  assert(isProtectedControl(control)||isReadonlyProjection(control),'OBSERVER_CONTROL_NOT_SUPPORTED');assert(Number.isFinite(deadline),'OBSERVER_ABSOLUTE_DEADLINE_REQUIRED');assert(typeof focus==='boolean','OBSERVER_FOCUS_OPTION_INVALID');assert(minRemainingMs>=250&&minRemainingMs<=1000);const s=actors.get(actor);assert(s&&!s.closed,'OBSERVER_NOT_ATTACHED_OR_CLOSED');
+  function deadlineError(){const error=Error('OBSERVER_READY_DEADLINE');error.readiness=snapshot(actor,{minRemainingMs,expectedScope,control});return error;}
+  async function within(operation){const remaining=deadline-now();if(remaining<=0)throw deadlineError();let timer;try{return await Promise.race([Promise.resolve().then(operation),new Promise((_,reject)=>{timer=setTimeout(()=>reject(deadlineError()),remaining);})]);}finally{clearTimeout(timer);}}
+  const initial=await within(()=>actor.page.evaluate(()=>({visible:document.visibilityState==='visible',focused:document.hasFocus()})));if(!initial.visible)invalidate(s);if(focus&&!initial.focused)await within(()=>actor.page.bringToFront());
+  let last;
+  while(now()<deadline){
+   last=snapshot(actor,{minRemainingMs,expectedScope,control});if(last.reason==='OVERFLOW'||last.reason==='CLOSED')throw Error('OBSERVER_'+last.reason);
+   if(last.ready){const target=actor.page.getByTestId(control),dom=await within(()=>target.isVisible())&&await within(()=>target.isEnabled()),room=new URLSearchParams(new URL(actor.page.url()).hash.slice(1)).get('room');
+    const documentVisible=await within(()=>actor.page.evaluate(()=>document.visibilityState==='visible'));if(!documentVisible){invalidate(s);last={...last,ready:false,reason:'DOCUMENT_HIDDEN'};}
+    if(dom&&room===actor.room&&documentVisible){
+     if(intendedValue){assert(typeof intendedValue.control==='string'&&['string','boolean'].includes(typeof intendedValue.value),'OBSERVER_INTENDED_VALUE_INVALID');const field=actor.page.getByTestId(intendedValue.control),value=typeof intendedValue.value==='boolean'?await within(()=>field.isChecked()):await within(()=>field.inputValue());if(value!==intendedValue.value)throw Error('OBSERVER_INTENDED_VALUE_CHANGED');}
+     const final=snapshot(actor,{minRemainingMs,expectedScope,control});if(final.ready&&final.cycle_id===last.cycle_id&&now()<deadline)return {...final,dom_ready:true,intended_value_rechecked:Boolean(intendedValue)};
+    }else last={...last,ready:false,reason:'DOM_NOT_READY'};
+   }
+   await delay(Math.max(1,Math.min(20,deadline-now())));
+  }
+  const error=Error('OBSERVER_READY_DEADLINE');error.readiness=last??snapshot(actor,{minRemainingMs,expectedScope,control});throw error;
+ }
+ async function close(actor){const s=actors.get(actor);if(!s)return;s.closed=true;invalidate(s);for(const[name,fn]of Object.entries(s.handlers))actor.page.off(name,fn);await Promise.allSettled([...s.pending]);s.current=null;s.currentRequest=null;s.accepted=null;s.batch=null;}
+ return {proof,attach,snapshot,requireReady,close};
+}

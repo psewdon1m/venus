@@ -1,0 +1,265 @@
+{
+  "schema_version": 1,
+  "suite": "P05_TOPIC_CHAT_POLICY",
+  "status": "PASS",
+  "checks": [
+    {
+      "id": "P05-TCP-01",
+      "status": "PASS",
+      "detail": {
+        "actual_online_bilateral_chat": true,
+        "snapshot_capability": true,
+        "own_permission": true,
+        "actor_projections": true
+      }
+    },
+    {
+      "id": "P05-TCP-02",
+      "status": "PASS",
+      "detail": {
+        "context": "in_person",
+        "flag": true,
+        "private_verbal_prompt_allowed": true,
+        "chat_get_post_denied": true,
+        "snapshot_chat_capability": false
+      }
+    },
+    {
+      "id": "P05-TCP-03",
+      "status": "PASS",
+      "detail": {
+        "context": "in_person",
+        "flag": false,
+        "private_verbal_prompt_allowed": true,
+        "chat_get_post_denied": true,
+        "snapshot_chat_capability": false
+      }
+    },
+    {
+      "id": "P05-TCP-04",
+      "status": "PASS",
+      "detail": {
+        "actual_rounds": 20,
+        "distinct_round_ids": 20,
+        "distinct_ordered_indexes_1_to_20": true,
+        "actual_database_round_count20": true,
+        "final_round_terminal": true,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "id": "P05-TCP-05",
+      "status": "PASS",
+      "detail": {
+        "actual_rounds": 20,
+        "distinct_round_ids": 20,
+        "distinct_ordered_indexes_1_to_20": true,
+        "actual_database_round_count20": true,
+        "final_round_terminal": true,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": true
+      }
+    },
+    {
+      "id": "P05-TCP-06",
+      "status": "PASS",
+      "detail": {
+        "live_flag_off_revokes_prompt_and_chat": true,
+        "own_permission_false": true,
+        "exact_successful_replay_denied": true,
+        "no_quota_charge_on_denials": true,
+        "reenable_does_not_revive": true
+      }
+    },
+    {
+      "id": "P05-TCP-07",
+      "status": "PASS",
+      "detail": {
+        "actual_host_outside_selection": true,
+        "host_private_read_write_denied": true,
+        "own_permission_false": true
+      }
+    },
+    {
+      "id": "P05-TCP-08",
+      "status": "PASS",
+      "detail": {
+        "exact_retry_same_receipt": true,
+        "quota_and_text_sequence_unchanged": true,
+        "changed_body_conflicts": true,
+        "lone_high_low_embedded_surrogate_denied400": true,
+        "invalid_unicode_no_quota_or_receipt": true
+      }
+    },
+    {
+      "id": "P05-TCP-09",
+      "status": "PASS",
+      "detail": {
+        "action_accepted_before_clock_window": {
+          "actual_http_action_acceptance": true,
+          "actor_accept_posts": 2,
+          "before": {
+            "label": "before_action_acceptance",
+            "server_time_ms": 1000000,
+            "round_state": "pending",
+            "action_state": "pending",
+            "action_pending_deadline_ms": 1030000,
+            "action_active_until_ms": null,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1180000,
+            "conversation_parent_expires_at_ms": 1180000
+          },
+          "after": {
+            "label": "after_action_acceptance",
+            "server_time_ms": 1000000,
+            "round_state": "active",
+            "action_state": "active",
+            "action_pending_deadline_ms": 1030000,
+            "action_active_until_ms": 1180000,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1180000,
+            "conversation_parent_expires_at_ms": 1180000
+          }
+        },
+        "clock_window": [
+          {
+            "label": "before_calendar_minute_advance",
+            "server_time_ms": 1000000,
+            "round_state": "active",
+            "action_state": "active",
+            "action_pending_deadline_ms": 1030000,
+            "action_active_until_ms": 1180000,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1180000,
+            "conversation_parent_expires_at_ms": 1180000
+          },
+          {
+            "label": "after_calendar_minute_advance",
+            "server_time_ms": 1020001,
+            "round_state": "active",
+            "action_state": "active",
+            "action_pending_deadline_ms": 1030000,
+            "action_active_until_ms": 1180000,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1180000,
+            "conversation_parent_expires_at_ms": 1180000
+          }
+        ],
+        "fixed_calendar_minute_floor": true,
+        "twelve_per_actor": true,
+        "thirteenth_denied429": true,
+        "peer_independent": true,
+        "next_minute_allowed": true,
+        "real_presence_heartbeats": true
+      }
+    },
+    {
+      "id": "P05-TCP-10",
+      "status": "PASS",
+      "detail": {
+        "action_accepted_before_clock_window": {
+          "actual_http_action_acceptance": true,
+          "actor_accept_posts": 2,
+          "before": {
+            "label": "before_action_acceptance",
+            "server_time_ms": 1020001,
+            "round_state": "pending",
+            "action_state": "pending",
+            "action_pending_deadline_ms": 1050001,
+            "action_active_until_ms": null,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1200001,
+            "conversation_parent_expires_at_ms": 1200001
+          },
+          "after": {
+            "label": "after_action_acceptance",
+            "server_time_ms": 1020001,
+            "round_state": "active",
+            "action_state": "active",
+            "action_pending_deadline_ms": 1050001,
+            "action_active_until_ms": 1200001,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1200001,
+            "conversation_parent_expires_at_ms": 1200001
+          }
+        },
+        "clock_window": [
+          {
+            "label": "before_calendar_minute_advance",
+            "server_time_ms": 1020001,
+            "round_state": "active",
+            "action_state": "active",
+            "action_pending_deadline_ms": 1050001,
+            "action_active_until_ms": 1200001,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1200001,
+            "conversation_parent_expires_at_ms": 1200001
+          },
+          {
+            "label": "after_calendar_minute_advance",
+            "server_time_ms": 1080001,
+            "round_state": "active",
+            "action_state": "active",
+            "action_pending_deadline_ms": 1050001,
+            "action_active_until_ms": 1200001,
+            "invitation_state": "active",
+            "invitation_active_until_ms": 1200001,
+            "conversation_parent_expires_at_ms": 1200001
+          }
+        ],
+        "actual_http_messages": 34,
+        "last32_only": true,
+        "monotonic_current_epoch_sequence": true,
+        "game_revision_unchanged": true,
+        "room_revision_unchanged": true
+      }
+    },
+    {
+      "id": "P05-TCP-11",
+      "status": "PASS",
+      "detail": {
+        "explicit_encrypted_quota_only_fixture_total": 126,
+        "natural_http_messages_in_case": 2,
+        "not_128_natural_sends": true,
+        "round_budget128_denies129": true,
+        "budget_survives_epoch_change": true,
+        "old_epoch_text_cleared": true,
+        "auth_consent_lifecycle_not_seeded": true
+      }
+    },
+    {
+      "id": "P05-TCP-12",
+      "status": "PASS",
+      "detail": {
+        "scope_GET_AND_POST_FINAL_FENCE": true,
+        "get": {
+          "actual_final_chat_pg_wait": true,
+          "same_client_chat_object_then_final_credentials": true,
+          "flag_off_during_await": true,
+          "actual_http_denied_without_text": true
+        },
+        "post": {
+          "actual_mutation_final_pg_wait": true,
+          "exact_room_member_request_insert_observed": true,
+          "same_client_insert_then_final_credentials": true,
+          "flag_off_during_await": true,
+          "actual_http_policy_denial": true,
+          "quota_unchanged": true,
+          "messages_unchanged": true,
+          "exact_new_request_receipts": 0,
+          "no_sent_canary": true
+        }
+      }
+    }
+  ],
+  "runtime_cleanup": "completed",
+  "real_postgresql_http_protected_lifecycle": true,
+  "synthetic_content_source": true,
+  "explicit_quota_boundary_fixture": true,
+  "ordinary_production_cmd": false,
+  "browser_cookie_jar": false,
+  "full_p05_pass": false
+}

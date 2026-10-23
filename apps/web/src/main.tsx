@@ -11,6 +11,35 @@ export function message(t:Text,error:unknown) {
   const keys:Record<string,keyof Text>={ROOM_FULL:'roomFull',INVITE_EXPIRED:'roomClosed',ROOM_CLOSED:'roomClosed',AUTH_REQUIRED:'sessionEnded',NOT_FOUND:'inviteInvalid',INVITE_INVALID:'inviteInvalid',REVISION_CONFLICT:'revisionConflict',IDEMPOTENCY_CONFLICT:'revisionConflict',ENTRY_POLICY_UNAVAILABLE:'policyUnavailable',ENTRY_ACCEPTANCE_REQUIRED:'acceptanceRequired',ENTRY_REACCEPT_REQUIRED:'reacceptRequired',RATE_LIMITED:'rateLimited',INVALID_NAME:'invalidName',HOST_REQUIRED:'hostRequired',INVALID_REQUEST:'invalidInput',GAME_SETTINGS_LOCKED:'gameSettingsLocked'};
   return t[keys[code]??'serviceUnavailable'];
 }
+type FocusCorrectionState={generation:number;frame:number|null;keyboard:boolean;repairing:boolean};
+type MainRef={current:HTMLElement|null};
+function cancelFocusCorrection(state:FocusCorrectionState) {
+  state.generation++;
+  if(state.frame!==null) window.cancelAnimationFrame(state.frame);
+  state.frame=null;
+}
+function interruptFocusCorrection(state:FocusCorrectionState) {
+  state.keyboard=false;cancelFocusCorrection(state);
+}
+function repairFocusCorrection(state:FocusCorrectionState,main:MainRef) {
+  if(state.repairing||!state.keyboard||!document.hasFocus()) return;
+  const field=document.activeElement;
+  if(!(field instanceof HTMLElement)||!field.isConnected||!main.current?.contains(field)||!field.matches('input,select,button,textarea')||!field.matches(':focus-visible')) return;
+  const rect=field.getBoundingClientRect();
+  if(rect.width<=window.innerWidth&&rect.height<=window.innerHeight&&(rect.top<0||rect.left<0||rect.bottom>window.innerHeight||rect.right>window.innerWidth)) {
+    state.repairing=true;
+    try {field.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});} finally {state.repairing=false;}
+  }
+}
+// Deferred repair retains bookkeeping and the main ref, never the focused private field.
+function scheduleFocusCorrection(state:FocusCorrectionState,main:MainRef) {
+  if(!state.keyboard||!document.hasFocus()||state.frame!==null) return;
+  const generation=state.generation;
+  state.frame=window.requestAnimationFrame(()=>{
+    if(state.generation!==generation) return;
+    state.frame=null;repairFocusCorrection(state,main);
+  });
+}
 function App() {
   const [api]=useState(()=>new SessionApi());const [locale,setLocale]=useState<Locale>('ru');
   const [policy,setPolicy]=useState<EntryPolicy|null>(null),[room,setRoom]=useState<RoomView|null>(null);
@@ -18,6 +47,33 @@ function App() {
   const [retry,setRetry]=useState<(()=>Promise<void>)|null>(null);
   const [accepted,setAccepted]=useState(false),[adult,setAdult]=useState(false);
   const reacceptRequested=useRef(false);
+  const focusCorrection=useRef<FocusCorrectionState>({generation:0,frame:null,keyboard:false,repairing:false});
+  const main=useRef<HTMLElement|null>(null);
+  useEffect(()=>{
+    const state=focusCorrection.current;
+    const repair=()=>repairFocusCorrection(state,main);
+    const interrupt=()=>interruptFocusCorrection(state);
+    const keydown=(event:KeyboardEvent)=>{if(event.key==='Tab') state.keyboard=true;else interrupt();};
+    const observer=new MutationObserver(repair);
+    const observe=()=>{if(main.current&&document.hasFocus()) observer.observe(main.current,{subtree:true,childList:true,characterData:true,attributes:true});};
+    const blur=()=>{interrupt();observer.takeRecords();observer.disconnect();};
+    document.addEventListener('keydown',keydown,true);
+    document.addEventListener('pointerdown',interrupt,true);
+    document.addEventListener('wheel',interrupt,{capture:true,passive:true});
+    document.addEventListener('touchstart',interrupt,{capture:true,passive:true});
+    window.addEventListener('blur',blur);
+    window.addEventListener('focus',observe);
+    observe();
+    return()=>{
+      blur();
+      document.removeEventListener('keydown',keydown,true);
+      document.removeEventListener('pointerdown',interrupt,true);
+      document.removeEventListener('wheel',interrupt,true);
+      document.removeEventListener('touchstart',interrupt,true);
+      window.removeEventListener('blur',blur);
+      window.removeEventListener('focus',observe);
+    };
+  },[]);
   const [needsReaccept,setNeedsReaccept]=useState(false),[connectionEpoch,setConnectionEpoch]=useState(0);
   const [name,setName]=useState(''),[context,setContext]=useState<'online'|'in_person'>('online');
   const [initial]=useState(()=>new URLSearchParams(location.hash.slice(1)));
@@ -74,9 +130,15 @@ function App() {
           {roomId?<button data-testid="reaccept-room" disabled={!hasApproval||busy} onClick={()=>{if(!policy) return;void perform(async()=>{await api.request(`/api/v1/rooms/${roomId}/me/entry-acceptance`,acceptance(policy));await refresh();reacceptRequested.current=false;setNeedsReaccept(false);setConnectionEpoch(v=>v+1);});}}>{t.acceptOffer}</button>:null}
         </>}
       </section>);
-  return <main>
+  return <main ref={main} onFocus={()=>{
+    const state=focusCorrection.current;cancelFocusCorrection(state);
+    repairFocusCorrection(state,main);scheduleFocusCorrection(state,main);
+  }} onBlur={()=>cancelFocusCorrection(focusCorrection.current)} onKeyUp={event=>{
+    if(event.key!=='Tab') return;
+    repairFocusCorrection(focusCorrection.current,main);scheduleFocusCorrection(focusCorrection.current,main);
+  }}>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
-      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{value.toUpperCase()}</button>)}</div>
+      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
     </nav>
     {error?<section className="notice error" role="alert" data-testid="error-message"><p>{message(t,error)}</p>
       <button data-testid="retry-action" onClick={()=>{void perform(async()=>{if(error instanceof ApiError&&error.code==='REVISION_CONFLICT') await refresh();else if(retry) await retry();else if(roomId) await refresh();else setPolicy(await api.bootstrap());if(roomId) setConnectionEpoch(v=>v+1);});}}>{t.retry}</button>
@@ -88,7 +150,7 @@ function App() {
       <section className="intro"><p className="eyebrow">{t.tagline}</p><h1>{t.title}</h1><p className="description">{t.description}</p><p className="stage">{t.stage}</p></section>
       {entryPanel}
       <div className="entry-grid">
-        <form onSubmit={event=>{event.preventDefault();if(!hasApproval||!policy) return;const input={name,locale,meeting_context:context,idempotency_key:crypto.randomUUID(),entry_acceptance:acceptance(policy)};void perform(async()=>{const result=await api.request<CreateResult>('/api/v1/rooms',input);enter(undefined,result.room_id);});}}>
+        <form onSubmit={event=>{event.preventDefault();if(!hasApproval||!policy) return;const input={name,locale,meeting_context:context,idempotency_key:crypto.randomUUID(),entry_acceptance:acceptance(policy)};let path:'/api/v1/rooms'|'/api/v2/rooms'|null=null;void perform(async()=>{path??=await api.creationPath();const result=await api.request<CreateResult>(path,input);enter(undefined,result.room_id);});}}>
           <h2>{t.createRoom}</h2><label>{t.yourName}<input data-testid="create-name" autoComplete="off" value={name} onChange={e=>setName(e.target.value)} required maxLength={192}/></label>
           <label>{t.meetingContext}<select value={context} onChange={e=>setContext(e.target.value as 'online'|'in_person')}><option value="online">{t.online}</option><option value="in_person">{t.inPerson}</option></select></label>
           <button className="primary" data-testid="create-room" disabled={!hasApproval||busy}>{busy?t.saving:t.createRoom}</button>

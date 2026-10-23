@@ -1,0 +1,5 @@
+# Statistics03 repeat independent infrastructure WIP review
+
+2026-10-20T16:15:06.934235+00:00 UTC — Non-author repeat of stats02 twoP2: sticky sinkIO failure; own WindowsJob gated worker start/confirmed zero-process stop and STOP_FAILED. Ownnewpacket/journal only; noDocker/fullcorpus/otherowner resources. Native hosthelper-only isnot actualstatisticalproducer acceptance.
+
+2026-10-20T16:19:30.284234+00:00 UTC — Author100children/HANDOFF/33working exact; unchangedmethods/protocol/budgets with3dispatchlabel substitutions confirmed. Own15controls PASS; repeated73finite+2actual ownjobtree stops PASS/native0/jobdestroyed, all commands0. Firstinputs-harnessFAIL expectedoldsectionrunner exact; preserved, correctedexact3labeldiff. Prior2P2 CLOSED limitedscope. NewprivacyP2 STATS-R03-R01-001 OPEN: rawworkerstop andsinkabort name/code canaryprojection; syntheticonly/noactualprivateexposure claim. NoDocker/corpus/runtime84/otherownerresources/producerwrites. CHANGES_REQUIRED_INFRA_WIP. Writes COMPLETE; INDEX f4f989d11ce6faaf1805a93b10a3fb7a21a29cc86a66e39ee9f7da4cc821c81b /23 files; HANDOFF 01f6928a84051ce4c396eca0afdabead360aca9b3d1bca8dae6ff2be649cf4a4.

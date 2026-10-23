@@ -1,0 +1,6 @@
+import {defineConfig} from 'vitest/config';
+import {createRequire} from 'node:module';
+const api=createRequire("C:/.projects/venus"+'/apps/api/package.json'),engine=createRequire("C:/.projects/venus"+'/packages/relationship-engine/package.json');
+const frozen="C:/.projects/venus/.artifacts/p05-pilot-bundle-source01";
+const dep=['@fastify/cookie','@fastify/static','@fastify/websocket','fastify','pg','ajv','ajv-formats'].map(name=>({find:new RegExp('^'+name.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'$'),replacement:api.resolve(name)}));
+export default defineConfig({root:frozen,cacheDir:"C:/.projects/venus/.docs/implementation/reviews/p05/coherent-round-view-product-independent-round01"+'/runtime-cache',resolve:{alias:[{find:'ajv/dist/2020.js',replacement:engine.resolve('ajv/dist/2020.js')},...dep,{find:'@venus/contracts/schemas',replacement:frozen+'/packages/contracts/src/schemas.json'},...['contracts','i18n','relationship-engine','card-catalog'].map(name=>({find:new RegExp('^@venus/'+name+'$'),replacement:frozen+'/packages/'+name+'/src/index.ts'}))]},test:{include:["C:/.projects/venus/.docs/implementation/reviews/p05/pilot-browser21-offer-cooldown-diagnosis-round01/cooldown-source-regression.test.ts"],exclude:['**/*.integration.test.ts'],testTimeout:120000,hookTimeout:120000,cache:false}});

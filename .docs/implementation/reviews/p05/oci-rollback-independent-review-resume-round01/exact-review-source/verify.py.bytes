@@ -1,0 +1,18 @@
+import hashlib,json,sys
+from pathlib import Path
+root=Path('.docs/implementation/reviews/p05/oci-rollback-author-resume-round01');out=Path('.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round01');out.mkdir(parents=True,exist_ok=True)
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+assert sha(root/'INDEX.json')=='6f8519c2d030a6a20add721ff6875d94ad4a70cdfca4950ecd57d033186853db'
+rows=json.loads((root/'INDEX.json').read_bytes())['files']
+for r in rows:
+ p=root/r['path'];assert sha(p)==r['sha256'];assert p.stat().st_size==r['bytes']
+producer=root/'producer';work=Path('.artifacts/p05-oci-rollback-producer-resume01')
+assert sha(producer/'INDEX.json')=='da5726afeeda9df9d5ae994cf42f7dde31fb3ef284714eabbae06ca8fb799b40'
+index=json.loads((producer/'INDEX.json').read_bytes())
+for n,r in index['source_map'].items():
+ if r['type']=='regular_file':assert sha(work/n)==r['sha256']==sha(producer/n),n
+assert sha(work/'oci_allocated_tree.py')=='7adcdaf51b40191ee5abf76def60292aa4a49364a62721968c68cd0ef7ebb4de'
+sys.path.insert(0,'tools');from stage_inventory import inventory,identity
+files=inventory();assert len(files)==1813 and identity(files)=='1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad'
+result={'status':'PASS_EXACT_INPUTS_ONLY','author_children':len(rows),'producer_map_entries':len(index['source_map']),'producer_map_file_pins':sum(r['type']=='regular_file' for r in index['source_map'].values()),'source_identity':identity(files),'included_files':len(files),'METHOD07_scanner_exact':True,'image_reextracted':False}
+(out/'hash-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result))

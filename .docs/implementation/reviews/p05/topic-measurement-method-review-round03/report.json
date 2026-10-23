@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/p04_gate_preflight",
+  "status": "CHANGES_REQUESTED_PREEXECUTION_RESOURCE_CONTRACT",
+  "method_split": "BOUNDED_CONTRACT_COMPATIBLE_NOT_CONSUMER_ACCEPTANCE",
+  "findings": [
+    {
+      "id": "P05-METHOD03-001",
+      "priority": "P2_PREEXECUTION_CONTRACT_GAP",
+      "location": "proposal REPORT operational layout item2",
+      "problem": "Unique labels do not establish that an initially root-owned native local volume is writable by workerUID1000. Mount ownership/no-copy/bootstrap/ownership-mismatch behavior is unspecified.",
+      "required_guard": "Create new entropy-named local volume and verify ownerlabel/name/driver/emptyinventory; use volume-nocopy. One bounded isolated bootstrap helper may set only this new empty volume root to1000:1000/mode0700, then exit. Nonroot actualwrite/read/fsync probe before sample; mismatched/nonempty/borrowed volume or bootstrap failure stops. Keep helper/image/mount/exit receipts and restrict cleanup to exactownedobject."
+    },
+    {
+      "id": "P05-METHOD03-002",
+      "priority": "P2_PREEXECUTION_CONTRACT_GAP",
+      "location": "proposal REPORT operational layout items1,2,5",
+      "problem": "Separate input accounting and combined native/export/archive allowance lack one numeric peak-footprint equation and proven actualDocker backing-disk relationship. C-host free alone or thin-provisioned native statfs cannot establish physical headroom.",
+      "required_guard": "Freeze input-size bound and global ledger: newly retained input snapshot copies +nativeoutputs+hoststaging/export+archive+temporary/logs/progress/pinreceipts <=declared total (or explicit preregistered input exclusion with separate bound). Reserve each copy peak before write; count simultaneous duplicates, use conservative archive bound. Verify actual Cfilesystem and Docker VM/VHD backing filesystem, fresh space on each with explicit reserves. Unknown/stale/low rejects before creation/export. Final32GiB cap cannot be inferred to fit current~27.6GB free."
+    },
+    {
+      "id": "P05-METHOD03-003",
+      "priority": "P2_PREEXECUTION_CONTRACT_GAP",
+      "location": "proposal REPORT boundedbenchmark timers/heartbeat/export paragraphs",
+      "problem": "Heartbeat age/clock-skew handling, external supervision and stop/export/cleanup deadlines are not fixed. A blockedNode loop cannot guarantee its own10s heartbeat or terminate itself.",
+      "required_guard": "Freeze external monotonic workerdeadline300000ms plus setup/stop/export/cleanup bounds and escalationgrace. Owner-bound sequence+age heartbeat with future/skew/stale rejection; external supervisor checks host/nativeguards independently of workerloop. Terminate only ownedworker, preserve failures/prefix; unfinished export/retainedvolume reportedNOT_ACCEPTED/NOT_CLEANED rather than cleanupPASS. Separate processCPU/cgroupCPU/host overhead and nested timers; never sum overlap or change logicalscriptclock."
+    }
+  ],
+  "P1_findings": [],
+  "source_identity": "13b24714f3dd2d6e2ea08e911042defb4ce0161b956a9bcc74af533d3795120e",
+  "included_files": 1813,
+  "proposal_index_sha256": "3d660d6284b9089da935169754502c08a4571ed9c91a7832caa601d91a1afb2c",
+  "actual_execution": "NOT_RUN",
+  "producer_imports": 0,
+  "statistical_RUN": false,
+  "consumer_completion_accepted": false,
+  "runtime_parity_accepted": false,
+  "full_P05_accepted": false,
+  "followup_root_128MiB": "New bounded diagnostic cap may be preregistered by root; not present in fixed proposal03 which says20MiB. Both require explicit combined-footprint accounting; final32GiB unaffected."
+}

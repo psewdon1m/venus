@@ -1,0 +1,1 @@
+import base from '../../../../../vitest.config.ts';export default {...base,test:{...base.test,include:['.docs/implementation/evidence/p05/topic-source-review-01/review.test.ts'],exclude:[],maxWorkers:1}};

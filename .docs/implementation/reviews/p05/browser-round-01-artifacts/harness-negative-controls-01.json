@@ -1,0 +1,320 @@
+{
+  "method": "Isolated execution of actual wrapper bytes and exact inner final acceptance block. Docker/FS side effects stubbed; not actual Docker evidence.",
+  "source": {
+    "wrapper_sha256": "c7a5b90df571233ff6ff461d4acfa4b2ce5fe13c1ad0fe9bd1c3eb650350b402",
+    "browser_sha256": "27207513c9e65ab8968b7d1a3bf86fa2415fbed03b85de1384619514ce067ca2"
+  },
+  "controls": [
+    {
+      "label": "Inherited scope reaches Compose while receipt claims full matrix",
+      "receipt": {
+        "source_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_identity_after": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-010101010101",
+        "image": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": true,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "commands": [
+        {
+          "name": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-010101010101:local",
+            "."
+          ],
+          "selected_engine": "firefox",
+          "selected_case": "P05-EXPLICIT-18"
+        },
+        {
+          "name": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-010101010101:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "selected_engine": "firefox",
+          "selected_case": "P05-EXPLICIT-18"
+        },
+        {
+          "name": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-010101010101",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "selected_engine": "firefox",
+          "selected_case": "P05-EXPLICIT-18"
+        },
+        {
+          "name": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-010101010101",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-010101010101-browser",
+            "browser"
+          ],
+          "selected_engine": "firefox",
+          "selected_case": "P05-EXPLICIT-18"
+        },
+        {
+          "name": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-010101010101-browser"
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-010101010101",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "selected_engine": "firefox",
+          "selected_case": "P05-EXPLICIT-18"
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "Partial inner PASS receipt accepted without count/scope validation",
+      "receipt": {
+        "source_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_identity_after": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-010101010101",
+        "image": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": true,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "commands": [
+        {
+          "name": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-010101010101:local",
+            "."
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-010101010101:local",
+            "--format",
+            "{{.Id}}"
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-010101010101",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-010101010101",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-010101010101-browser",
+            "browser"
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-010101010101-browser"
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-010101010101",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ]
+        }
+      ],
+      "exit_code": 0
+    },
+    {
+      "label": "Probe timeout does not inspect/remove unnamed owned container",
+      "receipt": {
+        "source_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_identity_after": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-010101010101",
+        "image": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "probe_only": true,
+        "chat_only": false,
+        "catalog_only": false,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Docker command failed, exit null; browser-probe.txt; ETIMEDOUT"
+      },
+      "commands": [
+        {
+          "name": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "dependencies",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-010101010101:local",
+            "."
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-010101010101:local",
+            "--format",
+            "{{.Id}}"
+          ]
+        },
+        {
+          "name": "docker",
+          "args": [
+            "run",
+            "--rm",
+            "--init",
+            "--user",
+            "1000:1000",
+            "--read-only",
+            "--cap-drop",
+            "ALL",
+            "--security-opt",
+            "no-new-privileges:true",
+            "--network",
+            "none",
+            "--shm-size",
+            "1g",
+            "--tmpfs",
+            "/tmp:size=1g,mode=1777,exec",
+            "--tmpfs",
+            "/home/node:size=64m,uid=1000,gid=1000",
+            "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          ]
+        }
+      ],
+      "exit_code": 1
+    },
+    {
+      "label": "Application pageerror accepted",
+      "result_status": "PASS",
+      "page_errors": [
+        {
+          "message": "Injected application crash"
+        }
+      ],
+      "page_errors_overflow": false
+    },
+    {
+      "label": "Application pageerror overflow accepted",
+      "result_status": "PASS",
+      "page_errors": [],
+      "page_errors_overflow": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+--- actual01/child.mjs
++++ metadata06/child.mjs
+@@ -2,10 +2,11 @@
+ import assert from 'node:assert/strict';
+ import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+ import {performance} from 'node:perf_hooks';
++import {numericHttpAssertion} from './status-diagnostics.mjs';
+ import {component} from './factory.mjs';
+ import {liveUntouched,revokedUntouched} from './observations.mjs';
+ import {fixtureFrom,phaseOne,phaseTwo,phaseThree} from './phases.mjs';
+-const start=performance.now(),report={schema_version:1,status:'FAIL',pid:process.pid,phase:null,checks:[],chronology:[],runtime_cleanup:'failed'};let runtime,step='construct';
++const start=performance.now(),report={schema_version:1,status:'FAIL',pid:process.pid,phase:null,checks:[],chronology:[],http_status_observations:[],http_status_overflow:false,runtime_cleanup:'failed'};let runtime,step='construct';
+ const mark=(stage,extra={})=>report.chronology.push({stage,native_elapsed_ms:performance.now()-start,wall_utc:new Date().toISOString(),...extra});
+ try{
+  runtime=await component(process.argv[2],process.argv[3]);const {h,config}=runtime;report.phase=config.phase;report.server_time_ms=h.time();report.clock_policy='EXPLICIT_FIXED_FORWARD_FIXTURE_NOT_NATURAL_TTL';step='migrate';await runtime.migrate();mark('migrations_completed');
+@@ -15,9 +16,9 @@
+  if(config.phase>1){step='raw_D_observer_before_other_reconcile_or_http';rawBootD=await revokedUntouched(h.pool,h.keys,fixtureFrom(state.D),state.baseline.D);mark('raw_D_revocation_observer_completed',{rawBootD});}
+  step='legacy_reconcile';await h.legacy.reconcilePublicPairPolicy();mark('legacy_reconcile_completed');step='maintain';await h.rooms.maintain();mark('Rooms_maintain_completed');step='listen';await h.listen();mark('listener_opened');
+  report.before_D=beforeD??null;report.raw_boot_D=rawBootD??null;report.production_catalog_reconcile='NOT_COMPOSED_SYNTHETIC_SOURCE';step='protected_http_phase'+config.phase;
+- const result=config.phase===1?await phaseOne(h):config.phase===2?await phaseTwo(h,state,{boot,rawBootD,chronology:report.chronology}):await phaseThree(h,state,{boot,rawBootD,chronology:report.chronology});
++ const result=config.phase===1?await phaseOne(h):config.phase===2?await phaseTwo(h,state,{boot,rawBootD,chronology:report.chronology}):await phaseThree(h,state,{boot,rawBootD,chronology:report.chronology},row=>{if(report.http_status_observations.length<4)report.http_status_observations.push(row);else report.http_status_overflow=true;});
+  if(result.privateState)writeFileSync(config.stateFile,JSON.stringify(result.privateState),{mode:0o600});report.checks=result.checks;report.status='PASS';mark('protected_phase_completed');
+-}catch(error){report.failure={step,name:error.name,code:typeof error.code==='string'?error.code:null,frames:String(error.stack??'').split('\n').filter(line=>/^\s*at /.test(line)&&line.includes('file:///app/')).slice(0,12)};process.exitCode=1;}
++}catch(error){report.failure={step,name:error.name,http_status_assertion:numericHttpAssertion(error,report.http_status_observations),code:typeof error.code==='string'?error.code:null,frames:String(error.stack??'').split('\n').filter(line=>/^\s*at /.test(line)&&line.includes('file:///app/')).slice(0,12)};process.exitCode=1;}
+ finally{
+  try{await runtime?.close();report.runtime_cleanup='completed';mark('app_pool_closed_authority_preserved');}catch(error){report.failure??={step:'close',name:error.name};report.status='FAIL';process.exitCode=1;}
+  report.native_elapsed_ms=performance.now()-start;

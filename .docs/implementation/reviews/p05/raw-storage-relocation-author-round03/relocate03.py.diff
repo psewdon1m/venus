@@ -1,0 +1,34 @@
+--- failed02
++++ corrected03
+@@ -200,7 +200,13 @@
+         except BaseException as error:
+             receipt['status'] = 'FAIL'
+             receipt['error_type'] = type(error).__name__
+-            record('FAIL_BEFORE_ROLLBACK_REVIEW')
++            def record_failure(phase):
++                # A failed receipt write must never prevent physical C rollback.
++                try:
++                    record(phase)
++                except Exception:
++                    receipt['failure_log_write_failed'] = True
++            record_failure('FAIL_BEFORE_ROLLBACK_REVIEW')
+             if renamed and not deleting_backup:
+                 # Remove only this validated junction (never recursively); restore original C tree.
+                 if os.path.isjunction(source):
+@@ -210,13 +216,13 @@
+                 exact_child(backup, SOURCE, backup.name)
+                 assert tree(backup) == expected
+                 backup.rename(source)
+-                record('ROLLBACK_C_ORIGINAL_RESTORED_E_COPY_RETAINED')
++                record_failure('ROLLBACK_C_ORIGINAL_RESTORED_E_COPY_RETAINED')
+             elif deleting_backup:
+                 # Never replace complete E storage with a partially deleted C backup.
+                 receipt['status'] = 'FAIL_C_BACKUP_CLEANUP_REVIEW_REQUIRED_E_AND_C_LINK_RETAINED'
+-                record('ROLLBACK_NOT_ATTEMPTED_AFTER_BACKUP_DELETE_STARTED')
++                record_failure('ROLLBACK_NOT_ATTEMPTED_AFTER_BACKUP_DELETE_STARTED')
+             else:
+-                record('C_ORIGINAL_UNCHANGED_PARTIAL_E_COPY_RETAINED_IF_ANY')
++                record_failure('C_ORIGINAL_UNCHANGED_PARTIAL_E_COPY_RETAINED_IF_ANY')
+             raise
+     print(json.dumps({'status': 'BATCH_COMPLETE_BYTE_STORAGE_ONLY_NOT_STATISTICAL_ACCEPTANCE',
+                       'owners': len(plan['owners']), 'receipts': str(receipt_dir)}))

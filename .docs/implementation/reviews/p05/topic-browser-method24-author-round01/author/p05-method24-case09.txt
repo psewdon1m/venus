@@ -1,0 +1,13 @@
+ await check(9,async()=>{
+  const f=await startPrivate('yes_but');await invite(f,{condition:true});await acceptTopics(f);
+  const pair=participants(f),secondary=actors.find(a=>f.plan.actors.includes(a.id)&&a.id!==f.plan.primary_member_id);
+  const actionCommit=f.plan.requires_action_consent?await acceptActionsUi(f):null;
+  const conditionDeadline=performance.now()+8000;
+  const minRev=actionCommit?actionCommit.minRev:(await coherentGame({session:f.session,round:f.plan.round_id,index:f.plan.round_index})).view.game_rev;
+  assert(Number.isSafeInteger(minRev)&&minRev>=0,'METHOD24_CONDITION_REVISION_FLOOR');
+  const expected={session:f.session,round:f.plan.round_id,minRev},intendedValue={control:'game-condition-input',value:'SYNTHETIC CONDITION TWO'};
+  const inputTicket=await normalPrivateReady(secondary,'game-condition-input',{deadline:conditionDeadline,expected});
+  await secondary.page.getByTestId('game-condition-input').fill('SYNTHETIC CONDITION TWO');assertPrivateTicket(secondary,'game-condition-input',inputTicket);await expect(secondary.page.getByTestId('game-condition-input')).toHaveValue('SYNTHETIC CONDITION TWO');
+  await exactUiMutation({page:secondary.page,path:`/api/v2/rooms/${secondary.room}/game/${f.session}/round/${f.plan.round_id}/condition`,control:'game-condition-submit',prepare:()=>normalPrivateReady(secondary,'game-condition-submit',{deadline:conditionDeadline,expected,intendedValue}),click:ticket=>click(secondary,'game-condition-submit',ticket),afterClick:async()=>{for(const a of pair)await expect(a.page.getByTestId('private-prompt')).toHaveCount(0);},record:event=>recordMutation({locale:secondary.locale,...event})});
+  await acceptTopics(f);for(const a of pair)await expect(a.page.getByTestId('private-prompt')).toContainText('SYNTHETIC CONDITION TWO');return {mode:'yes_but',secondary_condition_edit:true,fresh_topic_and_action_consent:true,...await actionAndFinish(f)};
+ });

@@ -1,0 +1,35 @@
+from pathlib import Path
+import hashlib,json
+ROOT=Path.cwd();OUT=Path(__file__).resolve().parent;P=ROOT/'.artifacts/p05-recovery-source1274-01/.artifacts/p05-oci-rollback-producer-resume04';OLD=P.with_name('p05-oci-rollback-producer-resume03');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def load(p):return json.loads(p.read_text(encoding='utf-8'))
+author=ROOT/'.docs/implementation/reviews/p05/oci04-host-startup-author-round01/INDEX.json';assert sha(author)=='1ed50a37be03d086cd596719c5e4d041a60f31d5b70d618adf23b035807ef0a6';a=load(author)
+for r in a['files']:
+ p=author.parent/r['path'];assert sha(p)==r['sha256'] and p.stat().st_size==r['bytes']
+assert sha(P/'INDEX.json')=='1787932df4422bde9f70ce5f5a49bf7eb12711240c31c29cffdc246a2afcd966'
+def map(p):
+ result={}
+ for q in sorted(p.rglob('*')):
+  n=q.relative_to(p).as_posix();assert not q.is_symlink()
+  if q.is_dir():result[n]={'type':'directory'}
+  elif n!='INDEX.json':result[n]={'type':'regular_file','bytes':q.stat().st_size,'sha256':sha(q)}
+ return result
+mirror={n.removesuffix('.bytes') if '/' not in n and n.endswith('.md.bytes') else n:v for n,v in map(author.parent/'producer').items()}
+assert map(P)==load(P/'INDEX.json')['source_map']==mirror
+assert map(OLD)==load(OLD/'INDEX.json')['source_map']
+b=load(P/'BINDING.json');prior=load(OLD/'BINDING.json');assert b['operational_parent_producer_index_sha256']==sha(OLD/'INDEX.json')
+for key in set(prior)-{'status','root_run_ack','operational_parent_producer_index_sha256'}:assert b[key]==prior[key],key
+assert b['status']=='AUTHOR_OPERATIONAL_BINDING_PENDING_INDEPENDENT_REVIEW' and b['root_run_ack'] is False and load(P/'ROOT_RUN_ACK.json')['status']=='NOT_AUTHORIZED'
+assert b['startup_fix']['changed_executable_scope']==['driver.mjs','host-runner.mjs','source-proof.mjs']
+unchanged=[]
+for q in OLD.iterdir():
+ if q.suffix in ['.mjs','.py'] and q.name not in ['driver.mjs','host-runner.mjs']:assert sha(q)==sha(P/q.name);unchanged.append(q.name)
+for q in (OLD/'pinned-inputs').rglob('*'):
+ if q.is_file():assert sha(q)==sha(P/q.relative_to(OLD))
+for n in ['actual-image-maps.json','operational-input-pins.json','ROOT_ACTIVATION_PROJECTION.json','included-inputs.json']:assert sha(P/n)==sha(OLD/n)
+for q in (OLD/'operational-inputs').rglob('*'):
+ if q.is_file():assert sha(q)==sha(P/q.relative_to(OLD))
+diag=ROOT/'.docs/implementation/reviews/p05/oci03-startup-cold-diagnosis-round01/INDEX.json';assert sha(diag)=='e50c8fece79d03524bef8b221f79d8ed7c79fff5f1a8c7cf94438f8c93f6515c';d=load(diag)
+for r in d['files']:
+ p=diag.parent/r['path'];assert sha(p)==r['sha256'] and p.stat().st_size==r['bytes']
+result={'status':'PASS_HOST_METHOD_INPUTS_ONLY','author_children':len(a['files']),'diagnosis_children':len(d['files']),'unchanged_executable_files':unchanged,'producer_map_entries':len(map(P)),'producer_index_sha256':sha(P/'INDEX.json'),'pending_binding':True,'image_resource_source_control_budget_bindings':'UNCHANGED_FROM_REVIEWED_OCI03','old_OCI03':'EXIT13_BEFORE_RESOURCES_ALL14_NOT_RUN','actual_OCI04':'NOT_RUN','actual_Docker_calls':0,'producer_writes':False}
+(OUT/'inputs-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'status':result['status'],'author_children':len(a['files']),'unchanged_executable_files':len(unchanged)}))

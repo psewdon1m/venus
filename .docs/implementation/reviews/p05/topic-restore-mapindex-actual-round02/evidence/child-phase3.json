@@ -1,0 +1,1096 @@
+{
+  "pid": 43,
+  "phase": 3,
+  "exit_code": 0,
+  "exit_signal": null,
+  "timed_out": false,
+  "streams": {
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "report": {
+    "schema_version": 1,
+    "status": "PASS",
+    "pid": 43,
+    "phase": 3,
+    "checks": [
+      {
+        "id": "P05-RESTORE-08",
+        "status": "PASS",
+        "detail": {
+          "actual_third_boot_before_listener": {
+            "boot": {
+              "schema_version": 2,
+              "private_scopes_revoked": true,
+              "rounds_reconciled": 2,
+              "corrupt_sessions_aborted": 0,
+              "unsupported_sessions_aborted": 0
+            },
+            "rawBootD": {
+              "raw_round_stopped": true,
+              "invitation_action_acks_cleared": true,
+              "private_objects": 0,
+              "private_refs": 0,
+              "snapshot_history_unchanged": true,
+              "observed_before_legacy_maintain_listen_or_private_http": true
+            },
+            "chronology": [
+              {
+                "stage": "migrations_completed",
+                "native_elapsed_ms": 690.2277610000001,
+                "wall_utc": "2026-10-19T21:18:53.183Z"
+              },
+              {
+                "stage": "raw_D_live_before_boot",
+                "native_elapsed_ms": 702.466265,
+                "wall_utc": "2026-10-19T21:18:53.195Z",
+                "remaining_positive": true
+              },
+              {
+                "stage": "actual_bootGate_returned",
+                "native_elapsed_ms": 716.28619,
+                "wall_utc": "2026-10-19T21:18:53.209Z",
+                "boot": {
+                  "schema_version": 2,
+                  "private_scopes_revoked": true,
+                  "rounds_reconciled": 2,
+                  "corrupt_sessions_aborted": 0,
+                  "unsupported_sessions_aborted": 0
+                }
+              },
+              {
+                "stage": "raw_D_revocation_observer_completed",
+                "native_elapsed_ms": 719.8288110000001,
+                "wall_utc": "2026-10-19T21:18:53.212Z",
+                "rawBootD": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                }
+              },
+              {
+                "stage": "legacy_reconcile_completed",
+                "native_elapsed_ms": 720.404497,
+                "wall_utc": "2026-10-19T21:18:53.213Z"
+              },
+              {
+                "stage": "Rooms_maintain_completed",
+                "native_elapsed_ms": 822.297564,
+                "wall_utc": "2026-10-19T21:18:53.315Z"
+              },
+              {
+                "stage": "listener_opened",
+                "native_elapsed_ms": 891.5437299999999,
+                "wall_utc": "2026-10-19T21:18:53.384Z"
+              },
+              {
+                "stage": "protected_phase_completed",
+                "native_elapsed_ms": 7710.652950000001,
+                "wall_utc": "2026-10-19T21:19:00.203Z"
+              },
+              {
+                "stage": "app_pool_closed_authority_preserved",
+                "native_elapsed_ms": 7718.922558,
+                "wall_utc": "2026-10-19T21:19:00.211Z"
+              }
+            ]
+          },
+          "old_private_refs_objects_acks_revoked": true
+        }
+      },
+      {
+        "id": "P05-RESTORE-09",
+        "status": "PASS",
+        "detail": {
+          "session_snapshot_history_retained": true,
+          "newer_durable_exclusion_survived_old_database": true
+        }
+      },
+      {
+        "id": "P05-RESTORE-10",
+        "status": "PASS",
+        "detail": {
+          "closed_B_denied": true,
+          "restored_retired_C_credential_denied": true,
+          "external_lifecycle_convergence": true
+        }
+      },
+      {
+        "id": "P05-RESTORE-13",
+        "status": "PASS",
+        "detail": {
+          "ordinary_untouched_D_room_credential200": true,
+          "valid_untouched_D_credentials": 2,
+          "old_nonchat_retries_exact_original_receipt_or_explicit_denial": true,
+          "old_chat_exact_retry_denied": true,
+          "old_tuples_new_request_ids_denied_no_new_receipts": true,
+          "replay_evidence": [
+            {
+              "kind": "private_read",
+              "route": "/target",
+              "status": 409,
+              "code": "ROUND_STALE",
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "bfaf25fa9801222acf069300c2233dd3f2a79ee010eb63a0365468e2133921e8",
+                "table_hash_after": "1075355dbdeebed5a6c0d4e6cfd05d581fb53e7e8d6b5f721e62c569c7026ace"
+              }
+            },
+            {
+              "kind": "private_read",
+              "route": "/conversation",
+              "status": 409,
+              "code": "CONVERSATION_UNAVAILABLE",
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "1075355dbdeebed5a6c0d4e6cfd05d581fb53e7e8d6b5f721e62c569c7026ace",
+                "table_hash_after": "8f8768835708d9aad708f176737c16c870084af047173f784fd5dc87cf62ab64"
+              }
+            },
+            {
+              "kind": "private_read",
+              "route": "/conversation/chat",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "8f8768835708d9aad708f176737c16c870084af047173f784fd5dc87cf62ab64",
+                "table_hash_after": "7946b3d617d0e5a1fa282540bb8db956e1338b0c8ff1f4accfc31a15b495d3d9"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "9363171cea6a40737c0e2896a4130b91784d5825905f0faf3ced0bafbcf1f67b",
+                "actual_receipt_sha256": "9363171cea6a40737c0e2896a4130b91784d5825905f0faf3ced0bafbcf1f67b",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "7946b3d617d0e5a1fa282540bb8db956e1338b0c8ff1f4accfc31a15b495d3d9",
+                "table_hash_after": "641b4ef764c2753150d2ad141f1463b1703a7e09f28786a0cd4a7d27512b9f20"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "accept",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "641b4ef764c2753150d2ad141f1463b1703a7e09f28786a0cd4a7d27512b9f20",
+                "table_hash_after": "256e527100c97ac5c447f36b541cd7741471078e8c283431818491845edfc72e"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "72b822288ed3ea95359ebc34e9db4842b33d2ebce927049983b295f4ea60efc3",
+                "actual_receipt_sha256": "72b822288ed3ea95359ebc34e9db4842b33d2ebce927049983b295f4ea60efc3",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "256e527100c97ac5c447f36b541cd7741471078e8c283431818491845edfc72e",
+                "table_hash_after": "674cc0407b98171e9834bf3c5d4e4c1e4aad010ad06ae7edddb3e216d16cbad3"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "accept",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "674cc0407b98171e9834bf3c5d4e4c1e4aad010ad06ae7edddb3e216d16cbad3",
+                "table_hash_after": "b92c796cbc2ada598ffada6d7c75965562462b59adb725977942c62bb961716d"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "f2012e0b6758464fc62f72848b402656c12d94eb9eceb853176c404e2517a50b",
+                "actual_receipt_sha256": "f2012e0b6758464fc62f72848b402656c12d94eb9eceb853176c404e2517a50b",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "b92c796cbc2ada598ffada6d7c75965562462b59adb725977942c62bb961716d",
+                "table_hash_after": "e542c795ebbac6cf3b6391cd636d06c17391a074ae7cda37c2f7b4c075dbe41a"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "respond_topic",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "e542c795ebbac6cf3b6391cd636d06c17391a074ae7cda37c2f7b4c075dbe41a",
+                "table_hash_after": "381e638bb48fd14a6aa352200c943781b32048db3092c3601cc262370269ba98"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "9be36091fb5b930a86d05af9e041a777b0eb6435dc8c0524c78019561f875394",
+                "actual_receipt_sha256": "9be36091fb5b930a86d05af9e041a777b0eb6435dc8c0524c78019561f875394",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "381e638bb48fd14a6aa352200c943781b32048db3092c3601cc262370269ba98",
+                "table_hash_after": "117bc97814bd36b685a313a3c851ba3bb11a4fb19a1a5c9a0665b66c9f7cd7ab"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "respond_topic",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "117bc97814bd36b685a313a3c851ba3bb11a4fb19a1a5c9a0665b66c9f7cd7ab",
+                "table_hash_after": "38f92387de750b358e17e5a3f00ace6b13466f2c7c36bdc4c758b4e46961203b"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "3ff1bb2112e18b3250cbf5a3378f57fa1823d97a21fc04f250b5dab0fc094042",
+                "actual_receipt_sha256": "3ff1bb2112e18b3250cbf5a3378f57fa1823d97a21fc04f250b5dab0fc094042",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "38f92387de750b358e17e5a3f00ace6b13466f2c7c36bdc4c758b4e46961203b",
+                "table_hash_after": "c2c57718f4ab48f0387718f78816187decd6cea767a74493f8de4c425c25dcf2"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "accept",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "c2c57718f4ab48f0387718f78816187decd6cea767a74493f8de4c425c25dcf2",
+                "table_hash_after": "6e21f50b8c817a38b8aec370c55f916986e40221cde2555157980b9900461653"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "51f002599a96bad9deab57dc68d9ab438e11dbd16c8875536982b67df5af551f",
+                "actual_receipt_sha256": "51f002599a96bad9deab57dc68d9ab438e11dbd16c8875536982b67df5af551f",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "6e21f50b8c817a38b8aec370c55f916986e40221cde2555157980b9900461653",
+                "table_hash_after": "19cffbc940a749708bc958cf28f31e0e30058911ad5d07e7751133a48d23f428"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "accept",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "19cffbc940a749708bc958cf28f31e0e30058911ad5d07e7751133a48d23f428",
+                "table_hash_after": "d8c0f44db387216ac29aa7d1efa64fee79934b848341cc4428a8413bc563f684"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "539b8ca501eb5ffa9a1b0e91bd664aa6d30d6f880e48e07a3223c7a73fa01d1a",
+                "actual_receipt_sha256": "539b8ca501eb5ffa9a1b0e91bd664aa6d30d6f880e48e07a3223c7a73fa01d1a",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "d8c0f44db387216ac29aa7d1efa64fee79934b848341cc4428a8413bc563f684",
+                "table_hash_after": "8ae44385790c2d39c98dd206c0f5a10f894ed6a56641daf1b2450c77fd8ba922"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "offer_advice",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "8ae44385790c2d39c98dd206c0f5a10f894ed6a56641daf1b2450c77fd8ba922",
+                "table_hash_after": "f5cc0ea3171cbc3a80a487441025b28b40d6e34701978620bbe06afef0abb4f8"
+              }
+            },
+            {
+              "kind": "nonchat_exact_retry",
+              "status": 200,
+              "code": null,
+              "receipt": {
+                "original_receipt_sha256": "a641130a370aa6cff25a25c807f94fb6f72082c5f685872098cb75f1c0759074",
+                "actual_receipt_sha256": "a641130a370aa6cff25a25c807f94fb6f72082c5f685872098cb75f1c0759074",
+                "canonical_full_receipt_equal": true
+              },
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "f5cc0ea3171cbc3a80a487441025b28b40d6e34701978620bbe06afef0abb4f8",
+                "table_hash_after": "5084a7674f56fbb9bb30d4ad25effb91551e60ba0c674daab0b2eed608a30557"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "respond_advice",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "5084a7674f56fbb9bb30d4ad25effb91551e60ba0c674daab0b2eed608a30557",
+                "table_hash_after": "46da574caf9126c78605aeed339b786fdbb11eaf5b57902fa99830e7da3e6599"
+              }
+            },
+            {
+              "kind": "old_chat_exact_retry",
+              "status": 409,
+              "code": "CONVERSATION_STALE",
+              "receipt": null,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "46da574caf9126c78605aeed339b786fdbb11eaf5b57902fa99830e7da3e6599",
+                "table_hash_after": "cf6dd9276e63b34d56b15216407e25681e63e2fa822fb99fc75aaa8cefbc8537"
+              }
+            },
+            {
+              "kind": "old_tuple_new_request_id",
+              "original_kind": "chat",
+              "status": 409,
+              "code": "ROUND_NOT_ACTIVE",
+              "new_receipts": 0,
+              "effects": {
+                "changed_tables": [
+                  "public.admission_limits",
+                  "public.game_rounds"
+                ],
+                "admission_accounting": {
+                  "table": "public.admission_limits",
+                  "expected_member_scope_only": true,
+                  "same_window": true,
+                  "request_counter_increment": 1
+                },
+                "revocation_only_round_rewrites": [
+                  {
+                    "round_identity_preserved": true,
+                    "cipher_rewrapped": true,
+                    "clock_floor_advanced": false
+                  }
+                ],
+                "all_other_tables_sequences_and_authority_equal": true,
+                "raw_grants_still_revoked": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                },
+                "table_hash_before": "cf6dd9276e63b34d56b15216407e25681e63e2fa822fb99fc75aaa8cefbc8537",
+                "table_hash_after": "2544aaa6f70ace2d1caf979a9de1462f52d30ba7b41bbd30d4885c9c6b701f42"
+              }
+            }
+          ],
+          "no_D_narrowing": true,
+          "raw_boot_proof": {
+            "boot": {
+              "schema_version": 2,
+              "private_scopes_revoked": true,
+              "rounds_reconciled": 2,
+              "corrupt_sessions_aborted": 0,
+              "unsupported_sessions_aborted": 0
+            },
+            "rawBootD": {
+              "raw_round_stopped": true,
+              "invitation_action_acks_cleared": true,
+              "private_objects": 0,
+              "private_refs": 0,
+              "snapshot_history_unchanged": true,
+              "observed_before_legacy_maintain_listen_or_private_http": true
+            },
+            "chronology": [
+              {
+                "stage": "migrations_completed",
+                "native_elapsed_ms": 690.2277610000001,
+                "wall_utc": "2026-10-19T21:18:53.183Z"
+              },
+              {
+                "stage": "raw_D_live_before_boot",
+                "native_elapsed_ms": 702.466265,
+                "wall_utc": "2026-10-19T21:18:53.195Z",
+                "remaining_positive": true
+              },
+              {
+                "stage": "actual_bootGate_returned",
+                "native_elapsed_ms": 716.28619,
+                "wall_utc": "2026-10-19T21:18:53.209Z",
+                "boot": {
+                  "schema_version": 2,
+                  "private_scopes_revoked": true,
+                  "rounds_reconciled": 2,
+                  "corrupt_sessions_aborted": 0,
+                  "unsupported_sessions_aborted": 0
+                }
+              },
+              {
+                "stage": "raw_D_revocation_observer_completed",
+                "native_elapsed_ms": 719.8288110000001,
+                "wall_utc": "2026-10-19T21:18:53.212Z",
+                "rawBootD": {
+                  "raw_round_stopped": true,
+                  "invitation_action_acks_cleared": true,
+                  "private_objects": 0,
+                  "private_refs": 0,
+                  "snapshot_history_unchanged": true,
+                  "observed_before_legacy_maintain_listen_or_private_http": true
+                }
+              },
+              {
+                "stage": "legacy_reconcile_completed",
+                "native_elapsed_ms": 720.404497,
+                "wall_utc": "2026-10-19T21:18:53.213Z"
+              },
+              {
+                "stage": "Rooms_maintain_completed",
+                "native_elapsed_ms": 822.297564,
+                "wall_utc": "2026-10-19T21:18:53.315Z"
+              },
+              {
+                "stage": "listener_opened",
+                "native_elapsed_ms": 891.5437299999999,
+                "wall_utc": "2026-10-19T21:18:53.384Z"
+              },
+              {
+                "stage": "protected_phase_completed",
+                "native_elapsed_ms": 7710.652950000001,
+                "wall_utc": "2026-10-19T21:19:00.203Z"
+              },
+              {
+                "stage": "app_pool_closed_authority_preserved",
+                "native_elapsed_ms": 7718.922558,
+                "wall_utc": "2026-10-19T21:19:00.211Z"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "P05-RESTORE-11",
+        "status": "PASS",
+        "detail": {
+          "separate_actual_current18_admission": true,
+          "same_host_display_name_new_identity": true,
+          "no_identity_host_role_or_private_settings_inherited": true
+        }
+      },
+      {
+        "id": "P05-RESTORE-12",
+        "status": "PASS",
+        "detail": {
+          "fault": "MISSING_OWNED_ROOM_PERSONAL_CHAIN",
+          "scope": "PER_ROOM_HTTP",
+          "http_status": 503,
+          "not_rebuilt": true,
+          "exact_bytes_restored": true,
+          "recovery200": true
+        }
+      }
+    ],
+    "chronology": [
+      {
+        "stage": "migrations_completed",
+        "native_elapsed_ms": 690.2277610000001,
+        "wall_utc": "2026-10-19T21:18:53.183Z"
+      },
+      {
+        "stage": "raw_D_live_before_boot",
+        "native_elapsed_ms": 702.466265,
+        "wall_utc": "2026-10-19T21:18:53.195Z",
+        "remaining_positive": true
+      },
+      {
+        "stage": "actual_bootGate_returned",
+        "native_elapsed_ms": 716.28619,
+        "wall_utc": "2026-10-19T21:18:53.209Z",
+        "boot": {
+          "schema_version": 2,
+          "private_scopes_revoked": true,
+          "rounds_reconciled": 2,
+          "corrupt_sessions_aborted": 0,
+          "unsupported_sessions_aborted": 0
+        }
+      },
+      {
+        "stage": "raw_D_revocation_observer_completed",
+        "native_elapsed_ms": 719.8288110000001,
+        "wall_utc": "2026-10-19T21:18:53.212Z",
+        "rawBootD": {
+          "raw_round_stopped": true,
+          "invitation_action_acks_cleared": true,
+          "private_objects": 0,
+          "private_refs": 0,
+          "snapshot_history_unchanged": true,
+          "observed_before_legacy_maintain_listen_or_private_http": true
+        }
+      },
+      {
+        "stage": "legacy_reconcile_completed",
+        "native_elapsed_ms": 720.404497,
+        "wall_utc": "2026-10-19T21:18:53.213Z"
+      },
+      {
+        "stage": "Rooms_maintain_completed",
+        "native_elapsed_ms": 822.297564,
+        "wall_utc": "2026-10-19T21:18:53.315Z"
+      },
+      {
+        "stage": "listener_opened",
+        "native_elapsed_ms": 891.5437299999999,
+        "wall_utc": "2026-10-19T21:18:53.384Z"
+      },
+      {
+        "stage": "protected_phase_completed",
+        "native_elapsed_ms": 7710.652950000001,
+        "wall_utc": "2026-10-19T21:19:00.203Z"
+      },
+      {
+        "stage": "app_pool_closed_authority_preserved",
+        "native_elapsed_ms": 7718.922558,
+        "wall_utc": "2026-10-19T21:19:00.211Z"
+      }
+    ],
+    "http_status_observations": [
+      {
+        "step": "MISSING_OWNED_ROOM_PERSONAL_CHAIN_READ",
+        "expected_http_status": 503,
+        "actual_http_status": 503,
+        "status_invalid": false,
+        "code": "TOPIC_STORAGE_UNAVAILABLE",
+        "code_unlisted": false,
+        "owned_path_verified": true,
+        "fault_path_absent_before": true,
+        "fault_path_absent_after": true,
+        "assertion_completed": true
+      }
+    ],
+    "http_status_overflow": false,
+    "runtime_cleanup": "completed",
+    "server_time_ms": 1002000,
+    "clock_policy": "EXPLICIT_FIXED_FORWARD_FIXTURE_NOT_NATURAL_TTL",
+    "before_D": {
+      "server_time_ms": 1002000,
+      "round_clock_floor_ms": 1000000,
+      "conversation_clock_floor_ms": 1000000,
+      "expiries_ms": {
+        "invitation": 1180000,
+        "action": 1180000,
+        "parent": 1180000,
+        "topic": 1180000,
+        "advice0": 1180000,
+        "session0": 87400000,
+        "presence0": 1045000,
+        "reservation0": 1090000,
+        "session1": 87400000,
+        "presence1": 1045000,
+        "reservation1": 1090000,
+        "projection0": 1005000,
+        "projection1": 1005000
+      },
+      "remaining_ms": {
+        "invitation": 178000,
+        "action": 178000,
+        "parent": 178000,
+        "topic": 178000,
+        "advice0": 178000,
+        "session0": 86398000,
+        "presence0": 43000,
+        "reservation0": 88000,
+        "session1": 86398000,
+        "presence1": 43000,
+        "reservation1": 88000,
+        "projection0": 3000,
+        "projection1": 3000
+      },
+      "live_invitation_action_topic_advice_chat": true,
+      "live_projection_count": 2,
+      "private_ref_count": 2,
+      "snapshot_sha256": "b26a0998d117a669157f22ea92332b6e22cf2e6be0a30935d555edc13529aaca",
+      "history_sha256": "ab5a8626c63f7ab59d6b5112d746e72629de44b72ce63fa1f9a5d56028b43322",
+      "boot_id_sha256": "9d1cddaa9154881339a7845f686a93d69229008b60e95fb78cc8cf6758fd5d50"
+    },
+    "raw_boot_D": {
+      "raw_round_stopped": true,
+      "invitation_action_acks_cleared": true,
+      "private_objects": 0,
+      "private_refs": 0,
+      "snapshot_history_unchanged": true,
+      "observed_before_legacy_maintain_listen_or_private_http": true
+    },
+    "production_catalog_reconcile": "NOT_COMPOSED_SYNTHETIC_SOURCE",
+    "native_elapsed_ms": 7718.934828
+  }
+}

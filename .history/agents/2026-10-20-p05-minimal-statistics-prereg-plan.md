@@ -1,0 +1,5 @@
+# Minimal current-source statistics preregistration/runtime-run plan
+
+- 2026-10-20T17:01:13.159276+00:00 — Assigned read-only audit P03/M3 commands, statistics03b/04 WIP and current unified-chat/r4. Deliver short practical plan with exact runnable commands or missing consumer per obligation. No RUN, no new framework, no app/threshold/history edits. Initial batched rg emitted Windows glob error for nonexistent contracts* path; other search results retained, repeat uses explicit paths.
+
+- 2026-10-20T17:04:15.599442+00:00 — Read M3-v3 protocol/legacy CLI/verifier, V2 norms ADR025/topic design,03b fixed consumers/protocol and stopped04. Completed practical plan: exact existing tests/draft-check/Games/TLC commands, preserved70k/42×2000R20/1M/100+400CI thresholds; legacy CLI cannot measureV2, missing narrow adapter/r4map-C2/wireparity/Dockerlauncher explicitly identified. Proposed limited extra inference strata labelled pre-review candidate, no14× or84×3 requirement. No tests/measurements/Docker/app changes. Writes COMPLETE.

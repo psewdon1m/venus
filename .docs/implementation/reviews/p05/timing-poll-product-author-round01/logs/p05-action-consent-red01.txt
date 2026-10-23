@@ -1,0 +1,86 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/topic-action-consent.test.ts (6 tests | 2 failed) 8ms
+   ❯ private action consent starts after visible, bilaterally approved content (6)
+     × does not consume an action deadline while topic acceptance is still pending 5ms
+     × requires a fresh private topic after content replacement clears action consent 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/topic-action-consent.test.ts > private action consent starts after visible, bilaterally approved content > does not consume an action deadline while topic acceptance is still pending
+AssertionError: expected { …(12) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "acks": [],
+  "activated_at": null,
+  "active_until": null,
+  "actors": [
+    "a",
+    "b",
+  ],
+  "created_at": 1000,
+  "deadline": 31000,
+  "last_ack_at": null,
+  "limit": 181000,
+  "offer_id": "d9c23717-d79d-490a-a2db-34b4933ca8ea",
+  "proposal_revision": 1,
+  "scope": "action",
+  "state": "pending",
+}
+
+ ❯ apps/api/src/topic-action-consent.test.ts:23:53
+     21| describe('private action consent starts after visible, bilaterally app…
+     22|  it('does not consume an action deadline while topic acceptance is sti…
+     23|   const f=fixture();f.begin();expect(f.data.action).toBeNull();
+       |                                                     ^
+     24|   f.setNow(29999);f.begin(false);expect(f.data.action).toBeNull();
+     25|   f.setNow(30000);f.begin(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  apps/api/src/topic-action-consent.test.ts > private action consent starts after visible, bilaterally approved content > requires a fresh private topic after content replacement clears action consent
+AssertionError: expected { …(12) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "acks": [],
+  "activated_at": null,
+  "active_until": null,
+  "actors": [
+    "a",
+    "b",
+  ],
+  "created_at": 15000,
+  "deadline": 45000,
+  "last_ack_at": null,
+  "limit": 181000,
+  "offer_id": "624dca3f-a85e-4783-a81e-c5090d578435",
+  "proposal_revision": 1,
+  "scope": "action",
+  "state": "pending",
+}
+
+ ❯ apps/api/src/topic-action-consent.test.ts:38:75
+     36|  it('requires a fresh private topic after content replacement clears a…
+     37|   const f=fixture();f.begin(true);const original=f.data.action;
+     38|   f.data.action=null;f.setNow(15000);f.begin(false);expect(f.data.acti…
+       |                                                                           ^
+     39|   f.setNow(29000);f.begin(true);expect(f.data.action?.offer_id).not.to…
+     40|   expect(f.data.action?.acks).toEqual([]);expect(f.data.action?.deadli…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  20:19:30
+   Duration  319ms (import 73%, transform 21%, tests 4%, worker 2%)
+

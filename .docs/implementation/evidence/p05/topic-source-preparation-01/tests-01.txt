@@ -1,0 +1,41 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > keeps both real release registries empty and frozen 3ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > binds raw bytes/full cards and preserves inactive historical pins for one reviewed pack 22ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > permits zero active maps without choosing a historical fallback 3ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects two active maps and duplicate exact historical pin tuples 7ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > does not authorize a matching map merely because it carries reviewed-format flags 2ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects synthetic packs even if their digest and map hashes are caller-supplied 1ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects duplicate authorized pack digests 2ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects malformed or oversized release registry schema_version 0ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects malformed or oversized release registry extra 0ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects malformed or oversized release registry approved 0ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects malformed or oversized release registry approved 1ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > requires exact entry fields and an explicit active boolean 2ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects noncanonical base64, external paths and changed raw JSON bytes 2ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > does not convert unapproved/HOLD documents even with correct newly supplied raw hashes 2ms
+ ✓ packages/card-catalog/src/topic-bundles.test.ts > release-only approved topic bundles, no production content activation > rejects changed trust hashes, unknown trust fields and wrong pack digest 2ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > defaults to unavailable with an empty release registry and never opens a nested transaction 25ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > gets the actual active catalog pack then performs the synchronous ledger fence 6ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > returns no new-start map when the actual catalog is inactive or only a historical map exists 4ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > retains exact old map pins without upgrading to the new active taxonomy 7ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > denies catalog inconsistency/errors without falling back to a remembered pack 3ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > requires every exact pin, rejects extra fields and never resolves historical pins by pack digest alone 5ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > withdraws the whole pack when any exact card revision is withdrawn 8ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > does not confuse a different card revision withdrawal with the pinned revision 7ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > observes a new withdrawal in the final sync fence after catalog active awaits 8ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > observes a new withdrawal in the final sync fence after assertPinned awaits 5ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > rereads the actual file at every final delivery fence 6ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > denies missing ledger instead of stale content 6ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > denies partial ledger instead of stale content 6ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > denies corrupt ledger instead of stale content 6ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > denies regressed ledger instead of stale content 8ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > rejects synthetic active packs even when a catalog interface incorrectly returns one 2ms
+ ✓ apps/api/src/topic-game-source.test.ts > release topic source actual catalog and protected ledger boundary > does not trust forged maps inserted by a test dependency instead of the immutable release loader 4ms
+
+ Test Files  2 passed (2)
+      Tests  32 passed (32)
+   Start at  20:26:39
+   Duration  494ms (import 50%, tests 25%, transform 23%, worker 1%)
+

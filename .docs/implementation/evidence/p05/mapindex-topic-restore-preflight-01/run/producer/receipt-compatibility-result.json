@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "role": "AUTHOR_NOT_ACCEPTOR",
+  "scope": "EXACT_METHOD_INERT_REPLAY_COMPATIBILITY_COUNTEREXAMPLE_NOT_ACTUAL_BOOT_OR_HTTP",
+  "source": "apps/api/src/topic-games.ts",
+  "source_sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a",
+  "method_sha256": "1d8f0ba89f0437cb35a8c119740a96cb132b439028312435227a3ba6b1474cc8",
+  "status": "DESIGN_CONFLICT_REQUIRES_ROOT_RESOLUTION",
+  "reason": "Current exact request replay without optional replayCheck returns harmless prior receipt after auth, while immutable restore design02 requests all old acceptance/advice retries denied4xx. Raw grants/effects need separate assertions.",
+  "observed": [
+    {
+      "operation": "respond",
+      "returned_old_receipt": true,
+      "new_effects": 0,
+      "final_auth_checks": 1
+    },
+    {
+      "operation": "conversation:respond_topic",
+      "returned_old_receipt": true,
+      "new_effects": 0,
+      "final_auth_checks": 1
+    },
+    {
+      "operation": "conversation:offer_advice",
+      "returned_old_receipt": true,
+      "new_effects": 0,
+      "final_auth_checks": 1
+    },
+    {
+      "operation": "conversation:respond_advice",
+      "returned_old_receipt": true,
+      "new_effects": 0,
+      "final_auth_checks": 1
+    }
+  ]
+}

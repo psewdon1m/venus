@@ -1,0 +1,61 @@
+{
+  "cwd": "C:\\.projects\\venus",
+  "node": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+  "commands": [
+    {
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "apps/api/src/room-games.test.ts",
+        "apps/api/src/room-socket-poll.test.ts",
+        "apps/api/src/room-socket-projection.test.ts",
+        "apps/api/src/topic-games-socket-projection.test.ts"
+      ],
+      "output": "red.txt",
+      "native_exit": 1,
+      "result": "6FAIL_46PASS_beforecode"
+    },
+    {
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "apps/api/src/room-games.test.ts",
+        "apps/api/src/room-socket-poll.test.ts",
+        "apps/api/src/room-socket-projection.test.ts",
+        "apps/api/src/topic-games-socket-projection.test.ts",
+        "apps/api/src/topic-games-feature-off.test.ts",
+        "apps/api/src/topic-projection-reuse.test.ts",
+        "apps/api/src/topic-round-view.test.ts"
+      ],
+      "output": "green02.txt",
+      "native_exit": 0,
+      "result": "88PASS_7FILES"
+    },
+    {
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "-b",
+        "apps/api"
+      ],
+      "output": "api-tsc.txt",
+      "native_exit": 0
+    },
+    {
+      "argv": [
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "C:/.projects/venus/eslint.config.mjs",
+        "apps/api/src/rooms.ts",
+        "apps/api/src/room-routes.ts",
+        "apps/api/src/room-games.ts",
+        "apps/api/src/topic-games.ts",
+        "apps/api/src/room-games.test.ts",
+        "apps/api/src/room-socket-poll.test.ts",
+        "apps/api/src/room-socket-projection.test.ts",
+        "apps/api/src/topic-games-socket-projection.test.ts"
+      ],
+      "output": "lint.txt",
+      "native_exit": 0
+    }
+  ]
+}

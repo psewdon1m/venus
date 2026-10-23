@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/p04_gate_preflight",
+  "status": "CHANGES_REQUESTED",
+  "scope": "EXACT_RESOURCE_WRITER_AND_NON_GATING_OPERATIONAL_EVIDENCE_ONLY",
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "checkpoint_index_sha256": "a4ef89b2f8007179da6c6fd9625d3ac017d54caedb50fc0cc282a1e31445eda7",
+  "writer_sha256": "eb8d38d5591f1c1cd5416cb41ac72a6e001e6e0fd8c4c6f478849fe3967d7c6a",
+  "previous_finding": {
+    "id": "P05-MEAS-COMP-001",
+    "status": "CLOSED_FOR_EXACT_NEW_WRITER_ONLY",
+    "independent_actual_windows_controls": [
+      "initial-root-junction",
+      "initial-ancestor-junction",
+      "post-init-nested-junction",
+      "post-init-root-junction"
+    ],
+    "original61_writer_unchanged": true
+  },
+  "findings": [
+    {
+      "id": "P05-MEAS-RESOURCE-001",
+      "priority": "P2",
+      "location": "resource/artifact-store.mjs:24-25",
+      "title": "NTFS alternate data streams escape artifact byte accounting",
+      "reproducer": "new ArtifactStore(ownedRegularRoot,{limit:5}); write(\"base:secret\",\"12345\"); write(\"base:other\",\"12345\")",
+      "actual": "Both writes succeed on Windows; two streams retain10 bytes while check()/store.bytes remains0; no overwrite or budget exception.",
+      "expected": "Reject unsupported stream namespace before creating any file, or account every retained stream byte; portable generated artifact names should reject colon/components outside the explicit grammar.",
+      "fix_scope": "Exact writer path/name boundary, no product mutation needed. Repeat actual NTFS stream and regular file budget controls after fix."
+    }
+  ],
+  "independent_execution": {
+    "actual_windows_controls": 11,
+    "pass": 10,
+    "fail": 1,
+    "statistical_samples": 0,
+    "product_requests": 0,
+    "Docker_actions": 0,
+    "temp_tree_cleanup": "completed"
+  },
+  "benchmark_scope": {
+    "zip_entries_verified": 44,
+    "R100": "HARD_WALL_STOPPED_NOT_ACCEPTED_26_COMPLETED_ROUNDS",
+    "R4": "LINUX_NON_GATING_4_ROUNDS_ZERO_PRIVATE",
+    "not_full_R100_byte_replay": true,
+    "no_feasibility_or_ETA_promise": true
+  },
+  "full_producer_accepted": false,
+  "actual_runtime_parity_accepted": false,
+  "statistical_RUN_authorized": false,
+  "full_stage_accepted": false,
+  "human_approval": false
+}

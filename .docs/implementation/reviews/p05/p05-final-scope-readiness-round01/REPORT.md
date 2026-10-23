@@ -1,0 +1,33 @@
+# P05: точный остаток приёмки в standalone-local-pilot-v2
+
+Проверка объёма, UTC 2026-10-23. **Этап ещё не принят.** Это read-only сверка плана и рабочих ссылок, не повторная проверка runtime. Автор участвовал в подготовке WIP и UI-helper; этот отчёт не является независимой приёмкой собственной реализации и не заменяет двух финальных nonauthor reviewers.
+
+Проверены план v2 §2.2/§9, документ 04 §8, решения v4, ADR-025/026/029/030 и 12 файлов незамороженного WIP. Зафиксированы **44 требования, 19 UX, 72 retired triggers, 5 EXIT, 10 E2E и 9 CI-R/I/P**; все итоговые acceptance=false. Исторические proof-пакеты заново не переаудированы. Точные входные хеши находятся в INDEX этого отчёта.
+
+## Обязательные пять EXIT
+
+| EXIT | Уже имеющееся ограниченное покрытие | Что остаётся принять |
+|---|---|---|
+| 1: три режима, 2…8 участников, оба контекста, locale/card ID, truth/dare, собственное «но», E2E/CI | Questions `774c7a4f…`, TD `4bc6c6df…`, YB `3eb4b5e5…`: совокупно 42 API-профиля/840 завершённых раундов и два отрицательных YB-случая. Их исходная provenance и конечный scope сохраняются. | Итоговая сборка применимых 10 E2E/9 CI-R/I/P из существующих proof; свежая UI-матрица, текущие обязательные вычислительные результаты, quality/CI и closing reviews. Новый аналогичный API-прогон сам по себе не требуется. |
+| 2: switch/reconnect/restart, identity isolation, Stop/decline, честные ошибки | Существующие конечные Browser26/N4/API/wire-компоненты и OCI39 server/boot/history/revoke/B4. Это отдельные наблюдения, не новый целиком принятый frontend. | Явная окончательная привязка этих компонентов к текущему кандидату, актуальная UI-матрица и финальная приёмка. Нельзя переносить старые main/CSS/RoomShell UI-результаты целиком; автоматического требования повторить весь Browser16 из этого не следует. |
+| 3: private ACL/TTL/revoke/disconnect/delete и выключенная capability | ADR-025 требует единый V2-текстовый канал online/in_person с прежними consent/ACL/TTL/fences. Имеются API, finite wire, privacy-source и matched-domain компоненты с их ограничениями. | Uniform06 со всеми семью существующими reducers, свежий UI и финальный privacy review. Модельные privacy-результаты не объявлять универсальной ordinary-wire/cadence гарантией. |
+| 4: закреплённые Chromium/Firefox/WebKit, RU/EN/TR, все геометрии, клавиатура/zoom/contrast/reduced motion | Принят **метод** A31-02 `5fe1f3…`, runtime `7b397bec…`; source28/image29. Предыдущие PASS/FAIL и диагностики остаются историческими. | **Девять свежих shards одного runtime + исходный aggregate 459/324/135 + независимая actual-приёмка.** На момент поручения они ещё не выполнены. CF 200% и narrowly accepted WebKit27.2 nominal200/measured207.36 фиксировать честно; не писать Safari/device/exact200 для WebKit. |
+| 5: retention/admission18+/mock notices, threat/privacy, актуальный P04 | U-019/ADR-026/029 принимает точный470r4 только для local friends pilot; технические P04/provisional-loader, admission, ACL/lifecycle компоненты уже существуют. | Текущие C2/M3 terminal/reducers, техническая сборка P04 и 44/19/72, проверенный предусмотренный rollback и два nonauthor final reviews в точном scope. Human review450 HOLD не возрождается как новый blocker; профессиональная языковая/правовая/production-приёмка не заявляется. |
+
+## Остаток без расширения работ
+
+1. A31-02: девять UI shards/aggregate/actual review на одном `7b397bec3c9f7724a0d86f1811e661d594cafaf6d97dbd9af6784dbc043ab847`. Принятый method INDEX: `.docs/implementation/reviews/p05/a31-public-advance-independent-round02/INDEX.json`, SHA `5fe1f3aed81dfbe07174a950c19390893c91e689a3356742e3f70181caf787bd`. Старый A31-01 FF/EN51 не смешивать с новым runtime.
+2. Продолжить уже запущенный **uniform06**, без frontend-driven restart/resample: manifest `.artifacts/p05-full-original-ranges06/MANIFEST.json`, SHA `12af2af441d19767794cae18fb32832cf02e2cefd0793f154414d34c8cf6d03e`; один A26/source27f/image48c, 1 364 448 исходных C2/M3 случаев. Нужны terminal, семь reducers и независимая приёмка. ACTIVE/частичные записи не являются C2/M3 PASS. ADR-030 запрещает заменить эти результаты старой статистикой/смешанным carry.
+3. Закончить предусмотренный clean quality и **восемь existing required GitHub contexts на exact final head**, затем окончательную traceability/manifest сборку. Root сообщил Q08 ENOBUFS и исправление с ожидающим повтором: quality PASS из этого не следует. Девять CI-R/I/P test IDs — не требование девятого CI job. Root CI-only core `8c95cc…/1891` и APP component `57c55…/1887` имеют разную provenance; результаты не переименовывать между SHA.
+4. Два разных nonauthor closing reviewers принимают Engineering/QA и Privacy/Security, с устранением конкретных findings и только затронутыми повторными проверками. Все writers STOP; root публикует **одну** финальную closure revision и актуальные реестры/manifest. P06 не начинать.
+
+## Два конкретных assembly-несоответствия WIP
+
+- **WIP-01:** `PENDING.LAYOUT459` и `CURRENT_FACTS.current_UI_method` всё ещё указывают A31-01/runtime `5b3d4e04…`, method `fee234…` и старый active58127. Перед финальной публикацией заменить текущий locator принятым A31-02/`7b397bec…`/`5fe1f3…` и фактическими terminal pins, сохранив старые результаты. Это metadata-правка; не новый прогон сверх уже обязательных девяти.
+- **WIP-02:** строка `P04_TECHNICAL_CARRY.rows[OriginalV2C2executionandmandatorybaselines]` содержит «No remainingoriginalC2executiongap» рядом с историческими84448. В `CURRENT_FACTS` и `PENDING` uniform06 уже правильно pending. Финальная сборка должна явно назвать указанную строку историческим source-компонентом либо привязать к новому принятому uniform06; сейчас эта фраза не доказывает текущий C2 PASS. Новый метод/порог/набор тестов не требуется.
+
+Остальные старые per-row `actual_pending` labels BROWSER16/OCI14/WIRE — сохранённые assembly references, а не повторные задания. Два context-only якоря строк не получают выдуманного equal-line доказательства. 72 исключённых trigger IDs не удаляют 19 общих UX-обязательств.
+
+Music/реальные телефоны в E2E-02, Cinema-интеграция в E2E-07 и mobile autoplay в E2E-08 остаются частично/полностью вне текущего P05 по принятому scope; Rooms/Games/recovery/accessibility части сохраняются. DNS/production TLS/сервер, внешние Exocortex/Updater, P06 update/restore, будущие Cinema/Calls и реальные mobile устройства не добавляются в этот остаток. 18+ обязательно отдельно от mock notices; U-019 не снимает технические гейты.
+
+Новых APP findings этим чтением не установлено. WIP, registry/status, APP, producer и тесты не изменены. **SCOPE AUDIT COMPLETE_STOP; NOT STAGE PASS.**

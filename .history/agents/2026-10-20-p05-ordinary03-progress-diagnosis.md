@@ -1,0 +1,5 @@
+# Ordinary03 readonly progress diagnosis
+
+2026-10-20T19:55:27.730860+00:00 UTC — Root authorized ≤5min observation only own project venus-pilot470-e138258d870f/sourceA4/image1c023. Read owner inspect/CPU/PGwait/round timestamps/probe flow. No mutations/restarts/kill/timeout changes; no secrets/ciphertext/response bodies.
+2026-10-20T19:56:21.922659+00:00 UTC — Exact ownIDs d7907f26336f/50323c17d4fa ownershipvalidated. Initial dockerstats--filter unsupportedFAIL1 retained tool output; exactIDs retry stats exit0. Firstsample19:55:46seq2/N3 inferred/round12rev40 updated1.5s ago; CPU42%app3.7%PG, transient0.29sadvisorywait/0.66sxact no stuckproof. Readonly report and secondsample saved, no mutations.
+2026-10-20T19:57:06.728760+00:00 UTC — Finished bounded observation: N2profilePASS20; N3round12→13rev40→47 in35sec, current updatesfresh, errorsnull. Checkpoint0/statusFAIL initialization explained exactsource. No persistenthang/productbug established, nochange recommended fromsamplesalone. Durable INDEX a090f61d3edeabc513edf20f4bd62222cdaad37b2e019da304b34928556aa31e /13 children. Observations stopped, writes COMPLETE.

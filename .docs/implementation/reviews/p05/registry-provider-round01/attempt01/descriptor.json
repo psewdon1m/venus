@@ -1,0 +1,22 @@
+{
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "id": "89098a47a113",
+  "timestamp": "2026-10-19T20:06:17.3994792+03:00",
+  "test_sha256": "cee89e592546d2036ae4f508f5d0b2b717d8e6d3e37cf3f8e4fc41e5437e862c",
+  "init": "venus-p05-life-review-89098a47a113-init",
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "kind": "INDEPENDENT_FROZEN_LINUX_REVIEW",
+  "binds": [
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\private-topic-ledger.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\independent.test.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\security.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\topic-room-lifecycle.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\topic-room-registry.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\private-topic-preferences.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round01\\rooms.ts"
+  ],
+  "source_sha256": "cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a",
+  "volume": "venus-p05-life-review-89098a47a113",
+  "bootstrap": "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/independent.test.ts','apps/api/src/security.ts','apps/api/src/topic-room-lifecycle.ts','apps/api/src/topic-room-registry.ts','apps/api/src/private-topic-preferences.ts','apps/api/src/rooms.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/independent.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/independent.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);",
+  "run": "venus-p05-life-review-89098a47a113-test"
+}

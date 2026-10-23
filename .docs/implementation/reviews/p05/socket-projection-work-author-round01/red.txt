@@ -1,0 +1,183 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/room-socket-projection.test.ts (5 tests | 3 failed) 19ms
+   ❯ internal V2 socket projection work selection preserves credential fences (5)
+     × default direct caller retains child projection, while private-only asks for private preparation 10ms
+     × V2 heartbeat skips all child projection but renews presence/session and rechecks current authority 2ms
+     × renewed heartbeat cannot revive the original credential expiring during later IO 2ms
+ ❯ apps/api/src/room-games.test.ts (42 tests | 1 failed) 32ms
+   ❯ immutable room protocol game routing (42)
+     × internal private-only projection option forwards only to V2, protocol2 7ms
+ ❯ apps/api/src/room-socket-poll.test.ts (2 tests | 1 failed) 16ms
+   ❯ bounded ordinary room WS polling (2)
+     × coalesces slow poll ticks so queued polls cannot starve a heartbeat 13ms
+ ❯ apps/api/src/topic-games-socket-projection.test.ts (3 tests | 1 failed) 12ms
+   ❯ V2 private-only socket view skips unused public projection (3)
+     × skips only public view while loading/preparing private content and querying exact refs 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/room-games.test.ts > immutable room protocol game routing > internal private-only projection option forwards only to V2, protocol2
+AssertionError: expected "vi.fn()" to be called with arguments: [ …(6) ]
+
+Received:
+
+  1st vi.fn() call:
+
+@@ -4,9 +4,6 @@
+    },
+    "room",
+    "member",
+    "en",
+    0,
+-   {
+-     "includePublicGame": false,
+-   },
+  ]
+
+
+Number of calls: 1
+
+ ❯ apps/api/src/room-games.test.ts:42:55
+     40|  for(const protocol of [1,2])it(`internal private-only projection opti…
+     41|   const f=fixture(protocol);await f.router.socketView(f.c,'room','memb…
+     42|   expect((protocol===2?f.topics:f.legacy).socketView).toHaveBeenCalled…
+       |                                                       ^
+     43|  });
+     44| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > coalesces slow poll ticks so queued polls cannot starve a heartbeat
+AssertionError: expected 1st "vi.fn()" call to have been called with [ Anything, false, +0, { …(1) } ]
+
+- Expected
++ Received
+
+@@ -3,11 +3,6 @@
+      "generation": 1,
+      "memberId": "actor",
+      "roomId": "11111111-1111-4111-8111-111111111111",
+      "sessionHash": "fixture",
+    },
+-   false,
+-   0,
+-   {
+-     "projection": "private",
+-   },
+  ]
+
+ ❯ apps/api/src/room-socket-poll.test.ts:46:34
+     44|   const f=await fixture();try{
+     45|    await vi.advanceTimersByTimeAsync(6000);expect(f.service.socketStat…
+     46|    expect(f.service.socketState).toHaveBeenNthCalledWith(1,expect.anyt…
+       |                                  ^
+     47|    expect(f.service.socketState).toHaveBeenNthCalledWith(2,expect.anyt…
+     48|    f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  apps/api/src/room-socket-projection.test.ts > internal V2 socket projection work selection preserves credential fences > default direct caller retains child projection, while private-only asks for private preparation
+AssertionError: expected last "vi.fn()" call to have been called with [ Anything, 'room', 'member', …(3) ]
+
+- Expected
++ Received
+
+@@ -5,9 +5,6 @@
+    },
+    "room",
+    "member",
+    "en",
+    9,
+-   {
+-     "includePublicGame": false,
+-   },
+  ]
+
+ ❯ apps/api/src/room-socket-projection.test.ts:34:109
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  apps/api/src/room-socket-projection.test.ts > internal V2 socket projection work selection preserves credential fences > V2 heartbeat skips all child projection but renews presence/session and rechecks current authority
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "query": [Function Mock],
+        "release": [Function Mock],
+      },
+      "room",
+      "member",
+      "en",
+      0,
+    ]
+
+
+Number of calls: 1
+
+ ❯ apps/api/src/room-socket-projection.test.ts:37:90
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  apps/api/src/room-socket-projection.test.ts > internal V2 socket projection work selection preserves credential fences > renewed heartbeat cannot revive the original credential expiring during later IO
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "query": [Function Mock],
+        "release": [Function Mock],
+      },
+      "room",
+      "member",
+      "en",
+      0,
+    ]
+
+
+Number of calls: 1
+
+ ❯ apps/api/src/room-socket-projection.test.ts:41:162
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  apps/api/src/topic-games-socket-projection.test.ts > V2 private-only socket view skips unused public projection > skips only public view while loading/preparing private content and querying exact refs
+AssertionError: expected { game: { proof: 'public' }, …(1) } to deeply equal { game: null, …(1) }
+
+- Expected
++ Received
+
+@@ -1,7 +1,9 @@
+  {
+-   "game": null,
++   "game": {
++     "proof": "public",
++   },
+    "privateEvents": [
+      {
+        "eventId": "event",
+        "revision": 3,
+      },
+
+ ❯ apps/api/src/topic-games-socket-projection.test.ts:16:209
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  4 failed (4)
+      Tests  6 failed | 46 passed (52)
+   Start at  01:50:45
+   Duration  377ms (import 55%, transform 29%, tests 13%, worker 3%)
+

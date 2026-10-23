@@ -1,0 +1,175 @@
+"""One root-authorized forensic export; never reruns worker or changes old host proof."""
+from pathlib import Path,PurePosixPath
+from datetime import datetime,timezone
+import hashlib,json,subprocess,shutil,os,stat,uuid,time,tarfile,threading,sys,re
+ROOT=Path('C:/.projects/venus');BASE=ROOT/'.artifacts/p05-r10008-forensic01';OLD=ROOT/'.artifacts/p05-recovery-source1274-01/.artifacts/p05/r100-v3-7da46d477970'
+OWNER='a2a6f0422ae6d811953ed137afa7b496';VOLUME='venus-r100-v3-7da46d477970-output';NAME='venus-r100-v3-7da46d477970';IMAGE='sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f'
+DOCKER='C:/Program Files/Docker/Docker/resources/bin/docker.exe';CAP=64*1024**2;TARCAP=20*1024**2;RESERVE=10*1024**3
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+KEY='com.venus.forensic.owner';OLDKEY='com.venus.measurement.owner'
+def portable(raw):
+ assert isinstance(raw,str)and raw and '\\'not in raw and ':'not in raw and '\x00'not in raw
+ p=PurePosixPath(raw);assert not p.is_absolute()and all(x not in ['.','..','']for x in raw.split('/'))
+ assert all(re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]*',x)and not x.endswith(('.',' '))and x.split('.')[0].upper()not in ['CON','PRN','AUX','NUL',*[f'COM{i}'for i in range(1,10)],*[f'LPT{i}'for i in range(1,10)]]for x in raw.split('/'))
+ return raw
+def validate_old_container(r):
+ assert re.fullmatch('[a-f0-9]{64}',r['Id'])and r['Image']==IMAGE
+ assert r['Config']['Labels'][OLDKEY]==OWNER
+ assert r['Name']in['/'+NAME+s for s in ['','-bootstrap','-probe','-volume-inspect','-export']]
+ assert not r['State']['Running']and r['HostConfig']['NetworkMode']=='none'and not r['HostConfig']['PortBindings']
+def validate_volume(v):assert v['Name']==VOLUME and v['Labels'][OLDKEY]==OWNER and v['Driver']=='local'and not v.get('Options')
+def controls():
+ for bad in ['../bad','x/../bad','/bad','a\\b','x:a','a//b','CON','a.']:
+  try:portable(bad)
+  except AssertionError:pass
+  else:raise AssertionError('BAD_PATH_ACCEPTED:'+bad)
+ assert portable('progress/001-001-1617.json')
+ print(json.dumps({'status':'FINITE_SAFE_PATH_CONTROLS_PASS','negative_paths':8,'positive_paths':1,'Docker_calls':0}))
+def run():
+ controls();assert shutil.disk_usage(ROOT).free>=RESERVE+CAP
+ before_index=ROOT/'.docs/implementation/evidence/p05/recovery-method08-actual01/INDEX.json'
+ assert sha(before_index)=='8e6de2acca7ef3e336fd32170d9ccc318d4e89b2bf4888aec8608378c6637d0f'
+ original=json.loads((OLD/'control/receipts/native-inventory.json').read_bytes());assert len(original['files'])==104
+ prep=json.loads((OLD/'preparation.json').read_bytes());assert prep['owner']==OWNER and prep['volume']==VOLUME and prep['image']==IMAGE
+ frozen=json.loads(before_index.read_bytes())
+ for row in frozen['files']:
+  p=before_index.parent/row['path'];assert p.is_file()and sha(p)==row['sha256']and p.stat().st_size==row['bytes']
+ inputs=OLD/'inputs/next'
+ for n in ['r100-v3-inspect.mjs','artifact-store-v2.mjs']:
+  assert (inputs/n).is_file()
+ ident=uuid.uuid4().hex;OUT=BASE/('attempt-'+ident[:12]);assert not OUT.exists();OUT.mkdir()
+ started=time.monotonic();records=[];helpers={};removed=[];cleanup_errors=[];verified=False
+ result={'status':'NOT_ACCEPTED_FORENSIC','source_run_status_unchanged':'NOT_ACCEPTED_HOST_TAR_STAGE_GUARD_FAILED','old_owner':OWNER,'old_volume':VOLUME,'new_forensic_owner':ident,'old_frozen_index_sha256':sha(before_index),'export_verified':False,'cleanup':'retained','attempt_root':str(OUT),'statistics_RUN':False,'full_P05_PASS':False}
+ def budget(nextbytes=0):
+  assert time.monotonic()-started<180,'WHOLE_FORENSIC_DEADLINE'
+  assert shutil.disk_usage(OUT).free>=RESERVE+CAP,'ACTUAL_HOST_RESERVE'
+  total=0
+  for p in OUT.rglob('*'):
+   s=p.lstat();assert not getattr(s,'st_file_attributes',0)&0x400,'REPARSE_FORBIDDEN'
+   total+=4096 if p.is_dir()else((s.st_size+4095)//4096)*4096
+  assert total+nextbytes+2*1024**2<=CAP,'OWN64MIB_CAP'
+  return total
+ def persist(name,data):
+  raw=data if isinstance(data,bytes)else(json.dumps(data,indent=2)+'\n').encode();budget(len(raw)+4096);p=OUT/name;assert not p.exists();p.parent.mkdir(parents=True,exist_ok=True)
+  with p.open('xb')as f:f.write(raw);f.flush();os.fsync(f.fileno())
+  return {'path':name,'bytes':len(raw),'sha256':sha(p)}
+ def cli(args,timeout=30,cap=262144):
+  budget();left=180-(time.monotonic()-started);assert left>0
+  r=subprocess.run([DOCKER,'--context','desktop-linux',*args],capture_output=True,timeout=min(timeout,left));assert len(r.stdout)+len(r.stderr)<=cap
+  records.append({'args':args,'exit_code':r.returncode,'stdout':r.stdout.decode('utf8','replace'),'stderr':r.stderr.decode('utf8','replace')});assert r.returncode==0,records[-1]
+  return r.stdout
+ def owner_inventory():
+  ids=cli(['ps','-aq','--no-trunc','--filter','label='+OLDKEY+'='+OWNER]).decode().split();assert len(ids)==len(set(ids))and all(re.fullmatch('[a-f0-9]{64}',i)for i in ids)
+  volumes=cli(['volume','ls','-q','--filter','label='+OLDKEY+'='+OWNER]).decode().split();assert all(v==VOLUME for v in volumes)
+  return {'containers':ids,'volumes':volumes}
+ def helper(role,entry,argv,bind=False):
+  name='venus-forensic-'+ident[:12]+'-'+role
+  args=['create','--name',name,'--label',KEY+'='+ident,'--label','com.venus.forensic.source_owner='+OWNER,'--network','none','--ipc','none','--read-only','--user','1000:1000','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','128m','--cpus','1','--pids-limit','48','--log-driver','none','--mount','type=volume,src='+VOLUME+',dst=/venus-output,volume-nocopy,readonly']
+  if bind:args+=['--mount','type=bind,src='+str(inputs)+',dst=/forensic-input,readonly']
+  args+=['--entrypoint',entry,IMAGE,*argv];cli(args);helpers[name]=True;check_helper(name);return name
+ def check_helper(name):
+  row=json.loads(cli(['inspect',name]))[0]
+  assert row['Name']=='/'+name and row['Image']==IMAGE and row['Config']['Labels'][KEY]==ident and row['Config']['Labels']['com.venus.forensic.source_owner']==OWNER
+  assert row['HostConfig']['IpcMode']=='none'and row['HostConfig']['ReadonlyRootfs']and row['HostConfig']['NetworkMode']=='none'and not row['HostConfig']['PortBindings']
+  assert len(row['Mounts'])in[1,2]and all(not m['RW']for m in row['Mounts'])
+  assert any(m['Name']==VOLUME and m['Destination']=='/venus-output'for m in row['Mounts']if m['Type']=='volume')
+  return row
+ try:
+  persist('authorization.json',{'source':'Explicit root collaboration task authorizing forensic export+cleanup only','owner':OWNER,'volume':VOLUME,'image':IMAGE,'host_cap_bytes':CAP,'tar_cap_bytes':TARCAP,'reserve_bytes':RESERVE,'old_run_acceptance_unchanged':True,'created_at':datetime.now(timezone.utc).isoformat()})
+  persist('original-native-inventory.json',(OLD/'control/receipts/native-inventory.json').read_bytes())
+  vol=json.loads(cli(['volume','inspect',VOLUME]))[0];validate_volume(vol);persist('source-volume-before.json',vol)
+  owned=owner_inventory();persist('source-owner-before.json',owned)
+  for cid in owned['containers']:validate_old_container(json.loads(cli(['inspect',cid]))[0])
+  name=helper('scan','node',['/forensic-input/r100-v3-inspect.mjs','--inspect'],True)
+  fresh=json.loads(cli(['start','-a',name],cap=131072));row=check_helper(name);assert not row['State']['Running']and row['State']['ExitCode']==0
+  assert fresh['status']=='READONLY_NATIVE_INVENTORY'and int(fresh['native_available_bytes'])>=RESERVE+128*1024**2
+  for obj in [original,fresh]:
+   assert len(obj['files'])==104 and len({x['path']for x in obj['files']})==104
+   for x in obj['files']:portable(x['path']);assert x['bytes']<=8*1024**2 and re.fullmatch('[a-f0-9]{64}',x['sha256'])
+  ordered=lambda obj:sorted(obj['files'],key=lambda x:x['path'])
+  assert ordered(fresh)==ordered(original),'FRESH104_EXACT_ORIGINAL_INVENTORY_REQUIRED';persist('fresh-native-inventory.json',fresh)
+  name=helper('tar','tar',['-C','/venus-output','-cf','-','.'])
+  tarpath=OUT/'native-prefix.tar';budget(TARCAP)
+  cmd=[DOCKER,'--context','desktop-linux','start','-a',name]
+  proc=subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE);err=[];timed=[]
+  def kill():timed.append(True);proc.kill()
+  timer=threading.Timer(min(60,180-(time.monotonic()-started)),kill);timer.start()
+  def stderr_reader():
+   while True:
+    b=proc.stderr.read(4096)
+    if not b:return
+    err.append(b)
+    if sum(map(len,err))>65536:proc.kill();return
+  t=threading.Thread(target=stderr_reader,daemon=True);t.start();size=0
+  try:
+   with tarpath.open('xb')as f:
+    while True:
+     b=proc.stdout.read(65536)
+     if not b:break
+     size+=len(b)
+     if size>TARCAP:proc.kill();raise AssertionError('TAR20MIB_CAPTURE_CAP')
+     budget(len(b));f.write(b)
+    f.flush();os.fsync(f.fileno())
+   code=proc.wait(timeout=5);t.join(timeout=2)
+  finally:timer.cancel()
+  records.append({'args':cmd[3:],'exit_code':code,'stdout_binary_bytes':size,'stdout_sha256':sha(tarpath),'stderr':b''.join(err).decode('utf8','replace'),'timed_out':bool(timed)})
+  assert code==0 and not timed and not t.is_alive()and sum(map(len,err))<=65536
+  row=check_helper(name);assert not row['State']['Running']and row['State']['ExitCode']==0
+  extracted=[];seen=set();total=0;destination=OUT/'export';destination.mkdir()
+  with tarfile.open(tarpath,'r:')as tf:
+   members=tf.getmembers();assert len(members)<=1024
+   for m in members:
+    raw=m.name[2:]if m.name.startswith('./')else m.name
+    if raw in ['','.']:assert m.isdir();continue
+    raw=raw.rstrip('/')if m.isdir()else raw;portable(raw)
+    assert raw not in seen and(m.isdir()or m.isfile())and not m.issym()and not m.islnk();seen.add(raw)
+    p=destination.joinpath(*raw.split('/'));assert p.resolve().is_relative_to(destination.resolve())
+    if m.isdir():p.mkdir(parents=True,exist_ok=True);continue
+    assert m.size<=8*1024**2;total+=m.size;assert total<=TARCAP
+    p.parent.mkdir(parents=True,exist_ok=True);budget(m.size+4096)
+    src=tf.extractfile(m);assert src
+    with p.open('xb')as f:
+     count=0
+     while True:
+      b=src.read(65536)
+      if not b:break
+      count+=len(b);assert count<=m.size;f.write(b)
+     f.flush();os.fsync(f.fileno())
+    assert count==m.size;extracted.append({'path':raw,'bytes':p.stat().st_size,'sha256':sha(p)})
+  assert sorted(extracted,key=lambda x:x['path'])==ordered(original)==ordered(fresh)
+  assert len(extracted)==104 and total==original['logical_bytes']==fresh['logical_bytes']
+  proof={'status':'VERIFIED_FORENSIC_EXPORT_NOT_GATE_ACCEPTANCE','files':sorted(extracted,key=lambda x:x['path']),'file_count':104,'logical_bytes':total,'tar_bytes':size,'tar_sha256':sha(tarpath),'old_inventory_sha256':sha(OUT/'original-native-inventory.json'),'fresh_inventory_sha256':sha(OUT/'fresh-native-inventory.json'),'fresh_native_free_bytes':fresh['native_available_bytes'],'all_three_maps_equal':True}
+  persist('export-verification.json',proof);persist('pre-cleanup-command-records.json',records)
+  assert sha(OUT/'export-verification.json');verified=True;result['export_verified']=True
+  # Stopped readonly forensic helpers still pin the volume: remove their exact
+  # own inspected containers before removing the retained source volume.
+  for name in list(helpers):
+   row=check_helper(name);assert not row['State']['Running'];cli(['rm',name]);del helpers[name]
+  # Only after durable verified104export may old owned resources be removed.
+  owned=owner_inventory()
+  for cid in owned['containers']:
+   validate_old_container(json.loads(cli(['inspect',cid]))[0]);cli(['rm',cid]);removed.append({'container':cid})
+  assert owned['volumes']==[VOLUME]
+  validate_volume(json.loads(cli(['volume','inspect',VOLUME]))[0]);cli(['volume','rm',VOLUME]);removed.append({'volume':VOLUME})
+  empty=owner_inventory();assert empty=={'containers':[],'volumes':[]};persist('source-owner-after.json',empty)
+  result['cleanup']='completed';result['status']='PASS_FORENSIC_EXPORT_AND_OWNED_CLEANUP_ONLY'
+ except Exception as e:result['error']={'type':type(e).__name__,'message':str(e)}
+ finally:
+  for name in helpers:
+   try:
+    row=check_helper(name)
+    if row['State']['Running']:cli(['kill',name]);row=check_helper(name)
+    assert not row['State']['Running'];cli(['rm',name])
+   except Exception as e:cleanup_errors.append({'helper':name,'error':str(e)})
+  try:
+   remaining=cli(['ps','-aq','--no-trunc','--filter','label='+KEY+'='+ident]).decode().strip();assert remaining==''
+  except Exception as e:cleanup_errors.append({'helper_inventory':str(e)})
+  result.update({'elapsed_seconds':time.monotonic()-started,'export_verified':verified,'removed_resources':removed,'helper_cleanup_errors':cleanup_errors,'commands':records,'old_failed_host_prefix_unchanged':True,'frozen_old_index_unchanged':sha(before_index)=='8e6de2acca7ef3e336fd32170d9ccc318d4e89b2bf4888aec8608378c6637d0f','own_allocated_conservative_bytes_before_report':budget()})
+  if cleanup_errors:result['status']='NOT_ACCEPTED_FORENSIC_HELPER_CLEANUP'
+  for row in frozen['files']:assert sha(before_index.parent/row['path'])==row['sha256']
+  persist('report.json',result)
+  print(json.dumps({k:v for k,v in result.items()if k!='commands'}))
+ return 0 if result['status']=='PASS_FORENSIC_EXPORT_AND_OWNED_CLEANUP_ONLY'else 1
+if __name__=='__main__':
+ if '--run' in sys.argv:raise SystemExit(run())
+ controls()

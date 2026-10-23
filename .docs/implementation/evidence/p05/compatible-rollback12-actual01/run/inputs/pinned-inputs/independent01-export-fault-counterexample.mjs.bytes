@@ -1,0 +1,18 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import {createRequire} from 'node:module';
+import {resolve} from 'node:path';
+import {pathToFileURL} from 'node:url';
+const root='.artifacts/p05-compatible-rollback-producer01',require=createRequire(import.meta.url),ts=require('typescript');
+const {validateReport,controlIds,expected}=await import(pathToFileURL(resolve(root+'/contract.mjs')));
+const {profile}=await import(pathToFileURL(resolve(root+'/bound-profile.mjs')));
+const binding=JSON.parse(fs.readFileSync(root+'/BINDING.json','utf8'));
+const source=fs.readFileSync(root+'/author-controls.mjs','utf8'),ast=ts.createSourceFile('controls.mjs',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);
+const fixture=ast.statements.find(s=>ts.isFunctionDeclaration(s)&&s.name?.text==='fixture');assert(fixture);
+const make=new Function('owner','project','binding','controlIds','expected','profile','clone',fixture.getText(ast)+';return fixture;')('a'.repeat(32),'venus-p05-oci-'+ 'b'.repeat(12),binding,controlIds,expected,profile,v=>JSON.parse(JSON.stringify(v)));
+const report=make();report.export_error={name:'Error',code:'ETIMEDOUT',phase:'cleanup'};
+const accepted=validateReport(report,binding);
+const host=fs.readFileSync(root+'/host-runner.mjs','utf8');
+assert(host.includes("catch(exportError){report.export_error=safeError(exportError,activePhase);}"));
+console.log(JSON.stringify({scope:'EXACT_CONTRACT_AND_SOURCE_MODEL_ONLY_NO_DOCKER',status:'EXPORT_FAILURE_ACCEPTED_BY_CURRENT_CONTRACT',validateReport_result:accepted,export_error:report.export_error,host_source:'Export catch records export_error without changing COMPONENT_WORK_COMPLETE; cleanup removes volumes on that status and later sets PASS. Contract does not reject export_error.'},null,2));
+assert.equal(accepted,false,'EXPORT_FAILURE_MUST_NOT_VALIDATE_FULL_EVIDENCE_PASS');

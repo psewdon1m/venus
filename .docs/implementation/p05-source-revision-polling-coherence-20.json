@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "revision": "P05-POLLING-COHERENCE-20",
+  "kind": "FRONTEND_POLLING_COHERENCE_AND_ERROR_RECOVERY_ONLY",
+  "parent_clean_commit": "fcbf477343d163d04f5b1d87c8f0dec8097e42e6",
+  "parent_core_identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
+  "parent_source_files": 1893,
+  "before_source_files": {
+    "apps/web/src/topic-games-panel.tsx": "0a5102a1d1672539520e88c3ec0277110e8b9eff5e149805c35ddf556b817ecd",
+    "apps/web/src/topic-round-view.test.ts": "10e0b524ce38ec565d74177a31dfe2d28629cdf4585f735a2d13f92fd8184c1a"
+  },
+  "changed_source_files": {
+    "apps/web/src/topic-games-panel.tsx": "46d5b8a2e6f428f36f970fee2e45880ce4c338a2602f421473d599806c7e7b5d",
+    "apps/web/src/topic-round-view.test.ts": "86fdaf3e8bb0ea93c668d2d1cf5ac0ff72cfd3595cb32ab03a1959802791839e"
+  },
+  "source_proven_defect": "Separate authenticated /current and round/view transactions can straddle a partner action: currentrev31, coherent sameidentity/session/round viewrev32. Strict oldscope validator correctly rejects publication, but client formerly invented SERVICE_UNAVAILABLE and left a read failure visible even after subsequent valid reads. This is a source-proven UX/coherence defect; it does NOT establish the cause of historical WK EN c6731c failure (36PASS/15NOTRUN, origin allocator click not complete).",
+  "behavior": "Only a fully original-validator-valid bundle with exact room/member/session/round and strictly newer validated own.game_rev is ordinary revision advancement: clear private/public cached values and stale drafts/pending references, revoke old round rights while retaining independently confirmed session Stop/Pause, do NOT accept/grant/publish the mismatched bundle, and wait existing1500ms poll. Other malformed/foreign/old data still follows strict failure path. Separate transient readError from commanderror; only accepted valid reads clear readError. Successful GET never clears failed/unconfirmed POST error; explicit user retry/new operation/Refresh retains prior intended behavior.",
+  "unchanged": "Single APP file changed; original validators, auth identity/transport generations, revoke fencing, TTL/deadline caps and request-start anchoring, API/server/backend/policy/contracts/cards, timers/poll budget, scopes, serialized snapshots and statistical algorithms unchanged. No new retry mechanism, helper, harness, test framework or automatic POST. Two focused regressions extend existing raw bundled real-TSX harness; every prior test byte retained.",
+  "validation": {
+    "focused_initial_tests": 11,
+    "related_existing_test_files": 9,
+    "related_tests_PASS": 149,
+    "focused_ESLint_exit": 0,
+    "web_typecheck_exit": 0,
+    "native_Docker_images_CI_runs_by_author": 0
+  },
+  "evidence": "reviews/p05/polling-coherence-author-round01/INDEX.json",
+  "source_and_image_qualification": "Historical source28 APP57c55/image29 and earlier selected fcbf localQ10/remote89cc remain unchanged historical proof, not acceptance of this new frontend. Root must freeze fresh source/image and run applicable quality/UI/CI plus independent reviews. Original full06 A26 backend source27f/image48c continues untouched; no fresh frontend proof replaces statistical acceptance. Root owns final derived manifest/source inventory, not this author.",
+  "rollback": "Restore exact two before/ snapshots pinned in author packet and remove source20; this reintroduces false transient revision-race error and persistent read failure. No DB/snapshot migration required. Existing historical failures remain immutable.",
+  "full_stage_PASS": false,
+  "P06_started": false
+}

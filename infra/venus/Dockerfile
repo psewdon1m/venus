@@ -27,9 +27,12 @@ COPY --from=build /app/apps/api/package.json ./apps/api/package.json
 COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/migrations ./apps/api/migrations
 COPY --from=build /app/apps/api/game-migrations ./apps/api/game-migrations
+COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
+COPY --from=build /app/apps/api/chat-migrations ./apps/api/chat-migrations
+COPY --from=build /app/apps/api/private-topic-migrations ./apps/api/private-topic-migrations
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY --from=build /app/package.json /app/build-metadata.json ./
-RUN mkdir -p /var/lib/venus && chown node:node /var/lib/venus
+RUN mkdir -p /var/lib/venus/topic-births /var/lib/venus/topic-personal /var/lib/venus/topic-personal-witness /var/lib/venus/topic-lifecycle /var/lib/venus/topic-lifecycle-witness && chmod 0700 /var/lib/venus/topic-* && chown -R node:node /var/lib/venus
 USER 1000:1000
 VOLUME ["/var/lib/venus"]
 EXPOSE 4300

@@ -1,0 +1,23 @@
+--- METHOD19
++++ METHOD20
+@@ -48,9 +48,10 @@
+  }
+  function attach(actor){
+   assert(actor?.page);assert(!actors.has(actor),'OBSERVER_ALREADY_ATTACHED');const s={actor,generation:0,sequence:0,current:null,currentRequest:null,batch:null,accepted:null,model:new production.TopicCache(),starts:new WeakMap(),pending:new Set(),sockets:new Set(),invalidations:0,closed:false,overflow:false,dropped:0,bodyErrors:0};actors.set(actor,s);
+-  const request=request=>{if(s.closed||request.method()!=='GET')return;const r=route(request.url());if(!r)return;const record={route:r,started:now(),generation:s.generation,batch:r.kind==='current'?null:s.batch,part:null};if(r.kind==='current')s.currentRequest=record;if(r.kind==='own'){const b={id:++s.sequence,generation:s.generation,currentRequest:s.currentRequest,scope:null,own:null,target:null,conversation:null,chat:null,complete:false,reason:'BATCH_INCOMPLETE'};s.batch=b;record.batch=b;}s.starts.set(request,record);};
++  const request=request=>{if(s.closed||request.method()!=='GET')return;const r=route(request.url());if(!r)return;const record={route:r,started:now(),generation:s.generation,batch:r.kind==='current'?null:s.batch,part:null};if(r.kind==='current')s.currentRequest=record;if(r.kind==='own'){const b={id:++s.sequence,generation:s.generation,currentRequest:s.currentRequest,scope:null,own:null,target:null,conversation:null,chat:null,complete:false,ownResponseArrived:false,reason:'BATCH_INCOMPLETE'};s.batch=b;record.batch=b;}s.starts.set(request,record);};
+   const response=response=>{
+    const request=response.request(),record=s.starts.get(request);if(!record||s.closed)return;if(s.pending.size>=maxPending){s.overflow=true;s.dropped++;return;}
++   if(record.route.kind==='own'&&record.batch)record.batch.ownResponseArrived=true;
+    const work=(async()=>{
+     const raw=await response.body();if(raw.length>1024*1024){s.overflow=true;s.dropped++;return;}const body=JSON.parse(raw.toString('utf8'));if(s.closed||record.generation!==s.generation){s.dropped++;return;}
+     const part={body,status:response.status(),started:record.started,received:now(),route:record.route},kind=record.route.kind;
+@@ -68,7 +69,7 @@
+   const close=()=>{s.closed=true;invalidate(s);};s.handlers={request,response,websocket,close};for(const[name,fn]of Object.entries(s.handlers))actor.page.on(name,fn);return proof;
+  }
+  function snapshot(actor,{minRemainingMs=250,expectedScope=null,control=null}={}){
+-  const s=actors.get(actor);assert(s,'OBSERVER_NOT_ATTACHED');const scope=currentScope(s),b=s.accepted&&(!s.batch||s.batch===s.accepted||!s.batch.own&&s.batch.reason!=='HTTP_REJECTED')&&same(scope,s.accepted.scope)&&s.model.visible(now())?s.accepted:s.batch,remaining=Math.max(0,s.model.until-now());let reason=s.closed?'CLOSED':s.overflow?'OVERFLOW':!s.sockets.size?'NO_LIVE_WS':!s.current?'NO_CURRENT':!b?'NO_CYCLE':!b.complete?b.reason:'READY';
++  const s=actors.get(actor);assert(s,'OBSERVER_NOT_ATTACHED');const scope=currentScope(s),b=s.accepted&&(!s.batch||s.batch===s.accepted||!s.batch.ownResponseArrived&&s.batch.reason!=='HTTP_REJECTED')&&same(scope,s.accepted.scope)&&s.model.visible(now())?s.accepted:s.batch,remaining=Math.max(0,s.model.until-now());let reason=s.closed?'CLOSED':s.overflow?'OVERFLOW':!s.sockets.size?'NO_LIVE_WS':!s.current?'NO_CURRENT':!b?'NO_CYCLE':!b.complete?b.reason:'READY';
+   if(reason==='READY'&&(!same(scope,b.scope)||s.accepted!==b))reason=b.reason??'MODEL_REJECTED';
+   if(reason==='READY'&&expectedScope&&!['room','member','session','round','rev'].every(k=>expectedScope[k]===undefined||expectedScope[k]===scope[k]))reason='EXPECTED_SCOPE_MISMATCH';
+   if(reason==='READY'&&(!s.model.visible(now())||!Number.isFinite(remaining)||remaining<minRemainingMs))reason='LEASE_TOO_SHORT';

@@ -1,0 +1,432 @@
+{
+  "schema_version": 1,
+  "suite": "OWS_REV_002_ASSERTION_REGRESSION",
+  "status": "PASS",
+  "checks": 16,
+  "explicit_doubles_only": true,
+  "actual_product_runtime": false,
+  "original_observer_sha256": "61ebcfe6fa07dc8ca5db2504eebb1cdafed05ea3a0af9c0be32235402ac6231d",
+  "corrected_observer_sha256": "1432face15dcb683cdbc73e9face3c41f80fd98df0eeb5ffa8f163e799d22a7a",
+  "no_private_text_in_observer_records": true,
+  "results": [
+    {
+      "variant": "payload-text",
+      "before": {
+        "variant": "payload-text",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "payload-text",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "foreign-target",
+      "before": {
+        "variant": "foreign-target",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "foreign-target",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "foreign-room",
+      "before": {
+        "variant": "foreign-room",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "foreign-room",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-audience",
+      "before": {
+        "variant": "wrong-audience",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "wrong-audience",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-schema",
+      "before": {
+        "variant": "wrong-schema",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "wrong-schema",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-stream",
+      "before": {
+        "variant": "wrong-stream",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 0,
+          "received_known_pre_boundary_queued_frames": 0,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "wrong-stream",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-type",
+      "before": {
+        "variant": "wrong-type",
+        "status": "REJECTED",
+        "error": "Unknown private frame inside full transition window"
+      },
+      "after": {
+        "variant": "wrong-type",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-event-id",
+      "before": {
+        "variant": "wrong-event-id",
+        "status": "REJECTED",
+        "error": "Unknown private frame inside full transition window"
+      },
+      "after": {
+        "variant": "wrong-event-id",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-stream-rev",
+      "before": {
+        "variant": "wrong-stream-rev",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "wrong-stream-rev",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "wrong-room-rev",
+      "before": {
+        "variant": "wrong-room-rev",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "wrong-room-rev",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "extra-payload-field",
+      "before": {
+        "variant": "extra-payload-field",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "extra-payload-field",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "already-received-replay",
+      "before": {
+        "variant": "already-received-replay",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "already-received-replay",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "two-late-one-enqueue",
+      "before": {
+        "variant": "two-late-one-enqueue",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 2,
+          "received_known_pre_boundary_queued_frames": 2,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "two-late-one-enqueue",
+        "status": "REJECTED",
+        "error": "Unknown private frame or replay inside full transition window"
+      },
+      "expected": "REJECTED",
+      "fixed": true
+    },
+    {
+      "variant": "legitimate-one-late",
+      "before": {
+        "variant": "legitimate-one-late",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "legitimate-one-late",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "baseline_private_frames_consumed": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "full_payload_sha_and_exact_acl_headers": true,
+          "distinct_enqueue_per_received_frame": true,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "expected": "PASS",
+      "fixed": true
+    },
+    {
+      "variant": "undefined-positive",
+      "before": {
+        "variant": "undefined-positive",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "undefined-positive",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "baseline_private_frames_consumed": 0,
+          "received_full_window_private_frames": 1,
+          "received_known_pre_boundary_queued_frames": 1,
+          "received_fresh_pending_frames": 0,
+          "full_payload_sha_and_exact_acl_headers": true,
+          "distinct_enqueue_per_received_frame": true,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "expected": "PASS",
+      "fixed": true
+    },
+    {
+      "variant": "two-enqueues-two-late",
+      "before": {
+        "variant": "two-enqueues-two-late",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "received_full_window_private_frames": 2,
+          "received_known_pre_boundary_queued_frames": 2,
+          "received_fresh_pending_frames": 0,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "after": {
+        "variant": "two-enqueues-two-late",
+        "status": "PASS",
+        "detail": {
+          "observation_started_before_transition": true,
+          "actual_enqueue_boundary_observed": true,
+          "post_boundary_private_callbacks": 0,
+          "baseline_private_frames_consumed": 0,
+          "received_full_window_private_frames": 2,
+          "received_known_pre_boundary_queued_frames": 2,
+          "received_fresh_pending_frames": 0,
+          "full_payload_sha_and_exact_acl_headers": true,
+          "distinct_enqueue_per_received_frame": true,
+          "raw_unknown_private_frames": 0,
+          "forbidden_post_boundary_private_callbacks": 0
+        },
+        "error": null
+      },
+      "expected": "PASS",
+      "fixed": true
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {coherentRound} from '../../../../../.artifacts/p05-private-batch-browser-producer26/observations.mjs';
+const root='C:/.projects/venus',source=readFileSync(root+'/.artifacts/p05-private-batch-browser-producer26/browser.mjs','utf8');
+const helper=source.slice(source.indexOf('async function coherentGame('),source.indexOf('async function ownUiRound('));
+const observers=source.slice(source.indexOf('function normalCurrentRequest('),source.indexOf('async function actor('));
+const listener=source.split('\n').find(line=>line.startsWith(" page.on('request',"));
+const responseListener=source.split('\n').find(line=>line.startsWith(" page.on('response',"));
+const fixture=()=>({session:'synthetic-session',game_rev:41,game_state:'active',current_round:4,plan:{round_id:'synthetic-round',round_index:4},data:{state:'pending'}});
+const dto=f=>({schema_version:2,session_id:f.session,game_rev:f.game_rev,state:f.game_state,current_round:{round_id:f.plan.round_id,round_index:f.plan.round_index,state:f.data.state},untouched_public_field:{original:true}});
+const rows=[];
+function model({f=fixture(),samples=1,before=async()=>{}}={}){
+ let clock=100,currentCalls=0,plans=0;const actors=[],callbacks=new Map(),normalCurrentStarts=new WeakMap(),normalCurrentViews=new WeakMap();
+ const service={origin:'https://synthetic.invalid',async plan(room){plans++;assert.equal(room,'room');return f;}};
+ const report={request_metadata:[]},expect={poll(callback,options){assert.equal(options.timeout,8000);assert.deepEqual(Array.from(options.intervals),[50,100,250]);return {async toBe(wanted){assert.equal(wanted,true);for(let n=0;n<samples;n++){await before({m,n});if(await callback()===true)return;}throw Error('FINITE_ORIGINAL_POLL_DEADLINE');}};}};
+ const env={assert,URL,service,actors,normalCurrentStarts,normalCurrentViews,expect,report,phase:'synthetic',performance:{now:()=>clock},current:async()=>{currentCalls++;throw Error('NO_DUPLICATE_CONTEXT_CURRENT_ALLOWED');}};
+ const context=vm.createContext({...env,coherentRound});vm.runInContext(observers+helper+';globalThis.run=coherentGame;',context);
+ for(const locale of ['ru','tr']){const handlers={},page={on:(name,fn)=>{handlers[name]=fn;},mainFrame:()=>frame,context:()=>a.context};const frame={page:()=>page},a={page,context:{},id:'synthetic-'+locale,room:'room',locale,lastGameView:null,gameReads:0,gameReadErrors:0};actors.push(a);callbacks.set(a,{handlers,frame});context.testActor=a;context.testPage=page;context.testLocale=locale;vm.runInContext('((a,page,locale)=>{'+listener+responseListener+'})(testActor,testPage,testLocale);',context);}
+ function request(a=actors[1],options={}){const {frame}=callbacks.get(a);return {method:()=>options.method??'GET',url:()=>options.url??service.origin+`/api/v2/rooms/${a.room}/game/current`,frame:()=>options.frame??frame};}
+ function start(a,request){callbacks.get(a).handlers.request(request);}
+ async function reply(a,request,view=dto(f),options={}){await callbacks.get(a).handlers.response({request:()=>request,status:()=>options.status??200,url:()=>options.url??request.url(),json:async()=>view});}
+ const m={f,actors,request,start,reply,run:context.run,setClock:value=>{clock=value;},get currentCalls(){return currentCalls;},get plans(){return plans;},slot:a=>normalCurrentViews.get(a),report};return m;
+}
+async function check(name,fn){await fn();rows.push({name,status:'PASS'});}
+await check('fresh_TR_full200_request_after_entry_accepts_original_DTO_without_host_current',async()=>{
+ let payload;const m=model({before:async({m})=>{m.setClock(101);const a=m.actors[1],q=m.request(a);m.start(a,q);m.setClock(102);payload=dto(m.f);await m.reply(a,q,payload);}});const result=await m.run({session:m.f.session,round:m.f.plan.round_id,index:4,minRev:41});assert.equal(result.view,payload);assert.equal(result.fixture,m.f);assert.equal(m.actors[0].lastGameView,null);assert.equal(m.currentCalls,0);assert.equal(m.plans,1);assert(!JSON.stringify(m.report).includes('untouched_public_field'));
+});
+await check('precall_request_late_reply_precall_cache_and_equal_start_never_accept',async()=>{
+ for(const at of [90,100]){let q;const m=model({before:async({m})=>{m.setClock(110);await m.reply(m.actors[1],q);}});m.setClock(at);q=m.request();m.start(m.actors[1],q);m.setClock(100);await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);}
+ const m=model();m.setClock(90);const q=m.request();m.start(m.actors[1],q);await m.reply(m.actors[1],q);m.setClock(100);await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);
+});
+await check('wrong_origin_room_method_context_frame_status_response_or_actor_never_evidence',async()=>{
+ const variants=[{url:'https://other.invalid/api/v2/rooms/room/game/current'},{url:'https://synthetic.invalid/api/v2/rooms/other/game/current'},{url:'https://synthetic.invalid/api/v2/rooms/room/game/current?injected=1'},{method:'POST'},{frame:{page:()=>null}},{status:429},{status:503},{responseURL:'https://other.invalid/api/v2/rooms/room/game/current'},{wrongContext:true},{untracked:true},{wrongActor:true},{actorRoom:'other'}];
+ for(const options of variants){const m=model({before:async({m})=>{m.setClock(101);const a=m.actors[1];if(options.actorRoom)a.room=options.actorRoom;if(options.wrongContext)a.page.context=()=>({});const q=m.request(a,options);if(!options.untracked)m.start(a,q);m.setClock(102);await m.reply(options.wrongActor?m.actors[0]:a,q,dto(m.f),{status:options.status,url:options.responseURL});}});if(options.status)await assert.rejects(m.run(),e=>e.code==='ERR_ASSERTION'&&e.actual===options.status&&e.expected===200);else await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);}
+});
+await check('full_DTO_mismatch_expected_minRev_cannot_pass_and_terminal_states_supported',async()=>{
+ for(const change of [v=>({...v,session_id:'old'}),v=>({...v,game_rev:40}),v=>({...v,state:'paused'}),v=>({...v,current_round:{...v.current_round,round_id:'old'}}),v=>({...v,current_round:{...v.current_round,round_index:3}}),v=>({...v,current_round:{...v.current_round,state:'completed'}})]){const m=model({before:async({m})=>{m.setClock(101);const a=m.actors[1],q=m.request(a);m.start(a,q);await m.reply(a,q,change(dto(m.f)));}});await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);}
+ for(const expected of [{session:'other'},{round:'other'},{index:5},{minRev:42}]){const m=model({before:async({m})=>{m.setClock(101);const a=m.actors[1],q=m.request(a);m.start(a,q);await m.reply(a,q);}});await assert.rejects(m.run(expected),/FINITE_ORIGINAL_POLL_DEADLINE/);}
+ for(const [state,round] of [['active','pending'],['active','active'],['active','completed'],['active','skipped'],['aborted','stopped'],['paused','pending']]){const f=fixture();f.game_state=state;f.data.state=round;const m=model({f,before:async({m})=>{m.setClock(101);const a=m.actors[1],q=m.request(a);m.start(a,q);await m.reply(a,q);}});assert(coherentRound(f,(await m.run({minRev:41})).view));assert.equal(m.currentCalls,0);}
+});
+await check('one_latest_slot_resists_late_older_response_and_same_actor_scope_reuse',async()=>{
+ let emitted=false;const m=model({before:async({m})=>{if(emitted)return;emitted=true;const a=m.actors[1];m.setClock(101);const old=m.request(a);m.start(a,old);m.setClock(102);const newer=m.request(a);m.start(a,newer);const payload=dto(m.f);await m.reply(a,newer,payload);await m.reply(a,old,{...payload,game_rev:40});assert.equal(m.slot(a).view,payload);}});await m.run();assert.equal(m.slot(m.actors[1]).started_at,102);assert.equal(m.currentCalls,0);m.setClock(103);await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);
+});
+await check('async_old_JSON_cannot_overwrite_new_non200_and_identity_replacement_fences',async()=>{
+ const m=model({before:async({m})=>{const a=m.actors[1];m.setClock(101);const q=m.request(a);m.start(a,q);let release;const held=new Promise(resolve=>{release=resolve;});const old=m.reply(a,q,held);m.setClock(102);const q2=m.request(a);m.start(a,q2);await m.reply(a,q2,null,{status:429});release(dto(m.f));await old;assert.equal(m.slot(a).status,429);assert.equal(m.slot(a).view,null);}});await assert.rejects(m.run(),e=>e.code==='ERR_ASSERTION'&&e.actual===429&&e.expected===200);assert.equal(m.currentCalls,0);
+ for(const change of [a=>{a.id='replacement';},a=>{a.context={};},a=>{a.room='replacement';}]){const m=model({before:async({m})=>{const a=m.actors[1];m.setClock(101);const q=m.request(a);m.start(a,q);let release;const held=new Promise(resolve=>{release=resolve;});const old=m.reply(a,q,held);change(a);release(dto(m.f));await old;assert.equal(m.slot(a).view,null);}});await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);}
+ const bad=model({before:async({m})=>{const a=m.actors[1];m.setClock(101);const q=m.request(a);m.start(a,q);await m.reply(a,q,'malformed');assert.equal(m.slot(a).view,null);}});await assert.rejects(bad.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);
+});
+await check('pending_wrapper_authority_prefix_rejects_before_inventory_allocation',async()=>{
+ const wrapper=readFileSync(root+'/.artifacts/p05-browser26-a18-run01.mjs','utf8'),pending=readFileSync(root+'/.artifacts/p05-browser26-a18-root-ack01.pending.json','utf8');let reads=0;const prefix=wrapper.slice(wrapper.indexOf('const image='),wrapper.indexOf('const before=inventory();')).replace('new URL(import.meta.url)',"'UNREACHED_WRAPPER_URL'");assert.throws(()=>vm.runInNewContext(prefix,{assert,process:{env:{}},readFileSync:path=>{reads++;assert.equal(path,root+'/.artifacts/p05-browser26-a18-root-ack01.json');return pending;},createHash(){throw Error('UNREACHED_HASH');},execFileSync(){throw Error('UNREACHED_INVENTORY');}}),e=>e.code==='ERR_ASSERTION'&&e.actual==='NOT_AUTHORIZED'&&e.expected==='ROOT_RUN_ACK');assert.equal(reads,1);
+});
+console.log(JSON.stringify({status:'PASS_EXTRACTED_ACTUAL_HELPER_LISTENERS_COLD_ONLY_NO_NATIVE',controls:rows.length,rows}));

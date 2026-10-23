@@ -1,0 +1,18 @@
+import hashlib,json,shutil
+from pathlib import Path
+from datetime import datetime,timezone
+root=Path('.docs/implementation/reviews/p05/topic-measurement-method06-independent-review-round01')
+work=Path('.artifacts/p05-method06-independent-review-round01')
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for name in ['verify.py','cleanup-controls.mjs','ack-controls.mjs','finalize.py']:
+ dest=root/'exact-review-source'/(name+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(work/name,dest)
+load=lambda name:json.loads((root/name).read_text('utf-8-sig'))
+cleanup=load('cleanup-controls.stdout.json');ack=load('ack-controls.stdout.json');sup=load('supervisor-author-controls-rerun.stdout.json')
+assert cleanup['count']==23 and ack['count']==4 and len(sup['controls'])==18
+for row in cleanup['controls']+ack['controls']+sup['controls']:assert row['status']=='PASS'
+for name in ['cleanup-controls.stderr.txt','ack-controls.stderr.txt','supervisor-author-controls-rerun.stderr.txt','launcher-cold.stderr.txt']:assert (root/name).stat().st_size==0
+report={'schema_version':1,'created_at':datetime.now(timezone.utc).isoformat(),'status':'PASS_METHOD_ONLY','author_is_reviewer':False,'closed_findings':[{'id':'P05-METHOD05-001','scope':'prospective canonical full Docker IDs and exact inspect mapping; actual Docker cleanup not executed'}],'new_confirmed_P1_P2':[],'inputs':load('hash-verification.json'),'independent_execution':{'own_cleanup_controls':23,'own_cold_ACK_denials':4,'same_author_test_logic_supervisor_cleanup_rerun':18,'launcher_cold_default_exit_code':0,'all_exit_codes':0,'Windows27':'HASH_QUALIFIED_REUSE_NOT_REEXECUTED','diagnostic_RUNs':0,'run_function_early_denial_calls':4,'Docker_calls':0,'prepare_calls':0,'selector_invocations':0},'candidate_revision':'METHOD06-CANONICAL-CLEANUP-IDS','guard_revision':'METHOD05-HOST-OUTPUT-FENCES','next':'orchestrator exact frozen preparation binding followed by separate one-attempt diagnostic ACK','statistics_RUN':False,'human_card_review':'HOLD_UNCHANGED','full_P05_PASS':False}
+(root/'report.json').write_text(json.dumps(report,indent=2)+'\n')
+files=[{'path':p.relative_to(root).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(root.rglob('*')) if p.is_file() and p.name!='INDEX.json']
+(root/'INDEX.json').write_text(json.dumps({'schema_version':1,'scope':'METHOD06_INDEPENDENT_METHOD_ONLY_NOT_RUN','files':files},indent=2)+'\n')
+print(json.dumps({'INDEX_sha256':sha(root/'INDEX.json'),'children':len(files),'REPORT_sha256':sha(root/'REPORT.md'),'status':'PASS_METHOD_ONLY'}))

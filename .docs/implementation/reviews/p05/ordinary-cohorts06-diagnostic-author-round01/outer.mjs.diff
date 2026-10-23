@@ -1,0 +1,24 @@
+--- 05/outer.mjs
++++ 06/outer.mjs
+@@ -9,7 +9,7 @@
+ import {spawnSync} from 'node:child_process';
+ const here=dirname(fileURLToPath(import.meta.url)),sha=b=>createHash('sha256').update(b).digest('hex');
+ export function validateAck(ack,read=readFileSync){
+- assert.equal(ack.schema_version,1);assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_FIXED_COHORT_05');
++ assert.equal(ack.schema_version,1);assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_FIXED_COHORT_06');
+  profiles(ack.cohort);
+  for(const key of ['source_identity','source_freeze_sha256','method_review_sha256'])assert.match(ack[key],/^[a-f0-9]{64}$/);
+  assert(ack.image_entrypoint===null||JSON.stringify(ack.image_entrypoint)==='["docker-entrypoint.sh"]');assert.match(ack.image_id,/^sha256:[a-f0-9]{64}$/);assert.match(ack.pack_digest,/^sha256:[a-f0-9]{64}$/);
+@@ -32,8 +32,10 @@
+ export function diagnosticEvents(raw){
+  const events=[],uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+  for(const line of raw.split('\n')){if(line.length>32768)continue;let x;try{x=JSON.parse(line);}catch{continue;}
+-  if(x?.event!=='request_failed'||!uuid.test(x.request_id??'')||!['TypeError','RangeError','ReferenceError','SyntaxError','URIError','EvalError','AggregateError','Error','UNKNOWN'].includes(x.error_kind)||!['40P01','40001','57014','25P02','23505','08006','QUERY_TIMEOUT','UNKNOWN'].includes(x.failure_code))continue;
+-  const row={event:'request_failed',request_id:x.request_id,error_kind:x.error_kind,failure_code:x.failure_code};
++  const websocket=x?.event==='websocket_failed';
++  if(x?.event!=='request_failed'&&!websocket||websocket&&(!['auth_or_heartbeat','poll'].includes(x.phase)||typeof x.request_id!=='string')||!uuid.test(x.request_id??'')||!['TypeError','RangeError','ReferenceError','SyntaxError','URIError','EvalError','AggregateError','Error','UNKNOWN'].includes(x.error_kind)||!['40P01','40001','57014','25P02','23505','08006','QUERY_TIMEOUT','UNKNOWN'].includes(x.failure_code))continue;
++  const row={event:websocket?'websocket_failed':'request_failed',request_id:x.request_id,error_kind:x.error_kind,failure_code:x.failure_code};
++  if(websocket){row.phase=x.phase;if(["AUTH_REQUIRED","ENTRY_REACCEPT_REQUIRED","ROOM_CLOSED","SOCKET_REPLACED","ACTORS_UNAVAILABLE","INVALID_REQUEST","RATE_LIMITED","TICKET_INVALID","CONSENT_EXPIRED","PRIVATE_CHAT_UNAVAILABLE","PRIVATE_EVENT_CAPACITY","TOPIC_ROOM_RETIRED","TOPIC_ROOM_MEMBER_RETIRED","TOPIC_ROOM_MEMBER_NOT_ADMITTED","TOPIC_ROOM_BUSY","TOPIC_LEDGER_BUSY","TOPIC_STATE_CHANGED","TOPIC_ROOM_BIRTH_UNAVAILABLE"].includes(x.domain_code))row.domain_code=x.domain_code;}
+   if(['app','rooms','security','catalog','database','games','games-model','room-routes','room-games','room-private-protocol','topic-games','topic-game-model','topic-game-source','topic-runtime','topic-game-routes','private-topic-preferences','private-topic-ledger','topic-room-registry','topic-room-lifecycle','http-delivery'].includes(x.source_module)&&Number.isSafeInteger(x.source_line)&&x.source_line>=1&&x.source_line<=1000000&&Number.isSafeInteger(x.source_column)&&x.source_column>=1&&x.source_column<=100000)Object.assign(row,{source_module:x.source_module,source_line:x.source_line,source_column:x.source_column});
+   events.push(row);assert(events.length<=64,'DIAGNOSTIC_EVENT_CAP');
+  }return events;

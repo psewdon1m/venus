@@ -1,0 +1,207 @@
+diff --git a/internal/kernel/register.go b/internal/kernel/register.go
+index a515e15..82c934d 100644
+--- a/internal/kernel/register.go
++++ b/internal/kernel/register.go
+@@ -193,7 +193,7 @@ func updaterMetadataKey(key string) bool {
+ 	if key == "services.saturn.sni" || key == "services.saturn.port" {
+ 		return true
+ 	}
+-	for _, service := range []string{"kernel", "volt", "saturn", "chronos", "laboratory", "neptune", "gryphon", "wyvern", "updater", "mastermind"} {
++	for _, service := range []string{"kernel", "volt", "saturn", "chronos", "laboratory", "neptune", "gryphon", "wyvern", "updater", "mastermind", "venus"} {
+ 		if key == "repositories."+service+".url" {
+ 			return true
+ 		}
+diff --git a/internal/kernel/venus_proposal_test.go b/internal/kernel/venus_proposal_test.go
+new file mode 100644
+index 0000000..cb7c81b
+--- /dev/null
++++ b/internal/kernel/venus_proposal_test.go
+@@ -0,0 +1,80 @@
++package kernel
++
++import (
++	"crypto/sha256"
++	"encoding/hex"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++)
++
++func TestVenusRepositoryResolutionExcludesCredentials(t *testing.T) {
++	ref := "volt://3518462b-bb66-459a-a1ab-c38a837740ab/4"
++	values := map[string]interface{}{
++		"repositories": map[string]interface{}{"venus": map[string]interface{}{"url": ref, "token": ref}},
++		"credentials":  map[string]interface{}{"venus": map[string]interface{}{"private_key": ref}},
++	}
++	raw, _ := json.Marshal(map[string]interface{}{"values": values})
++	sum := sha256.Sum256(raw)
++	resolved := 0
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.Header.Get("Authorization") != "Bearer synthetic-venus-metadata-only" {
++			w.WriteHeader(http.StatusUnauthorized)
++			return
++		}
++		switch r.URL.Path {
++		case "/api/v1/register/snapshot":
++			_ = json.NewEncoder(w).Encode(Snapshot{Schema: "exocortex.register.snapshot.v1", Revision: "venus-proposal-1", Checksum: "sha256:" + hex.EncodeToString(sum[:]), Values: values})
++		case "/api/v1/register/resolve":
++			var payload struct {
++				Keys []string `json:"keys"`
++			}
++			if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
++				t.Error(err)
++				return
++			}
++			if len(payload.Keys) != 1 || payload.Keys[0] != "repositories.venus.url" {
++				t.Errorf("unexpected metadata resolution: %v", payload.Keys)
++			}
++			resolved++
++			_ = json.NewEncoder(w).Encode(map[string]interface{}{"schema": "exocortex.register.resolution.v1", "values": map[string]interface{}{"repositories.venus.url": map[string]string{"value": "https://github.com/synthetic/venus-proposal"}}})
++		default:
++			http.NotFound(w, r)
++		}
++	}))
++	defer server.Close()
++	cache := filepath.Join(t.TempDir(), "register.json")
++	for i := 0; i < 2; i++ {
++		snapshot, err := Load(server.URL, "synthetic-venus-metadata-only", cache, time.Second)
++		if err != nil {
++			t.Fatal(err)
++		}
++		value, err := String(snapshot, "repositories.venus.url")
++		if err != nil || value != "https://github.com/synthetic/venus-proposal" {
++			t.Fatalf("Venus repository was not resolved: %q, %v", value, err)
++		}
++		if _, ok := snapshot.Values["credentials"]; ok {
++			t.Fatal("unrequested credentials returned")
++		}
++		if _, err := String(snapshot, "repositories.venus.token"); err == nil {
++			t.Fatal("unrequested repository token returned")
++		}
++	}
++	if resolved != 2 {
++		t.Fatalf("expected one scoped resolution per load, got %d", resolved)
++	}
++	data, err := os.ReadFile(cache)
++	if err != nil || strings.Contains(string(data), "https://github.com/synthetic/venus-proposal") || !strings.Contains(string(data), ref) {
++		t.Fatal("cache must retain references rather than resolved values")
++	}
++	for _, key := range []string{"repositories.venus.token", "credentials.venus.private_key", "repositories.venus.url.extra", "repositories.other.url"} {
++		if updaterMetadataKey(key) {
++			t.Fatalf("unrelated/secret key allowed: %s", key)
++		}
++	}
++}
+diff --git a/internal/releaseauth/venus_proposal_test.go b/internal/releaseauth/venus_proposal_test.go
+new file mode 100644
+index 0000000..32c9ca5
+--- /dev/null
++++ b/internal/releaseauth/venus_proposal_test.go
+@@ -0,0 +1,89 @@
++package releaseauth
++
++import (
++	"crypto"
++	"crypto/rand"
++	"crypto/rsa"
++	"crypto/sha256"
++	"crypto/x509"
++	"encoding/base64"
++	"encoding/hex"
++	"encoding/json"
++	"encoding/pem"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"testing"
++)
++
++func TestVenusReleaseTrustIsScopedToPinnedKey(t *testing.T) {
++	key, err := rsa.GenerateKey(rand.Reader, 3072)
++	if err != nil {
++		t.Fatal(err)
++	}
++	der, err := x509.MarshalPKIXPublicKey(&key.PublicKey)
++	if err != nil {
++		t.Fatal(err)
++	}
++	public := pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: der})
++	manifest := []byte(`{"schema_version":1,"service":"venus","version":"0.0.1"}`)
++	hash := sha256.Sum256(manifest)
++	id := sha256.Sum256(der)
++	sig, err := rsa.SignPSS(rand.Reader, key, crypto.SHA256, hash[:], &rsa.PSSOptions{SaltLength: rsa.PSSSaltLengthEqualsHash})
++	if err != nil {
++		t.Fatal(err)
++	}
++	envelope, err := json.Marshal(map[string]string{"schema": "exocortex.release-signature.v1", "algorithm": "RSA-PSS-SHA256", "key_id": hex.EncodeToString(id[:]), "signature": base64.StdEncoding.EncodeToString(sig)})
++	if err != nil {
++		t.Fatal(err)
++	}
++	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { _, _ = w.Write(envelope) }))
++	defer server.Close()
++	directory := t.TempDir()
++	manifestPath := filepath.Join(directory, "venus-release.json")
++	if err := os.WriteFile(manifestPath, manifest, 0600); err != nil {
++		t.Fatal(err)
++	}
++	t.Setenv("EXOCORTEX_RELEASE_TRUST_DIR", directory)
++	// A neighbouring service key must never substitute for a Venus pin.
++	if err := os.WriteFile(filepath.Join(directory, "updater.pem"), public, 0644); err != nil {
++		t.Fatal(err)
++	}
++	if err := VerifyDownloaded(t.Context(), server.Client(), manifestPath, server.URL, "venus"); err == nil {
++		t.Fatal("missing Venus pin accepted through another service")
++	}
++	if err := os.WriteFile(filepath.Join(directory, "venus.pem"), public, 0644); err != nil {
++		t.Fatal(err)
++	}
++	if err := VerifyDownloaded(t.Context(), server.Client(), manifestPath, server.URL, "venus"); err != nil {
++		t.Fatal(err)
++	}
++	other, err := rsa.GenerateKey(rand.Reader, 3072)
++	if err != nil {
++		t.Fatal(err)
++	}
++	otherDER, err := x509.MarshalPKIXPublicKey(&other.PublicKey)
++	if err != nil {
++		t.Fatal(err)
++	}
++	if err := os.WriteFile(filepath.Join(directory, "venus.pem"), pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: otherDER}), 0644); err != nil {
++		t.Fatal(err)
++	}
++	if err := VerifyDownloaded(t.Context(), server.Client(), manifestPath, server.URL, "venus"); err == nil {
++		t.Fatal("wrong Venus pin accepted")
++	}
++	if err := os.WriteFile(filepath.Join(directory, "venus.pem"), public, 0644); err != nil {
++		t.Fatal(err)
++	}
++	manifest[10] ^= 1
++	if err := os.WriteFile(manifestPath, manifest, 0600); err != nil {
++		t.Fatal(err)
++	}
++	if err := VerifyDownloaded(t.Context(), server.Client(), manifestPath, server.URL, "venus"); err == nil {
++		t.Fatal("tampered signed bytes accepted")
++	}
++	if err := VerifyDownloaded(t.Context(), server.Client(), manifestPath, server.URL, "../venus"); err == nil {
++		t.Fatal("unknown trust scope accepted")
++	}
++}
+diff --git a/internal/releaseauth/verify.go b/internal/releaseauth/verify.go
+index c5de5aa..8458e24 100644
+--- a/internal/releaseauth/verify.go
++++ b/internal/releaseauth/verify.go
+@@ -84,7 +84,7 @@ func downloadLimited(ctx context.Context, client *http.Client, location string,
+ // helper trust. A public key beside a manifest is not an authentication anchor.
+ func VerifyDownloaded(ctx context.Context, client *http.Client, manifestPath, signatureURL, service string) error {
+ 	switch service {
+-	case "kernel", "volt", "saturn", "updater", "neptune", "gryphon", "chronos", "laboratory", "wyvern", "window", "mastermind":
++	case "kernel", "volt", "saturn", "updater", "neptune", "gryphon", "chronos", "laboratory", "wyvern", "window", "mastermind", "venus":
+ 	default:
+ 		return errors.New("unsupported release trust scope")
+ 	}

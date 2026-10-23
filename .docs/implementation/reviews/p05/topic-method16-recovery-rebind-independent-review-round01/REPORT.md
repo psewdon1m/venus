@@ -1,0 +1,17 @@
+# METHOD16 operational rebind — independent review
+
+**PASS_OPERATIONAL_REBIND_ONLY.** No actionable finding in this bounded rebind. Reviewer did not author root's rebind or METHOD16 implementation. No Docker, ACK, product or producer mutation occurred; review completed 2026-10-20 UTC.
+
+Runner SHA `c4b2c00aba69c485b1e44147529f65a7f7b1dd86b7561d46d88992558584ba6b` is byte-exact accepted recovery15 outer `d6da5a457eee82441aa60ec5731ca660d01fe931ab981184dcee50ada5a37ce7` after only producer15→16 and root-ACK15→16 path replacements. The isolated allocation profile, full16 acceptance loop, bounded waits, worker/Compose cleanup, source recheck, exit policy and historical-only output qualification remain identical.
+
+Draft SHA `245dd0c217c1b887a53255d7fb149049493c10594ba33594015bf73a6f706159` remains NOT_AUTHORIZED; no final16 ACK exists. Its ten runtime pins, including readiness-diagnostics, equal both copied and original producer16 and the accepted METHOD16 HANDOFF. Independent method INDEX `d7c452b3b58bf3199f7a94af88b266c01121881a39389727709fd43e70ad9bc8` and all23 children verify. This review inherits its exact16 case-body/negative assertions and limits: shared12s preparation/emission only, unchanged15s response and8s coherence waits, unchanged product permissions/TTLs. It does not reclassify those as a whole-flow12s cap.
+
+Real restored inventory remains exact1274 (`1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad`) /1813 files. Image remains A `sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f`, receipt SHA `eb994713042617b6e9bcc567062e502b18e5330b54759ee85b33ab1459ae0f7c`, same independent historical image acceptance. Current live P04-r3/tooling is outside this proof. Image probes were not rerun.
+
+**24 cold preflight controls PASS**, with zero allocations/writes/Docker calls. Exact prefix through source fences executes in an inert VM; imports and import.meta.url are relocated exactly as in the prior accepted review. Missing/draft ACK, wrong runner/image, each of ten changed runtime files, review/receipt/rebind hash or availability errors, source identity drift and wrong included count refuse before allocation. A matching synthetic final ACK reaches only the allocation boundary. Real provenance and runner syntax also pass; all commands exit0. One read-only exploratory query for a nonexistent METHOD16 PROVENANCE.json exited1; actual INDEX/HANDOFF and all23 indexed children were subsequently verified directly. No tested control failed.
+
+Commands: original `.venv/Scripts/python.exe -B` with this packet's `verify-inputs.py`; Node24.22.0 with `preflight-controls.mjs`; same Node `--check` on the exact runner. The controls are a path-only reuse of this reviewer's frozen recovery15 cold controls, extended automatically across the ten runtime pins.
+
+Root may now finish the concrete final ACK: set ROOT_RUN_ACK status and this review INDEX path/SHA, preserving all draft runner/image/source/runtime/method-review/receipt pins; use restored snapshot cwd and original absolute Python. ACK is trusted orchestration authorization; hashed review/receipt bytes are checked before allocation. This report does not write or authorize that ACK itself.
+
+Actual15 FAIL (4 PASS / case05 FAIL /11 NOT_RUN) remains preserved. No actual16/functional result, full browser matrix, human-content approval, current-source or full-P05 PASS follows from this review. Rollback before RUN is to leave producer16 unused; no product state was changed.

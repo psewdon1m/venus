@@ -1,0 +1,24 @@
+--- layout14/x11.mjs
++++ layout15/x11.mjs
+@@ -14,15 +14,17 @@
+  try{browser=await engine.connect(server.wsEndpoint(),{timeout:15000});}catch(e){await server.close();throw e;}
+  return {browser,async close(){let error;try{await browser.close();}catch(e){error=e;}try{await server.close();}catch(e){error??=e;}const child=server.process();if(child.exitCode===null&&child.signalCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await Promise.race([exited,delay(5000)]);error??=Error('BROWSER_FORCED_KILL');}if(error)throw error;}};
+ }
+-// Only the exact native suffix measured on this pinned Chromium is allowed.
+-// Other engines retain the existing exact-title policy, with bounded readiness.
++// Only exact vendor suffixes measured on these pinned owned browsers are allowed.
++// WebKit remains exact-title-only: its native identity/template is unresolved.
+ const chromiumWindowSuffix=' - Google Chrome for Testing';
++const firefoxWindowSuffix=' \u2014 Nightly';
++function vendorWindowSuffix(engine){return engine==='chromium'?chromiumWindowSuffix:engine==='firefox'?firefoxWindowSuffix:'';}
+ function checkWindowNonce(title){assert(typeof title==='string'&&/^Venus layout [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(title),'EXACT_V2_WINDOW_REQUIRED');}
+ export function windowTitlePattern(title,engine){
+- checkWindowNonce(title);return '^'+title+(engine==='chromium'?'('+chromiumWindowSuffix+')?':'')+'$';
++ checkWindowNonce(title);const suffix=vendorWindowSuffix(engine);return '^'+title+(suffix?'('+suffix+')?':'')+'$';
+ }
+ export function ownWindowTitle(title,engine,value){
+- checkWindowNonce(title);return typeof value==='string'&&(value===title||(engine==='chromium'&&value===title+chromiumWindowSuffix));
++ checkWindowNonce(title);const suffix=vendorWindowSuffix(engine);return typeof value==='string'&&(value===title||(suffix!==''&&value===title+suffix));
+ }
+ export async function readyOwnedWindow(query,budget,wait=delay){
+  for(;;){

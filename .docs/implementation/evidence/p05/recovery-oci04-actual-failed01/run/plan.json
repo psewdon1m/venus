@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+  "project": "venus-p05-oci-ffaaeef4fe2b",
+  "workspace_root": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01",
+  "output_root": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b",
+  "guard_file": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\control\\guard.json",
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "images": {
+    "A": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "B": "sha256:b6f49831e1ca16dafdcd45707144f050f4e302d4709a51d59f9981ce7b67ed6b"
+  },
+  "roles": {
+    "db": "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+    "keeper": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "tls": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "browser": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "initialize": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "bootstrap": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "erase": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "A1": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+    "B2": "sha256:b6f49831e1ca16dafdcd45707144f050f4e302d4709a51d59f9981ce7b67ed6b",
+    "A3": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f"
+  },
+  "phase_limits_ms": {
+    "setup": 120000,
+    "A1": 120000,
+    "B2": 120000,
+    "A3": 120000,
+    "stop": 30000,
+    "export": 30000,
+    "cleanup": 60000
+  },
+  "deadline_ms": 900000,
+  "total_cap_bytes": 536870912,
+  "reserve_bytes": 10737418240,
+  "partitions_mib": {
+    "PG": 256,
+    "authority": 32,
+    "readonly_inputs": 16,
+    "private_tmpfs": 32,
+    "host_evidence": 64,
+    "archive": 64,
+    "logs_control": 16,
+    "safety": 32
+  },
+  "network": "venus-p05-oci-ffaaeef4fe2b-isolated",
+  "volumes": {
+    "db": "venus-p05-oci-ffaaeef4fe2b-db",
+    "authority": "venus-p05-oci-ffaaeef4fe2b-authority",
+    "private": "venus-p05-oci-ffaaeef4fe2b-private"
+  },
+  "private_tmpfs_split_mib": {
+    "private": 8,
+    "browser": 16,
+    "API": 4,
+    "proxy": 2,
+    "helpers": 2
+  },
+  "pg_writable_split_mib": {
+    "data_mib": 248,
+    "shm_mib": 8
+  },
+  "no_global_cleanup": true,
+  "protected_roots_rollback": false
+}

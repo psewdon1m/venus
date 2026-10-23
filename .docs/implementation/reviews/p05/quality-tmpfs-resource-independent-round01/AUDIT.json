@@ -1,0 +1,66 @@
+{
+  "status": "PASS_RESOURCE_METHOD_ONLY",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "created_utc": "2026-10-23T01:42:48.101901+00:00",
+  "scope": "Independent exact two-literal quality resource change, Q09 resource-failure qualification and prospective main-container budget; not actual Q10 or P05 acceptance.",
+  "author_index": {
+    "path": ".docs/implementation/reviews/p05/quality-tmpfs-resource-author-round01/INDEX.json",
+    "sha256": "7547387283f7914b59a3293c10126713daf9c01865326d92bbf6d3ea29cdaee1",
+    "verified_children": 9,
+    "verified_input_pins": 9
+  },
+  "source_identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
+  "source_file_count": 1893,
+  "parent_source_identity": "6485f465597960957954ecb7cf2f850f1fb67b01565588fde2fee9e77312c8e2",
+  "parent_source_file_count": 1892,
+  "changed_paths": {
+    "tools/docker-quality.mjs": "6d22e55eeb02aab1b61a759e03e43a06b2347cb083396eb8ebf9386180497650",
+    ".docs/implementation/p05-source-revision-quality-tmpfs-resource-19.json": "8d4d4a68c0a50c4315112d4fbca5fb970304eeec9f540c25a9fa9ae4b0067b15"
+  },
+  "verification": {
+    "whole_tool_inverse_exact": true,
+    "replacements": [
+      "main --memory 2g -> 4g",
+      "main /tmp size=512m -> size=2g"
+    ],
+    "all_other_core_source_bytes_exact_parent": true,
+    "cpu2_cases_algorithms_source_universe_cleanup_capture_unchanged": true,
+    "own_readonly_verification_exit": 0,
+    "author_syntax_exit": 0,
+    "own_tests_Docker_native_Git_mutations": 0
+  },
+  "actual_Q09": {
+    "report_sha256": "97d7fd2116faf548394015d5d97ef410591b6cf097d1556953bb64bc8833c3e0",
+    "quality_sha256": "f213361e36a57971519edf9217217c713717b9f5f74d8fdbbb610c06f4aa8d99",
+    "run_receipt_sha256": "f815b161394bb72d45c27916900e98d6a29a7c499f5d3e0c88ef3af0d1054dfd",
+    "source_commit": "89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+    "source_dirty": false,
+    "source_before_after_exact": true,
+    "exit_code": 1,
+    "cleanup": "completed",
+    "negative_cases": 0,
+    "negative_source_before_after_equal": true,
+    "failure": "ENOSPC copying included-source.zip into /tmp/venus-negative-* before first negative case. Original FAIL retained; not a failed corruption-detection case. Exact original last8000 quality bytes match frozen tail."
+  },
+  "budget": {
+    "main_memory_bytes": 4294967296,
+    "tmpfs_bytes_within_main_cgroup": 2147483648,
+    "stats8_memory_bytes": 12884901888,
+    "reserve_bytes": 4294967296,
+    "total_with_reserve_bytes": 21474836480,
+    "observed_host_memory_bytes": 33617223680,
+    "observed_host_GiB": 31.30847930908203,
+    "cpu_total_with_reserve": 12,
+    "observed_cpus": 16,
+    "observation_path": ".artifacts/p05-quality09-before-run-resource-snapshot01.json",
+    "observation_sha256": "eb09b623f11dbdd7601791fc675e18b38e922b1c08f5c294a5c5cddfc7cecffe",
+    "qualification": "Historical capacity supports prospective main budget only. Root must freshly record main4GiB admission separately from nominal UI3.5GiB guard accounting, after UI cleanup, with no concurrent UI/OCI/other heavy phase. Image builder and capture remain uncapped sequential operational phases; no whole-run4GiB or isolated-performance claim."
+  },
+  "carry_boundary": "Only quality-driver resource and new revision changed. All other source bytes, APP/packages/apps/SQL/infra and production runtime inputs remain exact parent. Existing A31 runtime/image29 and A26 uniform06 statistics retain their original provenance and accepted component scope; no all299-current-source-image equality or new whole-image acceptance claimed. No rebuild/native/statistics restart required for these two resource literals.",
+  "required_next": "Root clean Q10 actual full original quality run, exact source/commit attribution, fresh resource admission, natural cleanup. Adequacy of2GiB tmpfs and Q10 success not yet measured. No intermediate push/cancel of running remote baselines; no added cases or framework.",
+  "findings": [],
+  "actual_Q10_PASS": false,
+  "stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

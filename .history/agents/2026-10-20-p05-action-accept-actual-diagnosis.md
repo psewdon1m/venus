@@ -1,0 +1,7 @@
+# P05 independent action-accept actual diagnosis
+
+## 2026-10-19T22:10:26.616127+00:00 — Start
+Exact actual advice-method11-browser-preflight-01 indexfc44f08b/39 files, source1274/1813, producer6f09. Roothandle83785 exit1 cleanupPASS.4PASS05FAIL11NOTRUN; no source/method/functionalRUN edits. RU oldown35468093.233897+5000=73093.233897; freshown369body73090.974646 but fullbatch37675923.743319; click73144.195674. Actiondeadline18:03.757 notexpiredatclick; later skipR29 after18:04.004 is separate. Exact TSX retainedcallback repro next.
+
+## 2026-10-19T22:13:15.845554+00:00 — Formal diagnosis complete
+39files/sevenproducer/source1274/1813 exact;425HTTP235WScomplete. Click73144.195 is50.962ms afterold354privateuntil73093.234 while fresh369ownarrived73090.975 but376fullbatch75923.743. Actionstill12089ms remaining atlatestserver; laterroundskipafterdeadline. Two unmodifiedTSX controls +two exactproducerwaiter probes PASS; initial schedulerdoubleadvance fixtureFAIL preserved/corrected. M12-PRECONDITION-001 producer: no completeprivatebatch readiness/no-dispatch diagnostic. Actualcachecalluntraced, no newproductfinding. Method12 observationaloracle and boundedlimits documented. No source/producer/functionalRUNwrites. Report .docs/implementation/reviews/p05/topic-action-accept-actual-diagnosis-round01/index.json SHAc52cd02b974bd7f1ff05a54a76a23dd212f694615c6fe0c82f3f15a876729746 (18files).

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "scope": "AUTHOR_DISJOINT_ORDINARY_WS_PRODUCER_REVIEW",
+  "status": "FAIL",
+  "reviewer": "/root/p05_topics_ui_review",
+  "created_at": "2026-10-19T18:11:50.054829+00:00",
+  "producer_pins": {
+    "integration.mjs": "73590fb8bb0b55e0cf89b2e60383248749ea2f9328c70e45e9dde469f8683980",
+    "runner.mjs": "68b8686b7a1017ef5a4800c50fdaee757ce7f4c9890b5be08b12a4d571c742f7"
+  },
+  "actual_root_run": {
+    "handle": 45076,
+    "review_status": "NOT_YET_TERMINAL_REVIEWED",
+    "claim": "Root reports OWS01-08 PASS while run live. This review does not convert live partial results to gate PASS."
+  },
+  "findings": [
+    {
+      "id": "OWS-REV-001",
+      "severity": "P2",
+      "category": "TEST_FALSE_NEGATIVE",
+      "controls": [
+        "P05-OWS-05",
+        "P05-OWS-06"
+      ],
+      "title": "Observation starts after the fault and misses early leaked private frames",
+      "reproduction": "node .artifacts/p05-ordinary-ws-review/window-counterexamples.mjs",
+      "confirmed": "Extracted unchanged control functions both return PASS/no_new_private_frames=true after independent doubles inject one private prompt frame during initial HTTP call while fault/feature-off is already active.",
+      "cause": "starts frame index is captured only after fault installation, HTTP call and three ping/pong operations. Every earlier fault-window frame is excluded by slice(start).",
+      "impact": "The test can pass despite private delivery during the requested fault window. No actual product leak is claimed.",
+      "requested_change": "Snapshot/observe the entire fault-active interval with real dispatch enqueue attribution. Use a wrapper that delegates original Rooms.dispatchPrivate and records callback enqueue while fault marker is active, retaining ordinary WS observation; distinguish legitimate pre-fault TCP-queued frames. Archive root attempt01 before changing producer and repeat actual checks on new exact producer."
+    }
+  ],
+  "other_observations": [
+    "OWS10 selector follows actual private reference query on same underlying PoolClient and restricts room/member/credential; selected SQL matches parent finalAccessFence. Actual pg_stat_activity observation still needs terminal result review.",
+    "OWS10 source counters are explicitly global/unattributed and do not prove this particular child assertCurrent.",
+    "OWS09 begins its no-old-prompt observation after exclusion, own settings read and pings; review full invalidation window in corrective producer as well. This is an additional coverage obligation, not a separately reproduced product finding.",
+    "Manual Cookie/Origin ordinary WS path is accurately distinguished from browser cookie jar and production CMD."
+  ],
+  "limitations": [
+    "Counterexamples execute exact extracted control functions with explicit doubles; they demonstrate producer assertion weakness, not actual transport/product leakage.",
+    "No Docker by reviewer, no product or producer writes, root live run not yet independently rerun.",
+    "No full P05, browser, production or restore/rollback acceptance."
+  ]
+}

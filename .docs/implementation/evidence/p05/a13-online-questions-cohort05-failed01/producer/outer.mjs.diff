@@ -1,0 +1,42 @@
+--- accepted04/outer.mjs
++++ cohort05/outer.mjs
+@@ -1,5 +1,6 @@
+ /** One bounded existing-compose ordinary server probe; no new supervisor. */
+ import assert from 'node:assert/strict';
++import {profiles,negativeProfiles} from './probe.mjs';
+ import {readFileSync,writeFileSync,mkdirSync,mkdtempSync,rmSync,lstatSync} from 'node:fs';
+ import {resolve,dirname,join,relative,isAbsolute,sep} from 'node:path';
+ import {fileURLToPath} from 'node:url';
+@@ -8,7 +9,8 @@
+ import {spawnSync} from 'node:child_process';
+ const here=dirname(fileURLToPath(import.meta.url)),sha=b=>createHash('sha256').update(b).digest('hex');
+ export function validateAck(ack,read=readFileSync){
+- assert.equal(ack.schema_version,1);assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_N4_DIAGNOSTIC_04');
++ assert.equal(ack.schema_version,1);assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_FIXED_COHORT_05');
++ profiles(ack.cohort);
+  for(const key of ['source_identity','source_freeze_sha256','method_review_sha256'])assert.match(ack[key],/^[a-f0-9]{64}$/);
+  assert(ack.image_entrypoint===null||JSON.stringify(ack.image_entrypoint)==='["docker-entrypoint.sh"]');assert.match(ack.image_id,/^sha256:[a-f0-9]{64}$/);assert.match(ack.pack_digest,/^sha256:[a-f0-9]{64}$/);
+  assert(isAbsolute(ack.source_root)&&isAbsolute(ack.source_freeze_path)&&isAbsolute(ack.method_review_path));
+@@ -41,7 +43,7 @@
+  assert.equal(lstatSync(ack.source_root).isSymbolicLink(),false);
+  const project='venus-pilot470-'+randomBytes(6).toString('hex'),secretDir=mkdtempSync(join(tmpdir(),'venus-pilot470-')),output=resolve(here,'runs',project);mkdirSync(output,{recursive:true});
+  const env={...process.env,VENUS_IMAGE:ack.image_id,VENUS_HTTP_PORT:'0',VENUS_ORIGIN:'https://127.0.0.1',VENUS_DEPLOYMENT_PROFILE:'local-pilot',VENUS_PRIVATE_TOPICS:'true',VENUS_PRIVATE_TEXT_CHAT:'true',CATALOG_REVOCATION_LEDGER_FILE:'/var/lib/venus/revocations.jsonl',VENUS_DB_PASSWORD_FILE:join(secretDir,'db-password'),VENUS_KEYRING_FILE:join(secretDir,'keyring.json')};
+- const report={schema_version:1,purpose:ack.purpose,status:'FAIL',source_identity:ack.source_identity,image_id:ack.image_id,root_ack_sha256:sha(readFileSync(ackPath)),project,probe_exit:null,cleanup:'NOT_RUN',container_ownership_verified:false,API_only:true,actual_browser:false};
++ const report={schema_version:1,purpose:ack.purpose,cohort:ack.cohort,matrix_complete:false,status:'FAIL',source_identity:ack.source_identity,image_id:ack.image_id,root_ack_sha256:sha(readFileSync(ackPath)),project,probe_exit:null,cleanup:'NOT_RUN',container_ownership_verified:false,API_only:true,actual_browser:false};
+  const override=join(output,'compose.probe.json');writeFileSync(override,JSON.stringify({services:{app:{volumes:[{type:'bind',source:here,target:'/run/probe',read_only:true},{type:'bind',source:ackPath,target:'/run/pilot470-root-ack.json',read_only:true}]}}},null,2)+'\n');
+  const args=['compose','--project-name',project,'--file',join(ack.source_root,'infra/venus/compose.yml'),'--file',override];
+  let allocated=false,failure=null,appId=null;
+@@ -62,11 +64,11 @@
+   assert.deepEqual(app.Config.Entrypoint,ack.image_entrypoint);assert.equal(app.Config.WorkingDir,'/app');assert.equal(app.Config.User,'1000:1000');
+   for(const value of ['VENUS_DEPLOYMENT_PROFILE=local-pilot','VENUS_PRIVATE_TOPICS=true','VENUS_PRIVATE_TEXT_CHAT=true','APP_ORIGIN=https://127.0.0.1'])assert(app.Config.Env.includes(value));assert(!app.Config.Env.some(v=>v.startsWith('NODE_OPTIONS=')));
+   const allowedMounts=new Set(['/var/lib/venus','/run/secrets/db_password','/run/secrets/keyring','/run/probe','/run/pilot470-root-ack.json']);assert(app.Mounts.every(m=>allowedMounts.has(m.Destination)));assert(app.Mounts.filter(m=>m.Destination.startsWith('/run/')).every(m=>!m.RW));
+-  const result=docker(['exec','-T','app','node','/run/probe/probe.mjs'],{status:null,timeout:1000000});report.probe_exit=result.status;
++  const result=docker(['exec','-T','app','node','/run/probe/probe.mjs'],{status:null,timeout:4800000});report.probe_exit=result.status;
+   // stdout only has fixed status/count objects; raw API bodies/cookies never print.
+   writeFileSync(join(output,'probe-stdout.txt'),result.stdout);writeFileSync(join(output,'probe-stderr.txt'),result.stderr);
+   const raw=docker(['exec','-T','app','cat','/tmp/pilot470-report.json']).stdout;assert(Buffer.byteLength(raw)<2*1024*1024);const probe=JSON.parse(raw);writeFileSync(join(output,'probe-report.json'),raw);
+-  assert.equal(result.status,0);assert.equal(probe.status,'PASS');assert.equal(probe.completed_rounds,20);assert.equal(probe.profiles.length,1);assert(probe.profiles.every(p=>p.status==='PASS'));assert.equal(probe.negative_profiles.length,0);assert(probe.negative_profiles.every(p=>p.status==='PASS'));assert.equal(probe.rooms_created,1);assert.equal(probe.rooms_closed,1);assert.equal(probe.client_cleanup,'COMPLETE');
++  assert.equal(result.status,0);assert.equal(probe.status,'PASS');assert.equal(probe.cohort,ack.cohort);assert.equal(probe.matrix_complete,false);assert.equal(probe.completed_rounds,140);assert.deepEqual(probe.profiles.map(({id,context,mode,N})=>({id,context,mode,N})),profiles(ack.cohort));assert.equal(probe.profiles.length,7);assert(probe.profiles.every(p=>p.status==='PASS'));assert.deepEqual(probe.negative_profiles.map(({context,mode,N,relation})=>({context,mode,N,relation})),negativeProfiles(ack.cohort));assert.equal(probe.negative_profiles.length,negativeProfiles(ack.cohort).length);assert(probe.negative_profiles.every(p=>p.status==='PASS'));assert.equal(probe.rooms_created,7+negativeProfiles(ack.cohort).length);assert.equal(probe.rooms_closed,7+negativeProfiles(ack.cohort).length);assert.equal(probe.client_cleanup,'COMPLETE');
+   validateAck(ack);report.status='PASS';
+  }catch(error){failure=error;report.failure=error.safe??{name:error.name,code:'ORDINARY_PROBE_FAILED'};
+  }finally{

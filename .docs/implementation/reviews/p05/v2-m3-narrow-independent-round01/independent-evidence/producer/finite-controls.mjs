@@ -1,0 +1,76 @@
+/** Fixed small controls, no470r4 corpus case and no statistical run. */
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {caseAt,counts} from './descriptor.mjs';
+import {pairedRatioCI,aucCI,trainLDA,deterministicDecoders} from './math.mjs';
+import {bindEnvironment,fairnessCell,evaluateInference,reduceGf,safeCode,invariantsSection} from './adapter.mjs';
+import {modelSession} from './model.mjs';
+import {stageTable} from './diagnostics.mjs';
+import {accumulator} from './features.mjs';
+import * as engine from '../../packages/relationship-engine/dist/index.js';
+import * as planner from '../../packages/relationship-engine/dist/topic-planner.js';
+import {syntheticTopicFixtureCapability} from '../../packages/relationship-engine/dist/topic-map.js';
+import * as renderer from '../../apps/api/dist/topic-game-model.js';
+import {syntheticCards,syntheticManifest} from '../../tests/p03/fixtures.mjs';
+const out=[],test=(name,fn)=>{fn();out.push({name,status:'PASS'});},sha=v=>createHash('sha256').update(v).digest('hex');
+const source=fs.readFileSync('tools/p03-measurements.mjs','utf8').replace(/\r\n/g,'\n'),extraction=JSON.parse(fs.readFileSync(new URL('P03-extraction.json',import.meta.url)));
+const part=(a,b)=>source.slice(source.indexOf(a),source.indexOf(b)).trimEnd();
+test('exactP03mathbodies sourcebound',()=>{const raw=part('export function pairedRatioCI','function runPlans');assert.equal(sha(raw),extraction.isolated_functions.pairedRatioCI_aucCI_trainLDA);assert(fs.readFileSync(new URL('math.mjs',import.meta.url),'utf8').replace(/\r\n/g,'\n').includes(raw));});
+test('exactP03profile body environmentinjectiononly',()=>{const raw=part('export function profile','export function pairedRatioCI');assert.equal(sha(raw),extraction.isolated_functions.profile);assert(fs.readFileSync(new URL('profile.mjs',import.meta.url),'utf8').replace(/\r\n/g,'\n').includes(raw.replace('export function profile','function profile')));});
+test('originalcounts retained no14profiles',()=>assert.deepEqual(counts,{invariants:70000,fairness:84000,gf:1000000,inference:126000}));
+test('invariantsfirstindex exactseed/profileaxes',()=>assert.deepEqual(caseAt('invariants',0),{section:'invariants',ordinal:0,size:2,index:0,mode:'questions',context:'online',rounds:1,kind:'random',pairClass:'F',seed:'venus:P03-M1:test:2:0'}));
+test('invariantslast N8 index9999R100',()=>{const d=caseAt('invariants',69999);assert.equal(d.size,8);assert.equal(d.index,9999);assert.equal(d.rounds,100);});
+test('fairness42cells exact2000R20',()=>{const cells=new Set();for(let cell=0;cell<42;cell++){const d=caseAt('fairness',cell*2000);cells.add([d.size,d.mode,d.context].join('/'));assert.equal(d.rounds,20);assert.equal(d.index,0);}assert.equal(cells.size,42);assert.equal(caseAt('fairness',83999).index,1999);});
+test('GFmatched originalR20firststage notR1substitution',()=>{const d=caseAt('gf',999999);assert.equal(d.rounds,20);assert.equal(d.seed,'venus:P03-M1:gf:999999');assert.equal(d.first_round_only,true);});
+test('inferencesplit noholdouttrainingleak',()=>{for(const index of [0,99,100,499,500,599,600,999]){const d=caseAt('inference',index);assert.equal(d.pairClass,index<500?'F':'G');assert.equal(d.split,index%500<100?'train':'holdout');assert.equal(d.rounds,1+d.index%100);}});
+test('inference126strata exact comparisons',()=>{const cells=new Set();for(let i=0;i<126;i++){const d=caseAt('inference',i*1000);cells.add([d.comparison,d.size,d.mode,d.context].join('/'));}assert.equal(cells.size,126);assert.equal(caseAt('inference',125999).index,399);});
+test('negativeordinal rejects',()=>assert.throws(()=>caseAt('gf',-1)));
+test('oversizeordinal rejects noresample',()=>assert.throws(()=>caseAt('invariants',70000)));
+test('unknownsection rejects',()=>assert.throws(()=>caseAt('legacy',0)));
+test('pairedzero denominatorFAIL no continuity correction',()=>assert.equal(pairedRatioCI({both:0,g_only:0,f_only:0,neither:100}).status,'FAIL'));
+test('pairedcorrelation exactcounts',()=>{const r=pairedRatioCI({both:100,g_only:100,f_only:0,neither:100});assert.equal(r.ratio,2);assert.equal(r.status,'PASS');});
+test('pairedinvalidfractional refuses',()=>assert.throws(()=>pairedRatioCI({both:1.5,g_only:1,f_only:0,neither:0})));
+test('AUCties half',()=>assert.equal(aucCI([0,0,0],[0,0,0]).auc,.5));
+test('AUCstrongdecoder blocked',()=>assert.equal(aucCI([0,0,0],[1,1,1]).status,'FAIL'));
+test('AUCNaN refuses',()=>assert.throws(()=>aucCI([0,NaN],[0,1])));
+test('LDAorientation trainednotflipped',()=>{const m=trainLDA([[0],[.1]],[[1],[1.1]]);assert(m.score([1])>m.score([0]));});
+test('LDAshape malformed refuses',()=>assert.throws(()=>trainLDA([[0],[1]],[[1,2],[1,3]])));
+test('exactvaluedecoder trainingoverlapblocksclaim',()=>assert.deepEqual(deterministicDecoders([[[0],[0]],[[0],[0]]],[[[0]],[[0]]],['x']),[]));
+test('exactvaluedecoder disjoint heldout blocks',()=>assert.deepEqual(deterministicDecoders([[[0],[0]],[[1],[1]]],[[[0]],[[1]]],['x']),['x']));
+test('stage168zeros explicit',()=>{const rows=stageTable();assert.equal(rows.length,168);assert(rows.every(r=>r.rounds===0&&r.private_eligible_after_cap===0));});
+test('internalphase label cannot enter publicbytefeature',()=>{const frame={model:'DOMAIN_MODEL_NOT_ACTUAL_AUTH',modeled_tick:1,modeled_mutation:'SHORT',payload:{game_rev:1,current_round:{kind:'generic',round_id:'r',round_index:1,state:'pending'}}};const a=accumulator({cards:[]},[]),b=accumulator({cards:[]},[]);a.add(frame);b.add({...frame,modeled_mutation:'PRIVATE_PHASE_CANARY'.repeat(100)});assert.deepEqual(a.finish(1).features,b.finish(1).features);});
+test('privatepayload key cannot enter publicfeature',()=>{const a=accumulator({cards:[]},[]);assert.throws(()=>a.add({model:'DOMAIN_MODEL_NOT_ACTUAL_AUTH',modeled_tick:1,payload:{game_rev:1,edges:{secret:'CANARY'},current_round:{kind:'generic',round_id:'r',round_index:1,state:'pending'}}}));});
+test('unknownerror canary never projected',()=>assert.equal(safeCode({code:'SUPER_SECRET_CANARY',message:'SECRET'}),'MODEL_OR_INPUT_FAILURE'));
+test('shortGFcorpus refuses exact1M',()=>assert.throws(()=>reduceGf([])));
+test('GFreportedhit mustmatchrawstage1actors',()=>assert.throws(()=>reduceGf([{descriptor:caseAt('gf',0),g:true,f:false,raw:{g:{stage:1,interaction:'solo',actors:[]},f:{stage:1,interaction:'solo',actors:[]}}}])));
+test('fairness missing2000 refuses',()=>assert.throws(()=>fairnessCell([])));
+test('invariants missing70k refuses',()=>assert.throws(()=>invariantsSection([])));
+const inferenceRows=Array.from({length:1000},(_,ordinal)=>({descriptor:caseAt('inference',ordinal),status:'COMPLETE_DOMAIN_MODEL',features:{names:['same'],features:[0]}}));
+test('inference1000raw matched tie LDA cell',()=>{const r=evaluateInference(inferenceRows,['same']);assert.equal(r.metric.auc,.5);assert.equal(r.refusals_retained,0);assert.equal(r.pooling,'PER_CELL');});
+test('inference duplicate descriptor refuses',()=>{const rows=[...inferenceRows];rows[1]=rows[0];assert.throws(()=>evaluateInference(rows,['same']));});
+test('inference wrongdictionary refuses',()=>assert.throws(()=>evaluateInference(inferenceRows,['different'])));
+test('inference one retained refusal blocks even ifAUCpass',()=>{const rows=[...inferenceRows];rows[1]={...rows[1],status:'SAFE_REFUSAL'};const r=evaluateInference(rows,['same']);assert.equal(r.metric.status,'PASS');assert.equal(r.status,'NOT_ACCEPTED');});
+// Fixed non-gating historical600card unit fixture, NOT real470r4 measurement.
+const cards=syntheticCards(),pack=engine.FrozenPack.load(cards,syntheticManifest(cards,engine.digest,engine.policyDigest),true),flags={classification_status:'SYNTHETIC_MACHINE_FIXTURE',approved:false,runtime_eligible:false,owner_review_status:'SYNTHETIC_ONLY'};
+const taxonomy={schema:engine.TOPIC_MAP_VERSION,taxonomy_revision:'M3-FINITE-1',...flags,topics:[{topic_id:'creative_expression',labels:{ru:'creative',en:'creative',tr:'creative'}}]};
+const semantic={schema:engine.TOPIC_MAP_VERSION,semantic_revision:'M3-FINITE-1',...flags,families:cards.map(c=>({semantic_family_id:'UNIT-'+c.id,classification:'IDENTITY_ONLY',mixed_visibility:false,repertoire:'eligible',members:[{card_id:c.id,card_revision:c.revision,card_sha256:engine.digest(c),interaction:c.interaction}]}))};
+const doc={schema:engine.TOPIC_MAP_VERSION,map_revision:'M3-FINITE-1',...flags,pack_digest:pack.digest,taxonomy_digest:engine.digest(taxonomy),semantic_policy_digest:engine.digest(semantic),entries:cards.map(c=>({card_id:c.id,card_revision:c.revision,card_sha256:engine.digest(c),mode:c.mode,interaction:c.interaction,topic_ids:['creative_expression'],semantic_family_ids:['UNIT-'+c.id],locale_field_sha256:Object.fromEntries(['ru','en','tr'].map(locale=>[locale,Object.fromEntries(Object.entries(c.text[locale]).map(([k,v])=>[k,sha(v)]))]))}))};
+const map=engine.FrozenTopicMap.syntheticFixture({map:Buffer.from(JSON.stringify(doc)),taxonomy:Buffer.from(JSON.stringify(taxonomy)),semantic:Buffer.from(JSON.stringify(semantic))},pack,syntheticTopicFixtureCapability());
+const env=bindEnvironment({pack,map},engine,planner,renderer,JSON.parse(fs.readFileSync('.docs/contracts/relationship-policy.v1.json'))),nativeResults=[];
+for(const context of ['online','in_person'])for(const mode of ['questions','truth_or_dare','yes_but'])test('nativefreshmodel_'+context+'_'+mode,()=>{
+ const d={section:'FINITE_UNIT_NOT_CORPUS',seed:'P05-M3-NATIVE-FINITE-1:'+context+(mode==='questions'?'':':'+mode),size:4,mode,context,rounds:20,kind:'exchangeable',pairClass:'F'},frames=[];
+ const r=modelSession(env,d,{onFrame:f=>frames.push(f)});assert.equal(r.status,'COMPLETE_DOMAIN_MODEL');assert.equal(r.history_provenance,'RUNTIME');assert.equal(r.model,'DOMAIN_MODEL_NOT_ACTUAL_AUTH');assert.equal(r.actual_transport,false);assert.equal(r.completed_rounds,20);assert(r.invariants.every(row=>row.violations===0));assert.equal(r.invariants.find(row=>row.id==='I14').checks,0);assert(frames.some(f=>f.payload.current_round.kind==='public'));assert(r.features.features.every(Number.isFinite));assert.equal(r.counts.invitations.reduce((a,b)=>a+b,0),r.counts.D);nativeResults.push({context,mode,completed:20,private:r.counts.Kprivate,private_playable:r.counts.private_playable,frames:frames.length,fixture_pack:pack.digest,measurement_r4:false});
+});
+test('native typedrefusal retains exactfreshprefix no retry',()=>{
+ let calls=0;const d={section:'FINITE_UNIT_NOT_CORPUS',seed:'P05-M3-FINITE-REFUSAL-1',size:4,mode:'questions',context:'online',rounds:20,kind:'exchangeable',pairClass:'F'};
+ const r=modelSession({...env,planner:{...planner,selectNextTopicRound(...args){if(++calls===3)throw Object.assign(new Error('NOT_PUBLIC'),{code:'TOPIC_SAFE_POOL_EXHAUSTED'});return planner.selectNextTopicRound(...args);}}},d);
+ assert.equal(calls,3);assert.equal(r.status,'SAFE_REFUSAL');assert.equal(r.selected_rounds,2);assert.equal(r.completed_rounds,2);assert.equal(r.history.rounds.length,2);assert.equal(r.refusal.completed_prefix,2);assert.equal(r.history.provenance,'RUNTIME');
+});
+test('SIMULATION_ONLY cannot substitute nativeconstructor',()=>assert.throws(()=>modelSession({...env,planner:{...planner,createTopicHistory:()=>({provenance:'SIMULATION_ONLY'})}},{section:'FINITE_UNIT_NOT_CORPUS',seed:'P05-M3-NO-REBRAND',size:4,mode:'questions',context:'online',rounds:20,kind:'exchangeable',pairClass:'F'})));
+test('native unknownfault aborts withseparatefailedprefix',()=>{
+ let calls=0;const d={section:'FINITE_UNIT_NOT_CORPUS',seed:'P05-M3-FAIL-PREFIX-1',size:4,mode:'questions',context:'online',rounds:20,kind:'exchangeable',pairClass:'F'};let observed;
+ try{modelSession({...env,planner:{...planner,selectNextTopicRound(...args){if(++calls===2)throw Object.assign(new Error('PRIVATE_CANARY'),{code:'PRIVATE_CANARY'});return planner.selectNextTopicRound(...args);}}},d);}catch(error){observed=error;}
+ assert(observed);assert.equal(calls,2);assert.equal(safeCode(observed),'MODEL_OR_INPUT_FAILURE');assert.equal(observed.domain_prefix.status,'FAIL_DOMAIN_PREFIX_NOT_COMPLETE');assert.equal(observed.domain_prefix.completed_rounds,1);assert(!JSON.stringify(observed.domain_prefix).includes('PRIVATE_CANARY'));
+});
+console.log(JSON.stringify({status:'AUTHOR_FINITE_NOT_CORPUS_PASS',controls:out.length,controls_results:out,native_unit_results:nativeResults,actual470r4_corpus_cases:0,full_M3_PASS:false},null,2));

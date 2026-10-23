@@ -1,0 +1,35 @@
+{
+  "status": "EXISTING_COLD_BINDING_SOURCE_AND_INACTIVE_GUARDS_PASS",
+  "jobs": [
+    {
+      "name": "binding-read",
+      "exit": 0
+    },
+    {
+      "name": "syntax-run.mjs",
+      "exit": 0
+    },
+    {
+      "name": "syntax-runner-policy.mjs",
+      "exit": 0
+    },
+    {
+      "name": "layout-falseACK",
+      "exit": 1,
+      "expected": 1,
+      "code": "ROOT_RUN_ACK_REQUIRED"
+    },
+    {
+      "name": "OCI-falseACK",
+      "exit": 1,
+      "expected": 1,
+      "code": "ERR_ASSERTION",
+      "projection": "NOT_ACCEPTED_BEFORE_OR_DURING_PLAN"
+    }
+  ],
+  "initial_author_expectation_FAIL": "Author expected raw NOT_AUTHORIZED token, but unchanged OCI driver intentionally emits safe typed assertion projection; existing output validated, no rerun required.",
+  "new_functional_controls": 0,
+  "Docker": 0,
+  "native_models": 0,
+  "full_suites": 0
+}

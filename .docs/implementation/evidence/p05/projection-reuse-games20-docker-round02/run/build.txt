@@ -1,0 +1,77 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 12.38kB 0.0s done
+#4 DONE 0.0s
+
+#5 [runtime 2/5] COPY apps apps
+#5 CACHED
+
+#6 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#6 CACHED
+
+#7 [runtime 3/5] COPY packages packages
+#7 CACHED
+
+#8 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#8 CACHED
+
+#9 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#9 CACHED
+
+#10 [dependencies  2/12] WORKDIR /app
+#10 CACHED
+
+#11 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#11 CACHED
+
+#12 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#12 CACHED
+
+#13 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#13 CACHED
+
+#14 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#14 CACHED
+
+#15 [runtime 4/5] COPY tests tests
+#15 CACHED
+
+#16 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#16 CACHED
+
+#17 [runtime 1/5] COPY tsconfig*.json ./
+#17 CACHED
+
+#18 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#19 CACHED
+
+#20 [runtime 5/5] RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+#20 CACHED
+
+#21 exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:d4a9b698dccab5be5eb8150987a9e9f138f886e6627f0aba8e9007ca0bbaea0f done
+#21 exporting config sha256:e0b46aaf87e2dbffb1fbe1d017d8dd712a4ffc67c8373dd60d67725f72c4fa9a done
+#21 exporting attestation manifest sha256:5e6f63263864aab7062d918033c605169aa9f93ab547b570af57a0e2ed6c9c77 0.0s done
+#21 exporting manifest list sha256:9c84a3893beb0075bc608c4ef88f2759ed53034c8557dcb17857af9551484d29
+#21 exporting manifest list sha256:9c84a3893beb0075bc608c4ef88f2759ed53034c8557dcb17857af9551484d29 done
+#21 naming to moby-dangling@sha256:9c84a3893beb0075bc608c4ef88f2759ed53034c8557dcb17857af9551484d29 done
+#21 unpacking to moby-dangling@sha256:9c84a3893beb0075bc608c4ef88f2759ed53034c8557dcb17857af9551484d29 0.0s done
+#21 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/m102bj0x9koptu8gnnum2reh6

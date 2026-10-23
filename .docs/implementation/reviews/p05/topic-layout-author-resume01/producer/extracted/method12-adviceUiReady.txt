@@ -1,0 +1,4 @@
+async function adviceUiReady(participants,f,minRev,control,label,afterMonotonic=null){
+ const started=performance.now(),stage=topicReadinessPhase('advice_after_commit:'+label,started,participants);
+ const results=await Promise.allSettled(participants.map(a=>topicUiReady(a,f,minRev,control,stage,'advice_'+label,afterMonotonic))),failed=results.find(v=>v.status==='rejected');if(failed)throw failed.reason;
+}

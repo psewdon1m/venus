@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {pathToFileURL} from 'node:url';
+const root='C:/.projects/venus',p=root+'/.artifacts/p05-pilot-bundle-source13/.artifacts/p05-v2-layout-producer-resume15',c=root+'/.artifacts/p05-pilot-bundle-source14/.artifacts/p05-v2-layout-producer-resume16';
+const before=await import(pathToFileURL(p+'/x11.mjs')),after=await import(pathToFileURL(c+'/x11.mjs')),nonce='Venus layout 12345678-1234-4123-8123-123456789abc',prefix='\u{1f3ad} Playwright: ',rows=[];
+function check(name,operation){operation();rows.push({name,status:'PASS'});}
+check('measured_WebKit_prefix_with_exact_nonce_or_bare_only',()=>{const regex=new RegExp(after.windowTitlePattern(nonce,'webkit'));for(const title of [nonce,prefix+nonce]){assert(regex.test(title));assert(after.ownWindowTitle(nonce,'webkit',title));}assert(!new RegExp(before.windowTitlePattern(nonce,'webkit')).test(prefix+nonce));});
+check('wrong_emoji_prefix_suffix_nonce_and_private_tail_rejected',()=>{const regex=new RegExp(after.windowTitlePattern(nonce,'webkit'));for(const title of ['Playwright: '+nonce,'\u{1f3ad} Other: '+nonce,prefix+nonce+' PRIVATE_CANARY',prefix+nonce+' - Google Chrome for Testing',prefix+nonce.replace('12345678','87654321'),prefix+nonce.toUpperCase()]){assert(!regex.test(title));assert(!after.ownWindowTitle(nonce,'webkit',title));}});
+check('all_other_engine_templates_exact_parent15',()=>{for(const engine of ['chromium','firefox','unknown']){assert.equal(after.windowTitlePattern(nonce,engine),before.windowTitlePattern(nonce,engine));for(const title of [nonce,nonce+' - Google Chrome for Testing',nonce+' \u2014 Nightly',prefix+nonce])assert.equal(after.ownWindowTitle(nonce,engine,title),before.ownWindowTitle(nonce,engine,title));}});
+check('readiness_ambiguity_focus_native_source_exact15_no_PID_runtime',()=>{const a=readFileSync(p+'/x11.mjs','utf8'),b=readFileSync(c+'/x11.mjs','utf8');assert.equal(a.slice(a.indexOf('export async function readyOwnedWindow')),b.slice(b.indexOf('export async function readyOwnedWindow')));assert(!b.includes('/proc/'));assert(!b.includes("'getwindowpid'"));});
+console.log(JSON.stringify({status:'PASS_FOUR_NEW_SCOPE_CONTROLS_NOT_NATIVE',controls:rows.length,rows},null,2));

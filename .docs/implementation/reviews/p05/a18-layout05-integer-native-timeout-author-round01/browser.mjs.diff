@@ -1,0 +1,11 @@
+--- 04/browser.mjs
++++ 05/browser.mjs
+@@ -18,7 +18,7 @@
+  assert.equal(process.platform,'linux');assert.equal(process.env.VENUS_P05_LAYOUT_RUN,'1','ROOT_LAYOUT_RUN_ACK_REQUIRED');assert.equal(process.env.VENUS_P05_ISOLATED_FIXTURE,'1');
+  const engine=process.env.P05_LAYOUT_ENGINE,locale=process.env.P05_LAYOUT_LOCALE;assert(engines[engine]);assert(['ru','en','tr'].includes(locale));
+  const output=process.env.P05_ARTIFACT_DIRECTORY??'/artifacts';mkdirSync(output,{recursive:true});
+- const cells=expectedCells().filter(c=>c.engine===engine&&c.locale===locale),report={schema_version:1,scope:'ACTUAL_V2_LAYOUT_SHARD_NOT_FULL_STAGE',status:'FAIL',engine,locale,records:cells.map(c=>({...c,status:'NOT_RUN'})),page_errors:[],page_errors_overflow:false,request_metadata:[],keyboard_actions:[],sweep_preparations:[],layout_method_revision:'A18_BOUNDED_OFFER_SWEEPS_04',cleanup:'NOT_RUN',full_matrix:false,real_devices:false,production_approval:false,synthetic_fixture_only:true};
++ const cells=expectedCells().filter(c=>c.engine===engine&&c.locale===locale),report={schema_version:1,scope:'ACTUAL_V2_LAYOUT_SHARD_NOT_FULL_STAGE',status:'FAIL',engine,locale,records:cells.map(c=>({...c,status:'NOT_RUN'})),page_errors:[],page_errors_overflow:false,request_metadata:[],keyboard_actions:[],sweep_preparations:[],layout_method_revision:'A18_BOUNDED_OFFER_SWEEPS_05',cleanup:'NOT_RUN',full_matrix:false,real_devices:false,production_approval:false,synthetic_fixture_only:true};
+  const path=join(output,'layout-report.json'),save=()=>{writeFileSync(path,JSON.stringify(report,null,2)+'\n');assertSafeMetadata(path);};
+  const recordX11Failure=error=>{const safe=x11CommandFailure(error);if(safe&&!report.x11_command_failure){report.x11_command_failure=safe;try{save();}catch{report.x11_diagnostic_save_failed=true;}}};
+  const screenshots=screenshotBudget();let service,xserver,owned,driver,error;

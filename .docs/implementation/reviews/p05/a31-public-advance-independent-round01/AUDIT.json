@@ -1,0 +1,27 @@
+{
+  "status": "HOLD_METHOD_PUBLIC_CLICK_DEADLINE_AND_REVISION",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "author_index_sha256": "79b9ddd400c1fb9c719be57d49113e09f94c5b60ceb068650d36bd3451afa783",
+  "author_children_verified": 6,
+  "producer_index_sha256": "383972745c8b4dcfaa858ade110e5e7942276755f70331034a36d151e774b046",
+  "runtime": "b177bd0544422cf26617f9447f11462a24301a5e9816add7d6b1b55b8a97e8e2",
+  "binding_checks": "Exactlyrunselfpath+scene-driver changes; wholeinverse recovers originalA31-01scene bytes,25otherMJSexact. Runtime recomputed/inactiveACK/rootindexunchanged. SameAPP/resource17/formerimage29 originalcriteria retained.",
+  "positive": "Uses passivevalidatedown/current only/no privatecontent/newAPI/observer. Orderedhosttimes/min5000serverTTL/existing250minimum/same8s preparation/deadlineceiling/boundedreason+scopehash/nonenumerableexpectedIDs. Observeronly/cachefalse/authfalse distinctions explicit, no reissue/retry/reseed/focusoracles changes.",
+  "findings": [
+    {
+      "priority": 2,
+      "scope": "click final l.click timeout",
+      "problem": "game-next is not normalPrivateControls, so localticket=null. Publicprepared is rechecked but final l.click(ticket?deadline:{}) gets default timeout, allowing locatoraction auto-wait beyond publicreadiness deadline. Intendedfixedgrant actioncompletion ceiling not enforced.",
+      "minimal_fix": "Use privateticket OR publicprepared as timeout-only deadline for finalONEclick, preserving privateassert/privatebehavior and existingmaximum15s/deadline. No key/click/POST retry."
+    },
+    {
+      "priority": 2,
+      "scope": "wanted.rev=f.game_rev in ownUiRound/publicAdvanceReadiness",
+      "problem": "Original uiRoundMatches/coherentRound permit actualgame_rev>=fixture min. Helper requires exactown/current==fixturegame_rev, so a validhighercurrentrevision in samefixture round cannotbecome ready.",
+      "minimal_fix": "Bind wanted.rev to actualmatchingUIcurrentrevision >=fixturemin within SAMEexisting8spredicate, then own/current exactthatrevision and immediatepreclicksamepreparedscope. Do not relax session/round/revision coherence or extenddeadline."
+    }
+  ],
+  "actual_cause": "Historical noPOST cause remainsUNKNOWN; these are current helper defects, not newAPPcause proof.",
+  "reviewer_tests_Docker_native": 0,
+  "whole_stage_PASS": false
+}

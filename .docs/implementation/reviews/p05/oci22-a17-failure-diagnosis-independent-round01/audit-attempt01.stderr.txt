@@ -1,0 +1,174 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+... Skipped lines
+
+  {
+    boundary: {
+      elapsed_ms: 260916.7829,
+      finished: {
+        cleanup: 'retained_manual_cleanup_required',
+...
+    status: 'FAIL',
++   terminal_persisted: true,
+    whole_elapsed_ms: 260916.96250000002
+  }
+
+    at same (file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci22-a17-failure-diagnosis-independent-round01/audit.mjs:11:31)
+    at file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci22-a17-failure-diagnosis-independent-round01/audit.mjs:26:109
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: {
+    boundary: {
+      elapsed_ms: 260916.7829,
+      finished: { cleanup: 'retained_manual_cleanup_required', status: 'FAIL' },
+      profile: 'QRB_BOUND_ONLY_1',
+      status: 'BOUNDARY_FINISHED'
+    },
+    cleanup: 'retained_manual_cleanup_required',
+    cleanup_error: null,
+    error_name: 'AssertionError',
+    export_error: null,
+    first_error: {
+      code: 'ERR_ASSERTION',
+      name: 'AssertionError',
+      phase: 'B2',
+      source_column: 388,
+      source_line: 68,
+      source_module: 'bound-profile'
+    },
+    full_P05_PASS: false,
+    output: 'C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source14\\.artifacts\\p05\\venus-p05-oci-42ca11845db2',
+    phase_terminals: [
+      {
+        closed: true,
+        code: 0,
+        invalid: false,
+        phase: 'A1',
+        terminal: {
+          error: null,
+          evidence_write_failed: false,
+          phase: 'A1',
+          pool_closed: true,
+          process_nonce: '341db62a49bf8722651c1b4d38c853d3',
+          status: 'PHASE_COMPLETE'
+        }
+      },
+      {
+        closed: true,
+        code: 1,
+        invalid: false,
+        phase: 'B2',
+        terminal: {
+          error: {
+            code: null,
+            name: 'Error',
+            phase: 'B2',
+            source_column: 393,
+            source_line: 19,
+            source_module: 'api-child'
+          },
+          evidence_write_failed: false,
+          phase: 'B2',
+          pool_closed: true,
+          process_nonce: 'f35ca3338780a43172de05771115a5af',
+          status: 'FAIL'
+        }
+      }
+    ],
+    remaining_owned: {
+      containers: [ 'eabc59e5b81b', '1fafa0283c77' ],
+      networks: [ '00eabd948a82' ],
+      volumes: [
+        'venus-p05-oci-42ca11845db2-authority',
+        'venus-p05-oci-42ca11845db2-db',
+        'venus-p05-oci-42ca11845db2-evidence',
+        'venus-p05-oci-42ca11845db2-private'
+      ]
+    },
+    status: 'FAIL',
+    terminal_persisted: true,
+    whole_elapsed_ms: 260916.96250000002
+  },
+  expected: {
+    boundary: {
+      elapsed_ms: 260916.7829,
+      finished: { cleanup: 'retained_manual_cleanup_required', status: 'FAIL' },
+      profile: 'QRB_BOUND_ONLY_1',
+      status: 'BOUNDARY_FINISHED'
+    },
+    cleanup: 'retained_manual_cleanup_required',
+    cleanup_error: null,
+    error_name: 'AssertionError',
+    export_error: null,
+    first_error: {
+      code: 'ERR_ASSERTION',
+      name: 'AssertionError',
+      phase: 'B2',
+      source_column: 388,
+      source_line: 68,
+      source_module: 'bound-profile'
+    },
+    full_P05_PASS: false,
+    output: 'C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source14\\.artifacts\\p05\\venus-p05-oci-42ca11845db2',
+    phase_terminals: [
+      {
+        closed: true,
+        code: 0,
+        invalid: false,
+        phase: 'A1',
+        terminal: {
+          error: null,
+          evidence_write_failed: false,
+          phase: 'A1',
+          pool_closed: true,
+          process_nonce: '341db62a49bf8722651c1b4d38c853d3',
+          status: 'PHASE_COMPLETE'
+        }
+      },
+      {
+        closed: true,
+        code: 1,
+        invalid: false,
+        phase: 'B2',
+        terminal: {
+          error: {
+            code: null,
+            name: 'Error',
+            phase: 'B2',
+            source_column: 393,
+            source_line: 19,
+            source_module: 'api-child'
+          },
+          evidence_write_failed: false,
+          phase: 'B2',
+          pool_closed: true,
+          process_nonce: 'f35ca3338780a43172de05771115a5af',
+          status: 'FAIL'
+        }
+      }
+    ],
+    remaining_owned: {
+      containers: [ 'eabc59e5b81b', '1fafa0283c77' ],
+      networks: [ '00eabd948a82' ],
+      volumes: [
+        'venus-p05-oci-42ca11845db2-authority',
+        'venus-p05-oci-42ca11845db2-db',
+        'venus-p05-oci-42ca11845db2-evidence',
+        'venus-p05-oci-42ca11845db2-private'
+      ]
+    },
+    status: 'FAIL',
+    whole_elapsed_ms: 260916.96250000002
+  },
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

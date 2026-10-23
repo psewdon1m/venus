@@ -1,0 +1,11 @@
+# METHOD06 canonical cleanup IDs — candidate, not RUN
+
+P05-METHOD05-001 has a minimal prospective correction. Cleanup requests `docker ps -aq --no-trunc`, requires unique lowercase64hex IDs, then verifies inspect returns the exact same ordered ID list. Malformed/duplicate/missing/reordered replies and another64hex ID sharing a12char prefix fail before kill/removal. Existing exact owner/image/generated-name checks,30s cleanup deadline, logger-free teardown and unverified-export volume retention remain.
+
+The unchanged new ID-control program records3FAIL/5PASS on the copied METHOD05 cleanup (exit1), then8/8 top-level PASS after correction (exit0). Case8 contains7 explicit mapping-denial branches. Additional18 supervisor/cleanup source-bound controls reran with realistic64hex IDs, and31 syntax/cold checks passed. No Docker call, prepare, run, selector or R100 occurred. This predicts and fixes a representation error; it does not claim an observed Docker leak.
+
+The27 prior realWindows output controls were not rerun. Their four exact source inputs (Python guard, package helper, allocation helper, control program) match old raw pins; the packet preserves an explicit hash-qualified reuse record and original raw. The host-output schema remains METHOD05-HOST-OUTPUT-FENCES deliberately. The outer launcher/preparation/rootACK candidate is separately versioned METHOD06-CANONICAL-CLEANUP-IDS, with exact new launcher binding. GUARD_API documents fresh cleanup pins and this distinction.
+
+Exact content changes and base-path-only relocations are listed in raw/exact-diff.json; readable minimal changes are in raw/exact-diff.patch.txt. Original METHOD05 packet and all27 original workspace code snapshots are verified unchanged, along with formal05 review. Current source1274deb/1813, receipt2dae and64 compiled pins remain unchanged. Limits remain128MiB/300s/10GiB,1CPU/1536MiB, same literal descriptor/seed, no changed statistical counts or thresholds.
+
+The author is not the acceptor. Independent repeat must precede root preparation/binding and a separate diagnostic ACK. Actual native cleanup/runtime proof, full statistics/consumer acceptance, feasibility, human450HOLD and fullP05 remain open. OCI512MiB/900s requires separate explicit adaptation/review.

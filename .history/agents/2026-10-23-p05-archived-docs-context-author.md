@@ -1,0 +1,17 @@
+# P05 archived Markdown context metadata fix
+
+Agent `/root/p05_resume05_author`; UTC. Owned implementation files only: `tools/archived_markdown.py`, `tools/test_archived_markdown.py`, new source revision15 JSON; plus own journal and small author evidence. No copied snapshots/accepted packets, source28, APP/runtime/producer, manifest, Git or Docker/native changes. Root will qualify unchanged UI A31/source57c55/image29/statistics separately.
+
+## 2026-10-23T00:15:00Z — failed docs check and scoped investigation
+
+Root saved precleanQ docs exit1 at `.artifacts/p05-a31-docs-beforeQ01.txt`. Actual output says24 link-error occurrences across exactly four immutable copied Markdown files (plan plus ADR025/026/029); root's initial summary called them12. All are relative-link base interpretation failures. Existing ARCHIVES has13 exact pinned records and unchanged strict UTF8/hash/ancestor/link validation. Will append four exact UTF8+original-origin records, update inventory count13→17 in existing test only, and source revision15; no wildcard/exemption/logic changes. A guessed revision14 filename read failed; inventory will identify actual file before creation.
+
+## 2026-10-23T00:17:35Z — fix, existing checks and handoff
+
+Rehashed four copied MD bytes against historical continuity03 accepted INDEX; all exact UTF8 and declared original origins exist. Beforetools copied into small new author evidence, original failure log retained. Appended four exact SHA/byte/UTF8/origin dictionary records to `tools/archived_markdown.py`; updated descriptive inventory13→17/eight→twelve only. Prior13 dictionary records exact and `read_markdown`/`archive_errors` function bytes exact. `tools/test_archived_markdown.py` solely expected count13→17, inverse exact; no test added or relaxed.
+
+New `.docs/implementation/p05-source-revision-archived-link-context-15.json` `7ce3aa0f706e8bdcb1793607661cea8a8aab749b4b9c70b6f50a7d0436d154c9` explicitly DOCSCHECKER_METADATA_ONLY relative to frozenA31 source `57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd`. Root separately binds final whole-source identity and exact APP/runtime correspondence; this does not restart or claim native9 PASS. No source28/image29/currentUI58127/statistics inputs touched.
+
+Existing `.venv/Scripts/python.exe -X utf8 -B -m unittest discover -s tools -p test_archived_markdown.py -v` exit0: all7 meaningful tests PASS, including ancestor symlink/unknown encoding/deletion/corruption rejections expanded automatically over17 exact records. Existing `.venv/Scripts/python.exe -X utf8 -B tools/check_docs.py` exit0:1807Markdown/0errors, required files/assets/snapshot hashes PASS. No further backend/native/Docker/new tests. All four captured MD and historical INDEX rechecked exact after tools fix.
+
+Author packet `.docs/implementation/reviews/p05/archive-context15-author-round01/INDEX.json` `fbabbbb7657d6441d4dfa0ade5623f7f79c5ff0c3cd36eca0883062661ded502` /10children, pins/hunk/beforebytes/failure+pass logs. Tool hashes `18625d361e012f77aa585601b941d79e6b247315f326e194620d9d1fa0e843ec` and `2b5616a3b3c209c170e6df52c152e620c287700c7fbcd14a2a210977a933b973`. Root/gate22 notified. Only owned three implementation files changed; no manifest/Git/native/APP mutation, old accepted proofs untouched. Git index remainsa4bb6d5150e4fc2e8beb8bb14bd4aa13aba7e4b419b8c4e40c85e6708ac89093. Source/packet writes COMPLETE_STOP, journal STOP; root may snapshot Q after independent review/writers completion.

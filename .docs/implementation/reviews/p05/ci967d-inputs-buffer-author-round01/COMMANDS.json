@@ -1,0 +1,23 @@
+{
+  "fresh_compile": {
+    "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe node_modules/typescript/bin/tsc -b --force",
+    "exit": 0
+  },
+  "descriptor_generation": {
+    "invocation": "node --input-type=module - (metadata export import only; invokedAsMain=false)",
+    "entrypoint": "tools/p03-measurements.mjs exported measurementInputs() after fresh compile",
+    "output": ".docs/implementation/p03-measurement-inputs-v4.json",
+    "checks": "All nonraw descriptor fields deep-equal v3; raw deltas exactly runner +pack.ts +index.ts +games-model.ts; written JSON deep-equals a second measurementInputs() read",
+    "exit": 0,
+    "corpus_main": false,
+    "probe": false
+  },
+  "root_core_observation": {
+    "command": ".venv/Scripts/python.exe -X utf8 -B tools/stage_inventory.py",
+    "exit": 0,
+    "at_utc": "2026-10-23T01:00:54.0566031Z",
+    "core_identity": "63e09eefbdadb4ca71843fccf07cbf3c98db3163f694e5f102d95d42336a025e",
+    "primary_HEAD": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+    "qualification": "SHARED_ROOT_DIRTY_METADATA_OBSERVATION_NOT_FINAL_CLEAN_SOURCE; root has separate concurrent P04/revision17 work; CI actualhead967d is distinct"
+  }
+}

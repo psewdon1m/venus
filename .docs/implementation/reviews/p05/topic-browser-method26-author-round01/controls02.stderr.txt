@@ -1,0 +1,80 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /FINITE_ORIGINAL_POLL_DEADLINE/. Input:
+
+'AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:\n' +
+  '\n' +
+  '{\n' +
+  '  current_round: {\n' +
+  "    round_id: 'synthetic-round',\n" +
+  '    round_index: 4,\n' +
+  "    state: 'pending'\n" +
+  '  },\n' +
+  '  game_rev: 41,\n' +
+  '  schema_version: 2,\n' +
+  "  session_id: 'synthetic-session',\n" +
+  "  state: 'active',\n" +
+  '  untouched_public_field: {\n' +
+  '    original: true\n' +
+  '  }\n' +
+  '}\n'
+
+    at async file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:43:420
+    at async check (file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:25:31)
+    at async file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:42:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: AssertionError [ERR_ASSERTION]: Values have same structure but are not reference-equal:
+  
+  {
+    current_round: {
+      round_id: 'synthetic-round',
+      round_index: 4,
+      state: 'pending'
+    },
+    game_rev: 41,
+    schema_version: 2,
+    session_id: 'synthetic-session',
+    state: 'active',
+    untouched_public_field: {
+      original: true
+    }
+  }
+  
+      at before (file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:43:276)
+      at async Object.toBe (file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:16:244)
+      at async Object.coherentGame [as run] (evalmachine.<anonymous>:8:90)
+      at async waitForActual (node:assert:646:5)
+      at async strict.rejects (node:assert:769:25)
+      at async file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:43:420
+      at async check (file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:25:31)
+      at async file:///C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs:42:1 {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: {
+      schema_version: 2,
+      session_id: 'synthetic-session',
+      game_rev: 41,
+      state: 'active',
+      current_round: { round_id: 'synthetic-round', round_index: 4, state: 'pending' },
+      untouched_public_field: { original: true }
+    },
+    expected: {
+      schema_version: 2,
+      session_id: 'synthetic-session',
+      game_rev: 41,
+      state: 'active',
+      current_round: { round_id: 'synthetic-round', round_index: 4, state: 'pending' },
+      untouched_public_field: { original: true }
+    },
+    operator: 'strictEqual',
+    diff: 'simple'
+  },
+  expected: /FINITE_ORIGINAL_POLL_DEADLINE/,
+  operator: 'rejects',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

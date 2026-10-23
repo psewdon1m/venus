@@ -1,0 +1,17 @@
+from pathlib import Path
+import shutil,json,hashlib,datetime,sys
+r=Path.cwd();src=r/'.artifacts/p05-recovery-source1274-01/.artifacts/p05/r100-v3-7da46d477970';out=r/'.docs/implementation/evidence/p05/recovery-method08-actual01';assert not out.exists()
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+files=[p for p in src.rglob('*') if p.is_file()];total=sum(p.stat().st_size for p in files);assert total<128*1024**2;assert all(not p.is_symlink() for p in files)
+out.mkdir(parents=True)
+for p in files:
+ dest=out/'run'/p.relative_to(src);dest.parent.mkdir(exist_ok=True,parents=True);shutil.copyfile(p,dest)
+for name in ['p05-recovery-method08-run01.txt','p05-recovery-method08-run01-exit.txt','p05-recovery-method08-prepare01.txt','p05-recovery-method08-prepare02.txt','p05-recovery-method08-root-ack01.json','p05-recovery-method08-ack01.py','p05-recovery-method08-actual-archive01.py','p05-recovery-image-a-receipt01.json']:
+ shutil.copyfile(r/'.artifacts'/name,out/name)
+row=json.loads((r/'.artifacts/p05-recovery-method08-run01.txt').read_text(encoding='utf-8'));assert row['status']=='NOT_ACCEPTED'
+worker=json.loads((src/'control/receipts/worker-terminal.json').read_text(encoding='utf-8'));assert worker['code']==0
+record={'status':'NOT_ACCEPTED_HOST_TAR_STAGE_GUARD_FAILED','created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'source_scope':'EXACT_RESTORED_HISTORICAL1274_NOT_CURRENT_LIVE_STAGE','observed_exit_code':int((r/'.artifacts/p05-recovery-method08-run01-exit.txt').read_text()),'worker_exit_code':worker['code'],'worker_stdout':json.loads(worker['stdout']),'terminal':row,'terminal_stdout_transport_functioned':True,'actual_supervisor_exception':'UNRECORDED_STDERR_IGNORED','native_prefix':'RETAINED_UNVERIFIED_EXPORT_NO_DELETION','full_statistics':False,'full_stage_acceptance':False,'original_host_files':len(files),'original_host_logical_bytes':total}
+(out/'RECORD.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+(out/'REPORT.md').write_text('# METHOD08 actual: NOT_ACCEPTED\n\nWorker completed100/100, exit0,45.0449s. Parent exit1 at guarded tar staging; capacity fault HOST_TAR_STAGE_GUARD_FAILED. Export is unverified and the owned native volume is retained. No full statistics or stage PASS. Terminal stdout honestly reports NOT_ACCEPTED; the post-supervisor write bug is not treated as the cause of this new failure. Actual supervisor stderr was ignored and the Python traceback was truncated by the launcher, so exact exception is unrecorded. Independent diagnosis must distinguish proven code faults from an unproven Windows race hypothesis. Original prefix is preserved; no rerun or cleanup happened before this snapshot.\n\nSource/image are the independently qualified restored historical1274/A29e39 snapshot. Live tool/P04 changes are separate. Preparation01 failed before worker because its new output parent was absent; preparation02 succeeded after creation of that parent. Both attempts are retained.\n',encoding='utf-8',newline='\n')
+entries=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file()]
+(out/'INDEX.json').write_text(json.dumps({'status':record['status'],'files':entries},indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps({'index_sha256':sha(out/'INDEX.json'),'files':len(entries),'run_logical_bytes':total}))

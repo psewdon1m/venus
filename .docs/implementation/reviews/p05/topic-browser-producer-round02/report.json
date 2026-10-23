@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "status": "STATIC_PRODUCER_PREFLIGHT_PASS",
+  "scope": "AUTHOR_DISJOINT_STATIC_P05_FUNCTIONAL16_BROWSER_PRODUCER_REVIEW",
+  "created_at": "2026-10-19T19:07:37.337521+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "producer_author": "/root/p05_topics_ui",
+  "docker": "NOT_RUN",
+  "actual_browser": "NOT_RUN",
+  "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "included_files": 1808,
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-browser/browser.mjs",
+      "sha256": "d51c0339e0c745ce82624bf74bb9dbe5c5d9c92842f2759290354fd5e533ef28"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/runtime.mjs",
+      "sha256": "28dcf8e45b4c688fce984a00af035946f951fc17cd5f100b540e3eeea27494f2"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/run.mjs",
+      "sha256": "5f3fd2bf7a3f28cb940352658d5e0b317df9702370517b0c9a2942f1d84263e0"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/observations.mjs",
+      "sha256": "366b7867e17f5c17468e0b67afeb27d4895e2876469e54cdfefff145d4b27011"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/DESIGN.md",
+      "sha256": "c1b5bd4e34a2850f5e42fbf7cb331eafce9032856b6f3fd2f68b452796d25349"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/README.md",
+      "sha256": "aa04cfa4b5f73a4039803cc9d69ef1a5e802453746df8bb5ef8563ada0fe1479"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/static-result.json",
+      "sha256": "858324e8ed76d769c45dcfcebd47165fb6624eb8e326eaada57e69751732f982"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/lint-static.json",
+      "sha256": "87e7b3f8a53ca67135e6d499c87a76af118b414b6e6b8afff3d8ec7c9bd86ddb"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/HANDOFF.json",
+      "sha256": "02beadbbadb58e4c5099d0c5bed9753aedd820816a5aa55fae8a28ee5f924c85"
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "a5a6c6cb3da9b4beb75ce36be708c49bbdfecfcab9ce34523ad5a76fdfa6a36e"
+    },
+    {
+      "path": "apps/api/src/topic-game-model.ts",
+      "sha256": "fe371afa866f3899250d222d0135a0770304afc90513316971f2c923f00cc9b7"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "tests/p05-topic-lifecycle/harness.mjs",
+      "sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd"
+    }
+  ],
+  "before_after_unchanged": true,
+  "harness_sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+  "exact_two_replacements": true,
+  "derivative_sha256": "cbe7371b43d98721dcd7b641e55084929abfaa9123254d1a2240307b8b25d779",
+  "image_binding": {
+    "path": ".docs/implementation/evidence/p05/topic-games-preflight-07/index.json",
+    "index_sha256": "72a9ed7e6e3bc0ae12ff845e75cae2567cf822f17b9e99eaa43a5e578f6f3580",
+    "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+    "image": "sha256:00c46c7a5fd255dcebb43ec34decc1b27234a67f83ffead8d4828238fe96700a",
+    "new_image_execution": false
+  },
+  "corrected_author_snapshot": {
+    "path": ".artifacts/p05-topic-browser/corrected-static-03",
+    "index_sha256": "5d560e83da69f12c1cca74e58392ed097a63911f09ebee6e66ef2aaa57a5833d",
+    "verified_files": 18
+  },
+  "findings": [],
+  "closed_findings": [
+    "TB-PRODUCER-R01",
+    "TB-PRODUCER-R02",
+    "TB-PRODUCER-R03",
+    "TB-PRODUCER-R04"
+  ],
+  "probes": {
+    "own_exact_AST_and_oracles": 41,
+    "own_runner_VM": 11,
+    "copied_author_probes_rerun": 30,
+    "old_round01_counterexamples_reproduced": 4,
+    "syntax_exit_codes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "lint_exit_code": 0
+  },
+  "full_stage_pass": false,
+  "limitations": [
+    "Static producer acceptance only. No actual PG/browser/Docker execution and no image inspection performed.",
+    "Root must separately ACK runtime after chat-policy actual accepted; actual browser results require independent audit.",
+    "Advertised first16 functional cases only, not full mode/locale/layout/device matrix.",
+    "Local fixture TLS/cookie validation cannot prove production DNS/TLS or real devices.",
+    "Human450 HOLD/full P05/restore/production gates remain outside this report.",
+    "Reviewer has not authored or edited browser producer/product."
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "status": "FAIL",
+  "controls": [
+    {
+      "name": "fixed512/900 hard-ledger arithmetic itself is exact",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong total_cap_bytes denied",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong deadline_ms denied",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong no_global_cleanup denied",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong protected_roots_rollback denied",
+      "status": "PASS"
+    },
+    {
+      "name": "sample refuses low host/native/cap exhaustion",
+      "status": "PASS"
+    },
+    {
+      "name": "exact create function permits Docker default shm outside claimed native ledger",
+      "status": "PASS",
+      "details": {
+        "exact_create_args": [
+          "create",
+          "--name",
+          "venus-p05-oci-bbbbbbbbbbbb-a1",
+          "--label",
+          "com.venus.oci.owner=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "--label",
+          "com.venus.oci.role=A1",
+          "--network",
+          "venus-p05-oci-bbbbbbbbbbbb-isolated",
+          "--network-alias",
+          "app",
+          "--user",
+          "1000:1000",
+          "--read-only",
+          "--cap-drop",
+          "ALL",
+          "--security-opt",
+          "no-new-privileges:true",
+          "--memory",
+          "768m",
+          "--cpus",
+          "1",
+          "--pids-limit",
+          "128",
+          "--log-driver",
+          "none",
+          "--mount",
+          "type=bind,src=C:\\.projects\\venus\\.artifacts\\p05\\venus-p05-oci-bbbbbbbbbbbb\\inputs,dst=/run/p05-oci-producer,readonly",
+          "--mount",
+          "type=bind,src=C:\\.projects\\venus\\.artifacts\\p05\\venus-p05-oci-bbbbbbbbbbbb\\evidence,dst=/evidence",
+          "--mount",
+          "type=bind,src=C:\\.projects\\venus\\.artifacts\\p05\\venus-p05-oci-bbbbbbbbbbbb\\control,dst=/control,readonly",
+          "--tmpfs",
+          "/tmp:size=4m,mode=1777",
+          "--entrypoint",
+          "node",
+          "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+          "fixture"
+        ],
+        "unaccounted_default_SHM": true,
+        "read_only_root_is_not_no_shm": true,
+        "declared_native_reserved_bytes": 335544320,
+        "default_64MiB_hypothetical_extra_at_six_live_containers": 402653184,
+        "actual_Docker_created": false
+      }
+    },
+    {
+      "name": "probe and special PG create constructors also omit explicit IPC/shm fences",
+      "status": "PASS",
+      "details": {
+        "scope": "exact complete host/supervisor sources, no API creation"
+      }
+    },
+    {
+      "name": "final receipt denies pending owner/failure/missing persistence/deadline",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong volume driver/owner/options denied",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ undefined\n- 'venus-p05-oci-bbbbbbbbbbbb'\n"
+    }
+  ],
+  "count": 10,
+  "confirmed_findings": [
+    "OCI-RESOURCE-RESUME01-001"
+  ],
+  "Docker_calls": 0,
+  "OCI_switches": 0,
+  "statistics_RUN": false
+}

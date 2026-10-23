@@ -1,0 +1,29 @@
+from pathlib import Path
+import json,hashlib,subprocess,sys
+r=Path('C:/.projects/venus');o=Path(__file__).parent;p=r/'.artifacts/p05-private-batch-browser-producer25';c=r/'.artifacts/p05-private-batch-browser-producer26';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();read=lambda p:json.loads(p.read_text())
+names=sorted(x.name for x in p.glob('*.mjs'));assert len(names)==9 and names==sorted(x.name for x in c.glob('*.mjs'))
+for n in names:
+ if n!='browser.mjs':assert (p/n).read_bytes()==(c/n).read_bytes(),n
+old=(p/'browser.mjs').read_bytes();new=(c/'browser.mjs').read_bytes();ending=b'\r\n' if b'\r\n' in old else b'\n';restored=new
+for before,after in [(b'const observedOwnStarts=new WeakMap();'+ending+b'const normalCurrentStarts=new WeakMap(),normalCurrentViews=new WeakMap();',b'const observedOwnStarts=new WeakMap();'),((o/'OBSERVER_INSERT.txt').read_bytes(),b''),((o/'REQUEST_LISTENER.txt').read_bytes(),b''),(b'const v=await response.json();rememberNormalCurrent(a,response,v);a.lastGameView=',b'const v=await response.json();a.lastGameView='),((o/'CANDIDATE_HELPER.txt').read_bytes(),(o/'PARENT_HELPER.txt').read_bytes())]:
+ assert restored.count(before)==1;restored=restored.replace(before,after)
+assert restored==old and old.count(b'await check(')==new.count(b'await check(')==16
+helper=(o/'CANDIDATE_HELPER.txt').read_bytes();assert b'timeout:8000,intervals:[50,100,250]' in helper and b'await current(' not in helper and b'observed.started_at>started' in helper and b'coherentRound(f,observed.view,expected)' in helper
+assert new.count(b'normalCurrentViews')==3 and new.count(b'normalCurrentStarts')==3
+wrapper=r/'.artifacts/p05-browser26-a18-run01.mjs';pending=r/'.artifacts/p05-browser26-a18-root-ack01.pending.json';ack=read(pending);runtime=read(o/'RUNTIME.json');assert wrapper.read_bytes()==(r/'.artifacts/p05-browser25-a18-run01.mjs').read_bytes().replace(b'p05-private-batch-browser-producer25',b'p05-private-batch-browser-producer26').replace(b'p05-browser25-a18-root-ack01.json',b'p05-browser26-a18-root-ack01.json')
+assert ack['status']=='NOT_AUTHORIZED' and ack['issued_at'] is None and ack['independent_review_index_sha256'] is None and ack['runtime_pins']==runtime['runtime_pins'] and ack['runner_sha256']==sha(wrapper)
+assert not (r/'.artifacts/p05-browser26-a18-root-ack01.json').exists()
+for n,h in runtime['runtime_pins'].items():assert sha(c/n)==h
+assert hashlib.sha256(('\n'.join(n+' '+h for n,h in sorted(runtime['runtime_pins'].items()))+'\n').encode()).hexdigest()==runtime['runtime_digest']
+diag=r/'.docs/implementation/reviews/p05/a18-browser25-failure-diagnosis-independent-round01/INDEX.json';assert sha(diag)=='5d23ffa55fcae4e28384d64a69f083e73dfb40b2b46a4b6a47ba6b9f61b4f2d0'
+freeze=r/'.artifacts/p05-pilot-bundle-source-freeze15.json';f=read(freeze);assert f['identity']==ack['source_identity']=='a5a4143f3c8c346215450617b1ee711cd2c027cb23fc5e59f6e791c88b8f1866' and f['included_files']==1872
+for n,h in f['files'].items():assert sha(r/'.artifacts/p05-pilot-bundle-source15'/n)==h,n
+sys.path.insert(0,str(r/'tools'));from stage_inventory import inventory,identity
+actual=inventory();assert actual==f['files'] and identity(actual)==f['identity']
+commands=[];node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe'
+for name,args in [('syntax-browser',[node,'--check',str(c/'browser.mjs')]),('syntax-wrapper',[node,'--check',str(wrapper)]),('syntax-controls',[node,'--check',str(o/'controls.mjs')]),('lint',[node,str(r/'node_modules/eslint/bin/eslint.js'),'--config',str(r/'eslint.config.mjs'),'--no-ignore',str(c/'browser.mjs'),str(wrapper),str(o/'controls.mjs')])]:
+ result=subprocess.run(args,cwd=r,capture_output=True,timeout=30);(o/(name+'.stdout.txt')).write_bytes(result.stdout);(o/(name+'.stderr.txt')).write_bytes(result.stderr);commands.append({'name':name,'exit':result.returncode});assert result.returncode==0,(name,result.returncode)
+pins=[freeze,diag,r/'.artifacts/p05-pilot-bundle-image-binding15/receipt.json',r/'.artifacts/p05-browser25-a18-run01.mjs',r/'.artifacts/p05-browser25-a18-root-ack01.pending.json',r/'.docs/implementation/reviews/p05/topic-browser-method25-independent-round01/INDEX.json',r/'.docs/implementation/reviews/p05/a18-gate-bindings-independent-round01/INDEX.json']
+(o/'INPUT_PINS.json').write_text(json.dumps({x.relative_to(r).as_posix():{'bytes':x.stat().st_size,'sha256':sha(x)} for x in pins},indent=2)+'\n',encoding='utf8')
+checks={'status':'AUTHOR_COLD_PASS_PENDING_INDEPENDENT_NO_NATIVE','finite_controls':6,'other8MJS_raw_exact25':True,'browser_inverse_only_maps_provenance_listener_capture_coherentGame':True,'all16case_bodies_allotherhelpers_fault_private_TTL_auth_checks_raw_exact25':True,'wrapper_only_producer_ACK_path_literals':True,'full_genuine_normal_page_DTO_original_coherentRound':True,'request_started_strictly_after_helper_entry':True,'origin_GET_exact_room_path_actor_context_mainframe_provenance':True,'any_same_room_actor_no_forced_focus':True,'one_latest_successful_slot_peractor_no_export':True,'helper_context_current_GET':0,'original8s_and_50_100_250_intervals':True,'source1872_current_materialized_verified':True,'APP_edits':False,'native_RUN':False,'active_ACK':False,'commands':commands}
+(o/'CHECKS.json').write_text(json.dumps(checks,indent=2)+'\n',encoding='utf8');print(json.dumps(checks))

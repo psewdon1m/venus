@@ -1,0 +1,5 @@
+# Independent A15 image host source and N4 preparation audit
+
+2026-10-20T23:08:19.2861354Z UTC — Root frozenA15source658b710bdca35b678421a51c1c276028305f28362901b2c065a3867aa754f4de/1869, testreceipt53b22700/prod4f0d8e7e. Static savedpins/host records/N4falseACK+coldmemoryvalidate only. No hostretest/Docker/native/APPwrites. Close pureprospective19109d2d via finalcompiled27+rooms noninterference if supported. NativeN4newbackend remainspending; Linux219storageonlyqualify.
+
+2026-10-20T23:10:19.8715972Z UTC — Savedaudit0:1869current/materialized source exact;299test122prod+metadata pins/builds/probes0;compiledonly5expected/UI_SQL7_pgexactA14;host1083/204/76files4exit0 not repeated. Pure27source/nativeimageexactA9+lock,actualcompiledrooms localhashmatchesreceipt/ASTtop-levelrevisiontimersothermembersexact; oldA9actualidentity retained. Storage219same2modules3tests onlycarry; no blanketbackend/N4 carry. FalsependingACKdeniedbefore reads,statusonlymemoryROOTcoldvalidatePASS. Attempt01parser emptyhistoricalJSON error1/script/raw retained, rawchildhashfix thenaudit0. No Docker/nativeAPPwrites. Ownpacket COMPLETE_STOP; rootnotified.

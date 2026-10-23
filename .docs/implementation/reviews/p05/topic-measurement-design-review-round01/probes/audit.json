@@ -1,0 +1,164 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN_ARITHMETIC_PASS_NOT_APPROVAL",
+  "checks": [
+    {
+      "name": "cap_topic_profiles",
+      "actual": 14,
+      "expected": 14,
+      "status": "PASS"
+    },
+    {
+      "name": "eligibility_base_cells",
+      "actual": 5880,
+      "expected": 5880,
+      "status": "PASS"
+    },
+    {
+      "name": "eligibility_R_profiles",
+      "actual": 8232000,
+      "expected": 8232000,
+      "status": "PASS"
+    },
+    {
+      "name": "neutral_sessions",
+      "actual": 58800,
+      "expected": 58800,
+      "status": "PASS"
+    },
+    {
+      "name": "negative_YB_all_X_cases",
+      "actual": 196,
+      "expected": 196,
+      "status": "PASS"
+    },
+    {
+      "name": "private_sessions",
+      "actual": 588000,
+      "expected": 588000,
+      "status": "PASS"
+    },
+    {
+      "name": "invariant_sessions",
+      "actual": 980000,
+      "expected": 980000,
+      "status": "PASS"
+    },
+    {
+      "name": "fairness_sessions",
+      "actual": 1176000,
+      "expected": 1176000,
+      "status": "PASS"
+    },
+    {
+      "name": "fairness_stage_rows",
+      "actual": 2352,
+      "expected": 2352,
+      "status": "PASS"
+    },
+    {
+      "name": "social_transcripts",
+      "actual": 1764000,
+      "expected": 1764000,
+      "status": "PASS"
+    },
+    {
+      "name": "exclusion_transcripts",
+      "actual": 504000,
+      "expected": 504000,
+      "status": "PASS"
+    },
+    {
+      "name": "social_models_per_profile",
+      "actual": 129,
+      "expected": 129,
+      "status": "PASS"
+    },
+    {
+      "name": "individual_threshold",
+      "actual": 0.5,
+      "expected": 0.5,
+      "status": "PASS"
+    },
+    {
+      "name": "aggregate_threshold",
+      "actual": 0.02,
+      "expected": 0.02,
+      "status": "PASS"
+    },
+    {
+      "name": "GF_sample",
+      "actual": 1000000,
+      "expected": 1000000,
+      "status": "PASS"
+    },
+    {
+      "name": "GF_lower_exclusive",
+      "actual": 1,
+      "expected": 1,
+      "status": "PASS"
+    },
+    {
+      "name": "inference_upper",
+      "actual": 0.65,
+      "expected": 0.65,
+      "status": "PASS"
+    },
+    {
+      "name": "train_per_class_cell",
+      "actual": 100,
+      "expected": 100,
+      "status": "PASS"
+    },
+    {
+      "name": "holdout_per_class_cell",
+      "actual": 400,
+      "expected": 400,
+      "status": "PASS"
+    }
+  ],
+  "counterexamples": [
+    {
+      "id": "CLASS_BEARING_SEEDS",
+      "seed_strings": [
+        "venus:P03-M2:train:FG:F:4:questions:in_person:0",
+        "venus:P03-M2:train:FG:G:4:questions:in_person:0"
+      ],
+      "engine_seed_sha256": [
+        "35d3a6e91581ab8b816eab0d676619630b0d86342eb997c60e93959c858af7ce",
+        "9a8cbc7a50c0777ce3fba8429b0941dd44093026df6d7074b20f3e76ba4875db"
+      ],
+      "conclusion": "Same index across classes does not mean same literal/engine seed. Preserve old literals; label pairing precisely."
+    },
+    {
+      "id": "BASELINE75_NOT_SUBSET_CERTIFICATE",
+      "baseline_distinct_private_families": 75,
+      "creative_only_families": 1,
+      "music_only_families": 37,
+      "romance_only_families": 37,
+      "R": 100,
+      "private_cap": 25,
+      "conclusion": "Baseline cardinality alone cannot certify repeated creative-only or targeted support. Require frozen per-regime residual support."
+    },
+    {
+      "id": "N2_DIFFERENT_PAIR_IMPOSSIBLE",
+      "N": 2,
+      "unordered_private_pairs": 1,
+      "conclusion": "Different-pair runtime scenario requires predeclared N/A at N2; no extra selected actor."
+    }
+  ],
+  "conditional_round_workload": {
+    "invariants": 49490000.0,
+    "fairness": 23520000,
+    "social_inference": 89082000.0,
+    "exclusion_inference_IF_same_R_rule": 25452000.0,
+    "C2_neutral": 2969400.0,
+    "C2_private": 29694000.0
+  },
+  "conditional_round_total": 220207400.0,
+  "exclusion_R_rule_not_yet_explicit": true,
+  "max_runtime_canary_rounds": 25200,
+  "statistical_sampling": false,
+  "docker": false,
+  "producer_authoring": false
+}

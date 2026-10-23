@@ -1,0 +1,58 @@
+✔ exact image source matches independent captured component pins (2.391392ms)
+✔ same exact request replays without executing a second mutation (2.716091ms)
+✔ body-changing replay conflicts rather than running another callback (0.941084ms)
+✔ operation-changing replay conflicts (0.605664ms)
+✖ TG-REV-001 replay must bind URL session and round, not just body (1.329627ms)
+✔ final credential failure rolls SQL grants and receipts back then commits only safe floor (0.578271ms)
+✔ semantic tagged failure commits kernel state and surfaces error after transaction (0.262733ms)
+✔ thrown domain failure rolls operation back and persists clock floor (0.300876ms)
+✔ exact returned Symbol fence executes after final auth and is not serialized (0.497464ms)
+✔ source or safety failure in exact receipt fence cannot commit a grant (0.692401ms)
+✔ chunk AAD rejects cross-room substitution (2.445228ms)
+✔ chunk AAD rejects cross-session substitution (2.058973ms)
+✔ chunk AAD rejects cross-id substitution (0.614484ms)
+✔ chunk AAD rejects cross-kind substitution (0.608224ms)
+✔ authenticated JSON header rejects extra key and inconsistent digest (2.429206ms)
+✔ 8MiB bound refuses large object without truncating and 16KiB chunks hide length (66.890897ms)
+✔ source-independent stop clears private state with authoritative role checks (0.966686ms)
+✔ source-independent pause clears private state with authoritative role checks (0.325969ms)
+✔ source-independent abort clears private state with authoritative role checks (0.281835ms)
+✔ non-host cannot abort even when source unavailable (0.270484ms)
+✔ nonparticipant cannot use global Stop (0.311638ms)
+✔ round decline remains source independent and authorizes actor (4.442042ms)
+✔ round skip remains source independent and authorizes actor (0.33877ms)
+✔ round stop remains source independent and authorizes actor (0.236201ms)
+✔ round refusal denies nonactor before clearing (0.363212ms)
+✔ actor primary check refuses missing or wrong role (0.272375ms)
+✔ actor secondary check refuses missing or wrong role (0.088927ms)
+✔ selected-presence closure observes late heartbeat failure (0.388414ms)
+✔ selected-presence closure observes late reserved failure (0.145572ms)
+✔ selected-presence closure observes late credential failure (0.091738ms)
+✔ selected-presence closure observes late removed failure (0.078557ms)
+✔ selected-presence closure observes late slot failure (0.080547ms)
+✔ selected-presence closure observes late offer failure (0.091958ms)
+✔ selected-presence closure observes late clock failure (0.070306ms)
+✔ public delivery exact value checks source revocation after awaited outer auth (0.308997ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 34
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 405.696184
+
+✖ failing tests:
+
+test at ../review/probe.mjs:26:1
+✖ TG-REV-001 replay must bind URL session and round, not just body (1.329627ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///review/probe.mjs:33:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }

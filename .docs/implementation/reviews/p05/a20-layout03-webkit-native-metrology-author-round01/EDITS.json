@@ -1,0 +1,76 @@
+{
+  "run.mjs": [
+    {
+      "before": "p05-v2-layout-producer-a20-02",
+      "after": "p05-v2-layout-producer-a20-03"
+    }
+  ],
+  "probe-policy.mjs": [
+    {
+      "before": "export function assertNativeZoom(m){assert.equal(m.css_zoom,'1');assert.equal(m.before_dpr,1);assert(Math.abs(m.after_dpr/m.before_dpr-2)<=0.02,'NATIVE_200_NOT_MEASURED');assert(m.after_width<=m.before_width/1.9);assert.equal(m.scroll_width<=m.after_width+2,true);}",
+      "after": "/** Nominal200 reflow: pinned WebKit27.2 first physical step is207.36%, explicitly reported. */\nexport function assertNativeScale(m,engine=m.engine){\n if(engine==='webkit'){\n  assert.equal(m.engine,engine);assert.equal(m.browser_version,'27.2');assert.equal(m.nominal_zoom_percent,200);assert.equal(m.native_zoom_metrology,'WEBKIT_27_2_FIRST_SUPPORTED_207_36');assert.equal(m.before_dpr,1);\n  assert.equal(m.measured_zoom_percent,m.after_dpr/m.before_dpr*100);assert(Math.abs(m.after_dpr/m.before_dpr-2.0736)<=0.000001,'NATIVE_200_NOT_MEASURED');\n }else assert(Math.abs(m.after_dpr/m.before_dpr-2)<=0.02,'NATIVE_200_NOT_MEASURED');\n}\nexport function assertNativeZoom(m){assert.equal(m.css_zoom,'1');assert.equal(m.before_dpr,1);assertNativeScale(m);assert(m.after_width<=m.before_width/1.9);assert.equal(m.scroll_width<=m.after_width+2,true);}"
+    }
+  ],
+  "x11.mjs": [
+    {
+      "before": "const result={window_id:id,before_width:before.inner_width,after_width:after.inner_width,before_dpr:before.dpr,after_dpr:after.dpr,scroll_width:after.scroll_width,css_zoom:after.css_zoom,x11_keyboard:true,isolated_browser:true,reset_verified:false,steps};",
+      "after": "const engine=page.context().browser().browserType().name(),browser_version=page.context().browser().version();const result={window_id:id,engine,browser_version,nominal_zoom_percent:200,measured_zoom_percent:after.dpr/before.dpr*100,native_zoom_metrology:engine==='webkit'?'WEBKIT_27_2_FIRST_SUPPORTED_207_36':'EXACT_200_ORIGINAL_TOLERANCE',before_width:before.inner_width,after_width:after.inner_width,before_dpr:before.dpr,after_dpr:after.dpr,scroll_width:after.scroll_width,css_zoom:after.css_zoom,x11_keyboard:true,isolated_browser:true,reset_verified:false,steps};"
+    }
+  ],
+  "matrix.mjs": [
+    {
+      "before": "import assert from 'node:assert/strict';",
+      "after": "import assert from 'node:assert/strict';\nimport {assertNativeScale} from './probe-policy.mjs';"
+    },
+    {
+      "before": "assert(Math.abs(m.after_dpr/m.before_dpr-2)<=0.02);",
+      "after": "assert.equal(m.engine,row.engine);assertNativeScale(m,row.engine);"
+    },
+    {
+      "before": "assert(Math.abs(m.after_dpr/m.before_dpr-2)<=.02);",
+      "after": "assert.equal(m.engine,row.engine);assertNativeScale(m, row.engine);"
+    }
+  ],
+  "real-text-probe.mjs": [
+    {
+      "before": "import {bounded,assertObservation}",
+      "after": "import {bounded,assertObservation,assertNativeScale}"
+    },
+    {
+      "before": "export function assertTextMeasurement(value,profile,nativeMeasurement=null){",
+      "after": "export function assertTextMeasurement(value,profile,nativeMeasurement=null,engine=null){"
+    },
+    {
+      "before": "assert(Math.abs(value.dpr/nativeMeasurement.before_dpr-2)<=.02);",
+      "after": "assert.equal(nativeMeasurement.engine,engine);assertNativeScale(nativeMeasurement,engine);assertNativeScale({...nativeMeasurement,after_dpr:value.dpr,measured_zoom_percent:value.dpr/nativeMeasurement.before_dpr*100},engine);"
+    },
+    {
+      "before": "const record={id:row.id,locale,profile,status:'RUNNING'",
+      "after": "const engine=page.context().browser().browserType().name();assert.equal(engine,report.engine);const record={id:row.id,engine,locale,profile,status:'RUNNING'"
+    },
+    {
+      "before": "assertTextMeasurement(geometry,profile,nativeMeasurement);",
+      "after": "assertTextMeasurement(geometry,profile,nativeMeasurement,engine);"
+    },
+    {
+      "before": "export function assertTextRows(rows,locale){",
+      "after": "export function assertTextRows(rows,locale,engine){"
+    },
+    {
+      "before": "assertTextMeasurement(row.geometry,profile,row.native_measurement);",
+      "after": "assert.equal(row.engine,engine);assertTextMeasurement(row.geometry,profile,row.native_measurement,engine);"
+    }
+  ],
+  "browser.mjs": [
+    {
+      "before": "assertTextRows(report.real_text_observations??[],locale);",
+      "after": "assertTextRows(report.real_text_observations??[],locale,engine);"
+    }
+  ],
+  "runner-policy.mjs": [
+    {
+      "before": "assertTextRows(report.real_text_observations??[],locale);",
+      "after": "assertTextRows(report.real_text_observations??[],locale,engine);"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+
+> venus@0.0.0 test
+> vitest run
+
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ tools/catalog-request-snapshot.test.ts (1 test | 1 failed) 22ms
+   × validates the captured request even when its original file changes 21ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tools/catalog-request-snapshot.test.ts > validates the captured request even when its original file changes
+AssertionError: expected [Function] to not throw an error but 'Error: spawnSync python ENOENT' was thrown
+
+- Expected:
+undefined
+
++ Received:
+"Error: spawnSync python ENOENT"
+
+ ❯ tools/catalog-request-snapshot.test.ts:13:72
+     11|     writeFileSync(path,original);const captured=readFileSync(path);wri…
+     12|     const manifest=readFileSync('.docs/examples/pack-candidate-manifes…
+     13|     expect(()=>validateBatchSnapshot(captured,manifest,undefined)).not…
+       |                                                                        ^
+     14|     expect(()=>validateBatchSnapshot(readFileSync(path),manifest,undef…
+     15|   } finally {rmSync(directory,{recursive:true,force:true});}
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 40 passed (41)
+      Tests  1 failed | 516 passed | 179 skipped (696)
+   Start at  20:10:13
+   Duration  32.44s (tests 76%, import 21%, transform 3%)
+

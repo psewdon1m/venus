@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {createHash} from 'node:crypto';
+import {sha as byteSha} from './p05-pilot-bundle-source04/.artifacts/p05-compatible-rollback-producer10/image-modules.mjs';
+const root=new URL('./p05-pilot-bundle-source04/.artifacts/p05-compatible-rollback-producer10/',import.meta.url),pins=JSON.parse(fs.readFileSync(new URL('dependency-pins.json',root))),row=pins.find(v=>v.source==='.artifacts/p05-topic-restore/observations.mjs'),raw=fs.readFileSync(new URL(row.copy,root),'utf8');assert.equal(byteSha(raw),row.sha256);
+const declarations=raw.split('\n').filter(line=>line.startsWith('export const canonical=')||line.startsWith('export const sha='));assert.equal(declarations.length,2);const obs=Function('createHash',declarations.join('\n').replaceAll('export const ','const ')+'\nreturn {sha,canonical};')(createHash);
+let checks=0;const check=fn=>{fn();checks++;};const object={map:'a'.repeat(64),taxonomy:'b'.repeat(64)};
+check(()=>assert.throws(()=>byteSha(object),e=>e instanceof TypeError&&e.code==='ERR_INVALID_ARG_TYPE'));
+check(()=>assert.equal(obs.sha(object),byteSha(obs.canonical(object))));
+check(()=>assert.equal(obs.sha(object),obs.sha({taxonomy:object.taxonomy,map:object.map})));
+check(()=>assert.notEqual(obs.sha(object),obs.sha({...object,map:'c'.repeat(64)})));
+check(()=>assert.equal(byteSha(Buffer.from('FILE_BYTES')),createHash('sha256').update(Buffer.from('FILE_BYTES')).digest('hex')));
+check(()=>{const source=fs.readFileSync(new URL('api-child.mjs',root),'utf8');for(const code of ['state.sourcePins','h.source.map.pins','previous.sourcePins'])assert(source.includes('obs.sha('+code+')'));assert(source.includes('keyBefore=sha(readFileSync(config.keyringFile))'));assert(source.includes('assert.equal(sha(r.raw),hash)'));});
+console.log(JSON.stringify({status:'PASS_SIX_COLD_OBJECT_HASH_CONTROLS_ONLY_NOT_RUN',checks,original_native_TypeError_reproduced:true}));

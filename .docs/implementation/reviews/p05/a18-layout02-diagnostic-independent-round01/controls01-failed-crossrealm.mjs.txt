@@ -1,0 +1,30 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import vm from 'node:vm';
+import {assertKeyboard} from '../../../../../.artifacts/p05-pilot-bundle-source15/.artifacts/p05-v2-layout-producer-a18-02/probe-policy.mjs';
+// Reuse the bounded author fixture, independently test additional combinations.
+const author=readFileSync('C:/.projects/venus/.docs/implementation/reviews/p05/a18-layout02-diagnostic-author-round01/controls.mjs','utf8');
+const prefix=author.slice(0,author.indexOf("await check('same_focus_")).replace(/^import .*;\r?$/gm,'');
+const context=vm.createContext({assert,readFileSync,join,vm,assertKeyboard,Buffer});vm.runInContext(prefix+';globalThis.subject={model,sample};',context);
+const {model,sample}=context.subject,rows=[];
+async function check(name,fn){await fn();rows.push({name,status:'PASS'});}
+await check('diagnostic_selects_original_target_order_not_tab_arrival_order',async()=>{
+ const invisible={...sample('pair-decline'),focus_visible:false};const m=model([sample('game-stop',true),invisible]);
+ await assert.rejects(m.run(['pair-decline','game-stop']),e=>e.code==='ERR_ASSERTION'&&e.message==='KEYBOARD_FOCUS_INVISIBLE:pair-decline');
+ assert.equal(m.writes.length,1);assert.equal(m.writes[0].control,'pair-decline');assert.equal(m.writes[0].focus_visible,false);assert.equal(m.writes[0].in_viewport,true);assert.equal(m.tabs,2);assert.equal(m.reads,2);
+});
+await check('exclusive_writer_EEXIST_preserves_original_failure_and_no_extra_sample',async()=>{
+ const writeError=Object.assign(new Error('synthetic writer'),{code:'EEXIST'}),m=model([sample('pair-decline',true)],{writeError});
+ await assert.rejects(m.run(['pair-decline']),e=>e!==writeError&&e.code==='ERR_ASSERTION'&&e.message==='KEYBOARD_FOCUS_OUTSIDE:pair-decline');assert.deepEqual(m.events,['write','assert']);assert.equal(m.tabs,1);assert.equal(m.reads,1);assert.equal(m.writes.length,0);
+});
+await check('bounded_numeric_edges_unknown_ID_and_extra_private_fields_remain_sanitized',async()=>{
+ const m=model([]),id='PRIVATE_ACTOR_DYNAMIC_TOPIC',input={...sample(id,true),text:'SYNTHETIC_PRIVATE_TEXT',value:'SYNTHETIC_PRIVATE_VALUE',rect:{left:10000000,top:-10000000,right:10000001,bottom:-10000001,width:1n,height:new Number(8)},viewport:{width:NaN,height:Infinity},scroll_top:10000001,scroll_left:-10000000};
+ const output=m.project({controls:[input],truncated:false},[id]),serialized=JSON.stringify(output);
+ assert.equal(output.control,'OTHER');assert.equal(output.rect.left,10000000);assert.equal(output.rect.top,-10000000);assert.equal(output.rect.right,null);assert.equal(output.rect.bottom,null);assert.equal(output.rect.width,null);assert.equal(output.rect.height,null);assert.equal(output.viewport.width,null);assert.equal(output.viewport.height,null);assert.equal(output.scroll.top,null);assert.equal(output.scroll.left,-10000000);assert(!serialized.includes('PRIVATE'));assert(Buffer.byteLength(serialized)<=4096);
+});
+await check('unreached_target_stops_at_original120_Tabs_and_persists_null_first_sample_before_original_FAIL',async()=>{
+ const m=model([]);await assert.rejects(m.run(['pair-decline']),e=>e.code==='ERR_ASSERTION'&&e.actual===true&&e.expected===false);
+ assert.equal(m.tabs,120);assert.equal(m.reads,120);assert.deepEqual(m.events,['write','assert']);assert.equal(m.writes.length,1);assert.equal(m.writes[0].first_sample_present,false);assert.equal(m.writes[0].truncated,true);assert.equal(m.writes[0].rect.left,null);assert.equal(m.writes[0].in_viewport,null);
+});
+console.log(JSON.stringify({status:'PASS_FOUR_FINITE_ACTUAL_HELPER_COMBINATIONS_NO_NATIVE',controls:rows.length,rows}));

@@ -1,0 +1,96 @@
+/** Actual page measurements, real Tab traversal and bounded safe screenshots. */
+import assert from 'node:assert/strict';
+import {performance} from 'node:perf_hooks';
+import {statSync,readFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {createHash} from 'node:crypto';
+import {setTimeout as delay} from 'node:timers/promises';
+import {domAudit,focusAudit,visibleTargets} from './dom-audit.mjs';
+import {bounded,assertFreshScope,assertObservation,assertKeyboard,ownControlRequirements} from './probe-policy.mjs';
+import {windowFor,nativeScreenshot} from './x11.mjs';
+export function screenshotBudget(){let bytes=0,count=0;return {accept(path){const b=statSync(path).size;assert(b<=3*1024*1024,'SCREENSHOT_FILE_BUDGET');const raw=readFileSync(path);assert.equal(raw.subarray(0,8).toString('hex'),'89504e470d0a1a0a','SCREENSHOT_PNG_REQUIRED');bytes+=b;count++;assert(bytes<=4*1024**3&&count<=1836,'SCREENSHOT_TOTAL_BUDGET');return {bytes:b,sha256:createHash('sha256').update(raw).digest('hex'),total_bytes:bytes,count};},summary(){return {bytes,count};}};}
+export async function assertSceneProjection(page,scene,role,budget){
+ const visible=async id=>assert(await bounded(budget,'scene-'+id,()=>page.getByTestId(id).isVisible()),'SCENE_PROJECTION_MISSING:'+id),absent=async id=>assert.equal(await page.getByTestId(id).count(),0,'SCENE_FORBIDDEN_PROJECTION:'+id);
+ if(scene==='entry'){for(const id of ['adult18','accept-offer','create-name','join-name'])await visible(id);return;}
+ if(scene==='setup'){for(const id of ['room-shell','comfort','topics-save'])await visible(id);return;}
+ if(scene==='public_questions'){await visible('game-prompt');await absent('private-prompt');return;}
+ if(role==='observer'){for(const id of ['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat','game-condition-input','game-dare'])await absent(id);return;}
+ if(scene==='private_active'){for(const id of ['private-prompt','structured-advice','pair-chat','advice-text'])await visible(id);}
+ else await absent('private-prompt');
+ if(scene==='private_offer'){await visible('topic-conversation');await visible('topic-accept');assert(await page.getByTestId('topic-accept').isEnabled());}
+ if(scene==='truth_dare_choice'){if(role==='primary'){await visible('game-dare');await visible('game-truth');}else{await absent('game-dare');await absent('game-truth');}}
+ if(scene==='yes_but_condition'){if(role==='secondary'){await visible('game-condition-input');await visible('game-condition-submit');assert(await page.getByTestId('game-condition-submit').isEnabled());}else await absent('game-condition-input');}
+}
+/** Positive preparation only; forbidden projections fail every native RAF sample. */
+/* global document,getComputedStyle */
+export async function prepareSceneProjection(page,scene,role,required,budget){
+ let positive=[],forbidden=[];
+ if(scene==='entry')positive=['adult18','accept-offer','create-name','join-name'];
+ else if(scene==='setup')positive=['room-shell','comfort','topics-save'];
+ else if(scene==='public_questions'){positive=['game-prompt'];forbidden=['private-prompt'];}
+ else if(role==='observer')forbidden=['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat','game-condition-input','game-dare'];
+ else{
+  if(scene==='private_active')positive=['private-prompt','structured-advice','pair-chat','advice-text'];else forbidden.push('private-prompt');
+  if(scene==='private_offer')positive.push('topic-conversation','topic-accept');
+  if(scene==='truth_dare_choice'){if(role==='primary')positive.push('game-dare','game-truth');else forbidden.push('game-dare','game-truth');}
+  if(scene==='yes_but_condition'){if(role==='secondary')positive.push('game-condition-input','game-condition-submit');else forbidden.push('game-condition-input');}
+ }
+ positive=[...new Set([...positive,...required])];
+ await bounded(budget,'positive-scene-preparation',async()=>{
+  const handle=await page.waitForFunction(({positive,forbidden})=>{
+   for(const id of forbidden)if(document.querySelectorAll('[data-testid="'+id+'"]').length)throw Error('SCENE_FORBIDDEN_PROJECTION:'+id);
+   return document.visibilityState==='visible'&&positive.every(id=>{const element=document.querySelector('[data-testid="'+id+'"]');if(!element)return false;const style=getComputedStyle(element),rect=element.getBoundingClientRect();return style.visibility!=='hidden'&&style.visibility!=='collapse'&&rect.width>0&&rect.height>0;});
+  },{positive,forbidden},{polling:'raf',timeout:budget.remaining()});
+  await handle.dispose();
+ });
+}
+export async function keyboard(page,targets,xserver,budget,alreadyForeground=false){
+ assert(targets.length>0,'NO_EXPECTED_KEYBOARD_CONTROLS');if(!alreadyForeground)await windowFor(page,xserver,budget);await bounded(budget,'content-heading-focus',()=>page.locator('h1').first().click());
+ const records=new Map();let attempts=0;
+ for(;attempts<120&&targets.some(id=>!records.has(id));attempts++){await bounded(budget,'physical-tab',()=>page.keyboard.press('Tab'));const value=await bounded(budget,'actual-focus',()=>page.evaluate(focusAudit));if(value&&targets.includes(value.id)&&!records.has(value.id))records.set(value.id,value);}
+ const result={controls:[...records.values()],tab_events:attempts,truncated:targets.some(id=>!records.has(id))};assertKeyboard(result,targets);return result;
+}
+export async function measureRole({role,actor},scene,fixture,cell,{budget,xserver,output,screenshots,nativeMeasurement,onObservation=()=>{},onCheckpoint=()=>{}}){
+ const started=performance.now();budget.check();onCheckpoint('FOREGROUND');await windowFor(actor.page,xserver,budget);onCheckpoint('FRESH_SCOPE');
+ let required=[];if(fixture)for(;;){budget.check();try{assertFreshScope(actor.lastGameView,fixture,performance.now());required=ownControlRequirements(actor.lastSelfActions,fixture,actor,performance.now());break;}catch{await delay(Math.min(25,budget.remaining()));}}
+ onCheckpoint('POSITIVE_DOM_PREPARATION');await prepareSceneProjection(actor.page,scene,role,required,budget);
+ onCheckpoint('INITIAL_PROJECTION');if(fixture){assertFreshScope(actor.lastGameView,fixture,performance.now());required=ownControlRequirements(actor.lastSelfActions,fixture,actor,performance.now());}
+ for(const control of required)assert(await bounded(budget,'required-own-control',()=>actor.page.getByTestId(control).isVisible()),'OWN_PERMITTED_CONTROL_MISSING:'+control);
+ await assertSceneProjection(actor.page,scene,role,budget);
+ onCheckpoint('MEASUREMENT');
+ const clockBefore=await bounded(budget,'native-clock-before',()=>actor.page.evaluate(()=>({wall:Date.now(),elapsed:performance.now()})));
+ const audit=await bounded(budget,'dom-audit',()=>actor.page.evaluate(domAudit));
+ assert.equal(audit.locale,actor.locale,'ACTUAL_DOCUMENT_LOCALE_MISMATCH');
+ const isPrivate=['private_offer','private_active','truth_dare_choice','yes_but_condition'].includes(scene);let cross_private_leak=false;
+ if(isPrivate&&role==='observer'){for(const id of ['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat'])if(await actor.page.getByTestId(id).count())cross_private_leak=true;assert(!cross_private_leak,'OBSERVER_PRIVATE_LEAK');}
+ const targets=await bounded(budget,'own-visible-targets',()=>actor.page.evaluate(visibleTargets)),keys=await keyboard(actor.page,targets,xserver,budget,true);
+ const file=cell.id.replaceAll('/','-')+'-'+role+'.png',path=join(output,file);
+ if(nativeMeasurement)await nativeScreenshot(actor.page,xserver,nativeMeasurement,path,budget);else await bounded(budget,'masked-screenshot',()=>actor.page.screenshot({path,fullPage:false,mask:[actor.page.getByTestId('room-invite'),actor.page.getByTestId('join-invite')],timeout:Math.max(1,budget.remaining())}));
+ const capture=screenshots.accept(path);
+ const clockAfter=await bounded(budget,'native-clock-after',()=>actor.page.evaluate(()=>({wall:Date.now(),elapsed:performance.now()}))),clock_elapsed=clockAfter.elapsed-clockBefore.elapsed,normalClock=clock_elapsed>=0&&clockAfter.wall>=clockBefore.wall&&Math.abs(clockAfter.wall-clockBefore.wall-clock_elapsed)<250;
+ const outcome={role,visible:true,focus_visible:keys.controls.every(c=>c.focus_visible),keyboard_reached:true,focus_in_viewport:keys.controls.every(c=>c.in_viewport&&c.not_occluded),own_scope_matches:true,required_own_controls:required,cross_private_leak,control_names_nonempty:audit.named_controls,contrast_failures:audit.contrast_failures,contrast_unresolved:audit.contrast_unresolved,normal_ui_clock:normalClock,clock:{before:clockBefore,after:clockAfter},evidence_file:file,targets,keyboard:keys,audit,capture,elapsed_ms:performance.now()-started};
+ onCheckpoint('FINAL_PROJECTION');
+ // Evidence is saved before any strict assertion so legitimate failures remain inspectable.
+ onObservation(outcome);assert(normalClock,'UI_CLOCK_DISCONTINUITY');assertObservation(audit);await assertSceneProjection(actor.page,scene,role,budget);if(fixture)assertFreshScope(actor.lastGameView,fixture,performance.now());budget.check();return outcome;
+}
+export function assertSafeMetadata(outputFile){const b=readFileSync(outputFile);assert(b.length<=25*1024*1024,'METADATA_BUDGET_EXCEEDED');}
+export async function activateSafety(prepared,{budget,xserver,native}){
+ const {scene,roles,fixture}=prepared;
+ if(scene==='entry'||scene==='setup'){
+  const actor=roles[0].actor,id=scene==='entry'?'adult18':'topic-allow-creative',before=await actor.page.getByTestId(id).isChecked();
+  await keyboard(actor.page,[id],xserver,budget);await bounded(budget,'keyboard-space',()=>actor.page.keyboard.press('Space'));assert.equal(await actor.page.getByTestId(id).isChecked(),!before);
+  return {scene,native,kind:'Space-checkbox',control:id,actual_toggle:true,status:'PASS'};
+ }
+ const control=scene==='public_questions'?'game-pause':scene==='private_offer'?'topic-decline':scene==='private_active'?'topic-other':scene==='truth_dare_choice'?'game-dare':'game-condition-submit';
+ const own=roles.find(r=>scene==='yes_but_condition'?r.role==='secondary':scene==='truth_dare_choice'?r.role==='primary':true);
+ const candidates=scene==='public_questions'?roles:[own];let selected;
+ for(const role of candidates)if(await role.actor.page.getByTestId(control).isVisible()&&await role.actor.page.getByTestId(control).isEnabled()){selected=role;break;}
+ assert(selected,'KEYBOARD_SAFETY_ACTION_UNAVAILABLE');const {actor}=selected;assertFreshScope(actor.lastGameView,fixture,performance.now());
+ await keyboard(actor.page,[control],xserver,budget);
+ const suffix=scene==='public_questions'?`/api/v2/rooms/${actor.room}/game/${fixture.session}/pause`:`/api/v2/rooms/${actor.room}/game/${fixture.session}/round/${fixture.plan.round_id}/${scene==='truth_dare_choice'?'choice':scene==='yes_but_condition'?'condition':'conversation/commands'}`;
+ const kind=scene==='private_offer'?'respond_topic':scene==='private_active'?'other_question':null;
+ const pending=actor.page.waitForResponse(response=>new URL(response.url()).pathname===suffix&&response.request().method()==='POST'&&(!kind||response.request().postDataJSON()?.kind===kind));pending.catch(()=>{});
+ await bounded(budget,'keyboard-enter',()=>actor.page.keyboard.press('Enter'));const response=await bounded(budget,'keyboard-exact-receipt',()=>pending);assert.equal(response.status(),200);const receipt=await bounded(budget,'keyboard-receipt-json',()=>response.json()),request=response.request().postDataJSON();assert.equal(receipt.schema_version,2);assert(/^[a-f0-9]{8}-[a-f0-9-]{27}$/.test(request.request_id??''));assert.equal(receipt.request_id,request.request_id);assert(Number.isSafeInteger(receipt.game_rev));
+ if(scene==='private_offer')assert.equal(request.decision,'decline');if(scene==='private_active')assert.equal(request.exclude_current_topics,false);if(scene==='truth_dare_choice')assert.equal(request.side,'dare');if(scene==='yes_but_condition')assert.equal(request.text,'SYNTHETIC LAYOUT CONDITION');
+ return {scene,native,role:selected.role,control,kind:'Enter-exact-HTTP-receipt',status:response.status(),receipt_matches:true,game_rev:receipt.game_rev};
+}

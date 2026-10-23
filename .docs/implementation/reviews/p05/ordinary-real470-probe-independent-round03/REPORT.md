@@ -1,0 +1,5 @@
+# Targeted corrective03 independent review
+
+PASS_METHOD_OPERATIONAL_CEILINGS_ONLY_NOT_RUN. Compared against accepted02 f9783aa03e890403ba5863fbb5093b766e88d2f2c9674799d31a3e4f73649a08. Exact normalized diff proves only positive profile600s, total26000s, outer26100s and constant allowlisted first-failure diagnostics/elapsed are changed. Descriptor matches these values. 42×600s+2×90s+620s=26000s. No change to840 assertions,42profiles, rates, no-skip, source A4/image,30s/180s consent or5s grant. These are test operational ceilings, no service SLO waiver.
+
+Actual02 was incomplete(16 recorded rounds/17finish receipts);194s compose-to-report includes startup and does not prove the hidden native assertion. Deadline cause is an inference, not promoted as fact. Preserved actual02 remains FAIL. Repeated21 finite controls exit0; own10 allowlist/privacy/math controls exit0. No Docker/functional repeat. ROOT-ACK remains NOT_AUTHORIZED. This is a targeted carry of exact unchanged accepted02 method/source-image qualification, not whole-stage or actual normal matrix PASS.

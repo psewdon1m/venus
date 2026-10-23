@@ -1,0 +1,69 @@
+[
+  {
+    "name": "red01",
+    "exit": 1,
+    "command": "vitest private-topic-ledger.test.ts -t reuses unchanged validated",
+    "result": "1FAIL69SKIP; originalfullcodec inspection twice vs expectedone, fallback invokes originalcodec"
+  },
+  {
+    "name": "green01",
+    "exit": 0,
+    "command": "vitest private-topic-ledger.test.ts",
+    "result": "26PASS44LinuxSKIP"
+  },
+  {
+    "name": "green02",
+    "exit": 1,
+    "command": "vitest private-topic-ledger.test.ts",
+    "result": "2FAIL38PASS47LinuxSKIP; fixtureexpectedDomainErrorcodeinmessage, correctedtypedcode; exactbytespreserved"
+  },
+  {
+    "name": "typecheck01",
+    "exit": 0,
+    "command": "tsc -p apps/api/tsconfig.json --noEmit"
+  },
+  {
+    "name": "green03",
+    "exit": 0,
+    "command": "vitest ledger/historycache/snapshotcache/roundview/socketpoll fivefiles",
+    "result": "97PASS47LinuxSKIP"
+  },
+  {
+    "name": "green04",
+    "exit": 0,
+    "command": "samefivefiles afterone expirycontrol",
+    "result": "98PASS47LinuxSKIP"
+  },
+  {
+    "name": "typecheck02",
+    "exit": 0,
+    "command": "APItsc --noEmit"
+  },
+  {
+    "name": "lint01",
+    "exit": 0,
+    "command": "eslint threeownedTSpaths"
+  },
+  {
+    "name": "green05",
+    "exit": 0,
+    "command": "vitest ledger/historycache/snapshotcache/roundview/socketpoll/historyintegration/snapshotintegration/algorithmcompatibility eightfiles",
+    "result": "133PASS47LinuxSKIP"
+  },
+  {
+    "name": "typecheck03",
+    "exit": 0,
+    "command": "APItsc --noEmit afterfinaltestbytes"
+  },
+  {
+    "name": "lint02",
+    "exit": 0,
+    "command": "eslint threeownedTSpaths afterfinaltestbytes"
+  },
+  {
+    "name": "source-check01",
+    "exit": 0,
+    "command": "read-only inventory+exactsourceinverses",
+    "result": "1870/c9211057;3changed+1added,1866otherparentpaths exact"
+  }
+]

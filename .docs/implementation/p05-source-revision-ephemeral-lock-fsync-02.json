@@ -1,0 +1,32 @@
+{
+  "schema": 1,
+  "revision": "P05-EPHEMERAL-LOCK-FSYNC-02-TEST-ORACLE",
+  "at_utc": "2026-10-20T22:06:50.789658+00:00",
+  "parent_source_identity": "cd96a063769687b6e79ad6df0ecdbb60034af3d671fb2f1cbe773139b63024a3",
+  "status": "AUTHOR_COMPLETE_TEST_ONLY_PENDING_NONAUTHOR_AND_NATIVE_REPEAT",
+  "old_native_failure": {
+    "path": ".artifacts/p05-a12-linux-storage03/receipt.json",
+    "sha256": "1608c3a8b8e997131e54ef996db1e58b397eefd3e59990ef5f62a6f8a617c95a",
+    "tests_sha256": "1c55346dc0a3a9308ba96782baf3bca75d6527b9d86dfa6ec1964528af24ecb0",
+    "actual_counts": {
+      "passed": 218,
+      "failed": 1,
+      "platform_skips": 2
+    },
+    "sole_failure": "generic fsync expects empty although complete authenticated append survives before first data fsync"
+  },
+  "change": "Correct only generic fault-case recovery expectation: ENOSPC occurs before write => empty; fsync/rename may leave complete valid appended music exclusion => retain. Short-write corruption rejection, acknowledgement failure, all durability/locking tests unchanged.",
+  "runtime_unchanged": {
+    "apps/api/src/private-topic-ledger.ts": "de1bac5a3cc1e932242500571a2439e92a9e30ffc05010f1ecf758b523a51340",
+    "apps/api/src/topic-room-lifecycle.ts": "5f7114c1ea69ef3c126c8b0a1b6a8b0a88a3ab3ff6923212e7272f0391531770"
+  },
+  "test_sha256": "2bbd39dc86bc713ebd3dd332683da630e0b03020e7cf5e89bb16642e8dfbbaee",
+  "compatibility": "No production/source behavior or format change. Test rollback would restore obsolete expectation only. Parent revision01 and A12 failed proofs remain immutable.",
+  "verification": {
+    "host_pass": 36,
+    "linux_skips": 185,
+    "changed_test_lint_exit": 0,
+    "new_native_run": false,
+    "new_performance_run": false
+  }
+}

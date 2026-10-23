@@ -1,0 +1,27 @@
+# Compose override for local loopback tests. Fixture key is public test material.
+services:
+  app:
+    environment:
+      APP_ORIGIN: https://127.0.0.1:${VENUS_PILOT_HTTPS_PORT:-8443}
+      VENUS_DEPLOYMENT_PROFILE: ${VENUS_DEPLOYMENT_PROFILE:-local-pilot}
+  local-tls:
+    image: node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+    command: [node, /run/fixture/proxy.mjs]
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    ports: ["127.0.0.1:${VENUS_PILOT_HTTPS_PORT:-8443}:8443"]
+    volumes:
+      - ../../tools/local-pilot-proxy.mjs:/run/fixture/proxy.mjs:ro
+      - ../../tests/fixtures/p02-test-cert.pem:/run/fixture/cert.pem:ro
+      - ../../tests/fixtures/p02-test-key.pem:/run/fixture/key.pem:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, node, -e, "require('node:https').get({hostname:'127.0.0.1',port:8443,path:'/health/ready',ca:require('node:fs').readFileSync('/run/fixture/cert.pem'),agent:false},r=>{r.resume();process.exitCode=r.statusCode===200?0:1}).on('error',()=>process.exitCode=1)"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks: [app-edge]

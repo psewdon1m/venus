@@ -1,0 +1,7 @@
+# OCI17: browser B2 completion missing
+
+ACTUAL_FAIL_NOT_STAGE. A15 source658b710b/1869, image021a57ec, B4 image62602920. First launch stopped before allocation: ENOENT because the excluded artifact parent was absent. Original exit1 retained; only the workspace artifact parent was created, then fresh ACK950b7a17 activated one native attempt.
+
+Native attempt02 exit1,262686ms. A1 complete/pool closed. B2 server preserved state, strict replay/accounting equality and fresh E positive setup reached phase-B2-ready. Last browser marker: narrowed private cleared, held=true,inflightHTTP=0,completed-current-GET200=6. Browser-B2-ready absent; browser terminal Error,pageerrors0,contexts cleaned. Exact browser substep/error code was not captured. Host B2 phase wall limit and API STOP wait deadline are downstream incomplete-marker results; A3 NOT_RUN. Independent diagnosis d0708bae confirms these limits; no application defect or repeated foreign accounting failure is proved.
+
+Export succeeded. Owned containers/network/four volumes are retained_manual_cleanup_required; cleanup is not PASS. Old09–13 resources and unrelated projects untouched. This archive copies the existing bounded public host export, excluding live control; no private DB/session/keyring reads. Historical Markdown preserved as bytes. Diagnostic-only successor is prospective; it does not rewrite this FAIL or waive any of the14 original controls/deadlines. P06 not started.

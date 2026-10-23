@@ -1,0 +1,9 @@
+# Own permanent exclusion UI refresh application fix
+
+2026-10-20T20:52:23.248319+00:00 — START. Rootauthorizes narrow frontend fix for actualA9browser22 case15: persistedownexclude yetdisabledcheckedallow. Ownpanel/settings/test/additiverevision only; cachedAPI6paths frozenuntouched. Refresh only explicit ownsuccessfulexclude command, no peer/poll/safety-driven reload/autosave/preselection. Preservegeneration/identity fences. NoDocker/methodweakening. Beforebytes captured.
+
+2026-10-20T20:57:16.232878+00:00 — Actualsourcebug RED reproduced red02 on oldTSX: checkedtrue/ownreads1 vsfalse/2. red01fixturefailed becauseVMlacksstructuredClone; JSONclone correctedfixture (no productchange). Implemented explicitowncommittoken only; generationinvalidate+clearoldform/pending thenfreshownread.7newregressions +existingsettings/panel28PASS focused04. focused02 extra pending-save fixturefailed becauseonBeforeChangeclearsprivatecontrols; existingpollrestoresvalidcontrolbeforeownexclude correctedfixture, focused03PASS. Identitylatewrite ignored; sameownerroundadvance mayinvalidateonly (notpermission) aftersuccess; currentpreRequestauthorization unchanged. Cache6paths untouched. Broaderexistingweb/typecheck/lint next.
+
+2026-10-20T20:58:09.335507+00:00 — SOURCE WRITES STOPPED (4paths/2new). All16webtestfiles177PASS; webtsc0/lint0.7newcomposedactualTSXhook/APIregressions useexistingharness (notReactDOM). ParentAPIcache6frozenpins verifieduntouched. Addedversionedrevision; no API/CSS/contracts/schema/browsermethodchanges. Freezeauthorpacketnext.
+
+2026-10-20T20:58:43.657780+00:00 — WRITES COMPLETE/sourceSTOP. .docs/implementation/reviews/p05/own-exclusion-ui-refresh-author-round01/INDEX.json SHA 13dadf1a032e3e332240d78c0fa21a803af374236df4c9c63315acaf66699c72;7new/177allwebPASS/tsc0/lint0. All failedfixture/actualRED retained. APIcache6pinsuntouched; unchangedMETHOD22actualmustrepeatafterindep/finalsourceimage. No Docker/ReactDOM/P05claim.

@@ -1,0 +1,15 @@
+# Independent derivative handoff review — round 03
+
+**PASS for the derived handoff materials.** No actionable accuracy, traceability, approval-state, or link finding. This extends only the139-card correction/handoff gate; owner HOLD, CONTENT_GAP, and full-stage limitations remain.
+
+Reviewed exact bytes of README.md, SOURCE_REVISION.md, prepare-handoff.mjs, check-handoff.mjs, REPORT.md, REVIEW_CHANGED139.md, global-obligations.json, and source-index470.json. Their individual SHA256 pins are in `verification.json`. Final card/authoring freeze SHA256 remains e04966b7bca53b924116376b9becf4304d2a38091d77f3f79439eecd05048577; candidate digest remains97bf4bb876640ec11612ae9fdd9e3baceb2cd88075e7f8d0ad59d80e4f49f6db. Cards, original five author scripts, and ledger still match the completed prior gate.
+
+Independent verifier exit0:2934 checks,0 failures. It parsed each of139 worksheet sections by ID, language and field, comparing full before/after strings and canonical SHA against the corresponding JSON rather than relying on whole-file substring presence. All139 owner decision slots remain empty. All470 source-index entries have correct current source path, revision, raw/canonical SHA and changed flag;139 changed/331 preserved. No human-approved flag is fabricated.
+
+All11 semantic clusters match the source §6 table exactly in name, IDs, repetition description and requested action. All9 separate obligations are retained. The21 legacy applicability IDs are exact, and the48 withheld in_person IDs are correct.122 current public-pair cards have bilateral consent; the expanded current count is distinguished from the source's earlier115.
+
+REPORT and SOURCE_REVISION describe the synthetic coverage accurately:5880 cells,4214 neutral sessions and420 private profiles per capability setting; no-capability profile has210 CAPABILITY_UNAVAILABLE plus210 PASS, chat-capability profile has420 PASS. Both retain neutral20=PASS/private_coverage=CONTENT_GAP, and the docs do not present exit0 draft-check as full private/stage readiness. Current online-only runtime transport, safe withholding of48 corrected in_person private cards, remaining21 legacy cards, UX obligations, old-proof incompatibility and rollback are explicit.
+
+The reader-facing links and source paths resolve correctly. Independent strict UTF-8/local Markdown verification passed on all15 files and20 links present before this reviewer report was added. The root check-handoff.mjs was also executed read-only and returned DERIVED_HANDOFF_PASS exit0. Root's recorded whole-repository check_docs exit1 is explicitly preserved in REPORT; its receipt identifies two concurrent P05 UTF-8 files outside this task. This review does not claim to repair or independently certify those P05 proofs.
+
+The preparation script only derives the three handoff outputs with exclusive creation after frozen-input validation; the check script performs reads/assertions. Their review creates no card, ledger, runtime or P05 mutations. Prior failed rounds remain saved. All reviewer writes are finished; the orchestrator can derive the final manifest now.

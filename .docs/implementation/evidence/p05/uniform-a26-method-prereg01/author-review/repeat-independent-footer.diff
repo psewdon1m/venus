@@ -1,0 +1,15 @@
+--- C:\.projects\venus\.artifacts\p05-pilot-corpus-ranges02\repeat-independent-footer.mjs
++++ C:\.projects\venus\.artifacts\p05-pilot-corpus-ranges03\repeat-independent-footer.mjs
+@@ -4,9 +4,9 @@
+ import path from 'node:path';
+ import os from 'node:os';
+ import {createHash} from 'node:crypto';
+-import {durableSink} from '../p05-pilot-corpus-ranges02/raw/durable-sink.mjs';
+-import {loadInputs,rangeRecords} from '../p05-pilot-corpus-ranges02/replay-input.mjs';
+-import {validateRange} from '../p05-pilot-corpus-ranges02/range-plan.mjs';
++import {durableSink} from '../p05-pilot-corpus-ranges03/raw/durable-sink.mjs';
++import {loadInputs,rangeRecords} from '../p05-pilot-corpus-ranges03/replay-input.mjs';
++import {validateRange} from '../p05-pilot-corpus-ranges03/range-plan.mjs';
+ const hash=b=>createHash('sha256').update(b).digest('hex'),owner='a'.repeat(32),range=validateRange('c2-canary',0,336),root=fs.mkdtempSync(path.join(os.tmpdir(),'venus-range-footer-independent-'));
+ try{
+  const binding={source_identity:'1'.repeat(64),image:'sha256:'+'2'.repeat(64),pack_digest:'pack',map_pins:{}},bindingRaw=Buffer.from(JSON.stringify(binding)),preregRaw=Buffer.from('{}'),review='3'.repeat(64),sink=durableSink(path.join(root,'raw'),{owner,guard(){},payloadLimit:1024**2});

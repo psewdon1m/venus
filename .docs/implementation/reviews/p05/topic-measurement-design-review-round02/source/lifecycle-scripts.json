@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "policy": "P05_TOPIC_M2_DETERMINISTIC_100MS_ACTIONS_AND_5001MS_REPLACEMENT_GUARD",
+  "clock": {
+    "session_start_ms": 1000000,
+    "per_successful_mutation_advance_ms": 100,
+    "reads_advance": 0,
+    "before_replacement_offer": "advance to max(now,last_offer_at+5001), actualpresenceheartbeats in <=20000ms steps; never edit/extend consent/auth expiry",
+    "round_guard": "all pending actions accepted within30s; invitation/topic/advice active until<=180s AND parent; assert deadlines unchanged by clock/heartbeat",
+    "T6_max2_replacement_waits_ms": 10002
+  },
+  "observation": "Record exact production public room/game/frame bytes after every actual emitted public event plus fixed observation poll after each command/readpoint; do not create a WS frame or increment room/game/stream revision for a conceptual operation. Adapter derives captured mutation results, not artificial one-tick-per-event. Cross-check by mutation class against actual realPG public/actor records before final freeze.",
+  "actor_order": "Use actual planned primary/secondary. Bilateral commands in ascending actor UUID, each actor uses its own current exact offer/revision/token; outsiders never act as selected peer.",
+  "per_mode": {
+    "questions": "no choice/condition mutation",
+    "truth_or_dare": "after invitation accepted, primary chooses truth when round_index odd else dare. Record prior generic/choice result. Choice before pendingtopic disclosure; never choose for another actor.",
+    "yes_but": "T0..T5 secondary proposes exactly SYNTHETIC CONDITION 1 after invitation and last_offer_at+5001 guard, using current expected game_rev. This consumes an extra conversation offer binding; preserve previous unaccepted offer as invalid and require fresh twoacks. T6 leaves condition=null deliberately to reserve all3topicattempt slots; condition mutation tested in other6regimes and separate deterministic3binding boundary canary, never silently counted as a3candidate replacement."
+  },
+  "ordered_round_script": [
+    "Observe current public game/room and primary private target. For public group/solo no invitation, use available round actions; for pair read both target projections then accept invitation exact offer for each actor; observe zero/one/two acknowledgements.",
+    "Apply per-mode choice/condition exactly once as above. Public pair action consent is independent. Private empty branch: if no current offer/prompt, assert generic projections/candidate0, skip by actual actor and advance; no fabricated accept/finish, record reason.",
+    "For each offered private candidate observe both actors atzeroacks; accept first actor; observe both actors atoneack; accept secondactor; observe released prompt. Before twoacks raw serializers must omit candidate card_id/hash/prompt/condition/advice text; topic labels deliberately visible. If T6 replacement phase applies, do not accept discarded offers, see regime override.",
+    "With active topic, accept both current action consent offers through actor target references before long clock waits; observe each transition. No action-consent acceptance substituted for topic or viceversa.",
+    "On first nonempty private round in every regime execute advice lifecycle below; if no nonempty private round in whole session retain adviceNA with reason, never invent offer. Execute one chat send per actor onlineCHAT_ON only, and assert public game/room revision/frame count unchanged while private chat revision changes; in_person/onlineoff attempt guarded negatives without entering message features.",
+    "Primary finish only when actual required invitation/action/topic/choice grants allow it; otherwise unexpected denial FAIL_SETUP. Finish clears current private delivery; observe exact generic/public finalstate. Host advances using actual expectedrev; after final round complete session through normal endpoint. All errors/refusal prefixes retained."
+  ],
+  "advice": {
+    "schedule": "first nonempty private round per session in T0_ALL,T2_COMMON,T3_ASYMMETRIC_EXCLUSION,T4_PRIVATE_PRIOR,T5_PUBLIC_AND_PRIVATE_PRIOR,T6_TARGETED_CHANGES; T1_EMPTY and onlineoff have explicit NA_NO_ACTIVE_TOPIC",
+    "sender": "actual lower UUID selected actor; recipient other selected actor",
+    "text1": "SYNTHETIC ADVICE ONE",
+    "text2": "SYNTHETIC ADVICE TWO",
+    "order": [
+      "sender offer_advice(epoch,current offer_id,text1)",
+      "recipient read pending: consent metadata only, no text/hash/length/preview; sender owntext allowed",
+      "recipient respond_advice accept exactadviceId/rev/epoch; both reads current text1",
+      "sender offer_advice(text2,replaces_id=old adviceId); verify oldaccept revoked/newID+revision pending, recipient no text1/text2",
+      "recipient accept new advice exact ID/rev/epoch; readtext2",
+      "sender revoke current advice; subsequent read/private projection contains neither text; stale oldrespond denied"
+    ],
+    "budget": "exact2 offers in one sender direction; no third synthetic offer and no quota reset"
+  },
+  "regime_overrides": {
+    "T0_ALL": "normal allaccept/advice/chat",
+    "T1_EMPTY": "private generic opportunities remain counted, no offer/ack/advice/chat; actor skip; completion/public fairness remains required",
+    "T2_COMMON": "same allaccept with fullunion subsetcreative",
+    "T3_ASYMMETRIC_EXCLUSION": "actor0creative exclusion from frozen setup; allaccept every supported offer; anyfullunion creative leakFAIL",
+    "T4_PRIVATE_PRIOR": "frozen3privateprior per fixture-support, allacceptcurrent",
+    "T5_PUBLIC_AND_PRIVATE_PRIOR": "T4+3publicprior exact families, allacceptcurrent",
+    "T6_TARGETED_CHANGES": "first nonempty private opportunity: initial candidate zeroack; waitlastoffer+5001, other_question(exclude_current_topics=false) exactoffer; observe newepochzeroack; waitlastoffer+5001, offer_topic(expected_epoch,current,topic_ids=[creative]); thirdcandidate fullunion containscreative and all extra labels remainallowed. Twoack only finaloffer, then action/advice/chat. Secondnonempty private opportunity: beforetopicaccept actor0 if selected else firstselectedactor excludes current fulltopicunion using exactother_question exclude_current_topics=true; persist monotonic exclusion, pending newoffer or declared TOPIC_SAFE_EMPTY, then allaccept/skip. All subsequent opportunities normal. If actor0 not selected, actual selected actor is recorded; do not claim the designated actor changed. If fewer required private opportunities, retain branchNA with count; runtime canary requiringpositive branch remainsFAIL_SETUP, not resampling."
+  },
+  "unavailable_branches": "Record exact operation/result expected4xx, currentstage/budget/caps/support and completedprefix. No 5xx accepted as policy-denial. Condition/choice mode-mismatch NO_OP_PREDECLARED, not an emitted mutation; do not inject states. Pending/accepted advice absence is intentionally visible to actor only; public features include only real public outputs.",
+  "adapter_acceptance_required": [
+    "actual PG public/admission0/1/2 invitation",
+    "TDchoice truth/dare",
+    "YBcondition resets consent and binding before/after5s",
+    "topic0/1/2ack",
+    "other_question/targeted and safeempty",
+    "durable exclusion/revocation",
+    "advicepending/accept/edit/accept/revoke",
+    "GET/POST chat with no public revision bump",
+    "finish/skip/advance/refusal",
+    "actual room/game/private stream frame counts/time/serializedUTF8bytes for each; no production secrets in outputs"
+  ]
+}

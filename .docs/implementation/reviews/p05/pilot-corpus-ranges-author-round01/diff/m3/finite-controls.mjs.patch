@@ -1,0 +1,19 @@
+--- prior/m3\finite-controls.mjs
++++ new/m3\finite-controls.mjs
+@@ -6,6 +6,7 @@
+ import {pairedRatioCI,aucCI,trainLDA,deterministicDecoders} from './math.mjs';
+ import {bindEnvironment,fairnessCell,evaluateInference,reduceGf,safeCode,invariantsSection} from './adapter.mjs';
+ import {modelSession} from './model.mjs';
++import {verifyModelFeatures} from '../range-reduce.mjs';
+ import {stageTable} from './diagnostics.mjs';
+ import {accumulator} from './features.mjs';
+ import * as engine from '../../../packages/relationship-engine/dist/index.js';
+@@ -60,7 +61,7 @@
+ const env=bindEnvironment({pack,map},engine,planner,renderer,JSON.parse(fs.readFileSync('.docs/contracts/relationship-policy.v1.json'))),nativeResults=[];
+ for(const context of ['online','in_person'])for(const mode of ['questions','truth_or_dare','yes_but'])test('nativefreshmodel_'+context+'_'+mode,()=>{
+  const d={section:'FINITE_UNIT_NOT_CORPUS',seed:'P05-M3-NATIVE-FINITE-1:'+context+(mode==='questions'?'':':'+mode),size:4,mode,context,rounds:20,kind:'exchangeable',pairClass:'F'},frames=[];
+- const r=modelSession(env,d,{onFrame:f=>frames.push(f)});assert.equal(r.status,'COMPLETE_DOMAIN_MODEL');assert.equal(r.history_provenance,'RUNTIME');assert.equal(r.model,'DOMAIN_MODEL_NOT_ACTUAL_AUTH');assert.equal(r.actual_transport,false);assert.equal(r.completed_rounds,20);assert(r.invariants.every(row=>row.violations===0));assert.equal(r.invariants.find(row=>row.id==='I14').checks,0);assert(frames.some(f=>f.payload.current_round.kind==='public'));assert(r.features.features.every(Number.isFinite));assert.equal(r.counts.invitations.reduce((a,b)=>a+b,0),r.counts.D);nativeResults.push({context,mode,completed:20,private:r.counts.Kprivate,private_playable:r.counts.private_playable,frames:frames.length,fixture_pack:pack.digest,measurement_r4:false});
++ const r=modelSession(env,d,{onFrame:f=>frames.push(f)});verifyModelFeatures({...r,public_frames:frames},env);if(context==='online'&&mode==='questions'){const bad={...r,features:{...r.features,features:[...r.features.features]},public_frames:frames};bad.features.features[0]++;assert.throws(()=>verifyModelFeatures(bad,env));}assert.equal(r.status,'COMPLETE_DOMAIN_MODEL');assert.equal(r.history_provenance,'RUNTIME');assert.equal(r.model,'DOMAIN_MODEL_NOT_ACTUAL_AUTH');assert.equal(r.actual_transport,false);assert.equal(r.completed_rounds,20);assert(r.invariants.every(row=>row.violations===0));assert.equal(r.invariants.find(row=>row.id==='I14').checks,0);assert(frames.some(f=>f.payload.current_round.kind==='public'));assert(r.features.features.every(Number.isFinite));if(mode==='yes_but'){assert(r.counts.private_playable>0);const events=frames.filter(f=>f.modeled_mutation==='first_private_condition');assert.equal(events.length,r.counts.private_playable);assert(events.every(f=>f.payload.current_round.kind==='generic'&&!JSON.stringify(f.payload).includes('MODEL REQUIRED CONDITION')));for(const event of events){const at=frames.indexOf(event);assert(frames.slice(at+1).find(f=>f.payload.current_round.round_id===event.payload.current_round.round_id)?.modeled_mutation==='topic_ack');}}assert.equal(r.counts.invitations.reduce((a,b)=>a+b,0),r.counts.D);nativeResults.push({context,mode,completed:20,private:r.counts.Kprivate,private_playable:r.counts.private_playable,frames:frames.length,fixture_pack:pack.digest,measurement_r4:false});
+ });
+ test('native typedrefusal retains exactfreshprefix no retry',()=>{
+  let calls=0;const d={section:'FINITE_UNIT_NOT_CORPUS',seed:'P05-M3-FINITE-REFUSAL-1',size:4,mode:'questions',context:'online',rounds:20,kind:'exchangeable',pairClass:'F'};

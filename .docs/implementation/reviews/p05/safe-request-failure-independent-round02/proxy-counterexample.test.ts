@@ -1,0 +1,4 @@
+import {it,expect} from 'vitest';
+import {requestErrorDiagnostic} from 'C:/.projects/venus/apps/api/src/request-error-diagnostic.ts';
+it('non-native proxy never invokes a custom reflection trap',()=>{let calls=0;const e=new Proxy({}, {getOwnPropertyDescriptor(){calls++;throw Error('CUSTOM_HOOK_PRIVATE_CANARY');}});expect(requestErrorDiagnostic(e)).toEqual({error_kind:'UNKNOWN',failure_code:'UNKNOWN'});expect(calls).toBe(0);});
+it('native error hostile prototype never invokes custom reflection hooks',()=>{let calls=0;const e=new Error('controlled');Object.setPrototypeOf(e,new Proxy(Error.prototype,{getPrototypeOf(){calls++;throw Error('CUSTOM_HOOK_PRIVATE_CANARY');},getOwnPropertyDescriptor(){calls++;throw Error('CUSTOM_HOOK_PRIVATE_CANARY');}}));const d=requestErrorDiagnostic(e);expect(JSON.stringify(d)).not.toContain('CUSTOM_HOOK_PRIVATE_CANARY');expect(calls).toBe(0);});

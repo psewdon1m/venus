@@ -1,0 +1,7 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {resolve} from 'node:path';
+import {validateAck} from 'file:///C:/.projects/venus/.artifacts/p05-normal-rollback-probe01/outer.mjs';import {sha,assertSamePersisted} from 'file:///C:/.projects/venus/.artifacts/p05-normal-rollback-probe01/probe.mjs';
+const root='C:/.projects/venus/.artifacts/p05-normal-rollback-probe01',clone=x=>JSON.parse(JSON.stringify(x));
+function fixture(){const a=JSON.parse(readFileSync(root+'/ROOT-ACK.template.json'));a.status='ROOT_RUN_ACK';a.method_review_path=resolve(root,'DESCRIPTOR.json');a.method_review_sha256=sha(readFileSync(a.method_review_path));return a;}
+for(const [label,mutate]of [['A image',a=>a.A.image_id='sha256:'+'0'.repeat(64)],['A source',a=>a.A.source_identity='0'.repeat(64)],['B compiled',a=>a.B.runtime_files['apps/api/dist/server.js']='0'.repeat(64)],['A metadata',a=>a.A.runtime_files['build-metadata.json']='0'.repeat(64)]])test('independent preallocation pin rejection '+label,()=>{const a=fixture();mutate(a);assert.throws(()=>validateAck(a));});
+const before={room_id:'r',session_id:'s',pack_digest:'pack',snapshot_sha256:'snap',pins_sha256:'pins',history_sha256:'hist',participants:2,game_count:1,room_count:1,catalog:{ledger_head:'head'}},after={...before,private_objects:0,private_refs:0};
+for(const key of ['room_id','room_count'])test('independent persistence identity rejects '+key,()=>{const a=clone(after);a[key]=key==='room_id'?'foreign':2;assert.throws(()=>assertSamePersisted(before,a));});

@@ -1,0 +1,7 @@
+# P05 safe unexpected500 request diagnostics
+
+2026-10-20T20:18:04.369186+00:00 UTC — Root authorizes app.ts/helper/helpertests/app.test.ts/additiverevision only; preserveclientcontract/serverrequestUUID, no rawerror/message/stack/body/headers/cookie/SQLparams. Native24 Error.stack is lazy accessor; custom/accessor/oversize values must be omitted. Use only literal ownmodule labels and boundednumeric locations when safely extractable. NoDocker/ordinary42rerun/sourceYB edits.
+
+2026-10-20T20:24:16.110075+00:00 UTC — app/helper privacyfocused01 33PASS; after nativebrand/lookalike tests focused02 34PASS; tsc/lint0. Native cold01 FAIL: location safelyomitted becauseNode24defaultprepareStackTrace is builtinJS and BufferTypeError extraNodeErrorprototype. Corrected extraction to exactknownNodeformatter body/reference only and boundeddata-only name/message resolution; allcustomhooks/getters stillomit. Cold02PASSnative security:16:48; cold03PASS includes actualcompiledFastify500 UUIDcorrelation andrawabsence. OriginalnativeFAIL retained. NoHTTP/rate/DBtimeout/sourceYB changes.
+
+2026-10-20T20:25:05.902349+00:00 UTC — Final36focused PASS, lint0,tsc-b0. Nativecoldfinal3controls PASS (realTypeErrorstaticlocation, nativegettersnotinvoked, compiledFastify500safeUUIDtrace). Fiveownedsourcepaths frozen; sixYBpaths byteunchanged verified. Source writes STOP. NoDocker/N4actualcause/ordinary42repeat claims. Root independentreview/build/boundeddiagnosticprobe next.

@@ -1,0 +1,335 @@
+{
+  "phase": "before",
+  "matched": 3,
+  "total": 14,
+  "rows": [
+    {
+      "name": "valid_twenty_rounds",
+      "expected": "ACCEPT",
+      "actual": "ACCEPT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "successful_but_noop_advance",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 1,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "duplicate_round_id",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 1,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "index_jump",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 19,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "early_completion",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 7,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "wrong_final_current",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "nonterminal_final",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "database_count19",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "database_distinct_ids19",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "database_distinct_indexes19",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "database_first0",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "database_last19",
+      "expected": "REJECT",
+      "actual": "ACCEPT",
+      "matches_expected": false,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "private_opportunity",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 0,
+      "advance_calls": 0,
+      "error": "Expected \"actual\" to be strictly unequal to:\n\n'pair_private'"
+    },
+    {
+      "name": "snapshot_changed",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '\"changed\"'\n- '\"immutable\"'\n"
+    }
+  ]
+}
+{
+  "phase": "after",
+  "matched": 14,
+  "total": 14,
+  "rows": [
+    {
+      "name": "valid_twenty_rounds",
+      "expected": "ACCEPT",
+      "actual": "ACCEPT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "detail": {
+        "actual_rounds": 20,
+        "distinct_round_ids": 20,
+        "distinct_ordered_indexes_1_to_20": true,
+        "actual_database_round_count20": true,
+        "final_round_terminal": true,
+        "private_opportunities": 0,
+        "immutable_snapshot_bytes_unchanged": true,
+        "capless_after_reenable": false
+      }
+    },
+    {
+      "name": "successful_but_noop_advance",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 1,
+      "advance_calls": 1,
+      "error": "Every observed round must advance exactly once\n\n1 !== 2\n"
+    },
+    {
+      "name": "duplicate_round_id",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 1,
+      "advance_calls": 1,
+      "error": "Repeated round cannot count as a new planner opportunity"
+    },
+    {
+      "name": "index_jump",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 1,
+      "advance_calls": 1,
+      "error": "Every observed round must advance exactly once\n\n3 !== 2\n"
+    },
+    {
+      "name": "early_completion",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 5,
+      "advance_calls": 5,
+      "error": "Every observed round must advance exactly once\n\n20 !== 6\n"
+    },
+    {
+      "name": "wrong_final_current",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n\n19 !== 20\n"
+    },
+    {
+      "name": "nonterminal_final",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Final observed round must be terminal"
+    },
+    {
+      "name": "database_count19",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n\n19 !== 20\n"
+    },
+    {
+      "name": "database_distinct_ids19",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n\n19 !== 20\n"
+    },
+    {
+      "name": "database_distinct_indexes19",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n\n19 !== 20\n"
+    },
+    {
+      "name": "database_first0",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n\n0 !== 1\n"
+    },
+    {
+      "name": "database_last19",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n\n19 !== 20\n"
+    },
+    {
+      "name": "private_opportunity",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 0,
+      "advance_calls": 0,
+      "error": "Expected \"actual\" to be strictly unequal to:\n\n'pair_private'"
+    },
+    {
+      "name": "snapshot_changed",
+      "expected": "REJECT",
+      "actual": "REJECT",
+      "matches_expected": true,
+      "distinct_observed_rounds": 20,
+      "advance_calls": 20,
+      "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ '\"changed\"'\n- '\"immutable\"'\n"
+    }
+  ]
+}

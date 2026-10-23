@@ -1,0 +1,5 @@
+# METHOD19: сохранить действующий batch при старте фонового чтения
+
+Только passive observer correction; приложение и METHOD18 scenario/setup/clock/deadline/TTL/permissions не изменены. При начале следующего own GET накопление нового batch не уничтожает прежний принятый TopicCache. Snapshot может использовать только целиком прежний accepted batch с тем же scope и действующим исходным lease. После любого ответа нового own (включая отказ/невалидный DTO) старый batch более не используется: ожидание полного нового batch консервативнее production OwnControls. HTTP_REJECTED также блокирует старый batch. Нет смешивания новых permissions со старым payload. Explicit clear, WS close/revision, expiry, expected scope и min250ms продолжают блокировать.
+
+Модель остаётся наблюдателем, а не источником авторизации; cache.accept приложения не наблюдается. Девять новых конечных проверок и55 прежних проходят; исходный observer18 воспроизводимо FAIL на counterexample нового own request без ответа при действующем старом lease. Повтор actual16 требует независимой проверки и root ACK. Все прежние FAIL сохраняются.

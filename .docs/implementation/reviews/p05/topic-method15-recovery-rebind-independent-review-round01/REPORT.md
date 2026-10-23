@@ -1,0 +1,21 @@
+# METHOD15 historical-source operational rebind — independent review
+
+Verdict: **PASS_OPERATIONAL_REBIND_ONLY**. No actionable findings in this bounded review. Reviewer did not author the root runner, binding draft or recovery image receipt. Review completed on 2026-10-20 UTC without Docker, RUN or writing a root ACK.
+
+The runner is exactly the METHOD13 outer runner after five explicit replacements: old image ID → rebuilt image ID, producer13 → accepted producer15, new root ACK path, two additional receipt/rebinding-review hash fences, and historical-source output qualification. The allocation, isolated Compose profile, 16-case acceptance loop, timeout, resource cleanup, post-run source check and exit policy have no other change. The executed browser remains the independently accepted METHOD15 browser (exact METHOD13 case bodies); the copied historical `run.mjs` is not the entry point.
+
+The recovered source inventory equals all 1813 frozen files and identity `1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad`. Nine copied runtime files equal both the accepted METHOD15 review and original producer15. The existing review index and its ten indexed files verify exactly. Receipt SHA `eb994713042617b6e9bcc567062e502b18e5330b54759ee85b33ab1459ae0f7c` binds new image `sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f`. Its 73 image hashes equal the old image receipt map; all 64 host compiled files also match. This review reads those receipt bytes and checks maps; agent06 independently owns the image/resource probe. No image probe is claimed here.
+
+The root draft is explicitly unauthorized and no ACK file exists at review time. The outer refuses a missing ACK or non-ROOT_RUN_ACK status, wrong runner/image, each changed runtime file, altered/missing review or receipt bytes, source identity drift or wrong file count, before allocation or Docker. Twenty-three independent cold VM controls pass, including valid authorization reaching the allocation boundary. The VM executes the exact source prefix through every pre-allocation fence, with imports supplied and `import.meta.url` relocated to the actual runner URL. Inventory is a synthetic fixture in these counterexamples; the separate Python verification checks the real restored inventory. Every cold control has zero writes, allocations and Docker calls.
+
+Root authorization remains a trusted orchestration artifact: final ACK must preserve the reviewed draft's runner, image, nine runtime pins, source qualification, existing METHOD15 review and image receipt; only authorization status and this packet's review index path/hash are to be completed. The runner verifies the review/receipt byte hashes provided by that ACK. It does not independently infer approval from prose or reconstruct the image. Use the original absolute Python executable and the restored snapshot as cwd, as planned; its source fence refuses the changed live tree.
+
+Tests (all exit 0):
+
+- `.venv/Scripts/python.exe -B .docs/implementation/reviews/p05/topic-method15-recovery-rebind-independent-review-round01/verify-inputs.py` — exact source, outer transformation, runtime pins, existing review/index children, receipt maps and draft status.
+- `C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe .docs/implementation/reviews/p05/topic-method15-recovery-rebind-independent-review-round01/preflight-controls.mjs` — 23 cold controls PASS.
+- Same Node `--check .artifacts/p05-recovery-source1274-01/.artifacts/p05-recovery-method15-browser-run01.mjs` — syntax PASS.
+
+One read-only inspection command exited 1 because the earlier METHOD15 packet has no `HANDOFF.md`; its valid `INDEX.json` and ten indexed files were subsequently verified directly. No tested control failed.
+
+This allows root to finish the concrete ACK and perform one separately recorded diagnostic slice after independent image/resource acceptance. It does **not** establish functional PASS, identify the earlier offer409 error, accept live P04-r3 source, approve held cards, close the complete 459-cell layout matrix, or close P05. Historical image/proof bytes and product TTLs are unchanged. Existing METHOD13 actual result remains 7 PASS / case08 FAIL / 8 NOT_RUN with cleanup PASS; METHOD15 must record its own result.

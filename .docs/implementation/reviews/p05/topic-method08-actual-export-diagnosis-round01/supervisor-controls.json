@@ -1,0 +1,28 @@
+{
+  "status": "PASS_DIAGNOSIS_CONTROLS_ONLY",
+  "exact_module_sha256": "5ef8e95412e4256cd1feddb59bb375c1bde0d5cb49954419eab5e31d184cff72",
+  "cases": [
+    {
+      "name": "exact supervisor happy cold path writes terminal",
+      "status": "PASS",
+      "injected_rename_failure": false,
+      "observed_error": null,
+      "rename_calls": 5,
+      "docker_calls": 0,
+      "docker_qualification": "INERT_STUB_ONLY",
+      "terminal": "SUPERVISOR_COMPLETE_NON_GATING"
+    },
+    {
+      "name": "exact supervisor rename fault leaves temp; catch reentry throws before state/terminal",
+      "status": "PASS",
+      "injected_rename_failure": true,
+      "observed_error": "The expression evaluated to a falsy value:\n\n  assert(!existsSync(guardTemp))\n",
+      "rename_calls": 1,
+      "docker_calls": 1,
+      "docker_qualification": "INERT_STUB_ONLY",
+      "terminal": null
+    }
+  ],
+  "actual_Docker_calls": 0,
+  "actual_prefix_writes": 0
+}

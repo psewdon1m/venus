@@ -1,0 +1,97 @@
+{
+  "status": "PLANNED_NOT_EXECUTED_REQUIRES_FROZEN_EVIDENCE_AND_ROOT_DISPATCH",
+  "owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+  "project": "venus-p05-oci-ffaaeef4fe2b",
+  "evidence_freeze_required": true,
+  "stop_only_running_keeper": "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9",
+  "verify_before_every_mutation": [
+    "exact ID/name/owner/project/role/image",
+    "all expected role/IPC/mount properties",
+    "no extra owner resources",
+    "exact volume driver/options or network name"
+  ],
+  "containers_after_verified_stopped": [
+    {
+      "id": "c70cb70dda821a6ef55ece6528fb2098061ad7c08108a709074a15caf251dcb2",
+      "name": "/venus-p05-oci-ffaaeef4fe2b-a1",
+      "image": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "role": "A1"
+    },
+    {
+      "id": "b9ad2dcef75380652d6edb0187e49100c564278eb4d46ff3f3bef6428ad2f51c",
+      "name": "/venus-p05-oci-ffaaeef4fe2b-tls",
+      "image": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "role": "tls"
+    },
+    {
+      "id": "e8dc03de3a152ac71daf4cd2382a96958613bd700d14a4216276aadaa02bc1f3",
+      "name": "/venus-p05-oci-ffaaeef4fe2b-db",
+      "image": "sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "role": "db"
+    },
+    {
+      "id": "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9",
+      "name": "/venus-p05-oci-ffaaeef4fe2b-keeper",
+      "image": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "role": "keeper"
+    }
+  ],
+  "volumes_after_no_attachments": [
+    {
+      "Name": "venus-p05-oci-ffaaeef4fe2b-authority",
+      "Driver": "local",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      },
+      "Options": {
+        "device": "tmpfs",
+        "o": "size=32m,mode=0700",
+        "type": "tmpfs"
+      }
+    },
+    {
+      "Name": "venus-p05-oci-ffaaeef4fe2b-db",
+      "Driver": "local",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      },
+      "Options": {
+        "device": "tmpfs",
+        "o": "size=248m,mode=0700",
+        "type": "tmpfs"
+      }
+    },
+    {
+      "Name": "venus-p05-oci-ffaaeef4fe2b-private",
+      "Driver": "local",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      },
+      "Options": {
+        "device": "tmpfs",
+        "o": "size=8m,mode=0700,uid=0,gid=0",
+        "type": "tmpfs"
+      }
+    }
+  ],
+  "network_after_no_containers": [
+    {
+      "Id": "77b3383a0eb3c724c0e26cbe96e799cbd3428f7cc177c44fd7a848d95785e3dd",
+      "Name": "venus-p05-oci-ffaaeef4fe2b-isolated",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      }
+    }
+  ],
+  "new_starts": false,
+  "new_containers": false,
+  "host_prefix_delete_or_rewrite": false,
+  "keyring_password_DB_print_or_export": false,
+  "all_owner_inventories_must_be_empty_after_cleanup": true,
+  "on_failure": "FAIL_RETAINED_MANUAL_CLEANUP_REQUIRED_NO_OTHER_OWNER_ACTION",
+  "cleanup_executed": false
+}

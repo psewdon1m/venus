@@ -1,0 +1,5 @@
+# OCI12 safe static native failure location author
+
+2026-10-20T21:33:37.810806+00:00 Root task after historyAPP accepted: clone11→12, exactlybound-profile.mjs safeError andphase-terminal.mjs projection. No oracles/scenarios/APP/limits changes, noDocker/RUN. NativeError only +rejectgetters/Proxy/customprepare, exactknownpaths→staticmodule+boundednumericline/column, neverrawmessage/stack/privatevalues. Independentreviewrequired.
+
+2026-10-20T21:35:43.989542+00:00 Exactly2runtimefiles changed; nativeError proxy/getter/formatter-safe boundedstaticlocation andphaseprojection.34privacycontrolsPASS0 inclactualnativeAssertionError scenarios28/no rawvalues;58existingauthorcontrolsPASS0;2syntax/lint0. Original318members exactexcept2/all23otherrootMJSexact,sourceb210/1846+producerMap323 coldPASS0. Frozenproducer acf6cdf907ea60c508ff4e7ca437101a49875fc7be67b45cd5d75affe9b924f0; packet 06484bedd3e9b9ea444075e0194a4ea13d09fd38c2d6fed34ad2ee5168b84e55 /13 WRITES COMPLETE, independentpreRUN/rootACK required. NoDocker/DB/listener/nativeprivatevolume reads/mutations.

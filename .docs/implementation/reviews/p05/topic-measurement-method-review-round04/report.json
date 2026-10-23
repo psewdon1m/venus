@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_PREPARATION_ONLY",
+  "created_at": "2026-10-19T22:12:15.524036+00:00",
+  "reviewer": "independent /root/p04_gate_preflight",
+  "scope": "P05 method04 producer preexecution review; helper-only actual controls, not R100/runtime/statistical acceptance",
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "included_files": 1813,
+  "packet_index_sha256": "cbf037f5e54bb1956b437c73bb751e721d76cc325f9387c0bbef092b6578eaab",
+  "reference_image": "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+  "reference_build_receipt_sha256": "2dae88a270c9a9a3fbc33386b09ae98585bebb49d6d26e1a3f6d95c8ddf443e5",
+  "findings": [
+    {
+      "id": "P05-METHOD04-001",
+      "priority": "P2",
+      "title": "Post-stop export/archive loses actual host free-space guard",
+      "files": [
+        {
+          "snapshot": "r100-v3-watchdog.mjs",
+          "sha256": "c96f120c7569b2eb6da08172b48c0ea4a27638ef11c2d0ffa9521510d5a5a87e",
+          "lines": [
+            59,
+            70
+          ]
+        },
+        {
+          "snapshot": "r100-v3-package.py",
+          "sha256": "a5978137635be92b4c789f4f1c5725397002c932054b7328511a4ed8925f6317",
+          "lines": [
+            53,
+            60,
+            80,
+            81
+          ]
+        }
+      ],
+      "reproducer": "watchdog-inert-replay.mjs/result.json: timeout then simulated free=0; EXPORT/ARCHIVE/CLEANUP/DONE accepted by post-stop monitor with0 further statfs calls and stale12GiB guard",
+      "observed_result": "STOPPED_NOT_ACCEPTED remains honest; continued host writes lack promised reserve supervision",
+      "required_fix": "Continue independent actual host-space guard through all failure phases; check fresh owner/counter and prospective allocation/free reserve before host staging/extraction/archive writes; low/unknown/stale retains owned prefix without further allocation and cannot claim execution PASS",
+      "actual_disk_full_test": false
+    }
+  ],
+  "prior_disposition": {
+    "P05-METHOD03-001": "CLOSED_BOUNDED_HELPER_PREPARATION_SCOPE",
+    "P05-METHOD03-002": "PARTIAL_BLOCKED_BY_METHOD04_001",
+    "P05-METHOD03-003": "PARTIAL_BLOCKED_BY_METHOD04_001"
+  },
+  "actual_controls": {
+    "inert_exact_watchdog_replay": "REPRODUCED",
+    "Windows_author_filesystem_independent_repeat": 12,
+    "Docker_CLI_commands": 39,
+    "actual_helper_containers": 6,
+    "raw_helper_log_bytes": 139779,
+    "native_available_bytes_observed": "972999106560",
+    "remaining_owned_containers": 0,
+    "remaining_owned_volumes": 0,
+    "full_image73_map": "FROZEN_REFERENCE_RECEIPT_ONLY_NOT_FRESH_PROBE"
+  },
+  "NOT_RUN": [
+    "prepare",
+    "run",
+    "selector",
+    "R100v3 attempt",
+    "actual blocked-worker orchestration",
+    "actual low-C-space export",
+    "statistical consumers",
+    "actual runtime matrix"
+  ],
+  "statistical_counts_seeds_thresholds": "UNCHANGED_NOT_REDUCED",
+  "human450": "HOLD_UNCHANGED",
+  "full_P05_PASS": false,
+  "report_sha256": "4a52ad93caeb68074d8a669816b8c9ca1b44ef0f3986288e8ab237e823e26740"
+}

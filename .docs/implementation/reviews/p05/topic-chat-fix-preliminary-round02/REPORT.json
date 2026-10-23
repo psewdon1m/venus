@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_PRELIMINARY",
+  "scope": "Independent preliminary direct public source-bound controls; not runtime/stage acceptance",
+  "source_topic_games_sha256": "13f11d8d42204f22eaf0eb249d7e54784ccf67cb2aa57eb9863fb66b81a4b029",
+  "source_matches_later_freeze": false,
+  "freeze_identity_if_matching": null,
+  "checks_pass": 9,
+  "checks_fail": 1,
+  "validation": {
+    "schema_version": 1,
+    "status": "PASS",
+    "scope": "Independent source-bound direct public sendChat validation; mutation seam records reachability only; not actual HTTP/PG",
+    "source_sha256": "13f11d8d42204f22eaf0eb249d7e54784ccf67cb2aa57eb9863fb66b81a4b029",
+    "source_unchanged": true,
+    "checks": [
+      {
+        "id": "VALID_ASCII",
+        "expected_reach_mutation": true,
+        "actual_reach_mutation": true,
+        "error": null,
+        "status": "PASS"
+      },
+      {
+        "id": "VALID_ASTRAL",
+        "expected_reach_mutation": true,
+        "actual_reach_mutation": true,
+        "error": null,
+        "status": "PASS"
+      },
+      {
+        "id": "INVALID_HIGH",
+        "expected_reach_mutation": false,
+        "actual_reach_mutation": false,
+        "error": {
+          "code": "INVALID_TEXT",
+          "message": "Request could not be completed"
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "INVALID_LOW",
+        "expected_reach_mutation": false,
+        "actual_reach_mutation": false,
+        "error": {
+          "code": "INVALID_TEXT",
+          "message": "Request could not be completed"
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "INVALID_EMBEDDED",
+        "expected_reach_mutation": false,
+        "actual_reach_mutation": false,
+        "error": {
+          "code": "INVALID_TEXT",
+          "message": "Request could not be completed"
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "INVALID_BIDI",
+        "expected_reach_mutation": false,
+        "actual_reach_mutation": false,
+        "error": {
+          "code": "INVALID_TEXT",
+          "message": "Request could not be completed"
+        },
+        "status": "PASS"
+      },
+      {
+        "id": "INVALID_EMPTY",
+        "expected_reach_mutation": false,
+        "actual_reach_mutation": false,
+        "error": {
+          "code": "INVALID_TEXT",
+          "message": "Request could not be completed"
+        },
+        "status": "PASS"
+      }
+    ]
+  },
+  "advance": {
+    "schema_version": 1,
+    "status": "FAIL",
+    "scope": "Public advance plus actual mutation/loaded/newRound/receipt final fence and real selector/AEAD; explicit mocked PG/auth/source/clock persistence seams; not actual HTTP/PG or hot-config product claim",
+    "source_sha256": "13f11d8d42204f22eaf0eb249d7e54784ccf67cb2aa57eb9863fb66b81a4b029",
+    "next_round_index": 14,
+    "previous_interaction": "pair_public",
+    "cases": [
+      {
+        "id": "STABLE_ENABLED",
+        "expected_allowed": true,
+        "actual_allowed": true,
+        "error": null,
+        "flag_at_finish": true,
+        "created_new_round": true,
+        "final_fence_present": true,
+        "status": "PASS"
+      },
+      {
+        "id": "PRE_DISABLED",
+        "expected_allowed": false,
+        "actual_allowed": false,
+        "error": {
+          "code": "PRIVATE_CHAT_UNAVAILABLE",
+          "status": 503
+        },
+        "flag_at_finish": false,
+        "created_new_round": false,
+        "final_fence_present": true,
+        "status": "PASS"
+      },
+      {
+        "id": "FINAL_AWAIT_DISABLED",
+        "expected_allowed": false,
+        "actual_allowed": true,
+        "error": null,
+        "flag_at_finish": false,
+        "created_new_round": true,
+        "final_fence_present": true,
+        "status": "FAIL"
+      }
+    ]
+  },
+  "TG_CHAT_002": "CLOSED_SCALAR_VALIDATION_SOURCE_ONLY",
+  "late_new_round_policy": "CONFIRMED_FINAL_AWAIT_SEAM_FAILURE",
+  "limits": [
+    "not actual HTTP/PG",
+    "mutable flag seam not claim of exposed hotconfiguration",
+    "explicit SQL/auth/source/persistence mocks",
+    "old global runtimePASS not transferred",
+    "fresh actual policy producer stillpending"
+  ]
+}

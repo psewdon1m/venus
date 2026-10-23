@@ -1,0 +1,82 @@
+{
+  "status": "DIAGNOSIS_COMPLETE_PRODUCER_PRECONDITION_GAP",
+  "actual_index_sha256": "fc44f08b97cf887b0f3285538e847dff16f3524eea46ac9e297dc60cf236b273",
+  "verified_files": 39,
+  "producer_files": 7,
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "included_files": 1813,
+  "actual_counts": {
+    "PASS": 4,
+    "FAIL": 1,
+    "NOT_RUN": 11
+  },
+  "cleanup": "PASS",
+  "http": 425,
+  "ws": 235,
+  "timeline": {
+    "old_private_own_request_ms": 68093.233897,
+    "old_private_permission_duration_ms": 5000,
+    "old_private_upper_deadline_ms": 73093.233897,
+    "new_own_response_body_ms": 73090.974646,
+    "action_click_ms": 73144.195674,
+    "click_after_old_deadline_ms": 50.961777000004076,
+    "new_complete_chat_body_ms": 75923.743319,
+    "action_deadline": "1970-01-01T00:18:03.757Z",
+    "server_time_before_click": "1970-01-01T00:17:51.668Z",
+    "action_remaining_at_that_server_ms": 12089,
+    "later_expiry_server_time": "1970-01-01T00:18:04.004Z",
+    "later_rev29_body_ms": 85954.27792
+  },
+  "internal_cache_branch_observed": false,
+  "action_expiry_at_click_proven": false,
+  "source_bound_safe_expired_private_grant_rejection_reproduced": true,
+  "product_defect_proven": false,
+  "full_stage_pass": false,
+  "reviewer": "/root/p05_topics_ui_review",
+  "created_at": "2026-10-19T22:13:15.841272+00:00",
+  "finding": {
+    "id": "M12-PRECONDITION-001",
+    "severity": "P2",
+    "scope": "producer",
+    "product_defect_proven": false
+  },
+  "source_probes": {
+    "status": "PASS",
+    "checks": 2,
+    "result": {
+      "initialEnabled": true,
+      "heldTarget": true,
+      "enabledImmediatelyBeforeExpiry": true,
+      "expiredClickNoPost": true,
+      "actionRemainingAtClick": 24949,
+      "freshEnabled": true,
+      "retryPosted": true,
+      "posts": [
+        {
+          "path": "/api/v2/rooms/room/game/s/round/round-s/response",
+          "kind": "accept",
+          "scope": "action",
+          "offer_id": "action",
+          "proposal_revision": 1
+        }
+      ]
+    },
+    "result2": {
+      "bothOwnAndPrivateExpiredNoPost": true
+    },
+    "scope": "EXACT_UNMODIFIED_1274_PANEL_HARNESS_WITH_EXPLICIT_DEFERRED_TARGET_AND_RETAINED_DOM_CALLBACK_NOT_ACTUAL_BROWSER_INTERNAL_TRACE"
+  },
+  "producer_probes": {
+    "status": "PASS",
+    "checks": 2,
+    "noDispatchedRequest": {
+      "clickReturned": true,
+      "responseWaitStillPending": true,
+      "originalTimeoutExplicitlySimulated": true
+    },
+    "dispatchedMatchingRequest": {
+      "receiptVerified": true
+    },
+    "scope": "EXACT_PRODUCER_HELPER_WITH_EXPLICIT_EVENT_DOUBLES_NO_REAL_TIME_WAIT"
+  }
+}

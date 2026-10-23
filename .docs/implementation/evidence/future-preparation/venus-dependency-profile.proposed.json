@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "kind": "PROPOSED_DEPENDENCY_PROFILE_NOT_APPROVED",
+  "service": "venus",
+  "role": "web-api",
+  "phase_scope": "G1 Rooms+Games+ephemeral private text chat",
+  "owner_approval": null,
+  "operator": null,
+  "central_repository": "https://github.com/psewdon1m-exocortex/general",
+  "central_baseline_sha": "4449e65d732ca44b91cec5a6f3ca16c2c618578f",
+  "central_part13_git_sha256": "faa7e0cfe26927570a8230e835e7b8ac08815bc8450467fcab69d398f425d909",
+  "proposed_matrix_patch": {
+    "path": ".docs/implementation/evidence/future-preparation/general-venus-matrix.proposed.patch",
+    "sha256": "2a19cf8815339a168b8228daa3fbf166d9790023a28ea11723381225c214f9f2"
+  },
+  "host_dependencies": {
+    "updater": {
+      "required": true,
+      "approved_release": null,
+      "researched_version": "0.6.17",
+      "researched_source_sha": "17e2dcf1e72bbc6492ea5692520932d1c95a618f",
+      "researched_compatibility": "KNOWN_INCOMPATIBLE_VENUS",
+      "proposal": "updater-venus-proposal/venus-allowlists.patch"
+    },
+    "neptune": {
+      "required": false,
+      "approval": null
+    },
+    "gryphon": {
+      "required": false,
+      "approval": null
+    },
+    "wyvern": {
+      "required": false,
+      "approval": null
+    },
+    "window": {
+      "required": false,
+      "approval": null
+    }
+  },
+  "rationale": "Minimal G1 does not silently enroll optional shared agents. Updater remains mandatory. Selecting centralized backup/other shared services changes the explicit matrix/profile and requires corresponding scoped capability tests.",
+  "placement": {
+    "service_directory": "/opt/exocortex/venus",
+    "app_bind": "127.0.0.1:4300",
+    "database_public_port": false,
+    "global_nginx_mutation_by_app": false,
+    "operator_surface_separate_from_room_host": true
+  },
+  "backup": {
+    "full_logical_database": true,
+    "encrypted_private_preferences_and_snapshots": true,
+    "retention_max_days": 7,
+    "keys_recovered_separately": true,
+    "keys_env_tokens_in_backup": false,
+    "current_deletion_revocation_ledgers_preserved_outside_db_restore": true,
+    "operator_saved_same_zip_required": true,
+    "decoded_zip_max_bytes": 134217728,
+    "rpo": null,
+    "rto": null,
+    "restore_loss_reconciliation_approval": null
+  },
+  "not_authorized": [
+    "Applying this proposal to central/general or Updater",
+    "Creating or replacing release trust",
+    "Releasing an Updater version",
+    "Any actual host installation, enrollment or Nginx change"
+  ],
+  "remaining_acceptance": [
+    "Owner-approved matrix and named operator",
+    "New signed Venus-compatible Updater release and actual pins",
+    "Typed pre-mutation manifest/compatibility and restore guard",
+    "P05 final candidate and approved offer/catalogue",
+    "Production signing and bootstrap trust",
+    "Measured install/update/restore/rollback and RPO/RTO",
+    "All applicable Part12 checks and external assets/deployment proofs"
+  ]
+}

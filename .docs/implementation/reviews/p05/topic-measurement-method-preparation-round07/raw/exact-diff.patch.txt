@@ -1,0 +1,90 @@
+--- METHOD06/allocated-tree.py
++++ METHOD07/allocated-tree.py
+@@ -1,6 +1,39 @@
+ """Read-only allocated-file accounting. No Docker, producer or sample execution."""
+-import argparse,ctypes,json,os,stat,sys,subprocess
++import argparse,ctypes,json,os,stat,sys
++from functools import cache
+ from pathlib import Path
++
++@cache
++def stream_api():
++    from ctypes import wintypes
++    class StreamData(ctypes.Structure):
++        _fields_=[('size',ctypes.c_int64),('name',wintypes.WCHAR*(260+36))]
++    dll=ctypes.WinDLL('kernel32',use_last_error=True)
++    dll.FindFirstStreamW.argtypes=[wintypes.LPCWSTR,ctypes.c_int,ctypes.POINTER(StreamData),wintypes.DWORD]
++    dll.FindFirstStreamW.restype=wintypes.HANDLE
++    dll.FindNextStreamW.argtypes=[wintypes.HANDLE,ctypes.POINTER(StreamData)]
++    dll.FindNextStreamW.restype=wintypes.BOOL
++    dll.FindClose.argtypes=[wintypes.HANDLE]
++    dll.FindClose.restype=wintypes.BOOL
++    return dll,StreamData
++
++def windows_streams(path):
++    """Reject every named NTFS stream; EOF alone is valid for empty directories."""
++    dll,Data=stream_api();info=Data()
++    handle=dll.FindFirstStreamW(str(path),0,ctypes.byref(info),0)
++    if handle==ctypes.c_void_p(-1).value:
++        error=ctypes.get_last_error()
++        if error==38:return  # ERROR_HANDLE_EOF: no streams, not API failure.
++        raise ctypes.WinError(error)
++    try:
++        while True:
++            if info.name!='::$DATA':raise ValueError('ALTERNATE_STREAM_OR_ENUMERATOR_UNAVAILABLE')
++            if not dll.FindNextStreamW(handle,ctypes.byref(info)):
++                error=ctypes.get_last_error()
++                if error!=38:raise ctypes.WinError(error)
++                break
++    finally:
++        if not dll.FindClose(handle):raise ctypes.WinError(ctypes.get_last_error())
+ 
+ def windows_allocation(path):
+     from ctypes import wintypes
+@@ -25,9 +58,12 @@
+     root=Path(os.path.abspath(root))
+     def streams():
+         if os.name!='nt':return
+-        script="$ErrorActionPreference='Stop'; if($PSVersionTable.PSVersion -lt [Version]'7.2'){ throw 'WINDOWS_STREAM_ENUMERATOR_VERSION_REQUIRED' }; $r=[Environment]::GetEnvironmentVariable('VENUS_ALLOCATED_TREE_ROOT'); $items=@(Get-Item -LiteralPath $r -Force)+@(Get-ChildItem -LiteralPath $r -Recurse -Force); foreach($i in $items){ foreach($s in @(Get-Item -LiteralPath $i.FullName -Stream * -ErrorAction Stop)){ if($s.Stream -ne ':$DATA'){ Write-Output 'NONDEFAULT_STREAM'; exit 12 } } }"
+-        result=subprocess.run(['pwsh.exe','-NoLogo','-NoProfile','-NonInteractive','-Command',script],capture_output=True,text=True,timeout=10,env={**os.environ,'VENUS_ALLOCATED_TREE_ROOT':str(root)})
+-        if result.returncode!=0 or result.stdout.strip():raise ValueError('ALTERNATE_STREAM_OR_ENUMERATOR_UNAVAILABLE')
++        pending=[root]
++        while pending:
++            path=pending.pop();info=path.lstat()
++            if stat.S_ISLNK(info.st_mode) or info.st_file_attributes&0x400:raise ValueError('LINK_OR_REPARSE_TREE')
++            windows_streams(path)
++            if stat.S_ISDIR(info.st_mode):pending.extend(sorted(path.iterdir()))
+     for node in [*reversed(root.parents),root]:
+         s=node.lstat()
+         if stat.S_ISLNK(s.st_mode) or (os.name=='nt' and s.st_file_attributes&0x400):raise ValueError('LINK_OR_REPARSE_ANCESTOR')
+--- METHOD06/r100-v3-launcher.mjs
++++ METHOD07/r100-v3-launcher.mjs
+@@ -9,8 +9,8 @@
+ import {ArtifactStore} from './artifact-store-v2.mjs';
+ import {cleanupOwned} from './owned-cleanup.mjs';
+ import {beforeHostAllocation,METHOD05} from './host-output-guard.mjs';
+-export const CANDIDATE='METHOD06-CANONICAL-CLEANUP-IDS';
+-const base='.artifacts/p05-topic-measurements-method06',sha=b=>createHash('sha256').update(b).digest('hex'),json=p=>JSON.parse(readFileSync(p)),sleep=ms=>new Promise(r=>setTimeout(r,ms)),MiB=1024**2,CAP=128*MiB,RESERVE=10*1024**3;
++export const CANDIDATE='METHOD07-NATIVE-WINDOWS-STREAMS';
++const base='.artifacts/p05-topic-measurements-method07',sha=b=>createHash('sha256').update(b).digest('hex'),json=p=>JSON.parse(readFileSync(p)),sleep=ms=>new Promise(r=>setTimeout(r,ms)),MiB=1024**2,CAP=128*MiB,RESERVE=10*1024**3;
+ const next=['r100-v3-launcher.mjs','r100-v3-child.mjs','r100-v3-volume.mjs','r100-v3-watchdog.mjs','r100-v3-inspect.mjs','r100-v3-package.py','host-output-guard.py','host-output-guard.mjs','owned-cleanup.mjs','allocated-tree.py','r100-v3-timing.mjs','r100-v3-chunks.mjs','artifact-store-v2.mjs','artifact-store-v3.mjs','memory-session.mjs','lifecycle.mjs','consume-session.mjs','diagnostics.mjs','invariants.mjs','observations.mjs','public-transcript.mjs','wire-renderers.mjs','wire-source.json'];
+ const old=['fixture.mjs','profiles.mjs','support.mjs','private-transcript.mjs','contracts/public-features.json',...['cards','manifest','map','semantic','taxonomy'].map(n=>'fixture-checkpoint02/'+n+'.json')];
+ function execute(exe,args,{timeout=30000,cap=65536,input,onFailure}={}){return new Promise((done,reject)=>{const child=spawn(exe,args,{windowsHide:true}),out=[],err=[];let bytes=0,settled=false;const finish=(e,v)=>{if(settled)return;settled=true;clearTimeout(timer);if(e||v?.code!==0)onFailure?.(e??v);e?reject(e):done(v);},timer=setTimeout(()=>{child.kill('SIGKILL');finish(Error('BOUNDED_COMMAND_TIMEOUT:'+exe));},timeout);for(const[s,target]of[[child.stdout,out],[child.stderr,err]])s.on('data',b=>{bytes+=b.length;if(bytes>cap){child.kill('SIGKILL');finish(Error('BOUNDED_CAPTURE_CAP:'+exe));}else target.push(b);});if(input!==undefined){child.stdin.on('error',()=>{});child.stdin.end(input);}else child.stdin.end();child.on('error',e=>finish(e));child.on('close',(code,signal)=>finish(null,{code,signal,stdout:Buffer.concat(out),stderr:Buffer.concat(err)}));});}
+@@ -26,7 +26,7 @@
+  const preparation={candidate_revision:CANDIDATE,method_revision:METHOD05,status:'PREPARED_NOT_AUTHORIZED',root,id,owner,container:'venus-r100-v3-'+id,volume:'venus-r100-v3-'+id+'-output',source_identity:before.identity,image:receipt.image,receipt_path:receiptPath,receipt_sha256:sha(readFileSync(receiptPath)),metadata_pins:Object.fromEntries(['source-before.json','build-receipt.json','design-proposal.json'].map(n=>[n,sha(readFileSync(join(root,'inputs',n)))])),input_pin_sha256:sha(readFileSync(join(root,'inputs/input-pins.json'))),input_logical_bytes:input.check(),global_owned_cap_bytes:CAP,statistics_RUN:false};beforeHostAllocation({host_output_path:root},65536);store.write('preparation.json',JSON.stringify(preparation,null,2)+'\n');console.log(JSON.stringify(preparation));return preparation;
+ }
+ export async function run(root,ackPath){
+- root=resolve(root);const prep=json(join(root,'preparation.json')),ack=json(ackPath),pins=json(join(root,'inputs/input-pins.json'));assert.equal(prep.candidate_revision,CANDIDATE);assert.equal(ack.candidate_revision,CANDIDATE);assert.equal(prep.method_revision,METHOD05);assert.equal(ack.method_revision,METHOD05);assert.equal(sha(readFileSync(fileURLToPath(import.meta.url))),pins.producer[base+'/r100-v3-launcher.mjs'],'EXACT_METHOD06_LAUNCHER_REQUIRED');assert.equal(ack.kind,'ROOT_R100_V3_OPERATIONAL_DIAGNOSTIC_ACK');assert.equal(ack.status,'AUTHORIZED');assert.equal(ack.independent_method_and_producer_review,'PASS');assert.equal(ack.preparation_sha256,sha(readFileSync(join(root,'preparation.json'))));assert.equal(ack.source_identity,prep.source_identity);assert.equal(ack.image,prep.image);assert.equal(ack.attempts,1);assert.equal(ack.global_owned_cap_bytes,CAP);assert.equal(ack.reserve_bytes,RESERVE);assert.equal(sha(readFileSync(join(root,'inputs/input-pins.json'))),prep.input_pin_sha256);assert(!existsSync(join(root,'control/receipts/execution-start.json')),'NO_IMPLICIT_RERUN');
++ root=resolve(root);const prep=json(join(root,'preparation.json')),ack=json(ackPath),pins=json(join(root,'inputs/input-pins.json'));assert.equal(prep.candidate_revision,CANDIDATE);assert.equal(ack.candidate_revision,CANDIDATE);assert.equal(prep.method_revision,METHOD05);assert.equal(ack.method_revision,METHOD05);assert.equal(sha(readFileSync(fileURLToPath(import.meta.url))),pins.producer[base+'/r100-v3-launcher.mjs'],'EXACT_METHOD07_LAUNCHER_REQUIRED');assert.equal(ack.kind,'ROOT_R100_V3_OPERATIONAL_DIAGNOSTIC_ACK');assert.equal(ack.status,'AUTHORIZED');assert.equal(ack.independent_method_and_producer_review,'PASS');assert.equal(ack.preparation_sha256,sha(readFileSync(join(root,'preparation.json'))));assert.equal(ack.source_identity,prep.source_identity);assert.equal(ack.image,prep.image);assert.equal(ack.attempts,1);assert.equal(ack.global_owned_cap_bytes,CAP);assert.equal(ack.reserve_bytes,RESERVE);assert.equal(sha(readFileSync(join(root,'inputs/input-pins.json'))),prep.input_pin_sha256);assert(!existsSync(join(root,'control/receipts/execution-start.json')),'NO_IMPLICIT_RERUN');
+  for(const[n,h]of Object.entries(prep.metadata_pins))assert.equal(sha(readFileSync(join(root,'inputs',n))),h,'EXACT_PREPARED_METADATA');for(const row of pins.mapping){assert.equal(sha(readFileSync(join(root,'inputs',row.snapshot))),row.sha256);assert.equal(sha(readFileSync(row.original)),row.sha256);}assert.deepEqual(await inventory(),json(join(root,'inputs/source-before.json')));hostSpace(root);
+  const control=new ArtifactStore(join(root,'control/receipts'),{limit:8*MiB}),input=new ArtifactStore(join(root,'inputs'),{limit:16*MiB}),auditFailures=[];let supervisorArmed=false,capacityFault=null,lastAllowedCounter=0,lastSampleAt=null,externalAck=null,externalReport=null;
+  const write=async(name,value)=>{const bytes=Buffer.from(JSON.stringify(value,null,2)+'\n');try{beforeHostAllocation({host_output_path:root},bytes.length);}catch(e){capacityFault??=e.message;throw e;}if(capacityFault)throw Error('CAPACITY_FAULT_LATCHED:'+capacityFault);if(!supervisorArmed)return control.write(name,bytes);const r=await execute(python(),['-B',join(root,'inputs/next/r100-v3-package.py'),'--stage='+join(root,'control/receipts',name),'--partition='+join(root,'control/receipts'),'--limit='+8*MiB,'--guard-config='+join(root,'inputs/root-ack.json')],{timeout:30000,cap:65536,input:bytes,onFailure:()=>{capacityFault??='HOST_RECEIPT_WRITE_GUARD_FAILED';}});assert.equal(r.code,0,'GUARDED_RECEIPT_WRITE_FAILED:'+r.stderr.toString('utf8').slice(0,256));return JSON.parse(r.stdout);};
+--- METHOD06/r100-v3-root-ack-template.json
++++ METHOD07/r100-v3-root-ack-template.json
+@@ -20,5 +20,5 @@
+   },
+   "statistics_RUN": false,
+   "method_revision": "METHOD05-HOST-OUTPUT-FENCES",
+-  "candidate_revision": "METHOD06-CANONICAL-CLEANUP-IDS"
++  "candidate_revision": "METHOD07-NATIVE-WINDOWS-STREAMS"
+ }

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "review_id": "P05-DIRECTORY-ALLOCATOR-ROUND-01",
+  "created_at": "2026-10-19T17:12:45.304380+00:00",
+  "reviewer": "/root/p05_targeted_review",
+  "status": "CHANGES_REQUESTED",
+  "inputs": [
+    {
+      "path": "apps/api/src/security.ts",
+      "bytes": 5598,
+      "sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25"
+    },
+    {
+      "path": "apps/api/src/topic-room-directories.test.ts",
+      "bytes": 5338,
+      "sha256": "100cfcd0012688a35ddcd9a165e99c2022ae34a3191f23c6b00de3e2ca911307"
+    },
+    {
+      "path": "apps/api/src/topic-room-directories.ts",
+      "bytes": 4341,
+      "sha256": "5ebf06da8e9c882d60ef8d54ae6ea783bc841f50a1e2b69f14b4a608aac9ab81"
+    }
+  ],
+  "included_source_edits": false,
+  "author_artifacts_verified": 35,
+  "independent_pass": 23,
+  "independent_fail": 1,
+  "author_regressions_pass": 14,
+  "windows_only_skip": 1,
+  "test_exit_code": 1,
+  "image": "sha256:68980ea56c41bfbbfed14c3d7c168194b22483a5d66a429bd7cd5d60a53b0472",
+  "all_owned_containers_removed": true,
+  "open_findings": [
+    {
+      "id": "DIRECTORY-001",
+      "priority": "P2",
+      "file": "apps/api/src/topic-room-directories.ts",
+      "line": 38,
+      "title": "Late ancestor symlink accepted after final root ancestor preflight",
+      "reproduction": "Real Linux rename common base to .old and symlink old base to original tree immediately before fifth root open. Leaf root identities remain equal; provision returns success. Independent expected-denial test fails.",
+      "impact": "No-symlink namespace invariant violated; anchored writes remain on original opened roots. No foreign-root write/disclosure demonstrated.",
+      "required_fix": "Revalidate all ancestor no-symlink conditions and required root UID/mode/identity before successful return; preserve partial-birth nonreuse and anchored writes."
+    }
+  ],
+  "evidence_index": {
+    "path": ".docs/implementation/evidence/p05/directory-allocator-review-01/index.json",
+    "files": 14,
+    "sha256": "38a900995ec4d44f597ccbe078f8ad219882186c52377996a82584c559719da9"
+  },
+  "limitations": [
+    "Dirty exact-source filesystem component only",
+    "EIO injections are deterministic real-filesystem syscall fault controls, not power loss or SIGKILL",
+    "PG registry/operator provisioning/rollback-domain/restore/fullstage unproven",
+    "Content450 HOLD unchanged"
+  ]
+}

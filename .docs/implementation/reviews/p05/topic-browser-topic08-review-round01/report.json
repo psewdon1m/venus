@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "status": "TOPIC08_STATIC_CORRECTION_PASS_ROOT_RUN_ACK_REQUIRED",
+  "scope": "INDEPENDENT_EXCLUDED_BROWSER_PRODUCER_ACK_BARRIER_CORRECTION",
+  "created_at": "2026-10-19T20:25:34.300726+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "author": "/root/p05_topics_ui",
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-browser/browser.mjs",
+      "sha256": "22604ce71910ea732e30f4c50353f816ee57c39e4cb3b626f6c7a677d318dafc"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/runtime.mjs",
+      "sha256": "3baf673f606e230d3fcb12d3bef6b7118c3c5daee57ed95564148671f57c2688"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/run.mjs",
+      "sha256": "05965e6cd5cbf466c5adb4db95f6a8e766ffb01808ab57f9318251f71cc67e5a"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/observations.mjs",
+      "sha256": "df50eca39925ffb05da14f7408580b1aad037c781903f42abd943bc44621ab13"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/frontend-validators.mjs",
+      "sha256": "d3ee1550fb63247e35f969ebb20646d5e9045ccd5ebf68e9783a290018a51d38"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/delivery-diagnostics.mjs",
+      "sha256": "b1cef15bf446e55a4d5d616267a4dd2dd2095ee5cbe7fda172ab936aff7ebd8f"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/DESIGN.md",
+      "sha256": "7d3cee9f26ff3f72340ffe3c5b8aab5ca228851eac9ca183dde42b1d888ead86"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/README.md",
+      "sha256": "335da2dad334970e27127cba752a0a0f60c2a51064e66ba97191504131f2841a"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/topic08-static-result.json",
+      "sha256": "73e7fc31eaf035da15ebaf181cd7c783c1da6326e32430d93342cdf23afdef71"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/lint-topic08.json",
+      "sha256": "b10d34597129ead64bb42216c07321b2dd86bcadff10bdc0f822d5ca85adf4e8"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/source-binding07.json",
+      "sha256": "3116582a13d647c47d6d19d936c5c44de718a0931dd54df7daf5921dc2a0dd19"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/binding07-finite-diff.json",
+      "sha256": "927867b7e6c56148986230c8386c810658fa74d033da39aa277ab66afd8dfdeb"
+    }
+  ],
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "image": "sha256:12e6253fee35b1adec1976d9edfb41fddb3fd39eedc3815158aa96c8814f5a5f",
+  "snapshot_files_verified": 52,
+  "closed_producer_finding": "BROWSER-PRODUCER-TOPIC-ACK-BARRIER",
+  "findings": [],
+  "checks": {
+    "own_interleaving_controls": 8,
+    "copied_author_control_reruns": {
+      "topic-ack08-results.json": 16,
+      "delivery-results.json": 15,
+      "metadata-corrections-results.json": 14
+    },
+    "finite_diff": {
+      "status": "PASS",
+      "exact_string_replacements": 2,
+      "unchanged_function_declarations": [
+        "save",
+        "cleanError",
+        "captureFailure",
+        "check",
+        "read",
+        "screenshot",
+        "click",
+        "cleared",
+        "actor",
+        "approval",
+        "create",
+        "joinRoom",
+        "ownTopics",
+        "configure",
+        "connected",
+        "start",
+        "coherentGame",
+        "ownUiRound",
+        "mutationClick",
+        "advance",
+        "seekPrivate",
+        "participants",
+        "invite",
+        "currentOfferTopics",
+        "acceptActionsUi",
+        "actionAndFinish",
+        "freshPrivate",
+        "restoreConnections"
+      ],
+      "unchanged_scenarios": 16,
+      "unchanged_other_modules": [
+        "runtime.mjs",
+        "run.mjs",
+        "observations.mjs",
+        "frontend-validators.mjs",
+        "delivery-diagnostics.mjs"
+      ]
+    },
+    "syntax": 6,
+    "allsource_harness_frontpins_equal_before_after": true
+  },
+  "scope_preservation": [
+    "Exactly two old topic accept clicks replaced by existing exact mutationClick respond_topic HTTP receipt barriers and same session/round/index minRev coherence reads.",
+    "Entire remaining browser file exact07; sixteen case bodies and28 otherfunction declarations unchanged; five othercodefiles exact07 including metadata06 and runnerbinding07.",
+    "Zero/first committed ack no-prompt and observer no-private tests preserved; fixed5000 final matcher,20-round bound, no seed/TTL/lease/product changes."
+  ],
+  "limits": [
+    "Actual root07 FAIL remains4PASS/05FAIL/11NOT_RUN; original actual cause stays qualified/inconclusive, no product/cache bug claim.",
+    "This corrects a confirmed producer race; no new actual browser test executed or future PASS predicted.",
+    "Root RUN authorization and independent actual evidence audit are separate. No full P05/human450 acceptance."
+  ],
+  "no_docker_browser_product_or_producer_writes": true,
+  "full_stage_pass": false
+}

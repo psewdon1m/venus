@@ -5,6 +5,7 @@ from pathlib import Path, PurePosixPath
 import tempfile
 import zipfile
 from p00_evidence import validate_gate
+from source_revisions import authorized_plan_revision, validate_source_revisions
 
 ARCHIVE_SHA = 'bf2b3e8b02acf1a2904b1614049b46ae9c8f5b3c244ef1856682257825babb0d'
 
@@ -31,9 +32,11 @@ def validate_p00_history(root):
         report = json.loads((frozen/registry['current_gate_report']['path']).read_text('utf-8'))
         errors = validate_gate(frozen, report, registry['independent_reviewers'])
         inputs = json.loads((frozen/report['inputs']['path']).read_text('utf-8'))['files']
+        errors.extend(validate_source_revisions(root))
         for name, expected in inputs.items():
             if name.startswith('.docs/'):
                 current = root/name
-                if not current.is_file() or hashlib.sha256(current.read_bytes()).hexdigest() != expected:
+                if ((not current.is_file() or hashlib.sha256(current.read_bytes()).hexdigest() != expected)
+                        and not authorized_plan_revision(root, name, expected)):
                     errors.append('P00 normative input changed without a new revision: '+name)
         return errors

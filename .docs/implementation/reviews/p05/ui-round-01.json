@@ -1,0 +1,190 @@
+{
+  "reviewer_id": "/root/p04_evidence_review",
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity_sha256": "ec8ffd81ff00bc5d36f42a634674033c845ac54010c8ac81965b05c8dd522f12",
+  "scopes": [
+    "frontend",
+    "harness_partial"
+  ],
+  "status": "CHANGES_REQUESTED",
+  "open_findings": [
+    "P05-UI-001",
+    "P05-UI-002"
+  ],
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-19T13:46:05.031137+00:00",
+  "profile": "standalone-local-pilot-v2",
+  "source_dirty": true,
+  "acceptance_scope": "EARLY_DIRTY_FRONTEND_CODE_REVIEW_ONLY",
+  "stage_accepted": false,
+  "report_path": ".docs/implementation/reviews/p05/ui-round-01.md",
+  "report_sha256": "cc3f3ceee109d0c9d920b2e60876fc6a8c2ae23c748f7aded00fee0221b4367f",
+  "findings": [
+    {
+      "id": "P05-UI-001",
+      "priority": "P1",
+      "file": "apps/web/src/games-panel.tsx",
+      "start": 20,
+      "end": 25,
+      "title": "Invalidate pending reads before publishing a newly prepared session",
+      "status": "OPEN",
+      "reproduction": "Hold GET/current for session A; select yes_but and successfully prepare B/availability; release old A response. Actual component changes B waiting back to A active and starts A private endpoint reads.",
+      "required_fix": "Use a monotonic room/member/session/read generation across prepare and mutations; an old current response must not replace an accepted newer session. Fence mutation completion and follow-up refresh against abandoned scope as appropriate.",
+      "expected_retest": "Deferred old /current resolved after successful prepare/replay/new session or safety mutation cannot replace the newer session or start stale private reads; retain same-session revision guard."
+    },
+    {
+      "id": "P05-UI-002",
+      "priority": "P1",
+      "file": "apps/web/src/games-panel.tsx",
+      "start": 43,
+      "end": 54,
+      "title": "Expire private retry closures and inputs, rather than only hiding their DOM",
+      "status": "OPEN",
+      "reproduction": "A chat POST fails SERVICE_UNAVAILABLE, saving retry closure with plaintext. Advance local clock past invitation/prompt/chat deadline. Private UI disappears but generic Retry remains and sends the same old text again (actual POST count2).",
+      "required_fix": "Bind retry to exact room/member/session/round/proposal/deadline and invalidate at expiry, clear, revoke, disconnect/auth change or session replacement. Physically drop private input/condition/payload closure and reject retry before invoking API once its scope/deadline is invalid. Keep safety lane independent.",
+      "expected_retest": "After timeout/revoke/different room/member/session, pending or failed chat/condition/accept operations do not retain an actionable stale private retry; expiry-triggered retry sends zero further old payloads."
+    }
+  ],
+  "inspected_inputs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "9a9daa15a5d7536ead8922f16fd0bbdb931daa77e0f10d5c13c4c6cbd0f984b8",
+      "bytes": 3299
+    },
+    {
+      "path": ".docs/adr/ADR-020-p05-quiet-public-pair.md",
+      "sha256": "4025ff60dbd5435f170cbf409c8d40150017a588afab4e49b6b5fd3afbeb8e23",
+      "bytes": 5475
+    },
+    {
+      "path": ".docs/adr/ADR-021-p05-safety-neutral-reset.md",
+      "sha256": "81c55012893705552c29143b82702cf86339174205102dac8acc1d6f8b6b27de",
+      "bytes": 4328
+    },
+    {
+      "path": ".docs/P05_PRIVATE_CHAT.md",
+      "sha256": "2b4317402111066af5aa2a8b0dc1f4e5785d6f0fcee43e3ad39e9f612ac3344b",
+      "bytes": 9720
+    },
+    {
+      "path": ".docs/P05_TESTING.md",
+      "sha256": "60ad1215e3a14cdde702fb145b60e5e256421c891ce9cfa41d9e2cbb6ef061e0",
+      "bytes": 7946
+    },
+    {
+      "path": ".docs/implementation/p05-work-map.json",
+      "sha256": "eb5b44371f1034cf3c6d5929372125da3a1183fdc04cfd0ccd965a8b5551d6a6",
+      "bytes": 31359
+    },
+    {
+      "path": "apps/web/src/games-panel.tsx",
+      "sha256": "0c82832bf25bf9917615264ae3875e3903e81d4da80aac2ea6ead56b65ec2e17",
+      "bytes": 19917
+    },
+    {
+      "path": "apps/web/src/game-state.ts",
+      "sha256": "5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46",
+      "bytes": 3472
+    },
+    {
+      "path": "apps/web/src/private-state.ts",
+      "sha256": "be22a3b41802f80dac4731588201fecd6359066094a8be26f80d5f12b298a4bc",
+      "bytes": 2573
+    },
+    {
+      "path": "apps/web/src/game-copy.ts",
+      "sha256": "f76e51efadc02e29c7cf0d4aa18c57275e9723c3552db95dbafcf5c472aed2fe",
+      "bytes": 13292
+    },
+    {
+      "path": "apps/web/src/api.ts",
+      "sha256": "d761808aca8273081a856cc5c1431cd91a709c375f80d1989c2b20efa4c4fcb3",
+      "bytes": 3174
+    },
+    {
+      "path": "apps/web/src/room-shell.tsx",
+      "sha256": "197c3688843df1d2adaf5c57b973f11c73395095f7c94b00b58453cf3c0d4727",
+      "bytes": 8500
+    },
+    {
+      "path": "apps/web/src/main.tsx",
+      "sha256": "0106dbc19960a31109ab51c9471999c49347b33f4a9df0eb8f1bb72ca105f787",
+      "bytes": 10218
+    },
+    {
+      "path": "apps/web/src/game-state.test.ts",
+      "sha256": "3121b9606f034dbbbfd06aa2434cae7dac5babb736447b41cd6592d4de259702",
+      "bytes": 2504
+    },
+    {
+      "path": "apps/web/src/private-state.test.ts",
+      "sha256": "96c0b1fd952c9c002e35c624f34d1c0e4d9bdeb757152886a3fe0f36a8a52888",
+      "bytes": 2225
+    },
+    {
+      "path": "tools/p05-browser.mjs",
+      "sha256": "ffe4d03f5940051073bf84eded51000fbaf3ddf4f769c8741892f9519524552b",
+      "bytes": 5554
+    },
+    {
+      "path": "tests/p05/runtime.mjs",
+      "sha256": "7926fa84dad1100dd5751047f8f3900c9403a3df41181f3a6cad722263e08d30",
+      "bytes": 6212
+    },
+    {
+      "path": "tests/p05/browser.mjs",
+      "sha256": "3e3b19880368e6299d5df76e54c5675cf5735a465278f30a9870b074eba797fb",
+      "bytes": 23993
+    },
+    {
+      "path": "infra/venus/Dockerfile.p05-tests",
+      "sha256": "b7743c772ae1481b5fd8c91d51e0902ed457922c14434c300b30f6ea315c2679",
+      "bytes": 970
+    },
+    {
+      "path": "infra/venus/compose.p05-tests.yml",
+      "sha256": "068f7c58e8254c6316a4456380b13658b200b87fd3678e9604532ba3c4cf422f",
+      "bytes": 1361
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/ui-round-01.adversarial.mjs",
+      "sha256": "6cb9e2da3dd3cc94b2b21a862d8cb0629e0ea5ef5b83a3952c0d0d72fa4c4969",
+      "bytes": 7304
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/ui-round-01.adversarial.json",
+      "sha256": "8d43ecf200b88aa9c4be51a159718ef16a2f52e8016525a9b8296d18d7619df4",
+      "bytes": 895
+    }
+  ],
+  "actual_adversarial_result": {
+    "scope": "ADVERSARIAL_ACTUAL_GAMES_PANEL_CODE_WITH_FAKE_REACT_HOOKS_AND_API_NOT_BROWSER_E2E",
+    "status": "REPRODUCED",
+    "cases": [
+      {
+        "id": "UI-001",
+        "reproduced": true,
+        "before": "[\"Yes, but…\",\" · \",\"Waiting for the host to start\"]",
+        "after": "[\"Questions\",\" · \",\"Game in progress\"]",
+        "calls": [
+          "/api/v1/rooms/room/game/current",
+          "/api/v1/rooms/room/game/prepare",
+          "/api/v1/rooms/room/game/availability",
+          "/api/v1/rooms/room/game/old/round/round-old/invitation",
+          "/api/v1/rooms/room/game/old/round/round-old/private",
+          "/api/v1/rooms/room/game/old/round/round-old/action-consent"
+        ]
+      },
+      {
+        "id": "UI-002",
+        "reproduced": true,
+        "private_ui_hidden_after_expiry": true,
+        "post_count_after_expired_retry": 2,
+        "synthetic_payload_retained": true
+      }
+    ]
+  },
+  "actual_exit_code": 0,
+  "browser_E2E_executed_by_reviewer": false,
+  "journal_path": ".history/agents/2026-10-19-p05-ui-review.md"
+}

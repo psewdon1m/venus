@@ -1,0 +1,52 @@
+# Passive private-batch observer â€” author checkpoint02, NOT_RUN
+
+This test-only module observes ordinary frontend GET responses and WebSocket metadata. It imports inertly, issues no HTTP, seeds no grants, never clicks/fills, and does not authorize an operation. Its exact source-derived TopicCache instance is an independent observer model. `cache_accept_observed:false` and `auth_generation_observed:false` remain false even when `ready:true`. Actual application acceptance/dispatch still requires the DOM result and the caller's exact protected request/response receipt. This module has not been used in an actual browser/Docker run by its author.
+
+## Integration contract
+
+```js
+import {createPrivateBatchObserver,isProtectedControl,isReadonlyProjection} from './private-batch-observer.mjs';
+const observer=createPrivateBatchObserver({sourceRoot:'/app'});
+// actor has page, room, id; attach BEFORE navigation so ordinary WS/current cycles are observed.
+observer.attach(actor);
+// Use an EXISTING native-monotonic phase deadline. Do not start another budget here.
+await observer.requireReady(actor,{
+ control:'advice-input', deadline:stage.deadline, focus:false,
+ expectedScope:{room:actor.room,member:actor.id,session:'exact session',round:'exact round',rev:42}
+});
+await actor.page.getByTestId('advice-input').fill('SYNTHETIC...');
+await observer.requireReady(actor,{
+ control:'advice-offer',deadline:stage.deadline,focus:false,
+ expectedScope:{room:actor.room,member:actor.id,session:'exact session',round:'exact round',rev:42},
+ intendedValue:{control:'advice-input',value:'SYNTHETIC...'}
+});
+// Register exact request/response waiter AFTER readiness, BEFORE exactly one click.
+// Keep the original exact request + receipt + same-scope revision checks.
+// Close browser context first to terminate outstanding body reads, then await observer.close(actor).
+```
+
+`expectedScope` supports room/member/session/round/rev, with exact equality for each supplied field. Omitted fields still require complete internal current/own/target/conversation/chat consistency; absence is not a route-derived fallback. The ordinary `lastGameView` actor value can use snake_case fields, but the caller explicitly translates these to this contract. The observer does not read lastGameView as a substitute for observed current responses. No auth generation is inferred.
+
+`intendedValue` has `control` testid and a string `value` (inputValue) or boolean `value` (isChecked). It is checked immediately before the final same-cycle readiness check. A mismatch throws OBSERVER_INTENDED_VALUE_CHANGED; the module never refills or toggles it. Guard before each fill, then guard with intendedValue before its single normal protected click. Public controls and safety/degraded/negative paths are not automatically guarded.
+
+Normal action allowlist: pair-accept/action-accept, game-truth/game-dare, game-condition-input/game-condition-submit, game-finish (only its caller-selected private use), topic-accept/topic-new/offer-topic-*, advice-input/advice-offer/advice-accept/advice-edit, pair-chat-input/pair-chat-send. Own protocol2 permission must be true. `isProtectedControl` is only this classification; it does not claim visibility or authorization.
+
+Explicit readonly projections: private-prompt/advice-text/pair-chat-messages. `isReadonlyProjection` classifies them separately; `requireReady` checks the exact full private batch and corresponding source-model payload plus actual visible/enabled DOM, with no invented action permission. A missing payload yields PROJECTION_UNAVAILABLE. Safety/refusals/revokes/OtherQuestion/Stop/Pause/Skip and degraded negative checks remain unwrapped, including advice-revoke and advice-decline.
+
+## Guarantees and limits
+
+Factory reads four SHA-pinned frontend source files and transpiles them in memory with the installed TypeScript package: exact validSelfActions(protocol2), validGame, validTopicTarget/Conversation/Chat and TopicCache. `proof` records source/compiled hashes. Runtime sourceRoot is `/app`; inert controls use repository cwd. Any source pin mismatch fails before attach. Root supplied current image pin proof separately at `.docs/implementation/evidence/p05/observer-image-pins-preflight-01/index.json` SHA68016ab14171d501d58bc9de2a3cf114c2701d1b413d4fd09ed4f082925a5827; this packet does not manufacture a new image inspection.
+
+Each latest self-actions GET request starts a cycle and invalidates the preceding accepted private batch. Readiness waits for same-scope own/target/conversation and, when active, chat completion. Optional known frontend 4xx conversation/chat refusals are handled as null, without treating a missing required target as ready. New current revisions, relevant private clear/game snapshot, WS close, hidden activation, body failures and late generations cannot revive the prior batch. Focus activation is a declared preparation method change: `focus:true` (default, for physical layout/native focus work) calls bringToFront only when not already focused, bounded by the existing phase deadline. `focus:false` (headless functional integration) NEVER brings a page forward and does NOT require document.hasFocus. Both modes inspect real document.visibilityState initially and again after model/DOM checks; a hidden document invalidates observer values and cannot be made ready by this option. Blur alone does not revoke source grants. No visibility/focus property is replaced or faked. Two simultaneous headless actors may each report their actual document visibility, but this does not claim that two physical windows share OS keyboard focus. Source bind identity/floors remain intact; same-phase first deadlines cannot be extended by focus or refresh. Browser closure terminates the observer.
+
+The exact source model includes own five-second lease, request-start elapsed time, server-relative target expiry anchored to own.server_time, conversation and ALL advice expiries anchored to conversation.server_time, opaque offer/advice IDs, phase floors and epoch/revision floors. It does not extend TTL or rewind the monotonic clock. Every action/projection must retain at least250ms (configurable250..1000ms) at the final check. All waits, DOM reads and focus share the supplied absolute deadline. No poll resets it. Internal source model may conservatively reject UI that has not produced a complete observed batch. `ready:true` is still not evidence of the application's cache.accept callback or an E2E SLO.
+
+At most16 observer body reads per actor are in flight (test option1..16); overflow refuses readiness and does not abort, throttle, delay, retry or mutate product requests. Bodies over1MiB are rejected. Raw DTOs are transient only, bounded to current cycle and in-flight observer work. `close` drops current/batch/model values after pending reads drain. No raw DTO, private text, cookies, CSRF/token or opaque scope IDs appear in returned snapshots. Internal exact scope/offer/advice identifiers are needed for comparisons but are not evidence fields.
+
+`snapshot(actor,{control,expectedScope,minRemainingMs})` is synchronous, redacted and returns reason/ready, cycle ids, SHA256 scope, lease remaining, pending/overflow/drop/body-error counters, parts/status booleans, and the explicit observer-only flags. Optional `onProjection(actor,{kind,value})` emits current or own *metadata* with exact scope ids/own permissions for an integrating test driver; it is transient caller state, must not be logged verbatim, and is not application-cache observation. Default callback is no-op. No raw content is emitted.
+
+Reasons include CLOSED/OVERFLOW/NO_LIVE_WS/NO_CURRENT/NO_CYCLE/BATCH_INCOMPLETE/SCOPE_MISMATCH/OWN_INVALID/TARGET_INVALID/CONVERSATION_INVALID/CHAT_INVALID/ROUTE_SCOPE_MISMATCH/MODEL_REJECTED/HTTP_REJECTED/EXPECTED_SCOPE_MISMATCH/LEASE_TOO_SHORT/CONTROL_FORBIDDEN/PROJECTION_UNAVAILABLE. DOM_NOT_READY and DOCUMENT_HIDDEN remain pending within the same deadline. `requireReady` throws bounded OBSERVER_* enum messages; deadline errors attach only a redacted `readiness` snapshot. Caller must keep its failure evidence redacted and distinguish NO_DISPATCH from an HTTP refusal.
+
+34 finite controls use inert transport, DOM and native clock injection with the exact source model. They cover complete/partial/stale/ABA-like revisions, phases, own dates/recipient, ALL advice expiry, source server anchors, focus preservation, readonly payloads without action permission, intended values, observer work caps and late/close fences. They do not establish actual browser layout, permission delivery, 459-cell PASS, functional case05 PASS or P05 acceptance. Independent review and separate root RUN ACK remain required.
+
+Checkpoint01 remains immutable at `.artifacts/p05-private-batch-observer01/` (INDEX eb34a04e6fd680300c6d866fe2f87ce99e71d01e6d7318e65c119faacfdc93c5). Checkpoint02 adds only optional focus control and a real visibility recheck plus three inert controls. `change-from01.diff` preserves the exact author code delta; no old functional producer or included source changed.

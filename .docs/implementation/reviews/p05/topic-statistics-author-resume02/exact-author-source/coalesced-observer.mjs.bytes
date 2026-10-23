@@ -1,0 +1,21 @@
+/** Real WS arrivals + source-derived fixed poll barrier + mirrored formatter.
+ * This is a fixture scheduler proof; natural timer/network timing is not claimed.
+ */
+import assert from 'node:assert/strict';
+import {setImmediate as tick} from 'node:timers/promises';
+import {setTimeout,clearTimeout} from 'node:timers';
+import {makeWireRenderers} from '../p05-topic-measurements-method06/wire-renderers.mjs';
+export function coalescedObserver({session,h,f,socket,polls,onRaw,guard}){
+ let label='start',lastRevision=-1,commands=0,frames=[],closed=false;const actual=[],modeled=[],observerId=socket.actorId;
+ assert(observerId&&f.members.some(m=>m.id===observerId));socket.on('close',()=>{closed=true;});socket.on('message',raw=>{try{const v=JSON.parse(raw);if(v.stream==='room'||v.stream==='game')frames.push(raw.toString());else onRaw({kind:'actual-WS-private-or-control',actor:observerId,label,raw:raw.toString()});}catch{closed=true;}});
+ const modelSocket={readyState:1,send:raw=>{const v=JSON.parse(raw);modeled.push({label,channel:v.stream,raw});}},grant={roomId:f.room,memberId:observerId},render=makeWireRenderers({now:()=>session.model.now,dispatchGame:async(_g,emit)=>emit(await session.model.gameView(),Number(session.model.room.rev))});
+ async function drain(){// Ping/pong is a real in-order WS barrier, not a timer guess.
+  assert(!closed);await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{socket.off('pong',done);reject(Error('ACTUAL_WS_BARRIER_TIMEOUT'));},3000);function done(){clearTimeout(timer);resolve();}socket.once('pong',done);socket.ping();});await tick();assert(!closed);
+ }
+ async function barrier(){guard();await polls.barrier();await drain();const room=await session.model.roomView(),changed=room.room_rev>lastRevision;if(changed){lastRevision=room.room_rev;render.send(modelSocket,grant,room);await render.sendGame(modelSocket,grant,{room,privateEvents:[]},true);}const expected=modeled.splice(0),arrived=frames.splice(0);assert.equal(arrived.length,expected.length,'COALESCED_ACTUAL_FRAME_COUNT');for(let i=0;i<arrived.length;i++){const a=JSON.parse(arrived[i]),m=JSON.parse(expected[i].raw);session.normal.equal(a,m);const row={label,channel:a.stream,raw:arrived[i]};actual.push(row);onRaw({kind:'actual-WS-public',actor:observerId,...row});}return arrived.length;}
+ return{async observe(_s,next,clock){guard();label=next;session.setLabel(next);if(next==='clock_tick'){onRaw({kind:'fixture-clock',clock});return;}
+  for(const[channel,path,value]of [['room',h.roomPath(f),()=>session.model.roomView()],['game',h.base(f)+'/current',()=>session.model.gameView()]]){const r=await h.call(f.members.find(m=>m.id===observerId),path);assert.equal(r.status,200);const expected=await value();session.normal.equal(r.body,expected);const row={label,channel,raw:r.raw};actual.push(row);onRaw({kind:'actual-HTTP-public',actor:observerId,status:r.status,...row});}
+  // A fixed number of observations, not outcomes/card/private data, selects polls.
+  commands++;if(commands===1||commands%3===0||next==='session_complete')await barrier();
+ },async finish(){await barrier();return{status:'ACTUAL_FIXTURE_COALESCED_PARITY_COMPLETE',public_observations:actual.length,barriers_rule:'first, every third observation, session_complete, final; independent of outcome',natural_production_timing_proof:false};}};
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "file": "factory.mjs",
+    "before": "checkedConfig(config);verifyCompiled(binding.compiled_files);",
+    "after": "checkedConfig(config);const compiled=binding.per_image_compiled[config.phase==='B2'?'B':'A'];verifyCompiled(compiled);"
+  },
+  {
+    "file": "factory.mjs",
+    "before": "binding.compiled_files['apps/api/dist/'+n+'.js']",
+    "after": "compiled['apps/api/dist/'+n+'.js']"
+  },
+  {
+    "file": "factory.mjs",
+    "before": "let text=absolute(raw('tests/p05-topic-lifecycle/harness.mjs'));",
+    "after": "let text=absolute(raw('tests/p05-topic-lifecycle/harness.mjs'));\n text=replace(text,\"import pg from 'pg';\",\"import pg from '/app/node_modules/pg/lib/index.js';\",proof);\n text=replace(text,'enabled:true,privateTextChat:true',\"enabled:config.phase!=='B2',privateTextChat:true\",proof);"
+  },
+  {
+    "file": "image-modules.mjs",
+    "before": "actualImageMap(binding){verifyCompiled(binding.compiled_files);const files={...binding.compiled_files};",
+    "after": "actualImageMap(binding,phase){assert(['A1','B2','A3'].includes(phase));const compiled=binding.per_image_compiled[phase==='B2'?'B':'A'];verifyCompiled(compiled);const files={...compiled};"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "activePrivate,serialize",
+    "after": "activePrivate,serialize,quiesce,blockedStarts"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "actualImageMap(binding);",
+    "after": "actualImageMap(binding,phase);"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "untouched=restore(phase==='B2'?previous.D:previous.E);baseline=phase==='B2'?previous.baseline.D:previous.baseline.E;report.live_before_boot=await obs.liveUntouched(h.pool,h.keys,untouched,h.time());mark('untouched_live');",
+    "after": "untouched=restore(previous.D);baseline=previous.baseline.D;report.quiesced_before_boot=await obs.revokedUntouched(h.pool,h.keys,untouched,baseline);assert.equal((await obs.storedGame(h.pool,h.keys,untouched)).game.state,'aborted');mark('quiesced_before_boot');"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "publicWrite('phase-A1-ready.json',{status:'READY_FOR_STOP',phase});",
+    "after": "publicWrite('phase-A1-narrowed.json',{status:'READY_FOR_QUIESCE',phase});await command('QUIESCE');report.quiesce=await quiesce(h,obs,narrowed);privateWrite('state-A1-quiesced.json',narrowed);publicWrite('phase-A1-ready.json',{status:'QUIESCED_READY_FOR_STOP',phase});"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "previous=phase==='A1'?null:JSON.parse(readFileSync('/private/state-'+(phase==='B2'?'A1-final':'B2-final')+'.json'));",
+    "after": "previous=phase==='A1'?null:JSON.parse(readFileSync('/private/state-'+(phase==='B2'?'A1-quiesced':'B2-quiesced')+'.json'));"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "if(phase==='B2'){const E=await activePrivate(h);assert.equal(sha(h.source.map.pins),sha(previous.sourcePins));const next={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};privateWrite('state-B2-final.json',next);report.new_E={fresh_bilateral_private_positive:true,same_synthetic_pins:true,live_before_switch:next.baseline.E};publicWrite('phase-B2-ready.json',{status:'READY_FOR_BROWSER_AND_STOP',phase});}",
+    "after": "if(phase==='B2'){report.starts_off=await blockedStarts(h,obs,previous,effects);assert.equal(sha(h.source.map.pins),sha(previous.sourcePins));privateWrite('state-B2-final.json',previous);publicWrite('phase-B2-ui-ready.json',{status:'STARTS_OFF_READY_FOR_BROWSER',phase});await command('QUIESCE');report.quiesce=await quiesce(h,obs,previous,{already:true});privateWrite('state-B2-quiesced.json',previous);publicWrite('phase-B2-ready.json',{status:'QUIESCED_READY_FOR_STOP',phase});}"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "else{const E=restore(previous.E);const stop=await h.call(E.host,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}",
+    "after": "else{const E=await activePrivate(h);assert.equal(sha(h.source.map.pins),sha(previous.sourcePins));const fresh={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};privateWrite('state-A3-positive.json',fresh);report.new_A3={fresh_bilateral_private_positive:true,same_synthetic_pins:true};publicWrite('phase-A3-ui-ready.json',{status:'FRESH_CURRENT_PRIVATE_READY',phase});await command('QUIESCE');report.quiesce=await quiesce(h,obs,fresh);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'QUIESCED_READY_FOR_STOP',phase});}"
+  },
+  {
+    "file": "api-child.mjs",
+    "before": "phase==='B2'?previous.D:previous.E",
+    "after": "previous.D"
+  },
+  {
+    "file": "scenarios.mjs",
+    "before": "assert([404,409].includes(response.status));assert(['ROUND_STALE'",
+    "after": "assert([404,409].includes(response.status)||response.status===503&&response.body.code==='TOPIC_GAMES_DISABLED');assert(response.status===503&&response.body.code==='TOPIC_GAMES_DISABLED'||['ROUND_STALE'"
+  }
+]

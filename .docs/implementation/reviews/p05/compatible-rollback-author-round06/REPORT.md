@@ -1,0 +1,9 @@
+# OCI06 minimal dense own revision oracle correction
+
+AUTHOR_CORRECTIVE06_READY_FOR_INDEPENDENT_REPEAT_NOT_RUN. Resolves independent OCI05-VIEW-DENSE-METADATA-001, subject to nonauthor acceptance. The sole executable change versus frozen05 is two Number.isSafeInteger && >=0 assertions for own.game_rev/room_rev. This follows the existing dense public DTO contract; zero remains allowed, strings/objects/arrays/null/NaN/fraction/unsafe/negative/infinity are rejected. Positive fixture now uses numbers3/4. A malformed known metadata slot cannot be labeled safe own. All scope/lease/private-null/false-grant/B3exact404 checks and original14 remain unchanged.
+
+The exact new35response controls fail on immutable05 (exit1) and pass06 (exit0), syntax/lint0. This is finite oracle sensitivity, not an actual API leak or actual14PASS.22other method modules are byteexact02/05. Binding9/full76A/B/sourcef427/1835/root276+272maps from05 are unchanged, carried by hashes, not rerun. QRB_BOUND_ONLY_1/476MiB within512/900s/10GiB/strong liveD/E/exportfault/ownership/cleanup unchanged. No Docker, browser, DB, build, ACK or functionalRUN.
+
+This is a HISTORICAL A3f427 imagece07/genuineB3ed18 image367 binding. Bothengine3/ROOM2 and7SQL match, but f427 has known TDprechoice defect corrected only by separately accepted source02 (d4094a71). This producer does not become current A4 nor ordinary470pilot rollback by fixing an oracle. Final genuine A4/B4 must share reviewed pilot provider/map/grant, and source/image/operational binding must be newly reviewed before root ACK. Functional synthetic flagON drill stays separate from operational quiesce/startsOFF fallback. RootACKtemplate remainsfalse/null. Do not silently substitute final image/source or rewrite05FAIL.
+
+Writes COMPLETE.

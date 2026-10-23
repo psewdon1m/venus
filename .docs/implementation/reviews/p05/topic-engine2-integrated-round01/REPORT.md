@@ -1,0 +1,33 @@
+# Integrated engine2/source compatibility review
+
+**INTEGRATED_SOURCE_COMPONENT_PREFLIGHT_PASS.** Root author; independent reviewer `/root/p05_topic_games_review`. No new findings in the reviewed included source. TG-AR-001 source repair and ADR024-D02 prior guard are verified at this source boundary; affected actual runtime/PG/HTTP/WS/browser/restart/restore/measurement gates remain pending. This is not fullP05, approved content release or clean-source acceptance.
+
+## Exact binding
+
+Included identity **ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571**,1811 files. Freeze index4fd48212751f56519258c2261ccf92c651c0002763ea031a6ae8c7259e5c8dbc and both indexed artifacts verified. ZIP5a622f20a18c427cde591b0f0f78a61f52b892b7dec3fff5ff14833d532b82af has1811 unique entries, every byte hash matches the full before/current/after inventory maps. Exact source copies and isolated compile inputs are retained in this new packet; no historical accepted directory was overwritten.
+
+Included engine SHAef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756 and TopicGames SHA0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a match the prospective sources reviewed earlier. Tests are freshly repeated from the **included ZIP copies**, not inherited prospective results. New delta versus895 is3added/5modified/no removed files: engine/API/test changes, compatibility test, ADR/currentindex/workmap/source-revision record. Seven trace file hashes match the archive. ADR-024 is registered; work-map preserves pending actual/browser/measurement/restore scope and owner450HOLD.
+
+## Independent source executions
+
+Preparation exit0; three independent probe scripts exit0:
+
+- Original fixed16 pure full-selector diagnostic inputs:16 no-repeat controls,0 violations,0 missing. First empty opportunity followed by own allow expansion cannot erase the current-session previous private pair; original failedsource packet remains immutable.
+-14 additional selector controls: exact engine2/old snapshot rejection; full topic union/both-actor permissions/exclusions/missing actor; validated selected/disclosed/declined/replaced same-family prior context clones; pair-scoped and cardID blocking; baseline alternatives2/effective0; N2 onlypair repeats justified;40 exact public projections independent of private prior/allow settings.
+-42 boot/prior controls with real copied Keyring/AAD crypto and explicit SQL/transaction/snapshotreader doubles: unsupported/corrupt/malformed header active+paused; currentround0 before skip; supported pairs revoke oldacks with featureoff; corruptround/missinground/DBerror handling; terminal/waiting transient cleanup; preserved snapshot/history model; missing key/nonce/data conservative denial; prior missing/unsupported/capacity/filter/resequence; exact scoped OR guards and six altered-query negatives; both refined pack/completed marker cases select then503, clean draft can skip.
+
+Source-only helper export was appended to the own compiled engine namespace to inspect its exact predicate; selector/boot/prior bodies were unchanged. Context-clone semantic tests here are not cross-mode runtime semantic proof. Prior SQL shape and relational cases are static/doubled; they do not execute PostgreSQL or prove its locks/rollback. Transaction rollback and history preservation are explicit unit models; no actual restore has run in this review.
+
+## Root units and retained failed attempt
+
+Host packet index602b68cb612c1004497062f712b8bec6e5fd8087279f2d2bba5e71b025d0747c: all6 files verified, full maps before/after matchef009. Root observed the same handle38580 terminal0; raw summary confirms **57 files,760 PASS,208 platformSKIP**. Types and scopedlint observed exit0. Lint produced no output/file via Tee; archive explicitly stores empty bytes and records the first pre-index FileNotFoundError/resume. Empty lint bytes alone are not treated as an exit-code proof; provenance is root's observed result/receipt. Host expected schema-negative ERROR lines are not reclassified as failed aggregate tests.
+
+Failed unit-fixture packet index7baeb9a1f096cfe4b2861b6b25e1188d7af818352e2f87643c03b40d446d77af: all7 files verified. Initial22FAIL/45PASS exit1 is retained; relevant integrated engine/API/compatibility source pins match, original test source matches895 ZIP. Whole initial included identity is explicitly NOT_FROZEN/NOT_CLAIMED, and stderr stacks were tool-visible rather than redirected. Subsequent67PASS/exit0 precedes the two added AR property tests; no counts are merged into final760.
+
+The positive unit helper now derives the exact literal `'TOPIC-GOLDEN-'+TOPIC_ALGORITHM`; a legal fixed20round schedule may contain no private opportunity. This is a prospective versioned unit fixture, not reselection of statistical/diagnostic seeds. The old failing fixture remains visible. Alloriginal16 independent diagnostic literals are unchanged. New property unit explicitly requires checked>0 and emptyTransitions>0 over its fixed16grid; N2 requires>1 private opportunity, preventing a vacuous anti-repeat PASS. Its semantic/fullunion alternative oracle is separate from the production helper. Compatibility14 tests check source-unavailable boot, unsupported/corrupt/terminal snapshots and missing prior; minimal SQL/row fixtures are labelled units and supplemented by the own42 controls, not sold as actual server composition.
+
+## Compatibility and remaining gates
+
+Engine2 uses complete current-session rounds for previouspair and the effective unused filter before private recovery; prior-content fallback is a heuristic. Room semantic history remains separate. Oldrevision snapshots are not rewritten/reinterpreted. Boot method is source-independent when compatible prerequisites reach it; ordinary missing profile/catalog can still refuse before the method. That early no-listen outcome is not successful cleanup. Snapshots/history/external roots are preserved during quiesce, and observable started-prior corruption denies new same-room starts. No blanket arbitrary DB tamper detector or offline recovery command is claimed.
+
+ADR exit/close/rollback routes apply only through compatible available runtime; old private grants cannot revive. Approved registry0/450HOLD remain unchanged. New actual proofs must bind ef009 or a subsequently frozen revision and independently accepted producers; old895 Games/lifecycle/runtime/chat/WS/browser PASS is historical. Real restart and actual restore are separate from method/unit controls. Final statistical scripts/support/canaries/cleancommit and fullP05 gate remain outstanding. No product write or Docker run was made by this reviewer.

@@ -1,0 +1,3 @@
+# A7 Games20 actual integration
+
+20/20 PASS exit0, cleanupcompleted, immutable materialized sourceb2100207/1846 before/after equal. Exactimage9f5a417c bound284source/compiled/UI/7SQL/PG bytepins. Current fixturefirstprivateYBcondition precedes topic; TG07 verifies too-early edit409 has no game/content/offer mutation and retains fresh topic/action and oldack rejection checks. API delta independently accepted3463a581111+6; operationalc9e7df2e accepted exactsource/fixture/wrapper pins. NativePG run has explicit isolated synthetic source/clockfixture seams; this is not real470ordinaryserver/browser/fullmatrix/M3/rollback/clean-source or stagePASS. Actualindependent auditpending. A4ordinary03HTTP500 investigation is separate and unclosed.

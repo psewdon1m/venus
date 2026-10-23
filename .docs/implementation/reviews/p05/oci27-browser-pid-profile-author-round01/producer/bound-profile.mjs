@@ -1,0 +1,77 @@
+/** One-shot QRB boundary: hard tmpfs limits, finite phases, no advancing file lease. */
+import assert from 'node:assert/strict';
+import {execFile} from 'node:child_process';
+import {promisify,types} from 'node:util';
+import {fileURLToPath} from 'node:url';
+import {statfsSync,mkdirSync,existsSync,openSync,writeSync,fsyncSync,closeSync} from 'node:fs';
+import {join} from 'node:path';
+import {performance} from 'node:perf_hooks';
+const exec=promisify(execFile),MiB=1024**2;
+export const profile=Object.freeze({revision:'QRB_BOUND_ONLY_2_BROWSER_PIDS256',whole_ms:900000,work_ms:780000,cap_mib:512,host_cap_mib:96,native_reserved_mib:380,conservative_combined_mib:476,reserve_gib:10,host:{inputs:16,evidence:64,other:16},native:{db_data:240,db_shm:8,db_tmp_run:4,authority:32,private:8,evidence:64,simultaneous_scratch:24},RSS_mib:{api:768,db:512,tls:128,browser:1536,keeper:64,helper:128},archive_copies:0,PID_limits:{browser:256,other_roles:128,native_free:32}});
+const allowedErrors=new Set(['ERR_MODULE_NOT_FOUND','ERR_PACKAGE_PATH_NOT_EXPORTED','ENOENT','EACCES','EPERM','ENOSPC','ETIMEDOUT','ERR_ASSERTION']);
+const errorClasses=[[assert.AssertionError,'AssertionError'],[TypeError,'TypeError'],[RangeError,'RangeError'],[Error,'Error']];
+const nativeStackGetter=Object.getOwnPropertyDescriptor(new Error(),'stack')?.get;
+const preparer=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');
+const nodePreparer=preparer&&'value'in preparer&&typeof preparer.value==='function'&&Function.prototype.toString.call(preparer.value).replace(/\r\n/g,'\n')==='function ErrorPrepareStackTrace(error, trace) {\n  return internalPrepareStackTrace(error, trace);\n}'?preparer.value:undefined;
+const producerModules=['api-child','scenarios','phase-terminal','bound-profile','factory','host-runner','http-client','image-modules','resource-lease','source-proof','ipc-policy','browser-child'];
+const generatedModules=['observations','replay-observations','harness','fixtures','context-fixture','p03-fixtures'];
+const sourceLocations=[...producerModules.map(source_module=>({source_module,paths:[new URL('./'+source_module+'.mjs',import.meta.url)].flatMap(u=>[u.href,fileURLToPath(u).replace(/\\/g,'/')])})),...generatedModules.map(source_module=>({source_module,paths:['A1','B2','A3'].flatMap(phase=>['/private/modules-'+phase+'/'+source_module+'.mjs','file:///private/modules-'+phase+'/'+source_module+'.mjs'])}))];
+function safePrototypeChain(value){if(!value||typeof value!=='object'||types.isProxy(value))return false;let current=value;for(let depth=0;current&&depth<8;depth++){if(types.isProxy(current))return false;current=Object.getPrototypeOf(current);}return current===null;}
+function data(value,key){try{const d=Object.getOwnPropertyDescriptor(value,key);return d&&'value'in d?d.value:undefined;}catch{return undefined;}}
+function boundedNativeStack(error){
+ try{
+  const d=Object.getOwnPropertyDescriptor(error,'stack');let stack;
+  if(d&&'value'in d)stack=d.value;
+  else if(d?.get&&d.get===nativeStackGetter){
+   const hook=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');
+   if(hook&&(!('value'in hook)||!nodePreparer||hook.value!==nodePreparer))return;
+   let redact;
+   for(const key of ['name','message']){
+    let current=error,found=false;
+    for(let depth=0;current&&depth<8;depth++,current=Object.getPrototypeOf(current)){
+     const own=Object.getOwnPropertyDescriptor(current,key);if(!own)continue;
+     if(!('value'in own)||typeof own.value!=='string')return;
+     if(key==='message'&&own.value.length>2048){
+      // Format only the original native callsites; never format a large private
+      // assertion message. Restore its exact own descriptor synchronously.
+      if(current!==error||!own.configurable&&!own.writable)return;
+      redact=own;
+     }else if(own.value.length>2048||own.value.includes('\0'))return;
+     found=true;break;
+    }
+    if(!found)return;
+   }
+   if(redact){
+    Object.defineProperty(error,'message',{...redact,value:'[redacted native diagnostic]'});
+    try{stack=d.get.call(error);}finally{Object.defineProperty(error,'message',redact);}
+   }else stack=d.get.call(error);
+  }
+  return typeof stack==='string'&&stack.length<=16384&&Buffer.byteLength(stack,'utf8')<=16384?stack:undefined;
+ }catch{return undefined;}
+}
+function nativeLocation(error){const stack=boundedNativeStack(error);if(!stack)return;for(const raw of stack.split('\n').filter(line=>line.startsWith('    at ')).slice(0,16)){const line=raw.replace(/\\/g,'/');if(line.length>1024||/[\r\0]/.test(line))continue;for(const module of sourceLocations)for(const path of module.paths){const at=line.lastIndexOf(path);if(at<0)continue;const prefix=line.slice(0,at),parenthesized=prefix.endsWith(' (');if(prefix!=='    at '&&prefix!=='    at async '&&!parenthesized)continue;const match=/^:([1-9]\d{0,6}):([1-9]\d{0,5})(\)?)$/.exec(line.slice(at+path.length));if(!match||Boolean(match[3])!==parenthesized)continue;const source_line=Number(match[1]),source_column=Number(match[2]);if(source_line<=1000000&&source_column<=100000)return{source_module:module.source_module,source_line,source_column};}}}
+/** Failure diagnostic only: no raw message/stack/path/value is ever projected. */
+export function safeError(e,phase){const result={name:'UNKNOWN',code:null,phase:['setup','A1','B2','A3','cleanup'].includes(phase)?phase:'UNKNOWN_PHASE'};try{if(!safePrototypeChain(e)||!types.isNativeError(e))return result;for(const[constructor,name]of errorClasses)if(e instanceof constructor){result.name=name;break;}const code=data(e,'code');if(typeof code==='string'&&allowedErrors.has(code))result.code=code;return{...result,...nativeLocation(e)};}catch{return result;}}
+export async function boundedDocker(args,timeout=15000,maxBuffer=1024*1024){return exec('docker',args,{windowsHide:true,timeout,maxBuffer,encoding:'utf8'});}
+export class BoundProfile{
+ constructor(plan){const pre=statfsSync(plan.workspace_root,{bigint:true});assert(pre.bavail*pre.bsize>=10n*1024n**3n+512n*1024n**2n,'QRB_INITIAL_HOST_RESERVE');this.plan=plan;this.started=performance.now();this.phase=null;this.keeper=null;this.samples=[];this.peakHost=0;assert(!existsSync(plan.output_root));mkdirSync(plan.output_root,{recursive:false});mkdirSync(join(plan.output_root,'control'));this.deadlineEpoch=Date.now()+profile.whole_ms;this.terminal=join(plan.output_root,'TERMINAL.json');const fd=openSync(this.terminal,'wx',0o600);try{const initial=Buffer.alloc(16384,32);Buffer.from(JSON.stringify({status:'RUNNING',profile:'QRB_BOUND_ONLY_2_BROWSER_PIDS256',owner:plan.owner,cleanup:'NOT_STARTED'})+'\n').copy(initial);writeSync(fd,initial);fsyncSync(fd);}finally{closeSync(fd);}this.finished=null;this.failure=null;this.phaseStarted=this.started;this.windows=new Map([['setup',this.started]]);this.peakRSS=0;}
+ remaining(){return Math.max(1,profile.whole_ms-(performance.now()-this.started));}
+ setKeeper(name){assert(name===this.plan.project+'-keeper');this.keeper=name;}
+ async nativeFree(){const script="const s=require('fs').statfsSync('/app',{bigint:true});console.log(String(s.bavail*s.bsize));";let stdout;
+  if(this.keeper)({stdout}=await boundedDocker(['exec',this.keeper,'node','-e',script],Math.min(15000,this.remaining()),4096));else{const name=this.plan.project+'-native-free',args=['create','--pull=never','--name',name,'--label','com.venus.oci.owner='+this.plan.owner,'--label','com.venus.oci.project='+this.plan.project,'--label','com.venus.oci.role=native-free','--network','none','--ipc','none','--read-only','--user','1000:1000','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','64m','--memory-swap','64m','--cpus','0.25','--pids-limit','32','--log-driver','none','--entrypoint','node',this.plan.images.A,'-e',script];let created=false;
+   try{await boundedDocker(args,Math.min(15000,this.remaining()),4096);created=true;const inspected=await boundedDocker(['inspect',name],Math.min(15000,this.remaining()),65536),[r]=JSON.parse(inspected.stdout);assert.equal(r.Name,'/'+name);assert.equal(r.Config.Labels['com.venus.oci.owner'],this.plan.owner);assert.equal(r.Config.Labels['com.venus.oci.role'],'native-free');assert.equal(r.Image,this.plan.images.A);assert.equal(r.Config.User,'1000:1000');assert.equal(r.HostConfig.NetworkMode,'none');assert.equal(r.HostConfig.IpcMode,'none');assert.equal(r.HostConfig.ReadonlyRootfs,true);assert.equal(r.HostConfig.Memory,64*MiB);assert.equal(r.HostConfig.MemorySwap,64*MiB);assert.equal(r.HostConfig.NanoCpus,250000000);assert.equal(r.HostConfig.PidsLimit,32);assert.equal(r.HostConfig.LogConfig.Type,'none');assert.equal(r.Mounts.length,0);assert.deepEqual(r.HostConfig.CapDrop,['ALL']);assert((r.HostConfig.SecurityOpt??[]).includes('no-new-privileges:true'));({stdout}=await boundedDocker(['start','-a',name],Math.min(15000,this.remaining()),4096));}
+   finally{if(created){const inspected=await boundedDocker(['inspect',name],Math.min(15000,this.remaining()),65536),[r]=JSON.parse(inspected.stdout);assert.equal(r.Name,'/'+name);assert.equal(r.Config.Labels['com.venus.oci.owner'],this.plan.owner);assert.equal(r.Image,this.plan.images.A);await boundedDocker(['rm','-f',name],Math.min(15000,this.remaining()),4096);}}
+  }assert(/^\d+\s*$/.test(stdout));return BigInt(stdout.trim());
+ }
+
+ async allocated(){const {stdout}=await exec(join(this.plan.workspace_root,'.venv/Scripts/python.exe'),['-B',join(this.plan.producer,'allocated-tree07.py'),'--root='+this.plan.output_root],{windowsHide:true,timeout:Math.min(15000,this.remaining()),maxBuffer:2*MiB,encoding:'utf8'});const r=JSON.parse(stdout);assert.equal(r.status,'READ_ONLY_ALLOCATED_TREE');assert(Number.isSafeInteger(r.allocated_bytes)&&r.allocated_bytes>=0);return r;}
+ async beforeMutation({owner,phase,next_bytes=0,output_path=null}){assert.equal(owner,this.plan.owner);assert(['setup','A1','B2','A3','cleanup'].includes(phase));assert(Number.isSafeInteger(next_bytes)&&next_bytes>=0&&next_bytes<=16*MiB);assert(performance.now()-this.started<profile.whole_ms,'QRB_WHOLE_WALL_LIMIT');if(!this.windows.has(phase))this.windows.set(phase,performance.now());assert(performance.now()-this.windows.get(phase)<(phase==='cleanup'?60000:120000),'QRB_PHASE_WALL_LIMIT');try{assert.equal(owner,this.plan.owner);assert(['setup','A1','B2','A3','cleanup'].includes(phase));assert(Number.isSafeInteger(next_bytes)&&next_bytes>=0&&next_bytes<=16*MiB);assert(performance.now()-this.started<(phase==='cleanup'?profile.whole_ms:profile.work_ms),'QRB_WALL_LIMIT');const rss=process.memoryUsage().rss;this.peakRSS=Math.max(this.peakRSS,rss);assert(rss<=256*MiB,'QRB_HOST_CONTROLLER_RSS');const host=statfsSync(this.plan.workspace_root,{bigint:true});assert(host.bavail*host.bsize>=10n*1024n**3n+512n*1024n**2n,'QRB_HOST_RESERVE');
+  const r=await this.allocated();assert(r.allocated_bytes+next_bytes+MiB<=96*MiB,'QRB_HOST96');assert(380*MiB+r.allocated_bytes+next_bytes+MiB<=512*MiB,'QRB_TOTAL512');this.peakHost=Math.max(this.peakHost,r.allocated_bytes);if(output_path){const category=output_path.startsWith('inputs/')?'inputs':output_path.startsWith('evidence/')?'evidence':'other';const count=r.records.filter(x=>category==='other'?!x.path.startsWith('inputs/')&&!x.path.startsWith('evidence/')&&!['inputs','evidence'].includes(x.path):x.path===category||x.path.startsWith(category+'/')).reduce((n,x)=>n+x.allocated_bytes,0);assert(count+next_bytes+MiB<=profile.host[category]*MiB,'QRB_HOST_PARTITION');}
+  if(this.phase!==phase){const native=await this.nativeFree();assert(native>=10n*1024n**3n+512n*1024n**2n,'QRB_NATIVE_RESERVE');this.samples.push({phase,host_free_bytes:String(host.bavail*host.bsize),native_free_bytes:String(native),host_allocated_bytes:r.allocated_bytes,elapsed_ms:performance.now()-this.started});this.phase=phase;this.phaseStarted=performance.now();}
+ }catch(error){this.failure??=safeError(error,phase);if(phase==='cleanup'&&next_bytes===0)return;throw error;}
+ }
+ async terminalReport(){return {status:this.failure?'NOT_ACCEPTED_BOUND_PROFILE':'PASS_QRB_BOUND_ONLY_PROFILE',failure:this.failure,owner:this.plan.owner,project:this.plan.project,profile,phase_preflights:this.samples,host_allocated_peak:this.peakHost,host_controller_peak_sampled_rss:this.peakRSS,host_controller_RSS_scope:'Sampled256MiB stop threshold; not an OS cgroup hard limit. CLI requires max-old-space-size192; child scans are bounded input/time.',native_quota_accounting:'Sum of inspected hard tmpfs/SHM limits, not actual RSS',advancing_2s_guard:false,whole_elapsed_ms:performance.now()-this.started};}
+ terminalWrite(value){const data=Buffer.from(JSON.stringify(value)+'\n');if(data.length>=16384)return false;const padded=Buffer.alloc(16384,32);data.copy(padded);let fd;try{fd=openSync(this.terminal,'r+');writeSync(fd,padded,0,padded.length,0);fsyncSync(fd);return true;}catch{return false;}finally{if(fd!==undefined)try{closeSync(fd);}catch{/* Terminal stdout remains available. */}}}
+ async finish(value){this.finished=value;}
+ async stop(){return {profile:'QRB_BOUND_ONLY_2_BROWSER_PIDS256',status:'BOUNDARY_FINISHED',elapsed_ms:performance.now()-this.started,finished:this.finished};}
+}

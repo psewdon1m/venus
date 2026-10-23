@@ -1,0 +1,57 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'function classifyPair(base,variant,{changed,effective}){\r\n' +
++   " const sequence=r=>r.raw_rounds.map(x=>({round_id:x.round_id,round_index:x.round_index,stage:x.stage,kind:x.interaction==='pair_private'?'generic':x.interaction,...(x.interaction==='pair_private'?{}:{card:x.card,actors:x.actors,primary_member_id:x.primary_member_id})}));\r\n" +
++   ' const sequence_equal=isDeepStrictEqual(sequence(base),sequence(variant));\r\n' +
++   ' const payloads=r=>r.public_frames.map(x=>({modeled_tick:x.modeled_tick,payload:x.payload}));\r\n' +
++   ' const public_trace_equal=isDeepStrictEqual(payloads(base),payloads(variant));\r\n' +
++   ' const positive_private=base.counts.private_playable>0&&variant.counts.private_playable>0;\r\n' +
++   " const full_common=changed&&effective&&positive_private&&base.status==='COMPLETE_DOMAIN_MODEL'&&variant.status==='COMPLETE_DOMAIN_MODEL'&&base.counts.private_safe_empty===0&&variant.counts.private_safe_empty===0;\r\n" +
++   " return {changed,effective,positive_private,classification:!changed?'NO_HIDDEN_CHANGE':!effective?'OUT_OF_SUPPORT_NO_EFFECTIVE_HIDDEN_INPUT':!positive_private?'OUT_OF_SUPPORT_NO_POSITIVE_PRIVATE':full_common?'COMMON_SUPPORT_FULL_CONTROLLED_LIFECYCLE':'OUT_OF_SUPPORT_REFUSAL_OR_SAFE_EMPTY',sequence_equal,public_trace_equal,base_status:base.status,variant_status:variant.status,retained_refusals:[base.refusal,variant.refusal],base_safe_empty:base.counts.private_safe_empty,variant_safe_empty:variant.counts.private_safe_empty,\r\n" +
++   "  status:!sequence_equal?'FAIL_SELECTOR_PUBLIC_SEQUENCE':full_common&&!public_trace_equal?'FAIL_COMMON_SUPPORT_PUBLIC_TRACE':full_common?'PASS_MATCHED_DOMAIN_ONLY':'RETAINED_OUT_OF_SUPPORT_NOT_PRIVACY_PASS'};\r\n" +
+- 'function classifyPair(base,variant,{changed,effective}){\n' +
+-   " const sequence=r=>r.raw_rounds.map(x=>({round_id:x.round_id,round_index:x.round_index,stage:x.stage,kind:x.interaction==='pair_private'?'generic':x.interaction,...(x.interaction==='pair_private'?{}:{card:x.card,actors:x.actors,primary_member_id:x.primary_member_id})}));\n" +
+-   ' const sequence_equal=isDeepStrictEqual(sequence(base),sequence(variant));\n' +
+-   ' const payloads=r=>r.public_frames.map(x=>({modeled_tick:x.modeled_tick,payload:x.payload}));\n' +
+-   ' const public_trace_equal=isDeepStrictEqual(payloads(base),payloads(variant));\n' +
+-   ' const positive_private=base.counts.private_playable>0&&variant.counts.private_playable>0;\n' +
+-   " const full_common=changed&&effective&&positive_private&&base.status==='COMPLETE_DOMAIN_MODEL'&&variant.status==='COMPLETE_DOMAIN_MODEL'&&base.counts.private_safe_empty===0&&variant.counts.private_safe_empty===0;\n" +
+-   " return {changed,effective,positive_private,classification:!changed?'NO_HIDDEN_CHANGE':!effective?'OUT_OF_SUPPORT_NO_EFFECTIVE_HIDDEN_INPUT':!positive_private?'OUT_OF_SUPPORT_NO_POSITIVE_PRIVATE':full_common?'COMMON_SUPPORT_FULL_CONTROLLED_LIFECYCLE':'OUT_OF_SUPPORT_REFUSAL_OR_SAFE_EMPTY',sequence_equal,public_trace_equal,base_status:base.status,variant_status:variant.status,retained_refusals:[base.refusal,variant.refusal],base_safe_empty:base.counts.private_safe_empty,variant_safe_empty:variant.counts.private_safe_empty,\n" +
+-   "  status:!sequence_equal?'FAIL_SELECTOR_PUBLIC_SEQUENCE':full_common&&!public_trace_equal?'FAIL_COMMON_SUPPORT_PUBLIC_TRACE':full_common?'PASS_MATCHED_DOMAIN_ONLY':'RETAINED_OUT_OF_SUPPORT_NOT_PRIVACY_PASS'};\n" +
+    '}'
+
+    at file:///C:/.projects/venus/.artifacts/p05-privacy-support-constructive01/controls.mjs:19:605
+    at check (file:///C:/.projects/venus/.artifacts/p05-privacy-support-constructive01/controls.mjs:9:25)
+    at file:///C:/.projects/venus/.artifacts/p05-privacy-support-constructive01/controls.mjs:19:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'function classifyPair(base,variant,{changed,effective}){\r\n' +
+    " const sequence=r=>r.raw_rounds.map(x=>({round_id:x.round_id,round_index:x.round_index,stage:x.stage,kind:x.interaction==='pair_private'?'generic':x.interaction,...(x.interaction==='pair_private'?{}:{card:x.card,actors:x.actors,primary_member_id:x.primary_member_id})}));\r\n" +
+    ' const sequence_equal=isDeepStrictEqual(sequence(base),sequence(variant));\r\n' +
+    ' const payloads=r=>r.public_frames.map(x=>({modeled_tick:x.modeled_tick,payload:x.payload}));\r\n' +
+    ' const public_trace_equal=isDeepStrictEqual(payloads(base),payloads(variant));\r\n' +
+    ' const positive_private=base.counts.private_playable>0&&variant.counts.private_playable>0;\r\n' +
+    " const full_common=changed&&effective&&positive_private&&base.status==='COMPLETE_DOMAIN_MODEL'&&variant.status==='COMPLETE_DOMAIN_MODEL'&&base.counts.private_safe_empty===0&&variant.counts.private_safe_empty===0;\r\n" +
+    " return {changed,effective,positive_private,classification:!changed?'NO_HIDDEN_CHANGE':!effective?'OUT_OF_SUPPORT_NO_EFFECTIVE_HIDDEN_INPUT':!positive_private?'OUT_OF_SUPPORT_NO_POSITIVE_PRIVATE':full_common?'COMMON_SUPPORT_FULL_CONTROLLED_LIFECYCLE':'OUT_OF_SUPPORT_REFUSAL_OR_SAFE_EMPTY',sequence_equal,public_trace_equal,base_status:base.status,variant_status:variant.status,retained_refusals:[base.refusal,variant.refusal],base_safe_empty:base.counts.private_safe_empty,variant_safe_empty:variant.counts.private_safe_empty,\r\n" +
+    "  status:!sequence_equal?'FAIL_SELECTOR_PUBLIC_SEQUENCE':full_common&&!public_trace_equal?'FAIL_COMMON_SUPPORT_PUBLIC_TRACE':full_common?'PASS_MATCHED_DOMAIN_ONLY':'RETAINED_OUT_OF_SUPPORT_NOT_PRIVACY_PASS'};\r\n" +
+    '}',
+  expected: 'function classifyPair(base,variant,{changed,effective}){\n' +
+    " const sequence=r=>r.raw_rounds.map(x=>({round_id:x.round_id,round_index:x.round_index,stage:x.stage,kind:x.interaction==='pair_private'?'generic':x.interaction,...(x.interaction==='pair_private'?{}:{card:x.card,actors:x.actors,primary_member_id:x.primary_member_id})}));\n" +
+    ' const sequence_equal=isDeepStrictEqual(sequence(base),sequence(variant));\n' +
+    ' const payloads=r=>r.public_frames.map(x=>({modeled_tick:x.modeled_tick,payload:x.payload}));\n' +
+    ' const public_trace_equal=isDeepStrictEqual(payloads(base),payloads(variant));\n' +
+    ' const positive_private=base.counts.private_playable>0&&variant.counts.private_playable>0;\n' +
+    " const full_common=changed&&effective&&positive_private&&base.status==='COMPLETE_DOMAIN_MODEL'&&variant.status==='COMPLETE_DOMAIN_MODEL'&&base.counts.private_safe_empty===0&&variant.counts.private_safe_empty===0;\n" +
+    " return {changed,effective,positive_private,classification:!changed?'NO_HIDDEN_CHANGE':!effective?'OUT_OF_SUPPORT_NO_EFFECTIVE_HIDDEN_INPUT':!positive_private?'OUT_OF_SUPPORT_NO_POSITIVE_PRIVATE':full_common?'COMMON_SUPPORT_FULL_CONTROLLED_LIFECYCLE':'OUT_OF_SUPPORT_REFUSAL_OR_SAFE_EMPTY',sequence_equal,public_trace_equal,base_status:base.status,variant_status:variant.status,retained_refusals:[base.refusal,variant.refusal],base_safe_empty:base.counts.private_safe_empty,variant_safe_empty:variant.counts.private_safe_empty,\n" +
+    "  status:!sequence_equal?'FAIL_SELECTOR_PUBLIC_SEQUENCE':full_common&&!public_trace_equal?'FAIL_COMMON_SUPPORT_PUBLIC_TRACE':full_common?'PASS_MATCHED_DOMAIN_ONLY':'RETAINED_OUT_OF_SUPPORT_NOT_PRIVACY_PASS'};\n" +
+    '}',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

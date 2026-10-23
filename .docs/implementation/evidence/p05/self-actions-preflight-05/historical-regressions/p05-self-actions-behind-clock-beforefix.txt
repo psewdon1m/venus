@@ -1,0 +1,45 @@
+
+> venus@0.0.0 test
+> vitest run apps/web/src/game-controls-panel.test.ts
+
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/game-controls-panel.test.ts (16 tests | 1 failed) 1329ms
+   ❯ actual GamesPanel degraded round refusal (8)
+     × retains authenticated refusal evidence with server clock offset -360000 without restoring private content 72ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/game-controls-panel.test.ts > actual GamesPanel degraded round refusal > retains authenticated refusal evidence with server clock offset -360000 without restoring private content
+AssertionError: expected Object{ visible: false, …(5) } to deeply equal { visible: true, enabled: true, …(4) }
+
+- Expected
++ Received
+
+  {
+    "accept": false,
+-   "enabled": true,
+-   "generic": true,
+-   "posts": [
+-     "decline",
+-   ],
++   "enabled": false,
++   "generic": false,
++   "posts": [],
+    "privateContent": false,
+-   "visible": true,
++   "visible": false,
+  }
+
+ ❯ apps/web/src/game-controls-panel.test.ts:72:55
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 15 passed (16)
+   Start at  18:59:43
+   Duration  1.73s (tests 83%, import 13%, transform 4%)
+

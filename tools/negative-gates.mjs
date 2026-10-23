@@ -6,7 +6,7 @@ import {execFileSync, spawnSync} from 'node:child_process';
 import {createHash} from 'node:crypto';
 const root = process.cwd();
 const scratch = mkdtempSync(join(tmpdir(), 'venus-negative-'));
-const paths = [...new Set(execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],{encoding:'utf8'}).split('\0').filter(p => p && existsSync(p)))];
+const paths = [...new Set(execFileSync('git',['ls-files','--cached','--others','--exclude-standard','-z'],{encoding:'utf8',maxBuffer:64*1024*1024}).split('\0').filter(p => p && existsSync(p)))];
 const hash = () => createHash('sha256').update(paths.map(p => p+':'+createHash('sha256').update(readFileSync(p)).digest('hex')).join('\n')).digest('hex');
 const before = hash();
 const sourceIdentity = execFileSync('python',['-B','tools/stage_inventory.py'],{encoding:'utf8'}).trim();

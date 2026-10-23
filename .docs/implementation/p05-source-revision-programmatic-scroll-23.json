@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "revision": "P05-PROGRAMMATIC-SCROLL-23",
+  "kind": "FRONTEND_REMOVE_PER_SCROLL_FOCUS_REPAIR_ONLY",
+  "parent_revision": "P05-KEYBOARD-FOCUS-REFLOW-22",
+  "before_source_identity": "f281eee1578ed7147393239b116c1479ec32fa6443e06ab6a2b64cae586e9ef1",
+  "before_source_files": {
+    "apps/web/src/main.tsx": "59212239e1c917d605cb16c331910d344f09956d55cc8750585e4bee4c02e3a9"
+  },
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "8665d158b07d967e3f960637918dc1cb7d68a84abf0cd5de0bdea97a3732d873"
+  },
+  "finding": "Independent diagnosis5e6fd7 identifies global per-scroll focus correction as capable of opposing intentional pre-pointer heading auto-scroll before pointerdown clears keyboard modality. Exact historical A33 failing await and causal writer remain unknown; no retrospective cause claim.",
+  "fix": "Delete exactly four native document/window scroll add/remove listener lines. Keep all other main.tsx bytes exact: global body-origin Tab and pointer/wheel/touch/nonTab cancellation, guarded focus/Tabkeyup and one pending coalesced cancellable RAF, one owned main-subtree MutationObserver synchronous repair, primitive reentry/generation and blur/unmount cleanup.",
+  "removed_exact_lines": [
+    {
+      "line": 64,
+      "literal": "    document.addEventListener('scroll',repair,true);"
+    },
+    {
+      "line": 65,
+      "literal": "    window.addEventListener('scroll',repair);"
+    },
+    {
+      "line": 75,
+      "literal": "      document.removeEventListener('scroll',repair,true);"
+    },
+    {
+      "line": 76,
+      "literal": "      window.removeEventListener('scroll',repair);"
+    }
+  ],
+  "tradeoff": "Pure late UA document scroll without a DOM mutation is no longer repaired after the existing focus/keyup RAF. Main DOM reflow repair remains. Fresh native nine-shard gate must determine whether observed focus behavior passes; no test oracle/budget/wait/action changes.",
+  "compatibility": "SOURCE21 panel4774 opaque revoke/read recovery, backend/API/SQL/CSS/catalog/policy/contracts/privacy scopes/TTL/transport/statistical model unchanged. Uniform06 source27f/image48c continuous/no restart. HistoricalSOURCE22 reviews/FAILs/r4 immutable; source22Q12PASS is old source, no SOURCE23 native or quality credit inferred.",
+  "validation": {
+    "existing_tests_PASS": 149,
+    "existing_test_files": 9,
+    "focused_ESLint_exit": 0,
+    "web_typecheck_exit": 0,
+    "existing_tests_cover_new_main_native_behavior": false,
+    "new_tests_harness_or_producer_changes": false,
+    "native_Docker_CI_Git_by_author": 0
+  },
+  "rollback": "Mechanical exact inverse: restore main.tsx from keyboard-programmatic-scroll-author-round01/before/main.tsx SHA 59212239e1c917d605cb16c331910d344f09956d55cc8750585e4bee4c02e3a9 and remove revision23. SOURCE21 stays intact; no DB/config migration. This returns known SOURCE22 global-scroll trap/uncertain native behavior and is not an accepted release or production rollback claim. Preserve immutable snapshots and failures; use only controlled local rollback with documented limitation.",
+  "evidence": "reviews/p05/keyboard-programmatic-scroll-author-round01/INDEX.json",
+  "historical_exact_await_or_APP_cause_proven": false,
+  "native_PASS_claimed": false,
+  "full_stage_PASS": false,
+  "P06_started": false
+}

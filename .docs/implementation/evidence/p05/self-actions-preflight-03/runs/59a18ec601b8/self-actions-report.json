@@ -1,0 +1,256 @@
+{
+  "schema_version": 1,
+  "suite": "P05_SELF_ACTIONS",
+  "synthetic_fixture_only": true,
+  "status": "PASS",
+  "runtime_cleanup": "completed",
+  "checks": [
+    {
+      "id": "P05-SA-01",
+      "status": "PASS",
+      "detail": {
+        "actual_recipients": 5,
+        "selected": 3,
+        "group_public_actors_empty": true,
+        "authoritative_role_denials": 3,
+        "private_metadata_not_in_shared_frames": true
+      }
+    },
+    {
+      "id": "P05-SA-02",
+      "status": "PASS",
+      "detail": {
+        "same_origin_cookie_csrf": true,
+        "query_selection_forbidden": true,
+        "foreign_session_denied": true,
+        "game_revision_unchanged": true
+      }
+    },
+    {
+      "id": "P05-SA-03",
+      "status": "PASS",
+      "detail": {
+        "private_choice_not_added_publicly": true,
+        "locked_both_display_buttons": true,
+        "actual_headless_chromium_choice_lock": true,
+        "same_side_replay_allowed": true,
+        "alternate_choice_code": "CHOICE_LOCKED"
+      }
+    },
+    {
+      "id": "P05-SA-04",
+      "status": "PASS",
+      "detail": {
+        "quiet_none_one_two": true,
+        "action_separate": true,
+        "condition_secondary_only": true,
+        "stale_proposal_rejected": true
+      }
+    },
+    {
+      "id": "P05-SA-05",
+      "status": "PASS",
+      "detail": {
+        "actual_sql_wait": true,
+        "clock_crossed_45s_presence": true,
+        "normal_denied": true,
+        "safety_preserved": true
+      }
+    },
+    {
+      "id": "P05-SA-06",
+      "status": "PASS",
+      "detail": {
+        "engine": "156.0.8078.4",
+        "actual_headless_chromium": true,
+        "finish_and_advance_inputs": "JSX UI clicks only",
+        "primary_hidden_publicly": true,
+        "observer_controls_correct": true,
+        "posts": [
+          {
+            "label": "primary",
+            "path": "/api/v1/rooms/1a3fc78d-94ef-4980-b0d7-e04a5070e58d/game/308e5161-2e12-4317-9373-baa74e1f107f/round/313fae3f-2c1d-41da-8d00-106e30cbb39e/finish",
+            "body": {
+              "request_id": "6be2fc1e-30e3-4aa4-86ce-dea4da75b3c4"
+            }
+          },
+          {
+            "label": "host",
+            "path": "/api/v1/rooms/1a3fc78d-94ef-4980-b0d7-e04a5070e58d/game/308e5161-2e12-4317-9373-baa74e1f107f/round/advance",
+            "body": {
+              "expected_rev": 5,
+              "idempotency_key": "82f77558-3e03-4f9f-a1c6-0cfa0162fee8"
+            }
+          }
+        ],
+        "responses": [
+          {
+            "label": "primary",
+            "path": "/api/v1/rooms/1a3fc78d-94ef-4980-b0d7-e04a5070e58d/game/308e5161-2e12-4317-9373-baa74e1f107f/round/313fae3f-2c1d-41da-8d00-106e30cbb39e/finish",
+            "status": 200,
+            "body": {
+              "rev": 5,
+              "request_id": "6e2c7b5a-16a4-46ee-9ea1-dc364bf3b50e"
+            }
+          },
+          {
+            "label": "host",
+            "path": "/api/v1/rooms/1a3fc78d-94ef-4980-b0d7-e04a5070e58d/game/308e5161-2e12-4317-9373-baa74e1f107f/round/advance",
+            "status": 200,
+            "body": {
+              "session_id": "308e5161-2e12-4317-9373-baa74e1f107f",
+              "game_rev": 6,
+              "state": "active",
+              "mode": "questions",
+              "total_rounds": 15,
+              "current_round": {
+                "round_id": "91a9539d-c18d-4bbb-9fc4-dae8ea4d195f",
+                "round_index": 3,
+                "state": "pending",
+                "kind": "generic"
+              },
+              "pause_reason": null
+            }
+          }
+        ],
+        "pageErrors": [],
+        "diagnostic": {
+          "fixture_round": 2,
+          "observer_reset_did_not_abort": true,
+          "before_finish": {
+            "session_id": "308e5161-2e12-4317-9373-baa74e1f107f",
+            "game_rev": 4,
+            "state": "active",
+            "mode": "questions",
+            "total_rounds": 15,
+            "current_round": {
+              "round_id": "313fae3f-2c1d-41da-8d00-106e30cbb39e",
+              "round_index": 2,
+              "state": "active",
+              "kind": "public",
+              "card_id": "Q-0012",
+              "card_revision": 1,
+              "actors": [],
+              "response_state": "pending",
+              "proposal_revision": 1,
+              "mode": "questions",
+              "text": {
+                "question": "SYNTHETIC EN Q-12. Neutral group test."
+              },
+              "choice": null
+            },
+            "pause_reason": null
+          },
+          "before_next": {
+            "view": {
+              "session_id": "308e5161-2e12-4317-9373-baa74e1f107f",
+              "game_rev": 5,
+              "state": "active",
+              "mode": "questions",
+              "total_rounds": 15,
+              "current_round": {
+                "round_id": "313fae3f-2c1d-41da-8d00-106e30cbb39e",
+                "round_index": 2,
+                "state": "completed",
+                "kind": "public",
+                "card_id": "Q-0012",
+                "card_revision": 1,
+                "actors": [],
+                "response_state": "completed",
+                "proposal_revision": 1,
+                "mode": "questions",
+                "text": {
+                  "question": "SYNTHETIC EN Q-12. Neutral group test."
+                },
+                "choice": null
+              },
+              "pause_reason": null
+            },
+            "own": {
+              "schema_version": 1,
+              "room_id": "1a3fc78d-94ef-4980-b0d7-e04a5070e58d",
+              "member_id": "ab57ba30-33bd-4acf-a306-f2d119a086ad",
+              "session_id": "308e5161-2e12-4317-9373-baa74e1f107f",
+              "round_id": "313fae3f-2c1d-41da-8d00-106e30cbb39e",
+              "game_rev": 5,
+              "room_rev": 22,
+              "server_time": "2026-10-19T15:39:49.326Z",
+              "expires_at": "2026-10-19T15:39:54.326Z",
+              "session_actions": {
+                "pause": false,
+                "stop": false,
+                "abort": true,
+                "resume": false,
+                "advance": true,
+                "neutral_reset": true,
+                "neutral_reset_aborts_game": false
+              },
+              "round_actions": {
+                "finish": false,
+                "skip": false,
+                "choose_truth": false,
+                "choose_dare": false,
+                "propose_condition": false,
+                "accept_invitation": false,
+                "accept_action": false,
+                "decline_invitation": false,
+                "withdraw_action": false
+              }
+            },
+            "ui": "VENUS\n\nGames\n\nQuestions · Game in progress\n\nSettings are fixed until the game ends. You can withdraw at any time.\n\nRound 2 / 15\n\nSYNTHETIC EN Q-12. Neutral group test.\n\nNext round\n\nSkip or decline without reasons or penalties. Written or fictional answers are welcome. You may withdraw consent.\n\nEnd game for the room\nUse my neutral settings\n\nCamera and microphone are optional for these games."
+          }
+        }
+      }
+    },
+    {
+      "id": "P05-SA-07",
+      "status": "PASS",
+      "detail": {
+        "actual_headless_chromium": true,
+        "added_server_clock_offset_ms": 360000,
+        "observed_total_server_offset_ms": 406000,
+        "actions": [
+          {
+            "action": "pause",
+            "status": 200,
+            "server_state": "paused",
+            "ordinary_request_stalled": true,
+            "metadata_aborted": true,
+            "websocket_degraded": true,
+            "lease_expired": true
+          },
+          {
+            "action": "stop",
+            "status": 200,
+            "server_state": "aborted",
+            "ordinary_request_stalled": true,
+            "metadata_aborted": true,
+            "websocket_degraded": true,
+            "lease_expired": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "P05-SA-08",
+      "status": "PASS",
+      "detail": {
+        "actual_pg_row_wait": true,
+        "actual_session_row_revocation": true,
+        "no_metadata_enqueued": true,
+        "owner_remove_api_not_claimed": true
+      }
+    },
+    {
+      "id": "P05-SA-09",
+      "status": "PASS",
+      "detail": {
+        "actual_pg_final_acceptance_wait": true,
+        "fixture_sql_function_second_read_only": true,
+        "expiry_crossed_during_real_await": true,
+        "no_enqueue_including_safety_metadata": true,
+        "application_source_not_replaced": true
+      }
+    }
+  ]
+}

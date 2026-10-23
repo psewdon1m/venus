@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "suite": "P05_PRIVATE_CONVERSATION_INDEPENDENT_KERNEL",
+  "scope": "PURE_UNEXPORTED_MODULE_PREFLIGHT_ONLY",
+  "created_at": "2026-10-19T15:27:54.390Z",
+  "node": "v24.22.0",
+  "source_before": {
+    "module": "fbb3715c6d6c78999594bad1324d372d6e30c89d0e79b147799f1500dac3dbf4",
+    "author_tests": "490829fc144a7c3f21c889a1bb089ac74efb317ec685b65bc89f71176bd8cda9"
+  },
+  "source_after": {
+    "module": "fbb3715c6d6c78999594bad1324d372d6e30c89d0e79b147799f1500dac3dbf4",
+    "author_tests": "490829fc144a7c3f21c889a1bb089ac74efb317ec685b65bc89f71176bd8cda9"
+  },
+  "checks": [
+    {
+      "id": "K01-empty-by-default",
+      "status": "PASS"
+    },
+    {
+      "id": "K02-one-profile-does-not-grant",
+      "status": "PASS"
+    },
+    {
+      "id": "K03-pending-one-ack-hides-card-and-hash",
+      "status": "PASS"
+    },
+    {
+      "id": "K04-bilateral-ordered-pair-unlocks-exact-candidate",
+      "status": "PASS"
+    },
+    {
+      "id": "K05-binding-offer_id",
+      "status": "PASS"
+    },
+    {
+      "id": "K05-binding-epoch",
+      "status": "PASS"
+    },
+    {
+      "id": "K05-binding-proposal_revision",
+      "status": "PASS"
+    },
+    {
+      "id": "K05-binding-token",
+      "status": "PASS"
+    },
+    {
+      "id": "K06-scope-room",
+      "status": "PASS"
+    },
+    {
+      "id": "K06-scope-session",
+      "status": "PASS"
+    },
+    {
+      "id": "K06-scope-round",
+      "status": "PASS"
+    },
+    {
+      "id": "K06-scope-reversed",
+      "status": "PASS"
+    },
+    {
+      "id": "K06-scope-substituted",
+      "status": "PASS"
+    },
+    {
+      "id": "K07-outsider-denied-all-projectors",
+      "status": "PASS"
+    },
+    {
+      "id": "K08-decline-terminal-and-topic-unavailable",
+      "status": "PASS"
+    },
+    {
+      "id": "K09-other-question-revokes-advice-and-acks",
+      "status": "PASS"
+    },
+    {
+      "id": "K10-monotonic-multitag-exclusion",
+      "status": "PASS"
+    },
+    {
+      "id": "K11-pref-change-removes-even-accepted-advice",
+      "status": "PASS"
+    },
+    {
+      "id": "K12-three-attempts-and-five-second-rate",
+      "status": "PASS"
+    },
+    {
+      "id": "K13-id-token-and-candidate-reuse-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "K14-pending-advice-recipient-exact-opaque-fields",
+      "status": "PASS"
+    },
+    {
+      "id": "K15-advice-sender-cannot-accept",
+      "status": "PASS"
+    },
+    {
+      "id": "K16-delayed-advice-send-cannot-cross-new-topic",
+      "status": "PASS"
+    },
+    {
+      "id": "K17-edit-revokes-old-and-requires-new-revision",
+      "status": "PASS"
+    },
+    {
+      "id": "K18-advice-decline-and-bilateral-revoke-erase",
+      "status": "PASS"
+    },
+    {
+      "id": "K19-pending-and-direction-budgets",
+      "status": "PASS"
+    },
+    {
+      "id": "K20-invalid-text-surrogate",
+      "status": "PASS"
+    },
+    {
+      "id": "K20-invalid-text-control",
+      "status": "PASS"
+    },
+    {
+      "id": "K20-invalid-text-bidi",
+      "status": "PASS"
+    },
+    {
+      "id": "K20-invalid-text-paragraph",
+      "status": "PASS"
+    },
+    {
+      "id": "K20-invalid-text-scalarOverflow",
+      "status": "PASS"
+    },
+    {
+      "id": "K21-valid-unicode-boundary",
+      "status": "PASS"
+    },
+    {
+      "id": "K22-exact-pending-topic-expiry",
+      "status": "PASS"
+    },
+    {
+      "id": "K23-exact-advice-expiry-and-parent-ceiling",
+      "status": "PASS"
+    },
+    {
+      "id": "K24-clock-invalid-rewind-future-cannot-revive",
+      "status": "PASS"
+    },
+    {
+      "id": "K25-failed-action-still-carries-clock-floor",
+      "status": "PASS"
+    },
+    {
+      "id": "K26-internal-content-and-pin-drift-invalidates",
+      "status": "PASS"
+    },
+    {
+      "id": "K27-defensive-copy-deep-immutability",
+      "status": "PASS"
+    },
+    {
+      "id": "K28-unknown-tags-pins-malformed-locales-denied",
+      "status": "PASS"
+    },
+    {
+      "id": "K29-safety-seed-monotonic-and-private",
+      "status": "PASS"
+    },
+    {
+      "id": "K30-stale-other-question-must-not-exclude-new-topic",
+      "status": "FAIL",
+      "error": "AssertionError [ERR_ASSERTION]: Delayed old-music withdrawal excluded newly accepted food topic\n+ actual - expected\n\n+ [\n+   'food'\n+ ]\n- []\n\n    at file:///C:/.projects/venus/.docs/implementation/reviews/p05/kernel-round-01.probes.mjs:85:315\n    at probe (file:///C:/.projects/venus/.docs/implementation/reviews/p05/kernel-round-01.probes.mjs:54:32)\n    at file:///C:/.projects/venus/.docs/implementation/reviews/p05/kernel-round-01.probes.mjs:85:1\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    }
+  ],
+  "passed": 40,
+  "failed": 1
+}

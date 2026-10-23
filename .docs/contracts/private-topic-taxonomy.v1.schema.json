@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:private-topic-taxonomy:1",
+  "title": "Authenticated room private topic vocabulary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "taxonomy_digest", "topics"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "taxonomy_digest": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "topics": {
+      "type": "array", "minItems": 1, "maxItems": 64,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["topic_id", "labels"],
+        "properties": {
+          "topic_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]{0,47}$"},
+          "labels": {
+            "type": "object", "additionalProperties": false,
+            "required": ["ru", "en", "tr"],
+            "properties": {
+              "ru": {"type": "string", "minLength": 1, "maxLength": 240},
+              "en": {"type": "string", "minLength": 1, "maxLength": 240},
+              "tr": {"type": "string", "minLength": 1, "maxLength": 240}
+            }
+          }
+        }
+      }
+    }
+  }
+}

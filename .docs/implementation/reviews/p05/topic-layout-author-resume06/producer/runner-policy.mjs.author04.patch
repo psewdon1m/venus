@@ -1,0 +1,18 @@
+--- resume03/runner-policy.mjs
++++ resume04/runner-policy.mjs
+@@ -4,6 +4,7 @@
+ import {join} from 'node:path';
+ import {createHash} from 'node:crypto';
+ import {assertMatrix} from './matrix.mjs';
++import {assertTextRows} from './real-text-probe.mjs';
+ export const sha=b=>createHash('sha256').update(b).digest('hex');
+ export function captureProducer(root){
+  return Object.fromEntries(readdirSync(root).sort().map(name=>{const p=join(root,name),s=lstatSync(p);assert(!s.isSymbolicLink(),'PRODUCER_SYMLINK_FORBIDDEN');assert(s.isFile()||s.isDirectory(),'PRODUCER_FILETYPE_FORBIDDEN');return [name,s.isFile()?{type:'file',sha256:sha(readFileSync(p)),bytes:s.size}:{type:'historical_or_extraction_directory'}];}));
+@@ -15,6 +16,7 @@
+ export function runtimeDigest(inventory){const runtime=Object.fromEntries(Object.entries(inventory).filter(([name])=>name.endsWith('.mjs')||name==='binding.json'||name==='DESIGN.md'));return sha(Buffer.from(JSON.stringify(runtime)));}
+ export function assertUnchanged(before,after){assert.deepEqual(after,before,'PRODUCER_FILESET_OR_BYTES_CHANGED');}
+ export function assertShard(report,engine,locale){
++ assertTextRows(report.real_text_observations??[],locale);
+  assert.equal(report.status,'PASS');assert.equal(report.cleanup,'PASS');assert.equal(report.engine,engine);assert.equal(report.locale,locale);assert.equal(report.scope,'ACTUAL_V2_LAYOUT_SHARD_NOT_FULL_STAGE');assert.equal(report.full_matrix,false);assert.equal(report.page_errors.length,0);assert.equal(report.page_errors_overflow,false);assert(!report.observer_error&&!report.request_metadata_overflow);
+  const result=assertMatrix(report.records,{engine,locale});assert.equal(result.cells,51);assert.equal(result.full_matrix,false);
+  assert.equal(report.keyboard_actions.length,14);assert.equal(new Set(report.keyboard_actions.map(a=>a.scene+'/'+a.native)).size,14);

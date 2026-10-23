@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_DOMAINERROR_PRECEDENCE",
+  "created_at": "2026-10-19T20:48:52.490727+00:00",
+  "scope": "INDEPENDENT_ROOT_AUTHORED_PROSPECTIVE_STORAGE_CANDIDATE_NOT_INTEGRATED",
+  "reviewer": "/root/p05_topics_ui_review",
+  "author": "/root",
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-storage-availability-candidate01/DESIGN.json",
+      "sha256": "b09a95808d19a3b55d7643b3728f3af1d3db87652f86096c2b4d16113eb89224"
+    },
+    {
+      "path": ".artifacts/p05-storage-availability-candidate01/private-topic-preferences.test.ts",
+      "sha256": "0c12dfe21a938d47e687f310d9eea12e10822f5488cf26a1b76961016ee5ce54"
+    },
+    {
+      "path": ".artifacts/p05-storage-availability-candidate01/private-topic-preferences.ts",
+      "sha256": "f22183aa957ea449a7f485a8ea58c8fbd04db9279acdee0ebb0b09ba5abf8474"
+    },
+    {
+      "path": ".artifacts/p05-storage-availability-candidate01/test-raw.txt",
+      "sha256": "ad9f0b7ee2cd32762af222a29c7f423f7d2d0c6eea598b82d4abb36e9d08ceed"
+    },
+    {
+      "path": ".artifacts/p05-storage-availability-candidate01/vitest.config.mjs",
+      "sha256": "5d7607b2e47380ee9dc7c69b6fb33c482d5f19de71e573eacff47b40fe1b193e"
+    }
+  ],
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "actual_trigger_files_verified": 113,
+  "findings": [
+    {
+      "id": "STORAGE-CANDIDATE-R01-DOMAIN_PRECEDENCE",
+      "severity": "P2",
+      "problem": "topicStorage computes native errno/syscall classification before preserving an existing DomainError. A typed DomainError with errno context is replaced by503, violating the stated preservation contract.",
+      "exact_counterexample": {
+        "input": "Object.assign(new DomainError(ENOENT,409), {syscall:open})",
+        "expected": "same object/status409",
+        "actual": "new TOPIC_STORAGE_UNAVAILABLE/status503"
+      },
+      "impact_scope": "Contract edge; no current production endpoint exploit or regression observed. Ordinary tested DomainErrors401/409 remain correct.",
+      "requested_fix": "First catch branch: if(error instanceof DomainError) throw error. Add identity+status regression for DomainError carrying recognized errno/syscall context; keep native storage errors503, unknown errors unchanged. Preserve candidate01 proof and publish revised candidate bytes."
+    }
+  ],
+  "checks": {
+    "independent_Vitest_same_prospective_loader_tests": 79,
+    "own_helper_controls": 8,
+    "own_confirmed_contract_counterexamples": 1,
+    "finite_storage_call_wrappers": 7,
+    "entire_existing_class_identical_after_unwrap_and_lineending_normalization": true
+  },
+  "positive_scope": [
+    "Seven wrappers only around open/read/narrow/assertLive storage calls, no DB/auth/enqueue/revoke wrapper.",
+    "Candidate knownstorageclass/nativeerrors sanitized503; raw SyntaxError/TypeError/nonfilesystem syscall remain original500.",
+    "Root79 tests include durable-narrowing SQLrollback/no repeatedoperation/plannerfences, no broadallendpoint/corruptJSONclassification claim."
+  ],
+  "failed_attempts": [
+    "Own initial VM probe used separate Error realm and falsely rejected host native Error; injected host Error constructor, preserved note.",
+    "Own initial finite exact class text check failed CRLF vsLF; normalized only line endings before unwrapping seven expressions, preserved note."
+  ],
+  "limits": [
+    "No included candidate integration, Docker/restore RUN or fullstage acceptance.",
+    "Actual503 restore regression still required on fresh source/image after exactcandidate review.",
+    "All113 actualtrigger files verified; actualHTTP500 finding stays open until newsourceactualproof."
+  ],
+  "full_stage_pass": false
+}

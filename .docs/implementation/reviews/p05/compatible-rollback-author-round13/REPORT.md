@@ -1,0 +1,7 @@
+# Bounded native callsite formatting for large private assertion messages
+
+One diagnostic-only change in bound-profile.mjs. A native Error lazy stack with own data message longer than2048 is formatted under a temporary fixed redacted own message; the exact original descriptor is restored synchronously in finally. No custom getter/proxy/formatter is invoked. Immutable or inherited large messages stay omitted. Existing16KiB stack,16frame, exact module/line allowlist and phase projection bounds remain. Already materialized oversized stack stays omitted. Cached native stack header can now be redacted; original error.message/descriptor and assertion control flow are preserved. No raw text is emitted.
+
+Original12 did not retain a location in actualB2. ExactB4 synthetic probe proves the long native message omission mechanism, not the original actual error length/site. New cold RED against12 and GREEN7 host+7 exactB4 native controls prove robust formatting and descriptor restoration; prior34privacy+58existing controls repeatPASS. Unknown native frames remain unknown. No functional oracle, scenarios, API, source/image binding, resource budgets or cleanup changed. One separately reviewed/root-authorized actual remains required. Oldfailed12 and all earlier outcomes remain unchanged.
+
+Source writes COMPLETE. Root authored this delta and does not independently accept it. Native noDB synthetic cold controls are separate from actual14.

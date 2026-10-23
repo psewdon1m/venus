@@ -1,0 +1,284 @@
+{
+  "schema_version": 1,
+  "status": "STATIC_OBSERVER_PREFLIGHT_PASS",
+  "reviewer": "/root/p05_topics_ui_review",
+  "created_at": "2026-10-19T22:43:55.689796+00:00",
+  "handoff_sha256": "a0c8680a4641c9a3a24cc6f65bb2d1ac3260510277ac856d227fe0c74c2313d9",
+  "author_index_sha256": "1da1f36dd497ceca0bbe2b5a4d4cd4e2a84826eefa7fbc63f2f91923d482f75a",
+  "module_sha256": "8913015d820022cca873f0a8f819dcea054ef13e0591492b9d665244bdc59e8a",
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "source_files": 1813,
+  "closed_findings": [
+    "OBS-R01",
+    "OBS-R02"
+  ],
+  "new_findings": [],
+  "controls": {
+    "prior9": {
+      "status": "PASS_CLOSED_FINDINGS",
+      "checks": 9,
+      "results": [
+        {
+          "name": "ordinary_order_exact_positive",
+          "status": "PASS"
+        },
+        {
+          "name": "late_node_current_body_fresh_complete_batch_now_ready",
+          "status": "PASS",
+          "detail": {
+            "ready": true,
+            "reason": "READY",
+            "cycle_id": 1,
+            "accepted_cycle_id": 1,
+            "scope_sha256": "dcfb28468287f9612df37016f60cbb55375463a29a4168c1164801b4aa131d29",
+            "lease_remaining_ms": 5000,
+            "minimum_remaining_ms": 250,
+            "pending_observers": 0,
+            "observer_overflow": false,
+            "dropped": 0,
+            "body_errors": 0,
+            "invalidations": 0,
+            "complete": true,
+            "parts": {
+              "own": true,
+              "target": true,
+              "conversation": true,
+              "chat": true,
+              "chat_required": true
+            },
+            "http": {
+              "own": 200,
+              "target": 200,
+              "conversation": 200,
+              "chat": 200
+            },
+            "observer_model_only": true,
+            "cache_accept_observed": false,
+            "auth_generation_observed": false
+          }
+        },
+        {
+          "name": "late_new_revision_body_accepts_legitimate_transition",
+          "status": "PASS",
+          "detail": {
+            "failed": {
+              "ready": true,
+              "reason": "READY",
+              "cycle_id": 2,
+              "accepted_cycle_id": 2,
+              "scope_sha256": "729fd01edebca9cda984a610410ba0e4114dab19e9c57993c975d6f67ecc1a4e",
+              "lease_remaining_ms": 5000,
+              "minimum_remaining_ms": 250,
+              "pending_observers": 0,
+              "observer_overflow": false,
+              "dropped": 0,
+              "body_errors": 0,
+              "invalidations": 0,
+              "complete": true,
+              "parts": {
+                "own": true,
+                "target": true,
+                "conversation": true,
+                "chat": true,
+                "chat_required": true
+              },
+              "http": {
+                "own": 200,
+                "target": 200,
+                "conversation": 200,
+                "chat": 200
+              },
+              "observer_model_only": true,
+              "cache_accept_observed": false,
+              "auth_generation_observed": false
+            },
+            "recovered": {
+              "ready": true,
+              "reason": "READY",
+              "cycle_id": 3,
+              "accepted_cycle_id": 3,
+              "scope_sha256": "729fd01edebca9cda984a610410ba0e4114dab19e9c57993c975d6f67ecc1a4e",
+              "lease_remaining_ms": 5000,
+              "minimum_remaining_ms": 250,
+              "pending_observers": 0,
+              "observer_overflow": false,
+              "dropped": 0,
+              "body_errors": 0,
+              "invalidations": 0,
+              "complete": true,
+              "parts": {
+                "own": true,
+                "target": true,
+                "conversation": true,
+                "chat": true,
+                "chat_required": true
+              },
+              "http": {
+                "own": 200,
+                "target": 200,
+                "conversation": 200,
+                "chat": 200
+              },
+              "observer_model_only": true,
+              "cache_accept_observed": false,
+              "auth_generation_observed": false
+            }
+          }
+        },
+        {
+          "name": "late_current_after_all_parts_reconciles_that_batch",
+          "status": "PASS",
+          "detail": {
+            "ready": true,
+            "reason": "READY",
+            "cycle_id": 1,
+            "accepted_cycle_id": 1,
+            "scope_sha256": "dcfb28468287f9612df37016f60cbb55375463a29a4168c1164801b4aa131d29",
+            "lease_remaining_ms": 5000,
+            "minimum_remaining_ms": 250,
+            "pending_observers": 0,
+            "observer_overflow": false,
+            "dropped": 0,
+            "body_errors": 0,
+            "invalidations": 0,
+            "complete": true,
+            "parts": {
+              "own": true,
+              "target": true,
+              "conversation": true,
+              "chat": true,
+              "chat_required": true
+            },
+            "http": {
+              "own": 200,
+              "target": 200,
+              "conversation": 200,
+              "chat": 200
+            },
+            "observer_model_only": true,
+            "cache_accept_observed": false,
+            "auth_generation_observed": false
+          }
+        },
+        {
+          "name": "wrong_own_member_denies_in_ordered_batch",
+          "status": "PASS"
+        },
+        {
+          "name": "two_headless_actors_same_body_interleaving_accepts_both",
+          "status": "PASS",
+          "detail": {
+            "bothReady": true
+          }
+        },
+        {
+          "name": "snapshots_contain_no_private_text_or_token",
+          "status": "PASS"
+        },
+        {
+          "name": "invalid_projection_does_not_emit_raw_nested_payload",
+          "status": "PASS",
+          "detail": {
+            "invalidOwnRejected": true,
+            "rawUnexpectedPrivateNestedFieldEmitted": false
+          }
+        },
+        {
+          "name": "first_corrected_batch_ready_within_existing_8s_phase",
+          "status": "PASS",
+          "detail": {
+            "phaseDeadline": 9000,
+            "firstFreshComplete": 4500,
+            "firstOwnElapsed": 3400,
+            "secondFreshComplete": 9700,
+            "secondOwnElapsed": 3400,
+            "firstReachedBeforePhaseDeadline": true
+          }
+        }
+      ],
+      "scope": "EXACT_OBSERVER02_PRODUCTION_VALIDATORS_MODEL_WITH_EXPLICIT_NODE_BODY_DELIVERY_ORDER_DOUBLES_NOT_ACTUAL_BROWSER"
+    },
+    "new18": {
+      "status": "PASS",
+      "checks": 18,
+      "results": [
+        {
+          "name": "caller_projection_mutation_cannot_change_model_or_input",
+          "status": "PASS"
+        },
+        {
+          "name": "invalid_extra_nested_session_actions_never_emitted",
+          "status": "PASS"
+        },
+        {
+          "name": "invalid_extra_nested_round_actions_never_emitted",
+          "status": "PASS"
+        },
+        {
+          "name": "invalid_extra_nested_conversation_actions_never_emitted",
+          "status": "PASS"
+        },
+        {
+          "name": "wrong_nested_value_type_no_projection",
+          "status": "PASS"
+        },
+        {
+          "name": "current_LAST_with_cleared_generation_never_revives",
+          "status": "PASS"
+        },
+        {
+          "name": "associated_old_current_cannot_bind_newer_current_revision",
+          "status": "PASS"
+        },
+        {
+          "name": "late_current_does_not_weaken_own_scope_member_id",
+          "status": "PASS"
+        },
+        {
+          "name": "late_current_does_not_weaken_own_scope_session_id",
+          "status": "PASS"
+        },
+        {
+          "name": "late_current_does_not_weaken_own_scope_round_id",
+          "status": "PASS"
+        },
+        {
+          "name": "late_current_does_not_weaken_own_scope_game_rev",
+          "status": "PASS"
+        },
+        {
+          "name": "late_current_does_not_weaken_target_scope",
+          "status": "PASS"
+        },
+        {
+          "name": "late_current_does_not_weaken_conversation_scope",
+          "status": "PASS"
+        },
+        {
+          "name": "active_missing_chat_denied",
+          "status": "PASS"
+        },
+        {
+          "name": "chat_wrong_epoch_denied",
+          "status": "PASS"
+        },
+        {
+          "name": "all_advice_shortest_expiry_enforced",
+          "status": "PASS"
+        },
+        {
+          "name": "final_minimum250ms_never_waives_native_lease",
+          "status": "PASS"
+        },
+        {
+          "name": "two_concurrent_headless_readiness_calls_no_focus_override",
+          "status": "PASS"
+        }
+      ],
+      "scope": "EXACT_OBSERVER03_SCOPE_GENERATION_PROJECTION_ALIAS_NEGATIVES_WITH_INERT_TRANSPORT"
+    }
+  },
+  "functional_run": false,
+  "whole_method12_accepted": false,
+  "full_stage_pass": false
+}

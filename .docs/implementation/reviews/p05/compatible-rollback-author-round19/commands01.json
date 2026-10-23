@@ -1,0 +1,43 @@
+[
+  {
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source12\\.artifacts\\p05-compatible-rollback-producer19\\browser-child.mjs"
+    ],
+    "native_exit": 0,
+    "output": "syntax-browser.txt"
+  },
+  {
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      "C:\\.projects\\venus\\.artifacts\\p05-oci19-author01\\controls.mjs"
+    ],
+    "native_exit": 0,
+    "output": "syntax-controls.txt"
+  },
+  {
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\node_modules\\eslint\\bin\\eslint.js",
+      "--config",
+      "C:\\.projects\\venus\\eslint.config.mjs",
+      "--no-ignore",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source12\\.artifacts\\p05-compatible-rollback-producer19\\browser-child.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-oci19-author01\\controls.mjs"
+    ],
+    "native_exit": 0,
+    "output": "lint02.txt"
+  },
+  {
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--input-type=module",
+      "-e",
+      "const m=await import('file:///C:/.projects/venus/.artifacts/p05-pilot-bundle-source12/.artifacts/p05-compatible-rollback-producer19/source-proof.mjs');const r=await m.verifyIncluded();console.log(JSON.stringify({status:'EXACT_FROZEN_SOURCE_READONLY',identity:r.identity,files:Object.keys(r.files).length}));"
+    ],
+    "native_exit": 0,
+    "output": "included-source01.txt"
+  }
+]

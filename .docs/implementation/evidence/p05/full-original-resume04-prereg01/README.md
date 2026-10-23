@@ -1,0 +1,3 @@
+# Fixed corpus continuation04 preregistration
+
+Prospective continuation after Docker daemon loss. Carry683 normal accepted host receipts and original1600 prefix cases. Repeat eight interrupted host slots uniformly using fixed original cases/seeds and new transport identities;1918 unstarted owners unchanged. OriginalFAILs and three recovered exports remain preserved; recovered exports have zero aggregate credit. Existing host/selector/reducer criteria and counts are unchanged. Native continuation is not authorized by this package. Core A19 commit remains 7e5c19485d9993548a01836481fd5f42b34de4aa; this commit adds excluded proof documents only.

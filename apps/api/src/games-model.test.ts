@@ -1,5 +1,5 @@
 import {it,expect} from 'vitest';
-import {FrozenPack,digest,policyDigest,type RoundPlan} from '@venus/relationship-engine';
+import {FrozenPack,digest,policyDigest,proposeConsent,consentResponse,type RoundPlan} from '@venus/relationship-engine';
 import {syntheticCards,syntheticManifest,playerId} from '../../../tests/p03/fixtures.mjs';
 import {publicRound,localText,privateText,type RoundData} from './games-model.js';
 const cards=syntheticCards();
@@ -35,4 +35,20 @@ it('TruthOrDare discloses neither side before choice and only the chosen side af
   expect(publicRound(pack,round,'en',names)).toMatchObject({text:null,choice:null});
   round.choice='truth';const text=localText(pack,round,'en',names);
   expect(text).toContain('Truth');expect(text).not.toContain('Dare');
+});
+it('public pairs disclose no identity or prompt until both quiet opt-ins, and withdraw without a public reason',()=>{
+  const round=data('Q-0002'),actors=round.plan.actors,now=1000;
+  expect(round.plan.interaction).toBe('pair_public');
+  round.invitation=proposeConsent('quiet-offer',actors,'invitation',now);
+  const generic={round_id:round.plan.round_id,round_index:1,state:'pending',kind:'generic'};
+  expect(publicRound(pack,round,'en',names,now)).toEqual(generic);
+  for(let i=0;i<actors.length;i++) {
+    round.invitation=consentResponse(round.invitation,actors[i]!,'accept',now+1,{offer_id:'quiet-offer',scope:'invitation',proposal_revision:1});
+    expect(publicRound(pack,round,'en',names,now+1).kind).toBe(i===0?'generic':'public');
+  }
+  expect(publicRound(pack,round,'en',names).kind).toBe('generic');
+  expect(publicRound(pack,round,'en',names,now+180001).kind).toBe('generic');
+  round.invitation=consentResponse(round.invitation,actors[1]!,'decline',now+2);
+  expect(publicRound(pack,round,'en',names,now+2)).toEqual(generic);
+  for(const locale of ['ru','en','tr'] as const) expect(JSON.stringify(publicRound(pack,round,locale,names,now+2))).not.toMatch(/Alice|Bob|card_id|actors|question/);
 });

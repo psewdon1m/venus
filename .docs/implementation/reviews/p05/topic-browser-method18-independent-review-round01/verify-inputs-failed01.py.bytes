@@ -1,0 +1,44 @@
+from pathlib import Path
+import hashlib,json,sys,datetime,difflib
+ROOT=Path(__file__).resolve().parents[5];sys.path.insert(0,str(ROOT/'tools'))
+from stage_inventory import inventory,identity
+OUT=Path(__file__).parent
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+def load(p):return json.loads(p.read_text(encoding='utf-8'))
+author=ROOT/'.docs/implementation/reviews/p05/topic-browser-method18-preparation-round01';index=author/'INDEX.json'
+assert sha(index)=='f022475b215454e7a1cb54843f26c0cbc75676890e55988c12ca28121b8445db'
+rows=load(index)['files'];assert len(rows)==30
+for x in rows:assert sha(author/x['path'])==x['sha256'] and (author/x['path']).stat().st_size==x['bytes']
+draftpath=ROOT/'.artifacts/p05-unified-method18-binding-draft01.json';draft=load(draftpath);assert sha(draftpath)=='15a0b4cdde01c00ec6277fa9530c934eb9e0e8fb57ae24e93ee6be70e8089e93'
+outer=ROOT/'.artifacts/p05-unified-method18-browser-run01.mjs';assert sha(outer)==draft['runner_sha256']=='74512f107b23ab20acefedad4eb2206d4c9e41140f3665d4770bc04222673505'
+assert draft['status']=='NOT_AUTHORIZED_DRAFT_REBINDING_REVIEW_REQUIRED' and draft['independent_review_index'] is None and draft['rebinding_review_index'] is None
+producer=ROOT/'.artifacts/p05-private-batch-browser-producer18';assert len(draft['runtime_pins'])==10
+for name,pin in draft['runtime_pins'].items():assert sha(producer/name)==sha(author/'producer'/name)==pin
+assert draft['runtime_pins']==load(author/'HANDOFF.json')['runtime_pins']
+assert draft['runtime_pins']['browser.mjs']=='564f7054c9c784284140aa9723d1f03c9439b8cdbfd182687176702f5b8b546e'
+oldouter=Path(draft['previous_outer']);assert sha(oldouter)==draft['previous_outer_sha256']=='8be734ece818cf1b2a20a3d6afad5661277b5173aa1b4daf1d49fd91f22c8ea6'
+old=oldouter.read_text(encoding='utf-8');new=outer.read_text(encoding='utf-8')
+replacements=[('sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f',draft['image']),('p05-private-batch-browser-producer17','p05-private-batch-browser-producer18'),('p05-recovery-method17-root-ack01.json','p05-unified-method18-root-ack01.json'),('1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad',draft['source_identity']),('1813','1819'),('HISTORICAL_EXACT_SOURCE_REBUILT_IMAGE_DIAGNOSTIC_SLICE_NOT_CURRENT_LIVE_STAGE','CURRENT_EXACT_DIRTY_SOURCE_UNIFIED_CHAT_SYNTHETIC_FUNCTIONAL_SLICE_NOT_STAGE_PASS')]
+normalized=old
+for a,b in replacements:assert normalized.count(a)==1;normalized=normalized.replace(a,b)
+extra="assert(!report.request_metadata_overflow,'Request metadata overflow is incomplete proof');assert((report.request_metadata??[]).length<=2048);assert((report.mutation_dispatches??[]).length<=2048);"
+assert new.count(extra)==1 and new.replace(extra,'')==normalized
+(OUT/'outer-exact-diff.patch.txt').write_text(''.join(difflib.unified_diff(old.splitlines(True),new.splitlines(True),fromfile='accepted17',tofile='operational18')),encoding='utf-8')
+receiptpath=Path(draft['image_receipt']);assert sha(receiptpath)==draft['image_receipt_sha256']=='9b9307c5f09ab5706fe678c67e6835f7c24bbd5c39b3c8208567b6b09581e5ed'
+receipt=load(receiptpath);assert receipt['image']==draft['image'] and receipt['source_identity']==draft['source_identity'] and receipt['included_files']==1819 and receipt['build_exit_code']==receipt['probe_exit_code']==0 and receipt['probe_cleanup']=='AUTO_REMOVED'
+map_path=receiptpath.parent/'actual-source-map.json';paths_path=receiptpath.parent/'paths.json';actual=load(map_path);paths=load(paths_path)
+source=inventory(ROOT);assert len(source)==1819 and identity(source)==draft['source_identity']=='b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4'
+assert len(actual)==len(paths)==len(set(paths))==receipt['verified_app_package_test_source_files']==200 and set(actual)==set(paths)
+for path,pin in actual.items():assert source[path]==pin==sha(ROOT/path)
+assert source['tests/p05-topic-lifecycle/harness.mjs']=='06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd'
+assert source['apps/web/src/topic-state.ts']=='04c18ef53573590c7ffee1c5ff4fdc891d1a6e8f14c0f98cc080f14721cb1678'
+assert source['infra/venus/Dockerfile.p05-tests']==receipt['Dockerfile_sha256']
+oldactual=ROOT/'.docs/implementation/evidence/p05/recovery-method17-chromium-actual01';assert sha(oldactual/'INDEX.json')=='83d8ccf9fec5929024ca79e2dac7b7472aada4998d820cfa4e168cf84266486f'
+oldrows=load(oldactual/'INDEX.json')['files']
+for x in oldrows:assert sha(oldactual/x['path'])==x['sha256'] and (oldactual/x['path']).stat().st_size==x['bytes']
+for name,p in [('binding-draft.json.bytes',draftpath),('outer.mjs.bytes',outer),('image-receipt.json.bytes',receiptpath),('image-source-map.json',map_path),('image-paths.json',paths_path)]: (OUT/name).write_bytes(p.read_bytes())
+source_inputs={'identity':identity(source),'files':source,'included_files':len(source)};(OUT/'included-inputs.json').write_text(json.dumps(source_inputs,indent=2)+'\n',encoding='utf-8')
+control=(author/'p05-method18-controls01.mjs').read_text(encoding='utf-8');wanted="'.artifacts/p05-method18-controls01.json'";assert control.count(wanted)==1
+(OUT/'author-controls-repeat.mjs').write_text(control.replace(wanted,"'.docs/implementation/reviews/p05/topic-browser-method18-independent-review-round01/author-repeat-result.json'"),encoding='utf-8')
+result={'status':'PASS_INPUTS_SOURCE_IMAGE_REBIND_COLD_ONLY','at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'author_children':30,'runtime_files':10,'source_identity':identity(source),'included_files':len(source),'image':draft['image'],'actual_image_source_pins_reused_verified':200,'image_dependencies':'Pinned Dockerfile npm-ci lock + existing image source receipt; actual browser version is for forthcoming RUN, not claimed here','outer_exact_identity_path_scope_changes':6,'outer_new_overflow_gate_only':True,'old17_actual_children_preserved':len(oldrows),'draft_ack_issued':False,'actual_browser_RUN':False,'full_stage_pass':False}
+(OUT/'input-verification.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');print(json.dumps(result,indent=2))

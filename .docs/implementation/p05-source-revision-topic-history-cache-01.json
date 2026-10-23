@@ -1,0 +1,52 @@
+{
+  "schema": 1,
+  "revision": "P05-TOPIC-HISTORY-VALIDATION-MEMO-01",
+  "at_utc": "2026-10-20T21:28:18.209822+00:00",
+  "parent_source_identity": "51f833a9eae3db65e4418bc7ad28183470751982b90e4bade3f0f8cf9e73fa12",
+  "parent_freeze_sha256": "451d684179cb4e1173840de9178fc6dd7a82a680469e1cd4ff0ddc976b471d8c",
+  "actual_failure_evidence_index_sha256": "606dbdb723ebcc381dbab6a7cead92f5df9c9c05c014241829f35bcb2605688e",
+  "status": "AUTHOR_APPLICATION_CORRECTION_PENDING_INDEPENDENT_AND_NATIVE_N4_REPEAT",
+  "problem": "Every history read authenticated and then reconstructed/fully validated the complete immutable history while holding the room transaction lock; concurrent current/view/WS requests repeat this work. Actual A10 500 is correlated to QUERY_TIMEOUT roomOrdering, but memo speedup/cause sufficiency is not yet measured.",
+  "change": "Keep loadTopicObject metadata/chunks/decrypt/AAD/byte/hash/UTF8/JSON validation fresh on every read, reuse only exact previously validated immutable history after canonical raw SHA256 +room/session/snapshot/pack/map identity match.",
+  "bounds": {
+    "entries": 32,
+    "encoded_UTF8_total_bytes": 16777216,
+    "absolute_monotonic_TTL_ms": 30000,
+    "unref_expiry_timers": 1,
+    "same_room_session_history_versions": 1,
+    "oversize": "validate uncached, no truncation",
+    "memory_qualification": "Encoded raw weight bound, not JS heap or operating system cap."
+  },
+  "retained_fences": [
+    "current encrypted object/chunks/AAD/keyring authentication every read",
+    "source/catalog/ledger",
+    "selected membership/presence",
+    "current history version/chunks",
+    "safety/exclusions",
+    "clock floors and consent TTL",
+    "final delivery authorization"
+  ],
+  "lifecycle": "Existing bootGate and service-close clearSnapshotCache now clear both memos; purge forgets both for this room before await.",
+  "compatibility": "No DB schema, wire/protocol, engine/RNG, map/cards, routes, consent/rates, clock or query timeout changes. Revert helper/callsite to revalidate every read; persisted data unchanged.",
+  "tests": {
+    "baseline_red": "Same actual AES-loaded native history returns a different immutable object before correction; exact RED retained.",
+    "new_focused_tests": 25,
+    "targeted_11_files_tests": 163,
+    "typecheck_exit": 0,
+    "changed_lint_exit": 0,
+    "Docker_or_latency_RUN": false
+  },
+  "files": {
+    "apps/api/src/topic-games.ts": "9095d2f15ba0742ae540e0cbd41c062a5e22d949ac6bab0efa06a79c61a34f3c",
+    "apps/api/src/topic-history-cache.ts": "d5ec73125054bdc5697b479c6dd4171374b7441d38abdecb89d60dd3e1368b2e",
+    "apps/api/src/topic-history-cache.test.ts": "2e1e1ab3912b5c837e73ed9f0546b2119df12c1b87b3d0b1a0b610cdf34d804b",
+    "apps/api/src/topic-history-cache-integration.test.ts": "4acf07531c8a3ca25bdc88c3ef51bb7db4eb4b126e62e75b7be6274370ab3908"
+  },
+  "new_runtime_module": "apps/api/dist/topic-history-cache.js",
+  "not_claimed": [
+    "old A4 unknown500 cause",
+    "actual latency improvement",
+    "actual new N4 PASS",
+    "full current stage or production PASS"
+  ]
+}

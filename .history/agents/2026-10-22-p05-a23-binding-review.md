@@ -1,0 +1,8 @@
+# P05 A23 compact binding/resource09 — independent review
+
+## 2026-10-22T20:07:46.2053650Z — assignment
+
+RootAPPauthor. A23source20/source6acdb060/1877/cleanGitc0feb43c/freeze20deb004cc; independentcontrol-focus-center source0e598c64. ExactA22FFtopics-save clipping original21PASS1FAIL29NR/bottom876.433>768 retainedFAIL. ProductchangeONEexistingmain input/select/button nearest→center literal plusadditivenormative05; A22textarea-center remains. Rootimages21 test357d914/receipt182ada89/299 andprodb01f7d7a/receipt8a074a97/122; backend69/67SQL7PG2CSS exactA22,newJSHTML. Resource095a7f6501/guard079d4c7d7c currentmetadataonly/numericexact08. Awaitzoom UIa23-01/OCI35freeze beforefinalONEcompactbinding/resource/qualifiedcomponentreview. Nooldfunctionalcontrols/newtests/Docker/archivepayloadread, no newimagearchiveclaim. Sourcealreadyindependent; no native/stagePASS beforeactual. Ownnewjournal/immutablepacket; STOPafterhandoff.
+
+## 2026-10-22T20:12:01.0343255Z — HOLD before acceptance
+Root identified pointer-button risk; zoom author confirmed HOLD. Read frozen source20 main: unconditional input/select/button center-onFocus may move a pointer target between down/up. Current working main already contains :focus-visible guard, but source20 is historical immutable. Read current producer dom-audit: keyboard focus acceptance explicitly requires :focus-visible. Sent concise static assessment recommending narrow guard in a NEW source revision/freeze; no native success inferred. No metadata cold commands, new packet, Docker, tests, or APP edits performed. Await root decision/new pins; no A23 activation accepted.

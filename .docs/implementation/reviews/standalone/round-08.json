@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T13:04:37.519019+00:00",
+  "outcome": "PREFLIGHT_PASS",
+  "scope": "catalog-r2-semantic-and-execution-receipt-preflight",
+  "stage_acceptance": false,
+  "source_dirty": true,
+  "reviewed_files": [
+    {
+      "path": "tools/check-catalog-r2.mjs",
+      "sha256": "e6dec8b42cb5fa46288d2b14f9149908f557484c67745075b06d075b3d162882"
+    },
+    {
+      "path": "tools/docker-quality.mjs",
+      "sha256": "23e989e9863f59d2a94effaa76f48fd02c6f294998caa063e180d9b5128d6a30"
+    },
+    {
+      "path": "tools/docker-quality-exec.mjs",
+      "sha256": "3b81f042f2f33dc78bc60fa19ba6560b6e094e76cd4812c19cd1d12935591d7c"
+    },
+    {
+      "path": "package.json",
+      "sha256": "88c753f3592d430193c2b5eb5493b675be62541e656a7bda23f83f5e27b322c4"
+    }
+  ],
+  "findings": [
+    {
+      "id": "SG-003",
+      "severity": "P2",
+      "status": "RESOLVED",
+      "retest": "18/18semantic +6/6subprocess/raw-logcontrols PASS"
+    }
+  ],
+  "tests": {
+    "semantic_controls": {
+      "passed": 18,
+      "total": 18,
+      "actual_catalog": false
+    },
+    "execution_controls": {
+      "passed": 6,
+      "total": 6,
+      "actual_commands": false
+    }
+  },
+  "supersedes": {
+    "rounds": [
+      "round-06",
+      "round-07"
+    ],
+    "reason": "Exact current helper bytes captured and validated before report; new semantic guard now actually exercised"
+  },
+  "test_artifacts": [
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-semantic-retest.mjs",
+      "sha256": "b90e4a561fc24e1b35a64fde4ee54ecc473c9ecea493924ffa029556ad226a74"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-semantic-retest.json",
+      "sha256": "ec3772ba0a6f4874207beeae40b1382f9c23672053d6050d6c99ad222ba655b5"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-producer-faults-retest.mjs",
+      "sha256": "2369cb6420328ef9c4e9fc6959641d1f459b25785201fe55570bf992cd29c3a4"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-producer-faults-retest.json",
+      "sha256": "f424576293cf227f5646af761eab04b5088771a74e7e54d1f6fa6f65b4ed8417"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/standalone/round-08.md",
+    "sha256": "c504cc6e9aea2cd8922d19934a196916cffea9817a01080e9dd87d2806bc8793"
+  },
+  "limits": [
+    "DIRTY_CANDIDATE",
+    "FINAL_ACTUAL_TESTS_AND_FREEZE_AWAITED",
+    "NOT_HUMAN_APPROVAL",
+    "NOT_STAGE_ACCEPTANCE"
+  ]
+}

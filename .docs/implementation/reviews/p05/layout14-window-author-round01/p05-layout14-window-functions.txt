@@ -1,0 +1,24 @@
+// Only the exact native suffix measured on this pinned Chromium is allowed.
+// Other engines retain the existing exact-title policy, with bounded readiness.
+const chromiumWindowSuffix=' - Google Chrome for Testing';
+function checkWindowNonce(title){assert(typeof title==='string'&&/^Venus layout [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(title),'EXACT_V2_WINDOW_REQUIRED');}
+export function windowTitlePattern(title,engine){
+ checkWindowNonce(title);return '^'+title+(engine==='chromium'?'('+chromiumWindowSuffix+')?':'')+'$';
+}
+export function ownWindowTitle(title,engine,value){
+ checkWindowNonce(title);return typeof value==='string'&&(value===title||(engine==='chromium'&&value===title+chromiumWindowSuffix));
+}
+export async function readyOwnedWindow(query,budget,wait=delay){
+ for(;;){
+  budget.check();const windows=await query();budget.check();
+  if(windows.length){assert.equal(windows.length,1,'EXACT_V2_WINDOW_REQUIRED');return windows;}
+  await wait(Math.min(25,budget.remaining()));
+ }
+}
+export async function windowFor(page,xserver,budget){
+ const title='Venus layout '+randomUUID();await bounded(budget,'window-title',()=>page.evaluate(t=>{document.title=t;},title));
+ const engine=page.context().browser().browserType().name(),pattern=windowTitlePattern(title,engine);
+ const windows=await readyOwnedWindow(()=>windowInventory(()=>xdo(xserver.name,'search','--onlyvisible','--name',pattern)),budget);
+ assert.equal(windows.length,1,'EXACT_V2_WINDOW_REQUIRED');const id=windows[0];assert(ownWindowTitle(title,engine,xdo(xserver.name,'getwindowname',id)),'EXACT_V2_WINDOW_REQUIRED');xdo(xserver.name,'windowraise',id);xdo(xserver.name,'windowfocus','--sync',id);assert.equal(xdo(xserver.name,'getwindowfocus'),id);
+ await bounded(budget,'content-focus',()=>page.bringToFront());assert.equal(xdo(xserver.name,'getwindowfocus'),id);return id;
+}

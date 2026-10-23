@@ -1,0 +1,33 @@
+--- accepted-range02/m3/model.mjs
++++ privacy-matched01/matched-model.mjs
+@@ -1,15 +1,15 @@
+ /** Fresh native domain fixture. No persistence/auth/network/real-user consent. */
+ import assert from 'node:assert/strict';
+ import {createHash} from 'node:crypto';
+-import {accumulator} from './features.mjs';
+-import {invariantDefinitions,consentCheckFactory} from './invariant-definitions.mjs';
+-import {emptyStage,optionCounter} from './diagnostics.mjs';
++import {accumulator} from '../p05-pilot-corpus-ranges02/m3/features.mjs';
++import {invariantDefinitions,consentCheckFactory} from '../p05-pilot-corpus-ranges02/m3/invariant-definitions.mjs';
++import {emptyStage,optionCounter} from '../p05-pilot-corpus-ranges02/m3/diagnostics.mjs';
+ const hash=value=>createHash('sha256').update(value).digest('hex'),pairKey=actors=>[...actors].sort().join(':');
+ const draftRejection=new WeakMap();
+-export function modelSession(env,descriptor,{onFrame=()=>{},onRound=()=>{}}={}){
++export function modelSession(env,descriptor,{onFrame=()=>{},onRound=()=>{},initialSafety=null,prior={public_history:[],private_history:[]}}={}){
+  const {engine:e,pack,map,planner:p,renderer}=env,snapshot=env.makeSnapshot(descriptor),s=snapshot.baseline;
+- const safety={room_id:s.room_id,revision:1,members:s.players.map(player=>({member_id:player.id,revision:1,allow_topic_ids:map.topics.map(t=>t.topic_id),excluded_topic_ids:[]}))};
+- let history=p.createTopicHistory(snapshot,pack,map),completed=0,tick=0,gameRev=1,current=null,selected=0;
++ const safety=initialSafety??{room_id:s.room_id,revision:1,members:s.players.map(player=>({member_id:player.id,revision:1,allow_topic_ids:map.topics.map(t=>t.topic_id),excluded_topic_ids:[]}))};
++ let history=p.createTopicHistory(snapshot,pack,map,prior),completed=0,tick=0,gameRev=1,current=null,selected=0;
+  assert.equal(history.provenance,'RUNTIME'); // Native constructor, never rebranding simulation history.
+  const projection=accumulator(pack,s.players),rows=invariantDefinitions(),consentChecks=consentCheckFactory(e),invitations=Array(s.players.length).fill(0),stages={},rawRounds=[];
+  const diagnostic=optionCounter(env,snapshot);
+@@ -42,7 +42,7 @@
+  const topicConsent=()=>{
+   assert(current.plan.card);assert(current.invitation?.state==='active');const card=pack.card(current.plan.card.card_id),binding={...current.plan.card,candidate_ref:'candidate-'+hash(current.plan.round_id),side:current.choice,condition:current.condition?.text??null};
+   const candidate=renderer.candidateFromBinding(pack,binding,map.entry(card.id).topic_ids),scope={room_id:s.room_id,session_id:s.session_id,round_id:current.plan.round_id,actors:current.plan.actors};
+-  let conversation=e.createPrivateConversation({scope,pins:{pack_digest:pack.digest,map_digest:map.pins.map_sha256,taxonomy_digest:map.pins.taxonomy_digest},topics:map.topics,candidates:[candidate],preferences:Object.fromEntries(scope.actors.map(actor=>[actor,{revision:1,allow:safety.members.find(m=>m.member_id===actor).allow_topic_ids,excluded:[]}])),now:stamp(),parent_expires_at:current.invitation.active_until});
++  let conversation=e.createPrivateConversation({scope,pins:{pack_digest:pack.digest,map_digest:map.pins.map_sha256,taxonomy_digest:map.pins.taxonomy_digest},topics:map.topics,candidates:[candidate],preferences:Object.fromEntries(scope.actors.map(actor=>[actor,{revision:1,allow:safety.members.find(m=>m.member_id===actor).allow_topic_ids,excluded:safety.members.find(m=>m.member_id===actor).excluded_topic_ids}])),now:stamp(),parent_expires_at:current.invitation.active_until});
+   const apply=(command,actor)=>{const result=e.applyPrivateConversation(conversation,command,{scope,actor,now:stamp()});conversation=result.state;assert.equal(result.error,null);};
+   apply({kind:'offer_topic',expected_revision:conversation.revision,expected_epoch:conversation.epoch,offer_id:'model-topic-'+current.plan.round_id,token:hash(descriptor.seed+':model-token:'+current.plan.round_id),candidate:{candidate_ref:candidate.candidate_ref,card_sha256:candidate.card_sha256}},scope.actors[0]);
+   const project=actor=>{const projected=e.projectPrivateConversation(conversation,{scope,actor,now:stamp()});conversation=projected.state;assert.equal(projected.error,null);return projected.view;};

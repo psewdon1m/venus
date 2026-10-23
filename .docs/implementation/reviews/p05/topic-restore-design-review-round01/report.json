@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN_ACCEPTED_FOR_PRODUCER_AUTHORING_NOT_RUN",
+  "scope": "INDEPENDENT_P05_FULL_RESTORE_DESIGN_REVIEW_ONLY",
+  "reviewer": "/root/p05_topics_ui_review",
+  "design_author": "/root",
+  "created_at": "2026-10-19T19:27:36.825114+00:00",
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN.md",
+      "sha256": "8e4a7522c8b2f3522147a977f4205cfe37b79e9a1554e0daa86518f59dca6e6a",
+      "bytes": 6957
+    },
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN-round02.md",
+      "sha256": "93ed0073e1fb92bb6199387c64ad627234e7862c1e877ae80ded524030eeb56b",
+      "bytes": 3509
+    },
+    {
+      "path": ".artifacts/p05-topic-restore/DESIGN-round03.md",
+      "sha256": "62f729ced06ee0ef8cf4d00cf1d3246bf090b8036b338bab7bea95d45759a04e",
+      "bytes": 1283
+    },
+    {
+      "path": ".artifacts/p05-topic-restore/AUTHOR_FEASIBILITY.md",
+      "sha256": "5b364d65cb4e794fb70e6c49e9a1628dbfb034a86f671cdb6252fc1c004a6889",
+      "bytes": 4287
+    },
+    {
+      "path": ".docs/adr/ADR-023-p05-room-topic-safety-lifecycle.md",
+      "sha256": "f119f5420f8962879b2a33797c980c162db47fa6de3a883a8f6ecfbe71801b2d",
+      "bytes": 16895
+    },
+    {
+      "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+      "sha256": "94c704e17d6a2e949f741c592e9147f53205412c87865452c96499e2bf93c430",
+      "bytes": 30220
+    },
+    {
+      "path": "apps/api/src/server.ts",
+      "sha256": "8466c74a803e4c7b6766616248d1e1d2a27b9fca9777478ab981f7cc0636b17d",
+      "bytes": 6564
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "a5a6c6cb3da9b4beb75ce36be708c49bbdfecfcab9ce34523ad5a76fdfa6a36e",
+      "bytes": 85014
+    },
+    {
+      "path": "apps/api/src/topic-room-registry.ts",
+      "sha256": "23de303a222dc9e30c6b50f86219662c9735076468ac7db4303cb8ac1b1a659e",
+      "bytes": 6746
+    },
+    {
+      "path": "tests/p05-topic-lifecycle/harness.mjs",
+      "sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+      "bytes": 12466
+    }
+  ],
+  "accepted_version_chain": {
+    "DESIGN.md": "8e4a7522c8b2f3522147a977f4205cfe37b79e9a1554e0daa86518f59dca6e6a",
+    "DESIGN-round02.md": "93ed0073e1fb92bb6199387c64ad627234e7862c1e877ae80ded524030eeb56b",
+    "DESIGN-round03.md": "62f729ced06ee0ef8cf4d00cf1d3246bf090b8036b338bab7bea95d45759a04e"
+  },
+  "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "included_files": 1808,
+  "findings": [
+    {
+      "id": "RESTORE-DESIGN-R01",
+      "severity": "P2",
+      "original_status": "CHANGES_REQUESTED_ON_DESIGN01",
+      "status": "CLOSED_BY_VERSIONED_DESIGN02",
+      "problem": "All original A/B/C post-dump scopes are narrowed/retired; denials could pass without boot revocation or solely from TTL expiration. Action/advice no-revival also lacks an explicit pre-dump positive.",
+      "counterexample": "Omit bootGate; restored A is denied by advanced topic authority, B by room retirement, C by member withdrawal. Original negative-only observation could still PASS.",
+      "fix": "Untouched online D (or explicit D1/D2 if real FSM requires), actual accepted invitation/action/topic/advice and chat before dump; raw originals demonstrably restored; D authority unchanged; same credentials/ordinary room remain200. All stored relevant deadlines are future at preboot time with nonrewind and separate native elapsed proof. Never create fresh grant after restore to repair the control.",
+      "fixed_input_sha256": "93ed0073e1fb92bb6199387c64ad627234e7862c1e877ae80ded524030eeb56b"
+    },
+    {
+      "id": "RESTORE-DESIGN-R02",
+      "severity": "P2",
+      "original_status": "CHANGES_REQUESTED_ON_DESIGN02_ORDERING",
+      "status": "CLOSED_BY_VERSIONED_DESIGN03",
+      "problem": "Raw clearing checked only after HTTP could be supplied by lazy boot-ID reconciliation rather than the startup barrier.",
+      "counterexample": "Omit startup bootGate; first target/private read invokes reconcile, sees different bootId, stops/clears scope; subsequent raw assertion and denial can PASS despite missing prelisten barrier.",
+      "source_evidence": "TopicGames.target\u2192reconcile checks d.boot_id against process bootId and calls close/clearPrivate. bootGate separately clears all private objects/refs and stops active pair rounds.",
+      "fix": "Readonly observer immediately AFTER real bootGate and BEFORE legacy reconciliation/Rooms.maintain/listen/HTTP/self-actions verifies stopped D, cleared invitation/action acks, no conversation/chat/advice-bearing objects/private refs, retained snapshot/history. Child PID/method-return/query-completion/listener chronology retained; only successful observer permits serving.",
+      "fixed_input_sha256": "62f729ced06ee0ef8cf4d00cf1d3246bf090b8036b338bab7bea95d45759a04e"
+    }
+  ],
+  "open_findings": [],
+  "producer_obligations": [
+    "Freeze exact finite harness derivative diff/hashes before producer acceptance. New actual Node children reconstruct actual storage/Rooms/TopicGames/provider; same controller container alone is not a server restart.",
+    "Persist five authority roots, keyring and legacy DeletionLedger across children; preserve separately measured post-mutation root heads/tree bytes across DB restore before third boot. AUTHOR_FEASIBILITY covers legacy file but exact producer must implement it.",
+    "Controller holds no pool across dump/restore handshake; stopped child exits and no API pg_stat_activity sessions are verified. Observer pools close before server resumes; owned DB operation connections are distinguished.",
+    "Full custom pg_dump/pg_restore with exit codes/size/SHA/TOC coverage, no in-memory restored authorization. Exact scoped raw rows/ciphertexts/credentials compared before third boot; enumerate every included table/PK/ordering/digest and any unscoped schema/sequence metadata boundary.",
+    "Untouched D grants genuinely nonempty and still unexpired before third boot, original exact HTTP commands/retries denied after barrier; ordinary room/credential200 is independent positive access control. A/B/C monotonic narrowing/close/leave remain separate.",
+    "Missing/corrupt file control uses an otherwise healthy positive read, expected authority denial/no private bytes, no automatic repair, identical saved-byte restoration and positive recovery. Record per-room read versus startup failure scope.",
+    "All14 unique fixed IDs, required runtime cleanup and exact full producer/source maps before/after/after-finally gate PASS. Historical feasibility text mentions12 and is subordinate to revision02/03 mandatory14.",
+    "Preserve failed dump/restore/startup/timeout attempts and owned cleanup logs;10-minute phase wall deadlines are separate from explicitly controlled nonrewinding server fixture clock. No secrets or private decrypted state exported to evidence.",
+    "Synthetic source/provider composition is explicit. No production-approved source-loader/catalog, previous production OCI rollback, P06 export/update/retention or full-stage approval inferred."
+  ],
+  "required_controls": 14,
+  "statistical_or_docker_run": false,
+  "restore_producer_implementation": false,
+  "actual_pg_dump_restore": false,
+  "actual_child_restart": false,
+  "producer_acceptance": "PENDING_SEPARATE_INDEPENDENT_REVIEW",
+  "functional_run_ack": "PENDING_ROOT_AFTER_PRODUCER_ACCEPTANCE",
+  "actual_result_acceptance": "PENDING_SEPARATE_INDEPENDENT_AUDIT",
+  "full_stage_pass": false,
+  "human450": "HOLD_UNCHANGED"
+}

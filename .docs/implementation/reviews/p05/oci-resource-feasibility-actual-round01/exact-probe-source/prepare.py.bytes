@@ -1,0 +1,21 @@
+"""Prepare documentary pins/cold controls only; never Docker execution."""
+from pathlib import Path
+import ast,hashlib,json,subprocess,sys,importlib.util
+work=Path('.artifacts/p05-oci-resource-feasibility-probe01');out=Path('.docs/implementation/reviews/p05/oci-resource-feasibility-actual-round01');out.mkdir(parents=True,exist_ok=True);sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+paths=['.artifacts/p05-oci-rollback-producer-resume02/ipc-policy.mjs','.artifacts/p05-oci-rollback-producer-resume02/ipc-keeper.mjs','.artifacts/p05-oci-rollback-producer-resume02/oci-resource-policy.mjs','.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round02/INDEX.json']
+(work/'input-pins.json').write_text(json.dumps({p:sha(p)for p in paths},indent=2)+'\n')
+tree=ast.parse((work/'probe.py').read_text());s=importlib.util.spec_from_file_location('owned_resource_probe',work/'probe.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m)
+assert m.NATIVE_RESERVED==298*1024**2 and m.NATIVE_RESERVED<=320*1024**2
+owner='a'*32;project='venus-oci-resource-'+'b'*12
+row={'Name':'/'+project+'-native','Config':{'Labels':{m.KEY:owner,'com.venus.oci.feasibility.role':'native'}},'Image':m.IMAGE,'HostConfig':{'NetworkMode':'none','PortBindings':{},'IpcMode':'none'}}
+m.check_container(row,owner,project,'native',m.IMAGE);checks=[{'name':'exactownernameimagenetworkIPCshapeaccepts','status':'PASS'}]
+for name,mutate in [('foreignowner',lambda r:r['Config']['Labels'].__setitem__(m.KEY,'foreign')),('foreignimage',lambda r:r.__setitem__('Image','foreign')),('networked',lambda r:r['HostConfig'].__setitem__('NetworkMode','bridge')),('publishedport',lambda r:r['HostConfig'].__setitem__('PortBindings',{'80/tcp':[{'HostPort':'80'}]})),('defaultIPC',lambda r:r['HostConfig'].__setitem__('IpcMode',''))]:
+ r=json.loads(json.dumps(row));mutate(r)
+ try:m.check_container(r,owner,project,'native',m.IMAGE)
+ except AssertionError:checks.append({'name':name+'denied','status':'PASS'})
+ else:raise AssertionError(name)
+assert not any(isinstance(n,ast.Call)and isinstance(n.func,ast.Attribute)and n.func.attr in ['system']for n in ast.walk(tree))
+r=subprocess.run([sys.executable,'-B',str(work/'probe.py')],capture_output=True);assert r.returncode==0
+(out/'planned-commands.json').write_bytes(r.stdout);(out/'cold.stderr.txt').write_bytes(r.stderr)
+(out/'finite-controls.json').write_text(json.dumps({'status':'PASS_COLD_SOURCE_AND_OWNER_CONTROLS_NOT_DOCKER','count':len(checks),'checks':checks,'Docker_calls':0,'actual_mount_inspections':0,'actual_PG_boot':0},indent=2)+'\n')
+print(json.dumps({'cold_exit_code':r.returncode,'finite_controls':len(checks),'probe_sha256':sha(work/'probe.py'),'actual_RUN':False}))

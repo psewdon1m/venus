@@ -1,0 +1,216 @@
+{
+  "schema_version": 1,
+  "status": "FAIL",
+  "compatibility_profile": "LIVE_SAME_POLICY_COMPATIBILITY_14",
+  "resource_profile": "QRB_BOUND_ONLY_1",
+  "original_resource_guard": "REPLACED_ROOT_SELECTED_BOUND_ONLY_NOT_ADVANCING2S",
+  "actual_execution": true,
+  "full_P05_PASS": false,
+  "production_approval": false,
+  "human450": "HOLD_UNCHANGED",
+  "source_identity": "93221ba482331e3916e56f2e1866b5c7743fa72ad29320f2819a7a6fd1a2951d",
+  "images": {
+    "A": "sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2",
+    "B": "sha256:62602920f998e1e971d3f8f9dd55c706217e4e00a50bcee2d056cbf6d94c8903"
+  },
+  "image_switches": 2,
+  "DB_restore": false,
+  "external_roots_rolled_back": false,
+  "boots": [
+    {
+      "phase": "A1",
+      "image": "sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2",
+      "container_id": "df42b61a91b9c3462ed22016219c2272ffa8eeecdda7f39765aa9364e9946d4f",
+      "live_host_pid": 82780,
+      "process_nonce": "d8840cc909ef8cdbfa0682d8db36dcde",
+      "exit_code": 0,
+      "pool_closed": true,
+      "runtime_compiled64": true
+    },
+    {
+      "phase": "B2",
+      "image": "sha256:62602920f998e1e971d3f8f9dd55c706217e4e00a50bcee2d056cbf6d94c8903",
+      "container_id": "61ca83b5cef8e58170dbb764b3ed58081c555e369dd830c7d79fdd086919e0fd",
+      "live_host_pid": 84334,
+      "process_nonce": "d10e51c048784768cd6c93007ef824e0",
+      "exit_code": 0,
+      "pool_closed": true,
+      "runtime_compiled64": true
+    },
+    {
+      "phase": "A3",
+      "image": "sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2",
+      "container_id": "acec9bead5b4a2974ea9e851e4e654e525b614b88f0b247695ac88e6d131c9df",
+      "live_host_pid": 86539,
+      "process_nonce": "ca6289a8d69745a8845a0b7d59529351",
+      "exit_code": null,
+      "pool_closed": false,
+      "runtime_compiled64": true
+    }
+  ],
+  "chronology": [
+    {
+      "phase": "A1",
+      "event": "migration_observer",
+      "native_elapsed_ms": 965.7062530000001
+    },
+    {
+      "phase": "A1",
+      "event": "bootGate_return",
+      "native_elapsed_ms": 967.272183
+    },
+    {
+      "phase": "A1",
+      "event": "maintenance",
+      "native_elapsed_ms": 970.6625300000001
+    },
+    {
+      "phase": "A1",
+      "event": "listen",
+      "native_elapsed_ms": 1038.1643550000001
+    },
+    {
+      "phase": "B2",
+      "event": "migration_observer",
+      "native_elapsed_ms": 1084.1243630000001
+    },
+    {
+      "phase": "B2",
+      "event": "untouched_live",
+      "native_elapsed_ms": 1091.983094
+    },
+    {
+      "phase": "B2",
+      "event": "bootGate_return",
+      "native_elapsed_ms": 1100.776668
+    },
+    {
+      "phase": "B2",
+      "event": "raw_revoked",
+      "native_elapsed_ms": 1104.836918
+    },
+    {
+      "phase": "B2",
+      "event": "maintenance",
+      "native_elapsed_ms": 1200.365474
+    },
+    {
+      "phase": "B2",
+      "event": "listen",
+      "native_elapsed_ms": 1270.031141
+    }
+  ],
+  "controls": [],
+  "truncated": false,
+  "first_error": {
+    "name": "Error",
+    "code": null,
+    "phase": "A3",
+    "source_module": "host-runner",
+    "source_line": 29,
+    "source_column": 903
+  },
+  "remaining_owned": {
+    "containers": [
+      "1562dfe3d65f",
+      "a089e9033479"
+    ],
+    "networks": [
+      "e784917b2e4a"
+    ],
+    "volumes": [
+      "venus-p05-oci-f0ff48a45f06-authority",
+      "venus-p05-oci-f0ff48a45f06-db",
+      "venus-p05-oci-f0ff48a45f06-evidence",
+      "venus-p05-oci-f0ff48a45f06-private"
+    ]
+  },
+  "resource": {
+    "status": "PASS_QRB_BOUND_ONLY_PROFILE",
+    "failure": null,
+    "owner": "b6c742b1e5a7d69cc12267a2c1d6a061",
+    "project": "venus-p05-oci-f0ff48a45f06",
+    "profile": {
+      "revision": "QRB_BOUND_ONLY_1",
+      "whole_ms": 900000,
+      "work_ms": 780000,
+      "cap_mib": 512,
+      "host_cap_mib": 96,
+      "native_reserved_mib": 380,
+      "conservative_combined_mib": 476,
+      "reserve_gib": 10,
+      "host": {
+        "inputs": 16,
+        "evidence": 64,
+        "other": 16
+      },
+      "native": {
+        "db_data": 240,
+        "db_shm": 8,
+        "db_tmp_run": 4,
+        "authority": 32,
+        "private": 8,
+        "evidence": 64,
+        "simultaneous_scratch": 24
+      },
+      "RSS_mib": {
+        "api": 768,
+        "db": 512,
+        "tls": 128,
+        "browser": 1536,
+        "keeper": 64,
+        "helper": 128
+      },
+      "archive_copies": 0
+    },
+    "phase_preflights": [
+      {
+        "phase": "setup",
+        "host_free_bytes": "79161065472",
+        "native_free_bytes": "992587890688",
+        "host_allocated_bytes": 16384,
+        "elapsed_ms": 1152.8863999999999
+      },
+      {
+        "phase": "A1",
+        "host_free_bytes": "79148212224",
+        "native_free_bytes": "992587706368",
+        "host_allocated_bytes": 5507840,
+        "elapsed_ms": 76270.4231
+      },
+      {
+        "phase": "B2",
+        "host_free_bytes": "79142473728",
+        "native_free_bytes": "992587489280",
+        "host_allocated_bytes": 6191160,
+        "elapsed_ms": 109260.935
+      },
+      {
+        "phase": "A3",
+        "host_free_bytes": "79135469568",
+        "native_free_bytes": "992587489280",
+        "host_allocated_bytes": 6590432,
+        "elapsed_ms": 152870.4548
+      },
+      {
+        "phase": "cleanup",
+        "host_free_bytes": "79140495360",
+        "native_free_bytes": "992587366400",
+        "host_allocated_bytes": 6623568,
+        "elapsed_ms": 195455.2673
+      }
+    ],
+    "host_allocated_peak": 6849144,
+    "host_controller_peak_sampled_rss": 144924672,
+    "host_controller_RSS_scope": "Sampled256MiB stop threshold; not an OS cgroup hard limit. CLI requires max-old-space-size192; child scans are bounded input/time.",
+    "native_quota_accounting": "Sum of inspected hard tmpfs/SHM limits, not actual RSS",
+    "advancing_2s_guard": false,
+    "whole_elapsed_ms": 251094.7349
+  },
+  "cleanup": "retained_manual_cleanup_required",
+  "error_name": "Error",
+  "elapsed_ms": 251094.9146,
+  "owner": "b6c742b1e5a7d69cc12267a2c1d6a061",
+  "project": "venus-p05-oci-f0ff48a45f06",
+  "source_producer_unchanged": false
+}

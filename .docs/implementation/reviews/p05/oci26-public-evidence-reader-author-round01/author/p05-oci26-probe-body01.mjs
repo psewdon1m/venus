@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,symlinkSync,mkdirSync,chmodSync,existsSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const input=JSON.parse(readFileSync('/probe/INPUTS.json')),rows=[],sha=b=>createHash('sha256').update(b).digest('hex');
+assert.equal(sha(Buffer.from(input.candidate)),input.candidate_script_sha256);assert.equal(sha(Buffer.from(input.old)),input.old_script_sha256);
+for(const path of['/bin/sh','/usr/bin/stat','/usr/bin/cat']){const result=spawnSync('/usr/bin/test',['-x',path]);assert.equal(result.status,0);}
+writeFileSync('/evidence/empty',Buffer.alloc(0));writeFileSync('/evidence/binary',Buffer.from(Array.from({length:512},(_,i)=>i%256)));writeFileSync('/evidence/regular',Buffer.from('PUBLIC SYNTHETIC\n'));writeFileSync('/evidence/max',Buffer.alloc(2097152,90));writeFileSync('/evidence/oversize',Buffer.alloc(2097153,90));writeFileSync('/evidence/unreadable',Buffer.from('PUBLIC SYNTHETIC NOREAD'));chmodSync('/evidence/unreadable',0);mkdirSync('/evidence/directory');symlinkSync('/evidence/regular','/evidence/symlink');symlinkSync('/evidence/missing-target','/evidence/broken');assert.equal(spawnSync('/usr/bin/mkfifo',['/evidence/fifo']).status,0);
+for(const [name,expected]of[['missing',0],['empty',0],['regular',0],['binary',0],['max',0],['oversize',8],['unreadable',1],['directory',8],['symlink',8],['broken',0],['fifo',8],['x$(touch /evidence/INJECTED)',0]]){
+ const a=spawnSync(process.execPath,['-e',input.old,name],{timeout:5000,maxBuffer:3*1024**2}),b=spawnSync('/bin/sh',['-c',input.candidate,'venus-public-evidence',name],{timeout:5000,maxBuffer:3*1024**2});assert.equal(a.error,undefined);assert.equal(b.error,undefined);assert.equal(a.status,expected,name+' original');assert.equal(b.status,expected,name+' candidate');assert.deepEqual(a.stdout,b.stdout,name+' rawbytes');rows.push({case:name.startsWith('x$')?'injection_literal_arg':name,original_status:a.status,candidate_status:b.status,stdout_bytes:b.stdout.length,stdout_sha256:sha(b.stdout),stderr_bytes:b.stderr.length,stderr_sha256:sha(b.stderr)});
+}
+assert.equal(existsSync('/evidence/INJECTED'),false);console.log(JSON.stringify({status:'FINITE_LINUX_READER_EQUIVALENCE_ONLY_NOT_NATIVE_OCI_OR_RESOURCE_CAUSE',utilities:['/bin/sh','/usr/bin/stat','/usr/bin/cat'],candidate_script_sha256:input.candidate_script_sha256,original_script_sha256:input.old_script_sha256,rows},null,2));

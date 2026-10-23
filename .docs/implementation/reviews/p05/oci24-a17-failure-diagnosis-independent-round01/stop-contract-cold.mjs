@@ -1,0 +1,20 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import ts from 'typescript';
+const base='C:/.projects/venus/.artifacts/p05-pilot-bundle-source14/apps/api/src/';
+const parse=p=>ts.createSourceFile(p,readFileSync(base+p,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+const src=parse('topic-games.ts'),sec=parse('security.ts');
+const cls=src.statements.find(n=>ts.isClassDeclaration(n)&&n.name.text==='TopicGames');
+const methods=['participant','host','safetyStop'].map(name=>cls.members.find(n=>n.name?.getText(src)===name).getText(src));
+const exact=src.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name.text==='exact').getText(src);
+const security=sec.statements.filter(n=>(ts.isClassDeclaration(n)||ts.isFunctionDeclaration(n))&&['DomainError','requireThat'].includes(n.name?.text)).map(n=>n.getText(sec).replace(/^export /,'')).join('\n');
+const js=ts.transpileModule(security+'\n'+exact+'\nclass Probe{'+methods.join('\n')+'}\nreturn Probe;', {compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText;
+const Probe=Function(js)();
+function fixture(member){const p=new Probe(),g={state:'active',rev:99},a={member:{id:member,role:member==='H'?'host':'member'},room:{host_member_id:'H'}};let bumps=0;
+ p.mutation=async(_room,_session,_input,_op,_target,safety,fn)=>{assert.equal(safety,true);return fn({query:async(_sql,args)=>({rowCount:args[2]==='P'?1:0})},a);};
+ p.required=async()=>g;p.clearPrivate=async()=>{};p.current=async()=>null;p.bump=async()=>{bumps++;};p.receipt=()=>({ok:true});return{p,g,bumps:()=>bumps};}
+const host=fixture('H');await assert.rejects(host.p.safetyStop('R','S','G',{request_id:'COLD'},'stop'),e=>e.code==='GAME_PARTICIPANT_REQUIRED'&&e.statusCode===403);assert.equal(host.g.state,'active');
+const selected=fixture('P');assert.deepEqual(await selected.p.safetyStop('R','S','G',{request_id:'COLD'},'stop'),{ok:true});assert.equal(selected.g.state,'aborted');
+const revision=fixture('P');await revision.p.safetyStop('R','S','G',{request_id:'COLD',expected_rev:-1},'stop');assert.equal(revision.g.state,'aborted');
+const abort=fixture('H');await abort.p.safetyStop('R','S','G',{request_id:'COLD'},'abort');assert.equal(abort.g.state,'aborted');
+console.log(JSON.stringify({status:'PASS_COLD_EXACT_METHOD_NOT_NATIVE_RESPONSE_PROOF',controls:4,host_stop:'GAME_PARTICIPANT_REQUIRED403',selected_stop_without_revision:'ACCEPTED',selected_stop_revision_not_checked:true,host_abort:'ACCEPTED'}));

@@ -1,0 +1,5 @@
+# A13 ordinary N4: 20 completed rounds
+
+PASS scoped N4 actual, independently67b17559. Exact original method04/600s, actual ordinary production CMD/image5dd2c30d/source5be63565/1863/real470 owner-provisional pack. One online/questions N4 session:20 distinct approved ID/revision rounds completed,20 finishes,481 requests,4WS, RU/EN/TR same-ID projection checked, room closed, client cleanup COMPLETE, compose cleanup PASS and safe server events0. ACK0d29b7b0 binds exact source/freeze/method/runtime123 pins inclmetadata/native storage gate033e78a3.
+
+No inspector/SQL diagnostic, server clock override, sourcefixture, timeout/rate/consent relaxation or concurrent owned bulk/browser/OCI workload during this N4. Previous A10/A11 failures stay preserved. No measured percentage speedup is inferred without a saved comparable monotonic total. This establishes completion under the old bound on the corrected app, not all42 sessions/840 rounds, browser/layout, full C2/M3/rollback or P05. Cookie/header requests with HTTPS Origin are not real TLS/browser/device proof.

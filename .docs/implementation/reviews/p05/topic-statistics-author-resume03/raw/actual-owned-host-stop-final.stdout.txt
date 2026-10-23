@@ -1,0 +1,59 @@
+{
+  "status": "PASS_ACTUAL_OWNED_WINDOWS_JOB_STOP_ONLY",
+  "count": 2,
+  "results": [
+    {
+      "mode": "normal-tree-stop",
+      "owner": "53199d4d1e93529430a30b8b3ad17263",
+      "manager_pid": 93036,
+      "worker_pid": 23512,
+      "descendant_seen_in_job": 3,
+      "terminal": {
+        "kind": "TERMINAL",
+        "owner": "53199d4d1e93529430a30b8b3ad17263",
+        "status": "STOP_CONFIRMED",
+        "active_processes": 0,
+        "worker_code": 137,
+        "stop_requested": true,
+        "errors": []
+      },
+      "final": {
+        "owner": "53199d4d1e93529430a30b8b3ad17263",
+        "kind": "VERIFY",
+        "active_processes": 0,
+        "job_destroyed": true
+      },
+      "elapsed_ms": 248,
+      "logs": "{\"kind\":\"OWNED_TEST_DESCENDANT\",\"pid\":140560}\n"
+    },
+    {
+      "mode": "manager-crash-job-close-fallback",
+      "owner": "519813c0e0285087559dc88e7153733f",
+      "manager_pid": 35492,
+      "worker_pid": 104752,
+      "descendant_seen_in_job": 3,
+      "terminal": {
+        "kind": "TERMINAL",
+        "owner": "519813c0e0285087559dc88e7153733f",
+        "status": "STOP_CONFIRMED_WITH_MANAGER_FAILURE",
+        "active_processes": 0,
+        "errors": [
+          "OWNED_MANAGER_NONZERO"
+        ],
+        "first_stop_failure": "OWNED_MANAGER_NONZERO"
+      },
+      "final": {
+        "owner": "519813c0e0285087559dc88e7153733f",
+        "kind": "VERIFY",
+        "active_processes": 0,
+        "job_destroyed": true
+      },
+      "elapsed_ms": 315,
+      "logs": "{\"kind\":\"OWNED_TEST_DESCENDANT\",\"pid\":90708}\n"
+    }
+  ],
+  "taskkill_calls": 0,
+  "Docker_calls": 0,
+  "actual_PG_sessions": 0,
+  "statistics_RUN": false
+}

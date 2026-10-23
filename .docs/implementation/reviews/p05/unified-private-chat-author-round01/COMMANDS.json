@@ -1,0 +1,57 @@
+{
+  "node": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+  "python": "C:/.projects/venus/.venv/Scripts/python.exe",
+  "results": [
+    {
+      "command": "vitest run APIchatguards+compatibility+topicplanner+UIpanel",
+      "log": "raw/target-tests01.txt",
+      "exit": 1,
+      "PASS": 143,
+      "FAIL": 1,
+      "reason": "Own UI fixture expectation conversation_id conversation vs actual c-s; corrected expectation only"
+    },
+    {
+      "command": "vitest run APIchatguards+compatibility+topicplanner+UIpanel+contextfixture",
+      "log": "raw/target-tests02.txt",
+      "exit": 0,
+      "PASS": 152
+    },
+    {
+      "command": "PYTHON=absolutevenv vitest run",
+      "log": "raw/all-tests01.txt",
+      "exit": 0,
+      "files": 57,
+      "PASS": 846,
+      "platform_SKIP": 208
+    },
+    {
+      "command": "eslint nine changed source/test files",
+      "log": "raw/lint01.txt",
+      "exit": 0,
+      "warnings": 1,
+      "reason": "Removed now-unneeded room.meeting_context dependency"
+    },
+    {
+      "command": "eslint same final nine files",
+      "log": "raw/lint02.txt",
+      "exit": 0,
+      "warnings": 0
+    },
+    {
+      "command": "tsc -b and tsc -p apps/web/tsconfig.json",
+      "log": "raw/typecheck01.txt",
+      "exit": 0
+    },
+    {
+      "command": "tsc -b and tsc -p apps/web/tsconfig.json finalbytes",
+      "log": "raw/typecheck02.txt",
+      "exit": 0
+    },
+    {
+      "command": "node --check tests/p05-topic-games/cases.mjs",
+      "log": "raw/integration-syntax01.txt",
+      "exit": 0
+    }
+  ],
+  "Docker_RUN": false
+}

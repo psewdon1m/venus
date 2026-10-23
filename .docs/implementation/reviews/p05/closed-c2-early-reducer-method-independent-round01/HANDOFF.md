@@ -1,0 +1,3 @@
+PASS_METHOD_ONLY exact driverf126/witness0c14. Trajectory37072/371ranges +canary336/4ranges allclosed;1125metadatahashes+373batchlogs verify2prefix/52carry/321new provenance. Accepted37producerpins/reducer42769 unchanged; section-only replay does not need global2609 terminal. Docker tail exact after LF/CRLF normalization, no semantic delta.
+
+ONE extra reducer at a time with original8/freshresource guards, no othernewheavywork; two sections sequentially/no staticrepeat. Actual raw reduction/status/C2/P05 acceptance pending independent actual review. Own path-schema checker failure retained/corrected; no driver/native/test/model/shared execution. COMPLETE_STOP.

@@ -1,0 +1,13 @@
+--- 
++++ 
+@@ -99,8 +99,8 @@
+   assert.equal((await get({},'/health/ready')).status,'ready');
+   if(phase==='a-on'){
+    const {host,prep}=await createProfile({N:2,context:'online',mode:'yes_but'});await mutation(host,gameBase(host)+'/start',{draft_rev:prep.game_rev});
+-   let g=await current(host);assert.equal(g.state,'active');assert.equal(g.current_round.round_index,1);assert.equal(g.current_round.actors.length,2);
+-   assert.equal(await consentRound(g,'invitation'),2);g=await current(host);const proposer=(await ownAll()).filter(x=>x.own.round_actions.propose_condition);assert.equal(proposer.length,1);await mutation(proposer[0].a,rpath(host,g)+'/condition',{expected_rev:g.game_rev,text:'Continuity test: only while both agree.'});assert.equal(await consentRound(g,'action'),2);g=await current(host);assert.equal(g.current_round.kind,'public');const card=pack.card(g.current_round.card_id);assert.equal(card.interaction,'pair_public');assert.equal(card.mode,'yes_but');
++   let g=await current(host);assert.equal(g.state,'active');assert.equal(g.current_round.round_index,1);assert.equal(g.current_round.kind,'generic');assert.equal(Object.hasOwn(g.current_round,'actors'),false);assert.equal(Object.hasOwn(g.current_round,'card_id'),false);
++   assert.equal(await consentRound(g,'invitation'),2);g=await current(host);const proposer=(await ownAll()).filter(x=>x.own.round_actions.propose_condition);assert.equal(proposer.length,1);await mutation(proposer[0].a,rpath(host,g)+'/condition',{expected_rev:g.game_rev,text:'Continuity test: only while both agree.'});assert.equal(await consentRound(g,'action'),2);g=await current(host);assert.equal(g.current_round.kind,'public');assert.equal(g.current_round.actors.length,2);const card=pack.card(g.current_round.card_id);assert.equal(card.interaction,'pair_public');assert.equal(card.mode,'yes_but');
+    const controls=await ownAll();assert(controls.some(x=>x.own.round_actions.finish));
+    state={schema_version:1,actors:currentActors.map(({room,id,name,locale,cookie,csrf})=>({room,id,name,locale,cookie,csrf})),session:g.session_id,round:g.current_round.round_id,draft_rev:prep.game_rev};
+    const before=await persisted();assert.equal(before.catalog.active_digest,pack.digest);assert.equal(before.game_count,1);assert.equal(before.room_count,1);assert.equal(before.participants,2);state.before=before;report.persisted=before;

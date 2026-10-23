@@ -1,0 +1,37 @@
+"""Freeze only new resume02. Refuse an already frozen output."""
+import hashlib,json,re,subprocess,shutil
+from pathlib import Path
+from datetime import datetime,timezone
+work=Path('.artifacts/p05-topic-statistics-resume02');out=Path('.docs/implementation/reviews/p05/topic-statistics-author-resume02')
+assert out.is_dir() and not (out/'INDEX.json').exists()
+node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+commands=[]
+for name,args in [('inherited-finite-final',[node,str(work/'finite-controls.mjs')]),('infrastructure-finite-final',[node,str(work/'infrastructure-controls.mjs')]),('eligibility-component-final',[node,str(work/'eligibility-controls.mjs')]),('eslint-final',[node,'node_modules/eslint/bin/eslint.js','--config',str(work/'eslint.config.mjs'),str(work)]),('dispatch-cold-final',[node,str(work/'section-runner.mjs'),'--describe']),('supervisor-cold-final',[node,str(work/'supervisor32.mjs'),'--describe']),('worker-cold-final',[node,str(work/'worker.mjs'),'--describe'])]:
+ r=subprocess.run(args,capture_output=True,timeout=60);(out/'raw'/f'{name}.stdout.txt').write_bytes(r.stdout);(out/'raw'/f'{name}.stderr.txt').write_bytes(r.stderr);commands.append({'name':name,'command':args,'exit_code':r.returncode,'at_utc':datetime.now(timezone.utc).isoformat()})
+syntax=[]
+for p in work.glob('*.mjs'):
+ r=subprocess.run([node,'--check',str(p)],capture_output=True);syntax.append({'path':p.as_posix(),'exit_code':r.returncode,'stderr':r.stderr.decode()})
+assert all(x['exit_code']==0 for x in commands+syntax),(commands,syntax)
+(out/'validation-final.json').write_text(json.dumps({'commands':commands,'syntax':syntax},indent=2)+'\n',encoding='utf8')
+repo=Path('.').resolve();pending=list(work.glob('*.mjs'));seen=set()
+while pending:
+ p=pending.pop().resolve()
+ if p in seen:continue
+ assert p.is_relative_to(repo);seen.add(p)
+ for quote,name in re.findall(r'(?:from\s*|import\s*\()([\x27\x22])([^\x27\x22]+)\1',p.read_text(encoding='utf8')):
+  if name.startswith('.'):
+   target=(p.parent/name).resolve()
+   if target.is_file() and target.suffix in ('.mjs','.js','.json'):pending.append(target)
+for name in ['.artifacts/p05-topic-measurements/contracts/expected-status.json','packages/relationship-engine/src/policy.json','package-lock.json','package.json','tools/stage_inventory.py','tools/source_inventory.py','tests/p05-topic-lifecycle/harness.mjs','apps/api/dist/app.js','apps/api/dist/room-routes.js','apps/api/dist/topic-games.js']:
+ seen.add((repo/name).resolve())
+dependencies=[]
+for p in sorted(seen):
+ if p.parent==work.resolve():continue
+ rel=p.relative_to(repo).as_posix();dest=out/'dependency-source'/(rel+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest);dependencies.append({'path':rel,'sha256':sha(p),'bytes':p.stat().st_size})
+(out/'DEPENDENCY_PINS.json').write_text(json.dumps({'scope':'Local recursive import references plus explicit raw/source/lock inputs; bare npm binary/runtime closure NOT proven','files':dependencies},indent=2)+'\n',encoding='utf8')
+for p in work.iterdir():
+ if p.is_file():dest=out/'exact-author-source'/(p.name+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+parent=Path('.docs/implementation/reviews/p05/topic-statistics-author-resume01/INDEX.json');assert sha(parent)=='5b263330f76e6119b1dd765426704d97d4b1d4ab12a7bddc3de1ce91367d549b';shutil.copyfile(parent,out/'parent-resume01-INDEX.json.bytes')
+report={'schema':1,'created_at':datetime.now(timezone.utc).isoformat(),'status':'AUTHOR_FINITE_INFRASTRUCTURE_CHECKPOINT_WITH_UNEXECUTED_ADAPTER_NOT_ACCEPTED','parent_index_sha256':sha(parent),'historical_source_identity':'1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad','historical_runtime_image':'sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4','current_full_identity':'NOT_FROZEN_PARALLEL_P04_R3_WRITER_ADDITIONS','implemented':['Synchronous fsync-before-receipt durable gzip/hash-chain append, exact persisted replay, closed index and NOT_ACCEPTED crash prefix','Fixed section dispatch with clean current source/preregistered input checks and explicit worker launch','Explicit new32GiB partition adaptation + separate external supervisor + owned inert IPC-none native free probe + actual allocated host lease','AST-selected marked seed and productionticker callback derivative; paired actual/model session and coalesced observer modules UNEXECUTED'],'remaining':['Independent nonauthor source/raw method review and correction cycle','Actual supervisor/probe/stop/tree-kill/scan scalability fault tests; host worker CPU/RSS hard containment; no actual quota/runtime containment proof','Runtime84 admission/orchestration/preStart history/WS initial-drain/real heartbeat/semantic cases/private boundaries; no actual trace','Bind offline observer to validated coalesced model: current METHOD06 remains conservative uncoalesced','GF stage1 cross-profile structural equivalence proof and complete fixed exclusion-support certificates','Feasibility qualification; final source/content freeze after writers stop; clean prereg commit/tag/exact runtime/bare dependency/rootACK/build lineage','Full unchanged statistical runs + independent raw coverage/AUC/denominator verification'],'validation':{'inherited_finite_controls':30,'new_infrastructure_finite_controls':20,'eligibility_support_components':6,'syntax':len(syntax),'commands':commands,'first_eslint_attempt':'FAIL11 retained; final exit0'},'actual_selector_sessions':0,'actual_mutator_sessions':0,'Docker_calls':0,'actual_runtime84_RUN':False,'full_statistical_RUN':False,'human470':'HOLD_UNCHANGED','P06_started':False,'full_P05_PASS':False}
+(out/'HANDOFF.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8');shutil.copyfile(work/'README.md',out/'REPORT.md')
+files=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file() and p.name!='INDEX.json'];(out/'INDEX.json').write_text(json.dumps({'schema':1,'scope':'AUTHOR_FINITE_INFRASTRUCTURE_WITH_UNEXECUTED_ADAPTER_NOT_ACCEPTED','files':files},indent=2)+'\n',encoding='utf8');print(json.dumps({'INDEX_sha256':sha(out/'INDEX.json'),'HANDOFF_sha256':sha(out/'HANDOFF.json'),'files':len(files),'dependencies':len(dependencies),'commands':commands}))

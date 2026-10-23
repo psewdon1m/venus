@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "review": "P05_TOPIC_LEDGER_COUNT_AND_ROOM_LIFECYCLE",
+  "round": 1,
+  "status": "COMPONENT_PREFLIGHT_PASS",
+  "timestamp": "2026-10-19T16:45:02.1103906+00:00",
+  "reviewer": "p05_topic_ledger_review",
+  "source_inputs": [
+    {
+      "path": "apps/api/src/private-topic-ledger.ts",
+      "sha256": "cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a"
+    },
+    {
+      "path": "apps/api/src/private-topic-ledger.test.ts",
+      "sha256": "241def51d56499ccfcedd0125dc89c95865081dff67740b4dbfe767f059e0d8e"
+    },
+    {
+      "path": "apps/api/src/topic-room-lifecycle.ts",
+      "sha256": "1e63e055ca3989c2783f0b2debea7d5d2c787d3c63fdaca10895ad23aba9d381"
+    },
+    {
+      "path": "apps/api/src/topic-room-lifecycle.test.ts",
+      "sha256": "a774943d9f0f80f3404932b517fa85ac9d28f0cc8c8e284673e99676039948f9"
+    },
+    {
+      "path": "apps/api/src/security.ts",
+      "sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25"
+    }
+  ],
+  "source_written_by_reviewer": false,
+  "independent_probe_sha256": "60d289423e1c732f7e899449193488fc6c511658ed758575e3f4b96a9a123819",
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "independent_execution": {
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "actual_child_sigkill": 3,
+    "raw": "lifecycle-round01/tests.txt"
+  },
+  "author_evidence_inspected": {
+    "indexed_files_verified": 20,
+    "passed": 133,
+    "skipped": 2,
+    "failed": 0,
+    "actual_lifecycle_sigkill": 15,
+    "actual_foundation_sigkill": 7,
+    "actual_live_secondprocess": 1,
+    "rerun_by_reviewer": false,
+    "path": "../../evidence/p05/ledger-preparation-01/agent/lifecycle-01/linux-round-02/"
+  },
+  "confirmed_component_findings": [],
+  "integration_obligations": [
+    {
+      "id": "LIFE001",
+      "state": "BOUNDED_COMPONENT_PROVED_INTEGRATION_OPEN",
+      "remaining": "Retention scheduling, finite terminal metadata pruning and restore replay barriers"
+    },
+    {
+      "id": "LIFE002",
+      "state": "OPEN_OUTSIDE_SCOPE",
+      "remaining": "DB immutable classification and actual authenticated adapter proof; external compatibility floor and old-worker quiescence"
+    },
+    {
+      "id": "LIFE003",
+      "state": "OPEN_OUTSIDE_SCOPE",
+      "remaining": "Actual PG advisory ordering/orphan race/final HTTP and WS fences"
+    },
+    {
+      "id": "LIFE004",
+      "state": "MEMBER_TOKEN_PROVED_INTEGRATION_OPEN",
+      "remaining": "DB/session revocation integration, explicit encrypted evidence retention addendum, finite lifecycle metadata retention, restored auth sessions"
+    },
+    {
+      "id": "LIFE-RECOVERY-01",
+      "state": "OPEN_INTEGRATION_OBLIGATION",
+      "remaining": "Recover exact original immutable retirement UUID/time after crash plus DB rollback; fresh timestamp conflicts by design",
+      "reproduced": "Independent intent-only test: changed retiredAt40001 conflicts, original40000 completes",
+      "permission_leak": false
+    }
+  ],
+  "cleanup_verified": true,
+  "source_pins_unchanged": true,
+  "clean_source_stage_pass": false,
+  "full_p05_pass": false,
+  "full_p06_pass": false,
+  "production_activation": false,
+  "evidence_index": "lifecycle-round01/index.json"
+}
