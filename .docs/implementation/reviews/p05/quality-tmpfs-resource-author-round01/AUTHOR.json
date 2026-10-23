@@ -1,0 +1,42 @@
+{
+  "status": "AUTHOR_RESOURCE_ONLY_READY_PENDING_INDEPENDENT_REVIEW_AND_ACTUAL_Q10",
+  "created_utc": "2026-10-23T01:38:39.177249+00:00",
+  "before": {
+    "bytes": 5669,
+    "sha256": "23e989e9863f59d2a94effaa76f48fd02c6f294998caa063e180d9b5128d6a30"
+  },
+  "after": {
+    "bytes": 5667,
+    "sha256": "6d22e55eeb02aab1b61a759e03e43a06b2347cb083396eb8ebf9386180497650"
+  },
+  "literal_replacements": 2,
+  "literal_inverse_exact": true,
+  "all_other_tool_bytes_exact": true,
+  "syntax": {
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      "tools/docker-quality.mjs"
+    ],
+    "exit_code": 0
+  },
+  "actual_evidence": "Original Q09 FAIL/cleanupcompleted; negative cases[] because unchanged copy failed ENOSPC. Tail is exact final8000 original quality.txt bytes, raw full file pinned in INPUT-PINS.json. No corrected quality PASS claimed.",
+  "resource_qualification": {
+    "host_observed_memory_bytes": 33617223680,
+    "host_memory_GiB": 31.30847930908203,
+    "host_logical_cpus": 16,
+    "main_quality_memory_bytes": 4294967296,
+    "main_tmpfs_bytes": 2147483648,
+    "eight_stats_memory_bytes": 12884901888,
+    "reserve_memory_bytes": 4294967296,
+    "sum_main_stats_reserve_bytes": 21474836480,
+    "main_cpus": 2,
+    "eight_stats_cpus": 8,
+    "reserve_cpus": 2,
+    "sum_cpu_caps_and_reserve": 12,
+    "qualification": "Prospective bounded main-container budget only; /tmp tmpfs is accounted inside main4GiB cgroup, not added to it. Host observation is 33.617223680 decimalGB /31.30847930908203GiB, not33.6GiB. No concurrent UI/OCI during quality; root must freshly admit Q10. Image-builder and artifact-capture helper remain uncapped sequential phases, so no whole-quality-run 4GiB claim."
+  },
+  "frozen_inputs_unchanged": true,
+  "own_runtime_or_Docker_launches": 0,
+  "own_Git_mutations": 0
+}

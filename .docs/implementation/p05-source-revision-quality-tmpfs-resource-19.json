@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "revision": "P05-QUALITY-TMPFS-RESOURCE-19",
+  "kind": "LOCAL_QUALITY_RUNNER_RESOURCE_ONLY",
+  "failed_Q09": {
+    "source_commit": "89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+    "report": ".artifacts/p05-final-quality-clone01/.artifacts/docker-quality/venus-quality-70a218c2c694/report.json",
+    "report_sha256": "97d7fd2116faf548394015d5d97ef410591b6cf097d1556953bb64bc8833c3e0",
+    "exit_code": 1,
+    "cleanup": "completed",
+    "failure": "ENOSPC copying unchanged full-source negative fixture into /tmp512MiB before any negative case; negative source_before/source_after equal."
+  },
+  "before_source_files": {
+    "tools/docker-quality.mjs": "23e989e9863f59d2a94effaa76f48fd02c6f294998caa063e180d9b5128d6a30"
+  },
+  "changed_source_files": {
+    "tools/docker-quality.mjs": "6d22e55eeb02aab1b61a759e03e43a06b2347cb083396eb8ebf9386180497650"
+  },
+  "literal_changes": [
+    {
+      "from": "'--memory','2g'",
+      "to": "'--memory','4g'"
+    },
+    {
+      "from": "/tmp:rw,exec,size=512m,mode=1777",
+      "to": "/tmp:rw,exec,size=2g,mode=1777"
+    }
+  ],
+  "unchanged": "CPU2, all runner logic, full source universe, negative cases and algorithms, artifact collector and cleanup. No APP/compiled production/card/measurement/manifest change. Revisions17/18 remain frozen. Source identity changes because this tool is source; do not claim all299 source-image pins equal. Existing app/image gates require explicit unchanged compiled-production correspondence, not a new image or native restart by this author.",
+  "resource_qualification": {
+    "host_observed_memory_bytes": 33617223680,
+    "host_memory_GiB": 31.30847930908203,
+    "host_logical_cpus": 16,
+    "main_quality_memory_bytes": 4294967296,
+    "main_tmpfs_bytes": 2147483648,
+    "eight_stats_memory_bytes": 12884901888,
+    "reserve_memory_bytes": 4294967296,
+    "sum_main_stats_reserve_bytes": 21474836480,
+    "main_cpus": 2,
+    "eight_stats_cpus": 8,
+    "reserve_cpus": 2,
+    "sum_cpu_caps_and_reserve": 12,
+    "qualification": "Prospective bounded main-container budget only; /tmp tmpfs is accounted inside main4GiB cgroup, not added to it. Host observation is 33.617223680 decimalGB /31.30847930908203GiB, not33.6GiB. No concurrent UI/OCI during quality; root must freshly admit Q10. Image-builder and artifact-capture helper remain uncapped sequential phases, so no whole-quality-run 4GiB claim."
+  },
+  "validation": "node --check tools/docker-quality.mjs only; original actual clean localQ10 remains root work. No Docker/native/CI execution or Git mutation by author.",
+  "rollback": "Restore exact before/docker-quality.mjs bytes pinned in author packet and remove revision19; original Q09512MiB fixture-copy limitation returns. Historical Q09 FAIL retained.",
+  "full_stage_PASS": false,
+  "P06_started": false
+}
