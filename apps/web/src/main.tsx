@@ -61,8 +61,6 @@ function App() {
     document.addEventListener('pointerdown',interrupt,true);
     document.addEventListener('wheel',interrupt,{capture:true,passive:true});
     document.addEventListener('touchstart',interrupt,{capture:true,passive:true});
-    document.addEventListener('scroll',repair,true);
-    window.addEventListener('scroll',repair);
     window.addEventListener('blur',blur);
     window.addEventListener('focus',observe);
     observe();
@@ -72,8 +70,6 @@ function App() {
       document.removeEventListener('pointerdown',interrupt,true);
       document.removeEventListener('wheel',interrupt,true);
       document.removeEventListener('touchstart',interrupt,true);
-      document.removeEventListener('scroll',repair,true);
-      window.removeEventListener('scroll',repair);
       window.removeEventListener('blur',blur);
       window.removeEventListener('focus',observe);
     };
