@@ -1,8 +1,8 @@
 """Read exact historical text without rewriting captured evidence.
 
-Ordinary Markdown remains strict UTF-8. Seventeen immutable capture records have
-explicit byte pins: five original Windows-1252 producer documents and twelve source
-copies whose relative links retain their original source directory as base.
+Ordinary Markdown remains strict UTF-8. Twenty immutable capture records have
+explicit byte pins: five original Windows-1252 producer documents, twelve source
+copies retaining original link context, and three exact historical link-target errata.
 This is not a wildcard encoding fallback or an exclusion from link validation.
 """
 from pathlib import Path
@@ -48,7 +48,10 @@ ARCHIVES = {'.docs/implementation/reviews/p05/c2-m3-owner-pilot-rebind-author-ro
  '.docs/implementation/reviews/p05/normal-continuity03-actual-independent-round01/inputs/00-10_IMPLEMENTATION_PLAN.md': {'sha256': '8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9', 'bytes': 78597, 'encoding': 'utf-8', 'origin': '.docs/10_IMPLEMENTATION_PLAN.md'},
  '.docs/implementation/reviews/p05/normal-continuity03-actual-independent-round01/inputs/02-ADR-025-p05-unified-private-text-chat.md': {'sha256': '59d3cc96bbca5a9b82c89c2cc2118d1666d6ae7a7e4d0dcec4c68ad79b55c5ed', 'bytes': 7331, 'encoding': 'utf-8', 'origin': '.docs/adr/ADR-025-p05-unified-private-text-chat.md'},
  '.docs/implementation/reviews/p05/normal-continuity03-actual-independent-round01/inputs/03-ADR-026-local-pilot-provisional-card-pass.md': {'sha256': '5c49e2d1dcdfd2e301878b2287ec0155da57711dc59f95293e4f6e311bd167d6', 'bytes': 2437, 'encoding': 'utf-8', 'origin': '.docs/adr/ADR-026-local-pilot-provisional-card-pass.md'},
- '.docs/implementation/reviews/p05/normal-continuity03-actual-independent-round01/inputs/04-ADR-029-owner-provisional-local-pilot-catalog.md': {'sha256': '0c2e65156452490351271c01da5de4a800742b2cad60de8321b96c55ff155146', 'bytes': 6134, 'encoding': 'utf-8', 'origin': '.docs/adr/ADR-029-owner-provisional-local-pilot-catalog.md'}}
+ '.docs/implementation/reviews/p05/normal-continuity03-actual-independent-round01/inputs/04-ADR-029-owner-provisional-local-pilot-catalog.md': {'sha256': '0c2e65156452490351271c01da5de4a800742b2cad60de8321b96c55ff155146', 'bytes': 6134, 'encoding': 'utf-8', 'origin': '.docs/adr/ADR-029-owner-provisional-local-pilot-catalog.md'},
+ '.docs/implementation/evidence/status/2026-10-20-p00-p05-pause/REPORT.md': {'sha256': '34d0f4c1ac37c503cb83f71590398d15a847be401b3e01081755c9cd3b91f17b', 'bytes': 30014, 'encoding': 'utf-8', 'origin': None, 'link_targets': {'../../../reviews/p05/topic-measurement-r100-diagnostic-round02/index.json': '../../../reviews/p05/topic-measurement-r100-diagnostic-round02/INDEX.json'}},
+ '.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round01/REPORT.md': {'sha256': '5b4270bbc7e2437e39c91f9a64b2af79d8285e8d3b0dd7e1d9c0841966239557', 'bytes': 5994, 'encoding': 'utf-8', 'origin': None, 'link_targets': {'../oci-rollback-author-resume-round01/INDEX.json': '../oci-rollback-author-resume-round01/index.json'}},
+ '.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round02/REPORT.md': {'sha256': '22855ae5ff5b80dacf72e4ce146ed695ba12a4a0f3be95261d5e4470a82b36f6', 'bytes': 4392, 'encoding': 'utf-8', 'origin': None, 'link_targets': {'../oci-rollback-author-resume-round02/INDEX.json': '../oci-rollback-author-resume-round02/index.json'}}}
 
 
 def read_markdown(path: Path, root: Path):

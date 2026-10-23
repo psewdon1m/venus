@@ -7,7 +7,7 @@ import hashlib
 import sys
 from urllib.parse import unquote
 from source_inventory import source_files
-from archived_markdown import read_markdown, archive_errors
+from archived_markdown import read_markdown, archive_errors, ARCHIVES
 
 ROOT=Path(__file__).resolve().parents[1]
 DOCS=ROOT/'.docs'
@@ -51,6 +51,7 @@ for p in markdown:
  for raw in LINKS.findall(text):
   link=raw.strip().split(' "')[0]
   if not link or link.startswith(('https://','http://','mailto:','data:','#')):continue
+  link=ARCHIVES.get(p.relative_to(ROOT).as_posix(),{}).get('link_targets',{}).get(link,link)
   path=unquote(link.split('#')[0])
   if not path:continue
   dest=(link_base/path).resolve()
