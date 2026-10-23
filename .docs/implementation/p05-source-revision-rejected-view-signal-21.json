@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "revision": "P05-REJECTED-VIEW-SIGNAL-21",
+  "kind": "FRONTEND_PRIVATE_RETENTION_CORRECTION_ONLY",
+  "parent_revision": "P05-POLLING-COHERENCE-20",
+  "before_source_files": {
+    "apps/web/src/topic-games-panel.tsx": "46d5b8a2e6f428f36f970fee2e45880ce4c338a2602f421473d599806c7e7b5d"
+  },
+  "changed_source_files": {
+    "apps/web/src/topic-games-panel.tsx": "4774a8c57f9f610a7cd4a2f35322467bc06dab66990f1e21cd83c65adc09f417"
+  },
+  "finding": "Root found a concrete private-retention defect in SOURCE20: OwnControls.revokeRound(signal) persists lastRoundSignal; passing the entire rejected newer round-view envelope retained prompt/advice/chat after clear/lease. Initial author/source-only reviews missed this. Those frozen proofs remain historical; they do not accept these corrected final bytes.",
+  "fix": "Exactly controls.revokeRound(value) -> controls.revokeRound({}) in the newer coherent-view branch. A fresh empty opaque signal has no envelope/own/private references, preserves per-call identity inequality, packet/refusal/deadline revocation and generation increment, and retains independently confirmed session Stop/Pause. No control module, validator, test or harness changes.",
+  "compatibility": "SOURCE20 revision-race detection, read-versus-write error separation and normal1500ms refresh behavior otherwise byte-exact. Backend/API/contracts/policy/cards/TTL/scopes/transport/auth/statistical model unchanged; original06/source27f/image48c continues. Historical source28/image29/source20 snapshots immutable; no native or WK failure-causation claim. Root new source/image/relevant quality/UI/CI and independent final-byte review remain required.",
+  "validation": {
+    "related_tests_PASS": 149,
+    "existing_test_files": 9,
+    "focused_ESLint_exit": 0,
+    "web_typecheck_exit": 0,
+    "new_tests_or_harness": false,
+    "Docker_native_CI_by_author": 0
+  },
+  "rollback": "Exact inverse restores SOURCE20 rejected-envelope retention and is not a safe operational rollback. Safe feature rollback restores pre20 panel/test snapshots from polling-coherence-author-round01 (exact fcbf parent blobs), removes revisions20/21, and accepts the documented original polling UX bug; no DB migration. Preserve all historical proof.",
+  "evidence": "reviews/p05/polling-coherence-author-round02/INDEX.json",
+  "full_stage_PASS": false,
+  "P06_started": false
+}
