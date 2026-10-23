@@ -1,0 +1,13 @@
+--- ORIGINAL-A29/x11.mjs
++++ ORIGINAL-A30/x11.mjs
+@@ -75,8 +75,9 @@
+ export async function native200(page,xserver,budget){
+  const id=await windowFor(page,xserver,budget);xdo(xserver.name,'windowsize','--sync',id,'640','1000');xdo(xserver.name,'windowmove',id,'0','0');xdo(xserver.name,'key','--clearmodifiers','ctrl+0');
+  const measure=()=>bounded(budget,'native-measure',()=>page.evaluate(()=>({inner_width:window.innerWidth,dpr:window.devicePixelRatio,css_zoom:getComputedStyle(document.documentElement).zoom,scroll_width:document.documentElement.scrollWidth})));
++ const resetReady=await page.waitForFunction(()=>window.devicePixelRatio===1,null,{polling:'raf',timeout:Math.max(1,budget.remaining())});await resetReady.dispose();
+  const before=await measure();assert.equal(before.dpr,1);let after=before,steps=0;
+- while(after.dpr/before.dpr<1.99&&steps<14){budget.check();xdo(xserver.name,'key','--clearmodifiers','ctrl+equal');await delay(60);after=await measure();steps++;}
++ while(after.dpr/before.dpr<1.99&&steps<14){budget.check();const previousDpr=after.dpr;xdo(xserver.name,'key','--clearmodifiers','ctrl+equal');const zoomReady=await page.waitForFunction(previous=>window.devicePixelRatio>previous,previousDpr,{polling:'raf',timeout:Math.max(1,budget.remaining())});await zoomReady.dispose();await delay(60);after=await measure();steps++;}
+  const engine=page.context().browser().browserType().name(),browser_version=page.context().browser().version();const result={window_id:id,engine,browser_version,nominal_zoom_percent:200,measured_zoom_percent:after.dpr/before.dpr*100,native_zoom_metrology:engine==='webkit'?'WEBKIT_27_2_FIRST_SUPPORTED_207_36':'EXACT_200_ORIGINAL_TOLERANCE',before_width:before.inner_width,after_width:after.inner_width,before_dpr:before.dpr,after_dpr:after.dpr,scroll_width:after.scroll_width,css_zoom:after.css_zoom,x11_keyboard:true,isolated_browser:true,reset_verified:false,steps};assertNativeZoom(result);return result;
+ }
+ export async function resetNative(page,xserver,measurement,budget){

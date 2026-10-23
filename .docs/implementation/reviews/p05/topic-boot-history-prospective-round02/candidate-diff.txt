@@ -1,0 +1,11 @@
+--- candidate697
++++ candidate0f3f
+@@ -107,7 +107,7 @@
+   // A missing snapshot is skippable only for a demonstrably never-started draft.
+   // Partial restores/corrupt started rows must not reset room semantic history.
+   const rows=(await c.query<TopicGameRow>(`SELECT g.* FROM game_sessions g JOIN topic_game_sessions t ON t.room_id=g.room_id AND t.session_id=g.id
+-   WHERE g.room_id=$1 AND g.id<>$2 AND (g.snapshot_cipher IS NOT NULL OR g.current_round>0
++   WHERE g.room_id=$1 AND g.id<>$2 AND (g.snapshot_cipher IS NOT NULL OR g.pack_digest IS NOT NULL OR g.state='completed' OR g.current_round>0
+     OR EXISTS(SELECT 1 FROM game_rounds r WHERE r.room_id=g.room_id AND r.session_id=g.id)
+     OR EXISTS(SELECT 1 FROM game_participants p WHERE p.room_id=g.room_id AND p.session_id=g.id)
+     OR EXISTS(SELECT 1 FROM topic_game_objects o WHERE o.room_id=g.room_id AND o.session_id=g.id AND o.kind='history'))

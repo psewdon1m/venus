@@ -1,0 +1,51 @@
+{
+  "status": "AUTHOR_CHECKS_PASS_WITH_RETAINED_LINT_FAILURE",
+  "functional_run": false,
+  "entries": [
+    {
+      "command": ".venv/Scripts/python.exe .artifacts/p05-v2-layout-producer-resume01/adapt-resume.py",
+      "exit_code": 0
+    },
+    {
+      "command": "node .artifacts/p05-v2-layout-producer-resume01/build-driver.mjs",
+      "exit_code": 0,
+      "final_helpers": 31
+    },
+    {
+      "command": ".venv/Scripts/python.exe .artifacts/p05-v2-layout-producer-resume01/check-author.py",
+      "attempts": [
+        1,
+        2,
+        3
+      ],
+      "exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "final_syntax_commands": 22,
+      "final_finite_modules": 4,
+      "final_finite_controls": 126
+    },
+    {
+      "command": "node .artifacts/p05-v2-layout-producer-resume01/resume-controls.mjs",
+      "exit_code": 0,
+      "final_controls": 13
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js --config .artifacts/p05-v2-layout-producer-resume01/eslint.config.mjs .artifacts/p05-v2-layout-producer-resume01 --format json --output-file [attempt output]",
+      "attempt": 1,
+      "exit_code": 1,
+      "cause": "Unused extracted choosePrivate; actual Node24 structuredClone builtin missing from lint environment; original full lint JSON retained"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js --config .artifacts/p05-v2-layout-producer-resume01/eslint.config.mjs .artifacts/p05-v2-layout-producer-resume01 --format json --output-file [attempt output]",
+      "attempt": 2,
+      "exit_code": 0
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js --config .artifacts/p05-v2-layout-producer-resume01/eslint.config.mjs .artifacts/p05-v2-layout-producer-resume01 --format json --output-file .artifacts/p05-v2-layout-producer-resume01/lint-final.json",
+      "exit_code": 0
+    }
+  ]
+}

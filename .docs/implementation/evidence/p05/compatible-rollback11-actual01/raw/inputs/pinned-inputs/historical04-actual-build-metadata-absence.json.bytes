@@ -1,0 +1,61 @@
+{
+  "A": {
+    "image": "sha256:e076901479f7b7af94d54ada3698cf69a60d39caf57cf78f311945638f589898",
+    "observed": {
+      "exists": false,
+      "sha256": null,
+      "app_imports": 0
+    },
+    "actual_receipt": ".artifacts/p05-projection-reuse-image-binding02/receipt.json",
+    "receipt_sha256": "e6a366ba340f91f91af5ba5bd8c07551f3175ebf4fcae385de3685058c39ffa1",
+    "exit_code": 0,
+    "cleanup": "AUTO_REMOVED"
+  },
+  "B": {
+    "at_utc": "2026-10-20T17:38:57.297958+00:00",
+    "image": "sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5",
+    "argv": [
+      "docker",
+      "run",
+      "--rm",
+      "--pull=never",
+      "--name",
+      "venus-qrb-meta-b3f82bf441eb",
+      "--label",
+      "com.venus.qrb.owner=46ab353551d34a5e802e961db9119a40",
+      "--label",
+      "com.venus.qrb.role=image-byte-probe",
+      "--network",
+      "none",
+      "--ipc",
+      "none",
+      "--read-only",
+      "--user",
+      "1000:1000",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges:true",
+      "--memory",
+      "64m",
+      "--cpus",
+      "0.25",
+      "--pids-limit",
+      "32",
+      "--log-driver",
+      "none",
+      "--entrypoint",
+      "node",
+      "sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5",
+      "-e",
+      "const f=require('fs'),c=require('crypto'),p='/app/build-metadata.json';const exists=f.existsSync(p);console.log(JSON.stringify({exists,sha256:exists?c.createHash('sha256').update(f.readFileSync(p)).digest('hex'):null,app_imports:0}));"
+    ],
+    "observed": {
+      "exists": false,
+      "sha256": null,
+      "app_imports": 0
+    },
+    "exit_code": 0,
+    "cleanup": "AUTO_REMOVED"
+  }
+}

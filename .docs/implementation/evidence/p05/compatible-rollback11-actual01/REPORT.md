@@ -1,0 +1,9 @@
+# OCI11 one actual attempt
+
+ACTUAL_FAIL_B2_NOT_FOURTEEN_PASS. Exactly one root-checked ACK04 attempt; driver exit1. A1 PHASE_COMPLETE, B2 FAIL with retained native AssertionError/ERR_ASSERTION, A3 NOT_RUN. Whole terminal elapsed 219685.2704 ms. The B2 replay assignment did not complete; no original stack or exact assertion site is retained, so no exact failure cause is asserted here.
+
+Historical A7/B4 synthetic component ran under exact producer11 ffa3f46a, independent pre-run review c64ba071 and ACK04 1e5d085c. Source b210/1846 and producer maps before/after are independently compared by this executor and exact. B2 reports row/sequence-preserving migration, live preboot scope, boot revocation, unchanged authority, bound TLS/version/UI and preserved A exclusions/B closed/C retired before failure. Failure is not waived or converted into fourteen-control acceptance.
+
+Export succeeded; resource report PASS_QRB_BOUND_ONLY_PROFILE with null failure. Host performed the accepted failure disposition: retained_manual_cleanup_required, stopped DB, keeper and DB containers plus one network and four native volumes retained. Owner 9814daf8d9a6d1d981edc93af314f328, project venus-p05-oci-7dbf43cd7f45. Native private keyring/session state was not read or exported by this executor. Old OCI09/10 resources were untouched. No retry, manual cleanup, app/oracle edits, or P06 work occurred.
+
+Public host files were copied byte-exact excluding live control; source/archive hashes and sizes are in raw-file-map.json. Historical Markdown bytes use .md.bytes archive names. The safe phase error is preserved separately from the host Error wrapper, and the terminal prioritizes the phase error. These are executor facts awaiting a separate nonauthor actual-evidence review, not full P05/current A10/production acceptance. WRITES COMPLETE.

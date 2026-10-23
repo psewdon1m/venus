@@ -1,0 +1,64 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/app[39m
+
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mlookup is immutable and never creates or scans missing rooms[32m 4[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mdoes not reuse even a single pre-existing regular file and leaves all other roots empty[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mnever adopts dangling destination symlinks[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mchecks every ancestor for symlinks before opening roots[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mrequires all roots before any mutation and never creates missing operator parents[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mrejects roots supplied through a nested alias after normalization[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mdenies lookup and provision after root deletion or inode replacement[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mrejects a wrong owner rather than repairing it[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mdoes not weaken caller umask, and a restrictive umask yields a denied partial birth[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mexclusively creates all five children and fsyncs each child then its own actual root[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 1 leaves an ambiguous partial birth that cannot be reused[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 2 leaves an ambiguous partial birth that cannot be reused[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 3 leaves an ambiguous partial birth that cannot be reused[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 4 leaves an ambiguous partial birth that cannot be reused[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 5 leaves an ambiguous partial birth that cannot be reused[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 6 leaves an ambiguous partial birth that cannot be reused[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 7 leaves an ambiguous partial birth that cannot be reused[32m 3[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 8 leaves an ambiguous partial birth that cannot be reused[32m 3[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 9 leaves an ambiguous partial birth that cannot be reused[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mfsync failure 10 leaves an ambiguous partial birth that cannot be reused[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mexclusive mkdir denies a competing directory created after the preflight[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22ma child swapped to a symlink before open fails O_NOFOLLOW, without writes to its target[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mretains anchored writes and denies a root replaced while fsync is in progress[32m 2[2mms[22m[39m
+ [31m×[39m apps/api/src/review-directory.test.ts[2m > [22mindependent Linux directory allocator adversarial controls[2m > [22mdoes not accept a late ancestor symlink introduced after the final root ancestor check[32m 5[2mms[22m[39m
+[31m   → expected function to throw an error, but it didn't[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mcreates only the five requested room directories with private modes[32m 6[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mdirectory lookup never creates a missing birth[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects existing partial birth before mutating any other root[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mcannot reinitialize a complete prior birth[32m 3[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects destination symlinks before any mkdir[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mdoes not repair or chmod unsafe operator roots[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrequires disjoint root paths[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects nested roots[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects root aliases through symlinks[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mretains root identity floors across delete/recreate attempts[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mnever follows changed root symlinks after initialization[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects non-UUID child "../escape"[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects non-UUID child ""[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts[2m > [22mprotected per-room directory allocation, actual Linux filesystem[2m > [22mrejects non-UUID child "10000000-0000-4000-8000-000000000001/child"[32m 1[2mms[22m[39m
+ [2m[90m↓[39m[22m apps/api/src/topic-room-directories.test.ts[2m > [22mrejects unsupported platform before filesystem writes
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/review-directory.test.ts > independent Linux directory allocator adversarial controls > does not accept a late ancestor symlink introduced after the final root ancestor check
+AssertionError: expected function to throw an error, but it didn't
+ ❯ apps/api/src/review-directory.test.ts:115:43
+    113|     const f=fixture(),allocator=new TopicRoomDirectories(f.roots),save…
+    114|     intercept.open=path=>{if(!swapped&&path===f.roots.lifecycleWitness…
+    115|     expect(()=>allocator.provision(room)).toThrow(expect.objectContain…
+       |                                           ^
+    116|   });
+    117| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m37 passed[39m[22m[2m | [22m[33m1 skipped[39m[90m (39)[39m
+[2m   Start at [22m 17:11:11
+[2m   Duration [22m 503ms[2m (transform 42%, tests 40%, import 15%, worker 3%)[22m
+

@@ -1,0 +1,33 @@
+from pathlib import Path
+import json,hashlib,collections,datetime
+R=Path('C:/.projects/venus');O=Path(__file__).resolve().parent;read=lambda p:json.loads(p.read_text(encoding='utf-8-sig'));sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+wp=R/'.artifacts/p05-c2-closed-inputs-witness01.json';dp=R/'.artifacts/p05-reduce-closed-c2-section04.py';mp=R/'.artifacts/p05-full-original-ranges02/MANIFEST.json'
+assert sha(wp)=='0c14fded52f052d333ce44a8d3ac04a33fcf08e2c7eb5b7c0cfdc90bf5eb1eca';assert sha(dp)=='f1267ac27e344f62f3dde5fb5ccc025bba0714812643c0f6439aee74a9004ad2'
+w=read(wp);plan=read(mp);assert sha(mp)==w['original_manifest_sha256']=='9b107dccf958551968e6e1fe758595754c219a66ac6bd66fcacdb26ff62e59c2';assert w['C2_statistical_acceptance'] is False and w['full_stage_PASS'] is False
+carry=read(R/'.artifacts/p05-full-original-execution03/verified-carry.json');origins=collections.Counter();totals={};metadata=0;logs=0;binding=read(Path(plan['ack_base']['producer_root'])/'binding.json')
+for section in ['c2-trajectory','c2-canary']:
+ s=w['sections'][section];items=s['inputs'];expected=[{'owner':p['owner'],'range':p['range']} for p in plan['prefixes'] if p['section']==section]+[{'owner':j['owner'],'range':j['range']} for j in plan['jobs'] if j['range']['section']==section]
+ assert [{'owner':x['owner'],'range':x['range']} for x in items]==expected;assert len(items)==s['ranges'];assert sum(x['range']['count'] for x in items)==s['cases']==plan['counts'][section];assert items[0]['range']['start']==0 and items[-1]['range']['end']==s['cases'];assert all(x['range']['end']==y['range']['start'] for x,y in zip(items,items[1:]))
+ for item in items:
+  owner=item['owner'];rg=item['range'];raw=R/'.artifacts/p05-fixedranges'/owner;origins[item['origin']]+=1
+  for name,h in item['metadata_pins'].items():
+   if name!='batch_log_sha256':assert sha(raw/name)==h;metadata+=1
+  h=read(raw/'host-report.json');summary=read(raw/'export/summary.json');export=read(raw/'export-pins.json')
+  assert h['status']==summary['status']=='RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE';assert h['owner']==summary['owner']==owner and h['range']==summary['range']==rg;assert h['cleanup']=='COMPLETE' and h['cleanup_errors']==[] and h['worker_exit']==0 and h['timeout'] is False
+  assert all(h[k] is True for k in ['writer_stopped','export_verified','producer_unchanged']);assert h['source_identity']==summary['source_identity']==plan['ack_base']['source_identity'];assert h['image']==summary['image']==plan['ack_base']['image_id'];assert summary['completed']==rg['count'] and summary['raw']['records']==rg['count']+1 and summary['full_section_PASS'] is False and summary['full_P05_PASS'] is False
+  for key in ['binding_sha256','prereg_sha256','method_review_sha256']:assert summary[key]==plan['ack_base'][key]
+  assert export['summary']==summary and export['records']==summary['raw']['records']
+  if item['origin']=='ACCEPTED_PREFIX':
+   p=next(p for p in plan['prefixes'] if p['owner']==owner);assert sha(Path(p['report_path']))==p['report_sha256']==item['metadata_pins']['host-report.json']
+  else:
+   job=next(j for j in plan['jobs'] if j['owner']==owner);root='p05-full-original-execution02' if item['origin']=='CARRIED_COMPLETED' else 'p05-full-original-execution03';lp=R/'.artifacts'/root/'logs'/(owner+'.json');assert sha(lp)==item['metadata_pins']['batch_log_sha256'];log=read(lp);logs+=1
+   assert log['owner']==owner and log['range']==rg and log['ordinal']==job['ordinal'] and log['lane']==job['lane'];assert log['ok'] is True and log['native_range_execution_ok'] is True and log['exit_code']==0 and log['signal'] is None and log['overflow'] is False;assert log['host_report_sha256']==item['metadata_pins']['host-report.json'] and Path(log['host_report']).resolve()==(raw/'host-report.json').resolve()
+   if item['origin']=='CARRIED_COMPLETED':assert job['ordinal'] in carry['carried_ordinals']
+  assert summary['map_pins']==binding['map_pins'] and summary['pack_digest']==binding['pack_digest'] and summary['approval_scope']=='OWNER_PROVISIONAL_LOCAL_PILOT'
+ totals[section]={'cases':s['cases'],'closed_ranges':len(items),'gapfree':True,'all_metadata_exact_and_closed':True}
+producer=Path(plan['ack_base']['producer_root']);assert len(plan['ack_base']['producer_pins'])==37
+for n,h in plan['ack_base']['producer_pins'].items():assert sha(producer/n)==h
+assert sha(producer/'range-reduce.mjs')=='42769a3dff329acb64d2c54f64b286c760db268c6b38fc047f13b3428ba046bd'
+old=(R/'.artifacts/p05-reduce-original-section03.py').read_text();new=dp.read_text();oldblock=old[old.index('def run(args'):];newblock=new[new.index('def run(args'):];assert oldblock==newblock
+d={'status':'PASS_CLOSED_INPUT_METADATA_AND_UNCHANGED_LAUNCH_REDUCER_SOURCE_ONLY','witness_sha256':sha(wp),'driver_sha256':sha(dp),'sections':totals,'ranges':sum(x['closed_ranges'] for x in totals.values()),'metadata_hashes_verified':metadata,'nonprefix_batch_logs_verified':logs,'origins':dict(origins),'producer_pins_verified':37,'unchanged_Docker_execution_cleanup_block_normalized_text_sha256':hashlib.sha256(newblock.encode()).hexdigest(),'full_raw_replay_deferred_to_unchanged_native_reducer':True,'model_reexecution':0,'native_actions':0,'created_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat()}
+(O/'VERIFICATION.json').write_text(json.dumps(d,indent=2)+'\n');print(json.dumps(d))

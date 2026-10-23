@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T13:43:46.473247+00:00",
+  "outcome": "CHANGES_REQUESTED",
+  "scope": "P05_BACKEND_CODE_REVIEW_WITH_FEATURE_PROJECTION",
+  "stage_acceptance": false,
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_dirty": true,
+  "reviewed_current_files": [
+    {
+      "path": "apps/api/src/games.ts",
+      "sha256": "f8ab05eb5acdd251a8e86770b469d0e245693d6bfaf679ea109f0e08716a67e2"
+    },
+    {
+      "path": "apps/api/src/rooms.ts",
+      "sha256": "b731fc531dafe17b3bf3fa307054fca8cfd0404c7732f4a6d2b66f08f9e2a6ad"
+    },
+    {
+      "path": "apps/api/src/private-chat.ts",
+      "sha256": "399ee331f861f87081d5fe1d41577aa49573eea2dbfd194b40af3b656805d758"
+    },
+    {
+      "path": "apps/api/src/catalog.ts",
+      "sha256": "26d84d2cc6d3af4d4f9873662e6e1a4dd5b298d5d34435247bddd21427e1ec58"
+    },
+    {
+      "path": "packages/card-catalog/src/revocations.ts",
+      "sha256": "fe0327936cb7ffbfebc058dac13b757d2a69f347545a97a76d63882b4757dfe9"
+    },
+    {
+      "path": "packages/card-catalog/src/catalog.ts",
+      "sha256": "8ccb3d79bf187e6430071bb9e3a455b74f68c062ce3cfdfad0b53487235a9dce"
+    }
+  ],
+  "findings": [
+    {
+      "id": "B05-001",
+      "status": "RESOLVED_DIRTY_SOURCE",
+      "retest": "3/3PASS"
+    },
+    {
+      "id": "B05-002",
+      "status": "RESOLVED_DIRTY_SOURCE",
+      "retest": "2/2original +3/3whole Games actual read fence PASS"
+    },
+    {
+      "id": "B05-003",
+      "severity": "P1",
+      "status": "OPEN_REAL_LEDGER_ERROR_CLASSES",
+      "issue": "Feature availability exception rolls back safety/catalogue reconcile; Domain/Engine fix excludes actual plain/FS/UTF8 ledger errors",
+      "current_failed_controls": 3
+    }
+  ],
+  "test_artifacts": [
+    {
+      "path": ".artifacts/p05-backend-review/backend-adversarial-round02.json",
+      "sha256": "15715713c9e0f04f2eb614f311599fe36182b03c1ea0612a8864fc953359d9eb"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/backend-adversarial-round02-with-whole-game.json",
+      "sha256": "c787393845dc862743091f348375f40933af662de2ee2ac62aadd3e6fa30c0b7"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/feature-availability-safety.initial.ts.txt",
+      "sha256": "d2f57a61b800794c23a4e36b9b9bb29b1901fbd5b7382ba24f734838b8ba4638"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/feature-availability-safety.test.ts",
+      "sha256": "4232c2dae0dd2f0ca0345a285163d33b7860dedf3f1a1495a099c4f2fdcc56ba"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/backend-adversarial-feature-io.json",
+      "sha256": "184afb990a6d5c7767ffb188670b5fabd81d87253ef025327966f56e8ead2cac"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/whole-game-chat-clock.test.ts",
+      "sha256": "fef07810c6a54ca13cfe888b78467606b2a0bceea11f2662c601f2f1c5c0f53d"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/author-suites-independent-round01.json",
+      "sha256": "9bb74b269d09cdfae0405422fde0a77fae52401564ae10207e703261bcddedee"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/p05/backend-round-02.md",
+    "sha256": "efc4aa21b30acd2611fe5e8bcacc4d82ddd190d5e127bfddb357a9db4912b04b"
+  }
+}

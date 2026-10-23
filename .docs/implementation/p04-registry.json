@@ -2,7 +2,7 @@
   "schema_version": 1,
   "stage": "P04",
   "gate": "EXIT-P04",
-  "status": "BLOCKED",
+  "status": "IN_PROGRESS_CURRENT_PILOT_TECHNICAL_GATES_PENDING",
   "branch": "feature/p04-catalog",
   "baseline_tag": "p03-accepted-20261019",
   "baseline_sha": "579ca40a9344fd0af841ff2e2883e394321dfbe7",
@@ -89,7 +89,8 @@
     {
       "id": "P04-HUMAN-REVIEW",
       "status": "PENDING",
-      "required": "Named independent competent RU/EN/TR, originality/rights and safety reviewers bound to exact card hashes; generated drafts cannot self-approve"
+      "required": "Named independent competent RU/EN/TR, originality/rights and safety reviewers bound to exact card hashes; generated drafts cannot self-approve",
+      "current_pilot_applicability": "SUPERSEDED_AS_BLOCKER_BY_U019_PROVISIONAL_PASS; historical qualified-review requirement retained for production"
     }
   ],
   "production_catalogue": "UNAVAILABLE",
@@ -114,6 +115,79 @@
     "actual_gate_evaluation": {
       "path": ".docs/implementation/evidence/p04/ci/gate-evaluation.json",
       "sha256": "66e10d405a5ca3c93d140c14c1fa168ffa8b27646c7fd3f0ce0e86fdb3fafdaf"
+    }
+  },
+  "historical_registry_scope": "Original450 technical/candidate records below retained; current standalone pilot acceptance is separately described by current_pilot_revision.",
+  "current_pilot_revision": {
+    "decision_id": "U-019",
+    "source": ".docs/implementation/user-decisions.v4.json",
+    "ADR": "ADR-026",
+    "catalog_digest": "dfb3a2871d2e988be97cc89cbd50a362eeffa5e60ae0c5258a4219c646f0a270",
+    "pack_digest": "sha256:d1a7cb38be173c673665c30ae8e91792940438b675f8830d72503eebed9985d4",
+    "cards": 470,
+    "content_acceptance": "OWNER_PROVISIONAL_LOCAL_PILOT_PASS",
+    "historical450_HOLD_current_pilot_blocker": false,
+    "qualified_multilingual_or_rights_approval_claimed": false,
+    "technical_map_review": "PASS_CANDIDATE_DATA03_NOT_RUNTIME_COVERAGE",
+    "technical_map_review_index": ".docs/implementation/reviews/p05/topic-map-r4-independent-repeat03-round01/INDEX.json",
+    "normal_application_source_review": ".docs/implementation/reviews/p05/owner-provisional-pilot-independent-round01/INDEX.json",
+    "actual_current_C2": "PASS_FIXED_EXECUTION_BASELINES_AND_CONDITIONAL_COVERAGE_ONLY",
+    "actual_current_API42": "QUALIFIED_COMPONENT_CARRY_PASS_NOT_RERUN_ON_A18",
+    "full_EXIT_P04": "PENDING_CURRENT_M3_AND_FINAL_QUALITY_RECONCILIATION",
+    "qualified_A18_components": {
+      "updated_at": "2026-10-21T06:35:46.615258+00:00",
+      "source_identity": "a5a4143f3c8c346215450617b1ee711cd2c027cb23fc5e59f6e791c88b8f1866",
+      "source_files": 1872,
+      "tested_core_git": "8f16c23a29ca6637ce6ef359fcf76398709549b2",
+      "qualified_binding_review": {
+        "path": ".docs/implementation/reviews/p05/a18-gate-bindings-independent-round01/INDEX.json",
+        "sha256": "6ba12785c55f5cdb547717902a4a397794fee3899f58d1ba909d3afa7a24cd5d"
+      },
+      "API42": {
+        "profiles": 42,
+        "completed_rounds": 840,
+        "negative_cases": 2,
+        "backend_compiled_files_exact_A17": 69,
+        "qualification": "component_backend_equivalence_only_not_A18_whole_suite",
+        "review_sha256": {
+          "questions": "774c7a4fe0dcec211074f34551606f4c1024648c76c0f66ea513de918bd2a298",
+          "truth_dare": "4bc6c6dfe4809f56c9e61238d843b2c9c22294ce19472c79db25fba9009e3885",
+          "yes_but": "3eb4b5e5f076ee3ea95f7ddf6b5b0de68dcb561846d9e4f0cf0ac1602574bed1"
+        }
+      },
+      "current_browser26": {
+        "independent_actual_sha256": "04f456ccc50d7a2388b512aa775adfaf90f2883409d63c53c38fb1e1137e9265",
+        "original_cases": 16,
+        "status": "PASS_COMPONENT_ONLY"
+      },
+      "C2_full_statistical_acceptance": false,
+      "stage_PASS": false
+    },
+    "C2_independent_actual_review": {
+      "path": ".docs/implementation/reviews/p05/full-c2-actual-independent-round01/INDEX.json",
+      "sha256": "9e5be60dcdc1309e2556dc789c14f4f1165837c3ec95b73dd75c3c6730526844",
+      "fixed_cases": 84448,
+      "mandatory_baseline_failures": 0,
+      "typed_refusals_retained": 3248,
+      "targeted_canary_positive": 23,
+      "targeted_canary_safe_empty": 45,
+      "targeted_canary_precondition_absent": 268,
+      "public_equality_positive": 75,
+      "public_equality_precondition_absent": 261,
+      "all_336_positive_claimed": false
+    },
+    "local_pilot_exit_readiness": {
+      "path": ".docs/implementation/reviews/p04/local-pilot-exit-readiness-round01/INDEX.json",
+      "sha256": "a003d7747847ce5e0ea63424d056edb7c260bc22147dbcee2e24fa7227f09451",
+      "status": "PENDING_LOCAL_PILOT_EXIT_DEPENDENCIES",
+      "human_approval_blocker": false,
+      "new_implementation_findings": false,
+      "remaining": [
+        "current_P03_M3_dependency",
+        "existing_final_current_catalog_selector_quality_reconciliation"
+      ],
+      "executed_C0_API42_840_neutral_rounds_confirmed": true,
+      "catalog_pointer_revocation_proof_separate_from_OCI_image_rollback": true
     }
   }
 }

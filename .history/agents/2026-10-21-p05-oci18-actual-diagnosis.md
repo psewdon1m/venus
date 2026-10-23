@@ -1,0 +1,7 @@
+2026-10-20T23:57:49.2143598Z
+UTC — Root requests narrow saved OCI18 B2_OBSERVER_PAGE_OPEN failure diagnosis. Exact producer18/source12; prior passive GET succeeded. Read-only source/evidence only, no APP/native/resource mutations, no private messages/cookies output.
+UTC — Initial read-only PowerShell logmetadata foreach-pipeline syntax FAIL1 (empty pipe element), no native action/file mutation. Corrected by array-wrapping foreach.
+UTC — First own pure audit exit1 on overly exact column-token assertion (428 is inside context.newPage expression rather than context start). Source location still page-creation call; correcting assertion to expression containment. No native actions.
+
+2026-10-21T00:00:27.7461000Z UTC — Final pure audit0;86pins. ObserverFailure exactnewPage46:428 beforeclock/goto/API auth; priorretainedGET/freshE/hoststopproofpassed. Browserterminal exported beforehostcleanupstop; underlyingErrorcause notretained. Savedinspectprestartonly cannotproveOOM/pid/tmp. B2guard120101.7ms/ERR_ASSERTION, resource summaryPASSdoesnotwaiveassertoutsideinnercatch. Recommenddispose+closefinishedhostcontextbeforeobserver, retainA/E/oracles/bounds; effectivenesspending. Source/producerbeforeafterexact. No APP/native/resource changes. Freezing ownpacket.
+2026-10-21T00:00:41.4478849Z UTC — Frozen INDEX9c271740fcc12673c4a87a565f8afd915c6d7f21ac9243c8900f5cdf5eedbf98/1205B/6children; rootnotified, ownpacketwritesSTOP.

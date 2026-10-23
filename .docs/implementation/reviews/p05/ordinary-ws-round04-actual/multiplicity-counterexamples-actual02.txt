@@ -1,0 +1,32 @@
+[
+  {
+    "variant": "legitimate-one-late-frame",
+    "status": "PASS",
+    "expected": "PASS",
+    "detail": {
+      "observation_started_before_transition": true,
+      "actual_enqueue_boundary_observed": true,
+      "post_boundary_private_callbacks": 0,
+      "baseline_private_frames_consumed": 0,
+      "received_full_window_private_frames": 1,
+      "received_known_pre_boundary_queued_frames": 1,
+      "received_fresh_pending_frames": 0,
+      "full_payload_sha_and_exact_acl_headers": true,
+      "distinct_enqueue_per_received_frame": true,
+      "raw_unknown_private_frames": 0,
+      "forbidden_post_boundary_private_callbacks": 0
+    }
+  },
+  {
+    "variant": "already-received-replay",
+    "status": "REJECTED",
+    "expected": "REJECTED",
+    "error": "Unknown private frame or replay inside full transition window"
+  },
+  {
+    "variant": "two-late-frames-one-enqueue",
+    "status": "REJECTED",
+    "expected": "REJECTED",
+    "error": "Unknown private frame or replay inside full transition window"
+  }
+]

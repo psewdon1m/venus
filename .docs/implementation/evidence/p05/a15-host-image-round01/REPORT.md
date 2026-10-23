@@ -1,0 +1,9 @@
+# A15 host regression and image binding
+
+HOST_BUILD_COMPONENT_PASS_NOT_STAGE. Source 658b710bdca35b678421a51c1c276028305f28362901b2c065a3867aa754f4de, 1869 included files, exact source12 materialization. A14 parent changed exactly12 declared paths:8existing code/test paths and4additions (2tests/2source revisions). Existing frontend source and compiled UI exactA14. Independent source reviews c5eb20ae (unused socket work) and8125e268 (safe operator WS diagnostics); no claim these prove the prior WS failure cause.
+
+Windows host Vitest76files/1083PASS/204platformSKIP; project TypeScript,webTypeScript,lint exit0. Before/after included source exact. Expected negative-fixture ERROR text retained. Unchanged Linux storage219PASS/2explicitSKIP is separately qualified; Windows skipped tests are not passed tests.
+
+Test image sha256:021a57ecd11d8e5df300a5030c78312f66c5595ebb5d97f156ab71cf7de3b689,299 observed pins:69 compiled backend/data entries with exactly5changed modules (rooms,room-routes,room-games,topic-games,request-error-diagnostic); all7SQL/PG and UI exactA14. Normal production image sha256:d1eff08f9a3201c087356bef173ab5b5df7ea202125d6e30aceaec090cbe893c,122 expected files plus build metadata. Metadata source_revision is the source SHA256, not a Git commit. Builds and readonly/no-network file probes exit0, auto-removal verified. No application started by probes.
+
+Original N4 method04 pendingACK is included as NOT_AUTHORIZED. Actual new ordinary sessions, browser/layout/wire,compatible rollback,full measurements,clean-source/CI and complete EXIT-P05 are not granted by this packet. A13 onlineQ WS_FAILURE and instrumented inpersonQ QUERY_TIMEOUT remain distinct failures with saved originals. Source-specific backend carry is narrower than whole-module identity; no A13 N4 is relabeled A15.

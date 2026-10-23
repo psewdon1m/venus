@@ -1,0 +1,3 @@
+PASS_METHOD_ONLY, no findings. One host-file delta; other39 MJS/all other producer bytes exact25. Fixed argv-safe reader preserves ordered old semantics; first failed record:false receipt is bounded enum/count/hash only and never suppresses original rejection. All14/E/F/strictStop/replay/poll/deadlines/quotas unchanged.
+
+Author49131319/69, producer24ad4aa1/371, source93221/1871, A17f9e/B4 6260. Six cold controls + independent projection negatives PASS/audit0. Existing native12 stable cases/worker0/empty cleanup audited only. No causal/performance/64MiB-keeper-fit/whole-native PASS; original25 unknowncause retained. No APP/native writes; COMPLETE_STOP.

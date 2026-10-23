@@ -1,0 +1,31 @@
+# M3: exact-card uniqueness and pair semantic history
+
+**NORMATIVE_AUDIT_COMPLETE — current-session exact-card zero remains applicable.** No engine/code/policy/RNG change, measurement corpus, Docker or functional run was made. This is an interpretation of the15 exact inputs in inputs.json, not a newly reproduced application defect or stage PASS. Source inspected:732ed8407556c3e39e4060fcb0c4985a03f7ad865a9cf642218b39dde182ad80/1826. Every input has SHA256; exact relevant lines are retained in excerpts.json.
+
+## Three separate constraints
+
+| Constraint | Scope and authority | Consequence |
+| --- | --- | --- |
+| Exact card ID | 08§10 step8/§14; P03-M3 invariants.max_repeated_cards_per_session=0 | A newly selected exact card cannot repeat in the same session, including for a different pair. Safe shortage/refusal is retained, not a repeat permission. |
+| Semantic family | P05 topic design§5; later measurement design additional assertions/runtime canaries | Public family history blocks roomwide. Private family history blocks the same unordered pair across modes/sessions. A different pair may receive another card in the same family if public history does not block it. |
+| Actor pair | P03-M3 anti_repeat_definition; ADR024§Планирование | Last actual private opportunity counts even with no text/public intervening rounds. Avoid that pair when an effective alternative exists; N2/no-alternative exceptions are explicitly counted. This does not authorize repeating a card ID. |
+
+## Exact authority chain
+
+08 is the normative selection specification RE-1.0.0. §10 requires unused cards; §14 explicitly says “No card repeats within a session when enough eligible cards; if shortage, use safe fallback/error, not relax policy.” The M3 protocol is algorithm RE-1.P03-M1, supersedes measurements only, and explicitly fixes maximum repeated cards/session at0. ADR016 (ACCEPTED_TECHNICAL_BEFORE_M3_CORPUS) retains algorithm, seeds, original thresholds and requires another preregistration for changed measured inputs. Active plan v2§7 preserves P03 obligations and distinguishes historical proofs from new regressions; §8 still requires20-round neutral profiles without repeats. Historical acceptance does not automatically certify V2, but neither does it waive these rules.
+
+P05 topic design§3 introduces a separate envelope/history/reader and states that old proofs do not automatically transfer. §5 specifically separates public and private-pair **semantic** history to avoid a public decoder. It does not explicitly permit same exact ID reuse across pairs within the current session. ADR024 adds complete opportunity history and pair anti-repeat; its status is FIX_CANDIDATE/INTEGRATED_TESTS_PENDING. It does not repeal exact-card zero. ADR023 concerns lifecycle/safety/compatibility, and ADR019 supersedes standalone infrastructure scope; neither supplies that waiver. Enumerated current owner decisions v2/v3 contain no such authorization; unified text chat is a different scope change.
+
+The later measurement design makes the distinction explicit: round03 PROPOSED_PREREG.json `invariants.old_design_retained.max_repeated_cards_per_session` remains0, while `additional_assertions` separately require no same-pair private semantic repetition across modes/sessions. Its canary permits the same **family** in another pair; it does not say same card ID. REPORT03 line9 says current-session0 remains. These are proposal/design artifacts, not approved RUN authority, but they supply no contrary permission or relaxed threshold. `anti-repeat.json` concerns actor-pair opportunities and must not be substituted for the card-ID gate.
+
+## Compatible interpretation and residual gap
+
+Both rules can hold simultaneously: retain sessionwide exact-ID exclusion for private cards already selected/attempted in the current session, while retaining private-pair semantic history across room sessions and public semantic history roomwide. Distinct cards may share a family for different private pairs. Do **not** introduce a roomwide cross-session private semantic-family block or feed private history into public selection. Cards have fixed interaction metadata: a private-only card ID is not a public card candidate, so excluding that exact private ID from later private choices does not require changing the public pool/RNG. Mixed-visibility semantic families still require their existing static quarantine/semantic disposition rules.
+
+Inspected V2 `blocked` checks exact IDs and families for supplied rows; `effectivePrivateCards` supplies public rows plus only the same pair's private rows. Targeted replacement has the analogous pair-row condition. No explicit global current-session exact-ID exclusion is present in those filters. This is a **source/contract compatibility gap to verify**, not a measured M3 violation: no reachable repeated-ID counterexample or corpus was executed in this audit, and actual M3 corpus remains0.
+
+The M3 adapter must retain the original exact-ID zero assertion separately from semantic-pair and actor-pair counters. It must not relabel a different-pair duplicate as permitted, weaken the threshold, clear history, invent IDs or omit refusals to obtain PASS. If an exact-source deterministic fixture demonstrates a reachable duplicate, a scoped implementation correction with explicit selector version/compatibility, focused regression and independent review is the normal technical path before statistical preregistration. All selected/declined/replaced attempt records must remain available; changing a candidate must not erase consumed history. The effective-alternative predicate must remain coherent with actual candidate eligibility.
+
+**No owner product decision is required to preserve the compatible intersection.** Owner participation is required only if the intended product deliberately changes to permit same exact private card across different pairs in one session, or changes the no-repeat scope/threshold. That requires an explicit new decision/ADR and new measured-contract revision before the corpus, not an interpretation silently implemented inside the observer. No new general test framework is justified by this audit.
+
+Writes COMPLETE. Historical norms, proposals, FAIL proofs and source remain unchanged.

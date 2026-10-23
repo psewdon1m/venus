@@ -1,0 +1,3 @@
+# Layout08 A10 operational author
+
+AUTHOR_OPERATIONAL_ONLY_NOT_RUN. Additive exact copy of acceptedlayout07 a8517059; onlybinding, two runner path/status/count literals, falseACK metadata. Other25MJS including allscene/helpers/matrix and real470supplement exact07. Original459/9engine-locale shards +324realtext stress receipts unchanged. A10 source51f833a9/1856 test4e536313/292receipt e875a42d: independentlyAPP424c6ef2 cache/ownexclusion correction49PASS, CSSexact; frontendbundleJSchanged and requiresactualtests. No reusingA9UI proof as A10actual. BrowserMETHOD22 be3615d5 full16PASS on A10 mandatory BEFORErootlayoutACK; templatefalse. Source/map/pack/engine/sevenSQL/PG exact previous. No actual459/device/TLS/stage assertion.

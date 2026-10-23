@@ -1,0 +1,24 @@
+/** Actual WS admission/heartbeat and bounded, listener-cleaned delivery barriers.
+ * Fixture clock explicit; natural production TTL/timer soak is not claimed. */
+import assert from 'node:assert/strict';
+import WebSocket from 'ws';
+import {performance} from 'node:perf_hooks';
+import {setTimeout as delay} from 'node:timers/promises';
+import {setTimeout,clearTimeout} from 'node:timers';
+import {randomUUID} from 'node:crypto';
+export function socketWait(socket,event,{accept=()=>true,send=()=>{},ms=5000,name='ACTUAL_WS_DEADLINE'}={}){return new Promise((done,reject)=>{let timer;const finish=(error,value)=>{clearTimeout(timer);socket.off(event,receive);socket.off('error',failed);socket.off('close',closed);error?reject(error):done(value);},receive=value=>{try{if(accept(value))finish(null,value);}catch(e){finish(e);}},failed=e=>finish(e),closed=()=>finish(Error(name+':CLOSED'));socket.on(event,receive);socket.once('error',failed);socket.once('close',closed);timer=setTimeout(()=>finish(Error(name)),ms);try{send();}catch(e){finish(e);}});}
+export async function realTransport(h,f,{observerId,onRaw,guard,auditFrame=()=>{},beforeAudit=async()=>{}}){
+ const sockets=new Map(),publicFrames=[],auditQueue=[];let error=null,lastHeartbeatNative=-Infinity,lastHeartbeatFixture=h.time(),closed=false;assert(f.members.length<=8);assert(f.members.some(a=>a.id===observerId));
+ const origin=h.rooms.options.origin,record=row=>{guard();onRaw(row);};
+ try{for(const actor of f.members){guard();const ticket=await h.ok(actor,h.roomPath(f)+'/ws-ticket','POST',{request_id:randomUUID()}),socket=new WebSocket(origin.replace(/^http/,'ws')+h.roomPath(f)+'/ws',{origin,headers:{cookie:'venus_room_session='+encodeURIComponent(actor.credential)}});socket.actorId=actor.id;sockets.set(actor.id,socket);
+  socket.on('error',e=>{error??=e;});socket.on('close',()=>{if(!closed)error??=Error('ACTUAL_AUTHENTICATED_WS_CLOSED');});
+  socket.on('message',raw=>{try{const text=raw.toString();assert(Buffer.byteLength(text)<=65536,'ACTUAL_FRAME_CAP');const v=JSON.parse(text);if(v.type==='pong')return;
+   if(actor.id===observerId&&(v.stream==='room'||v.stream==='game')){assert(publicFrames.length<16,'PUBLIC_FRAME_PENDING_CAP');publicFrames.push(text);}else record({kind:'actual-WS-nonclassifier',actor:actor.id,raw:text});assert(auditQueue.length<128,'PRIVATE_AUDIT_PENDING_CAP');auditQueue.push({actor,frame:v});
+  }catch(e){error??=e;}});
+  await socketWait(socket,'open',{name:'ACTUAL_WS_OPEN_DEADLINE'});
+  await socketWait(socket,'message',{accept:raw=>JSON.parse(raw).type==='room.snapshot',send:()=>socket.send(JSON.stringify({type:'auth',ticket:ticket.ticket})),name:'ACTUAL_WS_AUTH_DEADLINE'});
+ }}catch(e){closed=true;for(const s of sockets.values())s.terminate();throw e;}
+ async function drain(){guard();if(error)throw error;for(const socket of sockets.values())await socketWait(socket,'pong',{send:()=>socket.ping(),ms:3000,name:'ACTUAL_NATIVE_WS_DRAIN_DEADLINE'});if(error)throw error;await beforeAudit();for(const row of auditQueue.splice(0))await auditFrame(row.actor,row.frame);}
+ async function heartbeat(){guard();const wait=Math.max(0,lastHeartbeatNative+550-performance.now());if(wait)await delay(wait);await Promise.all([...sockets.values()].map(socket=>socketWait(socket,'message',{accept:raw=>JSON.parse(raw).type==='pong',send:()=>socket.send(JSON.stringify({type:'ping'})),name:'ACTUAL_APPLICATION_HEARTBEAT_DEADLINE'})));lastHeartbeatNative=performance.now();lastHeartbeatFixture=h.time();guard();if(error)throw error;record({kind:'actual-WS-heartbeat',members:sockets.size,fixture_clock_ms:h.time(),native_monotonic_ms:lastHeartbeatNative});}
+ return{sockets,publicFrames,observerId,drain,heartbeat,assertHealthy(){guard();if(error)throw error;assert(!closed);},async beforeClockAdvance(ms){assert(Number.isSafeInteger(ms)&&ms>=0&&ms<=10000);if(h.time()+ms-lastHeartbeatFixture>=10000)await heartbeat();},async prelude(polls){await polls.barrier();await drain();for(const raw of publicFrames.splice(0))record({kind:'actual-WS-public-prelude',actor:observerId,raw});record({kind:'actual-prelude-boundary',members:sockets.size,fixture_clock_ms:h.time()});},async close(){closed=true;const waits=[];for(const socket of sockets.values())if(socket.readyState!==WebSocket.CLOSED)waits.push(socketWait(socket,'close',{send:()=>socket.close(),ms:1000,name:'ACTUAL_WS_CLOSE_DEADLINE'}).catch(()=>socket.terminate()));await Promise.all(waits);}};
+}

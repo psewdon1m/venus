@@ -1,0 +1,23 @@
+async function normalPrivateReady(a,control,{deadline=performance.now()+8000,expected={},intendedValue=null}={}){
+ const started=performance.now(),wanted=expectedPrivateScope(a,expected),row={control,started_monotonic_ms:started,phase_deadline_monotonic_ms:deadline,status:'FAILED',observer_model_only:true,cache_accept_observed:false};
+ const rows=report.private_preparation??=[];assert(rows.length<256,'METHOD12_PREPARATION_RECORD_CAP');rows.push(row);let last=null;
+ try{
+  if(intendedValue){const field=a.page.getByTestId(intendedValue.control),value=typeof intendedValue.value==='boolean'?await field.isChecked():await field.inputValue();assert.equal(value,intendedValue.value,'METHOD12_INTENDED_VALUE_CLEARED_BEFORE_PREPARATION');}
+  while(performance.now()<deadline){
+   const ready=await privateBatches.requireReady(a,{control,deadline,focus:false,expectedScope:{room:wanted.room,member:wanted.member,session:wanted.session,round:wanted.round},intendedValue});last=ready;
+   if(wanted.afterMonotonic!==null&&(observedOwnStarts.get(a)??-Infinity)<wanted.afterMonotonic){await delay(Math.min(20,Math.max(1,deadline-performance.now())));continue;}
+   const observed=a.lastGameView;
+   if(!observed||observed.session_id!==wanted.session||observed.round_id!==wanted.round||observed.game_rev<wanted.minRev||observed.state!=='active'||!['pending','active'].includes(observed.round_state)){await delay(Math.min(20,Math.max(1,deadline-performance.now())));continue;}
+   const exact={room:wanted.room,member:wanted.member,session:wanted.session,round:wanted.round,rev:observed.game_rev};
+   const before=privateBatches.snapshot(a,{control,expectedScope:exact});if(!before.ready){await delay(Math.min(20,Math.max(1,deadline-performance.now())));continue;}
+   const remaining=deadline-performance.now();assert(remaining>0,'METHOD12_PREPARATION_DEADLINE');let timer;
+   let dom;try{dom=await Promise.race([privateDom(a,control,observed.round_index),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('METHOD12_PREPARATION_DEADLINE')),remaining);})]);}finally{clearTimeout(timer);}
+   const sampled=performance.now(),final=privateBatches.snapshot(a,{control,expectedScope:exact});last=final;
+   if(!dom||a.lastGameView!==observed||!final.ready||before.cycle_id!==final.cycle_id){await delay(Math.min(20,Math.max(1,deadline-performance.now())));continue;}
+   assert(sampled<deadline,'METHOD12_PREPARATION_DEADLINE');
+   const ticket={...final,phase_deadline_monotonic_ms:deadline,deadline_monotonic_ms:Math.min(deadline,sampled+final.lease_remaining_ms),prepared_monotonic_ms:sampled};
+   Object.defineProperties(ticket,{expected:{value:exact},control:{value:control}});a.privateReady??=new Map();a.privateReady.set(control,ticket);row.status='READY';row.snapshot={...ticket};return ticket;
+  }
+  throw Error('METHOD12_PREPARATION_DEADLINE');
+ }finally{row.finished_monotonic_ms=performance.now();row.last_snapshot=last;save();}
+}

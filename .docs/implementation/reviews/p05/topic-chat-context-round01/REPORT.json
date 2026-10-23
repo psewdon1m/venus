@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/p05_topic_games_review",
+  "verdict": "CHANGES_REQUESTED",
+  "scope": "Independent protocol2 chat context/capability boundary, dirty frozen component runtime only",
+  "source_identity": "1d4de7ebb897bcd93f76e66f966650dfbc3b6d9c378da352dbb3a926faedf143",
+  "image": "sha256:3e253902de3a3d1bf23f1f9c494fb7e970aa83f634d6e29ceb9debf1322e277a",
+  "project": "venus-chat-context-review-b856eb032919",
+  "parent_exec_handle": 55009,
+  "runner_exit": 0,
+  "probe_exit": 1,
+  "cleanup": "completed",
+  "finding": {
+    "id": "TG-CHAT-001",
+    "severity": "P1",
+    "title": "Protocol2 ignores online-only chat capability policy",
+    "observed": {
+      "schema_version": 1,
+      "suite": "INDEPENDENT_V2_CHAT_CONTEXT",
+      "status": "FAIL",
+      "checks": [
+        {
+          "id": "IN_PERSON_CHAT_POST_DENIED",
+          "status": "FAIL"
+        },
+        {
+          "id": "IN_PERSON_CHAT_READ_DENIED",
+          "status": "FAIL"
+        },
+        {
+          "id": "IN_PERSON_SNAPSHOT_NO_CHAT_CAPABILITY",
+          "status": "FAIL"
+        }
+      ],
+      "observations": {
+        "snapshot_context": "in_person",
+        "capabilities": [
+          "private_text_chat"
+        ],
+        "post_status": 200,
+        "post_code": null,
+        "get_status": 200,
+        "peer_received_synthetic_canary": true,
+        "self_actions": {
+          "status": 200,
+          "chat": true
+        },
+        "synthetic_fixture": true,
+        "operator_env_false": true,
+        "operator_env_consumed_by_harness": false
+      }
+    },
+    "operator_flag_scope": "Source-confirmed absent V2 configuration wiring; false env in harness is not consumed and does not establish ordinary-server positiveV2 runtime proof."
+  },
+  "rate_limits": {
+    "status": "OPEN_COMPATIBILITY_QUESTION",
+    "legacy_document": "12 new messages/minute/actor;128/round;32 polling window",
+    "v2_source": "100 messages/epoch and65536 UTF8 bytes; no actor-minute bucket; replacement resets epoch chat",
+    "explicit_superseding_v2_norm_found": false,
+    "not_in_primary_runtime_scope": true
+  },
+  "not_proven": [
+    "ordinary production server V2 enabled runtime",
+    "human approval of content",
+    "fullP05",
+    "clean-source acceptance",
+    "production deployment"
+  ]
+}

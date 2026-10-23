@@ -1,0 +1,26 @@
+--- current/topic-map.ts
++++ prospective/topic-map.ts
+@@ -130,6 +130,8 @@
+     && label.length > 0 && [...label].length <= 128 && !/[\p{Cc}\p{Zl}\p{Zp}\u061c\u200e\u200f\u202a-\u202e\u2066-\u206f]/u.test(label), 'TOPIC_LABEL_INVALID');
+ }
+ const verified = new WeakSet<FrozenTopicMap>();
++// Server-private index of fully verified, deeply frozen entries; never serialized.
++const entryIndexes = new WeakMap<FrozenTopicMap,ReadonlyMap<string,TopicMapEntry>>();
+ const fixtureCapabilities = new WeakSet<object>();
+ export type SyntheticTopicFixtureCapability = Readonly<{scope: 'SYNTHETIC_TOPIC_FIXTURE_ONLY'}>;
+ /** Test-only explicit capability factory; do not export through production index. */
+@@ -229,11 +231,12 @@
+     const result = new FrozenTopicMap(freeze(pins), freeze(JSON.parse(canonical([...entries.values()].sort((a,b) => a.card_id < b.card_id ? -1 : 1))) as TopicMapEntry[]),
+       freeze(JSON.parse(canonical(taxonomy.topics)) as RuntimeTopicTaxonomy['topics']), freeze(JSON.parse(canonical(semantic.families)) as RuntimeSemanticPolicy['families']),
+       freeze([...excluded].sort()), synthetic);
++    entryIndexes.set(result,new Map(result.entries.map(entry=>[entry.card_id,entry])));
+     verified.add(result); return Object.freeze(result);
+   }
+-  entry(id: string): TopicMapEntry { const e = this.entries.find(v => v.card_id === id); assertEngine(e, 'TOPIC_CARD_UNKNOWN'); return e; }
++  entry(id: string): TopicMapEntry { const e = entryIndexes.get(this)?.get(id); assertEngine(e, 'TOPIC_CARD_UNKNOWN'); return e; }
+   allowed(card: Card): boolean {
+-    const entry=this.entries.find(e=>e.card_id===card.id);
++    const entry=entryIndexes.get(this)?.get(card.id);
+     return Boolean(entry&&entry.card_revision===card.revision&&entry.card_sha256===digest(card)&&!this.excluded_card_ids.includes(card.id));
+   }
+   static assertVerified(value: FrozenTopicMap, pack: FrozenPack): void {

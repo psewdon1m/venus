@@ -1,0 +1,3 @@
+PASS_METHOD_ONLY exact helperd55d4f07/authorityeed00d49 revision3; top-level INDEX pins supplied for helper guard. One Chromium/RU51-cell shared window/max1 only, no ninebatch/retry. Corrected argv6..9,40GiBfree, explicit narrow scope; drafts preserved. Rootchosen CPU+3+2reserve/memory8caps+foreign+3.5+4reserve policy accepted prospectively, no isolation/actualcapacity guarantee.
+
+Freshpreflight≤60s/rootexternalACK generation and quick pin/scope confirmation remain before actual. Original8/runtimes/oracles/budgets/owners/seeds unchanged; noSTOP/DRAIN/foreign actions or new otherheavywork. No native/tests/helper execution/sharedwrites. COMPLETE_STOP.

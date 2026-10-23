@@ -1,0 +1,106 @@
+{
+  "scope": "ONE_CONSTANT_NATIVE_ZOOM_NOT_APP_OR_UI_GATE",
+  "started_utc": "2026-10-22T17:43:08.826170+00:00",
+  "owner": "e6f1767013bd4832bb6d71cc083f5be9",
+  "container": "venus-webkit-zoom-diag02-e6f1767013bd",
+  "image": "sha256:5d976ffbcf579bea9f9b6a51af314e2e23eee995cdaeab0dcf046c541bb63e3a",
+  "calls": [
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-webkit-zoom-diag02-e6f1767013bd"
+      ],
+      "exit": 1
+    },
+    {
+      "args": [
+        "create",
+        "--pull=never",
+        "--name",
+        "venus-webkit-zoom-diag02-e6f1767013bd",
+        "--label",
+        "venus.p05.diagnostic-owner=e6f1767013bd4832bb6d71cc083f5be9",
+        "--init",
+        "--network",
+        "none",
+        "--user",
+        "1000:1000",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--shm-size",
+        "1g",
+        "--memory",
+        "3g",
+        "--memory-swap",
+        "3g",
+        "--cpus",
+        "2",
+        "--pids-limit",
+        "512",
+        "--tmpfs",
+        "/tmp:size=1g,mode=1777,exec",
+        "--tmpfs",
+        "/home/node:size=64m,uid=1000,gid=1000",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p05-webkit-native-zoom-diagnostic02,target=/out",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p05-webkit-native-zoom-diagnostic02,target=/app/diagnostic,readonly",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p05-pilot-bundle-source17/.artifacts/p05-v2-layout-producer-a20-02,target=/app/tests/p05-v2-layout-producer,readonly",
+        "--entrypoint",
+        "node",
+        "sha256:5d976ffbcf579bea9f9b6a51af314e2e23eee995cdaeab0dcf046c541bb63e3a",
+        "/app/diagnostic/probe.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-webkit-zoom-diag02-e6f1767013bd"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "start",
+        "--attach",
+        "venus-webkit-zoom-diag02-e6f1767013bd"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-webkit-zoom-diag02-e6f1767013bd"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "rm",
+        "venus-webkit-zoom-diag02-e6f1767013bd"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-webkit-zoom-diag02-e6f1767013bd"
+      ],
+      "exit": 1
+    }
+  ],
+  "exit_code": 0,
+  "cleanup": "COMPLETE_OWNED_CONTAINER_ABSENT",
+  "error": null,
+  "finished_utc": "2026-10-22T17:43:14.865561+00:00"
+}

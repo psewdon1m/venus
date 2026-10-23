@@ -1,0 +1,14 @@
+{
+  "arguments": [
+    "exec",
+    "venus-p05-oci-882db5f59870-browser",
+    "node",
+    "-e",
+    "require('fs').writeFileSync(process.argv[1],process.argv[2],{flag:'wx',mode:0o600});",
+    "/private/browser-command-A3.json",
+    "{\"owner\":\"ea098ba253ac882a451aff4e37c71c2d\",\"command\":\"A3\"}"
+  ],
+  "code": 134,
+  "stdout": "",
+  "stderr": "\n  #  node[175]: std::unique_ptr<long unsigned int> node::WorkerThreadsTaskRunner::DelayedTaskScheduler::Start() at ../src/node_platform.cc:109\n  #  Assertion failed: (0) == (uv_thread_create(t.get(), start_thread, this))\n\n----- Native stack trace -----\n\n 1: 0x942e80  [node]\n 2: 0x943568 node::Assert(node::AssertionInfo const&) [node]\n 3: 0x9f18d0 node::WorkerThreadsTaskRunner::WorkerThreadsTaskRunner(int, node::PlatformDebugLogLevel) [node]\n 4: 0x9f2062 node::NodePlatform::NodePlatform(int, v8::TracingController*, v8::PageAllocator*) [node]\n 5: 0x8e21ce  [node]\n 6: 0x8e253c node::Start(int, char**) [node]\n 7: 0x7d5c0d2d224a  [/lib/x86_64-linux-gnu/libc.so.6]\n 8: 0x7d5c0d2d2305 __libc_start_main [/lib/x86_64-linux-gnu/libc.so.6]\n 9: 0x7f66be _start [node]\n"
+}

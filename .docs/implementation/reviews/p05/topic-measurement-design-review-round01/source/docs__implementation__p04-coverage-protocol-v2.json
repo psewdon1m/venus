@@ -1,0 +1,16 @@
+{
+  "schema_version":1,
+  "revision":"P04-C2",
+  "status":"FIXED_BEFORE_FINAL_MEASUREMENT",
+  "rationale":"P04-C1 aggregate counts hid a supported private-interaction content gap. C2 reports interaction counts, actual private baseline and conditional capabilities explicitly; original C1 development evidence remains unchanged.",
+  "engine":"Exact production P03 eligible/immutableSnapshot/preflight; engine source/policy unchanged",
+  "capability_profiles":[[],["private_text_chat"]],
+  "production_capabilities":[],
+  "conditional_profile_is_production_readiness":false,
+  "eligibility":{"modes":["questions","truth_or_dare","yes_but"],"contexts":["online","in_person"],"sizes":[2,3,4,5,6,7,8],"stages":[1,2,3,4],"comforts":[0,1,2,3,4],"classes":["X","J","F","G","M","S","R"],"cells_per_capability_profile":5880,"count_unit":"stable card IDs; count each card once regardless of eligible actor permutations"},
+  "neutral":{"comfort":0,"class":"F","rounds":"each integer1..100","sessions_per_capability_profile":4200,"expected":"all complete without repeated card IDs on the prepared100-public-cards/mode catalogue"},
+  "negative":{"mode":"yes_but","class":"X","comfort":0,"rounds":20,"cases_per_capability_profile":14,"expected":"INSUFFICIENT_SAFE_CARDS before Start"},
+  "private":{"comforts":[1,4],"classes":["F","G","M","S","R"],"rounds":100,"cases_per_capability_profile":420,"baseline_per_mode_per_supported_context":25,"baseline_rule":"eligible pair_private friend_or_more comfort1, nonphysical and no going-away; enough for ceil(.25*100)","private_round_limit":25,"first_private_stage":3,"expected":"no-repeat completion; baseline>=25 for supported context. Online with nochatcapability is explicitly unavailable, never a content-exemption for conditional chat profile."},
+  "seed_formula":"SHA256 UTF8 venus:P04:C1:<size>:<mode>:<context>:<comfort>:<class>:<rounds>; preserve C1 seed formula, no reseeding after outcomes",
+  "limitations":["Uniform synthetic directed class profiles, not every mixed graph","Token similarity threshold.78 remains uncalibrated, semantic originality requires actual human review","No romantic/physical content promised by this initial friendly core pack","Private chat capability in the conditional report is test input only; production remains disabled until P05 implementation/tests"]
+}

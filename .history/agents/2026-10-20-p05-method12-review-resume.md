@@ -1,0 +1,11 @@
+# P05 method12 independent review resume
+
+2026-10-20T14:23:46.0808110Z UTC — Task: independently review frozen whole browser METHOD12; source 1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad / 1813, image ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4. Scope: own journal and new review packet only; no product edits/Docker/RUN; content470 remains HOLD. Read author HANDOFF and inventories (exit 0).
+
+2026-10-20T14:24:54.6726177Z UTC — Verification attempt01 exit1: own verifier assumed producer/browser.mjs.bytes, author inventory actually .mjs; preserve script/error note and correct. No author/product defect.
+
+2026-10-20T14:26:31.9237536Z UTC — Author packet35 files and runtime9 pins verified; host1813 files and frozenZIP1813 entries match1274 identity; observer03 review index and all children verified. Verification attempt02 own path suffix error retained; corrected attempt03 exit0. Reran unchanged author assertions with documented import/output path-only relocation: integration17 PASS exit0, request13 PASS exit0. Own independent22 controls PASS exit0 (initial Windows import failure preserved). No product changes, Docker or browserRUN. Reviewing final scope/cleanup constraints before durable verdict.
+
+2026-10-20T14:28:13.2495933Z UTC — Final METHOD12 result PASS_METHOD_ONLY, no confirmed P1/P2.52 controls (17+13 repeated author assertions,22 independently authored);8 syntax commands exit0; all8 runtime mjs ESLint exit0. Included1813 host+ZIP hashes and final stage_inventory identity unchanged1274. Existing four-file image probe68016... and5 child hashes verified. Own attempt02 suffix failure, own ESM Windows import failure and read-only rg glob error123 preserved in report; all corrected final checks PASS. Historical run.mjs not executed. New own durable report complete; preparing derived index and handoff only.
+
+2026-10-20T14:28:51.5234643Z UTC — Review writes COMPLETE. INDEX0a55e28daa9e819850f9fb0276940bd49c8f478471ffbaa482d0fadb13d981e3 /19files; HANDOFFc910505518751efdd00ee970456819b8bcce8a2b3cac3613e06160c4eaab51fd; REPORTcd1237ede626918acf6f5c38d9017913d6ea35a13395438bae1a981a0782e4a5. Handing PASS_METHOD_ONLY to root for separately bound actual16 runner. No more reviewpacket writes. Subsequent layout authoring is separate task and requires other independent review.

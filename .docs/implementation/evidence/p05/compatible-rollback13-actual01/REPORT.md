@@ -1,0 +1,9 @@
+# OCI13: foreign admission accounting assertion located
+
+Initial ACK06 failed BEFORE allocation because the independent INDEX used verdict while the existing driver requires status. The original review/index/failed output are retained; metadata-only independent addendum170d3a19 copied original review exactly, and fresh ACK07 6c1218cc bound it. No native rollback ran under ACK06.
+
+One native ACK07 attempt: A1 complete, B2 ASSERT after preserved, A3 NOT_RUN. Whole165666ms, resource guards pass, export success, retained_manual_cleanup_required. This time robust safe diagnostic retained only source_module=replay-observations,line9,column9. The pinned generated module's line9 requires equality of every admission accounting row except the expected actor; that equality failed. Original actual foreign request identity/diff/large error size were not retained and are not inferred as fact.
+
+Independent diagnosis7285c80c establishes a source isolation gap: retained browser pages may issue foreground/background authenticated reads concurrently with the API replay's strict accounting snapshots. Those reads legitimately change their own admission counters. A two-case source counterexample supports quiescing the native browser transport around replay while retaining the strict foreign-row equality and all14 controls. No application defect or identified original foreign request follows. Producer14 is a separate prospective correction, not a rewrite or PASS for13.
+
+Old09/10/11/12 retained resources untouched. This new owned stoppedDB/keeper/network/four volumes remain retained for explicit disposition. This archive reads public host evidence only; no private DB/session/keyring export. Historical Markdown bytes preserved as .bytes; live control excluded. Full stage/current application/production PASS remains false.

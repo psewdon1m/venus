@@ -1,0 +1,17 @@
+{
+  "run": "venus-p05-ledger-review-d062fc4ae31b-test",
+  "binds": [
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\ledger-round-01\\private-topic-ledger.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\ledger-round-01\\independent.test.ts"
+  ],
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "init": "venus-p05-ledger-review-d062fc4ae31b-init",
+  "bootstrap": "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/independent.test.ts','apps/api/src/security.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/independent.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/independent.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);",
+  "source_sha256": "52655c6ed3f3754bc403e8f4c9d7610e1c487d2a4c8ccab175f958612622a284",
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "timestamp": "2026-10-19T19:04:28.4223861+03:00",
+  "test_sha256": "d743f20a06ff11ea7c974fafe9335f8fc243ab85d152b87cd4a8aa09f0f2e747",
+  "id": "d062fc4ae31b",
+  "volume": "venus-p05-ledger-review-d062fc4ae31b",
+  "kind": "INDEPENDENT_FROZEN_LINUX_REVIEW"
+}

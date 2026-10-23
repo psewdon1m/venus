@@ -1,0 +1,27 @@
+from pathlib import Path
+import hashlib,json,shutil,ast,subprocess,sys,datetime
+workspace=Path.cwd();historical=workspace/'.artifacts/p05-recovery-source1274-01';target=historical/'.artifacts/p05-oci-resource-feasibility-rebind01';out=workspace/'.docs/implementation/reviews/p05/oci-resource-feasibility-rebind-preparation-round01';out.mkdir(parents=True,exist_ok=True);sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert not target.exists();target.mkdir(parents=True);(historical/'.artifacts/p05').mkdir(parents=True,exist_ok=True)
+original=workspace/'.artifacts/p05-oci-resource-feasibility-probe01/probe.py';old=original.read_bytes();assert sha(original)=='25fca130a33196cf142341a1beba3412a0c2c1aec17791323544f6a6f6bde9ca'
+before=b'sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4';after=b'sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f';assert old.count(before)==1
+new=old.replace(before,after);ast.parse(new);(target/'probe.py').write_bytes(new)
+helpers=historical/'.artifacts/p05-oci-rollback-producer-resume02';helpers.mkdir(parents=True,exist_ok=True)
+pins={}
+for n in ['ipc-policy.mjs','ipc-keeper.mjs','oci-resource-policy.mjs']:
+ src=workspace/'.artifacts/p05-oci-rollback-producer-resume02'/n;dest=helpers/n
+ if dest.exists():assert sha(dest)==sha(src)
+ else:shutil.copyfile(src,dest)
+ pins[dest.relative_to(historical).as_posix()]=sha(src)
+copies=[('accepted-policy-review.INDEX.json',workspace/'.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round02/INDEX.json','789492910f6cbaea7e7b936eae3bd803333fe0b14b64a240ff80e43d12a621b0'),('accepted-image-review.INDEX.json',workspace/'.docs/implementation/reviews/p05/recovery-image-binding-independent-round01/INDEX.json','c451ddef9cec3ae0fadf1b9aa3d955c3ce7d5bffa60034cb9b91c9652e44db6c'),('new-A-image-receipt.json',workspace/'.artifacts/p05-recovery-image-a-receipt01.json','eb994713042617b6e9bcc567062e502b18e5330b54759ee85b33ab1459ae0f7c')]
+for name,src,h in copies:
+ assert sha(src)==h;dest=target/name;shutil.copyfile(src,dest);pins[dest.relative_to(historical).as_posix()]=h
+(target/'input-pins.json').write_text(json.dumps(pins,indent=2)+'\n')
+venv=historical/'.venv';assert venv.is_dir()and venv.resolve()==(workspace/'.venv').resolve()
+sys.path.insert(0,str(historical/'tools'));from stage_inventory import inventory,identity
+actual=inventory(historical);assert len(actual)==1813 and identity(actual)=='1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad'
+r=subprocess.run([str(workspace/'.venv/Scripts/python.exe'),'-B',str(target/'probe.py')],cwd=historical,capture_output=True);assert r.returncode==0
+(out/'cold-plan.json').write_bytes(r.stdout);(out/'cold.stderr.txt').write_bytes(r.stderr)
+for p in target.iterdir():
+ if p.is_file():q=out/'exact-rebound-inputs'/p.name;q.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,q)
+metadata={'created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'AUTHOR_COLD_REBIND_PREPARED_REQUIRES_ROOT_REVIEW_AND_NEW_ACK_NOT_RUN','historical_cwd':str(historical),'probe_path':str(target/'probe.py'),'old_probe_sha256':sha(original),'new_probe_sha256':sha(target/'probe.py'),'only_code_change':'Exactly one immutableAimageID constant ff371 to29e39; othercodebytesidentical','input_pins_sha256':sha(target/'input-pins.json'),'source_identity':identity(actual),'included_files':len(actual),'new_A_image':after.decode(),'PG_reference_unchanged':True,'accepted_policy_review_index_sha256':copies[0][2],'accepted_image_review_index_sha256':copies[1][2],'excluded_venv_junction':{'path':str(venv),'resolved_target':str(venv.resolve()),'used_for_host_helpers_only':True},'helper_copy_pins':pins,'cold_exit_code':r.returncode,'actual_resource_containers_created':0,'Docker_calls':0,'work_deadline_seconds':130,'whole_deadline_seconds':180,'native_reserved_mib':298,'host_report_cap_bytes':2097152,'root_M08_worker_priority':'NoactualprobeuntilR100finishedandseparateexactACK','human470':'HOLD_UNCHANGED','full_P05_PASS':False}
+(out/'HANDOFF.json').write_text(json.dumps(metadata,indent=2)+'\n');print(json.dumps(metadata,indent=2))

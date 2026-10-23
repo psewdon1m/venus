@@ -1,0 +1,117 @@
+{
+  "services": {
+    "db": {
+      "image": "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "pull_policy": "never",
+      "environment": {
+        "POSTGRES_DB": "venus",
+        "POSTGRES_USER": "venus",
+        "POSTGRES_PASSWORD_FILE": "/run/secrets/db_password"
+      },
+      "secrets": [
+        "db_password"
+      ],
+      "volumes": [
+        "postgres-data:/var/lib/postgresql/data"
+      ],
+      "networks": [
+        "isolated"
+      ],
+      "labels": {
+        "venus.p05.project": "venus-topic-browser-f9b872eccaea",
+        "venus.p05.role": "db"
+      },
+      "mem_limit": "512m",
+      "cpus": 1,
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U venus -d venus"
+        ],
+        "interval": "1s",
+        "timeout": "2s",
+        "retries": 60
+      }
+    },
+    "browser": {
+      "image": "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+      "pull_policy": "never",
+      "init": true,
+      "user": "1000:1000",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "shm_size": "1gb",
+      "mem_limit": "3g",
+      "cpus": 2,
+      "pids_limit": 256,
+      "tmpfs": [
+        "/tmp:size=1g,mode=1777,exec",
+        "/home/node:size=64m,uid=1000,gid=1000"
+      ],
+      "environment": {
+        "DB_HOST": "db",
+        "DB_PASSWORD_FILE": "/run/secrets/db_password",
+        "VENUS_P05_ISOLATED_FIXTURE": "1",
+        "P05_ARTIFACT_DIRECTORY": "/artifacts",
+        "P05_ENGINE": "chromium"
+      },
+      "secrets": [
+        "db_password"
+      ],
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "C:\\.projects\\venus\\.artifacts\\p05\\venus-topic-browser-f9b872eccaea",
+          "target": "/artifacts"
+        },
+        {
+          "type": "bind",
+          "source": "C:\\.projects\\venus\\.artifacts\\p05-renewal-browser-producer01",
+          "target": "/app/tests/p05-topic-browser",
+          "read_only": true
+        }
+      ],
+      "networks": [
+        "isolated"
+      ],
+      "labels": {
+        "venus.p05.project": "venus-topic-browser-f9b872eccaea",
+        "venus.p05.role": "browser"
+      },
+      "depends_on": {
+        "db": {
+          "condition": "service_healthy"
+        }
+      },
+      "command": [
+        "node",
+        "/app/tests/p05-topic-browser/browser.mjs"
+      ]
+    }
+  },
+  "secrets": {
+    "db_password": {
+      "file": "C:\\Temp\\venus-topic-browser-secret-fQw8zU\\password"
+    }
+  },
+  "volumes": {
+    "postgres-data": {
+      "labels": {
+        "venus.p05.project": "venus-topic-browser-f9b872eccaea"
+      }
+    }
+  },
+  "networks": {
+    "isolated": {
+      "internal": true,
+      "labels": {
+        "venus.p05.project": "venus-topic-browser-f9b872eccaea"
+      }
+    }
+  }
+}

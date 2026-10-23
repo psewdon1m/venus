@@ -1,0 +1,7 @@
+async function coherentGame(expected={}){let result=null;await expect.poll(async()=>{
+ const host=actors[0],f=await service.plan(host.room);
+ // A normal-page 200 observation is an emission prerequisite, never the acceptance oracle.
+ const ready=actors.some(a=>{const v=a.lastGameView;return a.room===host.room&&coherentRound(f,v&&{session_id:v.session_id,game_rev:v.game_rev,state:v.state,current_round:{round_id:v.round_id,round_index:v.round_index,state:v.round_state}},expected);});
+ if(!ready)return false;
+ const g=await current(host);if(!coherentRound(f,g,expected))return false;result={fixture:f,view:g};return true;
+},{timeout:8000,intervals:[50,100,250]}).toBe(true);return result;}

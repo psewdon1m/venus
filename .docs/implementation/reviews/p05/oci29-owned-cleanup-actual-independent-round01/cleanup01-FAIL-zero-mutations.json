@@ -1,0 +1,73 @@
+{
+  "status": "FAIL_STOPPED_NO_RETRY",
+  "owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+  "project": "venus-p05-oci-8f430f802c66",
+  "plan_sha256": "585ab51cf29d2d5102d5db3dc69440e0deb720d6c4452575c37e2e78b227fca5",
+  "script_sha256": "2fe6d8507fbe46a344530a71bb2114bfbdc111e46a1b25edc92b1f0abf736800",
+  "calls": [
+    {
+      "args": [
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=15c9560d4f0ab1d8e08e14c6a7987eb3"
+      ],
+      "mutation": false,
+      "exit": 0,
+      "stdout_bytes": 130,
+      "stdout_sha256": "99230f4fd85d5b700ea288a8c81889eb8d62e7e91a89b9868a9fdd2aa7ec0f45",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "args": [
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.project=venus-p05-oci-8f430f802c66"
+      ],
+      "mutation": false,
+      "exit": 0,
+      "stdout_bytes": 130,
+      "stdout_sha256": "99230f4fd85d5b700ea288a8c81889eb8d62e7e91a89b9868a9fdd2aa7ec0f45",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "--format",
+        "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"image\":{{json .Image}},\"running\":{{json .State.Running}},\"status\":{{json .State.Status}},\"exit_code\":{{json .State.ExitCode}},\"labels\":{{json .Config.Labels}},\"mounts\":{{json .Mounts}}}",
+        "020746a063d2399b33455820603c1ecebd29bd22dd178b7ec5da6b32b257ea6f"
+      ],
+      "mutation": false,
+      "exit": 0,
+      "stdout_bytes": 845,
+      "stdout_sha256": "3b2015b373135f9647b75ac4e9caf03973bc8142d6b688fd1369ccd949bfb5c9",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "--format",
+        "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"image\":{{json .Image}},\"running\":{{json .State.Running}},\"status\":{{json .State.Status}},\"exit_code\":{{json .State.ExitCode}},\"labels\":{{json .Config.Labels}},\"mounts\":{{json .Mounts}}}",
+        "49b486e20cd2aa3aa34e4c39e12dd8594f072badb33e453e1fff3b8921bb105b"
+      ],
+      "mutation": false,
+      "exit": 0,
+      "stdout_bytes": 1738,
+      "stdout_sha256": "5ff543e1f07c056d7e5d4de01d855e4b9f2f399161bcdf8539d9aabf3a8a97be",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "attempted_mutations": 0,
+  "error_type": "AssertionError",
+  "safe_archive_sha256": "3cfca3bda2cb8d29e67e30ad90328b042c71ce710954a4671fae871c119f8b70",
+  "full_P05_PASS": false
+}

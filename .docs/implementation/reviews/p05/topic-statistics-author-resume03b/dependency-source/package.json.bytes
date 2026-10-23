@@ -1,0 +1,58 @@
+{
+  "name": "venus",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "npm@11.19.1",
+  "engines": {
+    "node": "24.22.0",
+    "npm": "11.19.1"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "eslint apps packages tools/*.mjs tests/**/*.mjs",
+    "typecheck": "tsc -b && tsc -p apps/web/tsconfig.json",
+    "build": "tsc -b && npm run build -w @venus/web",
+    "test": "vitest run",
+    "check:schemas": "python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check",
+    "check:i18n": "node tools/check-i18n.mjs",
+    "check:docs": "python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py",
+    "test:python": "python -B -m unittest discover -s tools -p test_*.py",
+    "test:negative": "node tools/negative-gates.mjs",
+    "test:container": "node tools/container-smoke.mjs",
+    "test:local-pilot": "node tools/local-pilot-smoke.mjs",
+    "test:p05": "node tools/p05-browser.mjs",
+    "test:p05:chat": "node tools/p05-browser.mjs --chat",
+    "test:p05:self-actions": "node tools/p05-browser.mjs --self-actions",
+    "test:p05:reporter": "node --test tests/p05/report-contract.test.mjs",
+    "test:catalog-r2": "node tools/check-catalog-r2.mjs",
+    "quality:docker": "node tools/docker-quality.mjs",
+    "test:p02": "node tools/p02-integration.mjs",
+    "test:p03": "node tools/p03-integration.mjs",
+    "test:p04": "node tools/p04-integration.mjs",
+    "test:p03:measurements": "node tools/p03-measurements.mjs",
+    "browsers:install": "node tools/install-browsers.mjs",
+    "quality": "npm run lint && npm run typecheck && npm test && npm run test:p05:reporter && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:catalog-r2 && npm run test:negative",
+    "start": "node apps/api/dist/server.js"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@types/node": "24.19.2",
+    "@types/pg": "8.23.1",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@types/ws": "8.18.2",
+    "@vitejs/plugin-react": "6.1.2",
+    "eslint": "10.13.0",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
+    "vite": "8.3.4",
+    "vitest": "5.0.5",
+    "yaml": "2.9.1"
+  }
+}

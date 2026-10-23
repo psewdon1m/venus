@@ -1,0 +1,11 @@
+# Additive02: early STOP on a known strict-section refusal
+
+AUTHOR_PREPARED_PENDING_INDEPENDENT_AND_ROOT_ACTIVATION. Parent author7570d85f / independent7f1b3fc0 accepted the unchanged full original fixed plan. Read-only capacity triage e46c3122 found a real prospective inference support risk, not a known fixed-seed failure. No full outcomes or native cases were executed.
+
+Only behavioral change: after unchanged host03 returns successful owned stop/export/verified cleanup, read its exact summary and reconcile with host export-pins summary/hash. Nonzero typed_refusals for m3-inference or m3-fairness marks this job's native execution as successful but blocks the already preregistered statistical acceptance, sets the existing atomic STOP+memory latch and starts no further jobs. Already inflight host processes finish bounded cleanup. Original C2/invariant refusals do not STOP; no refusal is filtered or retried. New terminal records distinguish native_range_execution_ok, strict_section_refusal_blocks_acceptance and typed_refusals. Missing/malformed summary is an ordinary collection failure, not a pass.
+
+Original2609 jobs, owners, ACK bytes/hashes, source/image/producer/host03/reviews,1600 accepted prefixes, all7 counts/seeds/chunks/lanes are EXACT unchanged. Only operational script path/hash, fresh one-off output root02, parentmanifest hash and declared early-STOP disposition differ in MANIFEST02. No producer/reducer/math/norm/profile modifications. Remaining jobs after any observed failure are NOT_RUN. Even an all-executed batch is NOT_STATISTICAL_ACCEPTANCE; all full-section/stage flags stayfalse. Original01 remains frozen, and no run roots exist.
+
+16 parent cold controls repeated +2 new strict-section tests PASS (18 total), syntax2/ESLint0. New controls cover inference/fairness positive/zero refusals and C2/invariant legitimate refusals/malformed counters. No Docker/native/actual ACK. Root must independently review02, add exact manifest/script/review to clean supplemental preregistration, then issue matching ROOT_BATCH_RUN_ACK. ROOT-ACTIVATION.template.json is pending and cannot run. Execution command uses p05-full-original-lanes02.mjs +ranges02/MANIFEST.json +exactrootactivation. Large raw remains ignored with native hashes.
+
+Writes COMPLETE after INDEX.

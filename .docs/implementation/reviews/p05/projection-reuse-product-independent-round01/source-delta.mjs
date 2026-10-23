@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import {dirname,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const ts=createRequire(import.meta.url)('typescript'),folder=dirname(fileURLToPath(import.meta.url));
+const methods=path=>{const source=ts.createSourceFile(path,readFileSync(path,'utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.TS),c=source.statements.find(n=>ts.isClassDeclaration(n)&&n.name?.text==='TopicGames');assert(c);return new Map(c.members.filter(n=>n.name).map(n=>[n.name.getText(source),n.getText(source)]));};
+const old=methods('.docs/implementation/reviews/p05/projection-reuse-product-author-round01/topic-games.aa1205.ts.bytes'),current=methods('apps/api/src/topic-games.ts');
+const changed=[...old.keys()].filter(k=>old.get(k)!==current.get(k)),added=[...current.keys()].filter(k=>!old.has(k));
+assert.deepEqual(changed,['dto','prepareProjection','prepared','dispatchConversation','dispatchChat','privateDelivery']);assert.deepEqual(added,['projectionMatches','namesDigest']);assert([...old.keys()].every(k=>current.has(k)));
+writeFileSync(join(folder,'source-delta.json'),JSON.stringify({status:'PASS_EXACT_MEMBER_SCOPE',unchanged_members:old.size-changed.length,changed,added,no_removed_members:true},null,2)+'\n');console.log(JSON.stringify({unchanged:old.size-changed.length,changed,added}));

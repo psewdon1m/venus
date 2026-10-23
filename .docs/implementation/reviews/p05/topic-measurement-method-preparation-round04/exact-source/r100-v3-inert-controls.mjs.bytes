@@ -1,0 +1,35 @@
+/** Source-bound inert controls only; zero Docker/selector/statistical work. */
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import ts from '../../node_modules/typescript/lib/typescript.js';
+import {LayerTimings} from './r100-v3-timing.mjs';
+import {nextPhase,validateConfig,phaseLimits} from './r100-v3-watchdog.mjs';
+import {ChunkWriter as OriginalChunks} from './chunks.mjs';
+import {ChunkWriter as TimedChunks} from './r100-v3-chunks.mjs';
+const controls=[],check=async(name,fn)=>{await fn();controls.push({name,status:'PASS'});};
+await check('same-phase heartbeats do not reset monotonic phase deadline',()=>{const a=nextPhase(null,{counter:1,phase:'BOOTSTRAP'},10),b=nextPhase(a,{counter:2,phase:'PROBE'},20),c=nextPhase(b,{counter:3,phase:'RUN'},30),d=nextPhase(c,{counter:4,phase:'RUN'},299999);assert.equal(d.start,30);});
+await check('backward phase denied',()=>assert.throws(()=>nextPhase({counter:4,phase:'RUN',start:30},{counter:5,phase:'PROBE'},299999),/PHASE_DEADLINE_RESET_OR_REORDER/));
+await check('phase transition with stale counter denied',()=>assert.throws(()=>nextPhase({counter:4,phase:'RUN',start:30},{counter:4,phase:'STOP'},200),/PHASE_TRANSITION_REQUIRES_NEW_COUNTER/));
+await check('counter reordering denied',()=>assert.throws(()=>nextPhase({counter:4,phase:'RUN',start:30},{counter:3,phase:'RUN'},200),/PHASE_COUNTER_REORDER/));
+await check('timing wrapper preserves sync this/arguments/result and exact throw',()=>{const t=new LayerTimings(),result={},error=Error('INERT'),proto={f(x){assert.equal(this,instance);assert.equal(x,7);return result;},bad(){throw error;}},instance=Object.create(proto);t.wrap(proto,'f','sync');t.wrap(proto,'bad','throw');assert.equal(instance.f(7),result);assert.throws(()=>instance.bad(),e=>e===error);assert.equal(t.snapshot().layers.sync.calls,1);t.restore();assert.equal(instance.f(7),result);});
+await check('timing wrapper awaits same async result/throw',async()=>{const t=new LayerTimings(),result={},error=Error('INERT_ASYNC'),proto={async f(){return result;},async bad(){throw error;}};t.wrap(proto,'f','async',{async:true});t.wrap(proto,'bad','throw',{async:true});assert.equal(await proto.f(),result);await assert.rejects(proto.bad(),e=>e===error);t.restore();assert.equal(t.snapshot().active_calls,0);});
+const path='.artifacts/p05-topic-measurements-next/r100-v3-child.mjs',raw=readFileSync(path),source=raw.toString('utf8'),parsed=ts.createSourceFile(path,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS),fn=parsed.statements.find(s=>ts.isFunctionDeclaration(s)&&s.name?.text==='hostGuard');assert(fn);const text=fn.getText(parsed),config={owner:'OWN',reserve_bytes:10*1024**3,global_owned_cap_bytes:128*1024**2};
+function fixture(){let clock=0,row={owner:'OWN',counter:1,available_bytes:String(11*1024**3)};const guard=new Function('load','performance','assert','config','let lastCounter=null,lastAdvance=null;'+text+';return hostGuard;')(()=>row,{now:()=>clock},assert,config);return{guard,set(v){row={...row,...v};},tick(v){clock=v;}};}
+await check('fresh counter at unrelated monotonic origin accepted',()=>{const f=fixture();f.tick(987654321);f.guard();f.tick(987655000);f.set({counter:2});f.guard();});
+await check('unchanged counter stale at2001ms rejects despite future UTC',()=>{const f=fixture();f.set({UTC_diagnostic_only:'2999-01-01T00:00:00Z'});f.guard();f.tick(2001);assert.throws(()=>f.guard(),/HOST_COUNTER_STALE/);});
+await check('different nonce rejects',()=>{const f=fixture();f.set({owner:'WRONG'});assert.throws(()=>f.guard());});
+await check('counter rollback rejects',()=>{const f=fixture();f.guard();f.set({counter:0});assert.throws(()=>f.guard());});
+await check('actual host reserve plus global cap enforced',()=>{const f=fixture();f.set({available_bytes:String(config.reserve_bytes+config.global_owned_cap_bytes-1)});assert.throws(()=>f.guard(),/HOST_ACTUAL_SPACE_STOP/);});
+await check('timed gzip writer preserves exact raw/gzip bytes and manifests',()=>{const left=[],right=[],a=new OriginalChunks({write:(path,bytes)=>left.push({path,bytes})},'inert',{maxBytes:256}),b=new TimedChunks({write:(path,bytes)=>right.push({path,bytes})},'inert',{maxBytes:256});for(let i=0;i<20;i++){const row={index:i,value:'INERT_NO_SELECTOR_OR_REGISTERED_SAMPLE'};a.append(row);b.append(row);}assert.deepEqual(a.finish(),b.finish());assert.deepEqual(left,right);});
+const budgetFn=parsed.statements.find(s=>ts.isFunctionDeclaration(s)&&s.name?.text==='nativeBudget');assert(budgetFn);
+function budgetFixture({logical=1n,blocks=8n}={}){return new Function('assert','timing','lstatSync','readdirSync','statfsSync',budgetFn.getText(parsed)+';return nativeBudget;')(assert,{sync:(_,fn)=>fn()},p=>({isSymbolicLink:()=>false,isDirectory:()=>p==='/venus-output',isFile:()=>p!=='/venus-output',size:p==='/venus-output'?0n:logical,blocks:p==='/venus-output'?8n:blocks}),p=>p==='/venus-output'?['one']:[],()=>({bsize:4096n}));}
+await check('source-bound allocated budget charges blocks and next metadata margin',()=>assert.equal(budgetFixture()(1).next_reserved,String(1024**2+4096)));
+await check('source-bound logical bytes plus next write exceeding cap rejects',()=>assert.throws(()=>budgetFixture({logical:19n*1024n**2n})(4096),/NATIVE_ALLOCATED_CAP/));
+await check('source-bound allocated slack exceeding cap rejects',()=>assert.throws(()=>budgetFixture({blocks:19n*1024n**2n/512n})(4096),/NATIVE_ALLOCATED_CAP/));
+const configBase={kind:'ROOT_R100_V3_OPERATIONAL_DIAGNOSTIC_ACK',status:'AUTHORIZED',independent_method_and_producer_review:'PASS',owner:'a'.repeat(32),container:'venus-r100-v3-'+ 'a'.repeat(12),volume:'venus-r100-v3-'+ 'a'.repeat(12)+'-output',image:'sha256:'+'a'.repeat(64),source_identity:'a'.repeat(64),global_owned_cap_bytes:128*1024**2,reserve_bytes:10*1024**3,attempts:1,phase_limits_ms:phaseLimits,statistics_RUN:false,control_directory:'.artifacts/p05-topic-measurements-next',counter_freshness_ms:2000};
+await check('exact one-shot external configuration accepted without execution',()=>assert.equal(validateConfig(configBase),true));
+await check('second attempt forbidden before any Docker call',()=>assert.throws(()=>validateConfig({...configBase,attempts:2})));
+await check('global budget increase forbidden before any Docker call',()=>assert.throws(()=>validateConfig({...configBase,global_owned_cap_bytes:129*1024**2})));
+await check('not-authorized template rejected before any Docker call',()=>assert.throws(()=>validateConfig({...configBase,status:'PENDING_NOT_AUTHORIZED'})));
+console.log(JSON.stringify({status:'AUTHOR_INERT_CONTROLS_PASS',controls,child_sha256:createHash('sha256').update(raw).digest('hex'),extracted_hostGuard_sha256:createHash('sha256').update(text).digest('hex'),actual_Docker:false,selector_invocations:0,statistical_samples:0,independent_acceptance:false}));

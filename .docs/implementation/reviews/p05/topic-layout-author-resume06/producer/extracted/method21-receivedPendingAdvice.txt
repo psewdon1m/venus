@@ -1,0 +1,3 @@
+async function receivedPendingAdvice(a,f){
+ const view=await read(a,`/api/v2/rooms/${a.room}/game/${f.session}/round/${f.plan.round_id}/conversation`),rows=view.advice.filter(v=>v.direction==='received'&&v.state==='pending');assert.equal(rows.length,1);assert.equal(rows[0].text,undefined,'No received pending advice preview');return rows[0];
+}

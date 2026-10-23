@@ -1,0 +1,748 @@
+{
+  "schema_version": 1,
+  "profile": "standalone-local-pilot-v2",
+  "stage": "P05",
+  "status": "ENGINEERING_PREPARATION_NOT_STAGE_ACCEPTANCE",
+  "source_commit_before_p05": "b5436cd",
+  "sources": [
+    {
+      "path": ".docs/content/p04-r2/product-ux-requirements.json",
+      "sha256": "1e76c0e746c4ae757d0b086c7836b66a33467ce12cd9ef7b74f32fe99125f7ed"
+    },
+    {
+      "path": ".docs/content/p04-r2/global-review-requirements.json",
+      "sha256": "0fae215eca6a2b45faa8e999d05f708adb1e1ab737ebe4bbcf66b9d62dd2db7a"
+    },
+    {
+      "path": ".docs/content/p04-r2/required-scenarios.json",
+      "sha256": "56d38d81a5b79c4d011332f5811179a865daaea11e792528d05f385673529ca1"
+    }
+  ],
+  "owner_content_HOLD_unchanged": true,
+  "production_pack_activation": false,
+  "requirements": [
+    {
+      "id": "P04-UX-SKIP",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "В каждом раунде и приватном предложении доступны равноправные действия «Ответить/принять» и «Пропустить/отказаться». Отказ и пропуск не требуют причины, публичного ответа, штрафа или придумывания специальной фразы; можно пропустить несколько следующих раундов.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1017",
+        "Q-1086",
+        "Q-1099",
+        "Q-1146",
+        "TD-1019",
+        "TD-1093",
+        "TD-1095",
+        "TD-1122",
+        "YB-1017",
+        "YB-1019",
+        "YB-1020",
+        "YB-1087",
+        "YB-1088",
+        "YB-1093",
+        "YB-1097",
+        "YB-1122",
+        "YB-1147"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-WAIT",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Явное состояние «Пока не выбираю/пауза» не является согласием. Оно не создаёт обещания вернуться к сроку или обязательства участвовать позже. UI предлагает спокойный выбор без давления и автоматического принятия.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1020",
+        "Q-1085",
+        "Q-1090",
+        "Q-1124",
+        "TD-1087",
+        "TD-1091",
+        "TD-1099",
+        "TD-1146",
+        "YB-1018",
+        "YB-1083"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-NO_REASON",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Уточнение условий и отказ не требуют раскрытия личных мотивов. Приложение не объясняет отказ одного игрока другому и не публикует частные причины без его разрешения.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1096",
+        "Q-1148",
+        "TD-1090",
+        "YB-1092"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-NO_PERSONAL_STORY",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Личная история или реальный пример всегда добровольны; доступна вымышленная/общая альтернатива либо пропуск без проверки достоверности и объяснений.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1088",
+        "TD-1088",
+        "YB-1098"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-PER_ACTION",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Участие в комнате, игре или прошлом раунде не даёт согласия на следующий раунд или конкретное действие. Решение каждого участника сохраняется отдельно; согласие одного не заменяет другого.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1092",
+        "Q-1100",
+        "TD-1092",
+        "YB-1094"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-DECLINE_PERSISTS",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Первичный отказ остаётся действительным при обсуждении альтернативы. Предложенное ограничение не ослабляется автоматически и не запускает торг, повторное давление или автоматическое принятие.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1091",
+        "YB-1099"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-SILENCE",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Молчание и отсутствие ответа не считаются согласием или завершённым ответом. Переходы выполняются только после явного действия пользователя.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1095",
+        "TD-1094"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-WITHDRAW",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Каждый может отозвать прежнее согласие, прервать действие или сменить нежелательную тему без торга, оправданий и итогового отчёта. Остановка доступна непосредственным действием UI, включая приватную беседу.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1097",
+        "TD-1121",
+        "TD-1125",
+        "TD-1149",
+        "TD-1150"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-TOPIC_BOUNDARY",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "До приватной беседы доступны выбор допустимых тем и непосредственная смена вопроса. Исключённые темы не требуют объяснений и не раскрываются группе; продолжение беседы не расширяет границы автоматически.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1121",
+        "Q-1122",
+        "TD-1123",
+        "YB-1121"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-IDEA_ONLY",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "UI различает предложенную/сохранённую идею, обсуждение её формулировки и принятое действие. Сохранение, редактирование или обсуждение текста не создаёт обязательства и не запускает выполнение.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1128",
+        "Q-1144",
+        "TD-1148"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-READ_NOT_ACCEPT",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Получение, доставка и прочтение сообщения отделены от принятия предложения; подтверждение доставки/прочтения никогда не меняет согласие.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1147",
+        "TD-1147",
+        "YB-1149"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-CHANGED_CONDITION",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Любое изменённое условие образует новую редакцию предложения и требует свободного повторного решения P1 и P2. Выполнение разрешено только после явного подтверждения обоих одной и той же редакции.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1149",
+        "TD-1100",
+        "YB-1085",
+        "YB-1125"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-SHOW_SCOPE",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Полные условия и пределы предложения доступны до принятия; можно запросить уточнение, оставаясь без согласия на действие.",
+      "expected": null,
+      "source_card_ids": [
+        "TD-1097",
+        "YB-1089"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-ADVICE_OPT_IN",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Подсказка или совет не раскрывается до разрешения адресата. Отказ оставляет совет скрытым и не требует причины.",
+      "expected": null,
+      "source_card_ids": [
+        "TD-1098"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-NEW_INVITATION",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Новое приглашение или тема требует собственного явного согласования. Текущее присутствие, переписка и готовность к прежней теме не означают готовности к новой.",
+      "expected": null,
+      "source_card_ids": [
+        "TD-1124",
+        "YB-1123",
+        "YB-1146"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-NO_SOCIAL_PRESSURE",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Основной UX не подталкивает к согласию фразами «все уже согласились», «только ты остался» или публичным объяснением задержки/отказа.",
+      "expected": null,
+      "source_card_ids": [
+        "YB-1091"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-REVIEW_TERMS",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Перед выполнением обоим показана одна актуальная редакция согласованных условий; подтверждения связаны с её идентификатором/хешем.",
+      "expected": null,
+      "source_card_ids": [
+        "YB-1095"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-NO_AGREEMENT_END",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Завершить обсуждение без итогового согласия — нормальная терминальная ветвь; интерфейс не требует найти компромисс для выхода.",
+      "expected": null,
+      "source_card_ids": [
+        "YB-1100"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-UX-TASTES",
+      "source_kind": "MOVED_CARD_UX",
+      "requirement": "Правила комнаты и модерационные подсказки допускают разные музыкальные вкусы; отсутствие совпадения не становится оценкой/штрафом игрока и не требует спора.",
+      "expected": null,
+      "source_card_ids": [
+        "Q-1049"
+      ],
+      "implementation_owner": "p05_games_ui / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-COMFORT",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "Check the independent global comfort level of both players. It is not a per-pair value and is not copied from P1 to P2.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-DIRECTED-RELATIONS",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "P1→P2 and P2→P1 are independent private directed relations. Selection or refusal must not reveal a relation or its asymmetry to participants or the room.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-QUIET-PUBLIC-OPT-IN",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "Before publicly addressing a pair, offer P2 a quiet way to decline. Publish neither the private refusal nor its motive; public wording alone is insufficient.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-YB-CONFIRMATION",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "A changed yes_but condition requires a fresh free decision by P1 and explicit confirmation by both for the identical final terms. Either can withdraw; one player's rejection is sufficient to stop.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-PRIVATE-CHANNEL",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "Private in-person cards remain S3/C1 with bilateral eligible relations. Online private cards require a functioning private text chat for both devices. Offline chat-only cards are unavailable without that chat. Never silently send their answers to the room.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-TEXT-ACCESSIBILITY",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "TD-1001, TD-1009, TD-1011 and YB-1009 offer an equivalent written alternative. Text-only players are never forced to use camera, gesture or voice.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-STAGE-INHERITANCE",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "min_progression_stage is a minimum threshold: stage 2 can use otherwise eligible stage-1 cards. Private eligibility is still excluded before stage 3. No content-only change may lower private thresholds.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-SEMANTIC-EXCLUSION",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "Bind the 21 explicit semantic clusters to scheduling and test cross-mode/same-pair/same-session repetition. A zero token-Jaccard queue is not semantic completeness or scheduling enforcement.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-PRIVACY-PROMISE",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "YB-1148 may describe a voluntary agreement not to quote messages. It must not promise to prevent screenshots, copying or retelling. Corrected text remains quarantined under the authoritative HOLD until verified.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "P04-GLOBAL-TEMPLATE-AND-LANGUAGE",
+      "source_kind": "GLOBAL_OWNER_REVIEW",
+      "requirement": "Shorten fixed addressing/private prefixes only alongside an actual UX contract preserving context and consent. Verify the edited RU/EN/TR meanings, Turkish individual veto and Unicode with competent reviewers. No human approval is inferred for new hashes.",
+      "expected": null,
+      "source_card_ids": [],
+      "implementation_owner": "root / p05_private_chat / p05_games_ui",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V01",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "P1 допускает приватную пару, P2 не допускает по своему глобальному комфорту.",
+      "expected": "Не показывать `pair_private`; комфорт не копируется от P1 к P2.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V02",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Направленное отношение P1→P2 положительно, P2→P1 не совпадает.",
+      "expected": "Публичные и приватные предложения не раскрывают это несоответствие; участие только взаимно.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V03",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "`pair_public` адресует P2 в комнате из восьми игроков.",
+      "expected": "P2 вправе тихо отклонить до показа группе, без объяснений и штрафов.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V04",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "P2 отвечает «да, но» новым условием.",
+      "expected": "P1 может свободно не принять; выполнение начинается только после двух подтверждений.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V05",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "`YB-1111`: любой из двоих не принимает конкретную формулировку шутки.",
+      "expected": "Личное вето действует независимо от мнения другого; TR соответствует RU/EN.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V06",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "`YB-1148`: один участник хочет договориться не цитировать переписку.",
+      "expected": "Текст описывает добровольное правило, но не гарантирует блокировку чужих снимков/пересказов.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V07",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Онлайн-сеанс без камеры/голоса получает `TD-1001`, `TD-1009` или `YB-1009`.",
+      "expected": "Есть текстовая равноправная альтернатива либо карточка фильтруется.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V08",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Оффлайн-встреча: у пары нет рабочего личного текстового чата.",
+      "expected": "Карточки `PV-C` не выдаются; устная приватная альтернатива только как отдельный согласованный вариант.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V09",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Stage 2 между ранними и поздними раундами.",
+      "expected": "Определено, наследуются ли stage-1 карточки; сдерживается резкий переход к stage 3.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V10",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Комфорт изменён в ходе уже предложенного задания.",
+      "expected": "Доступность пересчитана перед действием; при снижении комфорта действие не продолжается.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V11",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Во время пары один участник отказывается либо отзывает согласие.",
+      "expected": "Остановка без пояснений группе; приватные сообщения не показываются другим.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V12",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Одной паре выпадают 3 последовательные приватные возможности.",
+      "expected": "Работает fairness и разведение повторов, не вытесняя пожелания остальных.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V13",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "В соседних раундах предлагаются `TD-1016`/`YB-1013` и `TD-1007`/`YB-1007`.",
+      "expected": "Семантически повторяющиеся механики разнесены в очереди.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V14",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "RU/EN/TR переключаются для `YB-1111`, `YB-1054`, `TD-1130`, `YB-1145`.",
+      "expected": "Смысл, число реплик, право отказа и роли P1/P2 совпадают.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    },
+    {
+      "id": "V15",
+      "source_kind": "OWNER_RUNTIME_SCENARIO",
+      "requirement": "Пользователь отказывается отвечать на любую boundary-карточку.",
+      "expected": "Никакого объяснения, расспроса или повторной санкции; право доступно вне карточек.",
+      "source_card_ids": [],
+      "implementation_owner": "p05_browser_harness / root",
+      "status": "NOT_ACCEPTED_REQUIRES_IMPLEMENTATION_AND_BOUND_TESTS",
+      "evidence": []
+    }
+  ],
+  "critical_e2e_04_section8": [
+    {
+      "id": "E2E-01",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-02",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": "Music output and physical phones: DEFERRED_OWNER",
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-03",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-04",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-05",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-06",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-07",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": "Cinema source-ended/music: FUTURE_STAGE_P09 / DEFERRED_OWNER",
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-08",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": "Real iOS/Android audio unlock: DEFERRED_OWNER",
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-09",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    },
+    {
+      "id": "E2E-10",
+      "active_part": "Room/game portion of original scenario",
+      "status": "NOT_RUN",
+      "deferred_part": null,
+      "rule": "No deferred part counted PASS"
+    }
+  ],
+  "known_followup": [
+    {
+      "id": "P05-QUIET-PUBLIC",
+      "decision": ".docs/adr/ADR-020-p05-quiet-public-pair.md",
+      "status": "IMPLEMENTED_PREFLIGHT_ONLY_CLEAN_SOURCE_AND_GATE_PENDING"
+    },
+    {
+      "id": "P05-COMFORT-V10",
+      "status": "IMPLEMENTED_PREFLIGHT_ONLY_CLEAN_SOURCE_AND_GATE_PENDING",
+      "constraint": "Immutable snapshot must remain unchanged; a comfort reduction must stop/revoke current action. Never silently allow raising consent or continuing a now-ineligible action."
+    },
+    {
+      "id": "P05-SEMANTIC-V13",
+      "status": "PURE_VERSIONED_PLANNER_COMPONENT_PASS_RUNTIME_C2_PENDING",
+      "constraint": "Bind explicit21cluster dispositions to actual cross-mode/session scheduling; token dedupe/content-only fixes are insufficient.",
+      "independent_review": ".docs/implementation/reviews/p05/planner-round-01.json",
+      "scope": "77 author/32 independent pure module checks; no production activation/API/new C2/fairness acceptance"
+    },
+    {
+      "id": "P05-ZOOM-NATIVE",
+      "status": "ACTUAL_ALL_ENGINE_DIRTY_PREFLIGHT_PASS_CLEAN_SOURCE_AND_STAGE_PENDING",
+      "constraint": "CSS zoom fixture does not prove native browser200percent zoom; retain honest scope.",
+      "evidence": ".docs/implementation/evidence/p05/browser-matrix-preflight-01/index.json",
+      "independent_review": ".docs/implementation/reviews/p05/browser-round-02.json",
+      "tested_source_identity_sha256": "46bf2780058b7a420af842de0939245f05bad32d039bc69cef90fe9fd853c197",
+      "scope": "30 scenarios,216 layout,27 native; synthetic fixtures, not full P05; later source changes require fresh applicable proof"
+    },
+    {
+      "id": "P05-TOPIC-BOUNDARY",
+      "status": "PURE_KERNEL_PREFLIGHT_PASS_RUNTIME_INTEGRATION_AND_BOUND_TESTS_PENDING",
+      "constraint": "Private topic allowlists and changed-topic consent must be enforced before prompt disclosure; historical immutable snapshots stay unchanged.",
+      "independent_review": ".docs/implementation/reviews/p05/kernel-round-02.json",
+      "tested_module_sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd",
+      "scope": "68 author and 86 independent pure-module checks; unexported; no API/ledger/planner/UI/restore/C2 acceptance",
+      "component_followups": [
+        {
+          "kind": "safety_ledger",
+          "review": ".docs/implementation/reviews/p05/ledger-round-01.json",
+          "scope": "67 author Linux PASS/1 skip,24 independent; old exact foundation bytes; lifecycle/retention/restore integration pending"
+        },
+        {
+          "kind": "settings_adapter",
+          "review": ".docs/implementation/reviews/p05/topic-settings-round02.json",
+          "evidence": ".docs/implementation/evidence/p05/topic-settings-preflight-02/index.json",
+          "scope": "35 author/22 independent andactual9; inactive; lifecycle/epochs fixture seams, not full restore"
+        },
+        {
+          "kind": "lifecycle",
+          "review": ".docs/implementation/reviews/p05/ledger-lifecycle-design-round01.json",
+          "scope": "LIFE001–004 OPEN; implementation underway; not accepted"
+        }
+      ]
+    },
+    {
+      "id": "P05-ADVICE-OPT-IN",
+      "status": "PURE_KERNEL_PREFLIGHT_PASS_RUNTIME_INTEGRATION_AND_BOUND_TESTS_PENDING",
+      "constraint": "Structured advice text is withheld from recipient until explicit opt-in; ordinary text chat cannot enforce semantic intent automatically.",
+      "independent_review": ".docs/implementation/reviews/p05/kernel-round-02.json",
+      "tested_module_sha256": "57d33ce1af14b4a3a69979a004a7c7122e529f2420ce99cb678089361120ccfd",
+      "scope": "68 author and 86 independent pure-module checks; unexported; no API/ledger/planner/UI/restore/C2 acceptance"
+    },
+    {
+      "id": "P05-SELF-ACTIONS",
+      "status": "ACTUAL_DIRTY_COMPONENT_PASS_CLEAN_STAGE_GATE_PENDING",
+      "constraint": "Public Questions group actors=[] does not identify the sole finish/skip actor. UI must use recipient-only session/round/revision-bound self actions rather than exposing hidden primary or guessing roles. Spectators/nonselected hosts must not receive controls rejected by current server ACL. Keep existing public projection/snapshot contracts unchanged; independently verify role/stale/TTL/privacy negatives.",
+      "evidence": ".docs/implementation/evidence/p05/self-actions-preflight-05/index.json",
+      "tested_source_identity_sha256": "d84d16f57da53682f1ae314b14bfb0d1663429c87e41fdeb5416c651c5703b9b",
+      "scope": "406 host PASS/43 platform skips and11 actual HTTPS/WS/PG/headless checks; independent132controls; originalFAIL attempts retained; later bytes do not inherit global PASS",
+      "open_full_p05_findings": [],
+      "independent_review": ".docs/implementation/reviews/p05/role-round-06.json",
+      "independent_review_scope": "SOURCE_COMPONENT_PASS; ROLE001–006 bounded closed; not full P05"
+    },
+    {
+      "id": "P05-V2-LIFECYCLE-INTEGRATION",
+      "status": "ACTUAL16_AND_INDEPENDENT_COMPONENT_PASS_FULL_RESTORE_PENDING",
+      "scope": "Real PG/HTTP Rooms admission, lifecycle, preferences provider, external withdrawal, fault safety and final credential waits actual16 PASS; independent prior-source producer16 and own12 controls PASS. Cold constructor still requires five healthy roots; row restore is not full pg_dump.",
+      "evidence": [
+        ".docs/implementation/evidence/p05/topic-lifecycle-preflight-02/index.json",
+        ".docs/implementation/reviews/p05/topic-lifecycle-round01.json",
+        ".docs/implementation/reviews/p05/directory-authority-round02.json"
+      ],
+      "open_work": "Ordinary production startup, full backup/restore/rollback, external compatibility barrier and final clean-source stage gate."
+    },
+    {
+      "id": "P05-V2-GAMES-TRANSPORT",
+      "status": "ACTUAL20_AND_INDEPENDENT_COMPONENT_PASS_ORDINARY_RUNTIME_UI_PENDING",
+      "tested_source_identity_sha256": "38a117dbd52dc3e6a5e3db8f42bf524a0bd097b0d595be302631c1ede94b8aaa",
+      "evidence": ".docs/implementation/evidence/p05/topic-games-preflight-05/index.json",
+      "scope": "Actual20 unique checks include100 HTTP rounds, generation3 streams, final SQL credential expiry, distinct-process boot, source-independent withdrawal and URL-scoped idempotency. Lifecycle/source/safety and WS adapter have explicit fixture seams. Independent51 plus two actual5-case HTTP probes PASS. Subsequent server/UI/source-availability changes do not inherit this full source identity.",
+      "open_work": "Ordinary runtime and WS/browser/cookie-jar, source outage clearing, UI independent gate, semantic canary/C2/fairness, full restore and final source freeze/reviews.",
+      "independent_review": ".docs/implementation/reviews/p05/topic-games-round02.json"
+    },
+    {
+      "id": "P05-V2-CONTENT-SOURCE",
+      "status": "SOURCE_COMPONENT_PREFLIGHT_PASS_APPROVED_REGISTRIES_EMPTY",
+      "scope": "Release-only reviewed pack/full topic pins, historical inactive tuples and final protected withdrawal fence. Author41 and independent38 controls PASS; no human approval inferred,450 HOLD unchanged.",
+      "open_work": "Ordinary runtime profile compatibility and activation proofs; actual production content remains unavailable until human review and rebuilt approved release.",
+      "independent_review": ".docs/implementation/reviews/p05/topic-source-round01.json"
+    },
+    {
+      "id": "P05-ORDINARY-RUNTIME-WIRING",
+      "status": "FROZEN_1D4DE7_ACTUAL8_WS10_COMPONENT_PASS_NEW_CHAT_FIX_PENDING",
+      "scope": "On frozen1d4de7: runtime8/8 and ordinaryWS10/10 actual PASS, independent bounded reviews PASS. UI141 and host700/208 platform skips separate component evidence. New chat policy/quota changes require fresh exact-source evidence.",
+      "review": ".docs/implementation/reviews/p05/ordinary-ws-round04-actual/REPORT.json",
+      "open_work": "Fresh post-chat-fix tests/reviews, actual browser, upgrade/full restore/rollback, clean-source stage gate.",
+      "evidence": [
+        ".docs/implementation/evidence/p05/ordinary-runtime-preflight-01/index.json",
+        ".docs/implementation/evidence/p05/ordinary-ws-preflight-02/index.json"
+      ]
+    },
+    {
+      "id": "P05-V2-CHAT-POLICY",
+      "status": "TG_CHAT_001_P1_AND_002_P2_FIX_CANDIDATE_ACTUAL_REVIEW_PENDING",
+      "scope": "Root candidate: online+current flag+immutable capability, final HTTP/GET/replay/receipt fences; source-independent revocation; round-bound encrypted12/calendar-minute/actor,128/round,32buffer; valid Unicode scalars. Typecheck/lint0, host733PASS/208platformSKIP. These are host/unit controls, not actual new-source acceptance.",
+      "evidence": [
+        ".docs/implementation/reviews/p05/topic-chat-context-round01/REPORT.json",
+        ".docs/implementation/reviews/p05/topic-chat-fix-preliminary-round01/REPORT.json"
+      ],
+      "open_work": "Actual PG/HTTP policy/quota/final-await controls and independent acceptance; affected Games/lifecycle/browser on exact new source."
+    }
+  ]
+}

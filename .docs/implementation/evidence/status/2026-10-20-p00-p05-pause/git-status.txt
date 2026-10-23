@@ -1,0 +1,213 @@
+A  .artifacts/p05-map-index-candidate01/HANDOFF.json
+ M .docs/adr/current-index.json
+ M .docs/implementation/status.md
+ M .history/2026-10-19-orchestrator.md
+ M .history/2026-10-19-p05.md
+ M apps/api/src/app.ts
+ M apps/api/src/catalog.ts
+ M apps/api/src/game-routes.ts
+ M apps/api/src/games-model.test.ts
+ M apps/api/src/games-model.ts
+ M apps/api/src/games.ts
+ M apps/api/src/room-routes.ts
+ M apps/api/src/rooms.ts
+ M apps/api/src/server.ts
+ M apps/web/src/api.ts
+ M apps/web/src/main.tsx
+ M apps/web/src/room-shell.tsx
+ M apps/web/src/style.css
+ M infra/venus/Dockerfile
+ M infra/venus/Dockerfile.checks.dockerignore
+ M infra/venus/compose.yml
+ M package.json
+ M packages/card-catalog/src/index.ts
+ M packages/contracts/src/index.ts
+ M packages/i18n/src/index.ts
+ M packages/relationship-engine/src/index.ts
+ M tests/p03/runtime.integration.test.mjs
+ M tools/check_docs.py
+?? .docs/P05_DEVELOPMENT.md
+?? .docs/P05_PRIVATE_CHAT.md
+?? .docs/P05_PRIVATE_TOPICS.md
+?? .docs/P05_SELF_ACTIONS.md
+?? .docs/P05_TESTING.md
+?? .docs/P05_TOPIC_ADVICE_DESIGN.md
+?? .docs/adr/ADR-020-p05-quiet-public-pair.md
+?? .docs/adr/ADR-021-p05-safety-neutral-reset.md
+?? .docs/adr/ADR-022-p05-recipient-self-actions.md
+?? .docs/adr/ADR-023-p05-room-topic-safety-lifecycle.md
+?? .docs/adr/ADR-024-p05-complete-private-opportunity-history.md
+?? .docs/contracts/game-self-actions.v1.schema.json
+?? .docs/contracts/private-chat.v1.schema.json
+?? .docs/contracts/private-room-protocol.v1.schema.json
+?? .docs/contracts/private-topic-settings.v1.schema.json
+?? .docs/contracts/private-topic-taxonomy.v1.schema.json
+?? .docs/contracts/runtime-capabilities.v1.schema.json
+?? .docs/implementation/evidence/p05/
+?? .docs/implementation/evidence/status/
+?? .docs/implementation/p05-registry.json
+?? .docs/implementation/p05-source-revisions.json
+?? .docs/implementation/p05-work-map.json
+?? .docs/implementation/reviews/p05/
+?? .history/agents/2026-10-19-p05-backend-review.md
+?? .history/agents/2026-10-19-p05-browser-harness.md
+?? .history/agents/2026-10-19-p05-browser-review.md
+?? .history/agents/2026-10-19-p05-content-capacity-proposal.md
+?? .history/agents/2026-10-19-p05-conversation-kernel-review.md
+?? .history/agents/2026-10-19-p05-conversation-kernel.md
+?? .history/agents/2026-10-19-p05-games-ui.md
+?? .history/agents/2026-10-19-p05-lifecycle-review2.md
+?? .history/agents/2026-10-19-p05-oci-rollback-producer-author.md
+?? .history/agents/2026-10-19-p05-ordinary-ws-review.md
+?? .history/agents/2026-10-19-p05-ordinary-ws.md
+?? .history/agents/2026-10-19-p05-private-chat.md
+?? .history/agents/2026-10-19-p05-registry-provider-review.md
+?? .history/agents/2026-10-19-p05-requirements-review.md
+?? .history/agents/2026-10-19-p05-runtime-integration.md
+?? .history/agents/2026-10-19-p05-self-actions-review.md
+?? .history/agents/2026-10-19-p05-self-actions-runner-review.md
+?? .history/agents/2026-10-19-p05-self-actions.md
+?? .history/agents/2026-10-19-p05-targeted-review.md
+?? .history/agents/2026-10-19-p05-topic-advice.md
+?? .history/agents/2026-10-19-p05-topic-browser-delivery-diagnostic.md
+?? .history/agents/2026-10-19-p05-topic-browser-metadata-review.md
+?? .history/agents/2026-10-19-p05-topic-browser-producer-review.md
+?? .history/agents/2026-10-19-p05-topic-browser.md
+?? .history/agents/2026-10-19-p05-topic-chat-policy-review.md
+?? .history/agents/2026-10-19-p05-topic-chat-policy.md
+?? .history/agents/2026-10-19-p05-topic-chat-producer-review.md
+?? .history/agents/2026-10-19-p05-topic-compatibility-review.md
+?? .history/agents/2026-10-19-p05-topic-compatibility-round02-review.md
+?? .history/agents/2026-10-19-p05-topic-games-review.md
+?? .history/agents/2026-10-19-p05-topic-games.md
+?? .history/agents/2026-10-19-p05-topic-ledger-review.md
+?? .history/agents/2026-10-19-p05-topic-ledger.md
+?? .history/agents/2026-10-19-p05-topic-lifecycle-integration.md
+?? .history/agents/2026-10-19-p05-topic-lifecycle-review.md
+?? .history/agents/2026-10-19-p05-topic-map-review.md
+?? .history/agents/2026-10-19-p05-topic-map.md
+?? .history/agents/2026-10-19-p05-topic-measurement-design-review.md
+?? .history/agents/2026-10-19-p05-topic-measurement-design.md
+?? .history/agents/2026-10-19-p05-topic-measurement-implementation.md
+?? .history/agents/2026-10-19-p05-topic-planner-review.md
+?? .history/agents/2026-10-19-p05-topic-planner.md
+?? .history/agents/2026-10-19-p05-topic-restore-design-review.md
+?? .history/agents/2026-10-19-p05-topic-restore.md
+?? .history/agents/2026-10-19-p05-topic-source-review.md
+?? .history/agents/2026-10-19-p05-topic-source.md
+?? .history/agents/2026-10-19-p05-topics-ui-review.md
+?? .history/agents/2026-10-19-p05-topics-ui.md
+?? .history/agents/2026-10-19-p05-ui-review.md
+?? .history/agents/2026-10-20-p05-action-accept-actual-diagnosis.md
+?? .history/agents/2026-10-20-p05-advice-method11-review.md
+?? .history/agents/2026-10-20-p05-content-capacity-choice.md
+?? .history/agents/2026-10-20-p05-content-expansion-470-r2.md
+?? .history/agents/2026-10-20-p05-content-expansion-470.md
+?? .history/agents/2026-10-20-p05-docs-archive-origin-review.md
+?? .history/agents/2026-10-20-p05-measurement-method05-review.md
+?? .history/agents/2026-10-20-p05-private-batch-observer-review.md
+?? .history/agents/2026-10-20-p05-renewal-regression-audit.md
+?? .history/agents/2026-10-20-p05-v2-layout-producer.md
+?? apps/api/chat-migrations/
+?? apps/api/private-topic-migrations/
+?? apps/api/src/chat-migrations.ts
+?? apps/api/src/game-self-actions.test.ts
+?? apps/api/src/game-self-actions.ts
+?? apps/api/src/p05-feature-availability.test.ts
+?? apps/api/src/p05-private-channel.test.ts
+?? apps/api/src/p05-public-receipt.test.ts
+?? apps/api/src/private-chat-delivery.test.ts
+?? apps/api/src/private-chat-routes.test.ts
+?? apps/api/src/private-chat.test.ts
+?? apps/api/src/private-chat.ts
+?? apps/api/src/private-topic-ledger.test.ts
+?? apps/api/src/private-topic-ledger.ts
+?? apps/api/src/private-topic-migrations.ts
+?? apps/api/src/private-topic-preferences.test.ts
+?? apps/api/src/private-topic-preferences.ts
+?? apps/api/src/room-games.test.ts
+?? apps/api/src/room-games.ts
+?? apps/api/src/room-private-protocol.test.ts
+?? apps/api/src/room-private-protocol.ts
+?? apps/api/src/room-routes-v2.test.ts
+?? apps/api/src/self-actions-delivery.test.ts
+?? apps/api/src/topic-algorithm-compatibility.test.ts
+?? apps/api/src/topic-chat-guards.test.ts
+?? apps/api/src/topic-chat-policy.test.ts
+?? apps/api/src/topic-chat-policy.ts
+?? apps/api/src/topic-content-availability.ts
+?? apps/api/src/topic-context-fixture.test.ts
+?? apps/api/src/topic-game-idempotency.test.ts
+?? apps/api/src/topic-game-model.test.ts
+?? apps/api/src/topic-game-model.ts
+?? apps/api/src/topic-game-routes.ts
+?? apps/api/src/topic-game-source.test.ts
+?? apps/api/src/topic-game-source.ts
+?? apps/api/src/topic-games-feature-off.test.ts
+?? apps/api/src/topic-games.test.ts
+?? apps/api/src/topic-games.ts
+?? apps/api/src/topic-room-directories.test.ts
+?? apps/api/src/topic-room-directories.ts
+?? apps/api/src/topic-room-lifecycle.test.ts
+?? apps/api/src/topic-room-lifecycle.ts
+?? apps/api/src/topic-room-registry.test.ts
+?? apps/api/src/topic-room-registry.ts
+?? apps/api/src/topic-runtime.test.ts
+?? apps/api/src/topic-runtime.ts
+?? apps/web/README-P05.md
+?? apps/web/src/game-controls-panel.test.ts
+?? apps/web/src/game-controls.test.ts
+?? apps/web/src/game-controls.ts
+?? apps/web/src/game-copy.ts
+?? apps/web/src/game-operations.test.ts
+?? apps/web/src/game-operations.ts
+?? apps/web/src/game-races.test.ts
+?? apps/web/src/game-setup.test.ts
+?? apps/web/src/game-setup.ts
+?? apps/web/src/game-state.test.ts
+?? apps/web/src/game-state.ts
+?? apps/web/src/games-panel.tsx
+?? apps/web/src/presentation-clock.test.ts
+?? apps/web/src/presentation-clock.ts
+?? apps/web/src/private-state.test.ts
+?? apps/web/src/private-state.ts
+?? apps/web/src/session-api.test.ts
+?? apps/web/src/topic-controls.test.ts
+?? apps/web/src/topic-games-panel.tsx
+?? apps/web/src/topic-panel.test.ts
+?? apps/web/src/topic-safety.ts
+?? apps/web/src/topic-settings.test.ts
+?? apps/web/src/topic-settings.tsx
+?? apps/web/src/topic-state.test.ts
+?? apps/web/src/topic-state.ts
+?? apps/web/src/topic-test-harness.ts
+?? infra/venus/Dockerfile.p05-tests
+?? infra/venus/Dockerfile.p05-tests.dockerignore
+?? infra/venus/compose.p05-tests.yml
+?? packages/card-catalog/src/approved-topic-bundles.json
+?? packages/card-catalog/src/topic-bundles.test.ts
+?? packages/card-catalog/src/topic-bundles.ts
+?? packages/contracts/src/private-chat.ts
+?? packages/contracts/src/self-actions.ts
+?? packages/contracts/src/topic-games.ts
+?? packages/i18n/src/topics.ts
+?? packages/relationship-engine/src/private-conversation.test.ts
+?? packages/relationship-engine/src/private-conversation.ts
+?? packages/relationship-engine/src/public-pair-opt-in.test.ts
+?? packages/relationship-engine/src/public-pair-opt-in.ts
+?? packages/relationship-engine/src/topic-map.test.ts
+?? packages/relationship-engine/src/topic-map.ts
+?? packages/relationship-engine/src/topic-planner.test.ts
+?? packages/relationship-engine/src/topic-planner.ts
+?? tests/p05-catalog/
+?? tests/p05-chat/
+?? tests/p05-runtime/
+?? tests/p05-self-actions/
+?? tests/p05-topic-games/
+?? tests/p05-topic-lifecycle/
+?? tests/p05-topics/
+?? tests/p05/
+?? tools/archived_markdown.py
+?? tools/p05-browser.mjs
+?? tools/p05-runtime.mjs
+?? tools/test_archived_markdown.py

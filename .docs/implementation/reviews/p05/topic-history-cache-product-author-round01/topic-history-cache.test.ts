@@ -1,0 +1,20 @@
+import {afterEach,describe,expect,it,vi} from 'vitest';
+import {TopicHistoryCache} from './topic-history-cache.js';
+const caches:TopicHistoryCache<unknown>[]=[];
+afterEach(()=>{for(const cache of caches.splice(0))cache.clear();vi.useRealTimers();});
+function fixture(){let now=0,validations=0;const cache=new TopicHistoryCache<object>(()=>now);caches.push(cache);const identity={room:'r',session:'s',snapshot:{},pack:{},map:{}};
+ const validate=()=>Object.freeze({validation:++validations});return {cache,identity,validate,setNow:(v:number)=>{now=v;},get validations(){return validations;},read:(raw:unknown={revision:1},patch={})=>cache.read({...identity,...patch},raw,validate)};
+}
+describe('bounded authenticated immutable history validation memo',()=>{
+ it('reuses object only for exact canonical authenticated contents',()=>{const f=fixture(),one=f.read({a:1,b:2});expect(f.read({b:2,a:1})).toBe(one);expect(f.validations).toBe(1);expect(f.read({a:1,b:3})).not.toBe(one);expect(f.validations).toBe(2);expect(Reflect.get(f.cache,'entries')).toHaveLength(1);});
+ for(const field of ['room','session','snapshot','pack','map']as const)it('never reuses a different '+field+' binding',()=>{const f=fixture(),one=f.read();expect(f.read({revision:1},{[field]:['room','session'].includes(field)?'other':{}})).not.toBe(one);expect(f.validations).toBe(2);});
+ it('replaces earlier history versions of the same room/session',()=>{const f=fixture();for(let revision=0;revision<40;revision++)f.read({revision});expect(Reflect.get(f.cache,'entries')).toHaveLength(1);});
+ it('does not extend its absolute30s TTL on hits',()=>{const f=fixture(),one=f.read();f.setNow(29999);expect(f.read()).toBe(one);f.setNow(30000);expect(f.read()).not.toBe(one);expect(f.validations).toBe(2);});
+ it('physically expires idle sensitive values with one unref timer',()=>{vi.useFakeTimers();const f=fixture();f.read();f.read({revision:1},{session:'two'});expect(vi.getTimerCount()).toBe(1);f.setNow(30000);vi.advanceTimersByTime(30000);expect(Reflect.get(f.cache,'entries')).toHaveLength(0);expect(vi.getTimerCount()).toBe(0);});
+ it('evicts LRU at32 entries and keeps the total bound',()=>{const f=fixture(),one=f.read({revision:1},{session:'s0'});for(let i=1;i<32;i++)f.read({revision:1},{session:'s'+i});expect(f.read({revision:1},{session:'s0'})).toBe(one);f.read({revision:1},{session:'s32'});expect(Reflect.get(f.cache,'entries')).toHaveLength(32);expect(f.read({revision:1},{session:'s1'})).toEqual({validation:34});});
+ it('evicts by encoded UTF8 weight within16MiB, not just entry count',()=>{const f=fixture(),raw={text:'İ'.repeat(3*1024*1024)},one=f.read(raw,{session:'s0'});f.read(raw,{session:'s1'});f.read(raw,{session:'s2'});const entries=Reflect.get(f.cache,'entries')as{bytes:number}[];expect(entries).toHaveLength(2);expect(entries.reduce((n,e)=>n+e.bytes,0)).toBeLessThanOrEqual(16*1024*1024);expect(f.read(raw,{session:'s0'})).not.toBe(one);});
+ it('validates over-budget values uncached instead of truncating or rejecting valid history',()=>{const f=fixture(),raw={text:'a'.repeat(16*1024*1024)};f.read();const one=f.read(raw);expect(f.read(raw)).not.toBe(one);expect(Reflect.get(f.cache,'entries')).toHaveLength(0);expect(f.validations).toBe(3);});
+ it('validation failure clears old values and cannot fall back to a previous version',()=>{const f=fixture();f.read();expect(()=>f.cache.read(f.identity,{revision:2},()=>{throw Error('invalidhistory');})).toThrow('invalidhistory');expect(Reflect.get(f.cache,'entries')).toHaveLength(0);});
+ it('clears only purged room and explicitly clears all values',()=>{const f=fixture(),one=f.read(),other=f.read({revision:1},{room:'other'});f.cache.forgetRoom('r');expect(f.read({revision:1},{room:'other'})).toBe(other);expect(f.read()).not.toBe(one);f.cache.clear();expect(Reflect.get(f.cache,'entries')).toHaveLength(0);});
+ it('clock rewind/nonfinite values cannot revive cached history',()=>{const f=fixture(),one=f.read();f.setNow(5);expect(f.read()).toBe(one);f.setNow(4);expect(f.read()).not.toBe(one);f.setNow(Infinity);f.read();expect(Reflect.get(f.cache,'entries')).toHaveLength(0);});
+});

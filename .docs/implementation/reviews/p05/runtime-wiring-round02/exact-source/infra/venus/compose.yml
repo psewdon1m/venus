@@ -1,0 +1,58 @@
+services:
+  app:
+    image: ${VENUS_IMAGE:?Set VENUS_IMAGE to the inspected local image ID}
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    ports: ["127.0.0.1:${VENUS_HTTP_PORT:-4300}:4300"]
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      IMAGE_DIGEST: ${VENUS_IMAGE:?Set VENUS_IMAGE}
+      KEYRING_FILE: /run/secrets/keyring
+      DELETION_LEDGER_FILE: /var/lib/venus/deletions.jsonl
+      CATALOG_REVOCATION_LEDGER_FILE: ${CATALOG_REVOCATION_LEDGER_FILE:-}
+      APP_ORIGIN: ${VENUS_ORIGIN:-https://venus.local.invalid}
+      VENUS_DEPLOYMENT_PROFILE: ${VENUS_DEPLOYMENT_PROFILE:-closed}
+      VENUS_PRIVATE_TEXT_CHAT: ${VENUS_PRIVATE_TEXT_CHAT:-false}
+      VENUS_PRIVATE_TOPICS: ${VENUS_PRIVATE_TOPICS:-false}
+    secrets: [db_password, keyring]
+    volumes: [venus-state:/var/lib/venus]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4300/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks: [backend, app-edge]
+  db:
+    image: postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8
+    environment:
+      POSTGRES_DB: venus
+      POSTGRES_USER: venus
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes: [postgres-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U venus -d venus"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    networks: [backend]
+secrets:
+  db_password:
+    file: ${VENUS_DB_PASSWORD_FILE:?Set an external secret file path}
+  keyring:
+    file: ${VENUS_KEYRING_FILE:?Set an external keyring file path}
+volumes:
+  postgres-data:
+  venus-state:
+networks:
+  backend:
+    internal: true
+  app-edge:

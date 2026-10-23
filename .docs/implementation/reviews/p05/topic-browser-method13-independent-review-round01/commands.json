@@ -1,0 +1,27 @@
+{
+  "commands": [
+    {
+      "command": ".venv/Scripts/python.exe .../topic-browser-method13-independent-review-round01/verify.py",
+      "exit_code": 0,
+      "checks": "22 author file hashes,9runtime pins,source1274/1813"
+    },
+    {
+      "command": "node .../author-rerun.mjs",
+      "exit_code": 0,
+      "checks": 16
+    },
+    {
+      "command": "node .../controls.mjs",
+      "attempt": 1,
+      "exit_code": 1,
+      "cause": "Reviewer import depth before tests; preserved"
+    },
+    {
+      "command": "node .../controls.mjs",
+      "attempt": 2,
+      "exit_code": 0,
+      "checks": 8
+    }
+  ],
+  "functional_run": false
+}

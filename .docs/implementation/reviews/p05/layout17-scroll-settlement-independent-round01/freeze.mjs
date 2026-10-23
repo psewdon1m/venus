@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+const root='C:/.projects/venus',out=fileURLToPath(new URL('.',import.meta.url)),hash=b=>createHash('sha256').update(b).digest('hex'),pins=JSON.parse(readFileSync(join(out,'INPUT_PINS.json'))),checks=JSON.parse(readFileSync(join(out,'CHECKS.json')));
+for(const [path,want]of Object.entries(pins)){const b=readFileSync(join(root,path));assert.equal(b.length,want.bytes,path);assert.equal(hash(b),want.sha256,path);}
+const source=JSON.parse(readFileSync(join(out,'current-source.stdout.txt')));assert.equal(source.source_identity,checks.source_identity);assert.equal(source.included_files,1871);for(const r of JSON.parse(readFileSync(join(out,'syntax.json'))))assert.equal(r.exit_code,0);assert(readFileSync(join(out,'pendingACK.stderr.txt'),'utf8').includes('ROOT_RUN_ACK_REQUIRED'));assert.equal(JSON.parse(readFileSync(join(out,'controls.stdout.txt'))).controls.length,6);
+const files={};for(const name of readdirSync(out).sort()){if(name==='INDEX.json')continue;const b=readFileSync(join(out,name));files[name]={bytes:b.length,sha256:hash(b)};}
+const index={status:'PASS_METHOD_ONLY',source_identity:checks.source_identity,source_count:1871,image:checks.image,producer_runtime_digest:checks.producer_runtime_digest,producer_INDEX_sha256:'5214ee7cbd52918d6e1f32e01b32cb50d1e43906874c027043b8be678d575052',author02_INDEX_sha256:'a2c36361d62f000d73ff7f99de2191c739d2d07ade351eb73b23b9e1b50f20e2',diagnosis_INDEX_sha256:'26a041fea549be2bae2af6512ad357729e0f736e1a001e4249565c1bf8657aa4',independent_finite_controls:6,root_run_ack:false,native_operations:0,actual_acceptance:false,original_layout16_actual:'FAIL_RETAINED_0PASS_1FAIL_50NOTRUN',actual_original_scroll_cause:'UNKNOWN',owned_writes:'COMPLETE_STOP',files};
+const bytes=JSON.stringify(index,null,2)+'\n';writeFileSync(join(out,'INDEX.json'),bytes);console.log(JSON.stringify({status:index.status,sha256:hash(bytes),children:Object.keys(files).length,final_inputs_rehashed:Object.keys(pins).length,owned_writes:'COMPLETE_STOP'}));

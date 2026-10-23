@@ -1,0 +1,28 @@
+--- 01/range-reduce.mjs
++++ 02/range-reduce.mjs
+@@ -25,6 +25,7 @@
+  return result;
+ }
+ export function compactInference(result,names){assert.deepEqual(result.features.names,names);return {descriptor:result.descriptor,status:result.status,features:{names,features:result.features.features}};}
++export function assertBoundDescriptor(section,row){assert.equal(row.section,section);assert.deepEqual(row.result.descriptor,caseAt(section.slice(3),row.ordinal),'DESCRIPTOR_OUTER_ORDINAL_MISMATCH');}
+ export function validatePreflightRaw(result,cell){
+  assert.deepEqual(result.cell,cell);assert.equal(result.actual_transport,false);assert.equal(result.simulation_only,true);
+  if(result.status==='SAFE_REFUSAL'){assert.equal(result.error_code,'TOPIC_SAFE_POOL_EXHAUSTED');assert.equal(result.prefix_available,false);assert.equal(result.history,null);assert.equal(result.planned_rounds,null);return;}
+@@ -52,7 +53,7 @@
+  summary.acceptance_boundary='Typed safe preStart refusals retained; R100 completion is not imposed. Canary preconditions/dispositions remain visible and require coverage review; full C2/stage PASS is not synthesized.';return summary;
+ }
+ export async function reduceM3(section,manifest,env){
+- function* validated(){let ordinal=0;for(const row of records(manifest)){assert.equal(row.ordinal,ordinal++);assert.equal(row.section,section);if(section==='m3-gf')yield row.result;else yield verifyModelRaw(row.result,env);}assert.equal(ordinal,counts[section]);}
++ function* validated(){let ordinal=0;for(const row of records(manifest)){assert.equal(row.ordinal,ordinal++);assertBoundDescriptor(section,row);if(section==='m3-gf')yield row.result;else yield verifyModelRaw(row.result,env);}assert.equal(ordinal,counts[section]);}
+  if(section==='m3-invariants')return invariantsSection(validated());
+  if(section==='m3-gf')return reduceGf(validated());
+  if(section==='m3-fairness'){
+@@ -66,7 +67,7 @@
+   const start=index*42000,end=start+42000,inputs=manifest.inputs.filter(r=>r.range.start<end&&r.range.end>start),rows=[];
+   // Each input is reverified in full. Only this comparison's raw feature vectors
+   // remain resident; a new pooled model is trained, never pooled cell scores.
+-  for(const row of records({...manifest,inputs}))if(row.ordinal>=start&&row.ordinal<end){assert.equal(row.result.descriptor.comparison,comparison);rows.push(compactInference(row.result,names));}
++  for(const row of records({...manifest,inputs})){assertBoundDescriptor(section,row);if(row.ordinal>=start&&row.ordinal<end){assert.equal(row.result.descriptor.comparison,comparison);rows.push(compactInference(row.result,names));}}
+   pooled.push({comparison,result:evaluateInference(rows,names,{pooled:true})});
+  }
+  return {status:[...cells,...pooled].every(c=>c.result.status==='PASS_DOMAIN_MODEL_LDA_ONLY_NOT_WIRE_OR_STAGE')?'PASS_DOMAIN_INFERENCE_ONLY_NOT_WIRE_OR_STAGE':'NOT_ACCEPTED',cells,pooled};

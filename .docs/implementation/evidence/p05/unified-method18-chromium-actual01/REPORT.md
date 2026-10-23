@@ -1,0 +1,3 @@
+# METHOD18 Chromium actual: FAIL
+
+{"PASS": 7, "FAIL": 1, "NOT_RUN": 8}; cleanup PASS. All16 fixed scenarios retained. Cases01–07 PASS,08 failed at OBSERVER_READY_DEADLINE before action acceptance,09–16 NOT_RUN. Private preconditions were selected on first actual session in rounds16 for questions and truth/dare. No seed, history, snapshot or planner mutation was used to force those encounters. Exact source b244/1819 and current image0b4 are bound by outer/ACK/reviews; previous17 failures preserved. Independent actual diagnosis pending; no product defect or full stage acceptance inferred from observer failure. Raw inputs, failure details, screenshots, diagnostics and before/after maps retained.

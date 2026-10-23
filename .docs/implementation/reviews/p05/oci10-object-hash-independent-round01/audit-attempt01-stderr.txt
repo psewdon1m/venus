@@ -1,0 +1,187 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ '/** Explicit bootstrap only; importing this module never opens DB/listener. */\r\n' +
++   "import assert from 'node:assert/strict';\r\n" +
++   "import {safeError} from './bound-profile.mjs';\r\n" +
++   "import {verifyOwnIPC} from './ipc-policy.mjs';\r\n" +
++   "import {readFileSync,existsSync,lstatSync} from 'node:fs';\r\n" +
++   "import {dirname,resolve,join} from 'node:path';\r\n" +
++   "import {fileURLToPath} from 'node:url';\r\n" +
++   "import {randomBytes} from 'node:crypto';\r\n" +
++   "import {performance} from 'node:perf_hooks';\r\n" +
++   "import {composition} from './factory.mjs';\r\n" +
++   "import {ResourceLease} from './resource-lease.mjs';\r\n" +
++   "import {actualImageMap,sha} from './image-modules.mjs';\r\n" +
++   "import {protectedRequest} from './http-client.mjs';\r\n" +
++   "import {seed,narrow,restore,preserved,replay,activePrivate,serialize} from './scenarios.mjs';\r\n" +
++   'const producer=dirname(fileURLToPath(import.meta.url)),delay=ms=>new Promise(r=>setTimeout(r,ms));\r\n' +
++   'export async function boot(config){const ipcReceipt=verifyOwnIPC(config.phase);\r\n' +
++   " const binding=JSON.parse(readFileSync(join(producer,'BINDING.json'))),processNonce=randomBytes(16).toString('hex'),started=performance.now(),lease=new ResourceLease(config);let service,closed=false;const phase=config.phase,chronology=[],report={schema_version:1,status:'FAIL',phase,process_nonce:processNonce,namespace_pid:process.pid,ipc:ipcReceipt,image:binding.images[phase==='B2'?'B':'A'],chronology,pool_closed:false,synthetic_only:true,full_P05_PASS:false};\r\n" +
++   " const mark=event=>chronology.push({phase,event,native_elapsed_ms:performance.now()-started}),publicWrite=(name,value)=>lease.write('/evidence',name,JSON.stringify(value,null,2)+'\\n'),privateWrite=(name,value)=>lease.write('/private',name,JSON.stringify(value)+'\\n',{privateFile:true});\r\n" +
++   " async function command(name){const file='/private/command-'+phase+'-'+name+'.json',deadline=performance.now()+120000;while(performance.now()<deadline){lease.assert();if(existsSync(file)){assert(!lstatSync(file).isSymbolicLink());const c=JSON.parse(readFileSync(file));assert.equal(c.owner,config.owner);assert.equal(c.phase,phase);assert.equal(c.command,name);return;}await delay(50);}throw Error('SCRIPTED_PHASE_DEADLINE');}\r\n" +
++   ' try{\r\n' +
++   "  await lease.initial();report.actual_image=actualImageMap(binding,phase);const source=phase==='B2'?binding.prior_source_identity:binding.source_identity;config.version={service:'venus',version:'image-bound-synthetic-fixture',source_revision:source,image_digest:report.image,contract_revision:'P00-2'};report.version_source='PINNED_EXTERNAL_RECEIPT_AND_ACTUAL_IMAGE_MAP_NOT_PRODUCTION_METADATA';service=await composition(config,binding,lease);const{h,obs,effects}=service;report.adaptations=service.adaptations;report.generated_harness_sha256=service.generated_source_sha256;\r\n" +
++   "  const previous=phase==='A1'?null:JSON.parse(readFileSync('/private/state-'+(phase==='B2'?'A1-final':'B2-final')+'.json'));\r\n" +
++   "  const before=phase==='A1'?null:await obs.rawDatabase(h.pool),authorityBefore=phase==='A1'?null:obs.authorityMap(h.directory),keyBefore=sha(readFileSync(config.keyringFile));await service.migrate();if(before)report.migration_only=obs.assertRestored(before,await obs.rawDatabase(h.pool));mark('migration_observer');\r\n" +
++   "  let untouched,baseline;if(previous){untouched=restore(phase==='B2'?previous.D:previous.E);baseline=phase==='B2'?previous.baseline.D:previous.baseline.E;report.live_before_boot=await obs.liveUntouched(h.pool,h.keys,untouched,h.time());mark('untouched_live');}\r\n" +
++   "  report.boot=await h.topics.bootGate();assert.equal(report.boot.private_scopes_revoked,true);mark('bootGate_return');if(previous){report.raw_revoked=await obs.revokedUntouched(h.pool,h.keys,untouched,baseline);assert.deepEqual(obs.authorityMap(h.directory),authorityBefore);assert.equal(sha(readFileSync(config.keyringFile)),keyBefore);report.authority_before_after_boot_equal=true;mark('raw_revoked');}\r\n" +
++   "  await h.legacy.reconcilePublicPairPolicy();await h.rooms.maintain();mark('maintenance');await h.listen();mark('listen');publicWrite('listener-'+phase+'.json',{phase,process_nonce:processNonce,status:'LISTENING',boot_before_listener:true,image:report.image});\r\n" +
++   "  const v=await protectedRequest(config,'/api/v1/version');assert.equal(v.status,200);assert.equal(v.tls_verified,true);assert.deepEqual(JSON.parse(v.raw),config.version);report.version_DTO_bound=true;report.actual_TLS_CA_verified=true;\r\n" +
++   "  const ui=Object.entries(report.actual_image.files).filter(([p])=>p.startsWith('apps/web/dist/'));report.served_UI=[];for(const[path,hash]of ui){const url=path==='apps/web/dist/index.html'?'/':path.slice('apps/web/dist'.length),r=await protectedRequest(config,url,{cap:4*1024**2});assert.equal(r.status,200);assert.equal(r.tls_verified,true);assert.equal(sha(r.raw),hash);report.served_UI.push({path,bytes:r.raw.length,sha256:hash});}assert(report.served_UI.some(x=>x.path.endsWith('.js'))&&report.served_UI.some(x=>x.path.endsWith('index.html')));\r\n" +
++   "  if(phase==='A1'){\r\n" +
++   "   const state=await seed(h,obs,config);report.seed={real_admissions:true,A_D_private_positive:true,...state.acl,synthetic_pins_sha256:obs.sha(state.sourcePins)};privateWrite('state-A1-seed.json',state);publicWrite('seed-A1-ready.json',{status:'READY_FOR_RETAINED_BROWSER',phase});await command('NARROW');const narrowed=await narrow(h,obs,state);privateWrite('state-A1-final.json',narrowed);report.narrow={HTTP_narrow_close_leave:true,authority_advanced:true,D_live_before_switch:narrowed.liveD_before_switch};publicWrite('phase-A1-ready.json',{status:'READY_FOR_STOP',phase});\r\n" +
++   '  }else{\r\n' +
++   "   report.preserved=await preserved(h,obs,previous);report.replay=await replay(h,obs,effects,phase==='B2'?previous.D:previous.E,baseline);\r\n" +
++   "   if(phase==='B2'){const E=await activePrivate(h);assert.equal(obs.sha(h.source.map.pins),obs.sha(previous.sourcePins));const next={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};privateWrite('state-B2-final.json',next);report.new_E={fresh_bilateral_private_positive:true,same_synthetic_pins:true,live_before_switch:next.baseline.E};publicWrite('phase-B2-ready.json',{status:'READY_FOR_BROWSER_AND_STOP',phase});}\r\n" +
++   "   else{const E=restore(previous.E);const stop=await h.call(E.host,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}\r\n" +
++   '  }\r\n' +
++   "  await command('STOP');await service.close();closed=true;report.pool_closed=true;report.status='PHASE_COMPLETE';\r\n" +
++   " }catch(error){report.error=safeError(error,phase);report.status='FAIL';}\r\n" +
++   " finally{if(service&&!closed){try{await service.close();report.pool_closed=true;}catch{report.pool_closed=false;}}report.elapsed_ms=performance.now()-started;try{publicWrite('phase-'+phase+'-terminal.json',report);}catch(error){report.error??=safeError(error,phase);report.evidence_write_failed=true;report.status='FAIL';}console.log(JSON.stringify({phase,status:report.status,pool_closed:report.pool_closed,process_nonce:processNonce,error:report.error??null,evidence_write_failed:report.evidence_write_failed===true}));}\r\n" +
++   ' return report;\r\n' +
++   '}\r\n' +
++   'function cryptoRandomUUID(){return globalThis.crypto.randomUUID();}\r\n' +
++   "if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const arg=process.argv.find(x=>x.startsWith('--boot='));if(!arg)console.log(JSON.stringify({status:'NOT_RUN',DB_connections:0,listeners:0}));else{const r=await boot(JSON.parse(readFileSync(arg.slice(7))));process.exitCode=r.status==='PHASE_COMPLETE'?0:1;}}\r\n"
+- '/** Explicit bootstrap only; importing this module never opens DB/listener. */\n' +
+-   "import assert from 'node:assert/strict';\n" +
+-   "import {safeError} from './bound-profile.mjs';\n" +
+-   "import {verifyOwnIPC} from './ipc-policy.mjs';\n" +
+-   "import {readFileSync,existsSync,lstatSync} from 'node:fs';\n" +
+-   "import {dirname,resolve,join} from 'node:path';\n" +
+-   "import {fileURLToPath} from 'node:url';\n" +
+-   "import {randomBytes} from 'node:crypto';\n" +
+-   "import {performance} from 'node:perf_hooks';\n" +
+-   "import {composition} from './factory.mjs';\n" +
+-   "import {ResourceLease} from './resource-lease.mjs';\n" +
+-   "import {actualImageMap,sha} from './image-modules.mjs';\n" +
+-   "import {protectedRequest} from './http-client.mjs';\n" +
+-   "import {seed,narrow,restore,preserved,replay,activePrivate,serialize} from './scenarios.mjs';\n" +
+-   'const producer=dirname(fileURLToPath(import.meta.url)),delay=ms=>new Promise(r=>setTimeout(r,ms));\n' +
+-   'export async function boot(config){const ipcReceipt=verifyOwnIPC(config.phase);\n' +
+-   " const binding=JSON.parse(readFileSync(join(producer,'BINDING.json'))),processNonce=randomBytes(16).toString('hex'),started=performance.now(),lease=new ResourceLease(config);let service,closed=false;const phase=config.phase,chronology=[],report={schema_version:1,status:'FAIL',phase,process_nonce:processNonce,namespace_pid:process.pid,ipc:ipcReceipt,image:binding.images[phase==='B2'?'B':'A'],chronology,pool_closed:false,synthetic_only:true,full_P05_PASS:false};\n" +
+-   " const mark=event=>chronology.push({phase,event,native_elapsed_ms:performance.now()-started}),publicWrite=(name,value)=>lease.write('/evidence',name,JSON.stringify(value,null,2)+'\\n'),privateWrite=(name,value)=>lease.write('/private',name,JSON.stringify(value)+'\\n',{privateFile:true});\n" +
+-   " async function command(name){const file='/private/command-'+phase+'-'+name+'.json',deadline=performance.now()+120000;while(performance.now()<deadline){lease.assert();if(existsSync(file)){assert(!lstatSync(file).isSymbolicLink());const c=JSON.parse(readFileSync(file));assert.equal(c.owner,config.owner);assert.equal(c.phase,phase);assert.equal(c.command,name);return;}await delay(50);}throw Error('SCRIPTED_PHASE_DEADLINE');}\n" +
+-   ' try{\n' +
+-   "  await lease.initial();report.actual_image=actualImageMap(binding,phase);const source=phase==='B2'?binding.prior_source_identity:binding.source_identity;config.version={service:'venus',version:'image-bound-synthetic-fixture',source_revision:source,image_digest:report.image,contract_revision:'P00-2'};report.version_source='PINNED_EXTERNAL_RECEIPT_AND_ACTUAL_IMAGE_MAP_NOT_PRODUCTION_METADATA';service=await composition(config,binding,lease);const{h,obs,effects}=service;report.adaptations=service.adaptations;report.generated_harness_sha256=service.generated_source_sha256;\n" +
+-   "  const previous=phase==='A1'?null:JSON.parse(readFileSync('/private/state-'+(phase==='B2'?'A1-final':'B2-final')+'.json'));\n" +
+-   "  const before=phase==='A1'?null:await obs.rawDatabase(h.pool),authorityBefore=phase==='A1'?null:obs.authorityMap(h.directory),keyBefore=sha(readFileSync(config.keyringFile));await service.migrate();if(before)report.migration_only=obs.assertRestored(before,await obs.rawDatabase(h.pool));mark('migration_observer');\n" +
+-   "  let untouched,baseline;if(previous){untouched=restore(phase==='B2'?previous.D:previous.E);baseline=phase==='B2'?previous.baseline.D:previous.baseline.E;report.live_before_boot=await obs.liveUntouched(h.pool,h.keys,untouched,h.time());mark('untouched_live');}\n" +
+-   "  report.boot=await h.topics.bootGate();assert.equal(report.boot.private_scopes_revoked,true);mark('bootGate_return');if(previous){report.raw_revoked=await obs.revokedUntouched(h.pool,h.keys,untouched,baseline);assert.deepEqual(obs.authorityMap(h.directory),authorityBefore);assert.equal(sha(readFileSync(config.keyringFile)),keyBefore);report.authority_before_after_boot_equal=true;mark('raw_revoked');}\n" +
+-   "  await h.legacy.reconcilePublicPairPolicy();await h.rooms.maintain();mark('maintenance');await h.listen();mark('listen');publicWrite('listener-'+phase+'.json',{phase,process_nonce:processNonce,status:'LISTENING',boot_before_listener:true,image:report.image});\n" +
+-   "  const v=await protectedRequest(config,'/api/v1/version');assert.equal(v.status,200);assert.equal(v.tls_verified,true);assert.deepEqual(JSON.parse(v.raw),config.version);report.version_DTO_bound=true;report.actual_TLS_CA_verified=true;\n" +
+-   "  const ui=Object.entries(report.actual_image.files).filter(([p])=>p.startsWith('apps/web/dist/'));report.served_UI=[];for(const[path,hash]of ui){const url=path==='apps/web/dist/index.html'?'/':path.slice('apps/web/dist'.length),r=await protectedRequest(config,url,{cap:4*1024**2});assert.equal(r.status,200);assert.equal(r.tls_verified,true);assert.equal(sha(r.raw),hash);report.served_UI.push({path,bytes:r.raw.length,sha256:hash});}assert(report.served_UI.some(x=>x.path.endsWith('.js'))&&report.served_UI.some(x=>x.path.endsWith('index.html')));\n" +
+-   "  if(phase==='A1'){\n" +
+-   "   const state=await seed(h,obs,config);report.seed={real_admissions:true,A_D_private_positive:true,...state.acl,synthetic_pins_sha256:obs.sha(state.sourcePins)};privateWrite('state-A1-seed.json',state);publicWrite('seed-A1-ready.json',{status:'READY_FOR_RETAINED_BROWSER',phase});await command('NARROW');const narrowed=await narrow(h,obs,state);privateWrite('state-A1-final.json',narrowed);report.narrow={HTTP_narrow_close_leave:true,authority_advanced:true,D_live_before_switch:narrowed.liveD_before_switch};publicWrite('phase-A1-ready.json',{status:'READY_FOR_STOP',phase});\n" +
+-   '  }else{\n' +
+-   "   report.preserved=await preserved(h,obs,previous);report.replay=await replay(h,obs,effects,phase==='B2'?previous.D:previous.E,baseline);\n" +
+-   "   if(phase==='B2'){const E=await activePrivate(h);assert.equal(obs.sha(h.source.map.pins),obs.sha(previous.sourcePins));const next={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};privateWrite('state-B2-final.json',next);report.new_E={fresh_bilateral_private_positive:true,same_synthetic_pins:true,live_before_switch:next.baseline.E};publicWrite('phase-B2-ready.json',{status:'READY_FOR_BROWSER_AND_STOP',phase});}\n" +
+-   "   else{const E=restore(previous.E);const stop=await h.call(E.host,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}\n" +
+-   '  }\n' +
+-   "  await command('STOP');await service.close();closed=true;report.pool_closed=true;report.status='PHASE_COMPLETE';\n" +
+-   " }catch(error){report.error=safeError(error,phase);report.status='FAIL';}\n" +
+-   " finally{if(service&&!closed){try{await service.close();report.pool_closed=true;}catch{report.pool_closed=false;}}report.elapsed_ms=performance.now()-started;try{publicWrite('phase-'+phase+'-terminal.json',report);}catch(error){report.error??=safeError(error,phase);report.evidence_write_failed=true;report.status='FAIL';}console.log(JSON.stringify({phase,status:report.status,pool_closed:report.pool_closed,process_nonce:processNonce,error:report.error??null,evidence_write_failed:report.evidence_write_failed===true}));}\n" +
+-   ' return report;\n' +
+-   '}\n' +
+-   'function cryptoRandomUUID(){return globalThis.crypto.randomUUID();}\n' +
+-   "if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const arg=process.argv.find(x=>x.startsWith('--boot='));if(!arg)console.log(JSON.stringify({status:'NOT_RUN',DB_connections:0,listeners:0}));else{const r=await boot(JSON.parse(readFileSync(arg.slice(7))));process.exitCode=r.status==='PHASE_COMPLETE'?0:1;}}\n"
+
+    at file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci10-object-hash-independent-round01/audit.mjs:14:263
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '/** Explicit bootstrap only; importing this module never opens DB/listener. */\r\n' +
+    "import assert from 'node:assert/strict';\r\n" +
+    "import {safeError} from './bound-profile.mjs';\r\n" +
+    "import {verifyOwnIPC} from './ipc-policy.mjs';\r\n" +
+    "import {readFileSync,existsSync,lstatSync} from 'node:fs';\r\n" +
+    "import {dirname,resolve,join} from 'node:path';\r\n" +
+    "import {fileURLToPath} from 'node:url';\r\n" +
+    "import {randomBytes} from 'node:crypto';\r\n" +
+    "import {performance} from 'node:perf_hooks';\r\n" +
+    "import {composition} from './factory.mjs';\r\n" +
+    "import {ResourceLease} from './resource-lease.mjs';\r\n" +
+    "import {actualImageMap,sha} from './image-modules.mjs';\r\n" +
+    "import {protectedRequest} from './http-client.mjs';\r\n" +
+    "import {seed,narrow,restore,preserved,replay,activePrivate,serialize} from './scenarios.mjs';\r\n" +
+    'const producer=dirname(fileURLToPath(import.meta.url)),delay=ms=>new Promise(r=>setTimeout(r,ms));\r\n' +
+    'export async function boot(config){const ipcReceipt=verifyOwnIPC(config.phase);\r\n' +
+    " const binding=JSON.parse(readFileSync(join(producer,'BINDING.json'))),processNonce=randomBytes(16).toString('hex'),started=performance.now(),lease=new ResourceLease(config);let service,closed=false;const phase=config.phase,chronology=[],report={schema_version:1,status:'FAIL',phase,process_nonce:processNonce,namespace_pid:process.pid,ipc:ipcReceipt,image:binding.images[phase==='B2'?'B':'A'],chronology,pool_closed:false,synthetic_only:true,full_P05_PASS:false};\r\n" +
+    " const mark=event=>chronology.push({phase,event,native_elapsed_ms:performance.now()-started}),publicWrite=(name,value)=>lease.write('/evidence',name,JSON.stringify(value,null,2)+'\\n'),privateWrite=(name,value)=>lease.write('/private',name,JSON.stringify(value)+'\\n',{privateFile:true});\r\n" +
+    " async function command(name){const file='/private/command-'+phase+'-'+name+'.json',deadline=performance.now()+120000;while(performance.now()<deadline){lease.assert();if(existsSync(file)){assert(!lstatSync(file).isSymbolicLink());const c=JSON.parse(readFileSync(file));assert.equal(c.owner,config.owner);assert.equal(c.phase,phase);assert.equal(c.command,name);return;}await delay(50);}throw Error('SCRIPTED_PHASE_DEADLINE');}\r\n" +
+    ' try{\r\n' +
+    "  await lease.initial();report.actual_image=actualImageMap(binding,phase);const source=phase==='B2'?binding.prior_source_identity:binding.source_identity;config.version={service:'venus',version:'image-bound-synthetic-fixture',source_revision:source,image_digest:report.image,contract_revision:'P00-2'};report.version_source='PINNED_EXTERNAL_RECEIPT_AND_ACTUAL_IMAGE_MAP_NOT_PRODUCTION_METADATA';service=await composition(config,binding,lease);const{h,obs,effects}=service;report.adaptations=service.adaptations;report.generated_harness_sha256=service.generated_source_sha256;\r\n" +
+    "  const previous=phase==='A1'?null:JSON.parse(readFileSync('/private/state-'+(phase==='B2'?'A1-final':'B2-final')+'.json'));\r\n" +
+    "  const before=phase==='A1'?null:await obs.rawDatabase(h.pool),authorityBefore=phase==='A1'?null:obs.authorityMap(h.directory),keyBefore=sha(readFileSync(config.keyringFile));await service.migrate();if(before)report.migration_only=obs.assertRestored(before,await obs.rawDatabase(h.pool));mark('migration_observer');\r\n" +
+    "  let untouched,baseline;if(previous){untouched=restore(phase==='B2'?previous.D:previous.E);baseline=phase==='B2'?previous.baseline.D:previous.baseline.E;report.live_before_boot=await obs.liveUntouched(h.pool,h.keys,untouched,h.time());mark('untouched_live');}\r\n" +
+    "  report.boot=await h.topics.bootGate();assert.equal(report.boot.private_scopes_revoked,true);mark('bootGate_return');if(previous){report.raw_revoked=await obs.revokedUntouched(h.pool,h.keys,untouched,baseline);assert.deepEqual(obs.authorityMap(h.directory),authorityBefore);assert.equal(sha(readFileSync(config.keyringFile)),keyBefore);report.authority_before_after_boot_equal=true;mark('raw_revoked');}\r\n" +
+    "  await h.legacy.reconcilePublicPairPolicy();await h.rooms.maintain();mark('maintenance');await h.listen();mark('listen');publicWrite('listener-'+phase+'.json',{phase,process_nonce:processNonce,status:'LISTENING',boot_before_listener:true,image:report.image});\r\n" +
+    "  const v=await protectedRequest(config,'/api/v1/version');assert.equal(v.status,200);assert.equal(v.tls_verified,true);assert.deepEqual(JSON.parse(v.raw),config.version);report.version_DTO_bound=true;report.actual_TLS_CA_verified=true;\r\n" +
+    "  const ui=Object.entries(report.actual_image.files).filter(([p])=>p.startsWith('apps/web/dist/'));report.served_UI=[];for(const[path,hash]of ui){const url=path==='apps/web/dist/index.html'?'/':path.slice('apps/web/dist'.length),r=await protectedRequest(config,url,{cap:4*1024**2});assert.equal(r.status,200);assert.equal(r.tls_verified,true);assert.equal(sha(r.raw),hash);report.served_UI.push({path,bytes:r.raw.length,sha256:hash});}assert(report.served_UI.some(x=>x.path.endsWith('.js'))&&report.served_UI.some(x=>x.path.endsWith('index.html')));\r\n" +
+    "  if(phase==='A1'){\r\n" +
+    "   const state=await seed(h,obs,config);report.seed={real_admissions:true,A_D_private_positive:true,...state.acl,synthetic_pins_sha256:obs.sha(state.sourcePins)};privateWrite('state-A1-seed.json',state);publicWrite('seed-A1-ready.json',{status:'READY_FOR_RETAINED_BROWSER',phase});await command('NARROW');const narrowed=await narrow(h,obs,state);privateWrite('state-A1-final.json',narrowed);report.narrow={HTTP_narrow_close_leave:true,authority_advanced:true,D_live_before_switch:narrowed.liveD_before_switch};publicWrite('phase-A1-ready.json',{status:'READY_FOR_STOP',phase});\r\n" +
+    '  }else{\r\n' +
+    "   report.preserved=await preserved(h,obs,previous);report.replay=await replay(h,obs,effects,phase==='B2'?previous.D:previous.E,baseline);\r\n" +
+    "   if(phase==='B2'){const E=await activePrivate(h);assert.equal(obs.sha(h.source.map.pins),obs.sha(previous.sourcePins));const next={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};privateWrite('state-B2-final.json',next);report.new_E={fresh_bilateral_private_positive:true,same_synthetic_pins:true,live_before_switch:next.baseline.E};publicWrite('phase-B2-ready.json',{status:'READY_FOR_BROWSER_AND_STOP',phase});}\r\n" +
+    "   else{const E=restore(previous.E);const stop=await h.call(E.host,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}\r\n" +
+    '  }\r\n' +
+    "  await command('STOP');await service.close();closed=true;report.pool_closed=true;report.status='PHASE_COMPLETE';\r\n" +
+    " }catch(error){report.error=safeError(error,phase);report.status='FAIL';}\r\n" +
+    " finally{if(service&&!closed){try{await service.close();report.pool_closed=true;}catch{report.pool_closed=false;}}report.elapsed_ms=performance.now()-started;try{publicWrite('phase-'+phase+'-terminal.json',report);}catch(error){report.error??=safeError(error,phase);report.evidence_write_failed=true;report.status='FAIL';}console.log(JSON.stringify({phase,status:report.status,pool_closed:report.pool_closed,process_nonce:processNonce,error:report.error??null,evidence_write_failed:report.evidence_write_failed===true}));}\r\n" +
+    ' return report;\r\n' +
+    '}\r\n' +
+    'function cryptoRandomUUID(){return globalThis.crypto.randomUUID();}\r\n' +
+    "if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const arg=process.argv.find(x=>x.startsWith('--boot='));if(!arg)console.log(JSON.stringify({status:'NOT_RUN',DB_connections:0,listeners:0}));else{const r=await boot(JSON.parse(readFileSync(arg.slice(7))));process.exitCode=r.status==='PHASE_COMPLETE'?0:1;}}\r\n",
+  expected: '/** Explicit bootstrap only; importing this module never opens DB/listener. */\n' +
+    "import assert from 'node:assert/strict';\n" +
+    "import {safeError} from './bound-profile.mjs';\n" +
+    "import {verifyOwnIPC} from './ipc-policy.mjs';\n" +
+    "import {readFileSync,existsSync,lstatSync} from 'node:fs';\n" +
+    "import {dirname,resolve,join} from 'node:path';\n" +
+    "import {fileURLToPath} from 'node:url';\n" +
+    "import {randomBytes} from 'node:crypto';\n" +
+    "import {performance} from 'node:perf_hooks';\n" +
+    "import {composition} from './factory.mjs';\n" +
+    "import {ResourceLease} from './resource-lease.mjs';\n" +
+    "import {actualImageMap,sha} from './image-modules.mjs';\n" +
+    "import {protectedRequest} from './http-client.mjs';\n" +
+    "import {seed,narrow,restore,preserved,replay,activePrivate,serialize} from './scenarios.mjs';\n" +
+    'const producer=dirname(fileURLToPath(import.meta.url)),delay=ms=>new Promise(r=>setTimeout(r,ms));\n' +
+    'export async function boot(config){const ipcReceipt=verifyOwnIPC(config.phase);\n' +
+    " const binding=JSON.parse(readFileSync(join(producer,'BINDING.json'))),processNonce=randomBytes(16).toString('hex'),started=performance.now(),lease=new ResourceLease(config);let service,closed=false;const phase=config.phase,chronology=[],report={schema_version:1,status:'FAIL',phase,process_nonce:processNonce,namespace_pid:process.pid,ipc:ipcReceipt,image:binding.images[phase==='B2'?'B':'A'],chronology,pool_closed:false,synthetic_only:true,full_P05_PASS:false};\n" +
+    " const mark=event=>chronology.push({phase,event,native_elapsed_ms:performance.now()-started}),publicWrite=(name,value)=>lease.write('/evidence',name,JSON.stringify(value,null,2)+'\\n'),privateWrite=(name,value)=>lease.write('/private',name,JSON.stringify(value)+'\\n',{privateFile:true});\n" +
+    " async function command(name){const file='/private/command-'+phase+'-'+name+'.json',deadline=performance.now()+120000;while(performance.now()<deadline){lease.assert();if(existsSync(file)){assert(!lstatSync(file).isSymbolicLink());const c=JSON.parse(readFileSync(file));assert.equal(c.owner,config.owner);assert.equal(c.phase,phase);assert.equal(c.command,name);return;}await delay(50);}throw Error('SCRIPTED_PHASE_DEADLINE');}\n" +
+    ' try{\n' +
+    "  await lease.initial();report.actual_image=actualImageMap(binding,phase);const source=phase==='B2'?binding.prior_source_identity:binding.source_identity;config.version={service:'venus',version:'image-bound-synthetic-fixture',source_revision:source,image_digest:report.image,contract_revision:'P00-2'};report.version_source='PINNED_EXTERNAL_RECEIPT_AND_ACTUAL_IMAGE_MAP_NOT_PRODUCTION_METADATA';service=await composition(config,binding,lease);const{h,obs,effects}=service;report.adaptations=service.adaptations;report.generated_harness_sha256=service.generated_source_sha256;\n" +
+    "  const previous=phase==='A1'?null:JSON.parse(readFileSync('/private/state-'+(phase==='B2'?'A1-final':'B2-final')+'.json'));\n" +
+    "  const before=phase==='A1'?null:await obs.rawDatabase(h.pool),authorityBefore=phase==='A1'?null:obs.authorityMap(h.directory),keyBefore=sha(readFileSync(config.keyringFile));await service.migrate();if(before)report.migration_only=obs.assertRestored(before,await obs.rawDatabase(h.pool));mark('migration_observer');\n" +
+    "  let untouched,baseline;if(previous){untouched=restore(phase==='B2'?previous.D:previous.E);baseline=phase==='B2'?previous.baseline.D:previous.baseline.E;report.live_before_boot=await obs.liveUntouched(h.pool,h.keys,untouched,h.time());mark('untouched_live');}\n" +
+    "  report.boot=await h.topics.bootGate();assert.equal(report.boot.private_scopes_revoked,true);mark('bootGate_return');if(previous){report.raw_revoked=await obs.revokedUntouched(h.pool,h.keys,untouched,baseline);assert.deepEqual(obs.authorityMap(h.directory),authorityBefore);assert.equal(sha(readFileSync(config.keyringFile)),keyBefore);report.authority_before_after_boot_equal=true;mark('raw_revoked');}\n" +
+    "  await h.legacy.reconcilePublicPairPolicy();await h.rooms.maintain();mark('maintenance');await h.listen();mark('listen');publicWrite('listener-'+phase+'.json',{phase,process_nonce:processNonce,status:'LISTENING',boot_before_listener:true,image:report.image});\n" +
+    "  const v=await protectedRequest(config,'/api/v1/version');assert.equal(v.status,200);assert.equal(v.tls_verified,true);assert.deepEqual(JSON.parse(v.raw),config.version);report.version_DTO_bound=true;report.actual_TLS_CA_verified=true;\n" +
+    "  const ui=Object.entries(report.actual_image.files).filter(([p])=>p.startsWith('apps/web/dist/'));report.served_UI=[];for(const[path,hash]of ui){const url=path==='apps/web/dist/index.html'?'/':path.slice('apps/web/dist'.length),r=await protectedRequest(config,url,{cap:4*1024**2});assert.equal(r.status,200);assert.equal(r.tls_verified,true);assert.equal(sha(r.raw),hash);report.served_UI.push({path,bytes:r.raw.length,sha256:hash});}assert(report.served_UI.some(x=>x.path.endsWith('.js'))&&report.served_UI.some(x=>x.path.endsWith('index.html')));\n" +
+    "  if(phase==='A1'){\n" +
+    "   const state=await seed(h,obs,config);report.seed={real_admissions:true,A_D_private_positive:true,...state.acl,synthetic_pins_sha256:obs.sha(state.sourcePins)};privateWrite('state-A1-seed.json',state);publicWrite('seed-A1-ready.json',{status:'READY_FOR_RETAINED_BROWSER',phase});await command('NARROW');const narrowed=await narrow(h,obs,state);privateWrite('state-A1-final.json',narrowed);report.narrow={HTTP_narrow_close_leave:true,authority_advanced:true,D_live_before_switch:narrowed.liveD_before_switch};publicWrite('phase-A1-ready.json',{status:'READY_FOR_STOP',phase});\n" +
+    '  }else{\n' +
+    "   report.preserved=await preserved(h,obs,previous);report.replay=await replay(h,obs,effects,phase==='B2'?previous.D:previous.E,baseline);\n" +
+    "   if(phase==='B2'){const E=await activePrivate(h);assert.equal(obs.sha(h.source.map.pins),obs.sha(previous.sourcePins));const next={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};privateWrite('state-B2-final.json',next);report.new_E={fresh_bilateral_private_positive:true,same_synthetic_pins:true,live_before_switch:next.baseline.E};publicWrite('phase-B2-ready.json',{status:'READY_FOR_BROWSER_AND_STOP',phase});}\n" +
+    "   else{const E=restore(previous.E);const stop=await h.call(E.host,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}\n" +
+    '  }\n' +
+    "  await command('STOP');await service.close();closed=true;report.pool_closed=true;report.status='PHASE_COMPLETE';\n" +
+    " }catch(error){report.error=safeError(error,phase);report.status='FAIL';}\n" +
+    " finally{if(service&&!closed){try{await service.close();report.pool_closed=true;}catch{report.pool_closed=false;}}report.elapsed_ms=performance.now()-started;try{publicWrite('phase-'+phase+'-terminal.json',report);}catch(error){report.error??=safeError(error,phase);report.evidence_write_failed=true;report.status='FAIL';}console.log(JSON.stringify({phase,status:report.status,pool_closed:report.pool_closed,process_nonce:processNonce,error:report.error??null,evidence_write_failed:report.evidence_write_failed===true}));}\n" +
+    ' return report;\n' +
+    '}\n' +
+    'function cryptoRandomUUID(){return globalThis.crypto.randomUUID();}\n' +
+    "if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const arg=process.argv.find(x=>x.startsWith('--boot='));if(!arg)console.log(JSON.stringify({status:'NOT_RUN',DB_connections:0,listeners:0}));else{const r=await boot(JSON.parse(readFileSync(arg.slice(7))));process.exitCode=r.status==='PHASE_COMPLETE'?0:1;}}\n",
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.14.0

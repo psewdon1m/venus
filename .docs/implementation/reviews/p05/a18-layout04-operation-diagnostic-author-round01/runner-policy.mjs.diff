@@ -1,0 +1,11 @@
+--- a18-03/runner-policy.mjs
++++ a18-04/runner-policy.mjs
+@@ -21,7 +21,7 @@
+  return [...new Set(rows.map(r=>r.scene))].flatMap(scene=>[false,true].flatMap(native=>{const cells=rows.filter(r=>r.scene===scene&&r.native===native);assert(cells.length);if(scene==='private_offer'&&!native){assert.equal(cells.length,8);return [0,1].map(chunk=>({scene,native,chunk,sweep_id:scene+'/'+native+'/'+chunk,cells:cells.slice(chunk*4,chunk*4+4)}));}return [{scene,native,chunk:0,sweep_id:scene+'/'+native+'/0',cells}];}));
+ }
+ export function assertSweepEvidence(report){
+- assert.equal(report.layout_method_revision,'A18_BOUNDED_OFFER_SWEEPS_03');const groups=sweepGroups(expectedCells().filter(c=>c.engine===report.engine&&c.locale===report.locale));assert.equal(groups.length,15);assert.equal(report.sweep_preparations.length,15);assert.equal(report.keyboard_actions.length,15);
++ assert.equal(report.layout_method_revision,'A18_BOUNDED_OFFER_SWEEPS_04');const groups=sweepGroups(expectedCells().filter(c=>c.engine===report.engine&&c.locale===report.locale));assert.equal(groups.length,15);assert.equal(report.sweep_preparations.length,15);assert.equal(report.keyboard_actions.length,15);
+  assert.equal(new Set(report.keyboard_actions.map(a=>a.scene+'/'+a.native)).size,14);assert.equal(new Set(report.keyboard_actions.map(a=>a.sweep_id)).size,15);
+  const rooms=[],sessions=[];
+  for(const [index,g]of groups.entries()){

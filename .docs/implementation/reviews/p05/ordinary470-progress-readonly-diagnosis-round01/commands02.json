@@ -1,0 +1,35 @@
+[
+  {
+    "name": "safe-report01",
+    "command": [
+      "docker",
+      "exec",
+      "d7907f26336f",
+      "node",
+      "-e",
+      "const r=JSON.parse(require('fs').readFileSync('/tmp/pilot470-report.json','utf8'));console.log(JSON.stringify({status:r.status,completed_rounds:r.completed_rounds,requests:r.requests,finishes:r.finishes,rooms_created:r.rooms_created,rooms_closed:r.rooms_closed,profiles:r.profiles.filter(p=>p.status!=='NOT_RUN').map(p=>({id:p.id,N:p.N,mode:p.mode,context:p.context,status:p.status,recorded_rounds:p.rounds?.length??0})),error:r.error??null}));"
+    ],
+    "exit_code": 0,
+    "utc": "2026-10-20T19:56:21.695142+00:00"
+  },
+  {
+    "name": "pg-progress02",
+    "command": [
+      "docker",
+      "exec",
+      "50323c17d4fa",
+      "psql",
+      "-X",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-c",
+      "BEGIN READ ONLY;SELECT clock_timestamp() AS observed_utc;SELECT seq,mode,state,current_round,rev,updated_at FROM game_sessions ORDER BY seq;SELECT state,wait_event_type,wait_event,count(*),max(clock_timestamp()-xact_start) AS max_xact_age FROM pg_stat_activity WHERE datname='venus' GROUP BY state,wait_event_type,wait_event;COMMIT;"
+    ],
+    "exit_code": 0,
+    "utc": "2026-10-20T19:56:21.922131+00:00"
+  }
+]

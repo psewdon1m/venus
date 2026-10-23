@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "revision": "P05-KEYBOARD-INTENT-FOCUS-FRAME-13",
+  "kind": "FRONTEND_BOUNDARY_FIX_AFTER_SOURCE_HOLD",
+  "supersedes_source_identity": "0fac2f6f405ab802e191bc980ba655cc1babf19a7f7b457087beaa47c82e6553",
+  "accepted_parent_source_identity": "7c23075ec4f3d5baeed046957a488c94ce2bfadc68de6562c49513e8591da2b4",
+  "finding_review": ".docs/implementation/reviews/p05/bounded-focus-frame-independent-round01/INDEX.json",
+  "finding_review_sha256": "1a333bec454e9ed4214a118bd56e811459442d68a124b3d502bcf28ffccf9449",
+  "finding": "P2: pointerdowncancel can be followed byfocusvisibletextarea/input and rearmRAF; :focus-visible alone is not keyboardintent.",
+  "fix": "Primitive keyboardintent falseinitial. Tabkeydownarmsintent; pointer/wheel/touch/nonTabkeydownclearintent andinvalidate/cancel. Everyfocus/blur stillinvalidate oldgeneration withoutclearingTabintent before nextfieldfocus. Schedule deferredONERAF onlywithkeyboardintent; existingimmediatefocus/Tabkeyup behaviorretained. No DOM/privatevaluereference/newtimer/loop/waits/oraclechange.",
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "b46836b65d9d4e226115dd176a3155781297d9ec10fa717dd4dc4863a1ee6acc"
+  },
+  "before_source_files": {
+    "apps/web/src/main.tsx": "93928aea407f00c75e66d61bacf33cd8653badf2c5a294db6f0bfcdd98bc89e9"
+  },
+  "history": "Prior source12/authorround01/HOLD preservedunchanged; newsource13resolvesonlyfinding. No nativeA30 claim.",
+  "validation": "Types/lint andindependentrepeat source review pending, thenoriginalfresh9withminimalnativezoomprereqs.",
+  "backend_and_cards": "ExactA26backend/fulluniform06uninterrupted/cards470r4unchanged",
+  "rollback": "Restore precedingcoherentfrontend; priorpointerRAFeligibility issuecanreturn. Backend/dataunchanged.",
+  "full_stage_PASS": false,
+  "P06_started": false
+}

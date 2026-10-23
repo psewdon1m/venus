@@ -1,0 +1,7 @@
+# Metadata checkpoint06 — independent repeat review
+
+**METADATA_CORRECTIONS_STATIC_PASS_RUN_HOLD.** All three round01 P2 findings are closed for these exact producer bytes. The immutable prior FAIL remains unchanged.
+
+Sixteen own inert controls pass, including reproduced old failures and corrected observed request/response UI tuples, separate route binding, body-read admission before pending cap, late-close and cycle fences, bounded conversation retention, known V2/unknown WS type privacy and five runner completeness predicates. Fifteen copied delivery controls pass; initial old fixture strict overflow equality failed on two added zero counters and is retained before the fixture update. Six script syntax checks pass. Exact frontend loader/harness pins and all author snapshot hashes were verified. Browser/runtime/observations/loader bytes remain identical to05;16 case ASTs and20 explicitly enumerated flow functions also compare equal to04 (whole browser equality preserves the wider prior flow review).
+
+The source is ef009/1811, but the runner still intentionally refuses it with an old895/image guard. Final new source/image/producer binding requires refresh and independent review before root RUN authorization. No Docker or browser ran here; no UI product defect or original browser05 cause is inferred. Pending unresolved bodies retain only bounded observer work, late writes are fenced and incomplete diagnostics fail the runner. Cache acceptance/React authority and full P05 are outside this static gate; human450 HOLD remains.

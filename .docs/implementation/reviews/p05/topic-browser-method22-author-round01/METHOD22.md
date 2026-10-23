@@ -1,0 +1,3 @@
+# METHOD22 — exact own safety route
+
+Case13 selects one exact expected operation before clicking, from the observed production own session action packet for the exact fixture session. An authorized host abort takes precedence exactly as the UI does; otherwise stop must explicitly be true. No other path, second click, fallback route, permission bypass, lease/timeout change is allowed. Existing request-emission.mjs correlates exact POST/request_id/200 receipt and actual SQL must be aborted; private UI is cleared before and after. All other15 case bodies, native clocks/setup bounds/mutation fences and eight shared runtime modules are byte-identical21. New actual browser result is required; previous12PASS/13FAIL is preserved.

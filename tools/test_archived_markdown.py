@@ -62,7 +62,7 @@ class ArchivedMarkdownTests(unittest.TestCase):
                 read_markdown(path, root)
 
     def test_all_exact_archives_are_decoded_with_declared_link_context(self):
-        self.assertEqual(len(ARCHIVES), 13)
+        self.assertEqual(len(ARCHIVES), 17)
         for relative, record in ARCHIVES.items():
             with self.subTest(path=relative):
                 path = REPOSITORY / relative

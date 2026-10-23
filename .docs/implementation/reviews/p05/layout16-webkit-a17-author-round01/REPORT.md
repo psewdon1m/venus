@@ -1,0 +1,11 @@
+# Layout16: measured WebKit template and A17 literal binding
+
+AUTHOR COMPLETE, source writes STOP. Pending independent method/binding review and fresh false-to-true root ACK. No APP edits or actual layout16 run.
+
+WebKit's native window has a measured `🎭 Playwright: ` prefix before the full random own nonce. Method16 accepts only this exact prefix or bare nonce compatibility, with the existing full anchored expression and final exact native-title check. Firefox's measured Nightly suffix and Chromium's measured Testing suffix remain unchanged; wrong prefix/vendor/emoji/nonce/tails are rejected. There is no generic title match, first-window fallback, PID-tree runtime or private content lookup. DIAGNOSIS describes the separate one-container synthetic proof and its limits.
+
+readyOwnedWindow, zero-readiness handling, immediate ambiguity/query failure, same absolute budget, focus/raise/bringToFront, keyboard/native200/reset/screenshot are byte-exact15. All459 cells/nine51-cell shards, fixtures, original clocks/20s60s/quotas and oracles remain. Of27 MJS,24 are rawbyteexact; x11 is the only behavioral change, run.mjs changes only dirname/A17 labels and runner-policy changes only expected1870→1871 count. Thus the other25 method bodies remain exact after the two explicit binding inverses; the packet does not falsely claim25 rawbyteexact files.
+
+The producer lives in immutable A17 source14, identity93221ba4/1871, testimagef9e93cf5 via exact receipt80cdcce2. Production metadata uses cleanGit3abad033 separately from sourceSHA256, and production receipt60c1386a is bound as context. Original A16 application failure, combined15 INCOMPLETE and all historical proof are preserved. A17 contains separately reviewed CSS source changes; this method packet does not self-accept their rendered behavior.
+
+Four targeted selector/inverse controls PASS, four syntax checks for three changed runtime files plus control and lint exit0. Pending ACK exits1 before allocation. All1871 A17 source hashes and exact receipt/source tuple pass; no27-module rerun or new framework. The new ROOT_RUN_ACK.json is false/PENDING with no old active review/authority copied. Future independent INDEX must match this source/image/runtime digest before root activation. Actual window focus, nativezoom/layout459 and P05 acceptance remain pending.

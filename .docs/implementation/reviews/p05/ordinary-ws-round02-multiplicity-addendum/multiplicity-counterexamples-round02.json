@@ -1,0 +1,51 @@
+{
+  "observer_sha256": "61ebcfe6fa07dc8ca5db2504eebb1cdafed05ea3a0af9c0be32235402ac6231d",
+  "scope": "FROZEN_HELPER_EXPLICIT_DOUBLES_NOT_PRODUCT_LEAK",
+  "results": [
+    {
+      "variant": "legitimate-one-late-frame",
+      "status": "PASS",
+      "expected": "PASS",
+      "detail": {
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 0,
+        "received_full_window_private_frames": 1,
+        "received_known_pre_boundary_queued_frames": 1,
+        "received_fresh_pending_frames": 0,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0
+      }
+    },
+    {
+      "variant": "already-received-replay",
+      "status": "PASS",
+      "expected": "REJECTED",
+      "detail": {
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 0,
+        "received_full_window_private_frames": 1,
+        "received_known_pre_boundary_queued_frames": 1,
+        "received_fresh_pending_frames": 0,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0
+      }
+    },
+    {
+      "variant": "two-late-frames-one-enqueue",
+      "status": "PASS",
+      "expected": "REJECTED",
+      "detail": {
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 0,
+        "received_full_window_private_frames": 2,
+        "received_known_pre_boundary_queued_frames": 2,
+        "received_fresh_pending_frames": 0,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0
+      }
+    }
+  ]
+}

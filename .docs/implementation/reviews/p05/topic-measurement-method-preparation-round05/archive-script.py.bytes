@@ -1,0 +1,70 @@
+"""Archive author candidate bytes and finite controls, never prepare/run the worker."""
+from pathlib import Path
+import hashlib,json,sys,datetime
+sys.path.insert(0,'tools')
+from stage_inventory import inventory,identity
+base=Path('.artifacts/p05-topic-measurements-method05');old=Path('.docs/implementation/reviews/p05/topic-measurement-method-preparation-round04');review=Path('.docs/implementation/reviews/p05/topic-measurement-method-review-round04');out=Path('.docs/implementation/reviews/p05/topic-measurement-method-preparation-round05')
+sha=lambda b:hashlib.sha256(b).hexdigest()
+def load(p):return json.loads(Path(p).read_text(encoding='utf-8-sig'))
+def write(p,data):
+    p=out/p;p.parent.mkdir(parents=True,exist_ok=True);assert not p.exists();p.write_bytes(data)
+def put(p,value):write(Path(p),(json.dumps(value,ensure_ascii=False,indent=2)+'\n').encode())
+assert not out.exists()
+assert sha((old/'INDEX.json').read_bytes())=='cbf037f5e54bb1956b437c73bb751e721d76cc325f9387c0bbef092b6578eaab'
+assert sha((review/'INDEX.json').read_bytes())=='4bad21b906e9f7b8eb812415dcaf23773f017fd99e77ec49196e77461a944ebb'
+assert sha((review/'REPORT.md').read_bytes())=='4a52ad93caeb68074d8a669816b8c9ca1b44ef0f3986288e8ab237e823e26740'
+for packet in [old,review]:
+    for row in load(packet/'INDEX.json')['files']:
+        assert sha((packet/row['path']).read_bytes())==row['sha256'],str(packet/row['path'])
+receipt_path=Path('.artifacts/p05-renewal-image-build-receipt01.json');receipt=load(receipt_path);assert sha(receipt_path.read_bytes())=='2dae88a270c9a9a3fbc33386b09ae98585bebb49d6d26e1a3f6d95c8ddf443e5'
+files=inventory();assert identity(files)==receipt['source_identity'];assert len(files)==1813
+for p,h in receipt['host_compiled_files_sha256'].items():assert sha(Path(p).read_bytes())==h,p
+assert len(receipt['host_compiled_files_sha256'])==64
+deps=load(old/'readonly-dependency-pins.json')
+for p,h in deps['readonly_producer_fixture'].items():assert sha(Path(p).read_bytes())==h,p
+node=load(base/'inert-attempt05.stdout.txt');windows=load(base/'output-attempt03.stdout.txt');syntax=load(base/'syntax-cold-final.json')
+assert len(node['controls'])==18 and windows['count']==27 and len(syntax['checks'])==30
+for result in [node,windows]:
+    for p,h in result['source'].items():assert sha((base/p).read_bytes())==h,p
+for row in syntax['checks']:
+    assert row['exit_code']==0
+    if 'sha256' in row:assert sha(Path(row['path']).read_bytes())==row['sha256']
+source=[]
+for p in sorted(base.iterdir()):
+    if p.suffix in ['.mjs','.py','.json'] and not p.name.startswith(('syntax-','freeze-')):
+        target=Path('exact-source')/(p.name+'.bytes');write(target,p.read_bytes());source.append({'original_path':p.as_posix(),'snapshot_path':target.as_posix(),'sha256':sha(p.read_bytes()),'bytes':p.stat().st_size})
+write(Path('archive-script.py.bytes'),Path(__file__).read_bytes())
+for p in sorted(base.iterdir()):
+    if p.name.startswith(('inert-attempt','output-attempt','syntax-cold')):write(Path('raw')/p.name,p.read_bytes())
+put('source-context.json',{'identity':identity(files),'files':files,'image':receipt['image'],'64_compiled_verified':True,'native_Docker_NOT_RUN':True})
+write(Path('reference-build-receipt.json'),receipt_path.read_bytes());write(Path('readonly-dependency-pins.json'),(old/'readonly-dependency-pins.json').read_bytes())
+write(Path('formal-review04.json'),(review/'INDEX.json').read_bytes())
+put('attempt-history.json',{'inert_attempts':[{'attempt':1,'exit':1,'reason':'test syntax missing function brace before any replay'},{'attempt':2,'exit':1,'reason':'control exposed final report overwriting cleanup-failed status; code corrected'},{'attempt':3,'exit':1,'reason':'test generic assertion text mismatch; explicit stable post-stop error added'},{'attempt':4,'exit':0,'scope':'17 controls before fixed-cap-reuse additional test'},{'attempt':5,'exit':0,'scope':'18 final exact-source controls'}],'output_attempts':[{'attempt':1,'exit':1,'reason':'initial no-advance denied correctly as SAMPLE_STALE, overly narrow expected text corrected; source/raw retained'},{'attempt':2,'exit':0,'scope':'24 controls, superseded by final27'},{'attempt':3,'exit':0,'scope':'27 final exact-source actualWindows controls'}],'syntax_cold_attempts':[{'attempt':1,'exit':0,'scope':'30 checks before finalJS fixed-cap guard'},{'attempt':'final','exit':0,'scope':'30 final exact-source checks'}],'Docker_calls':0,'selector_invocations':0,'prepare_calls':0,'run_calls':0,'statistics_RUN':False})
+api_files=['host-output-guard.py','host-output-guard.mjs','owned-cleanup.mjs','r100-v3-watchdog.mjs','r100-v3-package.py','allocated-tree.py','r100-v3-launcher.mjs','r100-v3-volume.mjs','r100-v3-child.mjs']
+api={'revision':'METHOD05-HOST-OUTPUT-FENCES','base':base.as_posix(),'files':{n:sha((base/n).read_bytes()) for n in api_files},'HostOutputGuard_python':{'constructor':'HostOutputGuard(root_ACK_config, *, space_probe=None, read_sample=None, clock=time.monotonic, wait=time.sleep)','before':'before(next_bytes=0): actual hostfree >=10GiB+128MiB AND liveowner counter; latches all low/unknown/stale/reordered faults','partition':'partition(exact root/export20MiB OR root/archive20MiB OR root/control/receipts8MiB).write(target,data): unbuffered<=64KiB, actual fresh guard before create/everychunk/fsync; prospective allocated+metadata cap','dependencies':['allocated-tree.py','pwsh>=7.2 onWindows for actualADS inventory'],'CLI':'r100-v3-package.py --guard-config=<exact authorized rootACK> with --stage/--extract/--archive; no CLI free/counter mock switches'},'beforeHostAllocation_JS':'beforeHostAllocation({host_output_path,optional fixed global_owned_cap_bytes/reserve_bytes},nextBytes=0): actualstatfs prewrite check, fixed128MiB/10GiB only; does not replace allocated partition writer or fresh supervisor check','cleanupOwned_JS':'async cleanupOwned({docker,owner,image,container,volume,exportVerified,optional now}): total30s exactowner/name/image teardown, no logger interface; unexportedvolume retained, Docker failures truthful','native_guard':'r100-v3-child hostGuard+nativeGuard+nativeBudget and artifact-store-v3; actualLinux statfs/st_blocks, fixed20MiB partition/128global+10GiB reserve; no independent new runtime proof','OCI_reuse':'NOT a generic512MiB/900s library. New explicit versioned adaptation/own budgets+phase deadlines+independent review required; JS rejects explicit512MiB to avoid silent128MiB reuse. Keep originalMETHOD05 constants unchanged.','capacity_fault_retention':'No furtherhostwrites afterfault. Currentfailure report over allocation-free IPC/console if newdiskreceipt unsafe. Cleanup still attempts ownedstop/removal; unverifiednativeprefix kept. Physicaldaemonfailure cannot guarantee cleanup; report retained/manual.'}
+put('GUARD_API.json',api)
+handoff={'schema_version':1,'status':'METHOD05_CANDIDATE_AUTHOR_FINITE_CONTROLS_PASS_REVIEW_REQUIRED_NOT_RUN','created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'author_NOT_acceptor':True,'source_context':{'identity':identity(files),'included_files':1813,'image':receipt['image'],'receipt_sha256':sha(receipt_path.read_bytes()),'compiled64_match':True,'input_snapshot':'NOT_PREPARED'},'code':source,'formal_parent_finding':{'id':'P05-METHOD04-001','report_sha256':'4a52ad93caeb68074d8a669816b8c9ca1b44ef0f3986288e8ab237e823e26740','review_index_sha256':'4bad21b906e9f7b8eb812415dcaf23773f017fd99e77ec49196e77461a944ebb','status':'PROSPECTIVE_FIXED_AWAIT_INDEPENDENT_REPEAT'},'author_validation':{'supervisor_cleanup_sourcebound_mock_controls':18,'actual_Windows_output_controls_with_injected_space_counter':27,'syntax_cold_checks':30,'all_final_exit_codes':0,'Docker_calls':0,'selector_invocations':0,'R100_attempts':0,'prepare_calls':0},'reuse_API':'GUARD_API.json','unchanged':{'original61':True,'original04_packet_and_sources':True,'e9_R100v2_failed_packet':True,'verifier_e09_packet':True,'included_product_and_compiled64':True,'literal_descriptor_seed_and_statistics_counts_thresholds':True},'limits':{'owned_cap_MiB':128,'worker_hardwall_ms':300000,'reserve_GiB_each_host_native':10,'worker_CPU':1,'worker_memory_MiB':1536,'not_Docker_VHD_extent_quota':True},'limitations':['Finite mocked supervisor inputs and realWindows file writes do not prove actualDocker failure/final100 completion. Root actual preparation/RUN only after independent approval and separate ACK.','During bounded asynchronous Docker kill the supervisor can delay sampling. Independent perwrite actualfree+reader counterfreshness guards failclosed when cachedfile cannot advance; no atomic concurrent filesystem/free-space guarantee.','At0free newly persisted failure receipt is unsafe; IPC/RAM failure and exact retained ownership are authoritative, not fictional successful export. Physicaldaemon/hardwarefailure remains retained/manual cleanup.','No final statistics RUN, full consumer acceptance, actual runtime parity,220m feasibility,450 approval or fullP05 PASS.','Historical copied04 test scripts are opaque .bytes and inactive. Current tests target new mandatory guard schema; no historical test execution relabelled.'],'statistics_RUN':False,'full_P05_PASS':False,'human450':'HOLD_UNCHANGED'}
+put('HANDOFF.json',handoff)
+report='''# METHOD05 candidate, awaiting independent repeat
+
+P05-METHOD04-001 has a prospective code correction with finite author controls. It is not independently closed here and no native diagnostic has run.
+
+The post-stop supervisor now reads actual host free space on every post-stop loop iteration through export/archive/cleanup. Low or unknown space latches refusal and allocation-free IPC continues even when no new disk receipt is safe. A bounded awaited Docker kill can delay supervisor sampling; each payload writer also reads actual free independently and requires an advancing fresh owner counter. No cached12GiB reading authorizes a write when actual free is0.
+
+Tar staging, extraction, archives and immutable receipts use the mandatory host guard. It reserves prospective allocation and metadata inside fixed partitions, checks fresh actual capacity before create and every unbuffered64KiB write, then before fsync. Faults cannot be cleared by later recovery. Parent live controls independently check actual space before write and rename. Cleanup has no artifact-writer parameter and runs before best-effort logging. Unverified native export keeps its owned volume; daemon failures are retained/manual, never cleanupPASS.
+
+Final author results:18 source-bound mocked supervisor/cleanup controls,27 realWindows output controls with injected capacity/counters,30 syntax/cold checks, all exit0. Tests cover deadline then0/unknown free, stale/reordered phases, continued samples without later mocked disk writes, forged late-export rejection; real partial stage/extract/ZIP stops at65536bytes with no second write; positive exact bytes/hashes; owner/oldschema/partition/cap/ADS/hardlink and root/nested/replaced-junction rejection. No Docker, selector, prepare or RUN invocation occurred. Raw FAIL attempts and corresponding source snapshots are retained; final exact source hashes are in HANDOFF and raw results.
+
+The fixed diagnostic remains128MiB owned artifacts,1CPU,1536MiB,300000ms and the original literal R100 descriptor/seed. Actual host and native free guards each require10GiB+128MiB. This is no physical Docker VHD-growth quota. Filesystem observations are sampled and not an atomic hostile race guarantee. GUARD_API.json documents exact interfaces; OCI512MiB/900s requires a new versioned adaptation and independent review, not reuse of these constants as if generic.
+
+Source1274deb/1813, imageff3710 and all64 compiled pins match the unchanged root receipt. Original61, METHOD04, failed e9R100v2 and verifier checkpoints remain immutable. Statistical counts/seeds/thresholds and human450HOLD are unchanged. Runtime fidelity, full consumer/statistical acceptance and fullP05 remain open. Root must review before preparing a real snapshot or authorizing a diagnostic.
+'''
+write(Path('REPORT.md'),report.encode())
+entries=[]
+for p in sorted(out.rglob('*')):
+    if p.is_file():entries.append({'path':p.relative_to(out).as_posix(),'sha256':sha(p.read_bytes()),'bytes':p.stat().st_size})
+put('INDEX.json',{'schema_version':1,'scope':'METHOD05_CANDIDATE_NOT_RUN','files':entries})
+for row in entries:assert sha((out/row['path']).read_bytes())==row['sha256']
+assert identity(inventory())==receipt['source_identity']
+for p,h in receipt['host_compiled_files_sha256'].items():assert sha(Path(p).read_bytes())==h
+print(json.dumps({'path':out.as_posix(),'INDEX_sha256':sha((out/'INDEX.json').read_bytes()),'files':len(entries),'guard_API':api['files'],'source_identity':identity(files),'NOT_RUN':True},indent=2))

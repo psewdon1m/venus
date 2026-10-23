@@ -1,0 +1,5 @@
+# Layout16 WebKit A17 independent review
+
+2026-10-21T01:24:50.8570063Z — Started independent method+A17 binding review. Author INDEX e5e821453be1ce815efc645e840757597dfa7fc4551fc2bc64935dd646a763ff /37. Runtime4a18ef21bef61e66765e998ca04eb46efff22083e22bc62efda684e08aee82c8. No source/APP/ACK/native writes; own report/journal only. Parent root browser30632 running solo.
+
+2026-10-21T01:28:03.780793+00:00 — COMPLETE_STOP. Author37children/workingproducerpins/parent15+14children verified; 24rawMJS exact, run+policy literal inverses only, x11prefix inverse exact and all readiness/focus/native rest exact15. Saved oneprobe ownedMiniBrowserchild/prefix qualification read; no live actions. All1871 A17source and exactreceipts verified; falseACK retained. Six own coldcontrols0, runtime4a18ef21 recomputed. Audit01 FAIL preserved (parent14 list schema assumption); audit02=0/final03=0 after reader correction, no producer fix. INDEX aa4bcb3daa8e0430ca0a4fa1e02493a6c4a658a966b2b14a6d1c3484fcf4b77a /9children statusPASS_METHOD_ONLY. Actual layout/nativezoom459/stage remain pending. No APP/source/ACK/native mutation; not OCI22selfreview.

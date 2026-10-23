@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "review_id": "P05-DIRECTORY-ALLOCATOR-ROUND-02",
+  "created_at": "2026-10-19T17:15:19.068565+00:00",
+  "reviewer": "/root/p05_targeted_review",
+  "status": "PREFLIGHT_COMPONENT_PASS",
+  "inputs": [
+    {
+      "path": "apps/api/src/security.ts",
+      "bytes": 5598,
+      "sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25"
+    },
+    {
+      "path": "apps/api/src/topic-room-directories.test.ts",
+      "bytes": 6163,
+      "sha256": "62b894dca66fe05c739a7d6504d6d330f911d11435d642b0b3ad3162357b1c05"
+    },
+    {
+      "path": "apps/api/src/topic-room-directories.ts",
+      "bytes": 4505,
+      "sha256": "91ff6dc131409e74746ffad6fccc5af895fd20563ecf4181559591d8ef9b7af9"
+    }
+  ],
+  "source_unchanged": true,
+  "included_edits": false,
+  "prior_independent_controls_byte_identical": true,
+  "prior_reports_unchanged": true,
+  "independent_pass": 26,
+  "author_rerun_pass": 15,
+  "windows_only_skip": 1,
+  "test_exit_code": 0,
+  "lint_exit_code": 0,
+  "closed_findings": [
+    {
+      "id": "DIRECTORY-001",
+      "closure": "Original failing control now PASS on 91ff6dc1 with final full ancestor and root UID/mode/inode revalidation; two extra publication fault controls PASS."
+    }
+  ],
+  "open_findings": [],
+  "container_cleanup_verified": [
+    {
+      "producer": "independent",
+      "owner": "venus-independent-dirs-6b02cc2beb59",
+      "actual_exit_code": 0,
+      "fresh_remaining": []
+    },
+    {
+      "producer": "author",
+      "owner": "venus-topic-dirs-1165a0a433d1",
+      "actual_exit_code": 0,
+      "fresh_remaining": []
+    }
+  ],
+  "evidence_index": {
+    "path": ".docs/implementation/evidence/p05/directory-allocator-review-02/index.json",
+    "files": 21,
+    "sha256": "3ae994b41ed8a6b3e4bb21bfd45bf490f939f1d967a6852ba5fd8383775aea10"
+  },
+  "limitations": [
+    "Exact dirty component scope only",
+    "Protected operator roots remain a precondition; no atomic defense against host administrator/continuing namespace mutation claimed",
+    "EIO/syscall boundary controls do not prove power loss or SIGKILL durability",
+    "PG registry/operator provisioning/rollback domains/full restore/fullstage unproven",
+    "Content450 HOLD unchanged"
+  ]
+}

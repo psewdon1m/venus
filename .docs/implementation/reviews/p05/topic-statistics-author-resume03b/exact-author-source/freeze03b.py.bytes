@@ -1,0 +1,43 @@
+"""Freeze only new resume02. Refuse an already frozen output."""
+import hashlib,json,re,subprocess,shutil
+from pathlib import Path
+from datetime import datetime,timezone
+work=Path('.artifacts/p05-topic-statistics-resume03b');out=Path('.docs/implementation/reviews/p05/topic-statistics-author-resume03b')
+assert out.is_dir() and not (out/'INDEX.json').exists()
+node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+commands=[]
+for name,args in [('inherited-finite-final',[node,str(work/'finite-controls.mjs')]),('infrastructure-finite-final',[node,str(work/'infrastructure-controls.mjs')]),('eligibility-component-final',[node,str(work/'eligibility-controls.mjs')]),('sticky-stop-fault-final',[node,str(work/'fault-controls.mjs')]),('privacy-final',[node,str(work/'privacy-controls.mjs')]),('actual-owned-host-stop-final',[node,str(work/'host-stop-controls.mjs')]),('eslint-final',[node,'node_modules/eslint/bin/eslint.js','--config',str(work/'eslint.config.mjs'),str(work)]),('dispatch-cold-final',[node,str(work/'section-runner.mjs'),'--describe']),('supervisor-cold-final',[node,str(work/'supervisor32.mjs'),'--describe']),('worker-cold-final',[node,str(work/'worker.mjs'),'--describe'])]:
+ r=subprocess.run(args,capture_output=True,timeout=60);(out/'raw'/f'{name}.stdout.txt').write_bytes(r.stdout);(out/'raw'/f'{name}.stderr.txt').write_bytes(r.stderr);commands.append({'name':name,'command':args,'exit_code':r.returncode,'at_utc':datetime.now(timezone.utc).isoformat()})
+syntax=[]
+for p in work.glob('*.mjs'):
+ r=subprocess.run([node,'--check',str(p)],capture_output=True);syntax.append({'path':p.as_posix(),'exit_code':r.returncode,'stderr':r.stderr.decode()})
+assert all(x['exit_code']==0 for x in commands+syntax),(commands,syntax)
+(out/'validation-final.json').write_text(json.dumps({'commands':commands,'syntax':syntax},indent=2)+'\n',encoding='utf8')
+repo=Path('.').resolve();pending=list(work.glob('*.mjs'));seen=set()
+while pending:
+ p=pending.pop().resolve()
+ if p in seen:continue
+ assert p.is_relative_to(repo);seen.add(p)
+ for quote,name in re.findall(r'(?:from\s*|import\s*\()([\x27\x22])([^\x27\x22]+)\1',p.read_text(encoding='utf8')):
+  if name.startswith('.'):
+   target=(p.parent/name).resolve()
+   if target.is_file() and target.suffix in ('.mjs','.js','.json'):pending.append(target)
+for name in ['.artifacts/p05-topic-measurements/contracts/expected-status.json','packages/relationship-engine/src/policy.json','package-lock.json','package.json','tools/stage_inventory.py','tools/source_inventory.py','tests/p05-topic-lifecycle/harness.mjs','apps/api/dist/app.js','apps/api/dist/room-routes.js','apps/api/dist/topic-games.js']:
+ seen.add((repo/name).resolve())
+dependencies=[]
+for p in sorted(seen):
+ if p.parent==work.resolve():continue
+ rel=p.relative_to(repo).as_posix();dest=out/'dependency-source'/(rel+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest);dependencies.append({'path':rel,'sha256':sha(p),'bytes':p.stat().st_size})
+(out/'DEPENDENCY_PINS.json').write_text(json.dumps({'scope':'Local recursive import references plus explicit raw/source/lock inputs; bare npm binary/runtime closure NOT proven','files':dependencies},indent=2)+'\n',encoding='utf8')
+for p in work.iterdir():
+ if p.is_file():dest=out/'exact-author-source'/(p.name+'.bytes');dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest)
+
+parents=[('topic-statistics-author-resume03','093b03d831bac208680dfdea56d3842bb48b062d5a9fc76bae027cdb6844aaac'),('topic-statistics-independent-resume03-round01','f4f989d11ce6faaf1805a93b10a3fb7a21a29cc86a66e39ee9f7da4cc821c81b')]
+for name,pin in parents:
+ p=Path('.docs/implementation/reviews/p05')/name/'INDEX.json';assert sha(p)==pin;shutil.copyfile(p,out/(name+'-INDEX.json.bytes'))
+for name in ['owned-worker.mjs','owned-job.py','owned-entry.mjs','consumers.mjs','inference.mjs','protocol.mjs','section-runner.mjs','resource32-policy.mjs','actual-session.mjs','derive-runtime.mjs','coalesced-observer.mjs']:
+ assert sha(work/name)==sha(Path('.artifacts/p05-topic-statistics-resume03')/name)
+shutil.copyfile(work/'README.md',out/'REPORT.md')
+report={'schema':1,'status':'AUTHOR_CORRECTIVE_03B_METADATA_WIP_REQUIRES_INDEPENDENT_REPEAT','writes':'COMPLETE','created_at':datetime.now(timezone.utc).isoformat(),'corrected_finding':'STATS-R03-R01-001','base':'Frozen03; separate04 runtime WIP not yet merged','parents':dict(parents),'validation':{'inherited_finite':73,'new_privacy_finite':21,'actual_owned_host_stop':2,'commands':len(commands),'syntax':len(syntax)},'actual_owned_host_scope':'Only own synthetic Windows Job tree; never Docker containment acceptance','original_stop_contract_and_fixed_counts_seeds_thresholds':'UNCHANGED_EXACT03','Docker_calls':0,'actual_runtime84':False,'full_statistics':False,'root_ACK_written':False,'human450_470':'HOLD_UNCHANGED','P06_started':False,'full_P05_PASS':False,'remaining':['Independent corrective repeat','Merge reviewed projection into04 actual-runtime WIP','Docker worker1CPU1536MiB/no-network/readonly/uid actual cgroup ownership stop/native retained guard/archive','Actual runtime84 orchestration/history/WS private semantics/coalesced-wire parity','Exclusion support/GF equivalence','Bounded actual offline cost qualification, clean source/content/preregistration/root ACK before full unchanged corpus and independent raw audit']}
+(out/'HANDOFF.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf8')
+files=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file() and p.name!='INDEX.json'];(out/'INDEX.json').write_text(json.dumps({'schema':1,'status':report['status'],'writes':'COMPLETE','files':files},indent=2)+'\n',encoding='utf8');print(json.dumps({'INDEX_sha256':sha(out/'INDEX.json'),'HANDOFF_sha256':sha(out/'HANDOFF.json'),'files':len(files),'commands':commands}))

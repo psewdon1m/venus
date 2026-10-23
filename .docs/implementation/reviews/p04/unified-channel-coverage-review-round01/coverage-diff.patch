@@ -1,0 +1,33 @@
+--- historical1274/coverage.ts
++++ current/coverage.ts
+@@ -28,16 +28,18 @@
+   requireCatalog(rounds.length>0&&new Set(rounds).size===rounds.length&&rounds.every(n=>Number.isSafeInteger(n)&&n>=1&&n<=100),'COVERAGE_ROUNDS_INVALID');
+   const cells:{mode:Mode;context:Context;size:number;stage:number;comfort:number;resolved_class:PairClass;effective_eligible_card_count:number;by_interaction:Record<string,number>;private_baseline_card_count:number;private_profile_status:string;rule_exclusions:string[]}[]=[],sessions:{mode:Mode;context:Context;size:number;rounds:number;profile:string;status:string;reason:string|null}[]=[],privateSessions:{mode:Mode;context:Context;size:number;comfort:number;resolved_class:PairClass;rounds:number;status:string;private_rounds:number}[]=[];
+   for(const mode of modes) for(const context of contexts) for(let size=2;size<=8;size++) {
++    const modeCards=pack.cards.filter(c=>c.mode===mode&&c.meeting_contexts.includes(context));
++    const privateCards=modeCards.filter(c=>c.interaction==='pair_private');
++    const privateChannelUnavailable=!capabilities.includes('private_text_chat')&&(context==='online'||privateCards.length>0&&privateCards.every(c=>c.required_capabilities.includes('private_text_chat')));
+     for(let comfort=0;comfort<=4;comfort++) for(const pairClass of classes) {
+       const snapshot=coverageSnapshot(pack,size,mode,context,comfort,pairClass,20,capabilities);
+-      const modeCards=pack.cards.filter(c=>c.mode===mode&&c.meeting_contexts.includes(context));
+       for(let stage=1;stage<=4;stage++) {
+         const candidates=modeCards.filter(c=>actorSets(c,snapshot).some(actors=>eligible(c,snapshot,actors,stage)));
+         const baseline=candidates.filter(c=>c.interaction==='pair_private'&&c.relationship_scope==='friend_or_more'&&c.min_comfort===1&&!c.requires_physical_contact&&!c.requires_going_away).length;
+-        const privateStatus=stage<3?'RULE_EXCLUDED_STAGE':comfort===0?'RULE_EXCLUDED_COMFORT':['X','J'].includes(pairClass)?'RULE_EXCLUDED_CLASS':context==='online'&&!capabilities.includes('private_text_chat')?'CAPABILITY_UNAVAILABLE':baseline<25?'CONTENT_GAP':'SUPPORTED';
++        const privateStatus=stage<3?'RULE_EXCLUDED_STAGE':comfort===0?'RULE_EXCLUDED_COMFORT':['X','J'].includes(pairClass)?'RULE_EXCLUDED_CLASS':privateChannelUnavailable?'CAPABILITY_UNAVAILABLE':baseline<25?'CONTENT_GAP':'SUPPORTED';
+         cells.push({mode,context,size,stage,comfort,resolved_class:pairClass,effective_eligible_card_count:candidates.length,
+           by_interaction:Object.fromEntries(['group','solo','pair_public','pair_private'].map(kind=>[kind,candidates.filter(c=>c.interaction===kind).length])),private_baseline_card_count:baseline,private_profile_status:privateStatus,
+-          rule_exclusions:[...(stage<3?['pair_private_before_S3']:[]),...(context==='online'&&!capabilities.includes('private_text_chat')?['online_private_without_chat']:[]),
++          rule_exclusions:[...(stage<3?['pair_private_before_S3']:[]),...(privateChannelUnavailable?[context==='online'?'online_private_without_chat':'private_cards_require_unavailable_chat']:[]),
+             'public_common_support_requires_comfort0_none_or_acquaintance',...(pairClass==='X'?['all_targeted_pairs_vetoed']:[])]});
+       }
+     }
+@@ -53,7 +55,7 @@
+       requireCatalog(!availability.available,'COVERAGE_X_VETO_BROKEN');sessions.push({mode,context,size,rounds:20,profile:'all_X',status:'EXPECTED_REFUSAL',reason:availability.reason});
+     }
+     for(const comfort of [1,4]) for(const pairClass of ['F','G','M','S','R'] as const) {
+-      if(context==='online'&&!capabilities.includes('private_text_chat')) {privateSessions.push({mode,context,size,comfort,resolved_class:pairClass,rounds:100,status:'CAPABILITY_UNAVAILABLE',private_rounds:0});continue;}
++      if(privateChannelUnavailable) {privateSessions.push({mode,context,size,comfort,resolved_class:pairClass,rounds:100,status:'CAPABILITY_UNAVAILABLE',private_rounds:0});continue;}
+       const snapshot=coverageSnapshot(pack,size,mode,context,comfort,pairClass,100,capabilities);
+       try {
+         const plans=preflight(snapshot,pack),privatePlans=plans.filter(p=>p.interaction==='pair_private');

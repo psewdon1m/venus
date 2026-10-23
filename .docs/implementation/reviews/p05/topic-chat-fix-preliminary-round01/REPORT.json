@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_PRELIMINARY",
+  "finding": {
+    "id": "TG-CHAT-002",
+    "severity": "P2",
+    "title": "Malformed UTF16 accepted by V2 chat text validation",
+    "source_sha256": "a7b864450a13c1d23fe210ae206c3faaa510b9e54e9b633e79c46e815d0919d5",
+    "checks_pass": 4,
+    "checks_fail": 3,
+    "probe_exit": 1,
+    "scope": "Independent source-bound direct public sendChat validation; mutation seam records reachability only; not actual HTTP/PG",
+    "contract": ".docs/P05_PRIVATE_CHAT.md forbids malformed Unicode; legacy chatInput explicitly rejects lone surrogates",
+    "not_claimed": [
+      "actual HTTP/PG acceptance ofmalformedtext",
+      "finalsourcefreeze",
+      "fullstagegate"
+    ]
+  },
+  "other_policy_quota_controls": "preliminary source review continues; noPASS untilfreshcheckpoint"
+}

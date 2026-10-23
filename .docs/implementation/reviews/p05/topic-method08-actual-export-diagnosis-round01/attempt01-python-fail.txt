@@ -1,0 +1,33 @@
+Traceback (most recent call last):
+  File "C:\.projects\venus\.docs\implementation\reviews\p05\topic-method08-actual-export-diagnosis-round01\cold-controls.py", line 19, in <module>
+    try:g.partition(RUN/'archive',20*1024**2)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 52, in partition
+    return Partition(self,root,limit)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 72, in __init__
+    safe_directory(self.root);self.block=quantum(self.root);self.refresh()
+                                                            ^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 74, in refresh
+    self.guard.before();self.baseline=allocation.inspect_tree(self.root)
+    ^^^^^^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 45, in before
+    if not self.armed:self.arm()
+                      ^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 42, in arm
+    self.wait(.025);self.sample()
+                    ^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 32, in sample
+    if now-self.advanced>2:self.stop('SUPERVISOR_SAMPLE_STALE')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-recovery-source1274-01\.artifacts\p05\r100-v3-7da46d477970\inputs\next\host-output-guard.py", line 18, in stop
+    raise OutputStopped('HOST_OUTPUT_STOP_NOT_ACCEPTED:'+self.fault)
+diag_guard.OutputStopped: HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_SAMPLE_STALE
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\.projects\venus\.docs\implementation\reviews\p05\topic-method08-actual-export-diagnosis-round01\cold-controls.py", line 21, in <module>
+    assert str(e)=='HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_INITIAL_ADVANCE_MISSING';results.append({'name':'exact guard cold replay static retained counter fails before tar creation','status':'PASS','observed_error':str(e),'qualification':'Possible exact package failure path after lost supervisor; not recovered actual truncated exception'})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

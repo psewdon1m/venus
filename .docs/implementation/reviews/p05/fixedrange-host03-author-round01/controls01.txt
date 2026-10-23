@@ -1,0 +1,26 @@
+PASS one exact range accepted
+PASS authority rejects status
+PASS authority rejects purpose
+PASS authority rejects no_actual_approval
+PASS authority rejects owner
+PASS authority rejects host_runner_sha256
+PASS authority rejects source_identity
+PASS authority rejects image_id
+PASS authority rejects method_review_sha256
+PASS authority rejects binding_sha256
+PASS authority rejects prereg_sha256
+PASS authority rejects producer_pins
+PASS range rejects {"section":"m3-fairness","start":-1,"count":2,"end":102}
+PASS range rejects {"section":"m3-fairness","start":100,"count":10001,"end":10101}
+PASS range rejects {"section":"m3-fairness","start":100,"count":2,"end":103}
+PASS range rejects {"section":"unknown","start":100,"count":2,"end":102}
+PASS range rejects {"section":"m3-fairness","start":83999,"count":2,"end":84001}
+PASS nested dependency mutation changes exact inventory
+PASS count+1 sealed chain verified without statistical acceptance
+PASS wrong owner rejects verified export
+PASS changed expected ordinal rejects export
+PASS sealed footer refuses unauthenticated summary substitution
+PASS refusal counter mismatch rejected
+PASS raw segment alteration rejected
+PASS stop-before-export and verified-only cleanup carry
+{"status":"PASS_FINITE_HOST_ONLY","checks":25,"Docker_RUN":false,"native_selector_cases":0,"raw_fixture_cases":2}

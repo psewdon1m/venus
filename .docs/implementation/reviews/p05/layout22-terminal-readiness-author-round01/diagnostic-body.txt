@@ -1,0 +1,9 @@
+/** One post-failure read only. Never text, attributes, geometry numbers or IDs from data. */
+export function terminalReadinessProjection({positive,forbidden,required}){
+ const own=['game-pause','game-stop','game-resume','game-next','game-finish','game-skip','game-truth','game-dare','game-condition-input','pair-accept','pair-decline','action-accept','action-withdraw','topic-other','topic-accept','topic-new','advice-input','pair-chat-input'];
+ const known=new Set([...own,'adult18','accept-offer','create-name','join-name','room-shell','comfort','topics-save','game-prompt','private-prompt','pair-invitation','topic-conversation','structured-advice','pair-chat','advice-text','game-condition-submit']);
+ for(const values of [positive,forbidden,required])if(!Array.isArray(values)||values.length>33||values.some(id=>typeof id!=='string'||!known.has(id)))throw Error('TERMINAL_READINESS_SELECTOR_REJECTED');
+ if(required.some(id=>!own.includes(id)))throw Error('TERMINAL_READINESS_OWN_SELECTOR_REJECTED');
+ const selectors=[...new Set([...positive,...forbidden,...required])];
+ return{document_visible:document.visibilityState==='visible',positive_ids:positive,forbidden_ids:forbidden,required_ids:required,selectors:selectors.map(id=>{const element=document.querySelector('[data-testid="'+id+'"]');if(!element)return{id,present:false,style_visible:false,nonzero_rect:false};const style=getComputedStyle(element),rect=element.getBoundingClientRect();return{id,present:true,style_visible:style.visibility!=='hidden'&&style.visibility!=='collapse',nonzero_rect:rect.width>0&&rect.height>0};})};
+}

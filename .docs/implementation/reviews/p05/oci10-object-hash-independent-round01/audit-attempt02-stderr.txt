@@ -1,0 +1,11 @@
+file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci10-object-hash-independent-round01/audit.mjs:18
+const control='.artifacts/p05-oci10-object-hash-controls01.mjs';pin(control,pins[author+'/p05-oci10-object-hash-controls01.mjs'].sha256);const run=spawnSync(process.execPath,[path.resolve(root,control)],{cwd:root,encoding:'utf8',timeout:30000,maxBuffer:1024**2});fs.writeFileSync(path.join(out,'six-controls.stdout.txt'),run.stdout??'');fs.writeFileSync(path.join(out,'six-controls.stderr.txt'),run.stderr??'');assert.equal(run.status,0);assert.equal(run.stderr,'');const result=JSON.parse(run.stdout);assert.equal(result.checks,6);assert.equal(result.original_native_TypeError_reproduced,true);
+                                                                                                                                 ^
+
+TypeError: Cannot read properties of undefined (reading 'sha256')
+    at file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci10-object-hash-independent-round01/audit.mjs:18:130
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.14.0

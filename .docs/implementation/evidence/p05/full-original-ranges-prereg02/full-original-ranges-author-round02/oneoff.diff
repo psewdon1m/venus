@@ -1,0 +1,27 @@
+--- lanes01.accepted
++++ lanes02.early-refusal-STOP
+@@ -9,6 +9,10 @@
+ const sha=b=>createHash('sha256').update(b).digest('hex');
+ const bytes=o=>Buffer.from(JSON.stringify(o,null,2)+'\n');
+ export function plannedAck(base,job){return {...base,status:'ROOT_RUN_ACK',no_actual_approval:false,owner:job.owner,range:job.range};}
++export function strictSectionRefusal(section,summary){
++ assert(Number.isSafeInteger(summary.typed_refusals)&&summary.typed_refusals>=0&&summary.typed_refusals<=summary.completed);
++ return ['m3-inference','m3-fairness'].includes(section)&&summary.typed_refusals>0;
++}
+ export function validatePlan(plan){
+  assert.equal(plan.status,'PREASSIGNED_ORIGINAL_RANGES_PENDING_ROOT_ACTIVATION');assert.equal(plan.lanes,8);assert.equal(plan.jobs.length,2609);
+  assert.deepEqual(plan.counts,{'c2-static':47040,'c2-trajectory':37072,'c2-canary':336,'m3-invariants':70000,'m3-fairness':84000,'m3-gf':1000000,'m3-inference':126000});
+@@ -56,8 +60,11 @@
+   child.on('error',error=>{record.spawn_error=error.code??'SPAWN_FAILED';});
+   child.on('close',(code,signal)=>{try{for(const stream of ['stdout','stderr'])fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.'+stream+'.txt'),Buffer.concat(log[stream]),{flag:'wx'});
+    let report=null;const reportFile=path.join(plan.output_parent,job.owner,'host-report.json');try{report=JSON.parse(fs.readFileSync(reportFile));}catch{/* exact missing report is failure */}
+-   const ok=code===0&&!signal&&!overflow&&!record.spawn_error&&report?.status==='RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE'&&report.cleanup==='COMPLETE'&&report.export_verified===true&&report.writer_stopped===true&&report.producer_unchanged===true&&report.owner===job.owner&&JSON.stringify(report.range)===JSON.stringify(job.range);
+-   const done={...record,finished_at:new Date().toISOString(),ok,exit_code:code,signal,log_bytes:length,overflow,host_report:reportFile,host_report_sha256:fs.existsSync(reportFile)?sha(fs.readFileSync(reportFile)):null};fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.json'),bytes(done),{flag:'wx'});if(!ok)fail(done);resolve(done);
++   const executionOk=code===0&&!signal&&!overflow&&!record.spawn_error&&report?.status==='RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE'&&report.cleanup==='COMPLETE'&&report.export_verified===true&&report.writer_stopped===true&&report.producer_unchanged===true&&report.owner===job.owner&&JSON.stringify(report.range)===JSON.stringify(job.range);
++   let strictRefusal=false,typedRefusals=null;
++   if(executionOk){const exportRoot=path.join(plan.output_parent,job.owner,'export'),verified=JSON.parse(fs.readFileSync(path.join(plan.output_parent,job.owner,'export-pins.json'))),raw=fs.readFileSync(path.join(exportRoot,'summary.json'));assert.equal(sha(raw),verified.files.find(f=>f.path==='summary.json')?.sha256);const summary=JSON.parse(raw);assert.deepEqual(summary,verified.summary);assert.equal(summary.owner,job.owner);assert.deepEqual(summary.range,job.range);strictRefusal=strictSectionRefusal(job.range.section,summary);typedRefusals=summary.typed_refusals;}
++   const ok=executionOk&&!strictRefusal;
++   const done={...record,finished_at:new Date().toISOString(),ok,native_range_execution_ok:executionOk,strict_section_refusal_blocks_acceptance:strictRefusal,typed_refusals:typedRefusals,exit_code:code,signal,log_bytes:length,overflow,host_report:reportFile,host_report_sha256:fs.existsSync(reportFile)?sha(fs.readFileSync(reportFile)):null};fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.json'),bytes(done),{flag:'wx'});if(!ok)fail(done);resolve(done);
+   }catch(error){const done={...record,ok:false,exit_code:code,signal,code:error.code??'HOST_RECEIPT_COLLECTION_FAILED'};fail(done);resolve(done);}
+   });
+  }),()=>stopFlag||fs.existsSync(stop),fail);

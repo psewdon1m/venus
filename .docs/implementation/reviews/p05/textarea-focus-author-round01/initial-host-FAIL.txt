@@ -1,0 +1,76 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-panel.test.ts (21 tests | 1 failed) 2908ms
+   ❯ actual TopicGamesPanel scoped V2 flow (21)
+     × keyboard focus reveals the whole private editor without submitting or exposing content 393ms
+Batch request: B-20261018-Q-001 errors= 0
+Batch request: <invalid> errors= 17
+ERROR BATCH-001 'batch_id' is a required property
+ERROR BATCH-001 'pack_id' is a required property
+ERROR BATCH-001 'schema_version' is a required property
+ERROR BATCH-001 'policy_revision' is a required property
+ERROR BATCH-001 'mode' is a required property
+ERROR BATCH-001 'count' is a required property
+ERROR BATCH-001 'id_range' is a required property
+ERROR BATCH-001 'meeting_contexts' is a required property
+ERROR BATCH-001 'allowed_interactions' is a required property
+ERROR BATCH-001 'relationship_scope_distribution' is a required property
+ERROR BATCH-001 'comfort_distribution' is a required property
+ERROR BATCH-001 'progression_distribution' is a required property
+ERROR BATCH-001 'languages' is a required property
+ERROR BATCH-001 'forbidden_categories' is a required property
+ERROR BATCH-001 'source_catalog_digest' is a required property
+ERROR BATCH-001 'requested_by' is a required property
+ERROR BATCH-001 'human_review_required' is a required property
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > keyboard focus reveals the whole private editor without submitting or exposing content
+AssertionError: expected Object{ posts: +0, …(2) } to deeply equal { posts: +0, …(2) }
+
+- Expected
++ Received
+
+@@ -2,23 +2,23 @@
+    "posts": 0,
+    "privateStillVisible": true,
+    "scrolls": [
+      {
+        "behavior": "instant",
+-       "block": "nearest",
++       "block": "center",
+        "id": "advice-input",
+        "inline": "nearest",
+      },
+      {
+        "behavior": "instant",
+-       "block": "nearest",
++       "block": "center",
+        "id": "pair-chat-input",
+        "inline": "nearest",
+      },
+      {
+        "behavior": "instant",
+-       "block": "nearest",
++       "block": "center",
+        "id": "game-condition-input",
+        "inline": "nearest",
+      },
+    ],
+  }
+
+ ❯ apps/web/src/topic-panel.test.ts:8:6
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 75 passed (76)
+      Tests  1 failed | 1103 passed | 207 skipped (1311)
+   Start at  22:39:51
+   Duration  42.54s (tests 77%, import 22%, transform 1%, worker 1%)
+
+    Isolate  76 workers spawned · ~135ms startup each (spawn + environment, per file)
+             at least ~4.99s faster with isolate: false — reuses workers across files instead of one per file
+

@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "status": "DESIGN_ONLY_CONSISTENT_WITH_REQUIRED_INTEGRATION_CONTROLS",
+  "created_at": "2026-10-19T19:36:23.286820+00:00",
+  "reviewer": "/root/p05_topic_games_review",
+  "author": "/root",
+  "original_candidate_sha256": "ab17dc01344720159fa8afbf514218fabf928b17b76a2f30078ac78dcd0efa61",
+  "clarification_candidate_sha256": "59a0f76fd3855b92eb91903709c909324ba11359602c6504d5e204c08a59faa0",
+  "findings": [
+    {
+      "id": "ADR024-D01",
+      "severity": "P2",
+      "status": "DESIGN_CORRECTED_BY_CANDIDATE_REV02",
+      "claim": "Method source-independent quiesce differs from ordinary early profile/catalog prerequisite refusal; no cleanup claim for unreachable barrier."
+    },
+    {
+      "id": "ADR024-D02",
+      "severity": "P2",
+      "status": "ROOT_ACK_REQUIRED_INTEGRATION_CONTROL",
+      "claim": "prior snapshotnonnull filter does not prove neverstarted; history-bearing aborted/completed nullsnapshot must failclosed. Root will select snapshotnonnull OR current_round>0 OR scoped rounds/participants/history exists and require snapshot503.",
+      "reachability": "active/paused nullsnapshot excluded by immutableSQLCHECK; this is defensive corrupt/partial-restore prior condition, not reproduced normal productbug."
+    }
+  ],
+  "planned_controls": [
+    {
+      "id": "ORDINARY_PROFILE_MISSING",
+      "expected": "early no-listen; no cleanup/DB convergence claim",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "ORDINARY_CATALOG_LEDGER_MISSING",
+      "expected": "early no-listen; no syntheticbypass",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "COMPATIBLE_BOOT_ORDER",
+      "expected": "barrier await and commit before listen/admission",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "METHOD_SOURCE_THROWS",
+      "expected": "zero source active/pinned/assertCurrent calls",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "METHOD_ENABLED_FALSE",
+      "expected": "all stored V2 private scopes still revoked",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "HEADER_ENGINE1",
+      "expected": "active+paused abort, snapshot/history byte exact",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "HEADER_CORRUPT_AEAD_OR_JSON",
+      "expected": "abort or fixed declared keyfailure policy, never content decode fallback",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "HEADER_SCHEMA_SCOPE_POLICY_PINS",
+      "expected": "wrongroom/session/privatepolicy/recovery/schema/digestformat abort",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "HEADER_MISSING_CURRENT_ROUND",
+      "expected": "header check precedes current_round early continue; unsupported active cannot be skipped",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "SUPPORTED_HEADER_CORRUPT_ROUND",
+      "expected": "deterministic abort or startupfailclosed, never grant",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "ALL_TRANSIENT_KINDS",
+      "expected": "conversation/chat/projection objects+private refs cleared, history excluded",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "SUPPORTED_PAIR",
+      "expected": "old pairacks/epochs invalidated even if current engine supported",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "PRESERVE_SNAPSHOT_HISTORY",
+      "expected": "exact ciphertext/chunk/metadata byte proof; no rewrite asengine2",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "EXTERNAL_ROOTS",
+      "expected": "no provision/reset/delete/rewind of5 authoritydirs orretirement/exclusion floors",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "ROOM_SESSION_LOCK_SCOPE",
+      "expected": "exactroom/session joins/order; nootherroom effects",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "DB_FAILURE_CAPACITY",
+      "expected": "startupfails/no-listen, transactionrollback; no partial success receipt",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "IDEMPOTENT_RESTART",
+      "expected": "secondbarrier no private recovery/no extra permission",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "PRIOR_NULL_STARTED",
+      "expected": "aborted/completed snapshotNULL but rounds/participants/history ->503 TOPIC_HISTORY_UNAVAILABLE",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "PRIOR_NONNULL_UNSUPPORTED",
+      "expected": "every unsupported prior read fails; never skip",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "PRIOR_NONNULL_CORRUPT",
+      "expected": "corrupt history/snapshot fails; no reset",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "PRIOR_SCOPE_QUERY",
+      "expected": "OR predicates all exactly room+session bound, fixed LIMIT with explicit overflowdeny",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "NEVER_STARTED_DRAFT",
+      "expected": "nullsnapshot/noround/noparticipants/nohistory only may skip",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "REAL_DOCKER_RESTART",
+      "expected": "ordinary compatiblecomposition+realPG lifecycle differentprocess; exactimage/source",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "RESTORE_SEPARATE",
+      "expected": "actual restore needed separately, missing authorityfailclosed; unitrestart notrestore",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "ROLLBACK_OLD_READER",
+      "expected": "unsupported revision doesnotresume; unavailableprereqs nolisten",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "EXIT_CLOSE_NEW_ROOM",
+      "expected": "only compatibleauthorizedruntime; freshpermissions/adult18; no assumedofflinecommand",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "OLD_PROCESS_OVERLAP",
+      "expected": "stop oldAPI/listeners/inflight before upgrade; no unprovenrolling compatibility",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    },
+    {
+      "id": "RETENTION",
+      "expected": "quiesce preserves audit ciphertext within existingretention; roomclose/purge followseparateprivacy lifecycle",
+      "status": "NOT_RUN_DESIGN_ONLY"
+    }
+  ],
+  "unit_runs": 0,
+  "docker_runs": 0,
+  "current_global_inventory_tested": false,
+  "product_writes": false,
+  "implementation_pass": false,
+  "full_stage_pass": false,
+  "owner450_hold_unchanged": true,
+  "pending": [
+    "included ADR/source revision and startup/prior implementation",
+    "independent source/unit/explicitSQLdouble review",
+    "actual ordinary boot/restart/restore proofs with applicability separated"
+  ]
+}

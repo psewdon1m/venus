@@ -1,0 +1,34 @@
+ Container venus-p05-36047ab17e5a-db-1  Running
+✔ B05-003 actual missing ledger cannot roll back emergency stop (497.350558ms)
+✔ B05-003 actual utf8 ledger cannot roll back emergency stop (134.78505ms)
+✔ B05-003 actual partial ledger cannot roll back emergency stop (114.209153ms)
+✔ B05-003 unreadable ledger cannot roll back neutral setup withdrawal (126.420706ms)
+✔ B05-003 unreadable ledger cannot roll back member leave and socket revocation (132.048223ms)
+✖ B05-003 fsynced withdrawal commits affected-game abort through intermediate head mismatch (564.134198ms)
+✔ B05-003 restart-style reconciliation applies external durable intent without restoring old game (318.834158ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2123.75774
+
+✖ failing tests:
+
+test at tests/p05-catalog/integration.mjs:95:1
+✖ B05-003 fsynced withdrawal commits affected-game abort through intermediate head mismatch (564.134198ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///app/tests/p05-catalog/integration.mjs:101:16
+      at async record (file:///app/tests/p05-catalog/integration.mjs:26:51)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+

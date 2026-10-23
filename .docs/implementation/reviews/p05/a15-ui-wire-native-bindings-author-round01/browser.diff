@@ -1,0 +1,19 @@
+--- A14-parent
++++ A15-binding-only
+@@ -5,13 +5,13 @@
+ import {resolve,join,dirname} from 'node:path';
+ import {tmpdir} from 'node:os';
+ import {randomBytes,createHash} from 'node:crypto';
+-const image='sha256:d3e515f5729af2306e5e62e9b92a50fe9dbf574e8a3451f8d22031bad519ac30',engine=process.env.P05_ENGINE??'chromium';assert(['chromium','firefox','webkit'].includes(engine));
++const image='sha256:021a57ecd11d8e5df300a5030c78312f66c5595ebb5d97f156ab71cf7de3b689',engine=process.env.P05_ENGINE??'chromium';assert(['chromium','firefox','webkit'].includes(engine));
+ const producer='C:/.projects/venus/.artifacts/p05-private-batch-browser-producer23',python='C:/.projects/venus/.venv/Scripts/python.exe';
+ const sha=b=>createHash('sha256').update(b).digest('hex');
+ const inventory=()=>JSON.parse(execFileSync(python,['-B','-c',"import sys,json;sys.path.insert(0,'tools');from stage_inventory import inventory,identity;x=inventory();print(json.dumps({'files':x,'source_identity_sha256':identity(x)},sort_keys=True))"],{encoding:'utf8',maxBuffer:16*1024*1024}));
+-const authority=JSON.parse(readFileSync('C:/.projects/venus/.artifacts/p05-browser23-a14-root-ack01.json','utf8'));assert.equal(authority.status,'ROOT_RUN_ACK');assert.equal(authority.runner_sha256,sha(readFileSync(new URL(import.meta.url))));assert.equal(authority.image,image);for(const[name,pin]of Object.entries(authority.runtime_pins))assert.equal(sha(readFileSync(join(producer,name))),pin);assert.equal(sha(readFileSync(resolve(authority.independent_review_index))),authority.independent_review_index_sha256);
++const authority=JSON.parse(readFileSync('C:/.projects/venus/.artifacts/p05-browser23-a15-root-ack01.json','utf8'));assert.equal(authority.status,'ROOT_RUN_ACK');assert.equal(authority.runner_sha256,sha(readFileSync(new URL(import.meta.url))));assert.equal(authority.image,image);for(const[name,pin]of Object.entries(authority.runtime_pins))assert.equal(sha(readFileSync(join(producer,name))),pin);assert.equal(sha(readFileSync(resolve(authority.independent_review_index))),authority.independent_review_index_sha256);
+ assert.equal(sha(readFileSync(authority.image_receipt)),authority.image_receipt_sha256);assert.equal(sha(readFileSync(authority.rebinding_review_index)),authority.rebinding_review_index_sha256);
+-const before=inventory();assert.equal(before.source_identity_sha256,'c481761fbecfadf77883c5ab4c8a851ab201c092b57e6994ced431dccefd4193','Refuse any source except root-approved frozen identity');assert.equal(Object.keys(before.files).length,1865,'Refuse changed frozen file count');
++const before=inventory();assert.equal(before.source_identity_sha256,'658b710bdca35b678421a51c1c276028305f28362901b2c065a3867aa754f4de','Refuse any source except root-approved frozen identity');assert.equal(Object.keys(before.files).length,1869,'Refuse changed frozen file count');
+ const project='venus-topic-browser-'+randomBytes(6).toString('hex'),output=resolve('.artifacts/p05/'+project),secret=mkdtempSync(join(tmpdir(),'venus-topic-browser-secret-'));mkdirSync(output,{recursive:true});mkdirSync(join(output,'producer'));
+ const files=readdirSync(producer).filter(f=>f.endsWith('.mjs')||f==='DESIGN.md'),producerPins=Object.fromEntries(files.map(f=>[f,sha(readFileSync(join(producer,f)))]));for(const f of files)copyFileSync(join(producer,f),join(output,'producer',f));
+ writeFileSync(join(output,'inputs-before.json'),JSON.stringify(before,null,2));writeFileSync(join(output,'producer-pins.json'),JSON.stringify(producerPins,null,2));writeFileSync(join(secret,'password'),randomBytes(32).toString('hex'),{mode:0o444});

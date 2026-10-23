@@ -1,0 +1,120 @@
+{
+  "status": "PASS_MAINTENANCE_ONLY",
+  "index_children_verified": {
+    "actual_fail_archive": 158,
+    "cleanup01": 3,
+    "cleanup02": 3
+  },
+  "failed_host_files_unchanged": 150,
+  "failed_host_bytes": 1916313,
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "included_files": 1813,
+  "cleanup01_before_mutation": true,
+  "cleanup02_commands": 42,
+  "cleanup02_mutations_exact_own_plan": [
+    [
+      "stop",
+      "--time",
+      "5",
+      "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9"
+    ],
+    [
+      "rm",
+      "c70cb70dda821a6ef55ece6528fb2098061ad7c08108a709074a15caf251dcb2"
+    ],
+    [
+      "rm",
+      "b9ad2dcef75380652d6edb0187e49100c564278eb4d46ff3f3bef6428ad2f51c"
+    ],
+    [
+      "rm",
+      "e8dc03de3a152ac71daf4cd2382a96958613bd700d14a4216276aadaa02bc1f3"
+    ],
+    [
+      "rm",
+      "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9"
+    ],
+    [
+      "volume",
+      "rm",
+      "venus-p05-oci-ffaaeef4fe2b-authority"
+    ],
+    [
+      "volume",
+      "rm",
+      "venus-p05-oci-ffaaeef4fe2b-db"
+    ],
+    [
+      "volume",
+      "rm",
+      "venus-p05-oci-ffaaeef4fe2b-private"
+    ],
+    [
+      "network",
+      "rm",
+      "77b3383a0eb3c724c0e26cbe96e799cbd3428f7cc177c44fd7a848d95785e3dd"
+    ]
+  ],
+  "fresh_owner_empty_inventory": [
+    {
+      "arguments": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_empty": true,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_empty": true,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_empty": true,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.resource.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_empty": true,
+      "stderr": ""
+    }
+  ],
+  "new_archive_record": ".docs/implementation/reviews/p05/oci-rollback-operational-rebind-author-round03/producer/README-resume01.md",
+  "archive_records": 12,
+  "unchanged_reader_function_AST": true,
+  "negative_same_size_hash_unknownUTF8_deleted_record": "PASS",
+  "actual_cleanup_by_reviewer": false,
+  "original_OCI04_status": "FAIL_UNCHANGED",
+  "full_stage_acceptance": false
+}

@@ -1,0 +1,138 @@
+import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto';
+import { readFileSync, openSync, writeSync, fsyncSync, closeSync, renameSync, unlinkSync } from 'node:fs';
+export class DomainError extends Error {
+    code;
+    statusCode;
+    constructor(code, statusCode) {
+        super('Request could not be completed');
+        this.code = code;
+        this.statusCode = statusCode;
+    }
+}
+export function requireThat(condition, code, status = 403) { if (!condition)
+    throw new DomainError(code, status); }
+export const token = () => randomBytes(32).toString('base64url');
+export const hash = (value) => createHash('sha256').update(value).digest('hex');
+export function equal(a, b) { const x = Buffer.from(a), y = Buffer.from(b); return x.length === y.length && timingSafeEqual(x, y); }
+export function canonical(value) {
+    if (value === null || typeof value !== 'object')
+        return JSON.stringify(value);
+    if (Array.isArray(value))
+        return '[' + value.map(canonical).join(',') + ']';
+    return '{' + Object.entries(value).sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0).map(([k, v]) => JSON.stringify(k) + ':' + canonical(v)).join(',') + '}';
+}
+export class Keyring {
+    current;
+    keys;
+    constructor(current, keys) {
+        this.current = current;
+        this.keys = keys;
+        requireThat(Object.hasOwn(keys, current) && Object.keys(keys).every(v => /^[A-Za-z0-9_-]{1,64}$/.test(v)) && Object.values(keys).every(k => Buffer.from(k, 'base64').length === 32), 'KEYRING_INVALID', 503);
+    }
+    static fromFile(path) { const v = JSON.parse(readFileSync(path, 'utf8')); return new Keyring(v.current, v.keys); }
+    sign(value) { return createHmac('sha256', Buffer.from(this.keys[this.current], 'base64')).update(value).digest('base64url'); }
+    fingerprint(value, version = this.current) {
+        const key = this.keys[version];
+        requireThat(key, 'KEY_VERSION_UNAVAILABLE', 503);
+        return version + ':' + createHmac('sha256', Buffer.from(key, 'base64')).update('venus:idempotency:v1:' + canonical(value)).digest('base64url');
+    }
+    matchesFingerprint(value, stored) { return equal(this.fingerprint(value, stored.split(':')[0]), stored); }
+    encrypt(value, aad, padded = true) {
+        const iv = randomBytes(12), cipher = createCipheriv('aes-256-gcm', Buffer.from(this.keys[this.current], 'base64'), iv);
+        const json = Buffer.from(JSON.stringify(value));
+        const format = padded ? 'padded-json-v1' : 'json-v1';
+        requireThat(!padded || json.length <= 16380, 'ENCRYPTED_VALUE_TOO_LARGE', 503);
+        const plain = padded ? randomBytes(16384) : json;
+        if (padded) {
+            plain.writeUInt32BE(json.length);
+            json.copy(plain, 4);
+        }
+        cipher.setAAD(Buffer.from(aad + ':' + format));
+        const data = Buffer.concat([cipher.update(plain), cipher.final()]).toString('base64');
+        return { key_version: this.current, nonce: iv.toString('base64'), data, tag: cipher.getAuthTag().toString('base64'), format };
+    }
+    decrypt(value, aad) {
+        const key = this.keys[value.key_version];
+        requireThat(key, 'KEY_VERSION_UNAVAILABLE', 503);
+        const cipher = createDecipheriv('aes-256-gcm', Buffer.from(key, 'base64'), Buffer.from(value.nonce, 'base64'));
+        requireThat(value.format === 'padded-json-v1' || value.format === 'json-v1', 'CIPHER_FORMAT_INVALID', 503);
+        cipher.setAAD(Buffer.from(aad + ':' + value.format));
+        cipher.setAuthTag(Buffer.from(value.tag, 'base64'));
+        const plain = Buffer.concat([cipher.update(Buffer.from(value.data, 'base64')), cipher.final()]);
+        if (value.format === 'padded-json-v1') {
+            requireThat(plain.length === 16384 && plain.readUInt32BE() <= 16380, 'CIPHER_FORMAT_INVALID', 503);
+            return JSON.parse(plain.subarray(4, 4 + plain.readUInt32BE()).toString('utf8'));
+        }
+        return JSON.parse(plain.toString('utf8'));
+    }
+}
+export class DeletionLedger {
+    path;
+    closed = new Map();
+    constructor(path) {
+        this.path = path;
+        const fd = openSync(path, 'a+', 0o600);
+        closeSync(fd);
+        this.reload();
+    }
+    reload() {
+        this.closed.clear();
+        for (const row of readFileSync(this.path, 'utf8').split('\n').filter(Boolean)) {
+            const entry = JSON.parse(row);
+            requireThat(/^[a-f0-9-]{36}$/.test(entry.room_id) && Number.isFinite(entry.closed_at), 'LEDGER_INVALID', 503);
+            this.closed.set(entry.room_id, entry.closed_at);
+        }
+    }
+    contains(roomId) { return this.closed.has(roomId); }
+    entries() { return [...this.closed.entries()]; }
+    revoke(roomId, now) {
+        this.lock(() => {
+            if (this.closed.has(roomId))
+                return;
+            const fd = openSync(this.path, 'a');
+            try {
+                writeSync(fd, JSON.stringify({ room_id: roomId, closed_at: now }) + '\n');
+                fsyncSync(fd);
+            }
+            finally {
+                closeSync(fd);
+            }
+            this.closed.set(roomId, now);
+        });
+    }
+    lock(operation) {
+        const lockPath = this.path + '.lock';
+        let fd;
+        try {
+            fd = openSync(lockPath, 'wx', 0o600);
+        }
+        catch {
+            throw new DomainError('LEDGER_BUSY', 503);
+        }
+        try {
+            this.reload();
+            operation();
+        }
+        finally {
+            closeSync(fd);
+            unlinkSync(lockPath);
+        }
+    }
+    prune(now, retention) {
+        this.lock(() => {
+            const remaining = [...this.closed.entries()].filter(([, closedAt]) => now - closedAt < retention);
+            if (remaining.length === this.closed.size)
+                return;
+            const path = this.path + '.new-' + randomBytes(8).toString('hex'), fd = openSync(path, 'wx', 0o600);
+            try {
+                writeSync(fd, remaining.map(([room_id, closed_at]) => JSON.stringify({ room_id, closed_at }) + '\n').join(''));
+                fsyncSync(fd);
+            }
+            finally {
+                closeSync(fd);
+            }
+            renameSync(path, this.path);
+            this.reload();
+        });
+    }
+}

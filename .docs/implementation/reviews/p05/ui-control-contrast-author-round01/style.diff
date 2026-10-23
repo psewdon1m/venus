@@ -1,0 +1,26 @@
+--- A16/apps/web/src/style.css
++++ current/apps/web/src/style.css
+@@ -4,3 +4,23 @@
+ html{scrollbar-width:none}html::-webkit-scrollbar,.offer::-webkit-scrollbar,.chat-messages::-webkit-scrollbar{display:none}main{min-height:100dvh}button{min-height:44px;min-width:44px}button:disabled{cursor:not-allowed}input,select,textarea,summary{min-height:44px}textarea{font:inherit;width:100%;resize:vertical;min-height:100px;border:1px solid #b9aab7;border-radius:12px;background:#fffdfa;color:inherit;padding:12px}textarea:focus-visible,summary:focus-visible{outline:3px solid #74547e;outline-offset:3px}fieldset{min-width:0;border:1px solid #d9ced8;border-radius:16px;padding:16px}legend{padding:0 8px}.games-panel{margin-top:28px;min-width:0;overflow-wrap:anywhere}.game-heading{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}.game-heading h2{font-family:Georgia,serif;font-size:32px;font-weight:400}.game-setup{max-width:700px}.game-setup label:not(.check),.private-panel label{display:grid;gap:8px;margin:16px 0}.game-setup .check{display:flex;min-height:44px;align-items:center}.game-setup details{margin-top:20px}.game-setup summary{cursor:pointer;padding-block:8px}.game-card{border:1px solid #d9ced8;border-radius:20px;padding:clamp(18px,4vw,48px);background:#f3ece8;min-height:180px}.game-prompt{font-family:Georgia,serif;font-size:clamp(22px,3vw,34px);line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.round-progress{font-variant-numeric:tabular-nums}.private-panel{border:2px solid #806780;background:#f7f0f7;border-radius:18px;padding:20px;margin:20px 0}.private-panel h3{margin-top:0}.safety-controls{border-top:1px solid #b9aab7;margin-top:24px;padding-top:16px}.safety-controls p{font-size:14px}.chat-messages{max-height:320px;overflow-y:auto;scrollbar-width:none;list-style:none;padding:0}.chat-messages li{padding:12px;border-bottom:1px solid #d9ced8}.chat-messages p{white-space:pre-wrap;overflow-wrap:anywhere;margin:4px 0}.game-end{padding-block:20px}.offer{scrollbar-width:none}.feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}@media(max-width:480px){main{padding:16px}.panel,.entry-policy,.entry-grid form{padding:16px}.game-heading{flex-wrap:wrap}.actions>button{flex-grow:1;max-width:100%}.private-panel{padding:14px}.feature-grid{grid-template-columns:1fr}.languages{flex-wrap:wrap}.game-card{padding:16px}nav{gap:12px}.room-heading h1{font-size:32px}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+ /* Text zoom may reduce the effective layout viewport below 320 CSS pixels. */
+ main,section,article,form,header,nav,label,fieldset,.check>span{min-width:0}body{overflow-wrap:anywhere}nav{flex-wrap:wrap}.languages{flex-wrap:wrap}button,select,input,textarea{max-width:100%}h1,h2,h3,p,li,button,label{overflow-wrap:anywhere}.check{min-width:0}.check input{max-width:20px}.offer{max-width:100%}
++
++/* Explicit form paint keeps the warm-light design legible under either OS scheme. */
++:root{color-scheme:light;--control-border:#806780;--control-background:#fffdfa;--control-ink:#4c3455;--control-selected:#e6dce6;--control-focus:#74547e}
++input,select,textarea{border:2px solid var(--control-border);color-scheme:light}
++input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--control-focus);outline-offset:3px}
++.check{min-height:44px;align-items:center}
++input[type=checkbox]{appearance:none;-webkit-appearance:none;display:inline-grid;place-content:center;flex:0 0 20px;width:20px;min-width:20px;height:20px;min-height:20px;padding:0;margin:0;border:2px solid var(--control-border);border-radius:4px;background:var(--control-background);color:var(--control-ink);vertical-align:middle;cursor:pointer}
++input[type=checkbox]::before{content:"";font:700 16px/1 Arial,sans-serif}
++input[type=checkbox]:checked{background:var(--control-selected)}
++input[type=checkbox]:checked::before{content:"âœ“"}
++input[type=checkbox]:indeterminate::before{content:"âˆ’"}
++input:disabled,select:disabled,textarea:disabled{background:#eee8ed;border-color:var(--control-border);color:#62586a;cursor:not-allowed}
++input[type=checkbox]:disabled{background:#eee8ed;color:#62586a;cursor:not-allowed}
++/* The real range input retains arrows/Home/End; track and thumb are explicit. */
++input[type=range]{appearance:none;-webkit-appearance:none;height:44px;min-height:44px;padding:12px;background:var(--control-background);border:2px solid var(--control-border);border-radius:12px;cursor:pointer}
++input[type=range]::-webkit-slider-runnable-track{height:6px;border:0;border-radius:3px;background:var(--control-border)}
++input[type=range]::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:22px;height:22px;margin-top:-8px;border:2px solid var(--control-ink);border-radius:50%;background:var(--control-background)}
++input[type=range]::-moz-range-track,input[type=range]::-moz-range-progress{height:6px;border:0;border-radius:3px;background:var(--control-border)}
++input[type=range]::-moz-range-thumb{width:18px;height:18px;border:2px solid var(--control-ink);border-radius:50%;background:var(--control-background)}
++input[type=range]:disabled{background:#eee8ed;cursor:not-allowed}

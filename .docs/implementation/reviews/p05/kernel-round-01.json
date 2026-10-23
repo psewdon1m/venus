@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "review_id": "P05-KERNEL-ROUND-01",
+  "status": "CHANGES_REQUESTED",
+  "scope": "PURE_UNEXPORTED_MODULE_DIRTY_TREE_PREFLIGHT_ONLY",
+  "independent_reviewer": true,
+  "source": {
+    "module": "fbb3715c6d6c78999594bad1324d372d6e30c89d0e79b147799f1500dac3dbf4",
+    "author_tests": "490829fc144a7c3f21c889a1bb089ac74efb317ec685b65bc89f71176bd8cda9",
+    "design": "581c97fc564ff1a57739f563027b442a12161a044d57bb434007985838165782",
+    "before_after_unchanged": true,
+    "unified_source_identity_claimed": false
+  },
+  "executed": {
+    "independent_checks": {"pass": 40, "fail": 1, "exit_code": 1},
+    "author_tests": {"pass": 59, "fail": 0, "exit_code": 0},
+    "scoped_lint_exit_code": 0,
+    "strict_no_emit_typecheck_exit_code": 0,
+    "node": "v24.22.0"
+  },
+  "findings": [
+    {
+      "id": "P05-KERNEL-001",
+      "priority": "P1",
+      "status": "OPEN",
+      "path": "packages/relationship-engine/src/private-conversation.ts",
+      "line": 264,
+      "title": "Delayed content-specific other_question excludes a newly accepted different topic",
+      "probe": "K30-stale-other-question-must-not-exclude-new-topic",
+      "expected_excluded": [],
+      "actual_excluded": ["food"],
+      "required_fix": "Bind content-specific withdrawal to intended epoch/offer; reject stale or missing references before changing current preferences. Keep immediate global stop independently available."
+    }
+  ],
+  "previous_author_fixed_regressions": {
+    "reversed_pair_denied": "PASS",
+    "delayed_advice_cannot_cross_topic_epoch": "PASS"
+  },
+  "claims": {
+    "full_p05_pass": false,
+    "integrated_feature_pass": false,
+    "human_content_approval": false,
+    "clean_source_proof": false,
+    "api_auth_or_final_dispatch_proof": false,
+    "durable_ledger_restore_proof": false
+  },
+  "writes_finished": true
+}

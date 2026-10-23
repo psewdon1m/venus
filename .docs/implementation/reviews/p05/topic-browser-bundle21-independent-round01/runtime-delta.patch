@@ -1,0 +1,137 @@
+--- METHOD20/browser.mjs
++++ METHOD21/browser.mjs
+@@ -98,7 +98,7 @@
+  page.on('pageerror',e=>{if(report.page_errors.length<64)report.page_errors.push({locale,phase,name:e.name,message:e.message.slice(0,256)});else report.page_errors_overflow=true;});
+  page.on('websocket',socket=>{a.liveSockets.add(socket);socket.on('close',()=>a.liveSockets.delete(socket));socket.on('framereceived',event=>{try{const f=JSON.parse(String(event.payload));if(a.ws.length<256)a.ws.push({type:f.type,stream:f.stream,audience:f.audience,room_rev:f.room_rev,has_prompt:Boolean(f.payload?.prompt)});}catch{/* Synthetic frame metadata only. */}});});
+  page.on('requestfailed',request=>{if(new URL(request.url()).pathname.startsWith('/api/v2/rooms/')&&new URL(request.url()).pathname.includes('/game/'))a.gameFailedRequests++;});
+- page.on('response',async response=>{const request=response.request();if(request.method()==='GET'&&new URL(response.url()).pathname.startsWith('/api/v2/rooms/')&&new URL(response.url()).pathname.includes('/game/')){a.gameReads++;if(response.status()>=400)a.gameReadErrors++;if(response.status()===200)try{const path=new URL(response.url()).pathname;if(path.endsWith('/current')){const v=await response.json();a.lastGameView={session_id:v.session_id,game_rev:v.game_rev,state:v.state,round_id:v.current_round?.round_id??null,round_index:v.current_round?.round_index??null,round_state:v.current_round?.state??null};}if(path.endsWith('/self-actions')){const v=await response.json();a.lastSelfActions={schema_version:v.schema_version,session_id:v.session_id,game_rev:v.game_rev,round_id:v.round_id,session_actions:v.session_actions,round_actions:v.round_actions,conversation_actions:v.conversation_actions};}}catch{/* Diagnostics never change product flow. */}}if(request.method()!=='GET'&&new URL(response.url()).pathname.startsWith('/api/')){let body;try{body=request.postDataJSON();}catch{body={};}if(report.request_metadata.length<2048)report.request_metadata.push({locale,phase,path:new URL(response.url()).pathname.replace(/[a-f0-9]{8}-[a-f0-9-]{27,}/g,':id'),status:response.status(),kind:body?.kind??null,scope:body?.scope??null,decision:body?.decision??null,has_exact_offer_tuple:Boolean(body?.offer_id&&body?.epoch&&body?.proposal_revision&&body?.token)});else report.request_metadata_overflow=true;}});
++ page.on('response',async response=>{const request=response.request();if(request.method()==='GET'&&new URL(response.url()).pathname.startsWith('/api/v2/rooms/')&&new URL(response.url()).pathname.includes('/game/')){a.gameReads++;if(response.status()>=400)a.gameReadErrors++;if(response.status()===200)try{const path=new URL(response.url()).pathname;if(path.endsWith('/current')){const v=await response.json();a.lastGameView={session_id:v.session_id,game_rev:v.game_rev,state:v.state,round_id:v.current_round?.round_id??null,round_index:v.current_round?.round_index??null,round_state:v.current_round?.state??null};}if(path.endsWith('/self-actions')||path.endsWith('/view')){const raw=await response.json(),v=path.endsWith('/view')?raw.own:raw;a.lastSelfActions={schema_version:v.schema_version,session_id:v.session_id,game_rev:v.game_rev,round_id:v.round_id,session_actions:v.session_actions,round_actions:v.round_actions,conversation_actions:v.conversation_actions};}}catch{/* Diagnostics never change product flow. */}}if(request.method()!=='GET'&&new URL(response.url()).pathname.startsWith('/api/')){let body;try{body=request.postDataJSON();}catch{body={};}if(report.request_metadata.length<2048)report.request_metadata.push({locale,phase,path:new URL(response.url()).pathname.replace(/[a-f0-9]{8}-[a-f0-9-]{27,}/g,':id'),status:response.status(),kind:body?.kind??null,scope:body?.scope??null,decision:body?.decision??null,has_exact_offer_tuple:Boolean(body?.offer_id&&body?.epoch&&body?.proposal_revision&&body?.token)});else report.request_metadata_overflow=true;}});
+  await page.goto(service.origin);await page.getByTestId('adult18').waitFor();await page.locator(`nav button[lang="${locale}"]`).click();return a;}
+ async function approval(a){await expect(a.page.getByTestId('create-room')).toBeDisabled();await a.page.getByTestId('accept-offer').check();await expect(a.page.getByTestId('create-room')).toBeDisabled();await a.page.getByTestId('adult18').check();}
+ async function create(a){await approval(a);const contextSelect=a.page.locator('form').filter({has:a.page.getByTestId('create-name')}).locator('select');await contextSelect.selectOption('online');await expect(contextSelect).toHaveValue('online');await a.page.getByTestId('create-name').fill('SYNTHETIC HOST');const response=a.page.waitForResponse(r=>new URL(r.url()).pathname==='/api/v2/rooms'&&r.request().method()==='POST');await a.page.getByTestId('create-room').click();const r=await response;assert.equal(r.status(),201);assert.equal(r.request().postDataJSON().meeting_context,'online');a.csrf=await r.headerValue('x-csrf-token');assert(a.csrf);await a.page.getByTestId('room-shell').waitFor();a.room=new URLSearchParams(new URL(a.page.url()).hash.slice(1)).get('room');a.id=(await read(a,base(a)+'/me/preferences')).owner_member_id;await expect(a.page.getByTestId('room-invite')).not.toHaveValue('');return a.page.getByTestId('room-invite').inputValue();}
+--- METHOD20/delivery-diagnostics.mjs
++++ METHOD21/delivery-diagnostics.mjs
+@@ -11,7 +11,7 @@
+ const browserTiming=request=>{try{const t=request.timing();return Object.fromEntries(['startTime','responseStart','responseEnd'].map(k=>[k,Number.isFinite(t[k])?t[k]:null]));}catch{return null;}};
+ const scope=v=>v?{session:uuid(v.session_id),round:uuid(v.round_id??v.current_round?.round_id),rev:integer(v.game_rev)}:null;
+ const equal=(a,b)=>Boolean(a&&b&&a.session===b.session&&a.round===b.round&&a.rev===b.rev);
+-function route(url){const p=new URL(url).pathname,m=/^\/api\/v2\/rooms\/([^/]+)\/game\/(.*)$/.exec(p);if(!m)return null;const tail=m[2],r=/^([^/]+)\/round\/([^/]+)\/(target|conversation(?:\/chat)?)$/.exec(tail);if(tail==='current'||tail==='self-actions')return {room:uuid(m[1]),kind:tail,session:null,round:null};return r?{room:uuid(m[1]),kind:r[3]==='conversation/chat'?'chat':r[3],session:uuid(r[1]),round:uuid(r[2])}:null;}
++function route(url){const p=new URL(url).pathname,m=/^\/api\/v2\/rooms\/([^/]+)\/game\/(.*)$/.exec(p);if(!m)return null;const tail=m[2],r=/^([^/]+)\/round\/([^/]+)\/(view|target|conversation(?:\/chat)?)$/.exec(tail);if(tail==='current'||tail==='self-actions')return {room:uuid(m[1]),kind:tail,session:null,round:null};return r?{room:uuid(m[1]),kind:r[3]==='conversation/chat'?'chat':r[3],session:uuid(r[1]),round:uuid(r[2])}:null;}
+ function offer(v){return v?{state:state(v.state),own_state:state(v.own_state),own_accepted:typeof v.own_accepted==='boolean'?v.own_accepted:null,expires_at:iso(v.expires_at),proposal_revision:integer(v.proposal_revision)}:null;}
+ export function safeDto(v,elapsed=0){const server=iso(v?.server_time),expiry=iso(v?.expires_at),duration=server&&expiry?Date.parse(expiry)-Date.parse(server):null;return {schema_version:integer(v?.schema_version),...scope(v),revision:integer(v?.revision),epoch:integer(v?.epoch),state:state(v?.state),error_code:errorCodes.has(v?.code)?v.code:null,error_code_unlisted:typeof v?.code==='string'&&!errorCodes.has(v.code),server_time:server,expires_at:expiry,server_relative_ms:duration,server_relative_minus_request_ms:duration===null?null:duration-elapsed,invitation:offer(v?.invitation),action:offer(v?.action),offer:v?.offer?{...offer(v.offer),topic_count:Array.isArray(v.offer.topics)?v.offer.topics.length:null}:null,prompt_present:Boolean(v?.prompt),advice_counts:Array.isArray(v?.advice)?Object.fromEntries(['sent','received'].flatMap(d=>['pending','accepted'].map(s=>[d+'_'+s,v.advice.filter(a=>a?.direction===d&&a?.state===s).length]))):null,chat_count:Array.isArray(v?.messages)?v.messages.length:null,conversation_actions:v?.conversation_actions?Object.fromEntries(['offer_topic','other_question','respond_topic','offer_advice','chat'].map(k=>[k,v.conversation_actions[k]===true])):null};}
+ export function createDeliveryDiagnostics(validators,{limit=1024,wsLimit=256,pendingLimit=Math.min(limit,32),now=()=>performance.now()}={}){
+@@ -23,7 +23,7 @@
+   const dropEntry=entry=>{entry.active=false;entry.resolve(null);};
+   const clearConversations=()=>{for(const entry of conversations.values())dropEntry(entry);conversations.clear();};
+   a.page.on('close',()=>{closed=true;clearConversations();for(const job of jobs){if(job.active)cancelled++;job.active=false;job.cancel?.();}});
+-  a.page.on('request',request=>{if(closed)return;let r;try{r=route(request.url());}catch{return;}if(!r||request.method()!=='GET')return;const started=now();if(r.kind==='current'){cycle++;currentStart=started;actionsStart=null;clearConversations();}if(r.kind==='self-actions')actionsStart=started;const timings={finished_native_ms:null,browser_timing:null};network.set(request,timings);const row={id:++next,locale:a.locale,method:'GET',route:r,cycle,started_native_ms:started,request_ui:scope(a.lastGameView),current_started_native_ms:currentStart,self_actions_started_native_ms:actionsStart,network:timings};states.set(request,row);});
++  a.page.on('request',request=>{if(closed)return;let r;try{r=route(request.url());}catch{return;}if(!r||request.method()!=='GET')return;const started=now();if(r.kind==='current'){cycle++;currentStart=started;actionsStart=null;clearConversations();}if(r.kind==='self-actions'||r.kind==='view')actionsStart=started;const timings={finished_native_ms:null,browser_timing:null};network.set(request,timings);const row={id:++next,locale:a.locale,method:'GET',route:r,cycle,started_native_ms:started,request_ui:scope(a.lastGameView),current_started_native_ms:currentStart,self_actions_started_native_ms:actionsStart,network:timings};states.set(request,row);});
+   a.page.on('requestfinished',request=>{const t=network.get(request);if(t){t.finished_native_ms=now();t.browser_timing=browserTiming(request);}});
+   a.page.on('requestfailed',request=>{const row=states.get(request);if(!row)return;states.delete(request);if(!closed)push(http,{...row,event:'requestfailed',finished_native_ms:now(),duration_ms:now()-row.started_native_ms},limit);});
+   a.page.on('response',response=>{
+@@ -33,6 +33,12 @@
+    const job={active:true,done:null,cancel:null};pending.add(job);jobs.add(job);let entry=null;
+    if(row.route.kind==='conversation'&&row.cycle===cycle){const key=JSON.stringify([row.cycle,row.route]);if(conversations.has(key)){dropEntry(conversations.get(key));conversations.delete(key);}if(conversations.size>=pendingLimit){const oldest=conversations.keys().next().value;dropEntry(conversations.get(oldest));conversations.delete(oldest);conversationOverflow++;}entry={active:true,resolve:null,promise:null};entry.promise=new Promise(resolve=>{entry.resolve=resolve;});conversations.set(key,entry);job.cancel=()=>dropEntry(entry);}
+    job.done=(async()=>{let dto=null;try{dto=await response.json();}catch{if(!closed)errors++;}if(!job.active||closed)return;const ended=now(),actual=scope(dto),observed={...row,event:'response',status:response.status(),response_native_ms:responseAt,body_complete_native_ms:ended,duration_ms:ended-row.started_native_ms,since_current_ms:row.current_started_native_ms===null?null:ended-row.current_started_native_ms,since_self_actions_ms:row.self_actions_started_native_ms===null?null:ended-row.self_actions_started_native_ms,response_ui:responseUi,request_response_ui_equal:equal(row.request_ui,responseUi),response_tuple_matches_request_ui:equal(actual,row.request_ui),response_tuple_matches_response_ui:equal(actual,responseUi),observer_cycle_current:row.cycle===cycle,dto:safeDto(dto,ended-row.started_native_ms),validators:null};
++    if(row.route.kind==='view'){
++     observed.transport_parts='ONE_ACTUAL_HTTP_ENVELOPE';
++     observed.bundle={schema_version:integer(dto?.schema_version),own:safeDto(dto?.own,ended-row.started_native_ms),target:safeDto(dto?.target,ended-row.started_native_ms),conversation:safeDto(dto?.conversation,ended-row.started_native_ms),chat:safeDto(dto?.chat,ended-row.started_native_ms)};
++     const ownScope=scope(dto?.own),input=ownScope?.session&&ownScope?.round?{room:row.route.room,member:a.id,identity:0,transport:0,...ownScope}:null;
++     observed.validators={cache_accept_observed:false,target:input&&dto?.target?validators.target(dto.target,input):null,conversation:input&&dto?.conversation?validators.conversation(dto.conversation,input):null,chat:dto?.chat&&dto?.conversation?validators.chat(dto.chat,dto.conversation):null};
++    }
+     const makeScope=s=>s&&s.session&&s.round&&s.rev!==null?{room:row.route.room,member:a.id,identity:0,transport:0,session:s.session,round:s.round,rev:s.rev}:null;
+     if(['target','conversation'].includes(row.route.kind)){observed.validators={scope_identity_transport:'UNOBSERVED_PLACEHOLDERS_UNUSED_BY_SHAPE_VALIDATOR',cache_accept_observed:false};for(const [name,s] of Object.entries({request_ui:row.request_ui,response_ui:responseUi,response_tuple:actual,route_binding:{session:row.route.session,round:row.route.round,rev:actual?.rev??null}})){const input=makeScope(s);observed.validators[name]=input?validators[row.route.kind](dto,input):null;}}
+     if(row.route.kind==='chat'){const key=JSON.stringify([row.cycle,{...row.route,kind:'conversation'}]),matched=conversations.get(key),c=matched?await matched.promise:null;if(!job.active||closed)return;observed.validators={corresponding_actual_conversation:Boolean(c),chat:c?validators.chat(dto,c):null,cache_accept_observed:false};if(conversations.get(key)===matched){if(matched)dropEntry(matched);conversations.delete(key);}}
+--- METHOD20/observations.mjs
++++ METHOD21/observations.mjs
+@@ -12,10 +12,11 @@
+  assert.deepEqual(view.offer.topics,expected,'Projection must expose the full pinned topic union');return expected.map(t=>t.label);
+ }
+ export const conversationPath=s=>`/api/v2/rooms/${s.room}/game/${s.session}/round/${s.round}/conversation`;
++export const roundViewPath=s=>`/api/v2/rooms/${s.room}/game/${s.session}/round/${s.round}/view`;
+ export function privatePayloadMetadata(path,status,bytes,selection){
+- if(!selection||path!==conversationPath(selection)||status!==200)return null;
+- let view;try{view=JSON.parse(bytes.toString('utf8'));}catch{return null;}
+- if(view.schema_version!==2||view.room_id!==selection.room||view.session_id!==selection.session||view.round_id!==selection.round||view.conversation_id!==selection.conversation||view.epoch!==selection.epoch||view.state!=='active'||typeof view.prompt?.text!=='string'||!view.prompt.text.includes('SYNTHETIC '))return null;
++ if(!selection||(path!==conversationPath(selection)&&path!==roundViewPath(selection))||status!==200)return null;
++ let view;try{view=JSON.parse(bytes.toString('utf8'));if(path===roundViewPath(selection)){if(view?.schema_version!==2||Object.keys(view).sort().join(',')!=='chat,conversation,own,schema_version,target')return null;view=view.conversation;}}catch{return null;}
++ if(!view||view.schema_version!==2||view.room_id!==selection.room||view.session_id!==selection.session||view.round_id!==selection.round||view.conversation_id!==selection.conversation||view.epoch!==selection.epoch||view.state!=='active'||typeof view.prompt?.text!=='string'||!view.prompt.text.includes('SYNTHETIC '))return null;
+  return {payload_kind:'private_conversation',private_payload:true,status,epoch:view.epoch,body_sha256:createHash('sha256').update(bytes).digest('hex')};
+ }
+ export function coherentRound(f,view,expected={}){
+--- METHOD20/private-batch-observer.mjs
++++ METHOD21/private-batch-observer.mjs
+@@ -11,7 +11,7 @@
+ import vm from 'node:vm';
+ import ts from 'typescript';
+ /* global document */
+-const sourcePins={'apps/web/src/topic-state.ts':'04c18ef53573590c7ffee1c5ff4fdc891d1a6e8f14c0f98cc080f14721cb1678','apps/web/src/presentation-clock.ts':'f9a1120a1fbff31454eafdfac269ea8163d9e7ef99d916f6ceeecb2f4cceccb0','apps/web/src/game-controls.ts':'21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c','apps/web/src/game-state.ts':'5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46'};
++const sourcePins={'apps/web/src/topic-round-view.ts':'c557c1b777a9d23f747982dc3ff216815508f809ef0d981d30896abae72df564','apps/web/src/topic-state.ts':'04c18ef53573590c7ffee1c5ff4fdc891d1a6e8f14c0f98cc080f14721cb1678','apps/web/src/presentation-clock.ts':'f9a1120a1fbff31454eafdfac269ea8163d9e7ef99d916f6ceeecb2f4cceccb0','apps/web/src/game-controls.ts':'21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c','apps/web/src/game-state.ts':'5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46'};
+ const hash=b=>createHash('sha256').update(b).digest('hex');
+ const optionalCodes=new Set(['ROUND_ACTOR_REQUIRED','ROUND_STALE','ROUND_NOT_ACTIVE','CONVERSATION_UNAVAILABLE','PRIVATE_CONVERSATION_REQUIRED','CONSENT_NOT_ACTIVE','CONSENT_EXPIRED','CONVERSATION_STALE','TOPIC_DELIVERY_EXPIRED','TOPIC_DELIVERY_STALE']);
+ const actionKeys={session_actions:['pause','stop','abort','resume','advance','neutral_reset','neutral_reset_aborts_game'],round_actions:['finish','skip','choose_truth','choose_dare','propose_condition','accept_invitation','accept_action','decline_invitation','withdraw_action'],conversation_actions:['offer_topic','other_question','respond_topic','offer_advice','chat']};
+@@ -22,13 +22,13 @@
+ function loadProduction(root){
+  const proof={source_inputs:{},compiled:{},observer_model_only:true,cache_accept_observed:false,auth_generation_observed:false};
+  function load(path,imports){const raw=readFileSync(resolve(root,path));assert.equal(hash(raw),sourcePins[path],'OBSERVER_SOURCE_PIN_MISMATCH');proof.source_inputs[path]=hash(raw);const t=ts.transpileModule(raw.toString('utf8'),{fileName:path,compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS},reportDiagnostics:true});assert(!(t.diagnostics??[]).some(d=>d.category===ts.DiagnosticCategory.Error));proof.compiled[path]=hash(t.outputText);const m={exports:{}};vm.runInNewContext(t.outputText,{module:m,exports:m.exports,require:name=>{assert(Object.hasOwn(imports,name));return imports[name];},Date,performance},{timeout:1000,filename:path});return m.exports;}
+- const clock=load('apps/web/src/presentation-clock.ts',{}),state=load('apps/web/src/topic-state.ts',{'./presentation-clock.js':clock}),controls=load('apps/web/src/game-controls.ts',{}),game=load('apps/web/src/game-state.ts',{});return {state,controls,game,proof};
++ const clock=load('apps/web/src/presentation-clock.ts',{}),state=load('apps/web/src/topic-state.ts',{'./presentation-clock.js':clock}),controls=load('apps/web/src/game-controls.ts',{}),game=load('apps/web/src/game-state.ts',{});const bundle=load('apps/web/src/topic-round-view.ts',{'./game-controls.js':controls,'./topic-state.js':state});return {state,controls,game,bundle,proof};
+ }
+-function route(url){const p=new URL(url).pathname,m=p.match(/^\/api\/v2\/rooms\/([^/]+)\/game\/(current|self-actions)$/);if(m)return {room:m[1],kind:m[2]==='current'?'current':'own'};const r=p.match(/^\/api\/v2\/rooms\/([^/]+)\/game\/([^/]+)\/round\/([^/]+)\/(target|conversation|conversation\/chat)$/);return r?{room:r[1],session:r[2],round:r[3],kind:r[4]==='conversation/chat'?'chat':r[4]}:null;}
++function route(url){const p=new URL(url).pathname,m=p.match(/^\/api\/v2\/rooms\/([^/]+)\/game\/(current|self-actions)$/);if(m)return {room:m[1],kind:m[2]==='current'?'current':'own'};const r=p.match(/^\/api\/v2\/rooms\/([^/]+)\/game\/([^/]+)\/round\/([^/]+)\/(view|target|conversation|conversation\/chat)$/);return r?{room:r[1],session:r[2],round:r[3],kind:r[4]==='conversation/chat'?'chat':r[4]}:null;}
+ const same=(a,b)=>Boolean(a&&b&&['room','member','session','round','rev'].every(k=>a[k]===b[k]));
+ const gameScope=(actor,v)=>v?.state==='active'&&v.current_round&&['pending','active'].includes(v.current_round.state)?{room:actor.room,member:actor.id,session:v.session_id,round:v.current_round.round_id,rev:v.game_rev}:null;
+ export function createPrivateBatchObserver({sourceRoot=process.cwd(),now=()=>performance.now(),onProjection=()=>{},maxPending=16}={}){
+- assert(Number.isInteger(maxPending)&&maxPending>0&&maxPending<=16);const {state:production,controls,game,proof}=loadProduction(sourceRoot),actors=new WeakMap();
++ assert(Number.isInteger(maxPending)&&maxPending>0&&maxPending<=16);const {state:production,controls,game,bundle,proof}=loadProduction(sourceRoot),actors=new WeakMap();
+  function invalidate(s){s.generation++;s.batch=null;s.model.clear();s.invalidations++;}
+  function currentScope(s){return s.current?gameScope(s.actor,s.current.body):null;}
+  function ownProjection(body,part){const projected={schema_version:body.schema_version,room_id:body.room_id,member_id:body.member_id,session_id:body.session_id,round_id:body.round_id,game_rev:body.game_rev,server_time:body.server_time,expires_at:body.expires_at,started_monotonic_ms:part.started,received_monotonic_ms:part.received};for(const [group,keys]of Object.entries(actionKeys))projected[group]=Object.fromEntries(keys.map(key=>[key,body[group][key]]));return projected;}
+@@ -48,10 +48,10 @@
+  }
+  function attach(actor){
+   assert(actor?.page);assert(!actors.has(actor),'OBSERVER_ALREADY_ATTACHED');const s={actor,generation:0,sequence:0,current:null,currentRequest:null,batch:null,accepted:null,model:new production.TopicCache(),starts:new WeakMap(),pending:new Set(),sockets:new Set(),invalidations:0,closed:false,overflow:false,dropped:0,bodyErrors:0};actors.set(actor,s);
+-  const request=request=>{if(s.closed||request.method()!=='GET')return;const r=route(request.url());if(!r)return;const record={route:r,started:now(),generation:s.generation,batch:r.kind==='current'?null:s.batch,part:null};if(r.kind==='current')s.currentRequest=record;if(r.kind==='own'){const b={id:++s.sequence,generation:s.generation,currentRequest:s.currentRequest,scope:null,own:null,target:null,conversation:null,chat:null,complete:false,ownResponseArrived:false,reason:'BATCH_INCOMPLETE'};s.batch=b;record.batch=b;}s.starts.set(request,record);};
++  const request=request=>{if(s.closed||request.method()!=='GET')return;const r=route(request.url());if(!r)return;const record={route:r,started:now(),generation:s.generation,batch:r.kind==='current'?null:s.batch,part:null};if(r.kind==='current')s.currentRequest=record;if(r.kind==='own'||r.kind==='view'){const b={id:++s.sequence,generation:s.generation,currentRequest:s.currentRequest,scope:null,own:null,target:null,conversation:null,chat:null,complete:false,ownResponseArrived:false,reason:'BATCH_INCOMPLETE'};s.batch=b;record.batch=b;}s.starts.set(request,record);};
+   const response=response=>{
+    const request=response.request(),record=s.starts.get(request);if(!record||s.closed)return;if(s.pending.size>=maxPending){s.overflow=true;s.dropped++;return;}
+-   if(record.route.kind==='own'&&record.batch){record.batch.ownResponseArrived=true;if(record.batch===s.batch)s.accepted=null;}
++   if(['own','view'].includes(record.route.kind)&&record.batch){record.batch.ownResponseArrived=true;if(record.batch===s.batch)s.accepted=null;}
+    const work=(async()=>{
+     const raw=await response.body();if(raw.length>1024*1024){s.overflow=true;s.dropped++;return;}const body=JSON.parse(raw.toString('utf8'));if(s.closed||record.generation!==s.generation){s.dropped++;return;}
+     const part={body,status:response.status(),started:record.started,received:now(),route:record.route},kind=record.route.kind;
+@@ -61,6 +61,14 @@
+     }
+     const b=record.batch;if(!b||s.batch!==b){s.dropped++;return;}
+     if(response.status()!==200){if(['target','conversation','chat'].includes(kind)&&response.status()>=400&&response.status()<500&&optionalCodes.has(body?.code)){part.body=null;part.optional_code=body.code;}else{b.reason='HTTP_REJECTED';return;}}
++    if(kind==='view'){
++     // One ACTUAL HTTP response, not four requests. Component routes below are
++     // validator bindings only; all times/status come from this envelope.
++     if(response.status()!==200||!bundle.validTopicRoundView(body,{room:record.route.room,member:actor.id,identity:0,transport:0,session:record.route.session,round:record.route.round,rev:body?.own?.game_rev})){b.reason='BUNDLE_INVALID';return;}
++     for(const name of ['own','target','conversation','chat'])b[name]={...part,body:body[name],route:{...part.route,kind:name,actual_transport:'view'}};
++     if(record.route.room===actor.room&&controls.validSelfActions(body.own,2)&&body.own.room_id===actor.room&&body.own.member_id===actor.id)onProjection(actor,{kind:'own',value:ownProjection(body.own,part)});
++     finish(s,b);return;
++    }
+     if(kind==='own'&&record.route.room===actor.room&&controls.validSelfActions(body,2)&&body.room_id===actor.room&&body.member_id===actor.id)onProjection(actor,{kind:'own',value:ownProjection(body,part)});
+     b[kind]=part;finish(s,b);
+    })();s.pending.add(work);work.catch(()=>{if(!s.closed)s.bodyErrors++;}).finally(()=>s.pending.delete(work));
+--- METHOD20/runtime.mjs
++++ METHOD21/runtime.mjs
+@@ -10,7 +10,7 @@
+ import https from 'node:https';
+ import http from 'node:http';
+ import {once} from 'node:events';
+-import {conversationPath,privatePayloadMetadata} from './observations.mjs';
++import {conversationPath,roundViewPath,privatePayloadMetadata} from './observations.mjs';
+ const sha=b=>createHash('sha256').update(b).digest('hex');
+ const harnessPin='06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd';
+ export async function runtime(output){
+@@ -27,7 +27,7 @@
+  const edge=https.createServer({cert:readFileSync('tests/fixtures/p02-test-cert.pem'),key:readFileSync('tests/fixtures/p02-test-key.pem')},(request,reply)=>{
+   if(!upstreamPort){reply.writeHead(503);reply.end();return;}
+   const upstream=http.request({host:'127.0.0.1',port:upstreamPort,path:request.url,method:request.method,headers:request.headers,agent:false},response=>{
+-   if(holdReads&&request.method==='GET'&&/^\/api\/v2\/rooms\/[a-f0-9-]+\/game\//.test(request.url)&&(!holdSelection||request.url===conversationPath(holdSelection))){
++   if(holdReads&&request.method==='GET'&&/^\/api\/v2\/rooms\/[a-f0-9-]+\/game\//.test(request.url)&&(!holdSelection||request.url===conversationPath(holdSelection)||request.url===roundViewPath(holdSelection))){
+     const selection=holdSelection,generation=holdGeneration,bytes=[];let size=0;response.on('data',b=>{size+=b.length;if(size>1024*1024){upstream.destroy();reply.destroy();return;}bytes.push(b);});response.on('end',()=>{const queuedAt=performance.now(),body=Buffer.concat(bytes),metadata=privatePayloadMetadata(request.url,response.statusCode,body,selection);if(!holdReads||generation!==holdGeneration||selection&&!metadata){reply.writeHead(response.statusCode,response.headers);reply.end(body);transport.push({kind:'private_hold_candidate_rejected',status:response.statusCode});return;}const row={reply,status:response.statusCode,headers:response.headers,body,queuedAt,metadata};held.push(row);transport.push({kind:'held_real_backend_response',status:response.statusCode,queued_at_monotonic_ms:queuedAt,...metadata});});return;
+    }
+    reply.writeHead(response.statusCode,response.headers);response.pipe(reply);

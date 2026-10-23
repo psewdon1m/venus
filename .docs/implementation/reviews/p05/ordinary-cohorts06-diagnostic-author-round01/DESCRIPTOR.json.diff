@@ -1,0 +1,60 @@
+--- 05/DESCRIPTOR.json
++++ 06/DESCRIPTOR.json
+@@ -102,5 +102,57 @@
+     "negative": "OnlyYBcohort hasone90snegative; othercohorts none",
+     "underlying_old_cause": "UNKNOWN; splittingdoesnotrepairorattributehistoricalHTTP500",
+     "full_matrix_pass": false
++  },
++  "diagnostics06": {
++    "purpose": "First native WS client fault branch only, no method/oracle/budget change",
++    "record": "one fixed first record: branch enum, actorordinal0..7orNull, monotonic elapsedms, native readyState0..3orNull, pongagems, first-event closecode1000..4999orNull",
++    "branches": [
++      "MESSAGE_BYTES",
++      "MESSAGE_JSON",
++      "SOCKET_ERROR",
++      "UNEXPECTED_CLOSE",
++      "HEARTBEAT_NOT_OPEN",
++      "PONG_STALE",
++      "PING_SEND_THROW",
++      "AUTH_SEND_THROW"
++    ],
++    "source_count_qualification": "Original six wsFault assignments encode seven semantic branches after heartbeat OR split; eighth diagnostic records existing auth send exception then rethrows same error without changing boolean fault state. No new fault detector. Existing open/auth timeout logic unchanged.",
++    "privacy": "No rawreason/error/frame/cookie/UUID/room/session identifiers; milliseconds primitive-only0..6000000 (projection bound, not deadline)",
++    "first_latch": "First record retained unchanged, later errors/close cannot overwrite; closecode only when available in first event",
++    "new_native_RUN": "HOLD pending stable backend/independent review/fresh rootACK",
++    "cohort_axes_and_budgets": "Unchanged05: all42 IDs/sixcohorts/sevenfixedN20rounds,600s/profile,zero retry/max2. No subset supplied.",
++    "prospective_server_collector": {
++      "event": "websocket_failed",
++      "phase": [
++        "auth_or_heartbeat",
++        "poll"
++      ],
++      "request_id": "Existing safeUUID trace field, not client ws_first_fault field",
++      "same_fields": "error_kind/failure_code/static source_module/line/column existing allowlists unchanged",
++      "optional_domain_code": [
++        "AUTH_REQUIRED",
++        "ENTRY_REACCEPT_REQUIRED",
++        "ROOM_CLOSED",
++        "SOCKET_REPLACED",
++        "ACTORS_UNAVAILABLE",
++        "INVALID_REQUEST",
++        "RATE_LIMITED",
++        "TICKET_INVALID",
++        "CONSENT_EXPIRED",
++        "PRIVATE_CHAT_UNAVAILABLE",
++        "PRIVATE_EVENT_CAPACITY",
++        "TOPIC_ROOM_RETIRED",
++        "TOPIC_ROOM_MEMBER_RETIRED",
++        "TOPIC_ROOM_MEMBER_NOT_ADMITTED",
++        "TOPIC_ROOM_BUSY",
++        "TOPIC_LEDGER_BUSY",
++        "TOPIC_STATE_CHANGED",
++        "TOPIC_ROOM_BIRTH_UNAVAILABLE"
++      ],
++      "unknown_domain": "omit, never raw",
++      "native_server_implementation": "PENDING_APP_AUTHOR_AND_INDEPENDENT_REVIEW_NOT_PROVEN_HERE",
++      "once_socket": "Server contract one event per socket; collector64 total cap unchanged",
++      "HTTP_request_failed": "Existing valid output fields unchanged; phase/domain and extra rawdata ignored"
++    }
+   }
+ }

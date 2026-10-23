@@ -1,0 +1,17 @@
+{
+  "status": "AUTHOR_RESOURCE_V2_REPAIR_READY_INDEPENDENT_REVIEW",
+  "finding": "P05-MEAS-RESOURCE-001 P2",
+  "paused_live_paths": {
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2.mjs": "61a75898d0f3e256be166ca1b3504ec8edd35310d4f7cb27d734e95014851d69",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-controls.mjs": "294e4f4bd8d95031ca22f63baddce6854cce4092f811bbfafcafd49258e302b6",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-controls.json": "b93962305ed2501141a237919f2cd6986f7523646c149f8d2ecc5c4267f75bd2",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-attempt01.txt": "ee3e9b84bfbfd23be5243661f0be2fa2144f7aab47deccddbed4236a797a3ad6",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-attempt02.txt": "828a006b68acac840943a9838724cd47ab42e3918e18cf443af3decda3e832b4"
+  },
+  "review_copies": "resource/",
+  "run_controls": "node resource/artifact-store-v2-controls.mjs (controls output path is workspace next; independent reviewer should run copied controls with own output path)",
+  "independent_reviewer": "Parent forwards to /root/p04_gate_preflight",
+  "request": "Independent actual NTFS ADS, names/devices, existing/post-init/root-directory stream controls plus normal budget and previous junction controls; no self acceptance.",
+  "Windows_prerequisite": "pwsh.exe >=7.2 with FileSystem Get-Item -Stream * support, timeout10s and max4096 stdout; unavailable/failure is failclosed. WindowsPowerShell5.1 fallback forbidden. Linux does not invoke pwsh.",
+  "no_statistics_RUN": true
+}

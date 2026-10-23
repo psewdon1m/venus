@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import vm from 'node:vm';
+import {safeFailure} from '../p05-ordinary-real470-probe02/probe.mjs';
+const text=readFileSync('.artifacts/p05-ordinary-real470-probe02/probe.mjs','utf8'),sha=b=>createHash('sha256').update(b).digest('hex');assert.equal(sha(text),'60bec9b2a3e0733fedb67259bdafbd384a7f0093bac98570c87016c62c99bc04');
+const capture="report.error??={...safeFailure(error),last_request:report.last_request};";assert.equal(text.split("catch(error){row.status='FAIL';"+capture+"throw error;}finally{await cleanupClients();save();}").length,3);assert(text.includes('}catch(error){'+capture+'process.exitCode=1;'));
+const report={last_request:{operation:'current',method:'GET',status:200,code:null}},row={status:'RUNNING'},first=Object.assign(Error('PRIVATE_COOKIE_CANARY'),{code:'ERR_ASSERTION'});
+vm.runInNewContext("try{try{throw first;}catch(error){row.status='FAIL';"+capture+"throw error;}finally{report.last_request={operation:'close',method:'POST',status:200,code:null};}}catch(error){"+capture+'}',{report,row,first,safeFailure},{timeout:1000});assert.equal(report.last_request.operation,'close');assert.equal(report.error.last_request.operation,'current');assert.equal(report.error.code,'ERR_ASSERTION');assert(!JSON.stringify(report).includes('PRIVATE_COOKIE_CANARY'));
+writeFileSync(new URL('./diagnostic-control-result.json',import.meta.url),JSON.stringify({status:'PASS_EXACT_CATCH_ORDER_AND_PRIVACY_CONTROL',source_sha256:sha(text),checks:1,actual_Docker_API_runs:0},null,2)+'\n');console.log('PASS_EXACT_CATCH_ORDER_AND_PRIVACY_CONTROL');

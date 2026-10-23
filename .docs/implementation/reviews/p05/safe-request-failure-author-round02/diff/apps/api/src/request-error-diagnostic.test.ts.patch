@@ -1,0 +1,13 @@
+--- 01/apps/api/src/request-error-diagnostic.test.ts
++++ 02/apps/api/src/request-error-diagnostic.test.ts
+@@ -49,4 +49,10 @@
+  it('uses only the explicit native JS error categories',()=>{
+   const errors=[new TypeError(secret),new RangeError(secret),new ReferenceError(secret),new SyntaxError(secret),new URIError(secret),new EvalError(secret),new AggregateError([],secret),new Error(secret)];expect(errors.map(e=>requestErrorDiagnostic(e).error_kind)).toEqual(['TypeError','RangeError','ReferenceError','SyntaxError','URIError','EvalError','AggregateError','Error']);
+  });
++ it('rejects a top-level Proxy before own-descriptor reflection',()=>{
++  let calls=0;const error=new Proxy({}, {getOwnPropertyDescriptor(){calls++;return undefined;},getPrototypeOf(){calls++;return null;}});expect(requestErrorDiagnostic(error)).toEqual({error_kind:'UNKNOWN',failure_code:'UNKNOWN'});expect(calls).toBe(0);
++ });
++ it('rejects a Proxy anywhere in a native-error prototype chain before instanceof or descriptor lookup',()=>{
++  for(const indirect of [false,true]){let calls=0;const proxy=new Proxy(Error.prototype,{getOwnPropertyDescriptor(){calls++;return undefined;},getPrototypeOf(){calls++;return Error.prototype;}}),error=new Error(secret);Object.setPrototypeOf(error,indirect?Object.create(proxy):proxy);expect(requestErrorDiagnostic(error)).toEqual({error_kind:'UNKNOWN',failure_code:'UNKNOWN'});expect(calls).toBe(0);}
++ });
+ });

@@ -1,0 +1,96 @@
+{
+  "scope": "INDEPENDENT_ACTUAL_TSX_WITH_DETERMINISTIC_HOOK_SCHEDULER_API_DOUBLES_NOT_BROWSER_E2E",
+  "status": "CHANGES_REQUESTED",
+  "cases": [
+    {
+      "id": "UI001_ORIGINAL_DELAYED_CURRENT",
+      "status": "PASS",
+      "old_private_reads": 0
+    },
+    {
+      "id": "UI002_ORIGINAL_TTL_STALE_DOM",
+      "status": "PASS",
+      "post_count": 1,
+      "old_entry_callback": null,
+      "private_input_cleared": true
+    },
+    {
+      "id": "TTL_BEFORE_TIMER_OLD_HANDLER",
+      "status": "PASS",
+      "deadline_checked_synchronously": true
+    },
+    {
+      "id": "STALE_RETRY_REVOKE",
+      "status": "PASS",
+      "old_entry_callback": null,
+      "stale_payload_resent": false
+    },
+    {
+      "id": "STALE_RETRY_DISCONNECT",
+      "status": "PASS",
+      "old_entry_callback": null,
+      "stale_payload_resent": false
+    },
+    {
+      "id": "STALE_RETRY_NEW_SESSION",
+      "status": "PASS",
+      "old_entry_callback": null,
+      "stale_payload_resent": false
+    },
+    {
+      "id": "STALE_RETRY_DIFFERENT_ROOM",
+      "status": "PASS",
+      "old_entry_callback": null,
+      "stale_payload_resent": false
+    },
+    {
+      "id": "STALE_RETRY_DIFFERENT_MEMBER",
+      "status": "PASS",
+      "old_entry_callback": null,
+      "stale_payload_resent": false
+    },
+    {
+      "id": "DELAYED_PRIVATE_READ_AFTER_SESSION_FRAME",
+      "status": "PASS",
+      "late_prompt_not_published": true,
+      "old_chat_read_issued": false
+    },
+    {
+      "id": "PREPARE_RESULT_AFTER_NEW_SESSION_FRAME",
+      "status": "PASS",
+      "newer_frame_survives_old_prepare": true
+    },
+    {
+      "id": "AVAILABILITY_AFTER_NEW_SESSION_FRAME",
+      "status": "PASS",
+      "old_availability_not_published": true
+    },
+    {
+      "id": "RETRY_VAULT_PHYSICAL_DISPOSAL",
+      "status": "PASS",
+      "old_callback_null": true,
+      "id_not_reused": true,
+      "invoked": 0
+    },
+    {
+      "id": "GRANT_DIMENSION_TABLE",
+      "status": "PASS",
+      "negative_dimensions": 10
+    },
+    {
+      "id": "FIRST_RENDER_OUTSIDER_MEMBER",
+      "status": "FAIL",
+      "error": "New room/authenticated outsider render contains old pair private JSX before passive-effect rerender\n+ actual - expected\n\n+ {\n+   key: undefined,\n+   props: {\n+     'data-testid': 'private-prompt',\n+     children: [\n+       {\n+         key: undefined,\n+         props: {\n+           children: 'Private round'\n+         },\n+         type: 'h3'\n+       },\n+       {\n+         key: undefined,\n+         props: {\n+           children: 'PRIVATE PROMPT',\n+           className: 'game-prompt'\n+         },\n+         type: 'p'\n+       },\n+       {\n+         key: undefined,\n+         props: {\n+           children: 'Only for the pair. Screenshots, copying and retelling cannot be technically prevented.',\n+           className: 'hint'\n+         },\n+         type: 'p'\n+       }\n+     ],\n+     className: 'private-panel'\n+   },\n+   type: 'section'\n+ }\n- null\n"
+    },
+    {
+      "id": "FIRST_RENDER_DIFFERENT_ROOM",
+      "status": "FAIL",
+      "error": "New room/authenticated outsider render contains old pair private JSX before passive-effect rerender\n+ actual - expected\n\n+ {\n+   key: undefined,\n+   props: {\n+     'data-testid': 'private-prompt',\n+     children: [\n+       {\n+         key: undefined,\n+         props: {\n+           children: 'Private round'\n+         },\n+         type: 'h3'\n+       },\n+       {\n+         key: undefined,\n+         props: {\n+           children: 'PRIVATE PROMPT',\n+           className: 'game-prompt'\n+         },\n+         type: 'p'\n+       },\n+       {\n+         key: undefined,\n+         props: {\n+           children: 'Only for the pair. Screenshots, copying and retelling cannot be technically prevented.',\n+           className: 'hint'\n+         },\n+         type: 'p'\n+       }\n+     ],\n+     className: 'private-panel'\n+   },\n+   type: 'section'\n+ }\n- null\n"
+    },
+    {
+      "id": "STALE_DOM_RETRY_BEFORE_IDENTITY_PASSIVE_EFFECT",
+      "status": "FAIL",
+      "error": "Old DOM retry still sends private body after new-identity render and before passive effects\n\n2 !== 1\n"
+    }
+  ]
+}

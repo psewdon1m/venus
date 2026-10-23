@@ -1,0 +1,30 @@
+{
+  "status": "AUTHOR_DIAGNOSTIC_ONLY_PENDING_INDEPENDENT",
+  "source_identity": "acb2945827a8961a3137df0938d6982d90c841d80d6f9fde6fe048374c397cc4",
+  "included_files": 1879,
+  "image": "sha256:2e447f2ce2af50dae8c3f12ceb010cf24a210732d07fdf1aa6416766cebdadfa",
+  "producer_runtime_digest": "d983a7104bc6b50ce214c7519f503904536206855be3aa635513aa66fc1f7b6d",
+  "operational_resource_profile": "LAYOUT21_BROWSER_PID512",
+  "browser_pids_limit": 512,
+  "runtime_MJS": 27,
+  "changed_MJS": [
+    "dom-audit.mjs",
+    "measure.mjs",
+    "run.mjs"
+  ],
+  "unchanged_MJS": 24,
+  "native_author_runs": 0,
+  "false_root_ACK": true,
+  "full_stage_acceptance": false,
+  "diagnostic_only": true,
+  "created_at_UTC": "2026-10-22T21:26:15.701023+00:00",
+  "notes": [
+    "Document capture geometry precedes root bubble; document bubble follows root bubble. React prop booleans alone are not handler execution proof.",
+    "focusAudit callback executes after ALL original reads/result construction, does not modify result, catches diagnostic error.",
+    "Original records Map samples survive assertion failure via host-only callback, no extra DOM queries.",
+    "MutationObserver tracks generation/count only, never serializes text/attribute values/nodes; disconnects after128 callbacks.",
+    "128 total rows per measure includes original first audit records. Overflow explicitly qualified.",
+    "Diagnostics do not repair focus, wait RAF, retry, preventDefault or wrap APP handlers.",
+    "Geometry reads can perturb layout; PASS is NO_REPRO and earns no final9/stage credit."
+  ]
+}

@@ -1,0 +1,40 @@
+async function newActor(locale){
+ const context=await browser.newContext({ignoreHTTPSErrors:true,locale,reducedMotion:'reduce',viewport}),page=await context.newPage();page.setDefaultTimeout(5000);
+ const a={context,page,locale,csrf:'',room:null,id:null,lastGameView:null,lastSelfActions:null,closed:false};
+ privateBatches.attach(a);
+ page.on('pageerror',e=>{if(report.page_errors.length>=64){report.page_errors_overflow=true;return;}report.page_errors.push({name:e.name,phase});});
+ page.on('response',response=>{if(a.closed)return;const path=new URL(response.url()).pathname;if(path.startsWith('/api/')){if(report.request_metadata.length<32768)report.request_metadata.push({phase,method:response.request().method(),route:path.replace(/[a-f0-9]{8}-[a-f0-9-]{27,}/g,':id'),status:response.status()});else report.request_metadata_overflow=true;}});
+ try{await page.goto(service.origin);await page.getByTestId('adult18').waitFor();await page.locator(`nav button[lang="${locale}"]`).click();return a;}
+ catch(error){a.closed=true;try{await context.close();}finally{await privateBatches.close(a);}throw error;}
+}
+async function seekPublic(){let snapshot=await coherentGame();const session=snapshot.fixture.session,seen=new Set();for(let n=0;n<20;n++){const f=snapshot.fixture,g=snapshot.view;assert.equal(f.session,session);assert.equal(f.plan.round_index,n+1);assert(!seen.has(f.plan.round_id));seen.add(f.plan.round_id);if(f.plan.interaction!=='pair_private'&&['pending','active'].includes(g.current_round.state))return f;if(!['completed','skipped','stopped'].includes(g.current_round.state)){const a=actors.find(a=>a.id===f.plan.primary_member_id);assert(a);await ownUiRound(a,f,'game-skip');const receipt=await mutationClick(a,'game-skip',`/api/v2/rooms/${a.room}/game/${f.session}/round/${f.plan.round_id}/response`,'skip');snapshot=await coherentGame({session,round:f.plan.round_id,index:f.plan.round_index,minRev:receipt.game_rev});}if(n===19)break;snapshot=await advance(snapshot);}throw Error('No public opportunity within fixed20 actual rounds');}
+async function prepareScene(scene,locale){
+ assert.equal(actors.length,0);assert(['entry','setup','public_questions','private_offer','private_active','truth_dare_choice','yes_but_condition'].includes(scene));phase=scene;
+ for(let i=0;i<(scene==='entry'?1:3);i++)actors.push(await newActor(locale));
+ if(scene==='entry'){const cap=await actors[0].context.request.get(service.origin+'/api/v1/runtime-capabilities');assert.equal(cap.status(),200);assert.equal((await cap.json()).room_creation_protocol,2);return {scene,actors,roles:[{role:'entry',actor:actors[0]}],fixture:null};}
+ const inviteUrl=await create(actors[0]);for(let i=1;i<actors.length;i++)await joinRoom(actors[i],inviteUrl,i);
+ for(const a of actors){const p=await read(a,base(a)+'/me/private-protocol');assert.equal(p.private_protocol,2);}
+ if(scene==='setup')return {scene,actors,roles:[{role:'host',actor:actors[0]},{role:'guest',actor:actors[1]}],fixture:null};
+ for(const a of actors)await configure(a);const mode=scene==='truth_dare_choice'?'truth_or_dare':scene==='yes_but_condition'?'yes_but':'questions';
+ let f;if(scene==='public_questions'){await start(mode);f=await seekPublic();}else f=await startPrivate(mode);
+ const primary=actors.find(a=>a.id===f.plan.primary_member_id);assert(primary);
+ if(scene==='public_questions'){if(f.plan.interaction==='pair_public')await invite(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);await expect(primary.page.getByTestId('game-prompt')).toBeVisible();return {scene,actors,roles:[{role:'primary',actor:primary},{role:'other',actor:actors.find(a=>a!==primary)}],fixture:f};}
+ const pair=await invite(f,{side:scene!=='truth_dare_choice'}),secondary=pair.find(a=>a!==primary),observer=actors.find(a=>!pair.includes(a));assert(secondary&&observer);
+ if(scene==='private_active'){
+  await acceptTopics(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);
+  await fillPrivate(primary,'advice-input','SYNTHETIC LAYOUT ADVICE','advice-offer');let receipt=await adviceMutation(primary,'advice-offer',f,'offer_advice');
+  await adviceUiReady([secondary],f,receipt.game_rev,'advice-accept','layout_pending');const pending=await receivedPendingAdvice(secondary,f);
+  receipt=await adviceMutation(secondary,'advice-accept',f,'respond_advice',{advice_id:pending.advice_id,proposal_revision:pending.revision,epoch:pending.epoch,decision:'accept'});
+  await adviceUiReady(pair,f,receipt.game_rev,'advice-text','layout_accepted');
+  await fillPrivate(primary,'pair-chat-input','SYNTHETIC LAYOUT CHAT','pair-chat-send');const chatReceipt=await mutationClick(primary,'pair-chat-send',`/api/v2/rooms/${primary.room}/game/${f.session}/round/${f.plan.round_id}/conversation/chat`);
+  await adviceUiReady(pair,f,chatReceipt.game_rev,'pair-chat-messages','layout_chat',performance.now());
+  for(const a of pair){await expect(a.page.getByTestId('advice-text')).toContainText('SYNTHETIC LAYOUT ADVICE');await expect(a.page.getByTestId('pair-chat-messages')).toContainText('SYNTHETIC LAYOUT CHAT');}
+ }
+ if(scene==='truth_dare_choice')await expect(primary.page.getByTestId('game-dare')).toBeEnabled();
+ if(scene==='yes_but_condition'){await expect(secondary.page.getByTestId('game-condition-input')).toBeVisible();await fillPrivate(secondary,'game-condition-input','SYNTHETIC LAYOUT CONDITION','game-condition-submit');await expect(secondary.page.getByTestId('game-condition-submit')).toBeEnabled();}
+ if(scene==='private_offer')for(const a of pair){await expect(a.page.getByTestId('topic-accept')).toBeEnabled();await expect(a.page.getByTestId('private-prompt')).toHaveCount(0);}
+ for(const id of ['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat'])await expect(observer.page.getByTestId(id)).toHaveCount(0);
+ return {scene,actors,roles:[{role:'primary',actor:primary},{role:'secondary',actor:secondary},{role:'observer',actor:observer}],fixture:f};
+}
+async function closeScene(){const errors=[];for(const a of actors){a.closed=true;try{await a.context.close();}catch(e){errors.push(e);}try{await privateBatches.close(a);}catch(e){errors.push(e);}}actors=[];if(errors.length)throw new AggregateError(errors,'Scene cleanup failed');}
+return {prepareScene,closeScene,actors:()=>actors,service,read,current,mutationClick,coherentGame,report};

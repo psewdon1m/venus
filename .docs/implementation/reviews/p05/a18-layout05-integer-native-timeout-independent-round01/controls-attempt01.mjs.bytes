@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {readFileSync,existsSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import vm from 'node:vm';
+const root='C:/.projects/venus/.artifacts/p05-pilot-bundle-source15/.artifacts/',old=readFileSync(root+'p05-v2-layout-producer-a18-04/x11.mjs','utf8'),source=readFileSync(root+'p05-v2-layout-producer-a18-05/x11.mjs','utf8');
+const prior='Math.max(1,Math.min(15000,budget.remaining()))',expression='Math.max(1,Math.floor(Math.min(15000,budget.remaining())))';assert.equal(source.replace(expression,prior),old);
+const boundary=[0.25,1,1.99,14999.75,15000,15000.75,1e9],rows=[];
+async function capture(text,remaining,{expired=false}={}){
+ const counts={remaining:0,check:0,evaluate:0,xdo:0,capture:0},marker=Error('ORIGINAL_EXPIRED_BUDGET'),calls=[];
+ const budget={remaining(){counts.remaining++;return remaining;},check(){counts.check++;if(expired)throw marker;}};
+ const context=vm.createContext({assert,Math,execFileSync:(command,args,options)=>{counts.capture++;calls.push({command,args,options});},xdo:(_display,command)=>{counts.xdo++;return command==='getwindowgeometry'?'WIDTH=640\nHEIGHT=1000\nX=0\nY=0':'1';},bounded:async(_budget,_label,op)=>op()});
+ const fn=vm.runInContext('('+text.slice(text.indexOf('export async function nativeScreenshot(')).replace('export async function','async function')+')',context);
+ let error;try{await fn({url:()=> 'https://fixture.invalid/',isClosed:()=>false,evaluate:async()=>{counts.evaluate++;return 0;}},{name:':INERT'},{window_id:'1'},'/INERT/native.png',budget);}catch(e){error=e;}
+ return {counts,calls,error,marker};
+}
+for(const remaining of boundary){const a=await capture(old,remaining),b=await capture(source,remaining);assert.equal(a.error,undefined);assert.equal(b.error,undefined);assert.deepEqual(b.counts,a.counts);assert.equal(b.counts.remaining,1);assert.equal(b.counts.capture,1);const before=a.calls[0],after=b.calls[0];assert.deepEqual(after.args,before.args);assert.equal(after.command,'ffmpeg');assert(Number.isInteger(after.options.timeout)&&after.options.timeout>=1&&after.options.timeout<=15000);assert(after.options.timeout<=before.options.timeout);rows.push({remaining,old_timeout:before.options.timeout,new_timeout:after.options.timeout,calls:{...b.counts}});}
+for(const text of [old,source]){const a=await capture(text,0,{expired:true});assert.equal(a.error,a.marker);assert.equal(a.counts.capture,0);assert.equal(a.counts.remaining,0);assert.equal(a.counts.xdo,0);}
+const absent=fileURLToPath(new URL('./NEVER_EXISTS_NO_NATIVE05.exe',import.meta.url));assert.equal(existsSync(absent),false);const integer=Function('budget','return '+expression)({remaining:()=>14999.75});
+assert.throws(()=>execFileSync(absent,[],{timeout:14999.75}),{name:'RangeError',code:'ERR_OUT_OF_RANGE'});assert.throws(()=>execFileSync(absent,[],{timeout:integer}),{code:'ENOENT'});
+console.log(JSON.stringify({status:'PASS_FOCUSED_COLD_NO_CHILD',groups:3,rows,expired_original_guard_preserved:true,real_Node_fractional_RED:'ERR_OUT_OF_RANGE',real_Node_integer_validation:'ACCEPTED_THEN_ENOENT',native_Docker_APP_models_children:0}));

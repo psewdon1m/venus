@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "status": "AUTHOR_NOT_RUN",
+  "scope": "NORMAL_PRODUCTION_PROVIDER_PERSISTENCE_A6_TO_B4_OFF_ON_ONLY",
+  "phases": [
+    "a-on",
+    "b-off",
+    "b-on"
+  ],
+  "normal_CMD": "node apps/api/dist/server.js",
+  "rooms": 1,
+  "actors": 2,
+  "context": "online",
+  "comfort": 0,
+  "mode": "yes_but",
+  "selected_rounds": 1,
+  "round_count": 20,
+  "phase_deadline_ms": 180000,
+  "whole_deadline_ms": 900000,
+  "hidden_retries": 0,
+  "private_grant_claim": false,
+  "manual_cookies_HTTP_loopback_HTTPS_Origin": true,
+  "actual_browser_TLS": false,
+  "rate_schedule": {
+    "member_ms": 350,
+    "public_ms": 550,
+    "WS_upgrade_ms": 550,
+    "ping_ms": 10000,
+    "HTTP_timeout_ms": 10000
+  },
+  "caps": {
+    "requests": 160,
+    "response_bytes": 131072,
+    "client_state_bytes": 65536,
+    "phase_report_bytes": 131072,
+    "outer_output_bytes": 2097152
+  },
+  "readonly_SQL": "Explicit BEGIN READ ONLY SELECT exact persisted cipher hashes/catalog pointer/counts only. No actor/seed/history/clock/presence writes.",
+  "persistence": "Same existingcompose DB+state namedvolumes/keyring across app-only replacements; client secrets survive only in private temporary bind, erased finally.",
+  "excluded_scope": [
+    "synthetic14 private grant revocation",
+    "private browser lifecycle",
+    "production/DNS/TLS/devices",
+    "whole P05 PASS"
+  ]
+}

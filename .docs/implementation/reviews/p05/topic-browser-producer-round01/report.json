@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED",
+  "scope": "AUTHOR_DISJOINT_STATIC_P05_FUNCTIONAL16_BROWSER_PRODUCER_REVIEW",
+  "created_at": "2026-10-19T18:59:25.537131+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "producer_author": "/root/p05_topics_ui",
+  "docker": "NOT_RUN",
+  "actual_browser": "NOT_RUN",
+  "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "included_files": 1808,
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-browser/browser.mjs",
+      "sha256": "238d2dfaa956b7eb1eac7c0bbfd3ab66b891b8848db1f2d3a098a05a04ea01e5"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/runtime.mjs",
+      "sha256": "c3b056f0d876b33b752cfc5464aa5e0cae926e51610132214a2bd9aaad6808fe"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/run.mjs",
+      "sha256": "5f3fd2bf7a3f28cb940352658d5e0b317df9702370517b0c9a2942f1d84263e0"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/DESIGN.md",
+      "sha256": "7c700b36e06c6919eee3b670c1a9d8b0526dc2eacd055b859522b42b3f6f0288"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/README.md",
+      "sha256": "154de71b0dd9df2917b92df22739489f91a80fd00a4d1dd6dc23867504143880"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/HANDOFF.json",
+      "sha256": "69d1b192c1868a265a598019d44ddd68f0fc9589da914fd63663d4870ca27cb3"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/static-result.json",
+      "sha256": "8913d7e09d4a95a90d0893277076989eeb72ccd4628f2862d57b5ad318ff9e61"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/lint-static.json",
+      "sha256": "3eeb769cfcbb339604583858becc27419116d1263281717ab0e42c183cf046f2"
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "a5a6c6cb3da9b4beb75ce36be708c49bbdfecfcab9ce34523ad5a76fdfa6a36e"
+    },
+    {
+      "path": "apps/api/src/topic-game-model.ts",
+      "sha256": "fe371afa866f3899250d222d0135a0770304afc90513316971f2c923f00cc9b7"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "tests/p05-topic-lifecycle/harness.mjs",
+      "sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd"
+    }
+  ],
+  "before_after_unchanged": true,
+  "exact_two_replacements": true,
+  "harness_sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+  "derivative_sha256": "cbe7371b43d98721dcd7b641e55084929abfaa9123254d1a2240307b8b25d779",
+  "image_binding": {
+    "path": ".docs/implementation/evidence/p05/topic-games-preflight-07/index.json",
+    "index_sha256": "72a9ed7e6e3bc0ae12ff845e75cae2567cf822f17b9e99eaa43a5e578f6f3580",
+    "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+    "image": "sha256:00c46c7a5fd255dcebb43ec34decc1b27234a67f83ffead8d4828238fe96700a",
+    "interpretation": "Existing root source/image artifact metadata binding; reviewer did not launch/inspect an image in this static review."
+  },
+  "independent_probes": {
+    "runner": {
+      "passed": 11,
+      "failed": 0,
+      "scope": "Exact inert control flow tests, no Docker."
+    },
+    "browser_semantics": {
+      "confirmed_type_error": 1,
+      "confirmed_false_accepts": 3,
+      "scope": "Exact AST functions/cases with inert UI/API doubles, no product leak/browser runtime claim."
+    },
+    "node_syntax": {
+      "checks": 3,
+      "exit_codes": [
+        0,
+        0,
+        0
+      ]
+    },
+    "reviewer_initial_syntax_error": "Preserved own failed probe source/raw before correcting probe only."
+  },
+  "findings": [
+    {
+      "id": "TB-PRODUCER-R01",
+      "severity": "P2",
+      "case": 15,
+      "type": "PRODUCER_RUNTIME_TYPEERROR",
+      "summary": "Raw StoredConversation.state has no candidates",
+      "location": "browser.mjs check15 state.state.candidates.find",
+      "evidence": "Exact case15 AST with actual persisted object shape throws Cannot read properties of undefined (reading find). Actual saveConversation explicitly omits topics/candidates and keeps bindings separately.",
+      "fix": "Use actual own conversation offer.topics through authenticated read-only projection, or verified bindings/map lookup; do not change product persistence to satisfy producer."
+    },
+    {
+      "id": "TB-PRODUCER-R02",
+      "severity": "P2",
+      "case": 5,
+      "type": "ASSERTION_FALSE_ACCEPT",
+      "summary": "Visible container does not prove full topic union",
+      "location": "browser.mjs acceptTopics",
+      "evidence": "Exact helper returns successfully with visible labels container containing zero labels while required union has two topics. No text/count comparison is performed.",
+      "fix": "For both actual actors/locales, read exact current offer and compare every rendered offered label/count with full offer topics before accepting; retain no prompt at zero/one acceptance."
+    },
+    {
+      "id": "TB-PRODUCER-R03",
+      "severity": "P2",
+      "case": 10,
+      "type": "ASSERTION_FALSE_ACCEPT",
+      "summary": "No-resurrection claim is untested after Resume",
+      "location": "browser.mjs check10",
+      "evidence": "Exact case returns private_not_resurrected=true with private content visibly restored by Resume. cleared() only ran before Resume.",
+      "fix": "After actual Resume and fresh UI sync/settled lease observation, assert old private prompt/chat/advice/accept state stays cleared; preserve same actual session/round boundary."
+    },
+    {
+      "id": "TB-PRODUCER-R04",
+      "severity": "P2",
+      "case": 14,
+      "type": "ASSERTION_FALSE_ACCEPT",
+      "summary": "Held metadata can pass stale-private-payload test",
+      "location": "runtime.mjs holdReads and browser.mjs check14",
+      "evidence": "Exact case14 accepts one held metadata response and zero held private prompt responses. Runtime buffers every game GET; actual panel sync starts with /current, so this can stop before requesting private conversation. No held body identity/epoch/prompt check exists.",
+      "fix": "Target and prove a successful actual selected actor conversation response containing the old private prompt/epoch before clear; buffer only that real response, record safe metadata/hash without private text, then release after newer epoch and verify old prompt/advice/chat cannot return. Keep clock case response hold/error/WS preconditions explicit to distinguish lease expiry from a synchronous transport failure."
+    }
+  ],
+  "full_stage_pass": false,
+  "limitations": [
+    "Only advertised first functional16 slice reviewed; no request to expand to full browser/layout/device matrix.",
+    "No browser/Docker ran; failures are producer/coverage issues, not claimed product failures.",
+    "Source/image binding is existing root artifact metadata plus exact full source/harness/derivative checks; no new independent image execution.",
+    "Human450 HOLD, full P05, production/DNS/TLS and backup/restore remain outside acceptance.",
+    "Reviewer did not edit product or producer. New producer fixes require a new frozen checkpoint and author-disjoint recheck."
+  ]
+}

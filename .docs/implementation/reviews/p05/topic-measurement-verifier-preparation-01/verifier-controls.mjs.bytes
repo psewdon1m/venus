@@ -1,0 +1,21 @@
+/** Finite inert mocked-record controls; no selector, runtime or registered sample. */
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {auditFairnessSession,compareFairness,recomputeInference} from './verifier-metrics.mjs';
+import {aucCI} from '../p05-topic-measurements/statistics.mjs';
+const start=performance.now(),results=[],names=Array.from({length:1075},(_,i)=>'MOCK_FEATURE_'+i),vector=Array(1075).fill(0),cells=Array.from({length:42},(_,i)=>'MOCK_CELL_'+i),sha=b=>createHash('sha256').update(b).digest('hex');
+function check(name,fn){assert(performance.now()-start<120000,'INERT_CONTROL_HARD_LIMIT');fn();results.push({name,status:'PASS'});}
+function* rows(){for(const cell of cells)for(const class_label of ['MOCK_NEG','MOCK_POS'])for(const split of ['train','holdout'])for(let index=0;index<(split==='train'?100:400);index++)yield{cell,class_label,split,index,seed_literal:'INERT_NOT_A_REGISTERED_SAMPLE',completed_rounds:1,raw:vector};}
+function* scores(tamper=false){let index=0;for(const r of rows())if(r.split==='holdout')yield{cell:r.cell,split:r.split,class_label:r.class_label,index:r.index,seed_literal:r.seed_literal,score:tamper&&index++===0?.125:0,pooled_score:0};}
+const digest=createHash('sha256');for(const r of rows())digest.update(JSON.stringify(r)+'\n');const expected=digest.digest('hex'),model=Array(1075).fill(0),coefficient=sha(Buffer.from(new Float64Array(model).buffer)),reportedMetric=n=>({...aucCI(Array(n).fill(0),Array(n).fill(0)),coefficient_sha256:coefficient,intercept:0,structural_deterministic_decoders:[]}),report={negative:'MOCK_NEG',positive:'MOCK_POS',training_rows:8400,holdout_rows:33600,strata:cells.map(cell=>({cell,...reportedMetric(400)})),pooled:reportedMetric(16800),status:'PASS'};
+check('zero-feature mock exact arithmetic, all42strata+pooled',()=>assert.equal(recomputeInference({rows,scoreRows:scores,reported:report,names,expectedFeatureDigest:expected}).records,42000));
+check('wrong heldout score rejected',()=>assert.throws(()=>recomputeInference({rows,scoreRows:()=>scores(true),reported:report,names,expectedFeatureDigest:expected}),/RECOMPUTED_HELDOUT_SCORE/));
+check('passing but forged CI rejected',()=>{const bad=structuredClone(report);bad.strata[0].ci95=[.49,.64];assert.throws(()=>recomputeInference({rows,scoreRows:scores,reported:bad,names,expectedFeatureDigest:expected}),/RECOMPUTED_ci95/);});
+check('relabelled raw-feature digest rejected',()=>assert.throws(()=>recomputeInference({rows,scoreRows:scores,reported:report,names,expectedFeatureDigest:'0'.repeat(64)}),/FEATURES_MUST_MATCH/));
+const p=i=>'00000000-0000-4000-8000-'+String(i+1).padStart(12,'0');
+check('private empty counts as one pair opportunity, attempts do not add invitations',()=>{const out=new Map();auditFairnessSession(out,{descriptor:{size:4,mode:'questions',context:'online',capability:'CHAT_ON',regime:'T0_ALL'},summary:{refusal:null},planner_audit:[{interaction:'pair_private',actors:[p(0),p(1)],card:null,attempts:[{},{}]},{interaction:'pair_public',actors:[p(0),p(2)]},{interaction:'solo',actors:[p(3)]}]});const c=[...out.values()][0];assert.equal(c.K,2);assert.equal(c.K_private,1);assert.deepEqual(c.counts,[2,1,1,0]);assert.equal(c.max_individual_session_share,.5);});
+const fairMap=new Map(),fairReport=[];for(let i=0;i<588;i++){const c={sessions:2000,K:2000,K_private:1000,counts:[2000,2000],max_individual_session_share:.5,zero_pair_sessions:0},cell='INERT_'+i;fairMap.set(cell,c);fairReport.push({cell,...structuredClone(c),D:4000,shares:[.5,.5],aggregate_player_share_gap:0});}
+check('independent fairness arithmetic exact588rows',()=>compareFairness(fairMap,fairReport));
+check('passing but forged fairness shares rejected',()=>{const bad=structuredClone(fairReport);bad[0].shares=[.49,.51];assert.throws(()=>compareFairness(fairMap,bad));});
+console.log(JSON.stringify({status:'PASS_INERT_AUTHOR_CONTROLS_ONLY',controls:results,elapsed_ms:performance.now()-start,peak_RSS_kib:process.resourceUsage().maxRSS,selector_invocations:0,registered_statistical_samples:0,statistics_RUN:false,producer_independently_accepted:false}));

@@ -1,0 +1,42 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/room-socket-poll.test.ts (2 tests | 1 failed) 14ms
+   ❯ bounded ordinary room WS polling (2)
+     × coalesces slow poll ticks so queued polls cannot starve a heartbeat 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > coalesces slow poll ticks so queued polls cannot starve a heartbeat
+AssertionError: expected [ 'poll:1', 'poll:2', 'poll:3', …(5) ] to deeply equal [ 'poll:1', 'poll:2', 'heartbeat' ]
+
+- Expected
++ Received
+
+  [
+    "poll:1",
+    "poll:2",
++   "poll:3",
++   "poll:4",
++   "poll:5",
++   "poll:6",
++   "poll:7",
+    "heartbeat",
+  ]
+
+ ❯ apps/api/src/room-socket-poll.test.ts:48:20
+     46|    f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));
+     47|    await vi.advanceTimersByTimeAsync(0);f.releasePoll();await vi.advan…
+     48|    expect(f.order).toEqual(['poll:1','poll:2','heartbeat']);
+       |                    ^
+     49|    expect(f.service.liveGrant).toHaveBeenCalledWith(expect.anything(),…
+     50|    expect(f.socket.send).toHaveBeenCalledWith(JSON.stringify({type:'po…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 1 passed (2)
+   Start at  20:24:40
+   Duration  266ms (import 62%, transform 25%, tests 9%, worker 3%)
+

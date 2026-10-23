@@ -1,0 +1,8 @@
+/** Exact owned mount roots only; host must verify labels before this helper. */
+import assert from 'node:assert/strict';
+import {verifyOwnIPC} from './ipc-policy.mjs';
+import {lstatSync,readdirSync,chmodSync,chownSync,unlinkSync,rmdirSync,realpathSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+export function administer(kind){verifyOwnIPC(kind==='initialize'?'initialize':'erase');assert.equal(process.platform,'linux');assert(['initialize','erase-private'].includes(kind));const roots=kind==='initialize'?['/authority','/private']:['/private'];for(const root of roots){assert.equal(realpathSync(root),root);assert(lstatSync(root).isDirectory()&&!lstatSync(root).isSymbolicLink());if(kind==='initialize'){assert.equal(process.getuid(),0);assert.deepEqual(readdirSync(root),[]);chmodSync(root,0o700);chownSync(root,1000,1000);}else{assert.equal(process.getuid(),1000);const erase=p=>{const s=lstatSync(p);assert(!s.isSymbolicLink());assert(s.isFile()||s.isDirectory());if(s.isDirectory()){for(const n of readdirSync(p))erase(join(p,n));if(p!==root)rmdirSync(p);}else unlinkSync(p);};erase(root);assert.deepEqual(readdirSync(root),[]);}}return{status:'OWNED_MOUNTS_OPERATION_COMPLETE',kind,roots_empty:true};}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const mode=process.argv.find(a=>a.startsWith('--mode='));if(mode)console.log(JSON.stringify(administer(mode.slice(7))));else console.log(JSON.stringify({status:'NOT_RUN',filesystem_mutations:0}));}

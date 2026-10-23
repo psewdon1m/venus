@@ -1,0 +1,41 @@
+--- producer12/bound-profile.mjs
++++ producer13/bound-profile.mjs
+@@ -18,7 +18,37 @@
+ const sourceLocations=[...producerModules.map(source_module=>({source_module,paths:[new URL('./'+source_module+'.mjs',import.meta.url)].flatMap(u=>[u.href,fileURLToPath(u).replace(/\\/g,'/')])})),...generatedModules.map(source_module=>({source_module,paths:['A1','B2','A3'].flatMap(phase=>['/private/modules-'+phase+'/'+source_module+'.mjs','file:///private/modules-'+phase+'/'+source_module+'.mjs'])}))];
+ function safePrototypeChain(value){if(!value||typeof value!=='object'||types.isProxy(value))return false;let current=value;for(let depth=0;current&&depth<8;depth++){if(types.isProxy(current))return false;current=Object.getPrototypeOf(current);}return current===null;}
+ function data(value,key){try{const d=Object.getOwnPropertyDescriptor(value,key);return d&&'value'in d?d.value:undefined;}catch{return undefined;}}
+-function boundedNativeStack(error){try{const d=Object.getOwnPropertyDescriptor(error,'stack');let stack;if(d&&'value'in d)stack=d.value;else if(d?.get&&d.get===nativeStackGetter){const hook=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');if(hook&&(!('value'in hook)||!nodePreparer||hook.value!==nodePreparer))return;for(const key of ['name','message']){let current=error,found=false;for(let depth=0;current&&depth<8;depth++,current=Object.getPrototypeOf(current)){const own=Object.getOwnPropertyDescriptor(current,key);if(!own)continue;if(!('value'in own)||typeof own.value!=='string'||own.value.length>2048||own.value.includes('\0'))return;found=true;break;}if(!found)return;}stack=d.get.call(error);}return typeof stack==='string'&&stack.length<=16384&&Buffer.byteLength(stack,'utf8')<=16384?stack:undefined;}catch{return undefined;}}
++function boundedNativeStack(error){
++ try{
++  const d=Object.getOwnPropertyDescriptor(error,'stack');let stack;
++  if(d&&'value'in d)stack=d.value;
++  else if(d?.get&&d.get===nativeStackGetter){
++   const hook=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');
++   if(hook&&(!('value'in hook)||!nodePreparer||hook.value!==nodePreparer))return;
++   let redact;
++   for(const key of ['name','message']){
++    let current=error,found=false;
++    for(let depth=0;current&&depth<8;depth++,current=Object.getPrototypeOf(current)){
++     const own=Object.getOwnPropertyDescriptor(current,key);if(!own)continue;
++     if(!('value'in own)||typeof own.value!=='string')return;
++     if(key==='message'&&own.value.length>2048){
++      // Format only the original native callsites; never format a large private
++      // assertion message. Restore its exact own descriptor synchronously.
++      if(current!==error||!own.configurable&&!own.writable)return;
++      redact=own;
++     }else if(own.value.length>2048||own.value.includes('\0'))return;
++     found=true;break;
++    }
++    if(!found)return;
++   }
++   if(redact){
++    Object.defineProperty(error,'message',{...redact,value:'[redacted native diagnostic]'});
++    try{stack=d.get.call(error);}finally{Object.defineProperty(error,'message',redact);}
++   }else stack=d.get.call(error);
++  }
++  return typeof stack==='string'&&stack.length<=16384&&Buffer.byteLength(stack,'utf8')<=16384?stack:undefined;
++ }catch{return undefined;}
++}
+ function nativeLocation(error){const stack=boundedNativeStack(error);if(!stack)return;for(const raw of stack.split('\n').filter(line=>line.startsWith('    at ')).slice(0,16)){const line=raw.replace(/\\/g,'/');if(line.length>1024||/[\r\0]/.test(line))continue;for(const module of sourceLocations)for(const path of module.paths){const at=line.lastIndexOf(path);if(at<0)continue;const prefix=line.slice(0,at),parenthesized=prefix.endsWith(' (');if(prefix!=='    at '&&prefix!=='    at async '&&!parenthesized)continue;const match=/^:([1-9]\d{0,6}):([1-9]\d{0,5})(\)?)$/.exec(line.slice(at+path.length));if(!match||Boolean(match[3])!==parenthesized)continue;const source_line=Number(match[1]),source_column=Number(match[2]);if(source_line<=1000000&&source_column<=100000)return{source_module:module.source_module,source_line,source_column};}}}
+ /** Failure diagnostic only: no raw message/stack/path/value is ever projected. */
+ export function safeError(e,phase){const result={name:'UNKNOWN',code:null,phase:['setup','A1','B2','A3','cleanup'].includes(phase)?phase:'UNKNOWN_PHASE'};try{if(!safePrototypeChain(e)||!types.isNativeError(e))return result;for(const[constructor,name]of errorClasses)if(e instanceof constructor){result.name=name;break;}const code=data(e,'code');if(typeof code==='string'&&allowedErrors.has(code))result.code=code;return{...result,...nativeLocation(e)};}catch{return result;}}

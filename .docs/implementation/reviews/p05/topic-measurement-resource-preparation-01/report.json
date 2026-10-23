@@ -1,0 +1,65 @@
+{
+  "status": "AUTHOR_RESOURCE_REPAIR_CHECKPOINT_READY_INDEPENDENT_REVIEW",
+  "created_at": "2026-10-19T20:48:17.734163+00:00",
+  "author_NOT_ACCEPTOR": true,
+  "scope": [
+    "artifact-store.mjs",
+    "artifact-store-controls.mjs"
+  ],
+  "WRITES_PAUSED": [
+    ".artifacts/p05-topic-measurements-next/artifact-store.mjs",
+    ".artifacts/p05-topic-measurements-next/artifact-store-controls.mjs",
+    ".artifacts/p05-topic-measurements-next/artifact-store-controls.json",
+    ".artifacts/p05-topic-measurements-next/artifact-store-attempt01.txt"
+  ],
+  "resource_pins": {
+    ".artifacts/p05-topic-measurements-next/artifact-store.mjs": "eb8d38d5591f1c1cd5416cb41ac72a6e001e6e0fd8c4c6f478849fe3967d7c6a",
+    ".artifacts/p05-topic-measurements-next/artifact-store-controls.mjs": "54a7fa0933f4cd4e95eb6f86f716f760fc7e3ede5a753b73103e8cda4f329afc",
+    ".artifacts/p05-topic-measurements-next/artifact-store-controls.json": "9f2580a05dbee18f811af7a9e1b58909b360e02ed6dfb2a91129050818d45e6d",
+    ".artifacts/p05-topic-measurements-next/artifact-store-attempt01.txt": "9b63c03a2f99f4598df7183048bf68a9d153fb4f91d4f6e8d79f497f356c4241"
+  },
+  "previous_finding": "P05-MEAS-COMP-001 P2",
+  "previous_review_index": "b1819ca477d43847d90119eff4e6dc43435bd2f8fb1dfd40ab26e031e174252b",
+  "previous_writer_sha256": "7c2800e61696185647c9b1202789769b32b453ca02542c588603a41b04c7062d",
+  "actual_Windows_controls": {
+    "passed": 7,
+    "failed": 0,
+    "link_type": "junction",
+    "owned_tree_retained": "C:/Temp/venus-measurement-resource-review-swqkKF"
+  },
+  "atomic_hostile_FS_race_proof": false,
+  "original61_edited": false,
+  "statistical_RUN": false,
+  "full_producer_accepted": false,
+  "stage_PASS": false,
+  "benchmark": {
+    "R100": "HARD_WALL_STOPPED_NOT_ACCEPTED",
+    "attempts": 1,
+    "elapsed_ms": 120030.0953,
+    "last_completed_round": 26,
+    "CPU": "NOT_RECORDED_CHILD_KILLED_BEFORE_FINALLY",
+    "no_rerun": true,
+    "source_pin_limitation": "No complete before-loaded-module pin map for stopped R100; operational evidence only. Later g.state initialization changed active to waiting; not represented as exact-byte replay."
+  },
+  "profiling": {
+    "profile": "P05-PER-LAYER-TIMING-DIAGNOSTIC-1",
+    "R": 4,
+    "host_wall_ms": 5701.0385,
+    "linux_wall_ms": 5378.384734,
+    "linux_CPU_user_ms": 5152.235,
+    "linux_CPU_system_ms": 120.548,
+    "linux_peak_RSS_bytes": 217473024,
+    "Linux_exit": 0,
+    "owned_cleanup": "completed",
+    "source_before_after": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+    "dominant_inclusive_layer": "actual api.advance: 3044.766ms Linux wall / 3058.132ms CPU; full selector/history validation internal split not yet instrumented",
+    "limitations": [
+      "Inclusive layer times overlap; do not sum.",
+      "Host process.cpuUsage calibration returns 0 for a 200ms busy loop; host CPU is unsuitable for cost extrapolation.",
+      "artifact_store_progress_write CPU measurement captures starting usage after the write; its CPU field is invalid. Wall 116.018ms Linux remains valid.",
+      "R4 reached no private round; neither R100 completion nor later-stage cost established.",
+      "Memory SQL/auth seams: not actual PG, HTTP, ordinary WS or production startup.",
+      "No statistical sample, ETA or feasibility promise."
+    ]
+  }
+}

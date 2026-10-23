@@ -1,0 +1,74 @@
+{
+  "status": "PASS_EXACT_SOURCE_LEASE_COUNTEREXAMPLE",
+  "source_sha256": "04c18ef53573590c7ffee1c5ff4fdc891d1a6e8f14c0f98cc080f14721cb1678",
+  "before": {
+    "ready": true,
+    "reason": "READY",
+    "cycle_id": 1,
+    "accepted_cycle_id": 1,
+    "scope_sha256": "d6467e4d9d1e9d008b1d2f3b5ff25e77b7b9de51b4453134d7432b67e010d598",
+    "lease_remaining_ms": 4600,
+    "minimum_remaining_ms": 250,
+    "pending_observers": 0,
+    "observer_overflow": false,
+    "dropped": 0,
+    "body_errors": 0,
+    "invalidations": 0,
+    "complete": true,
+    "parts": {
+      "own": true,
+      "target": true,
+      "conversation": true,
+      "chat": true,
+      "chat_required": true
+    },
+    "http": {
+      "own": 200,
+      "target": 200,
+      "conversation": 200,
+      "chat": 200
+    },
+    "observer_model_only": true,
+    "cache_accept_observed": false,
+    "auth_generation_observed": false
+  },
+  "at_new_same_scope_own_request": {
+    "native_ms": 5500,
+    "production_cache_visible": true,
+    "production_cache_until": 6000,
+    "production_remaining_ms": 500,
+    "observer": {
+      "ready": false,
+      "reason": "BATCH_INCOMPLETE",
+      "cycle_id": 2,
+      "accepted_cycle_id": null,
+      "scope_sha256": "d6467e4d9d1e9d008b1d2f3b5ff25e77b7b9de51b4453134d7432b67e010d598",
+      "lease_remaining_ms": 0,
+      "minimum_remaining_ms": 250,
+      "pending_observers": 0,
+      "observer_overflow": false,
+      "dropped": 0,
+      "body_errors": 0,
+      "invalidations": 0,
+      "complete": false,
+      "parts": {
+        "own": false,
+        "target": false,
+        "conversation": false,
+        "chat": false,
+        "chat_required": false
+      },
+      "http": {
+        "own": null,
+        "target": null,
+        "conversation": null,
+        "chat": null
+      },
+      "observer_model_only": true,
+      "cache_accept_observed": false,
+      "auth_generation_observed": false
+    }
+  },
+  "expiry_at_6000": "Production still expires normally; no extension or disclosure bypass.",
+  "qualification": "Real source TopicCache and unchanged passive observer, synthetic DTOs/scheduler; proves predicate mismatch, not actual React cache.accept or field value observation."
+}

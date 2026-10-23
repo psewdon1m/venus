@@ -1,0 +1,72 @@
+from pathlib import Path
+import json,hashlib,subprocess
+root=Path('C:/.projects/venus');here=Path(__file__).resolve().parent;pins={}
+def sha(b):return hashlib.sha256(b).hexdigest()
+def read(p,expected=None):
+    p=Path(p);p=p if p.is_absolute() else root/p;b=p.read_bytes();h=sha(b)
+    if expected:assert h==expected,str(p)
+    pins[str(p.relative_to(root)).replace('\\','/')]={'sha256':h,'bytes':len(b)}
+    return json.loads(b.decode('utf-8-sig')) if p.suffix=='.json' else b
+f=read('.artifacts/p05-pilot-bundle-source-freeze13.json','078580396448463f9e281a626f5e1b2c8c74bc5fe5ea68632ea36ad65635bf54')
+assert f['identity']=='c92110576ecaa7d9e6a56b74d79f51ee3d86f071134e760435adb9750350ed13' and len(f['files'])==f['included_files']==1870
+assert sha(json.dumps(dict(sorted(f['files'].items())),separators=(',',':')).encode())==f['identity']
+old=read('.artifacts/p05-pilot-bundle-source-freeze12.json')
+delta=sorted(n for n in set(f['files'])|set(old['files']) if f['files'].get(n)!=old['files'].get(n))
+assert delta==sorted(f['changed_paths']) and len(delta)==4
+for n,h in f['files'].items():
+    assert sha((root/n).read_bytes())==h and sha((Path(f['materialized_root'])/n).read_bytes())==h,n
+work=Path(f['git_worktree']);commit=f['git_source_commit'];assert commit=='b6fea8592e0ac5a56a2f0e66f1abc6022026a5fc'
+def git(*args):return subprocess.run(['git',*args],cwd=work,capture_output=True,check=True).stdout
+assert not git('status','--porcelain=v1') and git('rev-parse','HEAD').decode().strip()==commit
+assert git('rev-parse',commit+'^').decode().strip()=='7ce04192c84e1d01620b099a4a0386ab5b291fbc'
+assert sorted(git('diff-tree','--no-commit-id','--name-only','-r',commit).decode().splitlines())==delta
+for n in delta:assert sha(git('show',commit+':'+n))==f['files'][n],n
+# Remaining Git blobs are unchanged from independently witnessed exact A15 parent.
+image=read('.artifacts/p05-pilot-bundle-image-binding13/receipt.json','0637dd45ad6c224ff8ab06f53ded83418227b4af34a06dd2f0b9a89ffdf431d9')
+prod=read('.artifacts/p05-pilot-bundle-production-image-binding13/receipt.json','bb29900493ceed77715e62a6665eeab5eff2e1c377f6907fb95af35b5bcf1c4f')
+prior=read('.artifacts/p05-pilot-bundle-image-binding12/receipt.json');priorp=read('.artifacts/p05-pilot-bundle-production-image-binding12/receipt.json')
+assert image['image']=='sha256:b3ff0e81571977b5950cb8dd97d2c9a2bfb2ec70c65da25b5fee914b67ce765f'
+assert prod['image']=='sha256:b2eb45a81156b321a9d21d681c3174e7a286fcda94bebb4a156679fb9b19c0d2' and prod['base_test_image']==image['image']
+assert len(image['image_files_sha256'])==299 and len(prod['image_files_sha256'])==122
+assert len(image['compiled_files'])==69 and len(prod['compiled_files'])==67
+expected=['apps/api/dist/private-topic-ledger.js','apps/api/dist/topic-games.js']
+for now,before in [(image,prior),(prod,priorp)]:
+    assert now['source_identity']==f['identity'] and now['included_files']==1870
+    assert sorted(n for n in set(now['compiled_files'])|set(before['compiled_files']) if now['compiled_files'].get(n)!=before['compiled_files'].get(n))==expected
+    for field in ['migration_files','web_dist_files','pg_dependency_files']:assert now[field]==before[field]
+    for field in ['compiled_files','migration_files','web_dist_files','pg_dependency_files']:
+        for n,h in now[field].items():assert now['image_files_sha256'][n]==h,n
+for n,h in image['source_files'].items():assert f['files'][n]==image['image_files_sha256'][n]==h,n
+for n,h in image['compiled_files'].items():assert sha((root/n).read_bytes())==h,n
+assert len(image['migration_files'])==7 and len(image['web_dist_files'])==3 and len(image['pg_dependency_files'])==2
+assert prod['image_files_sha256']=={**prod['compiled_files'],**prod['migration_files'],**prod['web_dist_files'],**prod['pg_dependency_files'],**{n:h for n,h in image['source_files'].items() if n.startswith('packages/') and not n.endswith('.test.ts')}}
+assert image['build_metadata_absent'] and prod['metadata_source_revision_is_dirty_source_SHA256_not_git_commit'] is False
+assert prod['build_metadata']=={'version':'0.0.0','source_revision':commit} and prod['source_git_commit']==commit
+assert any(sha(s.encode())==prod['build_metadata_sha256'] for s in [json.dumps(prod['build_metadata'],separators=(',',':')),json.dumps(prod['build_metadata'],separators=(',',':'))+'\n',json.dumps(prod['build_metadata'],indent=2),json.dumps(prod['build_metadata'],indent=2)+'\n'])
+for label,rec in [('',image),('production-',prod)]:
+    prefix='.artifacts/p05-pilot-bundle-'+label+'build13';log=read(prefix+'.txt',rec['build_log_sha256']);assert rec['image'] in log.decode('utf-8-sig')
+    assert read(prefix+'-exit.txt').decode('utf-8-sig').strip()=='0'
+    assert read('.artifacts/p05-pilot-bundle-'+label+'image13.txt').decode('utf-8-sig').strip()==rec['image']
+    assert rec['build_observed_exit']==rec['probe_exit_code']==0 and rec['probe_cleanup']=='AUTO_REMOVED' and rec['app_imports']==0
+host=read('.artifacts/p05-a16-host-checks01/receipt.json');assert host['source_identity']==f['identity'] and host['source_count']==1870 and host['before_after_exact']
+assert host['results']==[{'name':n,'exit':0} for n in ['vitest','typecheck','web-typecheck','lint']]
+hostlog=read('.artifacts/p05-a16-host-checks01/vitest.txt').decode();assert '76 passed (76)' in hostlog and '1100 passed | 207 skipped (1307)' in hostlog
+for n in ['typecheck','web-typecheck','lint']:assert read('.artifacts/p05-a16-host-checks01/'+n+'.txt')==b''
+linux=read('.artifacts/p05-a16-linux-storage01/receipt.json','ba76eea8085e415d7cf907c2d2680810028e8c9ba8d68332c4f26374d1f63739')
+assert linux['source_identity']==f['identity'] and linux['test_image']==image['image'] and linux['image_receipt_sha256']==pins['.artifacts/p05-pilot-bundle-image-binding13/receipt.json']['sha256']
+assert linux['attach_exit']==linux['container_exit']==0 and linux['cleanup']=='ABSENT' and linux['source_test_bytes_unchanged']
+testlog=read('.artifacts/p05-a16-linux-storage01/tests.txt').decode();assert '239 passed | 2 skipped (241)' in testlog and '3 passed (3)' in testlog
+for n in linux['tests']+['vitest.config.ts']:assert sha((Path(f['materialized_root'])/n).read_bytes())==f['files'][n]
+closure=read('.artifacts/p05-privacy-matched-operational01/PURE-CLOSURE-A9-A11.json');assert len(closure['runtime_modules'])==28
+assert not set(expected)&set(closure['runtime_modules'])
+for n,h in closure['runtime_modules'].items():
+    assert image['image_files_sha256'][n]==prod['image_files_sha256'][n]==prior['image_files_sha256'][n],n
+    if n!='apps/api/dist/rooms.js':assert h==image['image_files_sha256'][n],n
+for n,h in closure['source_modules'].items():
+    if n!='apps/api/src/rooms.ts':assert f['files'][n]==h,n
+assert f['files']['package-lock.json']==closure['package_lock_sha256']
+assert image['compiled_files']['apps/api/dist/rooms.js']=='86ea9ad1bc8ea4c759ed340b58a6270459ffc4a865d20ac73a29e25277e47205'
+for n in ['.artifacts/p05-a16-prepare01.py','.artifacts/p05-a16-host-checks01.py','.artifacts/p05-a16-linux-storage01.py','.artifacts/p05-pilot-a16-image-probe01.py','.artifacts/p05-pilot-a16-production-probe01.py']:read(n)
+for n,h in [('.docs/implementation/reviews/p05/ledger-inspection-memo-product-independent-round01/INDEX.json','5cc6389f4625cd099b2df49e6b4e18098356c230696b7317b52f425a5e530f75'),('.docs/implementation/reviews/p05/a15-image-host-pure-n4-preparation-independent-round01/INDEX.json','129465903374b210d6e93e29ed0898dac761424b7259de6581f8d2f34784e582')]:read(n,h)
+out={'status':'PASS_A16_IMAGE_HOST_LINUX_AND_N4_PREPARATION_ONLY','source_identity':f['identity'],'files':1870,'git_commit':commit,'clean_worktree':True,'git_proof':'Exact4changedblobs plus exact-parentcommit and nootherGitdelta, inherited independent A15 baseline','test_image':image['image'],'production_image':prod['image'],'compiled_delta_only':expected,'test_pins':299,'production_pins':122,'metadata_extra':1,'UI_SQL7_pg_exact_A15':True,'host_PASS':1100,'host_SKIP':207,'Linux_PASS':239,'Linux_SKIP':2,'Linux_cleanup':'ABSENT','pure_scope':'All28closuremodules exact A15;27wholemodules exact A9,rooms revision-only semantic qualification unchanged;2newmodulesoutsideclosure','new_native_actions':0,'N4_actual':'NOT_RUN_BY_REVIEWER'}
+(here/'AUDIT.json').write_text(json.dumps(out,indent=2)+'\n',encoding='utf-8');(here/'INPUT-PINS.json').write_text(json.dumps(pins,indent=2)+'\n',encoding='utf-8');print(json.dumps(out))

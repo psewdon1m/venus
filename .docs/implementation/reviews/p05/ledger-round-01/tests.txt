@@ -1,0 +1,34 @@
+{"kind":"exact-image-inputs","node":"v24.22.0","uid":1000,"hashes":{"apps/api/src/private-topic-ledger.ts":"52655c6ed3f3754bc403e8f4c9d7610e1c487d2a4c8ccab175f958612622a284","apps/api/src/independent.test.ts":"d743f20a06ff11ea7c974fafe9335f8fc243ab85d152b87cd4a8aa09f0f2e747","apps/api/src/security.ts":"5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25"}}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/app[39m
+
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mindependent ordered durability trace includes durable witness and lock removal before receipt[32m 23[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mthree isolated scopes interleave while stale exact replay returns only its current stricter scope[33m 430[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mglobal operation id replay cannot change scope/body {"ownerId":"20000000-0000-4000-8000-000000000003"}[32m 138[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mglobal operation id replay cannot change scope/body {"roomId":"10000000-0000-4000-8000-000000000004"}[32m 124[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mglobal operation id replay cannot change scope/body {"exclude":["beta"]}[32m 195[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mglobal operation id replay cannot change scope/body {"expectedRevision":1}[32m 115[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mfull capacity still permits exact replay/read; another owner cannot bypass global bound[32m 31[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22msame-sequence authenticated divergent branch violates process digest floor[32m 35[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mold DB floor follows several fully authenticated unwitnessed scopes only after witness advance[32m 56[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mpartial appended tail of 1 bytes never truncates or returns a permissive read[32m 141[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mpartial appended tail of 1024 bytes never truncates or returns a permissive read[32m 166[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mpartial appended tail of 24575 bytes never truncates or returns a permissive read[32m 155[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrejects independent authenticated envelope attack noncanonical-outer[32m 159[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrejects independent authenticated envelope attack duplicate-outer-key[32m 110[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrejects independent authenticated envelope attack trailing-NUL[32m 106[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrejects independent authenticated envelope attack bad-base64[32m 129[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrejects independent authenticated envelope attack wrong-mac-domain[32m 110[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexcessive chain input rejected before bounded buffer allocation[32m 10[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexcessive witness input rejected before bounded buffer allocation[32m 10[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrecovery refuses to acknowledge/adopt tail when re-fsync or witness publication fails[32m 34[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minitialization failure cannot silently create an empty replacement incarnation[32m 9[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mindependent real SIGKILL after-chain-sync preserves stale lock then stricter recovery[32m 278[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mindependent real SIGKILL after-witness-rename preserves stale lock then stricter recovery[32m 150[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22min-memory records and safety projections cannot be altered through returned frozen arrays[32m 23[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m24 passed[39m[22m[90m (24)[39m
+[2m   Start at [22m 16:04:30
+[2m   Duration [22m 3.26s[2m (tests 88%, import 8%, transform 4%)[22m
+

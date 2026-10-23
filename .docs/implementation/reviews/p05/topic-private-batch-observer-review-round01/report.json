@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED",
+  "reviewer": "/root/p05_topics_ui_review",
+  "created_at": "2026-10-19T22:31:39.832375+00:00",
+  "handoff_sha256": "ef0822e232618baec37e5f8e61ab5051e105f9b15c5e83207107c4d1dc757095",
+  "author_index_sha256": "a4aef6777f9c59c4e33aea97686e19113a08baf241a1248cc1debfb19b89a99a",
+  "module_sha256": "182889b0d5b6b8085e3ad4a26f8686b4a98a8319d67b15c7e5d40621e207926c",
+  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+  "source_files": 1813,
+  "image_proof_index_sha256": "68016ab14171d501d58bc9de2a3cf114c2701d1b413d4fd09ed4f082925a5827",
+  "findings": [
+    {
+      "id": "OBS-R01",
+      "severity": "P2",
+      "title": "Node current-body ordering fixes batch to stale scope"
+    },
+    {
+      "id": "OBS-R02",
+      "severity": "P2",
+      "title": "Unvalidated own projection forwards raw nested fields"
+    }
+  ],
+  "independent_controls": {
+    "status": "PASS_FINDING_REPRODUCED",
+    "checks": 9,
+    "results": [
+      {
+        "name": "ordinary_order_exact_positive",
+        "status": "PASS"
+      },
+      {
+        "name": "late_node_current_body_fresh_complete_batch_false_rejected",
+        "status": "PASS",
+        "detail": {
+          "ready": false,
+          "reason": "SCOPE_MISMATCH",
+          "cycle_id": 1,
+          "accepted_cycle_id": null,
+          "scope_sha256": "dcfb28468287f9612df37016f60cbb55375463a29a4168c1164801b4aa131d29",
+          "lease_remaining_ms": 0,
+          "minimum_remaining_ms": 250,
+          "pending_observers": 0,
+          "observer_overflow": false,
+          "dropped": 0,
+          "body_errors": 0,
+          "invalidations": 0,
+          "complete": false,
+          "parts": {
+            "own": true,
+            "target": true,
+            "conversation": true,
+            "chat": true,
+            "chat_required": true
+          },
+          "http": {
+            "own": 200,
+            "target": 200,
+            "conversation": 200,
+            "chat": 200
+          },
+          "observer_model_only": true,
+          "cache_accept_observed": false,
+          "auth_generation_observed": false
+        }
+      },
+      {
+        "name": "late_new_revision_body_rejects_legitimate_transition",
+        "status": "PASS",
+        "detail": {
+          "failed": {
+            "ready": false,
+            "reason": "SCOPE_MISMATCH",
+            "cycle_id": 2,
+            "accepted_cycle_id": null,
+            "scope_sha256": "729fd01edebca9cda984a610410ba0e4114dab19e9c57993c975d6f67ecc1a4e",
+            "lease_remaining_ms": 0,
+            "minimum_remaining_ms": 250,
+            "pending_observers": 0,
+            "observer_overflow": false,
+            "dropped": 0,
+            "body_errors": 0,
+            "invalidations": 0,
+            "complete": false,
+            "parts": {
+              "own": true,
+              "target": true,
+              "conversation": true,
+              "chat": true,
+              "chat_required": true
+            },
+            "http": {
+              "own": 200,
+              "target": 200,
+              "conversation": 200,
+              "chat": 200
+            },
+            "observer_model_only": true,
+            "cache_accept_observed": false,
+            "auth_generation_observed": false
+          },
+          "recovered": {
+            "ready": true,
+            "reason": "READY",
+            "cycle_id": 3,
+            "accepted_cycle_id": 3,
+            "scope_sha256": "729fd01edebca9cda984a610410ba0e4114dab19e9c57993c975d6f67ecc1a4e",
+            "lease_remaining_ms": 5000,
+            "minimum_remaining_ms": 250,
+            "pending_observers": 0,
+            "observer_overflow": false,
+            "dropped": 0,
+            "body_errors": 0,
+            "invalidations": 0,
+            "complete": true,
+            "parts": {
+              "own": true,
+              "target": true,
+              "conversation": true,
+              "chat": true,
+              "chat_required": true
+            },
+            "http": {
+              "own": 200,
+              "target": 200,
+              "conversation": 200,
+              "chat": 200
+            },
+            "observer_model_only": true,
+            "cache_accept_observed": false,
+            "auth_generation_observed": false
+          }
+        }
+      },
+      {
+        "name": "late_current_after_all_parts_never_reconciles_that_batch",
+        "status": "PASS",
+        "detail": {
+          "ready": false,
+          "reason": "SCOPE_MISMATCH",
+          "cycle_id": 1,
+          "accepted_cycle_id": null,
+          "scope_sha256": "dcfb28468287f9612df37016f60cbb55375463a29a4168c1164801b4aa131d29",
+          "lease_remaining_ms": 0,
+          "minimum_remaining_ms": 250,
+          "pending_observers": 0,
+          "observer_overflow": false,
+          "dropped": 0,
+          "body_errors": 0,
+          "invalidations": 0,
+          "complete": false,
+          "parts": {
+            "own": true,
+            "target": true,
+            "conversation": true,
+            "chat": true,
+            "chat_required": true
+          },
+          "http": {
+            "own": 200,
+            "target": 200,
+            "conversation": 200,
+            "chat": 200
+          },
+          "observer_model_only": true,
+          "cache_accept_observed": false,
+          "auth_generation_observed": false
+        }
+      },
+      {
+        "name": "wrong_own_member_denies_in_ordered_batch",
+        "status": "PASS"
+      },
+      {
+        "name": "two_headless_actors_same_body_interleaving_rejects_both",
+        "status": "PASS",
+        "detail": {
+          "bothRejected": true
+        }
+      },
+      {
+        "name": "snapshots_contain_no_private_text_or_token",
+        "status": "PASS"
+      },
+      {
+        "name": "unvalidated_projection_emits_raw_nested_payload_before_rejection",
+        "status": "PASS",
+        "detail": {
+          "invalidOwnRejected": true,
+          "rawUnexpectedPrivateNestedFieldEmitted": true
+        }
+      },
+      {
+        "name": "unnecessary_second_fresh_cycle_exceeds_existing_8s_phase",
+        "status": "PASS",
+        "detail": {
+          "phaseDeadline": 9000,
+          "firstFreshComplete": 4500,
+          "firstOwnElapsed": 3400,
+          "secondFreshComplete": 9700,
+          "secondOwnElapsed": 3400,
+          "unnecessaryObserverOrderingDelay": 5200
+        }
+      }
+    ],
+    "scope": "EXACT_OBSERVER02_PRODUCTION_VALIDATORS_MODEL_WITH_EXPLICIT_NODE_BODY_DELIVERY_ORDER_DOUBLES_NOT_ACTUAL_BROWSER"
+  },
+  "functional_run": false,
+  "full_stage_pass": false
+}

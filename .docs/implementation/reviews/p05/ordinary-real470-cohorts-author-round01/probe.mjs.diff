@@ -1,0 +1,50 @@
+--- accepted04/probe.mjs
++++ cohort05/probe.mjs
+@@ -7,7 +7,9 @@
+ import {performance} from 'node:perf_hooks';
+ import {setInterval,clearInterval} from 'node:timers';
+ import {setTimeout as delay} from 'node:timers/promises';
+-export const profiles=()=>[{context:'online',mode:'questions',N:4}];
++export const cohortIds=Object.freeze(['online/questions','online/truth_or_dare','online/yes_but','in_person/questions','in_person/truth_or_dare','in_person/yes_but']);
++export function profiles(cohort){assert(cohortIds.includes(cohort),'DECLARED_COHORT_REQUIRED');return ['online','in_person'].flatMap(context=>['questions','truth_or_dare','yes_but'].flatMap(mode=>Array.from({length:7},(_,i)=>({context,mode,N:i+2})))).map((p,i)=>({id:'PILOT470-'+String(i+1).padStart(2,'0'),...p})).filter(p=>p.context+'/'+p.mode===cohort);}
++export function negativeProfiles(cohort){const [profile]=profiles(cohort);return profile.mode==='yes_but'?[{context:profile.context,N:2,mode:'yes_but',relation:'not_a_friend'}]:[];}
+ export const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+ export function publicIdentity(round,pack,seen){
+  assert.equal(round.kind,'public','Every neutral selected round must actually release a public card');
+@@ -26,7 +28,8 @@
+ export async function main(){
+  assert.equal(process.platform,'linux');assert.equal(process.cwd(),'/app');assert(!process.env.NODE_OPTIONS);
+  const ack=JSON.parse(readFileSync('/run/pilot470-root-ack.json','utf8'));
+- assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_N4_DIAGNOSTIC_04');
++ assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_FIXED_COHORT_05');
++ const cohort=ack.cohort,selectedProfiles=profiles(cohort),selectedNegatives=negativeProfiles(cohort);
+  const descriptor=JSON.parse(readFileSync('/run/probe/DESCRIPTOR.json','utf8'));
+  for(const[path,hash]of Object.entries(ack.runtime_files))assert.equal(sha(readFileSync('/app/'+path)),hash,'Exact compiled image file mismatch');
+  const {ownerProvisionalPilot,bundledPacks,bundledTopicSources}=await import('/app/packages/card-catalog/dist/index.js');
+@@ -38,9 +41,9 @@
+  const require=createRequire('/app/package.json'),{WebSocket}=require('ws');
+  const origin='https://127.0.0.1',root='http://127.0.0.1:4300',start=performance.now();let deadline=start+descriptor.rate_schedule.total_probe_deadline_ms;
+  const report={schema_version:1,scope:descriptor.scope,status:'FAIL',entrypoint:'apps/api/dist/server.js',API_only:true,actual_browser:false,actual_TLS:false,
+-  source_identity:ack.source_identity,image_id:ack.image_id,pack_digest:pack.digest,map_pins:map.pins,owner_authority:pack.owner_provisional,
+-  source_override:false,syntheticFixtureOnly:false,profiles:profiles().map((p,i)=>({id:'PILOT470-'+String(i+1).padStart(2,'0'),...p,status:'NOT_RUN'})),
+-  negative_profiles:[],diagnostic_trace:{phase:'startup',round_index:0},
++  cohort,matrix_complete:false,source_identity:ack.source_identity,image_id:ack.image_id,pack_digest:pack.digest,map_pins:map.pins,owner_authority:pack.owner_provisional,
++  source_override:false,syntheticFixtureOnly:false,profiles:selectedProfiles.map(p=>({...p,status:'NOT_RUN'})),
++  negative_profiles:selectedNegatives.map(p=>({...p,status:'NOT_RUN'})),diagnostic_trace:{phase:'startup',round_index:0},
+   requests:0,WS_connections:0,rooms_created:0,rooms_closed:0,completed_rounds:0,consent_acceptances:0,choices:0,conditions:0,finishes:0,skips:0,locales_checked_sessions:0,client_cleanup:'NOT_RUN',room_cleanup_failures:0};
+  const save=()=>writeFileSync('/tmp/pilot470-report.json',JSON.stringify(report,null,2)+'\n');
+  let publicNext=0,wsNext=0,currentActors=[],wsFault=false,cleanupDeadline=null;
+@@ -130,10 +133,10 @@
+  }
+  save();try{
+   const capability=await get({},'/api/v1/runtime-capabilities');assert.equal(capability.room_creation_protocol,2);
+-  for(const row of report.profiles){deadline=Math.min(start+900000,performance.now()+600000);row.status='RUNNING';save();try{await playProfile(row);row.status='PASS';console.log(JSON.stringify({profile:row.id,status:'PASS',completed:row.rounds.length}));}catch(error){row.status='FAIL';report.error??={...safeFailure(error),elapsed_ms:Math.round(performance.now()-start),last_request:report.last_request};throw error;}finally{await cleanupClients();save();}}
+-  for(const row of report.negative_profiles){deadline=Math.min(start+900000,performance.now()+90000);row.status='RUNNING';save();try{const {host,prep}=await createProfile(row,true),availability=await request(host,gameBase(host)+'/availability','GET',undefined,{status:null});assert.equal(availability.status,409);assert.equal(availability.body.code,'TOPIC_SAFE_POOL_EXHAUSTED');
++  for(const row of report.profiles){deadline=Math.min(start+4600000,performance.now()+600000);row.status='RUNNING';save();try{await playProfile(row);row.status='PASS';console.log(JSON.stringify({profile:row.id,status:'PASS',completed:row.rounds.length}));}catch(error){row.status='FAIL';report.error??={...safeFailure(error),elapsed_ms:Math.round(performance.now()-start),last_request:report.last_request};throw error;}finally{await cleanupClients();save();}}
++  for(const row of report.negative_profiles){deadline=Math.min(start+4600000,performance.now()+90000);row.status='RUNNING';save();try{const {host,prep}=await createProfile(row,true),availability=await request(host,gameBase(host)+'/availability','GET',undefined,{status:null});assert.equal(availability.status,409);assert.equal(availability.body.code,'TOPIC_SAFE_POOL_EXHAUSTED');
+     const id=randomUUID(),refused=await request(host,gameBase(host)+'/start','POST',{request_id:id,draft_rev:prep.game_rev},{status:null});assert.equal(refused.status,409);assert.equal(refused.body.code,'TOPIC_SAFE_POOL_EXHAUSTED');const g=await current(host);assert.equal(g.state,'waiting');assert.equal(g.current_round,null);row.status='PASS';row.code=refused.body.code;}catch(error){row.status='FAIL';report.error??={...safeFailure(error),elapsed_ms:Math.round(performance.now()-start),last_request:report.last_request};throw error;}finally{await cleanupClients();save();}}
+-  assert.equal(report.completed_rounds,20);assert.equal(report.finishes,20);assert.equal(report.skips,0);assert.equal(report.locales_checked_sessions,1);assert.equal(report.rooms_created,1);assert.equal(report.rooms_closed,1);assert(report.profiles.every(p=>p.status==='PASS'));assert(report.negative_profiles.every(p=>p.status==='PASS'));report.status='PASS';
++  assert.equal(report.completed_rounds,140);assert.equal(report.finishes,140);assert.equal(report.skips,0);assert.equal(report.locales_checked_sessions,7);assert.equal(report.rooms_created,7+selectedNegatives.length);assert.equal(report.rooms_closed,7+selectedNegatives.length);assert(report.profiles.every(p=>p.status==='PASS'));assert(report.negative_profiles.every(p=>p.status==='PASS'));report.status='PASS';
+  }catch(error){report.error??={...safeFailure(error),elapsed_ms:Math.round(performance.now()-start),last_request:report.last_request};process.exitCode=1;
+  }finally{try{await cleanupClients();}catch{report.status='FAIL';process.exitCode=1;}report.client_cleanup=report.room_cleanup_failures?'FAIL':'COMPLETE';save();console.log(JSON.stringify({status:report.status,profiles:report.profiles.filter(p=>p.status==='PASS').length,completed_rounds:report.completed_rounds,client_cleanup:report.client_cleanup}));}
+ }

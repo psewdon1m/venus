@@ -1,0 +1,5 @@
+async function coherentGame(expected={}){const started=performance.now();let result=null;await expect.poll(async()=>{
+ const host=actors[0],f=await service.plan(host.room);
+ for(const a of actors){const observed=normalCurrentViews.get(a);if(a.room!==host.room||observed?.room!==host.room||observed.member!==a.id||observed.context!==a.context||a.page.context()!==a.context||observed.started_at<=started)continue;assert.equal(observed.status,200,'Authenticated normal-page current failed');if(!result&&coherentRound(f,observed.view,expected))result={fixture:f,view:observed.view};}
+ return result!==null;
+},{timeout:8000,intervals:[50,100,250]}).toBe(true);return result;}

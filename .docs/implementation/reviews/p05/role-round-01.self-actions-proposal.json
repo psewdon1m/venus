@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_IMPLEMENTED_NOT_ACCEPTED",
+  "scope": "recipient-only display permissions; never mutation authority",
+  "endpoint_proposal": "GET /api/v1/rooms/:roomId/game/self-actions",
+  "existing_contracts": "Add new versioned response/endpoint; keep shared GameView/PublicRound and actor projection unchanged",
+  "response_shape_proposal": {
+    "schema_version": 1,
+    "room_id": "authenticated room UUID",
+    "member_id": "authenticated recipient own UUID only",
+    "session_id": "current UUID or null",
+    "round_id": "current UUID or null",
+    "game_rev": "current committed integer or null",
+    "room_rev": "current committed integer",
+    "expires_at": "bounded RFC3339 freshness/deadline",
+    "session_actions": {
+      "pause": "boolean",
+      "stop": "boolean",
+      "abort": "boolean",
+      "resume": "boolean",
+      "advance": "boolean",
+      "neutral_reset": "boolean",
+      "neutral_reset_aborts_game": "boolean owned membership effect only"
+    },
+    "round_actions": {
+      "finish": "boolean",
+      "skip": "boolean",
+      "choose_truth": "boolean",
+      "choose_dare": "boolean",
+      "propose_condition": "boolean",
+      "accept_invitation": "boolean",
+      "accept_action": "boolean",
+      "decline_invitation": "boolean",
+      "withdraw_action": "boolean"
+    }
+  },
+  "privacy_rules": [
+    "recipient derived from authenticated session; never selectable member query/body",
+    "no other member IDs/roles/actors/primary/relationship/card/condition/reason in capability packet",
+    "not embedded in room-audience GameView/WS/outbox/audit; no actor-specific public revision or traffic changes",
+    "dense boolean shape including false for unavailable actions; no denial reasons or other recipients matrices",
+    "GET is same-origin CSRF checked, private no-store; existing semantic/content human HOLD unchanged"
+  ],
+  "binding_rules": [
+    "client envelope binds room/member AuthBoundary identity and transport plus session/round/game_rev",
+    "private consent action metadata cannot outlive min invitation/action deadlines; final clock fence at enqueue",
+    "packet is display information, not bearer capability; POST guards/CSRF/consent remain authoritative",
+    "room/catalog/deletion-ledger/participant/actor/consent checks in same transaction/dispatch lock as revocations",
+    "reconstruct recipient permission packet immediately before synchronous enqueue; no awaited onSend gap",
+    "deny stale client records before render and callback execution, ABA/reconnect cannot restore tokens"
+  ],
+  "safety_rules": [
+    "ordinary pending must not block authorized pause/stop/abort/own-neutral-reset; clear private locally on safety dispatch",
+    "host nonselected abort differs from participant stop; host is not automatically selected/current/private actor",
+    "do not invent permission on metadata failure; preserve authenticated leave/own-neutral-reset and role-authorized emergency path, visibly report network uncertainty",
+    "neutral reset by observer affects own future settings, not the running game; label its effect honestly"
+  ],
+  "validation_required": [
+    "real HTTP/PG role matrix primary/secondary/selected nonactor/host nonselected/spectator across modes/interactions/states",
+    "actual browser controls and requests agree with self-actions; group Questions completes by authorized primary then host advances",
+    "quiet public none/one/two accept plus action consent and proposal revision; condition secondary only",
+    "private chosen Truth/Dare cannot present locked alternate as available",
+    "cross-room/member/session/round/old revision/ABA/reconnect/expiry negative packets and callbacks",
+    "held response versus decline/remove/close/withdraw/deletion ledger final fence bytes",
+    "authorized safety remains usable while ordinary request is stalled; no public primary/pair leak",
+    "controlled unknown outcome idempotency and startup/rollback tests; clean source freeze and independent review"
+  ],
+  "rollback_proposal": "Additive route/schema and frontend consumer versioned together. On consumer incompatibility keep Games admission closed/read-only affected controls; preserve existing direct safety routes and authorization. Do not expose primary or weaken role/consent checks as fallback."
+}

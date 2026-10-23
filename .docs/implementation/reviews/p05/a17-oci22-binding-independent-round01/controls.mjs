@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {validateAuthority,controlIds,expected} from 'file:///C:/.projects/venus/.artifacts/p05-pilot-bundle-source14/.artifacts/p05-compatible-rollback-producer22/contract.mjs';
+import {controlIds as oldIds,expected as oldExpected} from 'file:///C:/.projects/venus/.artifacts/p05-pilot-bundle-source13/.artifacts/p05-compatible-rollback-producer21/contract.mjs';
+import {profile} from 'file:///C:/.projects/venus/.artifacts/p05-pilot-bundle-source14/.artifacts/p05-compatible-rollback-producer22/bound-profile.mjs';
+const dir='C:/.projects/venus/.artifacts/p05-pilot-bundle-source14/.artifacts/p05-compatible-rollback-producer22/';
+const b=JSON.parse(readFileSync(dir+'BINDING.json')),ack=JSON.parse(readFileSync(dir+'ROOT_RUN_ACK_TEMPLATE.json'));
+assert.throws(()=>validateAuthority(b,ack,'4eb65767cada3f8a3ee10533535c67a56ac9cc45431e7d72c2bc385efd97cec2'),error=>error.code==='ERR_ASSERTION'&&error.actual==='NOT_AUTHORIZED'&&error.expected==='AUTHORIZED');
+assert.equal(b.root_run_ack,false);assert.equal(ack.root_run_ack,false);assert.equal(ack.independent_review_index,null);assert.equal(ack.application_source_review_index,null);
+assert.deepEqual(controlIds,Array.from({length:14},(_,i)=>'OCI'+String(i+1).padStart(2,'0')));assert.deepEqual(controlIds,oldIds);assert.deepEqual(expected,oldExpected);assert.deepEqual(Object.keys(expected),controlIds);
+assert.equal(profile.whole_ms,900000);assert.equal(profile.cap_mib,512);assert.equal(profile.RSS_mib.browser,1536);assert.equal(profile.host_cap_mib,96);assert.equal(profile.reserve_gib,10);assert.equal(profile.archive_copies,0);
+console.log(JSON.stringify({status:'PASS_COLD_UNAUTHORIZED_TEMPLATE_AND_ORACLES_BOUNDS',template_denied_at:'NOT_AUTHORIZED_NE_AUTHORIZED',original_oracle_IDs:14,expected_proof_keys_exact21:true,DB_connections:0,Docker_allocations:0,browser_launches:0}));

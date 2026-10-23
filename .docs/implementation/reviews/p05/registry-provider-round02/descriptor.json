@@ -1,0 +1,22 @@
+{
+  "bootstrap": "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/independent.test.ts','apps/api/src/security.ts','apps/api/src/topic-room-lifecycle.ts','apps/api/src/topic-room-registry.ts','apps/api/src/private-topic-preferences.ts','apps/api/src/rooms.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/independent.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/independent.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);",
+  "id": "6b704906be9e",
+  "test_sha256": "cd565ffb58bc4dc324422c7e00b114b119d95f9d9552309942367b8f1027d3b4",
+  "run": "venus-p05-life-review-6b704906be9e-test",
+  "source_sha256": "cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a",
+  "binds": [
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\private-topic-ledger.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\independent.test.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\security.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\topic-room-lifecycle.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\topic-room-registry.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\private-topic-preferences.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\registry-provider-round02\\rooms.ts"
+  ],
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "volume": "venus-p05-life-review-6b704906be9e",
+  "init": "venus-p05-life-review-6b704906be9e-init",
+  "kind": "INDEPENDENT_FROZEN_LINUX_REVIEW",
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "timestamp": "2026-10-19T20:13:55.3351766+03:00"
+}

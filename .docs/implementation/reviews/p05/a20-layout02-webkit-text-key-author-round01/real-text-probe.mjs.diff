@@ -1,0 +1,11 @@
+--- A20-01/real-text-probe.mjs
++++ A20-02/real-text-probe.mjs
+@@ -47,7 +47,7 @@
+   const before=await bounded(budget,'text-backup',()=>page.evaluate(()=>({x:window.scrollX,y:window.scrollY})));
+   let primary=null;try{
+    const installed=await bounded(budget,'text-clone',()=>page.evaluate(installText,row));assert.equal(installed.paragraphs,row.rendered_parts.length);
+-   await bounded(budget,'text-physical-scroll-focus',()=>page.locator('h1').first().click());await bounded(budget,'text-physical-scroll-end',()=>page.keyboard.press('Control+End'));
++   await bounded(budget,'text-physical-scroll-focus',()=>page.locator('h1').first().click());await bounded(budget,'text-physical-scroll-end',()=>page.keyboard.press(page.context().browser().browserType().name()==='webkit'?'End':'Control+End'));
+    await awaitTextBottom(page,budget);
+    const geometry=await bounded(budget,'text-geometry',()=>page.evaluate(textGeometry,row.rendered_parts)),audit=await bounded(budget,'text-existing-dom-audit',()=>page.evaluate(domAudit));record.geometry=geometry;record.audit=audit;save();assertTextMeasurement(geometry,profile,nativeMeasurement);assert.equal(audit.locale,locale);assertObservation(audit);record.status='PASS';save();
+   }catch(error){primary=error;record.status='FAIL';save();}

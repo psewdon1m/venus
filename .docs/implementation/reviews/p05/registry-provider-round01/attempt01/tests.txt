@@ -1,0 +1,81 @@
+{"kind":"exact-image-inputs","node":"v24.22.0","uid":1000,"hashes":{"apps/api/src/private-topic-ledger.ts":"cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a","apps/api/src/independent.test.ts":"cee89e592546d2036ae4f508f5d0b2b717d8e6d3e37cf3f8e4fc41e5437e862c","apps/api/src/security.ts":"5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25","apps/api/src/topic-room-lifecycle.ts":"5562b552e0f3d2fa113627bdd7dce14b7b406e13c66caf8e5c88fcf6b594748e","apps/api/src/topic-room-registry.ts":"438c5da0de39fc75cd815492b1feaedeb291688bb8a306d896c17d13e3800907","apps/api/src/private-topic-preferences.ts":"27fbaae01d684849bb5205820d3bb6cfd52602abc4bf5b13cbad24f2ccf130ff","apps/api/src/rooms.ts":"bcd9094295d55bef75ae8483da7789bfbce299e36262689ffa326ed005663187"}}
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/app[39m
+
+ [31m×[39m apps/api/src/independent.test.ts[2m > [22mSAFETY-GUARD-01 real lifecycle corrupt personal chain must not disable safety access fence[32m 122[2mms[22m[39m
+[31m   → promise rejected "Error: TOPIC_LEDGER_INVALID { …(1) }" instead of resolving[39m
+ [31m×[39m apps/api/src/independent.test.ts[2m > [22mSAFETY-GUARD-01 real lifecycle missing personal chain must not disable safety access fence[32m 93[2mms[22m[39m
+[31m   → promise rejected "Error: ENOENT: no such file or directory,… { …(4) }" instead of resolving[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mobservation exact object, nested arrays and member records are deeply frozen and scope-bound[32m 4[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexact exclusion rejects wrong-client proof without narrowing[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexact exclusion rejects wrong-room proof without narrowing[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexact exclusion rejects unselected-member proof without narrowing[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexact selected member SQL rows reject missing set[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexact selected member SQL rows reject extra set[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mexact selected member SQL rows reject duplicate set[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minvalid selected IDs fail before any ledger read 0[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minvalid selected IDs fail before any ledger read 1[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minvalid selected IDs fail before any ledger read 2[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minvalid selected IDs fail before any ledger read 3[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minvalid selected IDs fail before any ledger read 4[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mcredential expiry during count-read prevents irreversible exclusion[32m 3[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mcredential expiry during last-credential-read prevents irreversible exclusion[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mforged selected peer with original credential cannot narrow peer scope[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mlocked exclusion avoids nested transaction, revokes before publishing and retires original observation[32m 4[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mmaximum low-part rollback after exclusion cannot regress global/member revision or restore allow[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mall eight maximum DB low parts remain below one protected sequence stride[32m 3[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mplanner rejects db-revision-over-limit bounds[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mplanner rejects sequence-overflow bounds[32m 0[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mrevocation failure yields no published DB state but durable union remains stricter[32m 2[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22mindependently changed peer safety or retirement invalidates captured observation[32m 1[2mms[22m[39m
+ [32m✓[39m apps/api/src/independent.test.ts[2m > [22minternal planner reads do not write SQL, narrow, revoke or emit public updates[32m 1[2mms[22m[39m
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/independent.test.ts > SAFETY-GUARD-01 real lifecycle corrupt personal chain must not disable safety access fence
+AssertionError: promise rejected "Error: TOPIC_LEDGER_INVALID { …(1) }" instead of resolving
+ ❯ apps/api/src/independent.test.ts:28:54
+
+
+Caused by: Error: TOPIC_LEDGER_INVALID
+ ❯ demand apps/api/src/private-topic-ledger.ts:19:92
+ ❯ TopicLedgerCodec.inspect apps/api/src/private-topic-ledger.ts:132:7
+ ❯ PrivateTopicLedger.reload apps/api/src/private-topic-ledger.ts:297:28
+ ❯ apps/api/src/private-topic-ledger.ts:225:42
+ ❯ PrivateTopicLedger.locked apps/api/src/private-topic-ledger.ts:325:83
+ ❯ PrivateTopicLedger.read apps/api/src/private-topic-ledger.ts:224:42
+ ❯ TopicRoomLifecycle.live apps/api/src/topic-room-lifecycle.ts:272:40
+ ❯ apps/api/src/topic-room-lifecycle.ts:109:81
+ ❯ TopicRoomLifecycle.locked apps/api/src/topic-room-lifecycle.ts:401:94
+ ❯ TopicRoomLifecycle.assertLive apps/api/src/topic-room-lifecycle.ts:109:56
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'TOPIC_LEDGER_INVALID' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  apps/api/src/independent.test.ts > SAFETY-GUARD-01 real lifecycle missing personal chain must not disable safety access fence
+AssertionError: promise rejected "Error: ENOENT: no such file or directory,… { …(4) }" instead of resolving
+ ❯ apps/api/src/independent.test.ts:28:54
+
+
+
+Caused by: Error: ENOENT: no such file or directory, open '/proc/self/fd/25/chain'
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (25)[39m
+[2m   Start at [22m 17:06:19
+[2m   Duration [22m 703ms[2m (tests 45%, transform 42%, import 12%, worker 1%)[22m
+
+ ❯ PrivateTopicLedger.withFile apps/api/src/private-topic-ledger.ts:264:17
+ ❯ PrivateTopicLedger.readFile apps/api/src/private-topic-ledger.ts:271:17
+ ❯ PrivateTopicLedger.reload apps/api/src/private-topic-ledger.ts:297:41
+ ❯ apps/api/src/private-topic-ledger.ts:225:42
+ ❯ PrivateTopicLedger.locked apps/api/src/private-topic-ledger.ts:325:83
+ ❯ PrivateTopicLedger.read apps/api/src/private-topic-ledger.ts:224:42
+ ❯ TopicRoomLifecycle.live apps/api/src/topic-room-lifecycle.ts:272:40
+ ❯ apps/api/src/topic-room-lifecycle.ts:109:81
+ ❯ TopicRoomLifecycle.locked apps/api/src/topic-room-lifecycle.ts:401:94
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -2, code: 'ENOENT', syscall: 'open', path: '/proc/self/fd/25/chain' }
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+

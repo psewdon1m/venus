@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NOT_RUN_ROOT_ACK_AND_INDEPENDENT_REVIEW_REQUIRED",
+  "method_revision": "P05-R100-OPERATIONAL-3-NATIVE-OUTPUT",
+  "source_identity": "PENDING_EXACT_FINAL_PREPARATION_ROOT_RECEIPT",
+  "descriptor_immutable_reference": ".docs/implementation/reviews/p05/topic-measurement-r100-diagnostic-round02/exact-run.zip:input-snapshot/next/r100-v2-design.json",
+  "descriptor": {
+    "size": 8,
+    "mode": "truth_or_dare",
+    "context": "online",
+    "capability": "CHAT_ON",
+    "regime": "T6_TARGETED_CHANGES",
+    "rounds": 100,
+    "comfort": 4,
+    "class_profile": "F",
+    "seed_literal": "venus:P05-AUTHOR-FULL-CYCLE-CPU-1:N8:online:CHAT_ON:T6:TD:R100"
+  },
+  "attempts": 1,
+  "worker": {
+    "cpus": 1,
+    "memory_mib": 1536,
+    "heap_mib": 1200,
+    "network": "none",
+    "rootfs": "readonly",
+    "uid": 1000,
+    "gid": 1000,
+    "cap_drop": "ALL",
+    "no_new_privileges": true,
+    "log_driver": "none"
+  },
+  "global_allocated_footprint_cap_bytes": 134217728,
+  "partitions_bytes": {
+    "readonly_input_snapshot": 16777216,
+    "linux_native_output": 20971520,
+    "host_export": 20971520,
+    "archive": 20971520,
+    "logs_temp_receipts": 16777216,
+    "safety_filesystem_overhead": 37748736
+  },
+  "footprint_policy": "One128MiB cap covers measured owned artifact file/directory logical and allocated bytes across all simultaneous copies, plus reserved36MiB safety. It does not promise a bytewise bound on Docker VHD growth/daemon metadata; both actual hostC and native free-space guards remain mandatory. Unknown allocation metrics fail closed. No32GiB reservation or unrelatedR:.",
+  "reserve_bytes": 10737418240,
+  "space_checks": "Actual hostC and actual native output filesystem must each have reserve+128MiB beforeRUN. Before every phase/write require reserve+remaining global cap. A volume statfs reading cannot substitute for hostC. Nonatomic sampled guards explicitly labelled; external writes may trigger conservativeSTOP.",
+  "native_volume_bootstrap": {
+    "name": "unique venus-r100-v3 nonce prefix",
+    "labels": [
+      "com.venus.measurement.owner=<unpredictable nonce>",
+      "com.venus.measurement.purpose=R100v3-non-gating"
+    ],
+    "precondition": "No existing volume/container with exact generated name or nonce; no global cleanup",
+    "mount": "Docker volume-nocopy=true; readonly source snapshot on separate bind outsideoutput",
+    "bootstrap": "Bounded root helper on the same pinned image; network none, read-only root, cap drop ALL plus only required CHOWN/DAC_OVERRIDE capabilities. Verify initially empty volume, chown 1000:1000 and chmod 0700 exact mount root. No source mutation.",
+    "write_probe": "Separate helper actually runs as UID1000/GID1000. Verify ownership, create nonce file with O_EXCL/NOFOLLOW, fsync, read/hash/stat identity; delete and verify empty. UID mismatch, EACCES, nonempty volume or bad label fails before worker start.",
+    "cleanup": "Inspect owner labels before every remove; never reuse unrelated resource"
+  },
+  "watchdog": {
+    "external_process": "Dedicated host process uses its own monotonic clock, separate from worker and producer. All Docker commands are asynchronous and bounded. A blocked synchronous worker cannot block the supervisor.",
+    "run_hardwall_ms": 300000,
+    "bootstrap_deadline_ms": 30000,
+    "write_probe_deadline_ms": 10000,
+    "stop_deadline_ms": 30000,
+    "export_deadline_ms": 60000,
+    "archive_deadline_ms": 30000,
+    "cleanup_deadline_ms": 30000,
+    "phase_policy": "Each phase has a local monotonic start, deadline and terminal receipt. Arm the worker hard wall before Docker start, with supervisor acknowledgement. No CPU loop or native blocking call can extend it. Setup/export/cleanup durations are reported separately and bounded.",
+    "heartbeat": "Atomic guard file contains nonce and increasing counter. Reader records its own monotonic time whenever the counter advances. Require an initial advance before work; reject no advance for 2000ms, reordered counter or wrong nonce. Do not compare performance.now origins or require common UTC. Writer UTC is diagnostic only.",
+    "clock_skew": "Counter freshness and reader-local monotonic elapsed time are authority. UTC/NTP skew cannot extend deadlines or refresh stale data.",
+    "states": [
+      "PREPARED_NOT_RUN",
+      "BOOTSTRAP_FAILED_NOT_ACCEPTED",
+      "RUNNING",
+      "STOPPED_NOT_ACCEPTED",
+      "KILL_REQUESTED",
+      "KILL_FAILED_RETAINED_NOT_ACCEPTED",
+      "EXPORTING_PREFIX_NOT_ACCEPTED",
+      "EXPORT_FAILED_RETAINED_NOT_ACCEPTED",
+      "EXPORTED_VERIFIED",
+      "CLEANUP_FAILED_RETAINED_NOT_ACCEPTED",
+      "CLEANUP_COMPLETED",
+      "COMPLETE_NON_GATING"
+    ],
+    "kill_export_policy": "Timeout, low space or stale guard prevents PASS and requests bounded owned kill. Export only after confirmed worker stop. Retain exact prefix within caps. If daemon or kill fails, record retained owner labels/resource IDs and manual cleanup requirement. Native volume removal requires verified export or an independently reviewed retention policy; failed or missing export never implies cleanup PASS.",
+    "supervisor_loop_total_deadline_ms": 520000,
+    "final_owned_stop_grace_ms": 30000,
+    "maximum_supervisor_lifetime_ms": 550000,
+    "main_and_supervisor_controls": "Live heartbeat/phase/guard/state files are isolated from immutable receipts to avoid scans racing an atomic update.8MiB live +8MiB receipts are charged in full inside16MiB log/control partition. Watchdog remains active through bounded export/cleanup after a failed worker stop."
+  },
+  "measurement": {
+    "algorithm": "Actual TopicGames mutators through declared memory SQL/auth seams; unchanged selector, consent, replacement, safety, history and production serializers.",
+    "timing_layers": [
+      "fixture_verify",
+      "actual_map_entry_allowed",
+      "actual_mutator_calls",
+      "selected_core_calls_where_instrumentable_without_function_substitution",
+      "memory_SQL_and_AEAD",
+      "public_private_projection",
+      "gzip",
+      "artifact_tree_scan",
+      "artifact_write",
+      "input_pin_verify"
+    ],
+    "accounting": "Inclusive timers may nest or overlap. Report residual wall, process/cgroup CPU and sampled RSS; do not sum inclusive layers as exclusive CPU. Unknown work remains UNATTRIBUTED.",
+    "retention": "Preserve every raw public/private NDJSON record, gzip6 in <=4MiB chunks, with descriptor and diagnostic context. Record completed-round progress and CPU/wall/RSS at least every10s. Do not force raw flush per round. Pending buffers lost on kill are not completed raw evidence. No change to public events, revisions, clock or RNG.",
+    "scope": "One NON_GATING operational attempt. No PG/HTTP/WS fidelity, statistical acceptance or full-matrix feasibility claim. Historical120s and R100v2 FAIL remain immutable.",
+    "native_metadata_margin_bytes": 1048576,
+    "native_budget_guard": "Before every write scan actual Linux st_blocks and logical bytes; reserve rounded next bytes plus1MiB metadata headroom inside20MiB native partition. Final native inventory rechecks both allocations and exact file hashes. A conservative earlySTOP is NOT_ACCEPTED, never a smaller statistical sample."
+  },
+  "final_statistics_RUN": false,
+  "human450_status": "HOLD_UNCHANGED",
+  "P05_PASS": false
+}

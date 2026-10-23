@@ -1,0 +1,9 @@
+# Coordinated owner-pilot A4 host and paired image evidence
+
+All source authors stopped before snapshot. A4 fc1bfa0b3dd938ae4f9f0c99fd708032aedcf088b3ef54f14ed55be685a7004e/1842 exact before copy, after copy, after global host suite. Typecheck/API+web/lint exit0;65files925PASS/208Windows platformSKIP exit0. Negative CLI schema diagnostics in stdout are expected test controls, final exit0. Earlier concurrent dirty preflight3FAIL/921PASS/208SKIP remains separate and is not overwritten.
+
+A4 combines TDprechoice correction with ownerprovisionalreal470 support. B4 04237568e2ed0e91d9f7f4911ac0444a1da4cf8dd2f1d8c5cdb2eab689d6c6cc/1836 is an EXPLICIT new intermediate: genuineed18B3 +exact11pilot source paths and3normative docs/index; no bundle. Both builds0. TestimagesA4265e1b50/B462602920:282/278 measured source/runtime/7SQL/UI/pg pins. Initial01 probes243/239 did not include all inherited test fixture source pins, so02 adds those exact frozen paths; both receipts preserved and neither broadens itself silently. All engine/pilotprovider/registry/SQL/pg compiled bytes equal; only2API compiled differences(view) and expected frontend differ.
+
+ProductionimagesA41c023d3e/B4a3358cbc build0 using ordinaryDockerfile, include buildmetadata with exactdirtysourceSHA256 (not asserted Gitcommit).119measured paths each:64non-testcompiled,7SQL,servedUI,pg andnon-testpackagesource exact corresponding testimage. First prodprobe wrongly expected catalog.test.js; productiondockerignore deliberately excludes tests. Failedscript preserved, explicit non-test correction succeeds. All probes readonly/no-network/autoremoved/no application imports. None are server startup, PG/HTTP/browser/rollback or clean-source proof.
+
+Independent pilot approval review and final operational qualification pending. No fullstage acceptance. Source journals/derived evidence continue outside this immutable source. Finalmanifest/cleancommit and actual gates remain separate.

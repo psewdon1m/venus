@@ -1,0 +1,63 @@
+[
+  {
+    "label": "independent-binding-audit",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-B",
+      "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\topic-map-r4-independent-preliminary-round01\\audit.py"
+    ],
+    "exit_code": 0,
+    "stdout": "independent-binding-audit.stdout.txt",
+    "stderr": "independent-binding-audit.stderr.txt",
+    "at_utc": "2026-10-20T17:46:27.196268+00:00"
+  },
+  {
+    "label": "existing-package-check",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-B",
+      ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\package_candidate.py",
+      "--check"
+    ],
+    "exit_code": 0,
+    "stdout": "existing-package-check.stdout.txt",
+    "stderr": "existing-package-check.stderr.txt",
+    "at_utc": "2026-10-20T17:46:27.669788+00:00"
+  },
+  {
+    "label": "existing-validator",
+    "argv": [
+      ".venv/Scripts/python.exe",
+      "-B",
+      ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\validate_candidate.py"
+    ],
+    "exit_code": 0,
+    "stdout": "existing-validator.stdout.txt",
+    "stderr": "existing-validator.stderr.txt",
+    "at_utc": "2026-10-20T17:46:28.407410+00:00"
+  },
+  {
+    "attempt": "one-off-read",
+    "exit_code": 1,
+    "error": "UnicodeEncodeError cp1252 stdout",
+    "correction": "Explicit UTF8 output only."
+  },
+  {
+    "attempt": "independent-audit01",
+    "exit_code": 1,
+    "error": "FileNotFoundError duplicate r4 prefix",
+    "correction": "r4 manifest path is workspace-relative."
+  },
+  {
+    "attempt": "independent-audit02",
+    "exit_code": 1,
+    "error": "KeyError provenance",
+    "correction": "Card authoring field is the provenance hash payload."
+  },
+  {
+    "attempt": "independent-audit03",
+    "exit_code": 1,
+    "error": "KeyError space in TSV shorthand",
+    "correction": "Ignore whitespace separators, still reject unknown non-whitespace topic codes and require exact tag-set/rationale equality."
+  }
+]

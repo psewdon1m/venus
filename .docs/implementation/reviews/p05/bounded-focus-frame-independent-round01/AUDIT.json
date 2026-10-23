@@ -1,0 +1,21 @@
+{
+  "status": "HOLD_SOURCE_POINTER_ELIGIBILITY",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "APP_author": "root",
+  "author_index_sha256": "ae784d8e4adee746f7996d06fdd7cf749a2c89f7d17959ea8c42bfd61af35129",
+  "source_identity": "0fac2f6f405ab802e191bc980ba655cc1babf19a7f7b457087beaa47c82e6553",
+  "included_files": 1885,
+  "source_binding": "Four author children/1885actualsource rehashed; whole main inverse recovers parent A29 bytes after exactly helper/hook/root-handler additions; CSS byte-exact A26; other1882parent paths exact. Root index unchanged. Read-only checker exit0.",
+  "positive_review": "Module-scope callback factory captures only numericgeneration and bookkeepingstate, no event/DOM/privatefield. Generation checked before frame cleared. Callback re-reads current connected eligible focus-visible activeElement only with document focus and fitting/clipped geometry. One callback never reschedules; no listeners/timers/focussteal/scroll listener; blur/newfocus/wheel/touch/nonTab/unmount cancel. Backend/RoomShell/copy/dictionaries/statistics unchanged.",
+  "finding": {
+    "priority": 2,
+    "file": "apps/web/src/main.tsx",
+    "scope": "onPointerDownCapture followed by onFocus eligibility",
+    "problem": "Pointerdown cancels an existing frame, but pointer-origin focus then creates a new frame. Input/textarea can match :focus-visible after pointer focus. Therefore current capture cancellation does not suppress deferred recentering during a pointer caret gesture, despite the intended cancellation guarantee.",
+    "minimal_resolution": "Prevent scheduling on pointer-origin focus through bounded keyboard-intent/pointer-state bookkeeping, without capturing DOM/event/privatevalue, timers or extra frames; retain all existing immediate behavior. Alternatively explicitly accept and document this interaction limitation before claiming pointer cancellation safety.",
+    "native_reproduction_claimed": false
+  },
+  "qualification": "Historical A29 last h1 cause remains unknown; diagnostic failed earlier native preparation. Earlier causal late-scroll supports only bounded intervention hypothesis. Fresh current9/native readiness correction/quality remain required. No source/native/stage acceptance while finding unresolved.",
+  "tests_Docker_native_models": 0,
+  "whole_stage_PASS": false
+}

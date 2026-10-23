@@ -1,0 +1,26 @@
+{
+  "status": "EXACT_FOUR_LITERAL_METADATA_SUBSTITUTIONS",
+  "edits": [
+    {
+      "id": "MANIFEST_AND_EXACT_HASH",
+      "before": "manifest=r/'.artifacts/p05-full-original-ranges02/MANIFEST.json';assert sha(manifest)=='9b107dccf958551968e6e1fe758595754c219a66ac6bd66fcacdb26ff62e59c2'",
+      "after": "manifest=r/'.artifacts/p05-full-original-resume05/MANIFEST.json';assert sha(manifest)=='beacb3659d04aa39299afd2e06f1811f0191974e44f621a85a35c205be4ccd5a'"
+    },
+    {
+      "id": "TERMINAL_PATH",
+      "before": "terminal_path=r/'.artifacts/p05-full-original-execution03/BATCH_TERMINAL.json'",
+      "after": "terminal_path=r/'.artifacts/p05-full-original-execution05/BATCH_TERMINAL.json'"
+    },
+    {
+      "id": "FRESH_OUTPUT_PREFIX",
+      "before": "out=r/('.artifacts/p05-reduce-original03-'+section)",
+      "after": "out=r/('.artifacts/p05-reduce-original05-'+section)"
+    },
+    {
+      "id": "PHYSICAL_E_DOCKER_RAW_BIND_ONLY",
+      "before": "'type=bind,source='+str(r/'.artifacts/p05-fixedranges')+',target=/raw,readonly'",
+      "after": "'type=bind,source='+str(Path('E:/.venus-artifacts/venus-p05-20261022/raw'))+',target=/raw,readonly'"
+    }
+  ],
+  "changes_elsewhere": false
+}

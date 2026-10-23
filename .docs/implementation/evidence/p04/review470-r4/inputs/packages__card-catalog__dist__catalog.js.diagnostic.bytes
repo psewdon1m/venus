@@ -1,0 +1,103 @@
+/** Offline, server-only candidate validation. A signature authenticates a registered key,
+ * not personhood or linguistic competence; the operator must establish the human registry. */
+import { verify, createPublicKey } from 'node:crypto';
+import { FrozenPack, canonical, digest, policyDigest } from '@venus/relationship-engine';
+export const locales = ['ru', 'en', 'tr'];
+export const modes = ['questions', 'truth_or_dare', 'yes_but'];
+const fields = { questions: ['question'], truth_or_dare: ['truth', 'dare'], yes_but: ['proposal'] };
+export function requireCatalog(value, code) { if (!value)
+    throw new Error(code); }
+export function manifestFor(cards, revision = 1, release = false) {
+    requireCatalog(cards.length > 0 && Number.isSafeInteger(revision) && revision > 0, 'CATALOG_EMPTY_OR_REVISION');
+    requireCatalog(new Set(cards.map(c => c.pack_id)).size === 1, 'CATALOG_PACK_MISMATCH');
+    const counts = (values) => Object.fromEntries([...new Set(values)].sort().map(value => [value, values.filter(v => v === value).length]));
+    const payload = { schema_version: 1, pack_id: cards[0].pack_id, pack_revision: revision,
+        content_contract_revision: 'CARD-1', policy_revision: 'RE-1', policy_sha256: policyDigest.slice(7),
+        status: release ? 'reviewed_release_candidate' : 'illustrative_draft_candidate',
+        locale_codes: [...locales], total_cards: cards.length, reviewed_cards: cards.filter(c => c.status === 'reviewed').length,
+        mode_counts: counts(cards.map(c => c.mode)), category_counts: counts(cards.map(c => `${c.mode}/${c.category}`)),
+        eligibility_cell_counts: counts(cards.flatMap(c => c.meeting_contexts.map(ctx => `${c.mode}/${ctx}/C${c.min_comfort}/S${c.min_progression_stage}/${c.relationship_scope}`))),
+        cards: cards.map(c => ({ id: c.id, revision: c.revision, sha256: digest(c), status: c.status })).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
+        caveats: ['Human identity/competence/rights are externally established; machine checks alone are insufficient.'] };
+    return { ...payload, canonical_payload_sha256: digest(payload) };
+}
+/** Text is never rewritten. Turkish dotted/dotless i retain their Turkish distinction. */
+export function normalized(text, locale) {
+    return text.normalize('NFC').toLocaleLowerCase(locale === 'tr' ? 'tr' : 'en').replace(/ß/g, 'ss').replace(/ς/g, 'σ').replace(/[^\p{L}\p{N}]+/gu, ' ').trim().replace(/\s+/g, ' ');
+}
+export function analyze(cards) {
+    const manifest = manifestFor(cards);
+    FrozenPack.load([...cards], manifest, true);
+    const seen = new Map(), queue = [], texts = [];
+    for (const card of cards) {
+        requireCatalog(card.status === 'draft' && card.authoring.rights_status === 'needs_review' && card.authoring.reviewed_by === null && card.authoring.reviewed_at === null, 'CATALOG_DRAFT_REQUIRED');
+        for (const locale of locales)
+            for (const field of fields[card.mode]) {
+                const normalizedText = normalized(card.text[locale][field], locale), ref = { id: card.id, revision: card.revision, locale, field, text_sha256: digest(card.text[locale][field]) };
+                requireCatalog(normalizedText.length > 0, 'CATALOG_EMPTY_TEXT');
+                // Across modes and corresponding locales, including individual truth/dare sides.
+                const key = locale + ':' + normalizedText;
+                requireCatalog(!seen.has(key), 'CARD_013_EXACT_DUPLICATE');
+                seen.set(key, ref);
+                const tokens = new Set(normalizedText.split(' '));
+                for (const old of texts)
+                    if (old.ref.locale === locale) {
+                        const intersection = [...tokens].filter(t => old.tokens.has(t)).length, union = new Set([...tokens, ...old.tokens]).size, score = intersection / union;
+                        if (score >= .78) {
+                            const pair = [old.ref, ref].sort((a, b) => canonical(a) < canonical(b) ? -1 : 1);
+                            queue.push({ id: digest(pair), left: pair[0], right: pair[1], jaccard: score, status: 'HUMAN_DISPOSITION_REQUIRED' });
+                        }
+                    }
+                texts.push({ ref, tokens });
+            }
+    }
+    const diversity = modes.map(mode => {
+        const subset = cards.filter(c => c.mode === mode), categories = Object.fromEntries([...new Set(subset.map(c => c.category))].sort().map(category => [category, subset.filter(c => c.category === category).length]));
+        return { mode, total: subset.length, categories, over_twenty_percent: Object.entries(categories).filter(([, n]) => n / subset.length > .2).map(([category]) => category) };
+    });
+    return { schema_version: 1, catalog_digest: digest(cards.map(c => ({ id: c.id, revision: c.revision, sha256: digest(c) })).sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0)),
+        manifest, exact_duplicates: 0, similarity_method: { revision: 'P04-J1', threshold: .78, metric: 'token Jaccard, language-aware lowercase; no semantic completeness claim', calibration: 'PROPOSED_PENDING_HUMAN_LABELS' },
+        similarity_queue: queue.sort((a, b) => a.id < b.id ? -1 : 1), diversity };
+}
+export const requiredHumanChecks = ['editorial', 'safety', 'ru', 'en', 'tr', 'rights', 'similarity', 'diversity'];
+export function reviewedCandidate(cards, reviews, reviewers, authorIds, revision = 1) {
+    const analysis = analyze(cards), now = Date.now(), approved = new Map(), all = cards.map(digest);
+    requireCatalog(authorIds.length > 0 && authorIds.every(id => id.trim().length > 0), 'CATALOG_AUTHOR_ID_REQUIRED');
+    requireCatalog(new Set(reviewers.map(r => r.id)).size === reviewers.length, 'CATALOG_REVIEWER_DUPLICATE');
+    const signed = reviews.map(signed => {
+        const r = signed.review, person = reviewers.find(p => p.id === r.reviewer_id);
+        requireCatalog(Object.keys(r).sort().join(',') === 'card_hashes,catalog_digest,checks,decision,notes,reviewed_at,reviewer_id,schema_version,similarity_dispositions' && Array.isArray(r.card_hashes) && Array.isArray(r.checks) && Array.isArray(r.similarity_dispositions) && r.similarity_dispositions.every(d => Object.keys(d).sort().join(',') === 'decision,id,reason' && typeof d.reason === 'string'), 'CATALOG_REVIEW_SCHEMA_INVALID');
+        requireCatalog(person?.kind === 'human' && person.operator_evidence.trim().length >= 10 && !authorIds.includes(person.id), 'CATALOG_HUMAN_TRUST_REQUIRED');
+        const signature = Buffer.from(signed.signature_base64, 'base64'), key = createPublicKey(person.public_key_pem);
+        requireCatalog(key.asymmetricKeyType === 'ed25519' && signature.length === 64 && signature.toString('base64') === signed.signature_base64 && verify(null, Buffer.from(canonical(r)), key, signature), 'CATALOG_REVIEW_SIGNATURE_INVALID');
+        requireCatalog(r.schema_version === 1 && r.catalog_digest === analysis.catalog_digest && Number.isFinite(Date.parse(r.reviewed_at)) && Date.parse(r.reviewed_at) <= now && r.notes.trim().length > 0, 'CATALOG_REVIEW_STALE_OR_INVALID');
+        requireCatalog(r.card_hashes.length > 0 && new Set(r.card_hashes).size === r.card_hashes.length && r.card_hashes.every(hash => all.includes(hash)), 'CATALOG_REVIEW_UNKNOWN_CARD');
+        requireCatalog(r.checks.length > 0 && new Set(r.checks).size === r.checks.length && r.checks.every(check => person.competencies.includes(check)), 'CATALOG_REVIEW_COMPETENCE');
+        requireCatalog(r.decision === 'approve', 'CATALOG_HUMAN_REJECTED');
+        for (const hash of r.card_hashes)
+            for (const check of r.checks) {
+                const key = hash + ':' + check;
+                approved.set(key, [...(approved.get(key) ?? []), { id: person.id, date: r.reviewed_at }]);
+            }
+        return r;
+    });
+    for (const card of cards) {
+        const hash = digest(card), checks = [...requiredHumanChecks];
+        if (card.requires_physical_contact || card.safety_tags.includes('romantic') || card.category === 'romance')
+            checks.push('qualified_safety');
+        requireCatalog(checks.every(check => approved.has(hash + ':' + check)), 'CATALOG_HUMAN_REVIEW_INCOMPLETE');
+        requireCatalog(signed.filter(r => r.card_hashes.includes(hash)).every(r => Date.parse(r.reviewed_at) >= Date.parse(card.authoring.created_at)), 'CATALOG_REVIEW_BEFORE_CREATION');
+    }
+    for (const item of analysis.similarity_queue)
+        requireCatalog(signed.some(r => r.checks.includes('similarity') && r.card_hashes.includes(digest(cards.find(c => c.id === item.left.id))) && r.card_hashes.includes(digest(cards.find(c => c.id === item.right.id))) && r.similarity_dispositions.some(d => d.id === item.id && d.decision === 'distinct_originals' && d.reason.trim().length >= 10)), 'CATALOG_SIMILARITY_UNRESOLVED');
+    requireCatalog(analysis.diversity.every(row => row.total >= 100), 'CATALOG_MODE_MINIMUM_100');
+    // More than20% requires a separately accepted ADR, not a generic review tick.
+    requireCatalog(analysis.diversity.every(row => row.over_twenty_percent.length === 0), 'CATALOG_DIVERSITY_ADR_REQUIRED');
+    const output = cards.map(card => {
+        const record = approved.get(digest(card) + ':editorial')[0];
+        const copy = JSON.parse(canonical(card));
+        return { ...copy, status: 'reviewed', authoring: { ...copy.authoring, reviewed_by: record.id, reviewed_at: record.date, rights_status: 'original_verified' } };
+    });
+    const manifest = manifestFor(output, revision, true), pack = FrozenPack.load(output, manifest);
+    return { cards: output, manifest, analysis, pack, review_records_sha256: digest(reviews), reviewer_registry_sha256: digest(reviewers) };
+}

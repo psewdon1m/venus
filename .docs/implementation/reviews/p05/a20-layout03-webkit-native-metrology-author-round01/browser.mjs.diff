@@ -1,0 +1,11 @@
+--- parent02/browser.mjs
++++ candidate03/browser.mjs
+@@ -50,7 +50,7 @@
+    }catch(e){const row=group.find(r=>r.status==='RUNNING');if(row){row.status='FAIL';row.failure=safeFailure(e);}recordX11Failure(e);throw e;}
+    finally{if(native)for(const {actor}of prepared.roles){const m=measurements.get(actor);if(m&&!m.reset_verified&&!actor.page.isClosed())await resetNative(actor.page,xserver,m,absoluteBudget(5000));}await driver.closeScene();driver=null;await owned.close();owned=null;}
+   }
+-  report.matrix=assertMatrix(report.records,{engine,locale});report.owner_r4_typography=assertTextRows(report.real_text_observations??[],locale);assert.equal(report.page_errors.length,0);assert(!report.page_errors_overflow&&!report.observer_error&&!report.request_metadata_overflow);report.status='PASS';
++  report.matrix=assertMatrix(report.records,{engine,locale});report.owner_r4_typography=assertTextRows(report.real_text_observations??[],locale,engine);assert.equal(report.page_errors.length,0);assert(!report.page_errors_overflow&&!report.observer_error&&!report.request_metadata_overflow);report.status='PASS';
+  }catch(e){error=e;report.failure=safeFailure(e);report.status='FAIL';recordX11Failure(e);const a=driver?.actors().find(a=>!a.page.isClosed());if(a)try{const name='failure-dom-only.png';await a.page.screenshot({path:join(output,name),fullPage:false,timeout:5000,mask:[a.page.getByTestId('room-invite'),a.page.getByTestId('join-invite')]});report.failure_screenshot={file:name,diagnostic_only:true,capture:screenshots.accept(join(output,name))};}catch(captureError){report.failure_screenshot_error={name:captureError.name};}}
+  finally{
+   const cleanup=[];

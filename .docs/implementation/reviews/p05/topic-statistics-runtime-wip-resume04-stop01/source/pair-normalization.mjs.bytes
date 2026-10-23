@@ -1,0 +1,9 @@
+/** Only bijective UUIDs and explicitly named opaque token fields may differ. */
+import assert from 'node:assert/strict';
+const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
+export function pairNormalization(actorIds=[]){const forward=new Map(actorIds.map(x=>[x,x])),reverse=new Map(actorIds.map(x=>[x,x])),tokens=new Map(),rtokens=new Map();
+ function bind(a,b,f,r){if(f.has(a))assert.equal(f.get(a),b,'IDENTITY_MAP_CHANGED');if(r.has(b))assert.equal(r.get(b),a,'IDENTITY_MAP_NOT_BIJECTIVE');f.set(a,b);r.set(b,a);}
+ function equal(a,b,key=''){if(typeof a==='string'&&typeof b==='string'&&uuid.test(a)&&uuid.test(b)){bind(a,b,forward,reverse);return;}if(key==='token'&&typeof a==='string'&&typeof b==='string'&&/^[a-f0-9]{64}$/.test(a)&&/^[a-f0-9]{64}$/.test(b)){bind(a,b,tokens,rtokens);return;}if(Array.isArray(a)){assert(Array.isArray(b));assert.equal(a.length,b.length);a.forEach((v,i)=>equal(v,b[i],key));return;}if(a&&typeof a==='object'){assert(b&&typeof b==='object'&&!Array.isArray(b));assert.deepEqual(Object.keys(a).sort(),Object.keys(b).sort());for(const k of Object.keys(a))equal(a[k],b[k],k);return;}assert.deepEqual(a,b,'NON_NORMALIZABLE_VALUE:'+key);}
+ function translate(v,key=''){if(Array.isArray(v))return v.map(x=>translate(x,key));if(v&&typeof v==='object')return Object.fromEntries(Object.entries(v).map(([k,x])=>[k,translate(x,k)]));if(typeof v==='string'&&uuid.test(v)){assert(forward.has(v),'UNMAPPED_ACTUAL_ID');return forward.get(v);}if(key==='token'){assert(tokens.has(v),'UNMAPPED_PRIVATE_TOKEN');return tokens.get(v);}return v;}
+ return{equal,translate,forward,scope:'bijective UUID identity + explicit private token only; no digest/candidate_ref/revision/frame normalization'};
+}

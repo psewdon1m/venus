@@ -1,0 +1,54 @@
+# ADR-023 · Темы комнаты, необратимое сужение и восстановление
+
+**Дата:** 2026-10-19. **Статус:** `SERVER_WIRING_IMPLEMENTED / RUNTIME_ACCEPTANCE_PENDING / DEFAULT_OFF`.
+**Основание:** room-only retention U-002, [ADR-019](ADR-019-standalone-local-pilot.md), [topic design](../P05_TOPIC_ADVICE_DESIGN.md), независимый [lifecycle design gate](../implementation/reviews/p05/ledger-lifecycle-design-round01.md).
+Это инженерное решение внутри согласованного scope. Оно не подтверждает готовность функции или одобрение карточек.
+
+## Решение
+
+Новые комнаты с topic-enabled private protocol создаются как protocol2 с рождения. Уже существующая protocol1-комната не переводится в protocol2: для нового сценария создаётся новая комната. Признак `rooms.private_protocol` неизменяем; linked birth record коммитится с room в одной PG-транзакции. Файловые birth/ledger/witness публикуются и fsync до COMMIT. Откат или неизвестный результат COMMIT не даёт права автоматически удалять файлы.
+
+Обычные чтения, restart и restore никогда не вызывают initialize. Protocol2 без exact birth descriptor, incarnation, pins, chain или witness закрывается. Отсутствие этих файлов после удаления комнаты тоже означает отказ, включая старый DB backup после истечения tombstone. Protocol2 не становится protocol1. DB constraints не заменяют внешний descriptor: текущий deferred guard допускает DELETE+INSERT birth в одной транзакции; required external binding обязан отвергнуть подмену. Путь такой замены в API отсутствует.
+
+Private allow-set начинается пустым. Собственное явное добавление ещё не исключённой темы разрешает предложить её, а каждый prompt всё равно требует нового согласия обоих. Исключения монотонны внутри комнаты. Ledger объединяется с восстановленной БД; более старая запись не возвращает исключённую тему. Удаление из allow-set требует явного exclusion, а не скрытого изменения значения при refresh.
+
+API settings имеет собственную revision. Дополнительный `POST .../me/private-topics/exclusions` не требует `expected_rev`, поэтому чужая новая игровая/настроечная revision не блокирует сужение. Перед необратимой записью ledger повторно проверяются credential, acceptance, TTL, current safety revision и external lifecycle; после awaited revoke/SQL выполняется отдельный response fence. Ошибка SQL не откатывает уже подтверждённое durable сужение. Повтор idempotent request возвращает текущие более строгие настройки.
+
+## Retention и identity
+
+После leave собственные DB preferences удаляются. Минимальное зашифрованное exclusion/withdrawal evidence может оставаться в журнале этой комнаты до её закрытия и удаления за ≤24 ч после закрытия: оно нужно только для запрета восстановления старых разрешений из backup. Это явное уточнение прежней фразы «удаление person удаляет его rows» в topic design: речь о DB rows, а не обещании немедленно стереть все дешифруемые bytes safety ledger.
+
+Новая анонимная identity после повторного join получает пустой allow-set; система не связывает её с прежним человеком. Старые member/session credentials имеют отдельный монотонный withdrawal до DB revocation и replay до serving при restore. Сброс volatile private grants этого не заменяет. Механизм интегрирован в registry/Rooms и проверен отдельным actual producer; полный backup restore и штатный startup ещё не приняты.
+
+Personal ledger размещается отдельно для каждой комнаты. Удаление разрешается только после собственного authenticated durable retirement authority. Старый `DeletionLedger` не является единственным доказательством для unlink нового safety state. Предлагаемый lifecycle journal хранит только зашифрованные минимальные admission/withdrawal UUID metadata и использует отдельный chain/witness; immutable retirement intent задаёт точное closed-at. `RETIRING` уже закрывает выдачу; cleanup требует подтверждённого terminal record. Конкретный модуль и его fault tests ещё проходят реализацию/приёмку.
+
+## Обязательства до включения
+
+- LIFE001: полные записи, protected paths/owner/modes/links, file и directory fsync, durable retirement перед personal cleanup, повтор после частичного удаления.
+- LIFE002: external compatibility floor вне DB rollback, quiesce старых workers; старые game/chat routes и feature-off не обслуживают protocol2 через legacy reader.
+- LIFE003: единый room ordering для birth, unknown-COMMIT recovery, cleaner, retirement и final HTTP/WS dispatch; DB uncertainty запрещает cleanup.
+- LIFE004: admission/member/session withdrawal, точные сроки retention, restore-before-admission и tests старых credentials. Обслуживание не открывается только от `/health/ready`.
+
+Все четыре остаются открыты до полного source-bound implementation и independent runtime proof. Исторический settings producer использовал lifecycle/revoke seams; новый actual lifecycle producer использует реальные storage/provider/revoke. `server.ts` теперь содержит штатную сборку, её runtime-приёмка впереди. [Контракт и текущие доказательства](../P05_PRIVATE_TOPICS.md).
+
+## Совместимость и откат
+
+Исторические migrations/snapshots/proofs не меняются. Новая migration family добавляется отдельно. Перед отключением protocol2 закрыть новые starts и отозвать его grants/epochs; сохранить ledger/witness/keys и compatibility floor вне DB rollback. Старый reader нельзя вернуть в serving против protocol2. Не удалять таблицы/журналы для восстановления запуска; при несовместимости сохранять данные и закрытый serving. Фактический rollback/restore полного набора ещё не проверен.
+
+## Уточнения интеграции · 2026-10-19
+
+Контроль безопасности комнаты и участника отделён от чтения личного содержимого: metadata authority проверяет exact birth, intent/terminal, lifecycle membership и process floors. Повреждение личного ledger не должно блокировать Stop/Leave/Close при целой authority. Это не разрешает читать prompt/settings при неисправном personal state. [SAFETY-GUARD-01](../implementation/reviews/p05/registry-provider-round01.md) исправлен и проверен [повторно](../implementation/reviews/p05/registry-provider-round02.md). Зависимость callback от personal parent roots обнаружена отдельно как [SAFETY-GUARD-02](../implementation/reviews/p05/directory-authority-round01.md); [повторная проверка](../implementation/reviews/p05/directory-authority-round02.md) дала19/19 Linux PASS. Это проверяет runtime composition с bound callback; холодный constructor требует пять исправных roots. Actual PostgreSQL/HTTP и server activation остаются открыты.
+
+Внутренний planner provider читает реальные настройки всех выбранных участников в той же room transaction. Его observation заморожен и связан с точным объектом, PG client, birth и ledger drivers; десериализованный JSON такого доказательства не имеет. Синхронная проверка перед выдачей повторно читает protected safety каждого участника. Исключение темы принимает действительный Auth вызывающего и observation; перед первой необратимой записью снова проверяет credential/TTL/offer. Вложенной транзакции нет.
+
+Внутренняя planner revision составляется из защищённого счётчика ledger и DB revision: room `sequence * 65536 + sum(selected DB rev) + 1`, member `own ledger revision * 65536 + own DB rev + 1`. Максимум восемь участников и DB rev≤4096 дают low part≤32768; новое durable exclusion превосходит любой его откат. Исключение всегда объединяется с восстановленной БД. Удаление allow требует durable exclusion; откат простого allow-addition сужает разрешения. Публичный settings DTO сохраняет собственные прежние revision fields. Эти внутренние числа не публикуются в room/game projection.
+
+Файловый provisioning разрешён только новой server-owned identity под общей room ordering. Все корни заранее подготовлены оператором; allocator не создаёт родителей, не исправляет права, не переиспользует partial birth и не удаляет orphan при неизвестном COMMIT. Принятый retirement retry сохраняет исходные operation UUID/closedAt и не продлевает срок удаления.
+
+Для HTTP V2 используются отдельные маршруты и две узкие cookie paths `/api/v1/rooms/<id>` и `/api/v2/rooms/<id>` с одинаковым room credential. Это поддерживает общий Rooms transport и V2 Games без расширения cookie на весь `/api`. Протокол комнаты читается отдельным аутентифицированным ресурсом, не добавляется в исторический RoomView. V1 Games для protocol2 должен явно отказывать, а общий WS выбирает реализацию по неизменяемому protocol; при отсутствии V2 реализация V1 не подставляется. Штатное server wiring, браузерные cookie checks и внешний compatibility barrier пока не приняты.
+
+## Штатная сборка и compiled profile · текущая ревизия
+
+`server.ts` применяет private-topic migrations3, собирает directory→lifecycle→registry→preferences→release source→TopicGames и ждёт bootGate/reconciliation/maintenance до listen. `VENUS_PRIVATE_TOPICS` default false, допустимы только exact true/false. При existing protocol2 DB rows даже выключенный флаг требует совместимого compiled profile, protected authority и catalog ledger; legacy reader не подставляется. Profile допускает только общий exact taxonomy для всех historical bundled maps; изменение требует явного compatibility/quiesce решения. Новые контракты capability и own taxonomy отдельные, исторические snapshots не расширены.
+
+Все пять roots заранее provisioned UID1000/mode0700; image copy-up предназначен для fresh volume. Missing roots на старом volume и missing catalog ledger автоматически не создаются. Compose явно передаёт catalog ledger path, а default protected path расположен в отдельном от PostgreSQL `venus-state`. Текущие approved registries пусты: включение protocol2 fail closed, human HOLD не обходится. Typecheck и22 конфигурационных unit controls PASS; это ещё не actual production-image/restore/browser gate. Bounded actual lifecycle16/16 и Games20/20 относятся к своим frozen sources, не всему новому server wiring.

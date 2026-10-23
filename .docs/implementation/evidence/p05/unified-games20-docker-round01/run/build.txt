@@ -1,0 +1,77 @@
+2026/10/20 19:51:30 http2: server: error reading preface from client //./pipe/dockerDesktopLinuxEngine: file has already been closed
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 12.20kB 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  2/12] WORKDIR /app
+#5 CACHED
+
+#6 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#6 CACHED
+
+#7 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#7 CACHED
+
+#8 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#8 CACHED
+
+#9 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#9 CACHED
+
+#10 [runtime 4/5] COPY tests tests
+#10 CACHED
+
+#11 [runtime 1/5] COPY tsconfig*.json ./
+#11 CACHED
+
+#12 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#12 CACHED
+
+#13 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#13 CACHED
+
+#14 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#14 CACHED
+
+#15 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#15 CACHED
+
+#16 [runtime 2/5] COPY apps apps
+#16 CACHED
+
+#17 [runtime 3/5] COPY packages packages
+#17 CACHED
+
+#18 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#19 CACHED
+
+#20 [runtime 5/5] RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+#20 CACHED
+
+#21 exporting to image
+#21 exporting layers done
+#21 exporting manifest sha256:b33decb60aaca69aae4fcc61d55a2d7f49073e20feb93b6ec40de619b43a1af5 done
+#21 exporting config sha256:d509b2fc6948b252788aa546cfc9490edb2e68e3220d6e0d2f78d1bcd9acd3d0 done
+#21 exporting attestation manifest sha256:a125b3e57783ab2e761e284d67ed8c44f773cbbb2837ae398dbfe35d639cc14e 0.0s done
+#21 exporting manifest list sha256:e081feba66118113f5deb6bd2e19ee977de3d5e0389d0d6726c9b13006a56c82 done
+#21 naming to moby-dangling@sha256:e081feba66118113f5deb6bd2e19ee977de3d5e0389d0d6726c9b13006a56c82 done
+#21 unpacking to moby-dangling@sha256:e081feba66118113f5deb6bd2e19ee977de3d5e0389d0d6726c9b13006a56c82 0.0s done
+#21 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/na9mtcrdshsczag8pag6lc8ev

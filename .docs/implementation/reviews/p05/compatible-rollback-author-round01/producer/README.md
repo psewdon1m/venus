@@ -1,0 +1,35 @@
+# Author checkpoint: live same-policy rollback14
+
+Status: executable author preparation, **not executed and not independently accepted**. Root ACK remains false. No P05 PASS, production approval or human card approval is issued.
+
+A is current source `aa1205be262b4ba56374f992481723d68363ff7aa16c28729d4b19d2aac896ee` (1823 included files), image `sha256:ef5f432ae3e89b5ef63aef3bc3fb1511208a5be2db559cf801e5dc4f6f243ba5`. B is the real preceding source `b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4`, image `sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5`. Both use ROOM-TOPIC-2. B has known early action-offer timing and coalesced WS notification P2s; it is not a known-good GA. The two compiled deltas are topic-games.js and room-routes.js. All seven SQL migrations, engine and served UI pins are unchanged. See compatibility-comparison.json and actual-image-maps.json.
+
+The original liveD/liveE assertions remain: active D on A1 is revoked by actual bootGate on B2 before maintenance/listen; fresh E created bilaterally on B2 is revoked on A3. No database restore, root rollback, down migration, synthetic grant or skipped assertion. Each process uses its own actual image pins. These assertions could not be reused with the older policy1 image; that historical rejection remains valid. The separate operational rollback rule is quiesce and disable new V2 starts on fallback. This flagON synthetic compatibility drill does not demonstrate that operational deployment procedure and does not close B's known timing/WS defects.
+
+## Entry and review fences
+
+`driver.mjs --describe` is inert. Run only after a distinct independent producer review and independent current application source review, then root issues a new external ACK bound to exact INDEX hash, source, images, review indexes and expanded map. The supplied ACK template is deliberately unauthorized. No build, pull or functional run is authorized by this packet.
+
+```powershell
+& 'C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe' --max-old-space-size=192 .artifacts/p05-compatible-rollback-producer01/driver.mjs --run --ack=C:/ABSOLUTE/EXTERNAL/ROOT_ACK.json
+```
+
+All inputs and source are checked before runtime, each boot, after runtime and in finally. Independent review indexes must have a PASS status and live in the P05 reviews tree. Source-proof is an inert shared module, avoiding the previously diagnosed driver/host TLA cycle. The actual pg import is anchored to `/app/node_modules/pg/lib/index.js`, separately image-pinned.
+
+## Fixture boundary
+
+Actual Docker images, PostgreSQL, real server classes, protected HTTP, TLS and image-served Chromium UI are used; composition is a source-bound isolated test harness, not production server.js startup. Synthetic DTO version/source/pack fields are configured fixture attestations. Actual build-metadata absence is separately probed, not represented as embedded metadata. Dates remain original explicit fixed A1=1000000/B2=1001000/A3=1002000; this is not a natural TTL soak. Original scenario offers at most20 real selection opportunities, with no retry/reseed, fake grant or direct state injection; failure to reach private setup is a failed attempt, never a PASS. Production seed seam is unchanged. Runtime cards are synthetic; held r4 is not activated and human review450 HOLD stays unchanged.
+
+## Resource and failure boundary
+
+QRB_BOUND_ONLY_1 is the root-selected new profile, not the old advancing two-second lease or its Windows hostguard. Root900s; useful work780s; phase120s; export30s total; cleanup60s; bounded commands/captures. Host launcher heap192MiB and sampledRSS stop256MiB are stated separately from hard Docker RAM/CPU bounds. This host controller does not have an OS hardRSS cap. The profile is a local one-shot diagnostic with retained evidence bounds, not a reusable resource framework.
+
+Conservative writable-state/artifact accounting is native380MiB plus host96MiB =476MiB, below original512MiB. Native includes PGdata240+SHM8+tmp/run4, authority32, private8, evidence64, concurrent scratch24. Host includes readonly input clone16, evidence export64 (both copies counted), other/logs/control/terminal16; no archive copy. Earlier guard budgets were native320+host160=480MiB. This profile retains the conservative inclusion of scratch/SHM, rather than silently narrowing512 to public evidence. Images, daemon/VHD and filesystem metadata remain excluded; runtime RAM is separately bounded. Host/native free>=10GiB+512MiB is sampled at preflight and each phase, not an atomic reserve against unrelated writers. Host allocations are scanned with the frozen accepted METHOD07 scanner before controlled writes; native tmpfs quotas and actual IPC capacity are inspected. Exact actual container owner/image/user/RAM/swap/CPU/readonly/IPC/mount maps are checked before start and cleanup. No host ports, external network, shared default SHM or /app overlays.
+
+PG runs UID999 on readonly root, private IPC8MiB, tmp/run2+2MiB and tmpfs data240MiB. Private root UID1000:GID999 mode02710 allows only group traversal, SGID; only db-password is0640 and asserted GID999, all other private files remain0600. PG receives a readonly private mount. Initialization helper gets CHOWN only; authority/evidence roots stay0700. Actual POSIX behavior is a runtime prerequisite, not host Windows proof.
+
+On failure the first typed, whitelisted error is preserved without raw messages. Attached API stdout has a bounded public terminal fallback if evidence writes fail. The host preallocates16KiB TERMINAL, writes it in place, and always emits terminal_persisted on stdout. TERMINAL and live control files are explicitly excluded from the immutable raw-evidence index. Export preserves a bounded public prefix where possible. Cleanup addresses only exact owned resources, never unrelated containers/volumes. On a failed attempt, PG is stopped and keeper/volumes can remain for diagnosis; terminal names the remaining owned resources and manual cleanup requirement. A failed cleanup is never reported as completed. A Docker CLI timeout alone is not claimed to stop a container; owned container cleanup is separate.
+
+## Checks actually performed
+
+57 model/tiny-owned-file controls,4 inert factory checks (six generated modules parse),105 exact-source inert Docker-inspect/probe counterexamples, syntax and lint. These execute no functional Docker, DB, browser or application imports. The first source-bound inspection attempt failed because the legacy PG Config.Image fallback accepted a wrong actual image ID; the preserved failure is followed by an exact ID fix. Six actual read-only byte/metadata probes include historical superseded image records; selected A/B mappings are explicit. Independent acceptance and a bounded actual14 run remain required. See finite results and CONTROL_MATRIX.md.

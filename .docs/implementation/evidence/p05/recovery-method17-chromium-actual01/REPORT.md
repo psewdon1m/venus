@@ -1,0 +1,3 @@
+# METHOD17 Chromium actual: FAIL
+
+{"PASS": 3, "FAIL": 1, "NOT_RUN": 12}; cleanup PASS. All16 fixed scenarios remain in the raw report, including failed and unexecuted rows. Exact source/producer binding refers to restored historical1274/1813 and rebuiltA29e39, not current live source. The browser report retains an old method12 display label; provenance authority is the exact17 runtime/outer/method/operational review pins and root ACK. Raw files and before/after hashes are preserved, Markdown inputs under .md.bytes. Actual independent audit/diagnosis is pending. Earlier failures are not promoted by this attempt. No fullbrowser/layout/statistics/humanP04/P05 acceptance is implied.

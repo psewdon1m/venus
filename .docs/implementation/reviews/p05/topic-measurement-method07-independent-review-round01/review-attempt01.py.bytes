@@ -1,0 +1,105 @@
+import hashlib,json,sys,importlib.util,ctypes,time,shutil,tempfile,difflib
+from pathlib import Path
+from datetime import datetime,timezone
+work=Path('.artifacts/p05-method07-independent-review-round01').resolve();work.mkdir(parents=True,exist_ok=True)
+out=Path('.docs/implementation/reviews/p05/topic-measurement-method07-independent-review-round01');out.mkdir(parents=True,exist_ok=True)
+author=Path('.docs/implementation/reviews/p05/topic-measurement-method-preparation-round07')
+folder=Path('.artifacts/p05-topic-measurements-method07')
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert sha(author/'INDEX.json')=='2d7238037f079869207a5cca00d28683888b9a1e60bec999315c5798e0cd40cf'
+indexed=json.loads((author/'INDEX.json').read_bytes())['files']
+for r in indexed:
+ f=author/r['path'];assert sha(f)==r['sha256'],str(f);assert f.stat().st_size==r['bytes'],str(f)
+assert sha(author/'HANDOFF.json')=='eb103bf4629109d414bfa1439a889a9c687b45f0ba83b5758e4557a650a794b3'
+handoff=json.loads((author/'HANDOFF.json').read_bytes())
+for n,h in handoff['runtime_pins'].items():assert sha(folder/n)==h==sha(author/'producer'/n),n
+parent=Path('.docs/implementation/reviews/p05/topic-measurement-method-preparation-round06')
+assert sha(parent/'INDEX.json')=='f89a09a96bc86ca5a9d8249f00e51a1a657e0f37dcb7d953083bd487eb29792f'
+for r in json.loads((parent/'INDEX.json').read_bytes())['files']:assert sha(parent/r['path'])==r['sha256']
+for r in json.loads((parent/'HANDOFF.json').read_bytes())['code']:assert sha(r['original_path'])==r['sha256']
+old=json.loads((parent/'HANDOFF.json').read_bytes())['code'];changed=[]
+for r in old:
+ n=Path(r['original_path']).name
+ if n not in handoff['runtime_pins']:continue
+ if sha(folder/n)!=r['sha256']:changed.append(n)
+assert sorted(changed)==['allocated-tree.py','r100-v3-launcher.mjs','r100-v3-root-ack-template.json']
+oldLauncher=(parent/'exact-source/r100-v3-launcher.mjs.bytes').read_text()
+newLauncher=(folder/'r100-v3-launcher.mjs').read_text()
+assert newLauncher==oldLauncher.replace('METHOD06-CANONICAL-CLEANUP-IDS','METHOD07-NATIVE-WINDOWS-STREAMS').replace('p05-topic-measurements-method06','p05-topic-measurements-method07').replace('EXACT_METHOD06_LAUNCHER_REQUIRED','EXACT_METHOD07_LAUNCHER_REQUIRED')
+sys.path.insert(0,'tools');from stage_inventory import inventory,identity
+files=inventory();assert identity(files)==handoff['source_identity'];assert len(files)==1813
+receipt=Path('.artifacts/p05-renewal-image-build-receipt01.json');assert sha(receipt)=='2dae88a270c9a9a3fbc33386b09ae98585bebb49d6d26e1a3f6d95c8ddf443e5'
+for n,h in json.loads(receipt.read_bytes())['host_compiled_files_sha256'].items():assert sha(n)==h
+(out/'hash-verification.json').write_text(json.dumps({'status':'PASS','author_index_children':len(indexed),'runtime_workspace_snapshot_pairs':len(handoff['runtime_pins']),'changed_parent_runtime_files':changed,'launcher_change':'EXACT_CANDIDATE_PATH_LABEL_ONLY','parent_METHOD06_unchanged':True,'source_identity':identity(files),'included_files':len(files),'compiled_host_pins':64,'image_reextracted':False},indent=2)+'\n')
+def load(name,path):
+ s=importlib.util.spec_from_file_location(name,path);m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
+a=load('review07_allocation',folder/'allocated-tree.py');p=load('review07_package',folder/'r100-v3-package.py');g=load('review07_guard',folder/'host-output-guard.py')
+rows=[]
+def check(name,fn):
+ try:detail=fn();rows.append({'name':name,'status':'PASS','detail':detail})
+ except Exception as e:rows.append({'name':name,'status':'FAIL','error':repr(e)})
+def denied(fn):
+ try:fn()
+ except (OSError,ValueError):return
+ raise AssertionError('EXPECTED_DENIAL')
+root=Path(tempfile.mkdtemp(prefix='owned-',dir=work));assert root.parent==work
+real_api=a.stream_api
+class Data(ctypes.Structure):_fields_=[('size',ctypes.c_int64),('name',ctypes.c_wchar*296)]
+class Api:
+ def __init__(self,first_error=None,names=('::$DATA',),next_error=38,close_ok=True,close_error=5):self.first_error=first_error;self.names=list(names);self.next_error=next_error;self.close_ok=close_ok;self.close_error=close_error;self.index=0;self.closed=[]
+ def FindFirstStreamW(self,path,level,info,flags):
+  assert level==0 and flags==0
+  if self.first_error is not None:ctypes.set_last_error(self.first_error);return ctypes.c_void_p(-1).value
+  info._obj.name=self.names[0];return 0x123456789
+ def FindNextStreamW(self,handle,info):
+  assert handle==0x123456789;self.index+=1
+  if self.index<len(self.names):info._obj.name=self.names[self.index];return True
+  ctypes.set_last_error(self.next_error);return False
+ def FindClose(self,handle):self.closed.append(handle);ctypes.set_last_error(self.close_error);return self.close_ok
+def fake(api,expect_deny):
+ a.stream_api=lambda:(api,Data)
+ try:
+  if expect_deny:denied(lambda:a.windows_streams(root))
+  else:a.windows_streams(root)
+  assert len(api.closed)==(0 if api.first_error is not None else 1)
+ finally:a.stream_api=real_api
+try:
+ for code in (0,1,2,5,18,87,259):check('first API error '+str(code)+' is not EOF',lambda code=code:fake(Api(first_error=code),True))
+ check('only first EOF38 allows streamless directory',lambda:fake(Api(first_error=38),False))
+ for code in (0,1,5,18,87,259):check('next API error '+str(code)+' denies and closes64bit handle',lambda code=code:fake(Api(next_error=code),True))
+ check('next EOF38 accepts default and closes64bit handle once',lambda:fake(Api(),False))
+ for name in ('',':concealed:$DATA','::$INDEX_ALLOCATION','::$data',':ユニコード:$DATA'):
+  check('nondefault stream '+repr(name)+' denies and closes',lambda name=name:fake(Api(names=(name,)),True))
+ check('late ADS after default stream denies and closes',lambda:fake(Api(names=('::$DATA',':later:$DATA')),True))
+ check('close failure after success is denial',lambda:fake(Api(close_ok=False),True))
+ check('close failure does not promote prior ADS denial',lambda:fake(Api(names=(':hidden:$DATA',),close_ok=False),True))
+ check('close failure with ERROR_SUCCESS still denies',lambda:fake(Api(close_ok=False,close_error=0),True))
+ normal=root/'nested';normal.mkdir();(normal/'данные-音.txt').write_bytes(b'actual unicode NTFS payload')
+ def ordinary():
+  r=a.inspect_tree(root);assert r['files']==1 and r['logical_bytes']==26 and r['allocated_bytes']>=26;return{'logical':r['logical_bytes'],'allocated':r['allocated_bytes'],'metric':r['metric']}
+ check('actual NTFS nested unicode file default stream and allocation',ordinary)
+ def ads(path,name):
+  stream=Path(str(path)+':'+name);stream.write_bytes(b'new hidden stream')
+  try:denied(lambda:a.inspect_tree(root))
+  finally:stream.unlink()
+ check('actual unicode file ADS denied',lambda:ads(normal/'данные-音.txt','秘密'))
+ check('actual nested directory ADS denied',lambda:ads(normal,'directory_hidden'))
+ check('actual root directory ADS denied',lambda:ads(root,'root_hidden'))
+ check('actual missing path denies',lambda:denied(lambda:a.windows_streams(root/'absent')))
+ check('actual empty directory no streams allowed',lambda:a.windows_streams(normal))
+ # Guarded extraction uses frozen failed-attempt tar/inventory, actual free-space,
+ # synthetic moving supervisor counter only; no live run or source mutation.
+ target=root/'extraction';target.mkdir();counter=0
+ def sample():
+  global counter
+  counter+=1;return{'owner':'c'*32,'counter':counter,'available_bytes':str(shutil.disk_usage(target).free),'host_output_allowed':True,'capacity_fault':None}
+ config={'method_revision':'METHOD05-HOST-OUTPUT-FENCES','global_owned_cap_bytes':g.CAP,'reserve_bytes':g.RESERVE,'kind':'ROOT_R100_V3_OPERATIONAL_DIAGNOSTIC_ACK','status':'AUTHORIZED','owner':'c'*32,'host_output_path':str(target),'control_directory':str(target/'control/live')}
+ def extraction():
+  started=time.monotonic();guard=g.HostOutputGuard(config,read_sample=sample);result=p.extract(author/'raw/native-prefix.tar',target/'export',guard);elapsed=time.monotonic()-started;expected=json.loads((author/'raw/native-inventory.json').read_bytes())['files']
+  assert elapsed<60;assert sorted(result['files'],key=lambda r:r['path'])==sorted(expected,key=lambda r:r['path']);assert len(result['files'])==104
+  return{'elapsed_seconds':elapsed,'files':104,'tar_sha256':sha(author/'raw/native-prefix.tar'),'actual_host_free':True,'injected_supervisor_counter':True,'operational_R100':False}
+ check('independent exact104file guarded failed-prefix extraction under unchanged60s',extraction)
+finally:
+ a.stream_api=real_api;assert root.resolve().parent==work and root.name.startswith('owned-');shutil.rmtree(root)
+result={'status':'PASS_INDEPENDENT_FINITE_ONLY' if all(r['status']=='PASS' for r in rows) else 'FAIL','controls':rows,'count':len(rows),'Docker_calls':0,'prepare_calls':0,'selector_invocations':0,'statistics_RUN':False,'actual_R100':False,'owned_synthetic_test_tree_removed':not root.exists()}
+(out/'native-controls.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2));sys.exit(0 if result['status'].startswith('PASS') else 1)

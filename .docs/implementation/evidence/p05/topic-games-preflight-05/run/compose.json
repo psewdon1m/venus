@@ -1,0 +1,86 @@
+{
+  "services": {
+    "db": {
+      "image": "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "environment": {
+        "POSTGRES_DB": "venus",
+        "POSTGRES_USER": "venus",
+        "POSTGRES_PASSWORD_FILE": "/run/secrets/db_password"
+      },
+      "secrets": [
+        "db_password"
+      ],
+      "volumes": [
+        "postgres-data:/var/lib/postgresql/data"
+      ],
+      "networks": [
+        "isolated"
+      ],
+      "mem_limit": "512m",
+      "cpus": 1,
+      "healthcheck": {
+        "test": [
+          "CMD-SHELL",
+          "pg_isready -U venus -d venus"
+        ],
+        "interval": "1s",
+        "timeout": "2s",
+        "retries": 60
+      }
+    },
+    "api": {
+      "image": "sha256:3192b2d46772ea434977ef918bdd81775f5fb459fea1a8080c596d082907bc94",
+      "user": "1000:1000",
+      "read_only": true,
+      "cap_drop": [
+        "ALL"
+      ],
+      "security_opt": [
+        "no-new-privileges:true"
+      ],
+      "mem_limit": "768m",
+      "cpus": 1,
+      "pids_limit": 96,
+      "tmpfs": [
+        "/tmp:size=128m,mode=1777",
+        "/home/node:size=32m,uid=1000,gid=1000"
+      ],
+      "environment": {
+        "DB_HOST": "db",
+        "DB_PASSWORD_FILE": "/run/secrets/db_password",
+        "VENUS_P05_ISOLATED_FIXTURE": "1",
+        "P05_ARTIFACT_DIRECTORY": "/artifacts"
+      },
+      "secrets": [
+        "db_password"
+      ],
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "C:\\.projects\\venus\\.artifacts\\p05\\venus-topic-games-521e76f044d3",
+          "target": "/artifacts"
+        }
+      ],
+      "networks": [
+        "isolated"
+      ],
+      "command": [
+        "node",
+        "tests/p05-topic-games/integration.mjs"
+      ]
+    }
+  },
+  "secrets": {
+    "db_password": {
+      "file": "C:\\Temp\\venus-topics-secret-W66gID\\password"
+    }
+  },
+  "volumes": {
+    "postgres-data": {}
+  },
+  "networks": {
+    "isolated": {
+      "internal": true
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "normative_window": "CURRENT_SESSION_COMPLETE_OPPORTUNITY_HISTORY",
+  "authority": [
+    {
+      "path": ".docs/implementation/p03-measurement-protocol-v3.json",
+      "line": 168
+    },
+    {
+      "path": "tests/p03/planner-diagnostics.mjs",
+      "line": 11
+    },
+    {
+      "path": "packages/relationship-engine/src/engine.ts",
+      "definition": "lastPrivate from supplied current-session history; legacy has no room-prior input"
+    },
+    {
+      "path": "tools/p03-measurements.mjs",
+      "definition": "runPlans starts empty history for each newly constructed snapshot/session"
+    }
+  ],
+  "previous_pair": "sorted actors of history.rounds.findLast(round.interaction===pair_private), including card=null and selected/disclosed/declined/replaced attempts; public intervening rounds do not change it",
+  "alternatives": "different unordered pair with at least1 hard-eligible map.allowed full-union permitted candidate after roompublic semantic block, samepair private semantic block incl priors/allattempts, current targets where relevant, immutable caps/context/comfort/class/stage, and remaining ceil(.25R) private budget",
+  "violation": "at selected private opportunity previous_pair!=null AND effective alternative exists AND selected pair==previous_pair",
+  "maximum_violations": 0,
+  "exceptions": "N2/no effective alternative explicitly counted; not hidden/rejected as measurement missing",
+  "diagnostics_only": [
+    "last history-bearing candidate pair including prior room content",
+    "baseline options without fullunion/semantic filters",
+    "prior-session actual opportunity pair not persisted: NOT_AVAILABLE, no room-wide guarantee asserted"
+  ],
+  "cross_session_norm": "Semantic no-repeat across room modes/sessions is required separately. No authoritative current requirement located for room-wide previous actual actor pair; do not invent a new opportunity log as prerequisite to TG-AR-001.",
+  "current_product_finding": "TG-AR-001 OPEN on895; immutable pure seed0 round26null/round32samepair with two25family alternatives; strict gate blocks finalstats until versionedfix+independentrepeat",
+  "mandatory_deterministic_controls": [
+    "exactseed0 and complete16 diagnostic grid",
+    "empty private opportunity then own allow expansion and public intervening rounds",
+    "nonempty previous with effective alternative",
+    "N2/no alternative justified repeat",
+    "baseline-vs-effective disagreement",
+    "selected/disclosed/declined/replaced semantic attempt history across modes/sessions",
+    "public counterfactual schedule independence"
+  ],
+  "fix_revision": "Prospective engine2/support policy/ADR; unsupported old snapshot failclosed, preserve old bytes/ledgers/HOLD; private grants revoked on incompatible reader. Root authors fix, different reviewer accepts."
+}

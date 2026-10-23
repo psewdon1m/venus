@@ -1,0 +1,15 @@
+# Independent socket projection source review
+
+PASS_SOCKET_PROJECTION_WORK_SOURCE_ONLY_NATIVE_PENDING. No finding in the frozen author candidate d91a6232c23ebd40fb99284d31901c608f06790698340dac0f19fbf7863e1c8c. Independent reviewer did not author these application changes.
+
+All 26 author children, eight current source files, captured before/after files and additive revision were verified by SHA-256. The A14 freeze c481761fbecfadf77883c5ab4c8a851ab201c092b57e6994ced431dccefd4193 contains 1865 paths: exactly six existing paths changed, 1859 remain exact, and two tests plus one revision are additive. Reversing the explicitly reviewed edits reconstructs all four production files byte-for-byte, including line endings. No other production edits are hidden in this delta.
+
+Default socket projection remains full. V1 forces the original full path and child call arity. V2 auth/poll omits only the unused public game DTO: loaded game/actor checks, prepareProjection and the private-reference query remain. Production sendGame consumes fresh dispatchGame/dispatchPrivate results rather than bundle.game; the fresh public/private delivery fences remain unchanged. A private reference is still not publication authority.
+
+V2 heartbeat skips the discarded child projection but retains room/member/session/current acceptance checks, renewal and room view, initial/final external authority fences and the original credential expiry check. No credential cache, timer, poll queue, pool, TTL, schema, durability or maintenance change was introduced. The optional flag is internal and is not supplied by request data.
+
+Independent focused execution passed 52 related existing/new tests across four files, exit 0, and four additional security negatives, exit 0. The additional checks reject external withdrawal during room view, a replaced socket generation after renewal, changed entry acceptance after renewal, and a stale private delivery capability before enqueue. Output and test source are retained. Author RED 6 FAIL/46 PASS and final 88 PASS/7 files, API typecheck and lint exit 0 remain pinned as author evidence; unrelated suites were not repeated.
+
+This is dirty-tree source and focused-control acceptance. It proves neither native transport integration nor measured performance improvement nor the cause of the retained N7 WS_FAILURE. No Docker/browser/native workload or application edit was performed. Prior A14 images and backend-only actuals do not automatically validate this changed backend; the next exact freeze/build/rebind and applicable native gates remain necessary. No whole P05, production or card approval is implied. Rollback restores the coherent prior compatible API image/source without reverting safety state or data.
+
+Two exploratory lookups used nonexistent filenames (AUDIT.json and a freeze directory without its .json suffix); PowerShell reported missing paths. Correct existing audit-result/audit.mjs and freeze11.json were then used. These were read-only lookup errors, not test failures; the byte audit itself passed on its first execution.

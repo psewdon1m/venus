@@ -1,0 +1,357 @@
+[
+  {
+    "argv": [
+      "docker",
+      "run",
+      "--rm",
+      "-d",
+      "--name",
+      "venus-topic-settings-review-e88735195a",
+      "--label",
+      "venus.review=topic-settings-round01",
+      "--network",
+      "none",
+      "--memory",
+      "256m",
+      "--cpus",
+      "1",
+      "--tmpfs",
+      "/var/lib/postgresql/data:rw",
+      "-e",
+      "POSTGRES_HOST_AUTH_METHOD=trust",
+      "-e",
+      "POSTGRES_DB=venus",
+      "-e",
+      "POSTGRES_USER=venus",
+      "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8"
+    ],
+    "exit": 0,
+    "stdout": "af0286f60b2a893366c9a5a2d11bf7ecf7c41acb57e27f1866b07297bb7808c6\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "venus-topic-settings-review-e88735195a",
+      "pg_isready",
+      "-U",
+      "venus",
+      "-d",
+      "venus"
+    ],
+    "exit": 2,
+    "stdout": "/var/run/postgresql:5432 - no response\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "venus-topic-settings-review-e88735195a",
+      "pg_isready",
+      "-U",
+      "venus",
+      "-d",
+      "venus"
+    ],
+    "exit": 0,
+    "stdout": "/var/run/postgresql:5432 - accepting connections\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 0,
+    "stdout": "CREATE TABLE\nCREATE TABLE\nCREATE INDEX\nALTER TABLE\nCREATE TABLE\nCREATE TABLE\nCREATE TABLE\nCREATE INDEX\nCREATE TABLE\nCREATE TABLE\nCREATE TABLE\nCREATE TABLE\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE INDEX\nCREATE TABLE\nCREATE INDEX\nALTER TABLE\nCREATE FUNCTION\nCREATE TRIGGER\nCREATE TABLE\nCREATE FUNCTION\nCREATE TRIGGER\nCREATE FUNCTION\nCREATE TRIGGER\nCREATE TABLE\nCREATE TABLE\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 0,
+    "stdout": "BEGIN\nINSERT 0 1\nINSERT 0 1\nINSERT 0 1\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 0,
+    "stdout": "BEGIN\nINSERT 0 1\nINSERT 0 1\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "BEGIN\nINSERT 0 1\nINSERT 0 1\n",
+    "stderr": "ERROR:  Protocol2 room requires a birth record\nCONTEXT:  PL/pgSQL function venus_private_topic_birth_required() line 5 at RAISE\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  Birth requires protocol2 room\nCONTEXT:  PL/pgSQL function venus_private_topic_birth_guard() line 7 at RAISE\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  Room private protocol is immutable\nCONTEXT:  PL/pgSQL function venus_private_protocol_immutable() line 4 at RAISE\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  Room private protocol is immutable\nCONTEXT:  PL/pgSQL function venus_private_protocol_immutable() line 4 at RAISE\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  Cannot remove birth of a live protocol2 row\nCONTEXT:  PL/pgSQL function venus_private_topic_birth_guard() line 11 at RAISE\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  Room topic birth is immutable\nCONTEXT:  PL/pgSQL function venus_private_topic_birth_guard() line 4 at RAISE\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  new row for relation \"private_topic_preferences\" violates check constraint \"private_topic_preferences_rev_check\"\nDETAIL:  Failing row contains (92000000-0000-4000-8000-000000000001, 93000000-0000-4000-8000-000000000001, 0, {}).\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  new row for relation \"private_topic_preferences\" violates check constraint \"private_topic_preferences_rev_check\"\nDETAIL:  Failing row contains (92000000-0000-4000-8000-000000000001, 93000000-0000-4000-8000-000000000001, 9007199254740992, {}).\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  insert or update on table \"private_topic_preferences\" violates foreign key constraint \"private_topic_preferences_room_id_owner_member_id_fkey\"\nDETAIL:  Key (room_id, owner_member_id)=(92000000-0000-4000-8000-000000000001, 93000000-0000-4000-8000-000000000002) is not present in table \"room_members\".\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 3,
+    "stdout": "",
+    "stderr": "ERROR:  insert or update on table \"private_topic_requests\" violates foreign key constraint \"private_topic_requests_room_id_owner_member_id_fkey\"\nDETAIL:  Key (room_id, owner_member_id)=(92000000-0000-4000-8000-000000000001, 93000000-0000-4000-8000-000000000002) is not present in table \"room_members\".\n"
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 0,
+    "stdout": "BEGIN\nDELETE 1\nINSERT 0 1\nCOMMIT\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "exec",
+      "-i",
+      "venus-topic-settings-review-e88735195a",
+      "psql",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1"
+    ],
+    "exit": 0,
+    "stdout": "DELETE 1\n count \n-------\n     0\n(1 row)\n\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "rm",
+      "-f",
+      "venus-topic-settings-review-e88735195a"
+    ],
+    "exit": 0,
+    "stdout": "venus-topic-settings-review-e88735195a\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "docker",
+      "ps",
+      "-a",
+      "--filter",
+      "name=^/venus-topic-settings-review-e88735195a$",
+      "--format",
+      "{{.ID}}"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

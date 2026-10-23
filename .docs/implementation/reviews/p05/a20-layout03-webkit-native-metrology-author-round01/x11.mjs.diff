@@ -1,0 +1,11 @@
+--- parent02/x11.mjs
++++ candidate03/x11.mjs
+@@ -77,7 +77,7 @@
+  const measure=()=>bounded(budget,'native-measure',()=>page.evaluate(()=>({inner_width:window.innerWidth,dpr:window.devicePixelRatio,css_zoom:getComputedStyle(document.documentElement).zoom,scroll_width:document.documentElement.scrollWidth})));
+  const before=await measure();assert.equal(before.dpr,1);let after=before,steps=0;
+  while(after.dpr/before.dpr<1.99&&steps<14){budget.check();xdo(xserver.name,'key','--clearmodifiers','ctrl+equal');await delay(60);after=await measure();steps++;}
+- const result={window_id:id,before_width:before.inner_width,after_width:after.inner_width,before_dpr:before.dpr,after_dpr:after.dpr,scroll_width:after.scroll_width,css_zoom:after.css_zoom,x11_keyboard:true,isolated_browser:true,reset_verified:false,steps};assertNativeZoom(result);return result;
++ const engine=page.context().browser().browserType().name(),browser_version=page.context().browser().version();const result={window_id:id,engine,browser_version,nominal_zoom_percent:200,measured_zoom_percent:after.dpr/before.dpr*100,native_zoom_metrology:engine==='webkit'?'WEBKIT_27_2_FIRST_SUPPORTED_207_36':'EXACT_200_ORIGINAL_TOLERANCE',before_width:before.inner_width,after_width:after.inner_width,before_dpr:before.dpr,after_dpr:after.dpr,scroll_width:after.scroll_width,css_zoom:after.css_zoom,x11_keyboard:true,isolated_browser:true,reset_verified:false,steps};assertNativeZoom(result);return result;
+ }
+ export async function resetNative(page,xserver,measurement,budget){
+  xdo(xserver.name,'windowfocus','--sync',measurement.window_id);xdo(xserver.name,'key','--clearmodifiers','ctrl+0');

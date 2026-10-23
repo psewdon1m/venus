@@ -1,0 +1,1 @@
+PASS_METHOD_ONLY resource addendum03 only. Exact3462366d authority admits only known foreignec78 in place of emptybaseline; all bounds/method/source fields unchanged02. Fresh beforeEVERYactual+newACK remain mandatory; no foreign mutation or execution authority. Combinedee656 fourroles unchanged. COMPLETE_STOP.

@@ -1,0 +1,14 @@
+import {describe,it,expect,vi} from 'vitest';
+import {Games} from '../../apps/api/src/games.js';
+import {DomainError} from '../../apps/api/src/security.js';
+import type {Rooms} from '../../apps/api/src/rooms.js';
+import type pg from 'pg';
+describe('room feature projection cannot disable safety writes on catalogue faults',()=>{
+ for(const state of ['active','aborted'] as const)it(`reports unavailable on ledger mismatch with ${state} game`,async()=>{
+  const games=new Games({now:()=>1000} as Rooms,()=>null,true),adapters=games as unknown as Record<string,unknown>;
+  adapters.row=vi.fn(async()=>({id:'session',state}));
+  adapters.pack=vi.fn(async()=>{throw new DomainError('CATALOG_RECONCILIATION_REQUIRED',503);});
+  games.attachCatalog({active:async()=>{throw new DomainError('CATALOG_RECONCILIATION_REQUIRED',503);},assertPinned:async()=>{}});
+  await expect(games.featureAvailable({} as pg.PoolClient,'room')).resolves.toBe(false);
+ });
+});

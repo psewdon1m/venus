@@ -1,0 +1,24 @@
+# P05 A27 entry/native200 heading click failure — independent diagnosis
+
+UTC 2026-10-22, after combined full06 acceptance. Scope: read existing actual terminal/current methods only; no Docker/native/tests/APP or producer edits.
+
+Actual source24 project venus-v2-layout-7453d128a233 is FAIL/cleanupPASS, sourcecbba/1882/image94eb/runtime6820. Browser output reports eight completed cells. Phase KEYBOARD_HEADING in entry/native200 is the original `h1.first().click()` in measure.mjs:56, before Tab/focusAudit; no focus sample exists. Original safeFailure intentionally emits only fixed enum/name and cannot recover underlying arbitrary Playwright click message/stack. This failure does not establish a failed CSS caret intervention.
+
+Recommended root ONE diagnosis-only clone of original A27 chronology: own runpath and exact heading-click catch only; scoped entry/native200, bounded public h1 error message/stack plus numeric before/catch h1 rectangle, scroll/viewport/scroll-padding/document focus, rethrow exact original error. Preserve same click/options/timeouts/oracles/counts; no force/retry/wait/APP change. Public entry has no room fixture/private content; bound retained strings explicitly and do not generalize parser. Root informed; original failure preserved. No further actions, STOP.
+## Diagnostic method acceptance, UTC 2026-10-22T22:30:45Z
+
+Root authorized one separate diagnostic beyond original nine, under unchanged Resource13 caps after actual OCI cleanup/fresh guard11/new root ACK. Reviewed frozen headingdiag INDEX209c674f/runtime8d8164af. Independently rehashed83 indexed children, recomputed exactruntime, wholebyte inverse of runpath+measure wrapper, other25MJS exact. Original first eight nonnative chronology, h1 click/options/bounded deadline, all geometry/oracle/case limits unchanged. Only entry&&native records fixed numeric public heading/viewport/scroll/padding/focus and own data message/stack sliced8192 bytes each, file20KiB. No private DOM/input/request data. Catch preserves original error; success persists diagnosis then DIAGNOSTIC_COMPLETE before Tab; zero gate credit.
+
+Frozen `.docs/implementation/reviews/p05/a27-heading-diagnostic-independent-round01/INDEX.json` SHA256 `8f9622a8eba429bcd8bfa6576377eb7dd6dc211055441d98e181926cca00f68a`, one AUDIT, PASS_METHOD_ONLY. Static read exit0/root index a4bb unchanged. No new functional controls/tests/Docker/native/models. Root received exactpin. Original failure/CSS efficacy unestablished; all nine real UI gates remain mandatory. COMPLETE_STOP.
+
+## Actual diagnosis and supported selector correction, UTC 2026-10-22
+
+Independently read source24/p05/venus-v2-layout-0d8e9793539e/public-entry-native-heading-diagnostic.json. Outcome ORIGINAL_CLICK_FAILED: locator.click Timeout5000ms; heading repeatedly visible/enabled/stable, scrolling followed by interception by section.intro or p.eyebrow. Before top233.40/bottom374.50 already inside320x458; after119.90/261.00 with scroll113.5. DPR2, html padding120px both ends, document focus true. Actual failure establishes heading click regression in current global-padding configuration; compositor/hit-testing root mechanism not directly proven. Original failure remains; diagnostic earns zero gate credit.
+
+Supported root's minimal selector-only APP correction `html:has(textarea:focus){scroll-padding-block:min(30vh,120px)}`: public entry has no textarea, restoring previous heading scroll conditions; focused100px textarea keeps reserved native-caret area. No JS/handlers/RAF/force/retry/waits/oracle edits. This is a bounded remediation hypothesis, not proof all historical clipping fixed; all nine fresh current UI gates remain necessary. No new diagnostic framework recommended. Root informed, STOP.
+
+## A28 minimum retest/carry assessment, UTC 2026-10-22
+
+Read accepted OCI39 actual independent report and original contract14/browser-child implementation. Original controls concern identities/maps, real admissions/privacy/boot/migration/history/revocation/replay/safe exit/cleanup, not native textarea geometry. Browser-child functional readiness/stop/leave in B2 uses unchanged B4; no textarea caret intervention control identified.
+
+Supported qualified component reuse after image26 proves all backend69/67, SQL7/PG2 and webJS exact A27 and B4 unchanged. Do not rerun OCI only for selector CSS change. Preserve OCI39 actual sourcecbba/image94eb/project as historical current accepted component. OCI01 image identity/maps, OCI02 served web maps and OCI13 source facts cannot literally turn into fresh A28 actuals: new exact A28 source/build/probe/web-map proof must be separately coupled with functional component correspondence. Never claim14 fresh A28 OCI tests. All nine original A28 UI gates remain mandatory for changed CSS. Uniform A26 statistics unaffected, exact source/image/raw labels retained. Root informed; no producer/APP/native changes by reviewer. STOP.

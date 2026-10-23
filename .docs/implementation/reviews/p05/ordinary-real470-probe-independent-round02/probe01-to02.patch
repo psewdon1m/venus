@@ -1,0 +1,26 @@
+--- immutable01/probe.mjs
++++ corrective02/probe.mjs
+@@ -122,7 +122,7 @@
+    if(i===0)row.locale_identity=await localeCheck(host,g,card,names);
+    const finishers=(await ownAll()).filter(x=>x.own.round_actions.finish);assert(finishers.length>=1);g=await current(host);
+    await mutation(finishers[0].a,rpath(host,g)+'/finish',{expected_rev:g.game_rev});report.finishes++;
+-   const done=await current(host);assert.equal(done.current_round.state,'completed');assert.equal(done.current_round.card_id,card.id);
++   const done=await current(host);assert.equal(done.current_round.state,'completed');assert.equal(done.current_round.round_id,g.current_round.round_id);assert.equal(done.current_round.round_index,i+1);if(card.interaction==='pair_public')assert.equal(done.current_round.kind,'generic');else assert.equal(done.current_round.card_id,card.id);
+    row.rounds.push({round_index:i+1,card_id:card.id,revision:card.revision,mode:card.mode,state:'completed'});report.completed_rounds++;
+    assert.equal((await own(host)).session_actions.advance,true);await mutation(host,gameBase(host)+'/'+g.session_id+'/round/advance',{expected_rev:done.game_rev});
+   }
+@@ -130,11 +130,11 @@
+  }
+  save();try{
+   const capability=await get({},'/api/v1/runtime-capabilities');assert.equal(capability.room_creation_protocol,2);
+-  for(const row of report.profiles){deadline=Math.min(start+7800000,performance.now()+180000);row.status='RUNNING';save();try{await playProfile(row);row.status='PASS';console.log(JSON.stringify({profile:row.id,status:'PASS',completed:row.rounds.length}));}catch(error){row.status='FAIL';throw error;}finally{await cleanupClients();save();}}
++  for(const row of report.profiles){deadline=Math.min(start+7800000,performance.now()+180000);row.status='RUNNING';save();try{await playProfile(row);row.status='PASS';console.log(JSON.stringify({profile:row.id,status:'PASS',completed:row.rounds.length}));}catch(error){row.status='FAIL';report.error??={...safeFailure(error),last_request:report.last_request};throw error;}finally{await cleanupClients();save();}}
+   for(const row of report.negative_profiles){deadline=Math.min(start+7800000,performance.now()+90000);row.status='RUNNING';save();try{const {host,prep}=await createProfile(row,true),availability=await request(host,gameBase(host)+'/availability','GET',undefined,{status:null});assert.equal(availability.status,409);assert.equal(availability.body.code,'TOPIC_SAFE_POOL_EXHAUSTED');
+-    const id=randomUUID(),refused=await request(host,gameBase(host)+'/start','POST',{request_id:id,draft_rev:prep.game_rev},{status:null});assert.equal(refused.status,409);assert.equal(refused.body.code,'TOPIC_SAFE_POOL_EXHAUSTED');const g=await current(host);assert.equal(g.state,'waiting');assert.equal(g.current_round,null);row.status='PASS';row.code=refused.body.code;}catch(error){row.status='FAIL';throw error;}finally{await cleanupClients();save();}}
++    const id=randomUUID(),refused=await request(host,gameBase(host)+'/start','POST',{request_id:id,draft_rev:prep.game_rev},{status:null});assert.equal(refused.status,409);assert.equal(refused.body.code,'TOPIC_SAFE_POOL_EXHAUSTED');const g=await current(host);assert.equal(g.state,'waiting');assert.equal(g.current_round,null);row.status='PASS';row.code=refused.body.code;}catch(error){row.status='FAIL';report.error??={...safeFailure(error),last_request:report.last_request};throw error;}finally{await cleanupClients();save();}}
+   assert.equal(report.completed_rounds,840);assert.equal(report.finishes,840);assert.equal(report.skips,0);assert.equal(report.locales_checked_sessions,42);assert.equal(report.rooms_created,44);assert.equal(report.rooms_closed,44);assert(report.profiles.every(p=>p.status==='PASS'));assert(report.negative_profiles.every(p=>p.status==='PASS'));report.status='PASS';
+- }catch(error){report.error=safeFailure(error);process.exitCode=1;
++ }catch(error){report.error??={...safeFailure(error),last_request:report.last_request};process.exitCode=1;
+  }finally{try{await cleanupClients();}catch{report.status='FAIL';process.exitCode=1;}report.client_cleanup=report.room_cleanup_failures?'FAIL':'COMPLETE';save();console.log(JSON.stringify({status:report.status,profiles:report.profiles.filter(p=>p.status==='PASS').length,completed_rounds:report.completed_rounds,client_cleanup:report.client_cleanup}));}
+ }
+ if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href)await main();

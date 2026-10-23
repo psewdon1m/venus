@@ -1,0 +1,5 @@
+# Own exclusion frontend repair02 independent review
+
+- 2026-10-20T22:37:54.5085586Z: Root requests NONAUTHOR frozen FRONT-onlyrepair INDEX15c20160 vsA13freeze10; threeexistingfrontend/testpaths plusadditiverevision02. Reviewactuallydispatchedfinally/error/uncertain ownrefresh/identity/generation/draftpreservation; focusedmeaningfulownchecks no unrelated suites. NoAPPedits/native/Docker. Explicitbackend-onlycarryallowedonlyif1860otherA13files exact, no blanketstagecarry. Originalbrowser23case15FAIL diagnosis a514e118 retained.
+
+- 2026-10-20T22:40:17.2204121Z: Author15c20160allchildren verified;1860parentfiles outside3front/testpaths exact. Focused15PASS0; ownexistingharness3PASS/1FAIL1: saved a/addb→failedownexclude refreshpreservesb→userunchecksb→explicitSavefails→errorRefreshrechecks b(actualtrueexpectedfalse/posts2/reads3). Stalepreservedref notconsumed/reconciledafterload; latestdraftrefnotusedbydirectretry. P2 B23-DRAFT-RETRY-RESURRECTION-001OPEN; rootconfirmedkeepFAIL02/newauthor03revision03; sourcewriter12reopened, noAPPwritesbyme. Other3ownboundarychecksPASS. FrozenFAILREPORT/HANDOFF/INDEX andoutputs; writesSTOP; rootfreezeimagesHOLD.

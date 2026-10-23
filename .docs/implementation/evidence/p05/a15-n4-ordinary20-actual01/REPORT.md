@@ -1,0 +1,7 @@
+# A15 ordinary N4: 20 completed rounds
+
+ACTUAL_N4_PASS_COMPONENT_NOT_STAGE, independently0a9513fb. Original unchanged method04/600s on ordinary production CMD/image d1eff08f and source658b710b/1869/real470 owner-provisional pack. Twenty distinct card/revision rounds completed and20finishes;489requests,4WS, RU/EN/TR same-ID/text projection and mandatory adult-denial oracles PASS. One room created/closed,client cleanup COMPLETE,owned compose cleanup PASS,allowlisted HTTP failure events0. ExactACK77ecca2e/source/runtime123 inclmetadata/method3pins remain saved.
+
+No inspector/SQL diagnostic, sourcefixture, clock override, deadline/rate/consent relaxation or other root-owned browser/OCI/layout/bulk/matched/cohort native workload during N4. Ambient unrelated containers are not claimed absent. No percentage speedup inferred from incomparable elapsed observations. A13 onlineWS and instrumented inpersonQUERY_TIMEOUT FAIL remain preserved; this scoped positive does not explain or close N7 failures. It does not grant all42/840, browser/layout,full measurements/rollback or complete P05. HTTPS Origin headers are not actual TLS/browser/device proof.
+
+METHOD04 diagnostic collector only projects HTTP request_failed events. New server websocket_failed logging is source-reviewed but not exhaustively collected by this unchanged N4 method. Full cohort06 has the separately reviewed safe collector/first-fault metadata. Six new cohort ACKs were independently bound by0a9513fb; their native outcomes remain separate.

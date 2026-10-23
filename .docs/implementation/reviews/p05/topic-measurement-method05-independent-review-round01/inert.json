@@ -1,0 +1,385 @@
+{
+  "status": "PASS_FINDING_REPRODUCED",
+  "controls": 8,
+  "results": [
+    {
+      "name": "actual_CLI_shaped_short_ids_make_owned_cleanup_fail_before_kill",
+      "status": "PASS",
+      "detail": {
+        "result": {
+          "cleanup": "retained",
+          "workerStopped": false,
+          "remaining": null,
+          "actions": [
+            {
+              "operation": "ps",
+              "exit_code": 0
+            },
+            {
+              "operation": "volume",
+              "exit_code": 0
+            },
+            {
+              "operation": "inspect",
+              "exit_code": 0
+            }
+          ],
+          "error": "The expression evaluated to a falsy value:\n\n  assert(owned.containers.includes(r.Id))\n",
+          "elapsed_ms": 3.8292999999999964,
+          "prefix_retained_without_export": false,
+          "artifact_write_calls": 0
+        },
+        "calls": [
+          {
+            "args": [
+              "ps",
+              "-aq",
+              "--filter",
+              "label=com.venus.measurement.owner=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "timeout": 29999.9505
+          },
+          {
+            "args": [
+              "volume",
+              "ls",
+              "-q",
+              "--filter",
+              "label=com.venus.measurement.owner=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ],
+            "timeout": 29999.821
+          },
+          {
+            "args": [
+              "inspect",
+              "cccccccccccc"
+            ],
+            "timeout": 29999.756
+          }
+        ]
+      }
+    },
+    {
+      "name": "canonical_full_ids_positive_cleanup",
+      "status": "PASS",
+      "detail": {
+        "cleanup": "completed",
+        "workerStopped": true,
+        "remaining": {
+          "containers": [],
+          "volumes": []
+        },
+        "actions": [
+          {
+            "operation": "ps",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          },
+          {
+            "operation": "inspect",
+            "exit_code": 0
+          },
+          {
+            "operation": "kill",
+            "exit_code": 0
+          },
+          {
+            "operation": "rm",
+            "exit_code": 0
+          },
+          {
+            "operation": "ps",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          },
+          {
+            "operation": "ps",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          }
+        ],
+        "elapsed_ms": 0.13949999999999818,
+        "prefix_retained_without_export": false,
+        "artifact_write_calls": 0
+      }
+    },
+    {
+      "name": "foreign_resources_denied_foreign",
+      "status": "PASS",
+      "detail": {
+        "retained": true
+      }
+    },
+    {
+      "name": "foreign_resources_denied_badImage",
+      "status": "PASS",
+      "detail": {
+        "retained": true
+      }
+    },
+    {
+      "name": "unexported_owned_prefix_is_retained",
+      "status": "PASS",
+      "detail": {
+        "cleanup": "retained",
+        "workerStopped": true,
+        "remaining": {
+          "containers": [],
+          "volumes": [
+            "venus-r100-v3-123456789abc-output"
+          ]
+        },
+        "actions": [
+          {
+            "operation": "ps",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          },
+          {
+            "operation": "inspect",
+            "exit_code": 0
+          },
+          {
+            "operation": "kill",
+            "exit_code": 0
+          },
+          {
+            "operation": "rm",
+            "exit_code": 0
+          },
+          {
+            "operation": "ps",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          },
+          {
+            "operation": "ps",
+            "exit_code": 0
+          },
+          {
+            "operation": "volume",
+            "exit_code": 0
+          }
+        ],
+        "elapsed_ms": 0.03999999999999915,
+        "prefix_retained_without_export": true,
+        "artifact_write_calls": 0
+      }
+    },
+    {
+      "name": "post_stop_supervisor_continues_actual_space_zero",
+      "status": "PASS",
+      "detail": {
+        "r": {
+          "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-123456789abc",
+          "volume": "venus-r100-v3-123456789abc-output",
+          "phase": "RUN",
+          "events": [
+            {
+              "phase": "BOOTSTRAP",
+              "elapsed_ms": 0
+            },
+            {
+              "phase": "PROBE",
+              "elapsed_ms": 1000
+            },
+            {
+              "phase": "RUN",
+              "elapsed_ms": 2000
+            },
+            {
+              "phase": "PREFIX_NOT_EXPORTED_OR_RETAINED_NOT_ACCEPTED",
+              "elapsed_ms": 306000
+            }
+          ],
+          "reason": "EXTERNAL_RUN_MONOTONIC_DEADLINE; CAPACITY_FAULT:ACTUAL_HOST_C_SPACE_LOW; CAPACITY_FAULT:ACTUAL_HOST_C_SPACE_LOW",
+          "capacity_fault": {
+            "reason": "ACTUAL_HOST_C_SPACE_LOW",
+            "counter": 610,
+            "at_elapsed_ms": 302000
+          },
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 619,
+            "available_bytes": "0",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": false,
+            "capacity_fault": {
+              "reason": "ACTUAL_HOST_C_SPACE_LOW",
+              "counter": 610,
+              "at_elapsed_ms": 302000
+            },
+            "stop_requested": true,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method05-review-round01\\control-NlJkKf",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-19T22:35:18.278Z"
+          },
+          "actual_space_samples_after_stop": 10,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 306000,
+          "minimum_actual_host_free_bytes": "0",
+          "guard_counter": 619,
+          "manual_cleanup_required": true,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": false
+        },
+        "writesAfterStop": 0,
+        "spaceEmits": 619
+      }
+    },
+    {
+      "name": "post_stop_supervisor_continues_actual_space_unknown",
+      "status": "PASS",
+      "detail": {
+        "r": {
+          "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-123456789abc",
+          "volume": "venus-r100-v3-123456789abc-output",
+          "phase": "RUN",
+          "events": [
+            {
+              "phase": "BOOTSTRAP",
+              "elapsed_ms": 0
+            },
+            {
+              "phase": "PROBE",
+              "elapsed_ms": 1000
+            },
+            {
+              "phase": "RUN",
+              "elapsed_ms": 2000
+            },
+            {
+              "phase": "PREFIX_NOT_EXPORTED_OR_RETAINED_NOT_ACCEPTED",
+              "elapsed_ms": 306000
+            }
+          ],
+          "reason": "EXTERNAL_RUN_MONOTONIC_DEADLINE; CAPACITY_FAULT:ACTUAL_HOST_C_SPACE_UNKNOWN:INJECTED_UNKNOWN; CAPACITY_FAULT:ACTUAL_HOST_C_SPACE_UNKNOWN:INJECTED_UNKNOWN",
+          "capacity_fault": {
+            "reason": "ACTUAL_HOST_C_SPACE_UNKNOWN:INJECTED_UNKNOWN",
+            "counter": 610,
+            "at_elapsed_ms": 302000
+          },
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 619,
+            "available_bytes": "0",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": false,
+            "capacity_fault": {
+              "reason": "ACTUAL_HOST_C_SPACE_UNKNOWN:INJECTED_UNKNOWN",
+              "counter": 610,
+              "at_elapsed_ms": 302000
+            },
+            "stop_requested": true,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method05-review-round01\\control-NlJkKf",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-19T22:35:18.285Z"
+          },
+          "actual_space_samples_after_stop": 10,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 306000,
+          "minimum_actual_host_free_bytes": "12884901888",
+          "guard_counter": 619,
+          "manual_cleanup_required": true,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": false
+        },
+        "writesAfterStop": 0,
+        "spaceEmits": 619
+      }
+    },
+    {
+      "name": "post_stop_supervisor_continues_actual_space_none",
+      "status": "PASS",
+      "detail": {
+        "r": {
+          "status": "STOPPED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-123456789abc",
+          "volume": "venus-r100-v3-123456789abc-output",
+          "phase": "RUN",
+          "events": [
+            {
+              "phase": "BOOTSTRAP",
+              "elapsed_ms": 0
+            },
+            {
+              "phase": "PROBE",
+              "elapsed_ms": 1000
+            },
+            {
+              "phase": "RUN",
+              "elapsed_ms": 2000
+            },
+            {
+              "phase": "PREFIX_NOT_EXPORTED_OR_RETAINED_NOT_ACCEPTED",
+              "elapsed_ms": 304000
+            }
+          ],
+          "reason": "EXTERNAL_RUN_MONOTONIC_DEADLINE",
+          "capacity_fault": null,
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 618,
+            "available_bytes": "12884901888",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": true,
+            "capacity_fault": null,
+            "stop_requested": true,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method05-review-round01\\control-NlJkKf",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-19T22:35:18.292Z"
+          },
+          "actual_space_samples_after_stop": 9,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 304000,
+          "minimum_actual_host_free_bytes": "12884901888",
+          "guard_counter": 618,
+          "manual_cleanup_required": false,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": true
+        },
+        "writesAfterStop": 7,
+        "spaceEmits": 619
+      }
+    }
+  ],
+  "Docker_calls": 0,
+  "prepare_calls": 0,
+  "selector_calls": 0,
+  "R100_calls": 0,
+  "owned_empty_control_folder": "C:\\.projects\\venus\\.artifacts\\p05-method05-review-round01\\control-NlJkKf"
+}

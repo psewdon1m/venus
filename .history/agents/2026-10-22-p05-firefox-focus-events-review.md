@@ -1,0 +1,11 @@
+# P05 Firefox focus-events fixed diagnostic — independent static review
+
+## Assignment (UTC 2026-10-22)
+Root requested one bounded static input/resource review once author freeze is ready. Current A25 source22/acb2/1879 unchanged; native first run8798 FAIL25PASS1FAIL25NR cleanupPASS, OTHER topics-save smallheight832..876 vs320 while PRIMARY targetscorrect. Diagnostic is static synthetic production-CSS/mainfocus+keyup-equivalent in three contexts, not real APP/API/DB/zoom or gate credit. Root owns explicit oneoff ACK/freshguard09 and single extraheavy slot. Reviewer runs no Docker/tests/native and changes no APP/method. Await author pins; short journal/report/message only.
+
+## 2026-10-22T20:50:46.8291305Z — static review COMPLETE_STOP
+Rehashed diagnosticINDEXb3ee7732/3children, exactprobe537430db/launchfb9666b7/INPUTS78bbb8cd; all27currentMJS, image23/source1879/CSS receipt/guard09/resource11 exact. Readbothscripts, originalwindowFor/keyboard setup. Fixed3contexts/1440x900->1024x320, primary-other nativeTab<=120, trace3x600<=1800<2048,85work90absolute. Resource2CPU3GiB512PIDnetnone/readonly/nonroot/capdrop/tmpfs/ownoutput/owner+imageboundcleanup; rootfreshguard/explicitoneattemptACK/singleheavy prerequisites. No findings in prospective bounded diagnosis, no execution by reviewer. PlainDOM synthetic notReact/APP; rootmustinspectall8_reached/overflow/trace_read_failed/events/cleanup, exit0alone notproof. NoUI/gate/stagecredit/runtime change.
+Frozen shortreview .docs/implementation/reviews/p05/firefox-focus-events-diagnostic-static-independent01.json SHA30500f3d1c699d67e57f825a1d475db3b2a866be6a3b6ef6824d869d3155ab19. Rootnotified; no further writes. COMPLETE_STOP.
+
+## 2026-10-22T20:55:13.9206301Z — actual read-only metadata verification
+Actualreportd8ed6e01c4b2f6c8ccf85325b667ee8fa143420da55ab64212aed097df417806/exit4297adc7dcb61b3572a412c7d9127b21cb3e5b75f6e6526a963acd3bb2658908 verified: exit0/cleanupownedabsent/errornull;4.019s/92events/nooverflow/no trace failure, primary+other eachall8/sampleshasFocus true/focus+keyupcounts1..8. Syntheticconstant didnotreproduce issue, establishes no APPcause/fix or gatecredit. Reviewer onlyread/assert metadata, no Docker/native. Rootnotified. Nextauthorized task narrow observationalclone review afterauthorfreeze; no newactualpacket requested.

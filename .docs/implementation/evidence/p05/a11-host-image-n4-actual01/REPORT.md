@@ -1,0 +1,7 @@
+# A11: host, image binding и два N4 результата
+
+A11 source597f1a35/1860, testimagec9de40ee с296 pins, productionc0093244 с122 pins. Host73files/1031PASS/208 platformSKIP, tsc/webtsc/lint exit0, before/after exact. Это dirty-source доказательство; чистый commit и полный stage PASS не заявлены.
+
+Первый N4 завершился WS_FAILURE при одновременной тяжёлой нагрузке corpus/host/browser. Сохранён как FAIL, а не исключён. Второй N4 запущен отдельно после штатного drain корпуса: FAIL PROFILE_OR_TOTAL_DEADLINE,601336ms,15 завершённых раундов/15 finishes/375 requests/4WS, round16 finish_controls. Последний current200 занял3277ms. Оба раза room/client cleanup и compose ownership/empty cleanup PASS. Во втором safe server error events отсутствуют; это не доказательство отсутствия задержек.
+
+Второй прогон включает один7s container-local readonly CPU profile и100 коротких SELECT1 для диагностики; не называется полностью неинструментированным сравнением скорости. Профиль сохранён отдельно: a11-owned-cpu-profile-round01/INDEX.json b0b3faf4dd1faa5ca9c78a3884401b0b5e2ddf2735f013bb04660780bc0671ad. Он показывает доминирование fsync в операциях временных файлов блокировок. Нативные deadlines, lease, rate limits, query timeout и20round oracle не менялись. Memo истории независимо принят как корректный, но сам по себе не закрыл N4. Требуется узкое исправление горячего пути и новый фактический прогон на новой точной ревизии.

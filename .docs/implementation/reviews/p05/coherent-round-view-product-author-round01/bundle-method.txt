@@ -1,0 +1,34 @@
+ private roundTargetValue(l:Loaded,member:string):TopicRoundTarget{
+  const own=<K extends 'invitation'|'action'>(scope:K)=>{const o=l.data[scope];return o?{offer_id:o.offer_id,consent_scope:scope,proposal_revision:o.proposal_revision,own_state:o.acks.includes(member)?'accepted' as const:'pending' as const,state:o.state,expires_at:new Date(o.state==='pending'?o.deadline:o.active_until??o.deadline).toISOString()}:null;};
+  return {schema_version:2,room_id:l.game.room_id,session_id:l.game.id,round_id:l.row.id,game_rev:revision(l.game.rev),invitation:own('invitation'),action:own('action'),choice:l.data.choice,content_revision:l.data.content_revision,condition:l.data.plan.interaction==='pair_public'&&l.game.mode==='yes_but'&&l.data.invitation&&consentAllows(l.data.invitation,member,this.now)?l.data.condition:null};
+ }
+ /** Materialization commits before one coherent readonly delivery transaction.
+  * No nested endpoint dispatch or uncommitted grant is exposed to the caller. */
+ async dispatchRoundView(room:string,session:string|undefined,id:string,round:string,enqueue:(value:TopicRoundView)=>void){
+  try{await this.committed(async c=>{const a=await this.rooms.access(c,room,session,false,true);await this.protocol(c,room);const g=await this.row(c,room);requireThat(g?.id===id,'ROUND_STALE',409);const r=await this.current(c,g);requireThat(r?.row.id===round,'ROUND_STALE',409);
+   const role=(await c.query('SELECT role FROM game_round_actors WHERE room_id=$1 AND session_id=$2 AND round_id=$3 AND member_id=$4',[room,id,round,a.member.id])).rows[0];
+   if(role&&g.state==='active'&&['pending','active'].includes(r.data.state)){const l=await this.loaded(c,room,id);if(l.data.conversation_id)await this.prepareProjection(c,l,a.member.id,a.member.locale);else await this.reconcile(c,l);}return null;
+  });}catch(error){if(!(error instanceof DomainError||error instanceof EngineError)||error instanceof DomainError&&error.statusCode===401)throw error;}
+  return this.rooms.transaction(async c=>{const a=await this.rooms.access(c,room,session,true,true);await this.protocol(c,room);const context=await this.selfActionsContext(c,a);requireThat(context.g?.id===id&&context.r?.row.id===round,'ROUND_STALE',409);
+   let ordinary=this.ordinaryCurrent(context),target:TopicRoundTarget|null=null,conversation:TopicConversationView|null=null,chat:TopicChatView|null=null,contentFence:(()=>void)|null=null,chatCheck:(()=>void)|null=null;
+   const l=context.l;
+   if(ordinary&&l&&context.role&&l.game.state==='active'&&['pending','active'].includes(l.data.state)){
+    try{await this.actor(c,l.game,round,a.member.id);target=this.roundTargetValue(l,a.member.id);
+     if(l.data.conversation_id&&l.data.invitation&&l.data.plan.actors.every(member=>consentAllows(l.data.invitation!,member,this.now))){const value=await this.prepared(c,l,a.member.id,a.member.locale);requireThat(value,'CONVERSATION_UNAVAILABLE',409);conversation=value;contentFence=()=>this.checkDelivery(value);
+      if(value.state==='active'&&this.chatAvailable(l,a)){const conv=await this.conversation(c,l);requireThat(conv,'CONVERSATION_STALE',409);chatCheck=this.chatFence(l,a,conv);const state=await loadTopicObject<ChatState>(c,this.keys,this.scope(l.game,l.data.conversation_id,'chat'));
+       chat={schema_version:2,conversation_id:l.data.conversation_id,epoch:value.epoch,revision:state?.epoch===value.epoch?state.revision:0,state:'active',messages:state?.epoch===value.epoch?state.messages.slice(-topicChatLimits.buffer).map(m=>({message_id:m.id,sequence:m.sequence,direction:m.sender===a.member.id?'sent':'received',text:m.text})):[]};}
+     }
+    }catch(error){if(!(error instanceof DomainError||error instanceof EngineError))throw error;ordinary=false;target=null;conversation=null;chat=null;contentFence=null;chatCheck=null;}
+   }
+   // Strict acceptance is independent from source-free safety controls. Both
+   // captured closures are checked synchronously after the last awaited query.
+   const safetyFence=await this.finalAuth(c,a,true),normalFence=await this.finalAuth(c,a);
+   safetyFence();try{normalFence();if(ordinary){requireThat(this.ordinaryCurrent(context),'TOPIC_DELIVERY_STALE',409);if(l)this.checkDelivery(l.game);contentFence?.();chatCheck?.();}}
+   catch(error){if(!(error instanceof DomainError||error instanceof EngineError)||error instanceof DomainError&&error.statusCode===401)throw error;ordinary=false;target=null;conversation=null;chat=null;contentFence=null;chatCheck=null;}
+   const own=this.selfActionsValue(a,context,ordinary),issued=this.now;
+   if(conversation)conversation={...conversation,server_time:own.server_time};
+   const value:TopicRoundView={schema_version:2,own,target,conversation,chat};
+   const check=()=>{safetyFence();requireThat(this.now>=issued&&this.now<Date.parse(own.expires_at),'TOPIC_DELIVERY_EXPIRED',409);if(ordinary){normalFence();requireThat(this.ordinaryCurrent(context),'TOPIC_DELIVERY_STALE',409);if(l)this.checkDelivery(l.game);contentFence?.();chatCheck?.();}};
+   check();enqueue(this.withFence(value,check));
+  });
+ }

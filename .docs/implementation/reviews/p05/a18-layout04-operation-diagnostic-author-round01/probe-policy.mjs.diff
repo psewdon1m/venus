@@ -1,0 +1,34 @@
+--- a18-03/probe-policy.mjs
++++ a18-04/probe-policy.mjs
+@@ -53,7 +53,13 @@
+   const d=Object.getOwnPropertyDescriptor(current,key);if(d)return 'value'in d?d.value:undefined;
+  }
+ }
+-function failureLocation(error,name,message){
++// Fixed diagnostics only. No message/stack/code value outside these enums is emitted.
++const rangeNodeCodes=new Set(['ERR_OUT_OF_RANGE','ERR_BUFFER_OUT_OF_BOUNDS','ERR_STRING_TOO_LONG','ERR_BUFFER_TOO_LARGE','ERR_FS_FILE_TOO_LARGE']);
++const rangeStockKinds=new Map([['Maximum call stack size exceeded','CALL_STACK_EXHAUSTED'],['Invalid string length','INVALID_STRING_LENGTH'],['Invalid array length','INVALID_ARRAY_LENGTH'],['Array buffer allocation failed','ARRAY_BUFFER_ALLOCATION_FAILED']]);
++function rangeFailureMetadata(error,name,message){
++ if(name!=='RangeError')return {};const code=errorData(error,'code');return {range_error_kind:typeof message==='string'&&message.length<=128?(rangeStockKinds.get(message)??'UNKNOWN'):'UNKNOWN',node_code:typeof code==='string'&&code.length<=64&&rangeNodeCodes.has(code)?code:'UNKNOWN'};
++}
++function failureLocation(error,name,message,nodeCode){
+  try{
+   // Validate the native header before lazy formatting; comparison text may be
+   // multiline but is skipped in full before examining actual frame lines.
+@@ -66,7 +72,7 @@
+    stack=nativeStackGetter.call(error);
+   }
+   if(typeof stack!=='string'||stack.length>16384||Buffer.byteLength(stack)>16384)return;
+-  const header=name+(name==='AssertionError'?' [ERR_ASSERTION]':'')+(message?': '+message:'');
++  const header=name+(name==='AssertionError'?' [ERR_ASSERTION]':name==='RangeError'&&rangeNodeCodes.has(nodeCode)?' ['+nodeCode+']':'')+(message?': '+message:'');
+   if(!stack.startsWith(header+'\n'))return;
+   for(const raw of stack.slice(header.length+1).split('\n').slice(0,16)){
+    const line=raw.replace(/\\/g,'/');if(line.length>1024||!line.startsWith('    at ')||/[\r\0]/.test(line))continue;
+@@ -88,6 +94,6 @@
+   const name=failureKinds.find(([constructor])=>error instanceof constructor)?.[1]??'Error';
+   const message=errorData(error,'message');
+   const prefix=typeof message==='string'&&message.length<=8192&&Buffer.byteLength(message)<=8192?message.split(/[\r\n]/,1)[0].split(':',1)[0]:undefined;
+-  return {name,code:failureCodes.has(prefix)?prefix:fallback.code,...failureLocation(error,name,message)};
++  const range=rangeFailureMetadata(error,name,message);return {name,code:failureCodes.has(prefix)?prefix:fallback.code,...range,...failureLocation(error,name,message,range.node_code)};
+  }catch{return fallback;}
+ }

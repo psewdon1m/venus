@@ -1,0 +1,20 @@
+BEGIN
+         observed_utc          
+-------------------------------
+ 2026-10-20 19:56:21.812043+00
+(1 row)
+
+ seq |   mode    | state  | current_round | rev |         updated_at         
+-----+-----------+--------+---------------+-----+----------------------------
+   2 | questions | active |            13 |  47 | 2026-10-20 19:56:21.311+00
+(1 row)
+
+        state        | wait_event_type | wait_event | count |  max_xact_age   
+---------------------+-----------------+------------+-------+-----------------
+ active              | Lock            | advisory   |     2 | 00:00:00.397501
+ active              |                 |            |     1 | 00:00:00.002057
+ idle                | Client          | ClientRead |     3 | 
+ idle in transaction | Client          | ClientRead |     1 | 00:00:00.802324
+(4 rows)
+
+COMMIT

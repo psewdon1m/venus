@@ -1,0 +1,29 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-panel.test.ts (21 tests | 1 failed) 1786ms
+   ❯ actual TopicGamesPanel scoped V2 flow (21)
+     × keyboard focus reveals the whole private editor without submitting or exposing content 253ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > keyboard focus reveals the whole private editor without submitting or exposing content
+TypeError: find(...).props.onFocus is not a function
+ ❯ evalmachine.<anonymous>:34:94
+ ❯ topicScenario apps/web/src/topic-test-harness.ts:41:9
+     39| `;
+     40| export async function topicScenario(source:string):Promise<unknown> {
+     41|  return await vm.runInNewContext(harness+'\n(async()=>{'+source+'})()'…
+       |         ^
+     42| }
+     43|
+ ❯ apps/web/src/topic-panel.test.ts:4:111
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 20 passed (21)
+   Start at  18:36:32
+   Duration  2.17s (tests 87%, import 9%, transform 4%)
+

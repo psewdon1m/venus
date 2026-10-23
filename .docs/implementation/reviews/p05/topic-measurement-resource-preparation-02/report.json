@@ -1,0 +1,37 @@
+{
+  "status": "AUTHOR_RESOURCE_V2_REPAIR_READY_INDEPENDENT_REVIEW",
+  "author_NOT_ACCEPTOR": true,
+  "created_at": "2026-10-19T20:53:05.922131+00:00",
+  "finding": "P05-MEAS-RESOURCE-001 P2",
+  "prior_review_index": "528ae2feb6a915cf43ccd914fa05656c19aeebb8f1410a395edd4cce676e8fd1",
+  "previous_eb8_module_unchanged": true,
+  "pins": {
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2.mjs": "61a75898d0f3e256be166ca1b3504ec8edd35310d4f7cb27d734e95014851d69",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-controls.mjs": "294e4f4bd8d95031ca22f63baddce6854cce4092f811bbfafcafd49258e302b6",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-controls.json": "b93962305ed2501141a237919f2cd6986f7523646c149f8d2ecc5c4267f75bd2",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-attempt01.txt": "ee3e9b84bfbfd23be5243661f0be2fa2144f7aab47deccddbed4236a797a3ad6",
+    ".artifacts/p05-topic-measurements-next/artifact-store-v2-attempt02.txt": "828a006b68acac840943a9838724cd47ab42e3918e18cf443af3decda3e832b4"
+  },
+  "WRITES_PAUSED": true,
+  "controls": {
+    "attempt01": "FAIL: Windows PowerShell5.1 does not enumerate directory alternate streams; retained",
+    "attempt02": "PASS 8 actual Windows filesystem controls,33 rejected path names",
+    "initial_NTFS_ADS": true,
+    "post_init_NTFS_ADS": true,
+    "root_directory_NTFS_ADS": true,
+    "junction_regressions": true
+  },
+  "Windows_prerequisite": "pwsh.exe >=7.2 with FileSystem Get-Item -Stream * support, timeout10s and max4096 stdout; unavailable/failure is failclosed. WindowsPowerShell5.1 fallback forbidden. Linux does not invoke pwsh.",
+  "new_grammar": "1..2048 total characters; slash-delimited ASCII components1..128, alphanumeric first then alphanumeric/dot/underscore/hyphen; no finaldot; no CON/PRN/AUX/NUL/COM1..9/LPT1..9 including extension. Colon/backslash/empty/dot/space/drive/UNC rejected before filesystem open.",
+  "preexisting_streams": "On Windows re-enumerate root AND all descendants file/directory streams on each check; any nondefault stream denies. This protects existing hidden streams from escaping recount. Additional external-process cost is explicit.",
+  "limitations": [
+    "Best-effort revalidation, no atomic concurrent hostile FS guarantee.",
+    "Windows stream enumeration depends on pwsh>=7.2 provider correctness; actual NTFS tests cover both file and directory stream support.",
+    "Artifact path ownership remains single writer; no external concurrent filesystem actor.",
+    "No new whole-producer, pureFSM, actualruntime, statistic, P05 or human450 acceptance."
+  ],
+  "original61_inputs_changed": false,
+  "included_source_changed_by_author": false,
+  "statistics_RUN": false,
+  "new_included_freeze": "1d3a2ba1aa0c79ad223c89094e6def087036abcf327fb46ba42956a68ffbc6f0/1813 reported by root; this resource-only packet does not transfer old compiled/source proofs"
+}

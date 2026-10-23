@@ -1,0 +1,5 @@
+# Independent browser METHOD17 preparation review
+
+- 2026-10-20T16:13:58.1667139Z UTC — Root-authored METHOD17 frozenINDEX7f5ca531d5d00d0952eb838dfe1dc15a21b45819f9c6ba90b1cdf4a9dfa3a8c7 /27children. Non-author boundedreview click/assertPrivateTicket only; protected redundant-await removal, sync strictgate/oneclick/deadline and unchangednonprotected behavior; bounded128safe failureprojection. Ownnegative/interleaving/privacy controls; no Docker/browserRUN/productwrites, original16FAIL unchanged. Newdurable topic-browser-method17-independent-review-round01; allauthorbytes immutable.
+
+- 2026-10-20T16:16:40.7141585Z UTC — METHOD17 PASS_METHOD_ONLY:30own exactsource/AST/interleaving/negative/privacy/128overflow controls PASS;27authorchildren/10runtimepins exact. Only2functionschange; restbrowser/all16casebodies unchanged16; nineotherfiles byteexact. Strictsyncsamecycle/TTL gate immediatelybeforeoneactuator, no retry; safe failuretypedprojection passes unknownpayload/redaction/overflow tests. Frozennewreviewpacket; writesCOMPLETE. No actualDocker/browserRUN/currentstage or old16FAILpromotion. Rootfreshbinding/newACK/actualaudit remains.

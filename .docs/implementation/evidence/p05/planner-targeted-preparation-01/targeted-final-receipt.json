@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-19T19:54:02.6891073+03:00",
+  "status": "DIRTY_COMPONENT_AUTHOR_PREFLIGHT_PASS",
+  "scope": "ADDITIVE_TARGETED_PLANNER_UNIT_REGRESSION_NOT_API_C2_OR_STAGE",
+  "synthetic_fixture_only": true,
+  "source_unchanged": true,
+  "source_pins": [
+    {
+      "Path": "C:\\.projects\\venus\\packages\\relationship-engine\\src\\topic-map.ts",
+      "Hash": "1FFD16C7C6B307BA7E92ADEFC45915966C916BA72D3958C1F5BAD16AEC10BFC4"
+    },
+    {
+      "Path": "C:\\.projects\\venus\\packages\\relationship-engine\\src\\topic-map.test.ts",
+      "Hash": "E973118BDE7D8DC45084091FB9E7A114111C329E4992E2FD9F6F30713DB0CE3C"
+    },
+    {
+      "Path": "C:\\.projects\\venus\\packages\\relationship-engine\\src\\topic-planner.ts",
+      "Hash": "CB68BA07F83492E7CEBBDAD7F0A7AA5F1A115773608D5D2F65315C942D1F6D17"
+    },
+    {
+      "Path": "C:\\.projects\\venus\\packages\\relationship-engine\\src\\topic-planner.test.ts",
+      "Hash": "A4B28AF5EF527B1293C2CB46B116448C0739BB7B47A88D8971680EF1B9583800"
+    }
+  ],
+  "commands": [
+    {
+      "correction": "test.table array row spread sent undefined instead of empty list; changed to object rows",
+      "exit_code": 1,
+      "skipped": 39,
+      "run": 1,
+      "command": "vitest run topic-planner.test.ts -t additive targeted",
+      "passed": 12,
+      "raw": "targeted-tests-01.txt",
+      "failed": 1
+    },
+    {
+      "passed": 13,
+      "exit_code": 0,
+      "raw": "targeted-tests-02.txt",
+      "command": "vitest run topic-planner.test.ts -t additive targeted",
+      "failed": 0,
+      "skipped": 39,
+      "run": 2
+    },
+    {
+      "passed": 91,
+      "exit_code": 0,
+      "raw": "full-tests-03.txt",
+      "command": "vitest run topic-map.test.ts topic-planner.test.ts engine.test.ts",
+      "failed": 0,
+      "skipped": 0,
+      "run": 3
+    },
+    {
+      "exit_code": 0,
+      "raw": "typecheck-03.txt",
+      "command": "tsc -p packages/relationship-engine/tsconfig.json --noEmit"
+    },
+    {
+      "exit_code": 0,
+      "raw": "lint-03.txt",
+      "command": "eslint topic-planner.ts topic-planner.test.ts"
+    }
+  ],
+  "operation_revision": "RE-1.P05-TARGET-1",
+  "old_operation_bytes_preserved": true,
+  "api_integration_proven": false,
+  "full_c2_proven": false,
+  "human_approval": false
+}

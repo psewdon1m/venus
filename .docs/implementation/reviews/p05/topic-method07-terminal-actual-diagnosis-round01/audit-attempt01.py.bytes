@@ -1,0 +1,43 @@
+import hashlib,json,zipfile,sys,importlib.util
+from pathlib import Path
+root=Path('.docs/implementation/evidence/p05/resume-r100-method07-attempt01');out=Path('.docs/implementation/reviews/p05/topic-method07-terminal-actual-diagnosis-round01');out.mkdir(parents=True,exist_ok=True)
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert sha(root/'INDEX.json')=='86e5e71c849f32f29fa72494d5f7ac2ab24484f9f95c2073dbbc9c3724fb9ad7'
+index=json.loads((root/'INDEX.json').read_bytes());assert index['status']=='NOT_ACCEPTED_TERMINAL_RECEIPT_CAPACITY_FAULT_DESPITE_EXIT0'
+for row in index['files']:
+ f=root/row['path'];assert f.stat().st_size==row['bytes'];assert sha(f)==row['sha256'],str(f)
+run=root/'run';load=lambda n:json.loads((run/n).read_bytes())
+prep=load('preparation.json');ack=json.loads((root/'p05-resume-r100-method07-root-ack01.json').read_bytes());assert sha(run/'preparation.json')==ack['preparation_sha256'];assert sha(run/'inputs/input-pins.json')==prep['input_pin_sha256'];assert prep['owner']==load('inputs/root-ack.json')['owner']
+pins=load('inputs/input-pins.json')
+for r in pins['mapping']:assert sha(run/'inputs'/r['snapshot'])==r['sha256']
+worker=load('control/receipts/worker-terminal.json');assert worker['code']==0;terminal=json.loads(worker['stdout']);assert terminal['rounds']==100 and terminal['status']=='NON_GATING_FIXED_R100_DIAGNOSTIC_COMPLETE'
+native=load('control/receipts/native-inventory.json');export=load('control/receipts/export-verification.json');assert sorted(native['files'],key=lambda r:r['path'])==sorted(export['files'],key=lambda r:r['path'])
+for r in export['files']:
+ f=run/'export'/r['path'];assert sha(f)==r['sha256'] and f.stat().st_size==r['bytes']
+archive=load('control/receipts/archive-verification.json');z=run/'archive/exact-diagnostic.zip';assert sha(z)==archive['archive_sha256'];assert z.stat().st_size==archive['archive_bytes']
+with zipfile.ZipFile(z)as f:
+ for row in archive['files']:
+  b=f.read(row['path']);assert len(b)==row['bytes'] and hashlib.sha256(b).hexdigest()==row['sha256']
+cleanup=load('control/receipts/owned-after-cleanup.json');assert cleanup['cleanup']=='completed' and cleanup['workerStopped'] and cleanup['remaining']=={'containers':[],'volumes':[]} and not cleanup.get('error')
+watchdog=load('control/live/watchdog-terminal.json');assert watchdog['status']=='SUPERVISOR_COMPLETE_NON_GATING' and watchdog['capacity_fault']is None and watchdog['phase']=='DONE';assert watchdog['owner']==prep['owner']
+phase=load('control/live/phase.json');assert phase['phase']=='DONE' and phase['owned_cleanup']=='completed' and phase['export_verified']
+assert not(run/'control/receipts/launcher-terminal.json').exists()
+console=json.loads((root/'p05-resume-r100-method07-run01.txt').read_bytes());assert console['status']=='COMPLETE_NON_GATING' and console['capacityFault']=='HOST_RECEIPT_WRITE_GUARD_FAILED'
+report=load('export/report.json');assert report['rounds_completed']==100 and report['diagnostics']['status']=='PASS' and report['invariants']['status']=='PASS_PURE_COMPONENT_ONLY'
+for n in ['control/receipts/source-after.json','control/receipts/source-after-finally.json']:assert load(n)==load('inputs/source-before.json')
+guardPath=run/'inputs/next/host-output-guard.py';s=importlib.util.spec_from_file_location('frozen_actual07guard',guardPath);g=importlib.util.module_from_spec(s);s.loader.exec_module(g)
+config=load('inputs/root-ack.json');checks=[]
+for advancing in [False,True]:
+ clock=[0.];counter=[watchdog['guard_counter']]
+ def sample():
+  if advancing:counter[0]+=1
+  return{'owner':prep['owner'],'counter':counter[0],'available_bytes':str(12*1024**3),'host_output_allowed':True,'capacity_fault':None}
+ guard=g.HostOutputGuard(config,space_probe=lambda:12*1024**3,read_sample=sample,clock=lambda:clock[0],wait=lambda seconds:clock.__setitem__(0,clock[0]+seconds))
+ error=None
+ try:guard.before(100)
+ except g.OutputStopped as e:error=str(e)
+ if advancing:assert error is None and guard.armed
+ else:assert 'SUPERVISOR_INITIAL_ADVANCE_MISSING'in error and not guard.armed
+ checks.append({'kind':'moving_counter_accepts'if advancing else'constant_final_counter_denies','status':'PASS','simulated_elapsed_seconds':clock[0],'error':error,'actual_available_injected':True,'actual_disk_writes':0})
+result={'status':'ACTUAL_METHOD07_NOT_ACCEPTED_CONFIRMED_TERMINAL_ORDER_BUG','exact_actual_index':sha(root/'INDEX.json'),'verified_children':len(index['files']),'prepared_input_mapping_pins':len(pins['mapping']),'native_export_files':len(export['files']),'archive_files':len(archive['files']),'worker':terminal,'cleanup':cleanup['remaining'],'watchdog_status':watchdog['status'],'last_watchdog_counter':watchdog['guard_counter'],'console':console,'launcher_terminal_present':False,'guard_controls':checks,'actual_Docker_calls':0,'R100_reruns':0,'statistics_RUN':False}
+(out/'actual-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2))

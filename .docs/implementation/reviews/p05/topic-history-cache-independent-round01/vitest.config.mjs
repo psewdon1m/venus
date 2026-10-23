@@ -1,0 +1,1 @@
+import base from '../../vitest.config.ts';export default {...base,test:{...base.test,include:['apps/api/src/topic-history-cache.test.ts','apps/api/src/topic-history-cache-integration.test.ts','.artifacts/p05-history-cache-independent01/independent.test.ts'],exclude:[]}};

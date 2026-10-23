@@ -1,0 +1,9 @@
+import assert from 'node:assert/strict';
+import {readFileSync,readdirSync,writeFileSync} from 'node:fs';
+import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createHash} from 'node:crypto';
+const root='C:/.projects/venus',out=fileURLToPath(new URL('.',import.meta.url)),hash=b=>createHash('sha256').update(b).digest('hex'),pins=JSON.parse(readFileSync(join(out,'INPUT_PINS.json'))),checks=JSON.parse(readFileSync(join(out,'CHECKS.json')));
+for(const [path,want]of Object.entries(pins)){const b=readFileSync(join(root,path));assert.equal(b.length,want.bytes,path);assert.equal(hash(b),want.sha256,path);}
+const files={};for(const name of readdirSync(out).sort()){if(name==='INDEX.json')continue;const b=readFileSync(join(out,name));files[name]={bytes:b.length,sha256:hash(b)};}
+const index={status:'PASS_STATIC_SOURCE_ONLY',source_identity:checks.source_identity,source_count:1872,included_files:1872,parent_source_identity:checks.parent_source_identity,parent_source_count:1871,author_INDEX_sha256:'c38a5620e14f45b6080951e6611fa255876ebdb632070d1d0f8945f186ee64ac',changed:checks.changed,added:checks.added,other_existing_inputs_byte_exact:1869,independent_focused_tests:{PASS:3,SKIPPED:17,exit_code:0},backend_source:'BYTE_EXACT_A17',new_backend_image_proof:'PENDING_NOT_CLAIMED',root_materialization_may_proceed:true,native_operations:0,native_or_stage_acceptance:false,prior_actual_failed_predicate:'UNKNOWN',owned_writes:'COMPLETE_STOP',files};const bytes=JSON.stringify(index,null,2)+'\n';writeFileSync(join(out,'INDEX.json'),bytes);console.log(JSON.stringify({status:index.status,sha256:hash(bytes),children:Object.keys(files).length,final_inputs_rehashed:Object.keys(pins).length,source_identity:index.source_identity,source_count:1872,owned_writes:'COMPLETE_STOP'}));

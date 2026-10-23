@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "revision": "P05-ACTIVE-PAIR-REFUSAL-01",
+  "kind": "COMPATIBLE_FRONTEND_ACTIVE_CONVERSATION_SAFETY_CONTROL_FIX",
+  "parent_source_identity": "93221ba482331e3916e56f2e1866b5c7743fa72ad29320f2819a7a6fd1a2951d",
+  "parent_source_count": 1871,
+  "behavior": "A retained invitation with an active conversation prompt exposes the existing decline_invitation safety control exactly once when own scoped permission allows it. Both outer fallback and inner button guards include conversation.prompt; pending invitation panel remains unchanged.",
+  "normative_source": "apps/api/src/topic-games.ts:selfActionsValue declines remain permitted for an active selected actor with an unexpired retained invitation",
+  "changed_source_files": {
+    "apps/web/src/topic-games-panel.tsx": "c3dcb2d0d72d5221b2ac6c846306fab58f9eb83e486781abbb42c5045203e285",
+    "apps/web/src/topic-panel.test.ts": "1b5e695a132c18516c7f0754d93592d1360112b616051a9c11f9ff72eb04891c"
+  },
+  "before_source_files": {
+    "apps/web/src/topic-games-panel.tsx": {
+      "bytes": 32172,
+      "sha256": "b4c0d5108484ca85b37780972d8d444c64f92e04e14a1c99aac180a91055f671"
+    },
+    "apps/web/src/topic-panel.test.ts": {
+      "bytes": 17616,
+      "sha256": "34beac043a13171072d2b3df427c1b3a2f4e1c7417d04b077e8f37947e7e0b73"
+    }
+  },
+  "unchanged": [
+    "Invitation response handler/route/tuple/safety invalidation, withdraw_action guard and pending pair panel",
+    "All API/private ACL/consent/TTL/pack/map/storage/contracts/18+ backend bytes",
+    "Historical A17/source14 and actual FAIL proofs; no method/oracle/deadline/resource changes"
+  ],
+  "validation": {
+    "existing_actual_TSX_harness": "RED19PASS1FAIL active retained invitation missing control; GREEN20PASS (3 added cases)",
+    "web_typecheck_exit": 0,
+    "focused_lint_exit": 0,
+    "native_browser": false
+  },
+  "prior_actual_failure_qualification": {
+    "diagnosis_index": ".docs/implementation/reviews/p05/a17-layout21-failure-diagnosis-independent-round01/INDEX.json",
+    "sha256": "8c56e39472ca30981fa42e1ea37ad68c512ff12afb5061c7b64a24f56ef8d87e",
+    "actual_result": "36PASS/1FAIL/14NOTRUN cleanupPASS retained",
+    "cause": "The exact private_active preparation false term remains UNKNOWN. This independently source-proven UI omission is not asserted to be the observed native failure cause."
+  },
+  "compatibility": "A17 backend and protocol unchanged; prospective A18 frontend needs independent review and fresh materialized build/native proof.",
+  "rollback": "Restore coherent previous A17 frontend bundle. Backend/durable state unchanged; previous bundle retains the known active-prompt pair-refusal visibility omission."
+}

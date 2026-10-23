@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "stage": "P05",
+  "revision": "P05-ENGINE2-AR-BOOT-20261019",
+  "created_at": "2026-10-19T19:42:38.310677+00:00",
+  "status": "INTEGRATED_CANDIDATE_GATES_PENDING",
+  "previous_included_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "previous_source_archive": ".docs/implementation/evidence/p05/topic-games-preflight-07/included-source.zip",
+  "algorithm_before": "RE-1.P05-TOPIC-1",
+  "algorithm_after": "RE-1.P05-TOPIC-2",
+  "authority": [
+    "TG-AR-001",
+    "P03-M3 current-session strict anti-repeat",
+    "ADR-024"
+  ],
+  "files": [
+    {
+      "path": "packages/relationship-engine/src/topic-planner.ts",
+      "sha256": "ef1e11228f45ba6351e69f02b13f78726cd158cd7d6810d19de445550d3ea756"
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+    },
+    {
+      "path": "apps/api/src/topic-algorithm-compatibility.test.ts",
+      "sha256": "53714c56107d911c89e040813b31fe494b7dacfbf898b1b07e795bea51f9f260"
+    },
+    {
+      "path": ".docs/adr/ADR-024-p05-complete-private-opportunity-history.md",
+      "sha256": "735555f3c5e609633598f95b2004315395eb8bdbc3ce94d47538488efc92027f"
+    },
+    {
+      "path": ".docs/adr/current-index.json",
+      "sha256": "9fc35ff892db3e908a1d1dc07b0617ac78cffdeb63db9f4574f43d0698d1ac50"
+    },
+    {
+      "path": ".docs/implementation/p05-work-map.json",
+      "sha256": "09c27b472843d964b52ea49ee8833cdd8ed55ec92ca6741aac9bc5ebef71cac6"
+    },
+    {
+      "path": "packages/relationship-engine/src/topic-planner.test.ts",
+      "sha256": "c19b01ac301037b58bdda03e0c7d6c462c981d96aba3ce0a52918f451fe27e52"
+    }
+  ],
+  "compatibility": "No reinterpretation of unsupported snapshots; ordinary prerequisites can reject before bootGate. Started/history-bearing prior cannot silently vanish when snapshot missing. No offline recovery/approved profile bypass.",
+  "full_stage_acceptance": false,
+  "owner_450_HOLD_unchanged": true,
+  "scope_boundary": "Finish P05 only; do not continue P06-P11.",
+  "unit_fixture_revision": "Default positive unit seed derives from algorithm literal. Old TOPIC-GOLDEN has no private opportunity under engine2; 22 fixture failures preserved. No statistical/diagnostic seed grid changed."
+}

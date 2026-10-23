@@ -1,0 +1,182 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > starts with empty explicit topic choices and never offers a prompt automatically 21ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > does not infer the other actor consent from one allowed profile or one acknowledgement 7ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > exposes only allowed topic labels and opaque action metadata before both accepts 2ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects a response with stale offer_id 2ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects a response with stale epoch 2ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects a response with stale proposal_revision 2ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects a response with stale token 3ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > makes decline terminal, clears all delivery and does not expose its topic or actor as a reason 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > permits withdrawal after own first acknowledgement and rejects duplicate accept 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > other question immediately removes prompt, advice and acks and requires a real new candidate 2ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > a delayed old-question intent cannot affect a new pending or active offer (exclude=false) 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > a delayed old-question intent cannot affect a new pending or active offer (exclude=true) 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects other-question intent with mismatched offer_id before changing current pending/active state 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects other-question intent with mismatched epoch before changing current pending/active state 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects other-question intent with mismatched proposal_revision before changing current pending/active state 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > rejects other-question intent with mismatched token before changing current pending/active state 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > does not interpret a missing intent as current-topic exclusion or replacement; unconditional stop remains available 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > a correct pending-question exclusion only removes the explicitly intended current topics 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > an expired old offer cannot exclude its topics or a later replacement 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > excludes every tag of current prompt monotonically and never reveals other preferences 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > a preference change invalidates an active epoch even if another actor supplied the last shared revision 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > new candidate creates new epoch and no implicit grant even after prior bilateral acceptance 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > enforces one pending offer, rate limit and three total attempts across epochs 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > private conversation boundaries and exact topic invitation > never reuses opaque IDs/tokens and never accepts unknown candidate hashes 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > withholds text, preview, hash and length from pending recipient but lets sender see own composition 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > only exact recipient acceptance exposes the current advice and replay cannot duplicate acceptance 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > decline removes advice from all later projections 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > revoke removes advice from all later projections 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > editing accepted text revokes old ID/revision and requires fresh recipient opt-in 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > bounds each direction independently to one pending and two total attempts across topic epochs 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > requires an active bilateral topic epoch and rejects stale recipient response after replacement 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > does not relabel a delayed old-epoch advice send as part of a new accepted topic 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects a delayed edit of an already superseded advice ID without reopening the old text 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "          " 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂🙂" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "\ud800" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "\udfff" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x\u0000y" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x\ny" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x\ty" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "xy" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x‮y" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x⁩y" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x؜y" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > rejects invalid advice "x y" 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > structured advice opt-in > accepts exactly 1000 Unicode scalars and keeps the recipient boundary 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > pending invitation expires at exactly 30s with no implicit accept and cannot revive 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > new offers and late active acceptance cannot extend the parent private moment 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > pending advice expires at exactly 30s; accepted advice lasts only until the active parent deadline 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > fails closed on invalid time NaN and never revives 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > fails closed on invalid time Infinity and never revives 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > fails closed on invalid time -1 and never revives 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > fails closed on invalid time 1000.5 and never revives 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > fails closed on invalid time 9007199254740992 and never revives 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > a failed business action still returns the advanced clock fence 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > an observed future expiry closes delivery and cannot be undone by returning the clock to the past 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > the internal binding rejects altered exact candidate bytes or map pin before delivery 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > denies substituted scope without advancing clock or leaking content: {"room_id":"room-B","session_id":"game-A","round_id":"round-A","actors":["alice","bob"]} 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > denies substituted scope without advancing clock or leaking content: {"room_id":"room-A","session_id":"game-B","round_id":"round-A","actors":["alice","bob"]} 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > denies substituted scope without advancing clock or leaking content: {"room_id":"room-A","session_id":"game-A","round_id":"round-B","actors":["alice","bob"]} 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > denies substituted scope without advancing clock or leaking content: {"room_id":"room-A","session_id":"game-A","round_id":"round-A","actors":["alice","eve"]} 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > denies substituted scope without advancing clock or leaking content: {"room_id":"room-A","session_id":"game-A","round_id":"round-A","actors":["alice","alice"]} 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > rejects a third actor and own-preference access and rejects a reversed actor ordering 0ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > defensively copies and deeply freezes input state, labels, candidates and projections 2ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > rejects unknown topics, malformed labels, duplicate/unknown refs and invalid time bounds at construction 1ms
+ ✓ packages/relationship-engine/src/private-conversation.test.ts > expiry, authorization, immutable inputs and malformed pins > seeds exact room-ledger exclusions without widening and rejects malformed owner settings 1ms
+ ✓ apps/web/src/topic-controls.test.ts > V2 permission metadata never grants actor authority by room role > revokes explicit conversation negatives even when the new metadata lease aged in flight 3ms
+ ✓ apps/web/src/topic-controls.test.ts > V2 permission metadata never grants actor authority by room role > loses all ordinary conversation permissions on reconnect but keeps confirmed own Stop 1ms
+ ✓ apps/web/src/topic-controls.test.ts > V2 permission metadata never grants actor authority by room role > cannot reuse a foreign member, old game revision, extra conversation permission or old schema 1ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > uses runtime capability exactly and never downgrades failed or malformed reads 5ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > binds V2 room requests to room CSRF and V2 create to admission CSRF 30ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > keeps the full topic union and rejects prompt before bilateral accept and pending received advice preview 1ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > cannot publish a pre-clear or pre-ABA request and does not clear an empty loading read during render 1ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > anchors leases to server durations despite skew and never extends same-epoch deadline by refreshing 0ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > never displays private content beyond a shorter authenticated own permission/presence deadline 0ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > rejects old epoch and revisions after a newer response even after values clear 0ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > requires V2 conversation actions in its explicit shape and preserves V1 default 0ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > retains only an exact text-free other-question safety attempt across transport loss, and never an Accept grant 1ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > drops an old safety reference when a fresh projection has no current offer 0ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > cannot renew a repeated safety offer or revive it by moving the local clock backward 0ms
+ ✓ apps/web/src/topic-state.test.ts > explicit protocol and bounded V2 private presentation > has complete RU EN TR consumer copy with matching keys 1ms
+ ✓ packages/relationship-engine/src/public-pair-opt-in.test.ts > P05 quiet public pair exposure boundary > withholds the pair before either or both independent opt-ins 4ms
+ ✓ packages/relationship-engine/src/public-pair-opt-in.test.ts > P05 quiet public pair exposure boundary > requires a real offer and the same two participants 1ms
+ ✓ packages/relationship-engine/src/public-pair-opt-in.test.ts > P05 quiet public pair exposure boundary > an action consent does not authorize public presentation 0ms
+ ✓ packages/relationship-engine/src/public-pair-opt-in.test.ts > P05 quiet public pair exposure boundary > withdrawal and expiration immediately close exposure 0ms
+ ✓ packages/relationship-engine/src/public-pair-opt-in.test.ts > P05 quiet public pair exposure boundary > does not revive exposure if the clock moves backwards 0ms
+ ✓ packages/relationship-engine/src/public-pair-opt-in.test.ts > P05 quiet public pair exposure boundary > fails closed on malformed duplicate or foreign acknowledgements 0ms
+ ✓ packages/relationship-engine/src/consent.test.ts > production consent coordinator > needs two independent acknowledgements and does not equate consent with performed action 4ms
+ ✓ packages/relationship-engine/src/consent.test.ts > production consent coordinator > checks exact pending deadline and gives refusal priority in both serialized race orders 1ms
+ ✓ packages/relationship-engine/src/consent.test.ts > production consent coordinator > bounds action lifetime to the parent and invalidates old acknowledgements on a new condition 1ms
+ ✓ packages/relationship-engine/src/consent.test.ts > production consent coordinator > denies invitation and action access before the final acknowledgement after a clock rollback 1ms
+ ✓ packages/relationship-engine/src/consent.test.ts > production consent coordinator > fences the replacement condition revision in time and denies legacy activation without timestamps 1ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > shows the full topic union before accept, with exact epoch/token acceptance and no private prompt 299ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > host status never grants actor choice, finish, condition or action accept when own booleans are false 128ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > questions retains common private support in person without a chat capability 3ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > questions needs enabled chat for any online private opportunity 2ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > truth_or_dare retains common private support in person without a chat capability 1ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > truth_or_dare needs enabled chat for any online private opportunity 1ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > yes_but retains common private support in person without a chat capability 1ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > yes_but needs enabled chat for any online private opportunity 1ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > keeps context variants in one semantic family instead of counting new distinct content 1ms
+ ✓ apps/api/src/topic-context-fixture.test.ts > P05 context-specific synthetic fixture eligibility > preserves the historical P03 mixed-context machine data 1ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > clears prompt/advice/chat before other-question receipt and does not publish a held older read 126ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > receiver pending advice has generic opt-in and exact recipient response, without a text preview 90ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > server clock behind local time does not hide current accepts or preserve them beyond their relative lease 87ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > disconnect drops private text immediately but retains confirmed own Stop and Pause attempts 97ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > keeps an opaque Other question attempt on disconnect, without prompt/labels/advice/chat, and sends its exact old tuple 81ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > does not mount free chat for an in-person meeting 100ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > edits a sent advice as a new opt-in offer and clears existing content before the receipt 84ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > secondary condition uses the exact V2 shape and invalidates previous topic/action content immediately 89ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > prepares V2 with fresh room revision and replays the exact request after an unknown network result 69ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > destroys an expired private retry callback and ignores an old retry button handler 75ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R01 clears public prompt on poll_error without hiding own safety attempts 94ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R01 clears public prompt on lease_expiry without hiding own safety attempts 84ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R01 clears public prompt on disconnect without hiding own safety attempts 81ms
+ ✓ apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R02 expires private/public/advice content after six real elapsed seconds despite a wall clock rollback 76ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > complete private opportunity history after empty topic setup > keeps the previous actual pair across public rounds and avoids it when an effective unused alternative exists 12687ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > complete private opportunity history after empty topic setup > allows the only pair to recur for N2 without manufacturing an alternative 549ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > keeps selected public/group/solo/quiet-pair candidates generic until exact public release 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > does not put quiet public declines in released history or later scheduling inputs 7ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > never publishes hidden primary even after an exact public release 7ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects author simulation history as restored runtime history 220ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects disposition drift between current private attempt and its exact record 49ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects safety revision rewind on a later round 64ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > undisclosed quiet-pair choice, identities and decline do not change the next public selection 50ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > requires exact current runtime release record and always keeps private disclosures generic 57ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > canonicalizes safety-set ordering without weakening same-revision binding 54ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > domain-binds round identities to room and session even if caller reused seed 18ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > keeps a monotonic safety floor even when no private candidate has yet been chosen 55ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects semantic repeats and forged multiple public cards for one historical round 1ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > keeps historical source bytes and legacy replay unchanged 229ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > strictly dispatches new envelope and never adds schema1 topic capabilities 1ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > replays exact immutable V2 history and deterministic preflight 433ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > empty/default allow is safe-empty only at baseline-eligible generic private opportunities 728ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > filters entire multi-tag card using both own allow and both room exclusions 654ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > keeps full public projections identical across private settings, histories, IDs, intensity, safety revisions and outcomes 1496ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > public RNG and next-round choices ignore extra private candidate replacements and disclosed/declined state 56ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects all mixed-family members regardless of private history while preserving historical pack 230ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > binds public semantic history across mode and session, without card-ID-only dedupe 3306ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > filters same-pair private semantic history across modes/sessions and isolates other pairs 677ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > room exclusions remain effective for caller-supplied current preferences after new session/mode/pair 2397ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > replaces with exact actual candidate history, fresh epoch, stable scope and bounded attempts 57ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > records fresh safe-empty after narrowed preferences, never substitutes a public card 51ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > denies stale safety/history/epoch/counter, same-revision changed sets and terminal decline 62ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > does not disclose by selection or manufacture action consent from topic planning 49ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects foreign room on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects foreign session on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects unknown pins on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects rewound sequence on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects impossible stage on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects wrong card hash on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects fake actual record on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects extra field on history restore 6ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > rejects unknown safety topics, malformed owner scope and missing revision 1ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > runs base guard/cap/progression profiles for2..8, all modes and both contexts 12712ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > preserves veto and comfort/context guards and reports true shortage 3365ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > versioned topic planner without content activation or runtime delivery > keeps anti-consecutive private pair where baseline alternatives exist 4185ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > chooses the sole genuinely admissible target from the complete pool, never arbitrary-rotate/false-empty 72ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > requires all target subjects and preserves the full secondary-tag union 50ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > checks each actual actor and denies secondary tags without peer-specific errors 52ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > records truthful safe-empty only after all actual target candidates are exhausted by pair history 49ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > uses a deterministic own version domain and canonical target ordering without mutating the prior state 50ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > strictly requires a new epoch while the old untargeted exact replay remains unchanged 49ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > rejects malformed target list [] 46ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > rejects malformed target list [ 'unknown' ] 47ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > rejects malformed target list [ 'music', 'music' ] 46ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > rejects malformed target list [ 'music', 'creative', 'romance', …(1) ] 48ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > rejects unknown revision, stale history/counter/safety, wrong round, public scope and terminal decline 77ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > keeps future public selection and public history independent of targets and targeted empty outcomes 96ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > bounds targeted attempts, including empty outcomes, without reviving an exhausted private moment 52ms
+ ✓ packages/relationship-engine/src/topic-planner.test.ts > additive targeted private replacement RE-1.P05-TARGET-1 > supports real target-pool selection for all modes and both contexts without relaxing baseline guards 345ms
+
+ Test Files  8 passed (8)
+      Tests  173 passed (173)
+   Start at  23:10:01
+   Duration  46.38s (tests 95%, import 4%, transform 1%)
+

@@ -1,0 +1,52 @@
+from pathlib import Path
+import json,hashlib,zipfile
+ROOT=Path(__file__).resolve().parents[5];OUT=Path(__file__).resolve().parent;SRC=ROOT/'.artifacts/p05-content-expansion-470'
+read=lambda p:json.loads(p.read_text(encoding='utf8'));sha=lambda b:hashlib.sha256(b).hexdigest();canon=lambda x:json.dumps(x,ensure_ascii=False,sort_keys=True,separators=(',',':')).encode()
+cards={f.stem:read(f) for f in (SRC/'cards').glob('*.json')};oldmap={e['card_id']:e for e in read(ROOT/'.docs/implementation/evidence/p05/topic-map-candidate-02/private-topic-map.candidate.v1.json')['entries']}
+data="""Q-1174|Q-1003,Q-1023,TD-1032|BOUNDED_DIFFERENCE|Closed season-object choice differs from observing a historical era or depicting seasons; no independent family certificate.
+Q-1175|Q-1009,Q-1004,YB-1151|BOUNDED_DIFFERENCE|Choose two useless auditory powers, not superhero problem solving or swapping powers.
+Q-1176|Q-1044|OPEN_NEAR_FAMILY|Album cover choice repeats a visual album-cover task; fixed blank/symbol alternatives need explicit family comparison rather than automatic distinctness.
+Q-1177|YB-1178,TD-1174|CHANGES_REQUESTED_002|Song tone inferred from optimistic phrase is the same answer task as the optimistic-title mood proposal.
+Q-1178|Q-1056,TD-1059,YB-1056,YB-1112|OPEN_NEAR_FAMILY|An idle cat's unnecessary service differs from writing an advert, but shared useless-service advertising motif needs disposition.
+Q-1179|Q-1056,Q-1060,TD-1012|BOUNDED_DIFFERENCE|Infer a harmless misunderstanding from global question-to-exclamation substitution, not generic punctuation personification.
+Q-1180|Q-1069,Q-1079,TD-1076,YB-1076,YB-1119|CHANGES_REQUESTED_001|Same invent-a-tradition-for-friends task; dream scenery does not add a mechanic. Private ritual relation also relevant to future mixed-family boundary.
+Q-1181|Q-1016,Q-1075,TD-1022|BOUNDED_DIFFERENCE|Invent a game using one-minute-future asymmetry, unlike generic common activity or future-traveller recognition.
+Q-1182|Q-1154,Q-1155,YB-1156|BOUNDED_CATEGORY_FIT|Fictional quiet interval for scheduled mind-reading fits privacy/pacing; no participant thoughts or real secrets solicited.
+Q-1183|TD-1020,YB-1096|BOUNDED_CATEGORY_FIT|Dragon-only admitting fatigue/rest fits boundaries without asking actual C0 self-disclosure.
+TD-1174|Q-1024,Q-1177,YB-1178|BOUNDED_DIFFERENCE|One-sentence inversion of a supplied rain complaint into celebration is a real constraint; optimistic motif still in comparison queue.
+TD-1175|TD-1177,Q-1063|CHANGES_REQUESTED_003|Comic excuse for delayed fictional arrival duplicates the new missing/late-note excuse dare.
+TD-1176|Q-1047,TD-1030|BOUNDED_DIFFERENCE|Alliterative chorus line is a different lexical game from avoiding one word or two-word naming; no singing required.
+TD-1177|TD-1175,TD-1043,YB-1042|CHANGES_REQUESTED_003|Absent note personification overlaps retained lost/runaway note stories; strongest repeated operation is the new late-train excuse.
+TD-1178|Q-1052,TD-1106,YB-1134|OPEN_NEAR_FAMILY|Three-word tune description with taboo words adds a constraint but shares descriptive task with three-image/two-word prompts.
+TD-1179|TD-1063,Q-1067|BOUNDED_DIFFERENCE|Boast from impossible winner with banned speed words differs from a news announcement; no real competition or humiliation.
+TD-1180|TD-1022,TD-1069|BOUNDED_DIFFERENCE|Disguise clue plus bird-name-free alibi is a concrete response constraint, not participant imitation.
+TD-1181|YB-1075,TD-1080|BOUNDED_CATEGORY_FIT|Imaginary tiny gift within thimble is plausibly friendly gift-imagination, requires no purchase/material; classification still human-open.
+TD-1182|TD-1078,Q-1081,YB-1074|BOUNDED_DIFFERENCE|Comic dispute about carrying a weightless backpack differs from contribution credit/obstacles; no real conflict requested.
+TD-1183|TD-1154,TD-1018,Q-1154|BOUNDED_CATEGORY_FIT|Recognizing fictional no-hurry-space boundary fits pacing; no punishment/injury or actual consent instruction.
+TD-1184|Q-1157,TD-1153,TD-1169,YB-1154|OPEN_NEAR_FAMILY|Fictional offscreen omission is C0-safe with no real secrets, but shares omitted/unknown-detail motif requiring comparison.
+YB-1177|Q-1028,YB-1026,YB-1004|BOUNDED_DIFFERENCE|Solve delivery by smell-only imaginary destination, unlike postal colours/travelling postcard; no real address or movement.
+YB-1178|Q-1177,YB-1106,YB-1041|CHANGES_REQUESTED_002|Optimistic-title-to-mood and optimistic-prefix-to-song-type need conservative shared-family or rewrite disposition.
+YB-1179|YB-1113,YB-1126,Q-1054,YB-1010|BOUNDED_MIXED_REPLACEMENT_OPEN_RESIDUAL|Causal umbrella joke differs from quarantined book/bookmark dialogue/joined garden name. Public umbrella-excuse comparison stays open; do not silently create mixed family.
+YB-1180|YB-1133,YB-1005,TD-1005,Q-1043,YB-1131|BOUNDED_MIXED_REPLACEMENT|Two notation interpretations and humorous choice differs from conductor-market soundtrack/duet naming/concert event; human classification still required."""
+rows=[]
+for line in data.splitlines():
+ id,refstr,status,reason=line.split('|');refs=refstr.split(',');c=cards[id];rows.append({'id':id,'revision':c['revision'],'canonical_sha256':sha(canon(c)),'raw_sha256':sha((SRC/'cards'/(id+'.json')).read_bytes()),'category':c['category'],'interaction':c['interaction'],'contexts':c['meeting_contexts'],'min_comfort':c['min_comfort'],'min_stage':c['min_progression_stage'],'relationship_scope':c['relationship_scope'],'capabilities':c['required_capabilities'],'consent':c['consent'],'locales_read':['ru','en','tr'],'locale_result':'NO_DEFINITE_MEANING_OR_GUARD_DRIFT_FOUND_BY_AGENT_NOT_QUALIFIED_HUMAN_APPROVAL','safety_result':'NO_NEW_REQUIRED_PHYSICAL_CONTACT_SEPARATION_REAL_DISCLOSURE_OR_FORCED_CHANNEL_FOUND','semantic_status':status,'comparison_ids':refs,'comparison_old_family_labels':{r:oldmap[r]['semantic_family_ids'] for r in refs if r in oldmap},'semantic_reason':reason,'new_family_assigned':False,'human_approved':False})
+assert len(rows)==25
+OUT.joinpath('new25-matrix.json').write_text(json.dumps({'schema_version':1,'scope':'AGENT_EDITORIAL_REVIEW_NOT_HUMAN_APPROVAL','cards':rows,'note':'P05-CAND-SINGLE labels are unresolved candidate placeholders, not semantic certificates; bounded distinctions do not declare global semantic separation.'},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+findings=[]
+for suffix,ids,refs,field,issue,fix in [
+ ('001',['Q-1180'],['Q-1069','Q-1079','TD-1076','YB-1076','YB-1119'],'question','Invent a funny tradition/ritual for fictional friends repeats retained task; only fantastical setting changed. Private YB1119 also creates an unresolved mixed-visibility comparison.','Rewrite Q1180 around a different answer mechanic in RU/EN/TR; preserve ID/category/group/C0/S1/both contexts, increment revision and append actual record history in a separate candidate revision. Otherwise explicitly hold/group it, resolve mixed visibility and recompute necessary counts. Keep retained445 bytes unchanged.'),
+ ('002',['Q-1177','YB-1178'],['TD-1174','YB-1106'],'question/proposal','Infer song character/mood from optimistic prefix versus supplied optimistic title; group/pair roles or phrase framing alone do not establish distinct families.','Prefer rewriting YB1178 to a different musical operation, preserve public-pair/bilateral/own-condition/skip/category/context guards and localize all3languages. Or record a pending shared-family disposition and recompute applicable history/counts, without silently declaring SINGLE.'),
+ ('003',['TD-1175','TD-1177'],['TD-1043','YB-1042'],'dare','Funny cause for the invisible train being late and final note missing rehearsal share an absent/late-arrival comic-excuse response operation. Different truth sides do not differentiate both dare sides.','Prefer rewriting TD1177 dare with a different operation/constraint after comparison to retained missing-note stories; preserve solo/C0/S1/individual/both contexts/no-performance guards, increment revision and append actual ledger history. Repeat whole470 validation/history/counts.')]:
+ findings.append({'id':'P05-CONTENT470-'+suffix,'priority':'P2_EDITORIAL','cards':ids,'compare':refs,'location_fields':field,'quotes_exact_RU_EN_TR':{id:cards[id]['text'] for id in ids},'quotes_comparisons_RU':{id:cards[id]['text']['ru'] for id in refs},'issue':issue,'fix':fix,'human_semantic_approval':False})
+OUT.joinpath('findings.json').write_text(json.dumps({'status':'CHANGES_REQUESTED_EDITORIAL_AGENT_ONLY','findings':findings,'not_runtime_code_security_findings':True,'human_approval':False},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+refs=sorted(set(sum((r['comparison_ids'] for r in rows),[])));OUT.joinpath('comparison-corpus.json').write_text(json.dumps({'classification':'EXACT_INPUT_SUBSET_NOT_FAMILY_CERTIFICATE','cards':[{**cards[id],'comparison_raw_sha256':sha((SRC/'cards'/(id+'.json')).read_bytes())} for id in refs if id in cards],'quarantined_comparison_cards':[{**read(SRC/'quarantine'/(id+'.json'))} for id in refs if id not in cards]},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+paths=sorted(f for f in SRC.rglob('*') if f.is_file());assert len(paths)==536;maps=[]
+with zipfile.ZipFile(OUT/'author-draft470-snapshot.zip','w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
+ for f in paths:
+  assert not f.is_symlink();name=f.relative_to(SRC).as_posix();b=f.read_bytes();info=zipfile.ZipInfo('draft470/'+name,(2026,10,19,0,0,0));info.compress_type=zipfile.ZIP_DEFLATED;info.external_attr=0o100644<<16;z.writestr(info,b);maps.append({'path':name,'zip_path':'draft470/'+name,'bytes':len(b),'sha256':sha(b)})
+with zipfile.ZipFile(OUT/'author-draft470-snapshot.zip') as z:
+ assert len(z.namelist())==len(set(z.namelist()))==536
+ for r in maps:assert sha(z.read(r['zip_path']))==r['sha256']
+OUT.joinpath('author-snapshot-map.json').write_text(json.dumps({'schema_version':1,'author_HANDOFF_sha256':'efe1edee5d3fb78ae4b5533e7387290f332d2974304a3f595530f989e0dbb376','author_INDEX_sha256':'2fb5890498bcae0f0bafad35ea17b631976d6ccb96a6381964fc4fb5417b7f57','archive_sha256':sha(OUT.joinpath('author-draft470-snapshot.zip').read_bytes()),'files':maps},indent=2)+'\n',encoding='utf8')
+OUT.joinpath('HANDOFF.json').write_bytes(SRC.joinpath('HANDOFF.json').read_bytes());OUT.joinpath('REVIEW_NEW25.md').write_bytes(SRC.joinpath('REVIEW_NEW25.md').read_bytes());print('matrix25 findings3 comparisonrefs',len(refs),'ZIPbytes',OUT.joinpath('author-draft470-snapshot.zip').stat().st_size)

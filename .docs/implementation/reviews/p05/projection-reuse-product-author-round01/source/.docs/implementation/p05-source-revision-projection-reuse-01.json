@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "revision": "P05-PROJECTION-REUSE-01",
+  "status_at_capture": "AUTHOR_FOCUSED_95_PASS_INDEPENDENT_AND_ACTUAL_PENDING",
+  "previous_source_identity": "aa1205be262b4ba56374f992481723d68363ff7aa16c28729d4b19d2aac896ee",
+  "previous_image": "sha256:ef5f432ae3e89b5ef63aef3bc3fb1511208a5be2db559cf801e5dc4f6f243ba5",
+  "observation": "Actual browser20 TR full private batch took6202.766ms against own permission5000ms; correct safety rejection. Repeated preparation writes are a source hotpath, not proven sole latency cause.",
+  "change": "Reuse exact unchanged projection with >2000ms remaining after actor/reconcile/clock-floor persistence; avoid redundant DTO/projection/stream/ref writes. Bind member/locale/fresh public-name digest at preparation and final delivery. Return fresh server_time with original absolute expiries.",
+  "preserved": {
+    "permission_ms": 5000,
+    "projection_ms": 5000,
+    "invitation_ms": 180000,
+    "pending_ms": 30000,
+    "cache_hit_extends_projection_expiry": false,
+    "actor_reconcile_final_auth_source_safety_presence_consent_clock_fences": true,
+    "planner_rng_history_snapshot_policy_or_DB_schema_changed": false
+  },
+  "compatibility": "Internal encrypted prepared-object metadata is additive; old missing keys force recomputation or safe stale denial. Both versions use ROOM-TOPIC-2 and same7SQL. Startup bootGate revokes old private scopes. No wire DTO fields added.",
+  "rollback": "Quiesce private scopes and disable new V2 private starts before compatible previous-image fallback. Preserve history/exclusions/receipts; previous AA retains freshness-feasibility limitation.",
+  "evidence_scope": "Host storage/SQL doubles are not actual PostgreSQL/performance proof. Actual regression and independent review required.",
+  "human_content_HOLD": true,
+  "full_stage_acceptance": false,
+  "final_source_identity": "EXTERNAL_FREEZE_NO_RECURSIVE_HASH"
+}

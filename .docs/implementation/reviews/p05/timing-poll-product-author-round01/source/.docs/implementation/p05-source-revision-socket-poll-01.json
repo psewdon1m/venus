@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "revision": "P05-FIX-SOCKET-POLL-01",
+  "status_at_capture": "AUTHOR_IMPLEMENTED_HOST_PASS_INDEPENDENT_AND_DOCKER_PENDING",
+  "previous_source_identity": "b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4",
+  "problem": "Every timer tick appended another room poll to the same promise chain as heartbeat frames. Slow polls could accumulate ahead of a valid heartbeat and let presence expire while the socket remained open.",
+  "change": "Keep at most one scheduled or in-flight poll per socket. Coalesce redundant ticks; reset the latch after success or failure. The next poll reads current source state and current private cursor.",
+  "preserved_contract": {
+    "heartbeat_interval_ms": 20000,
+    "presence_timeout_ms": 45000,
+    "poll_interval_ms": 1000,
+    "serialized_mutation_and_delivery_chain": true,
+    "final_room_member_credential_private_fences": true,
+    "poll_errors_close_connection": true,
+    "room_clock_or_snapshot_rewritten": false,
+    "wire_or_schema_changed": false
+  },
+  "evidence_scope": "The production-handler regression uses service doubles and controlled timers; it proves queue behavior, not PostgreSQL or the sole historical cause of METHOD18. The first attempted fixture lacked app.route and is retained separately from the valid red counterexample.",
+  "compatibility": "No database, wire, snapshot, policy or clock changes. Current source retains the action timing correction as a separate revision.",
+  "rollback": "Previous image remains schema/policy compatible but retains both known timing and poll-backlog defects. Operational rollback quiesces private scopes and keeps new private starts disabled; functional compatibility testing is qualified separately.",
+  "human_content_HOLD": true,
+  "full_stage_acceptance": false,
+  "final_source_identity": "BOUND_BY_EXTERNAL_FREEZE_RECEIPT_NO_RECURSIVE_HASH"
+}

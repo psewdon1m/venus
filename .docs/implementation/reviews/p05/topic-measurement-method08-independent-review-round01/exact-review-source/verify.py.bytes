@@ -1,0 +1,19 @@
+from pathlib import Path
+import hashlib,json,sys
+root=Path('.docs/implementation/reviews/p05/topic-measurement-method-preparation-round08');out=Path('.docs/implementation/reviews/p05/topic-measurement-method08-independent-review-round01');out.mkdir(parents=True,exist_ok=True);sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert sha(root/'INDEX.json')=='f58f0f37494b0b44d835e8a05d493b8fbca819b75229abd8cc0f1eccd8aa62cb'
+rows=json.loads((root/'INDEX.json').read_bytes())['files']
+for r in rows:
+ p=root/r['path'];assert sha(p)==r['sha256']and p.stat().st_size==r['bytes'],str(p)
+assert sha(root/'HANDOFF.json')=='f5e2a0eedce2d239fe7ddc873f635bd13bfd573d71251e2ffd3bcedaefb875d4'
+h=json.loads((root/'HANDOFF.json').read_bytes());work=Path(h['workspace'])
+for n,d in h['runtime_pins'].items():assert sha(work/n)==d==sha(root/'producer'/n),n
+parent=Path('.docs/implementation/reviews/p05/topic-measurement-method-preparation-round07');assert sha(parent/'INDEX.json')=='2d7238037f079869207a5cca00d28683888b9a1e60bec999315c5798e0cd40cf'
+for r in json.loads((parent/'INDEX.json').read_bytes())['files']:assert sha(parent/r['path'])==r['sha256']
+for n in ['allocated-tree.py','owned-cleanup.mjs','host-output-guard.py','host-output-guard.mjs','r100-v3-watchdog.mjs','r100-v3-package.py','r100-v3-child.mjs','consume-session.mjs','lifecycle.mjs','diagnostics.mjs','invariants.mjs']:assert sha(work/n)==sha(parent/'producer'/n)
+source=(work/'r100-v3-launcher.mjs').read_text();tail=source[source.index('  clearInterval(heartbeat);'):source.index("\n if(status!=='COMPLETE_NON_GATING')")];assert not any(token in tail for token in ['writeFileSync','renameSync','await safe(','await write(','input.write(','control.write(']);assert "'verify-terminal.mjs'"in source
+sys.path.insert(0,'tools');from stage_inventory import inventory,identity
+files=inventory();assert len(files)==1813 and identity(files)==h['source_identity'];receipt=Path('.artifacts/p05-renewal-image-build-receipt01.json');assert sha(receipt)=='2dae88a270c9a9a3fbc33386b09ae98585bebb49d6d26e1a3f6d95c8ddf443e5'
+for n,d in json.loads(receipt.read_bytes())['host_compiled_files_sha256'].items():assert sha(n)==d
+r={'status':'PASS_EXACT_INPUTS_METHOD_ONLY','author_children':len(rows),'workspace_pairs':len(h['runtime_pins']),'source_identity':identity(files),'included_files':len(files),'compiled_host_pins':64,'unchanged_guard_cleanup_worker_components':11,'post_supervisor_tail_no_owned_writes':True,'emitter_verifier_in_preparation_next_pins':True,'image_reextracted':False}
+(out/'hash-verification.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r))

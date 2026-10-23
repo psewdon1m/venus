@@ -1,0 +1,35 @@
+{
+  "commands": [
+    {
+      "command": ".venv/Scripts/python.exe -B tools/validate_cards.py .docs/implementation/evidence/p04/review470-r3/candidate/cards --report C:\\.projects\\venus\\.docs\\implementation\\reviews\\p04\\final-gate-20261020-round01\\schema-draft.json",
+      "exit_code": 0,
+      "meaning": "Draft structural validation only"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -B tools/validate_cards.py .docs/implementation/evidence/p04/review470-r3/candidate/cards --release --minimum 100 --report C:\\.projects\\venus\\.docs\\implementation\\reviews\\p04\\final-gate-20261020-round01\\schema-release.json",
+      "exit_code": 1,
+      "meaning": "Expected release rejection:470CARD012+3CARD015"
+    },
+    {
+      "command": "Node24.22.0 .docs/implementation/evidence/p04/review470-r3/candidate/check-handoff.mjs",
+      "exit_code": 0,
+      "meaning": "Existing read-only139/331/11cluster handoff validator"
+    },
+    {
+      "command": "Node24.22.0 node_modules/vitest/vitest.mjs run packages/card-catalog/src/catalog.test.ts packages/card-catalog/src/topic-bundles.test.ts --reporter=json --outputFile=C:\\.projects\\venus\\.docs\\implementation\\reviews\\p04\\final-gate-20261020-round01\\catalog-tests.json",
+      "exit_code": 0,
+      "meaning": "23 existing host unit tests; not Docker acceptance"
+    },
+    {
+      "command": "Read-only stdlib source/manifest/editorial pin audit; root Docker receipt/index/output equality audit",
+      "exit_code": 0,
+      "meaning": "Exact input binding; reviewer no Docker"
+    }
+  ],
+  "failed_reviewer_queries": [
+    "Implicit cp1252read UnicodeDecodeError",
+    "cp1252console UnicodeEncodeError",
+    "len(integer exact_duplicates) TypeError"
+  ],
+  "correction": "ExplicitUTF8 and preserve original typed count; candidate unmodified"
+}

@@ -1,0 +1,37 @@
+{
+  "scope": "AUTHOR_COMMANDS_NOT_INDEPENDENT_GATE",
+  "commands": [
+    {
+      "command": "Node24.22.0 candidate/apply-metadata.mjs",
+      "exit_code": 0,
+      "result": "143metadata revisions;327rawunchanged;21newchatcaps;zero text/provenance edits"
+    },
+    {
+      "command": ".venv/Scripts/python.exe -B tools/validate_cards.py candidate/cards --report checks/schema.json",
+      "exit_code": 0,
+      "result": "470files470parsed0errors;not releaseapproval"
+    },
+    {
+      "command": "Node24.22.0 candidate/record-authoring.mjs;PYTHON=project.venv",
+      "exit_code": 0,
+      "result": "18records12validatedCASrevisions;983to1126revisions185to215events"
+    },
+    {
+      "command": "Node24.22.0 tools/card-catalog.mjs draft-check candidate/cards checks/draft-check-round01",
+      "exit_code": 0,
+      "result": "Historicalcompiled hostdiagnostic only; final newsourceDocker pending"
+    },
+    {
+      "command": "Read-only sqlite3 integrity/foreignkeys/sourceevent+revision tuple equality and rawmetadata/text check",
+      "exit_code": 0,
+      "result": "All983oldrevisions185oldevents preserved;2340locale fields unchanged"
+    },
+    {
+      "command": "Node24.22.0 --check on3own author modules +index-and-freeze.mjs",
+      "exit_code": 0,
+      "result": "Syntax3;470index and currentfreeze produced"
+    }
+  ],
+  "Docker_calls": 0,
+  "additional_host_C2_after_round01": 0
+}

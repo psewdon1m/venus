@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {captureProducer,runtimeDigest,assertBinding} from 'file:///C:/.projects/venus/.artifacts/p05-pilot-bundle-source01/.artifacts/p05-v2-layout-producer-resume05/runner-policy.mjs';
+import {measureOwnerText,assertTextMeasurement} from 'file:///C:/.projects/venus/.artifacts/p05-v2-layout-producer-resume04/real-text-probe.mjs';
+import {absoluteBudget} from 'file:///C:/.projects/venus/.artifacts/p05-v2-layout-producer-resume04/probe-policy.mjs';
+const root='C:/.projects/venus/.artifacts/p05-pilot-bundle-source01/.artifacts/p05-v2-layout-producer-resume05',binding=JSON.parse(readFileSync(root+'/binding.json')),ack=JSON.parse(readFileSync(root+'/ROOT_RUN_ACK.json')),inventory=captureProducer(root),digest=runtimeDigest(inventory),goodAck={...ack,root_run_ack:true,independent_producer_review:'PASS',independent_review_index_sha256:'a'.repeat(64),producer_runtime_digest:digest};let controls=0;
+assert.throws(()=>assertBinding(binding,ack));controls++;
+assertBinding(binding,goodAck);controls++;
+for(const change of [x=>x.image='sha256:'+'0'.repeat(64),x=>x.source_identity='0'.repeat(64),x=>x.independent_producer_review='PENDING',x=>x.producer_runtime_digest=null]){const altered={...goodAck};change(altered);assert.throws(()=>assertBinding(binding,altered));controls++;}
+assert.throws(()=>assertBinding({...binding,included_files:1819},goodAck));controls++;
+const mutated=structuredClone(inventory);mutated['browser.mjs'].sha256='0'.repeat(64);assert.notEqual(runtimeDigest(mutated),digest);controls++;
+const geometry={css_zoom:'1',text_matches:true,clipped:false,bottom_reachable:true,document_scroll_width:320,document_client_width:320,paragraphs:1,text_lengths:[10],width:320,height:568,dpr:1},audit={locale:'en',reduced_motion:true,motion_violations:0,horizontal_overflow:false,audit_overflow:false,contrast_failures:0,contrast_unresolved:0,named_controls:true,labels_associated:true},fault=Error('OWNED_TEXT_CLEANUP_FAILURE'),report={};
+const page={async evaluate(fn,arg){if(fn.name==='installText')return{paragraphs:arg.rendered_parts.length};if(fn.name==='textGeometry')return{...geometry,paragraphs:arg.length,text_lengths:arg.map(x=>x.length)};if(fn.name==='domAudit')return audit;if(arg&&'x'in arg)throw fault;return{x:0,y:0};},locator(){return{first(){return{async click(){}}}}},keyboard:{async press(){}}};
+await assert.rejects(measureOwnerText({page,locale:'en',profile:'w320',budget:absoluteBudget(1000),report}),e=>e===fault);assert.equal(report.real_text_observations[0].status,'FAIL');assert.equal(report.real_text_observations[0].cleanup,'FAIL');controls++;
+assert.throws(()=>assertTextMeasurement({...geometry,dpr:2},'native200',{x11_keyboard:false,isolated_browser:true,before_dpr:1,before_width:640}));controls++;
+const result={status:'PASS_TARGETED_LAYOUT_METHOD_BOUNDARY_CONTROLS',controls,producer_runtime_digest:digest,source_identity:binding.source_identity,image:binding.image,rootACK:false,RUN:false,Docker:false};writeFileSync(new URL('./independent-controls-result.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));

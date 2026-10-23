@@ -1,0 +1,9 @@
+# Browser23 A13 actual archive and pending A14 operational bindings
+
+2026-10-20T22:42:01.800112+00:00 UTC — Root task: immutable actualA13 archive, then thin A14 bindings only after finaltuple. Application source STOP after03. No Docker/native allocation/newframework/actualACK. Parent archive/browser22 and A13 binding scripts read; old artifacts untouched. A first lookup of reviewerINDEX before freeze and wrongdate orchestrator path returned missingfile; no evidence fabricated.
+
+2026-10-20T22:42:02.052902+00:00 UTC — Archive frozen ca41c8c446a6295b5fab60fc9f3769f1993bb9f447542c1b2ce15879b0e4f660; exact51actualchildren, all1863A13 sourcepins+9producerpins verified,14PASS/15FAIL/16NOT_RUN, diagnosticCOMPLETE0, cleanupPASS. Roottool exit1 qualified explicitly; no raw exitfile synthesized. All original actualbytes unchanged. Await exactA14tuple before thinbindings, no polling/native/source writes.
+
+2026-10-20T22:45:04.003574+00:00 UTC — Root final A14 tuple received; all1865materialized files/test297/prod122 source IDs/pinned receipt hashes verified; threebindings prepared with falseACK. browser wrapper4literal substitutions only; layout run/path/status+count only; wire5runtime exact03. No source/native/ACK. Pending cold controls/freeze/non-author review.
+
+2026-10-20T22:46:22.985763+00:00 UTC — A14 thinbinding controls13PASS/native0; syntax4+rootexplicitlint0. Three actualNode falseACK branches exit1 before allocation. Source1865/test297/prod122 and allbackendcompiled/SQL/PG oldexact;3frontend+2docdelta explicit. Frozen 11140a73c616933cae327164d7eff9b25600e028cdaadb6f2f43c81b17caa2d9; layoutruntime2224f9ad6041b3480bdf90bd00d0f84ca30095a21a0c84b3aa1ab046527e7969. No source/actualACK/native writes. Working and packet writes COMPLETE. OCI16 assigned otheragent; cost independent bindingreview required.

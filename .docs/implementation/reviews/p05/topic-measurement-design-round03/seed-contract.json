@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "derivation": "SHA256 of exact UTF8 literal -> lowercase hex engine seed; no implicit cap/topic suffix",
+  "C2": "venus:P04:C1:<size>:<mode>:<context>:<comfort>:<class>:<rounds>",
+  "invariants": {
+    "literal": "venus:P03-M1:test:<size>:<index>",
+    "indices": "0..9999 perN",
+    "R": "1+(index%100)",
+    "mode": "[questions,truth_or_dare,yes_but][index%3]",
+    "context": "[online,in_person][floor(index/3)%2]",
+    "profiles": "original random comfort hash(seed+:player:+i)8hex%5 and edges hash(seed+:edge:+a+:+b)8hex%6 labels exactly original order; original player UUIDs"
+  },
+  "fairness": {
+    "literal": "venus:P03-M2:fairness:<size>:<mode>:<context>:<index>",
+    "indices": "0..1999",
+    "R": 20
+  },
+  "GF": {
+    "literal": "venus:P03-M1:gf:<index>",
+    "indices": "0..999999",
+    "identical_seed_both_classes": true,
+    "R": 20,
+    "observed_round": 1,
+    "target_pair": "players0/1",
+    "profile": "N4,C1,questions,in_person; othersFR, targetG=CR/FR vsF=FR/FR"
+  },
+  "social": {
+    "literal": "venus:P03-M2:<train|holdout>:<FG|FM|GM>:<class>:<size>:<mode>:<context>:<index>",
+    "comparison_order": [
+      [
+        "F",
+        "G"
+      ],
+      [
+        "F",
+        "M"
+      ],
+      [
+        "G",
+        "M"
+      ]
+    ],
+    "class_order": "negative then positive as listed",
+    "train_indices": "0..99",
+    "holdout_indices": "0..399",
+    "R": "1+(index%100)",
+    "pairing": "F/G/M class literals and RNG seeds differ as historically declared; same index/distribution/formula across classes and cap/topic profiles. Do not claim identical F/G/M RNG seeds or pool repeated profile seeds as independent samples. Train/holdout literals disjoint even where index overlaps."
+  },
+  "exclusion": {
+    "literal": "venus:P05-TOPIC-M1:<train|holdout>:<comparison>:<class>:<size>:<mode>:<context>:<prior>:<index>",
+    "comparison_order": [
+      "E0E1",
+      "E0E2",
+      "E1E2"
+    ],
+    "class_values": [
+      "E0",
+      "E1",
+      "E2"
+    ],
+    "train_indices": "0..99",
+    "holdout_indices": "0..399",
+    "R": "1+(index%100)",
+    "prior": [
+      "NONE",
+      "T4_PRIVATE_PRIOR"
+    ],
+    "cap_input": "DEFAULT_OFF/CHAT_ON in exact descriptor only; same literal acrosscap, separate reports/CI"
+  },
+  "UUIDs": {
+    "room": "11111111-1111-4111-8111-111111111111",
+    "session": "22222222-2222-4222-8222-222222222222",
+    "players": "00000000-0000-4000-8000-<i+1 padded12>",
+    "prior": "fixture-support.json exact three distinct previous session refs"
+  },
+  "order": "sections C2,invariants,fairness,GF,social,exclusion; Nascending,modes[questions,truth_or_dare,yes_but],contexts[online,in_person],cap[DEFAULT_OFF,CHAT_ON],topicT0..T6,comparison/class/split/index as declared; persist exact key not row position"
+}

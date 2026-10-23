@@ -1,0 +1,12 @@
+/** Consumer-side contract only. Independent external writer is mandatory/NOT_READY. */
+import assert from 'node:assert/strict';
+import {readFileSync,statfsSync,writeFileSync,lstatSync,existsSync} from 'node:fs';
+import {join,relative,isAbsolute} from 'node:path';
+import {performance} from 'node:perf_hooks';
+const reserve=10n*1024n**3n,cap=512n*1024n**2n;
+export class ResourceLease{
+ constructor(config){this.config=config;this.counter=null;this.seen=null;}
+ assert(nextBytes=0){assert(Number.isSafeInteger(nextBytes)&&nextBytes>=0&&nextBytes<=2*1024**2);const path=this.config.guardFile;assert(!lstatSync(path).isSymbolicLink());const r=JSON.parse(readFileSync(path,'utf8'));assert.equal(r.owner,this.config.owner);assert.equal(r.stop_requested,false);assert(Number.isSafeInteger(r.counter)&&r.counter>0);const now=performance.now();assert(this.counter===null||r.counter>=this.counter);if(r.counter!==this.counter){this.counter=r.counter;this.seen=now;}assert(this.seen!==null&&now-this.seen<=2000,'EXTERNAL_RESOURCE_GUARD_STALE');assert.equal(r.total_cap_bytes,Number(cap));assert.equal(r.reserve_bytes,Number(reserve));assert.equal(r.actual_host_native_guards,true);assert.equal(r.failure_cleanup_supervised,true);assert(BigInt(r.actual_host_free_bytes)>=reserve+cap);assert(BigInt(r.actual_native_free_bytes)>=reserve+cap);assert(Number.isSafeInteger(r.allocated_total_bytes)&&r.allocated_total_bytes>=0);assert(Number.isSafeInteger(r.host_allocated_bytes)&&r.host_allocated_bytes>=0);assert(r.host_allocated_bytes+nextBytes+1048576<=160*1024**2,'PROSPECTIVE_HOST160_CAP');assert(BigInt(r.allocated_total_bytes)+BigInt(nextBytes)+1048576n<=cap,'PROSPECTIVE_GLOBAL_ALLOCATED_CAP');const own=statfsSync(this.config.privateRoot,{bigint:true});assert(own.bavail*own.bsize>=BigInt(nextBytes)+1048576n,'PRIVATE_TMPFS_SPACE_STOP');return r;}
+ async initial(){this.assert();const first=this.counter,until=performance.now()+2000;while(performance.now()<until){await new Promise(r=>setTimeout(r,25));this.assert();if(this.counter>first)return;}throw Error('RESOURCE_GUARD_INITIAL_ADVANCE_MISSING');}
+ write(root,name,value,{privateFile=false}={}){assert(/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(name));const target=join(root,name),inside=relative(root,target),bytes=Buffer.isBuffer(value)?value:Buffer.from(value);assert(inside&&!inside.startsWith('..')&&!isAbsolute(inside));this.assert(bytes.length);assert(!existsSync(target),'NO_RECEIPT_OVERWRITE');writeFileSync(target,bytes,{flag:'wx',mode:privateFile?0o600:0o644});this.assert();return target;}
+}

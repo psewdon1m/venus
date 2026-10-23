@@ -1,0 +1,75 @@
+{
+  "synthetic_fixture_only": true,
+  "production_approval": false,
+  "desktop_linux_engines_only": true,
+  "toolchain": {
+    "node": "v24.22.0",
+    "npm": "11.19.1",
+    "playwright": "1.64.1"
+  },
+  "selected_engine": "chromium",
+  "selected_case": "P05-STALE-READ-AFTER-NEW-PREPARE",
+  "full_suite": false,
+  "native_browser_zoom": "NOT_RUN",
+  "native_zoom": [],
+  "records": [
+    {
+      "id": "P05-STALE-READ-AFTER-NEW-PREPARE",
+      "engine": "chromium",
+      "status": "FAIL",
+      "error": "expect(locator).toBeEnabled() failed\n\nLocator: getByTestId('game-start')\nExpected: enabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeEnabled\" getByTestId('game-start') with timeout 5000ms\n  - waiting for getByTestId('game-start')\n"
+    }
+  ],
+  "matrix": [],
+  "versions": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4",
+      "node": "v24.22.0"
+    }
+  ],
+  "status": "FAIL",
+  "deferred": [
+    {
+      "spec": "04§8.2",
+      "scope": "Music output and real phones",
+      "status": "DEFERRED_OWNER"
+    },
+    {
+      "spec": "04§8.7",
+      "scope": "Cinema capture/music preservation",
+      "status": "FUTURE_STAGE_P09"
+    },
+    {
+      "spec": "04§8.8",
+      "scope": "Real iOS/Android audio unlock",
+      "status": "DEFERRED_OWNER"
+    }
+  ],
+  "stale_prepare": {
+    "phase": "initial-A-UI-prepare-start"
+  },
+  "diagnostics": [
+    {
+      "name": "failure-stale-prepare",
+      "actual_current": {
+        "diagnostic_error": "{\"code\":\"GAME_NOT_FOUND\",\"message\":\"Request could not be completed\",\"request_id\":\"41022d7b-51cf-4be6-81c0-2bfe8ac9183c\"}\n\n404 !== 200\n"
+      },
+      "game_state": [],
+      "availability": [],
+      "game_error": [
+        "State changed. Refresh and make a new decision.Refresh state"
+      ],
+      "root_error": [],
+      "connection": [
+        "Connected to the service"
+      ],
+      "panel": [
+        "VENUSGamesState changed. Refresh and make a new decision.Refresh stateModeQuestionsTruth or dareYes, but…Players · 2 to 8SYNTHETIC HOST · ✓SYNTHETIC GUEST · ✓Rounds · 1–100Prepare gameYour private settingsComfort: 0SYNTHETIC GUEST: FriendshipCamera and microphone are optional for these games."
+      ]
+    }
+  ],
+  "error": "expect(locator).toBeEnabled() failed\n\nLocator: getByTestId('game-start')\nExpected: enabled\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toBeEnabled\" getByTestId('game-start') with timeout 5000ms\n  - waiting for getByTestId('game-start')\n",
+  "runtime_cleanup": "completed",
+  "display_cleanup": "completed"
+}

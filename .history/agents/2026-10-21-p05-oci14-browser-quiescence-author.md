@@ -1,0 +1,5 @@
+# OCI14 browser API quiescence author
+
+2026-10-20T22:15:43.976182+00:00 START authorized minimum producer14 copy of13, browser-child-only runtime delta. Exactownorigin API HTTP+WS reconnect intercept, native request drain, release on existing commands after strictreplay, require natural GET /api/v2/rooms/{ownroom}/game/current status200 completion. No app/clock/TTL/oracle/budget/DB changes; no native browser/Docker while N4 quiet. Original13 remains immutable.
+
+2026-10-20T22:19:11.137242+00:00 Native-boundary mock16controls PASS, syntax/lint/cold-describe0; no Docker/browser allocation. Original body exactly reconstructed by reversing declared insertions; shared333 oldmembers only browser-child differs,332 exact. Original fixed clock updates kept before release receipts. Original WS gateway/stopAPI zeroDBclient fences unchanged. Frozen author INDEX cd253303d1eebfbbacd1a36b53229ed3af771174a3b1024e7adec4b7142a13b5/12 producer e245d47a93dac49a31b494714741eced5aa19e4cb56d190d1d9c8c3350324853/341; writes COMPLETE_STOP. Native/non-author/rootACK pending.

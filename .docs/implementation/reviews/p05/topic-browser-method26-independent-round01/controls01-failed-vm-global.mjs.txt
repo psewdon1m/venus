@@ -1,0 +1,49 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+import {EventEmitter} from 'node:events';
+import {fileURLToPath} from 'node:url';
+import {coherentRound} from '../../../../../.artifacts/p05-private-batch-browser-producer26/observations.mjs';
+import {createDeliveryDiagnostics} from '../../../../../.artifacts/p05-private-batch-browser-producer26/delivery-diagnostics.mjs';
+// Reuse the author's finite fixture; independently exercise additional combinations.
+// The fixture extracts the actual producer request/response listeners and helper.
+const author=readFileSync('C:/.projects/venus/.docs/implementation/reviews/p05/topic-browser-method26-author-round01/controls.mjs','utf8');
+const prefix=author.slice(0,author.indexOf("await check('fresh_TR_")).replace(/^import .*;\r?$/gm,'');
+const env=vm.createContext({assert,readFileSync,vm,coherentRound});
+vm.runInContext(prefix+';globalThis.subject={model,dto,fixture};',env);
+const {model,dto}=env.subject,results=[];
+async function check(name,fn){await fn();results.push({name,status:'PASS'});}
+await check('one_good_peer_cannot_mask_another_eligible_429_and_no_next_poll_occurs',async()=>{
+ let samples=0;
+ const m=model({samples:4,before:async({m})=>{samples++;m.setClock(101);for(const a of m.actors){const q=m.request(a);m.start(a,q);await m.reply(a,q,dto(m.f),{status:a===m.actors[0]?200:429});}}});
+ await assert.rejects(m.run(),e=>e.code==='ERR_ASSERTION'&&e.actual===429&&e.expected===200);assert.equal(samples,1);assert.equal(m.currentCalls,0);
+});
+await check('fresh_plan_rejects_old_actual_DTO_even_with_fabricated_matching_metadata_then_new_DTO_settles',async()=>{
+ let accepted;
+ const m=model({samples:2,before:async({m,n})=>{const a=m.actors[1];m.setClock(101+n);const q=m.request(a);m.start(a,q);const actual=dto(m.f);if(n===0){await m.reply(a,q,actual);m.f.game_rev=42;a.lastGameView={session_id:m.f.session,game_rev:42};}else{accepted=actual;await m.reply(a,q,actual);}}});
+ const answer=await m.run({minRev:42});assert.equal(m.plans,2);assert.equal(answer.view,accepted);assert.equal(answer.view.game_rev,42);assert.equal(m.currentCalls,0);
+});
+await check('valid_prior_helper_observation_is_not_reused_on_second_call_and_foreign_room_cannot_supply_it',async()=>{
+ let first=true;
+ const m=model({samples:2,before:async({m})=>{if(!first)return;first=false;m.setClock(101);const a=m.actors[1],q=m.request(a);m.start(a,q);await m.reply(a,q);}});
+ await m.run();m.setClock(200);await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);
+ const foreign=model({before:async({m})=>{m.setClock(101);const a=m.actors[1];a.room='foreign';const q=m.request(a);m.start(a,q);await m.reply(a,q);}});await assert.rejects(foreign.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(foreign.currentCalls,0);
+});
+await check('new_malformed_200_invalidates_prior_good_and_delayed_older_JSON_cannot_restore_it',async()=>{
+ const m=model({before:async({m})=>{const a=m.actors[1];m.setClock(101);let q=m.request(a);m.start(a,q);await m.reply(a,q);
+  m.setClock(102);q=m.request(a);m.start(a,q);let release;const held=new Promise(resolve=>{release=resolve;});const late=m.reply(a,q,held);
+  m.setClock(103);q=m.request(a);m.start(a,q);await m.reply(a,q,'malformed');release(dto(m.f));await late;assert.equal(m.slot(a).started_at,103);assert.equal(m.slot(a).status,200);assert.equal(m.slot(a).view,null);
+ }});await assert.rejects(m.run(),/FINITE_ORIGINAL_POLL_DEADLINE/);assert.equal(m.currentCalls,0);
+});
+await check('JSON_parse_failure_may_defer_helper_failure_but_original_delivery_guard_prevents_acceptance',async()=>{
+ const m=model({before:async({m})=>{m.setClock(101);const a=m.actors[0],q=m.request(a);m.start(a,q);await m.reply(a,q,Promise.reject(new SyntaxError('synthetic invalid JSON')));assert.equal(m.slot(a).view,null);const peer=m.actors[1],fresh=m.request(peer);m.start(peer,fresh);await m.reply(peer,fresh);}});
+ assert(coherentRound(m.f,(await m.run()).view));assert.equal(m.currentCalls,0);
+ const page=new EventEmitter(),diagnostic=createDeliveryDiagnostics({proof:'FINITE_SYNTHETIC_PARSE_NEGATIVE'});diagnostic.attach({page,locale:'ru',id:'synthetic',lastGameView:null});
+ const request={url:()=> 'https://synthetic.invalid/api/v2/rooms/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa/game/current',method:()=> 'GET',failure:()=>null};
+ page.emit('request',request);page.emit('response',{request:()=>request,status:()=>200,json:async()=>{throw new SyntaxError('synthetic invalid JSON');}});
+ const summary=await diagnostic.flush(fileURLToPath(new URL('.',import.meta.url)));assert.equal(summary.status,'INCOMPLETE');assert.equal(summary.diagnostic_errors,1);assert.equal(summary.failure_counts.HTTP_BODY,1);
+ const wrapper=readFileSync('C:/.projects/venus/.artifacts/p05-browser26-a18-run01.mjs','utf8');
+ const guard=wrapper.match(/assert\.equal\(report\.delivery_diagnostics\?\.status,'COMPLETE'[^;]+;/)?.[0];assert(guard);
+ assert.throws(()=>vm.runInNewContext(guard,{assert,report:{delivery_diagnostics:summary}}),e=>e.code==='ERR_ASSERTION'&&e.actual==='INCOMPLETE'&&e.expected==='COMPLETE');
+});
+console.log(JSON.stringify({status:'PASS_FIVE_FINITE_ACTUAL_HELPER_COMBINATIONS_NO_NATIVE',controls:results.length,results}));

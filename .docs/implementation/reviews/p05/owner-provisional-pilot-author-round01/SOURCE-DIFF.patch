@@ -1,0 +1,478 @@
+--- A3/packages/relationship-engine/src/pack.ts
++++ pilot01/packages/relationship-engine/src/pack.ts
+@@ -64,9 +64,33 @@
+     else assertRenderBudget(c.mode==='yes_but'?[text.proposal!,text.responder!]:[text.question!]);
+   }
+ }
++export type ApprovalScope='REVIEWED_RELEASE'|'SYNTHETIC_FIXTURE'|'OWNER_PROVISIONAL_LOCAL_PILOT';
++export type OwnerProvisionalPins=Readonly<{decision_id:'U-019';decision_sha256:string;grant_sha256:string;pack_digest:string;map_sha256:string;taxonomy_sha256:string;semantic_sha256:string}>;
++export type OwnerProvisionalCapability=Readonly<{scope:'OWNER_PROVISIONAL_LOCAL_PILOT';pins:OwnerProvisionalPins}>;
++const provisionalCapabilities=new WeakSet<object>();
++/** Trusted application code authenticates the compiled owner grant first. This
++ * brand is separate from reviewed release/test fixtures and grants no HTTP ACL. */
++export function ownerProvisionalCapability(profile:'local-pilot',pins:OwnerProvisionalPins):OwnerProvisionalCapability {
++  assertEngine(profile==='local-pilot'&&pins&&Object.keys(pins).sort().join(',')==='decision_id,decision_sha256,grant_sha256,map_sha256,pack_digest,semantic_sha256,taxonomy_sha256'
++    &&pins.decision_id==='U-019'&&/^sha256:[a-f0-9]{64}$/.test(pins.pack_digest)
++    &&[pins.decision_sha256,pins.grant_sha256,pins.map_sha256,pins.taxonomy_sha256,pins.semantic_sha256].every(v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v)),'OWNER_PROVISIONAL_GRANT_INVALID');
++  const value=freeze({scope:'OWNER_PROVISIONAL_LOCAL_PILOT' as const,pins:JSON.parse(canonical(pins)) as OwnerProvisionalPins});
++  provisionalCapabilities.add(value);return value;
++}
++export function assertOwnerProvisionalCapability(value:OwnerProvisionalCapability):OwnerProvisionalPins {
++  assertEngine(value&&provisionalCapabilities.has(value),'OWNER_PROVISIONAL_CAPABILITY_REQUIRED');return value.pins;
++}
+ /** Constructor validates bytes and review status; synthetic drafts remain explicitly synthetic. */
+ export class FrozenPack {
+-  private constructor(readonly manifest:PackManifest,readonly cards:readonly Card[],readonly synthetic:boolean) {}
++  private constructor(readonly manifest:PackManifest,readonly cards:readonly Card[],readonly synthetic:boolean,
++    readonly approval_scope:ApprovalScope=synthetic?'SYNTHETIC_FIXTURE':'REVIEWED_RELEASE',readonly owner_provisional:OwnerProvisionalPins|null=null) {}
++  /** Exact draft bytes with an authenticated owner-only local-pilot overlay.
++   * Normal load still rejects these cards/manifest; no rights/review are invented. */
++  static ownerProvisional(input:unknown[],manifest:PackManifest,capability:OwnerProvisionalCapability):FrozenPack {
++    const pins=assertOwnerProvisionalCapability(capability),draft=FrozenPack.load(input,manifest,true);
++    assertEngine(draft.digest===pins.pack_digest,'OWNER_PROVISIONAL_PACK_MISMATCH');
++    return Object.freeze(new FrozenPack(draft.manifest,draft.cards,false,'OWNER_PROVISIONAL_LOCAL_PILOT',pins));
++  }
+   static load(input:unknown[],manifest:PackManifest,synthetic=false) {
+     const {canonical_payload_sha256,...payload}=manifest;
+     assertEngine(manifest.schema_version===1&&manifest.policy_revision==='RE-1'&&manifest.policy_sha256===policyDigest.slice(7)&&manifest.content_contract_revision==='CARD-1'&&manifest.locale_codes.join(',')==='ru,en,tr','PACK_POLICY_UNSUPPORTED');
+--- A3/packages/relationship-engine/src/topic-map.ts
++++ pilot01/packages/relationship-engine/src/topic-map.ts
+@@ -1,6 +1,6 @@
+ import {createHash} from 'node:crypto';
+ import {TextDecoder} from 'node:util';
+-import {FrozenPack, canonical, digest, freeze} from './pack.js';
++import {FrozenPack, canonical, digest, freeze,assertOwnerProvisionalCapability,type ApprovalScope,type OwnerProvisionalPins,type OwnerProvisionalCapability} from './pack.js';
+ import {assertEngine, type Card, type Interaction, type Mode} from './types.js';
+ 
+ /** New server-only runtime format. Candidate authoring records are not approval
+@@ -143,11 +143,12 @@
+ export class FrozenTopicMap {
+   private constructor(readonly pins: TopicMapPins, readonly entries: readonly TopicMapEntry[],
+     readonly topics: RuntimeTopicTaxonomy['topics'], readonly families: RuntimeSemanticPolicy['families'],
+-    readonly excluded_card_ids: readonly string[], readonly synthetic: boolean) {}
++    readonly excluded_card_ids: readonly string[], readonly synthetic: boolean,
++    readonly approval_scope:ApprovalScope,readonly owner_provisional:OwnerProvisionalPins|null) {}
+   static load(bytes: TopicMapBytes, pack: FrozenPack, trusted: TrustedTopicPins): FrozenTopicMap {
+     keys(trusted, ['approval_id', 'approval_status', 'pack_digest', 'map_sha256', 'taxonomy_sha256', 'semantic_sha256']);
+     identifier(trusted.approval_id);
+-    assertEngine(pack instanceof FrozenPack && !pack.synthetic && trusted.approval_status === 'APPROVED'
++    assertEngine(pack instanceof FrozenPack && !pack.synthetic && pack.approval_scope==='REVIEWED_RELEASE' && trusted.approval_status === 'APPROVED'
+       && trusted.pack_digest === pack.digest, 'TOPIC_NOT_APPROVED');
+     for (const kind of ['map', 'taxonomy', 'semantic'] as const) {
+       hashes(trusted[`${kind}_sha256`]); assertEngine(sha(bytes[kind]) === trusted[`${kind}_sha256`], 'TOPIC_HASH_INVALID');
+@@ -158,10 +159,20 @@
+    * This is not an approval bypass for candidate450: every fixture document must
+    * use its own synthetic format/status, and the pack must also be synthetic. */
+   static syntheticFixture(bytes: TopicMapBytes, pack: FrozenPack, capability: SyntheticTopicFixtureCapability): FrozenTopicMap {
+-    assertEngine(pack instanceof FrozenPack && pack.synthetic && fixtureCapabilities.has(capability), 'TOPIC_FIXTURE_ONLY');
++    assertEngine(pack instanceof FrozenPack && pack.synthetic && pack.approval_scope==='SYNTHETIC_FIXTURE' && fixtureCapabilities.has(capability), 'TOPIC_FIXTURE_ONLY');
+     return FrozenTopicMap.read(bytes, pack, true);
+   }
+-  private static read(bytes: TopicMapBytes, pack: FrozenPack, synthetic: boolean): FrozenTopicMap {
++  static ownerProvisional(bytes:TopicMapBytes,pack:FrozenPack,capability:OwnerProvisionalCapability):FrozenTopicMap {
++    const pins=assertOwnerProvisionalCapability(capability);
++    assertEngine(pack instanceof FrozenPack&&!pack.synthetic&&pack.approval_scope==='OWNER_PROVISIONAL_LOCAL_PILOT'
++      &&canonical(pack.owner_provisional)===canonical(pins)&&pack.digest===pins.pack_digest,'OWNER_PROVISIONAL_PACK_MISMATCH');
++    for(const kind of ['map','taxonomy','semantic'] as const)assertEngine(sha(bytes[kind])===pins[`${kind}_sha256`],'OWNER_PROVISIONAL_MAP_MISMATCH');
++    // Input document labels stay untouched. Admission authority is the overlay,
++    // not a synthetic fixture capability or a fabricated APPROVED label.
++    return FrozenTopicMap.read(bytes,pack,true,'OWNER_PROVISIONAL_LOCAL_PILOT',pins);
++  }
++  private static read(bytes: TopicMapBytes, pack: FrozenPack, synthetic: boolean,
++    scope:ApprovalScope=synthetic?'SYNTHETIC_FIXTURE':'REVIEWED_RELEASE',owner:OwnerProvisionalPins|null=null): FrozenTopicMap {
+     keys(bytes, ['map', 'taxonomy', 'semantic']);
+     const map = strictJson(bytes.map), taxonomy = strictJson(bytes.taxonomy), semantic = strictJson(bytes.semantic);
+     for (const v of [map, taxonomy, semantic]) approval(v, synthetic);
+@@ -230,7 +241,7 @@
+     };
+     const result = new FrozenTopicMap(freeze(pins), freeze(JSON.parse(canonical([...entries.values()].sort((a,b) => a.card_id < b.card_id ? -1 : 1))) as TopicMapEntry[]),
+       freeze(JSON.parse(canonical(taxonomy.topics)) as RuntimeTopicTaxonomy['topics']), freeze(JSON.parse(canonical(semantic.families)) as RuntimeSemanticPolicy['families']),
+-      freeze([...excluded].sort()), synthetic);
++      freeze([...excluded].sort()), scope==='SYNTHETIC_FIXTURE',scope,owner);
+     entryIndexes.set(result,new Map(result.entries.map(entry=>[entry.card_id,entry])));
+     verified.add(result); return Object.freeze(result);
+   }
+@@ -240,6 +251,7 @@
+     return Boolean(entry&&entry.card_revision===card.revision&&entry.card_sha256===digest(card)&&!this.excluded_card_ids.includes(card.id));
+   }
+   static assertVerified(value: FrozenTopicMap, pack: FrozenPack): void {
+-    assertEngine(verified.has(value) && value.pins.pack_digest === pack.digest && value.synthetic === pack.synthetic, 'TOPIC_MAP_UNVERIFIED');
+-  }
+-}
++    assertEngine(verified.has(value) && value.pins.pack_digest === pack.digest && value.synthetic === pack.synthetic
++      &&value.approval_scope===pack.approval_scope&&canonical(value.owner_provisional)===canonical(pack.owner_provisional), 'TOPIC_MAP_UNVERIFIED');
++  }
++}
+--- A3/packages/card-catalog/src/index.ts
++++ pilot01/packages/card-catalog/src/index.ts
+@@ -7,3 +7,4 @@
+ export * from './json.js';
+ export * from './bundles.js';
+ export * from './topic-bundles.js';
++export * from './pilot-bundle.js';
+--- A3/packages/card-catalog/src/topic-bundles.ts
++++ pilot01/packages/card-catalog/src/topic-bundles.ts
+@@ -17,7 +17,7 @@
+ export function loadReleaseTopicBundles(input:unknown,authorizedPacks:readonly FrozenPack[]):readonly ReleaseTopicBundle[] {
+  requireCatalog(exact(input,['schema_version','approved'])&&input.schema_version===1&&Array.isArray(input.approved)
+   &&input.approved.length<=128,'CATALOG_TOPIC_REGISTRY_INVALID');
+- requireCatalog(authorizedPacks.every(pack=>pack instanceof FrozenPack&&!pack.synthetic)
++ requireCatalog(authorizedPacks.every(pack=>pack instanceof FrozenPack&&!pack.synthetic&&pack.approval_scope==='REVIEWED_RELEASE')
+   &&new Set(authorizedPacks.map(pack=>pack.digest)).size===authorizedPacks.length,'CATALOG_TOPIC_PACK_REGISTRY_INVALID');
+  const tuples=new Set<string>(),activePacks=new Set<string>();
+  const output=input.approved.map((entry:unknown)=>{
+--- A3/packages/card-catalog/src/pilot-bundle.ts
++++ pilot01/packages/card-catalog/src/pilot-bundle.ts
+@@ -0,0 +1,26 @@
++import {createHash} from 'node:crypto';
++import {FrozenPack,FrozenTopicMap,canonical,digest,ownerProvisionalCapability,type PackManifest} from '@venus/relationship-engine';
++import registry from './owner-provisional-pilot.json' with {type:'json'};
++import {requireCatalog} from './catalog.js';
++const registryDigest='313990feaa17153b4325d0e6d051a539ff926e38dd1e2764cd592070aea1f720';
++const sha=(value:Uint8Array)=>createHash('sha256').update(value).digest('hex');
++/** Authentication is the compiled exact owner-grant tuple, never user-provided
++ * paths, keys or approval labels. Exported for offline tamper validation only. */
++export function loadOwnerProvisionalPilot(input:unknown) {
++ requireCatalog(digest(input)===registryDigest,'PILOT_REGISTRY_MISMATCH');
++ const value=input as typeof registry,grant=value.grant;
++ const decode=(text:string)=>{const bytes=Buffer.from(text,'base64');requireCatalog(bytes.toString('base64')===text,'PILOT_BYTES_INVALID');return bytes;};
++ const bytes={manifest:decode(value.bytes.manifest),map:decode(value.bytes.map),taxonomy:decode(value.bytes.taxonomy),semantic:decode(value.bytes.semantic)};
++ for(const key of ['manifest','map','taxonomy','semantic'] as const)requireCatalog(sha(bytes[key])===grant.bytes_sha256[key],'PILOT_BYTES_MISMATCH');
++ const cards=value.cards.map(text=>{const raw=decode(text),card=JSON.parse(raw.toString('utf8')) as {id:string};
++  requireCatalog(sha(raw)===grant.card_raw_sha256[card.id as keyof typeof grant.card_raw_sha256],'PILOT_CARD_MISMATCH');return card;});
++ requireCatalog(cards.length===470&&new Set(cards.map(c=>c.id)).size===470,'PILOT_CARD_COUNT');
++ const authority=ownerProvisionalCapability('local-pilot',{decision_id:'U-019',decision_sha256:grant.references['.docs/implementation/user-decisions.v4.json'],
++  grant_sha256:digest(grant),pack_digest:grant.pack_digest,map_sha256:grant.bytes_sha256.map,taxonomy_sha256:grant.bytes_sha256.taxonomy,semantic_sha256:grant.bytes_sha256.semantic});
++ const pack=FrozenPack.ownerProvisional(cards,JSON.parse(bytes.manifest.toString('utf8')) as PackManifest,authority);
++ const map=FrozenTopicMap.ownerProvisional({map:bytes.map,taxonomy:bytes.taxonomy,semantic:bytes.semantic},pack,authority);
++ requireCatalog(canonical(pack.owner_provisional)===canonical(map.owner_provisional),'PILOT_AUTHORITY_MISMATCH');
++ return Object.freeze({pack,map,active:true as const,approval_scope:'OWNER_PROVISIONAL_LOCAL_PILOT' as const});
++}
++/** Loading validates metadata but does not authorize deployment/admission. */
++export const ownerProvisionalPilot=loadOwnerProvisionalPilot(registry);
+--- A3/packages/card-catalog/src/pilot-bundle.test.ts
++++ pilot01/packages/card-catalog/src/pilot-bundle.test.ts
+@@ -0,0 +1,63 @@
++import {createHash} from 'node:crypto';
++import {readFileSync} from 'node:fs';
++import {describe,it,expect} from 'vitest';
++import {FrozenPack,FrozenTopicMap,canonical,ownerProvisionalCapability,type OwnerProvisionalCapability} from '@venus/relationship-engine';
++import {syntheticTopicFixtureCapability} from '../../relationship-engine/src/topic-map.js';
++import {loadOwnerProvisionalPilot,ownerProvisionalPilot} from './pilot-bundle.js';
++import registry from './owner-provisional-pilot.json' with {type:'json'};
++import {loadReleaseTopicBundles} from './topic-bundles.js';
++const sha=(raw:Uint8Array)=>createHash('sha256').update(raw).digest('hex');
++const bytes=()=>Object.fromEntries(['map','taxonomy','semantic'].map(key=>[key,Buffer.from(registry.bytes[key as 'map'],'base64')])) as {map:Buffer;taxonomy:Buffer;semantic:Buffer};
++describe('compiled owner-provisional exact470 admission, distinct from production approval',()=>{
++ it('preserves real470 raw source bytes, draft metadata, digest and all map pins',()=>{
++  const {pack,map}=ownerProvisionalPilot;
++  expect(pack.cards).toHaveLength(470);expect(pack.synthetic||map.synthetic).toBe(false);
++  expect(pack.approval_scope).toBe('OWNER_PROVISIONAL_LOCAL_PILOT');expect(map.approval_scope).toBe(pack.approval_scope);
++  expect(pack.manifest.status).toBe('illustrative_draft_candidate');expect(pack.manifest.reviewed_cards).toBe(0);
++  expect(pack.cards.every(c=>c.status==='draft')).toBe(true);
++  expect(pack.digest).toBe(registry.grant.pack_digest);
++  for(const key of ['map','taxonomy','semantic'] as const)expect(map.pins[`${key}_sha256`]).toBe(sha(bytes()[key]));
++  for(const card of pack.cards){const raw=readFileSync(new URL(`../../../.docs/implementation/evidence/p04/review470-r4/candidate/cards/${card.id}.json`,import.meta.url));
++   expect(sha(raw)).toBe(registry.grant.card_raw_sha256[card.id as keyof typeof registry.grant.card_raw_sha256]);expect(canonical(JSON.parse(raw.toString()))).toBe(canonical(card));}
++  for(const[path,hash]of Object.entries(registry.grant.references))expect(sha(readFileSync(new URL('../../../'+path,import.meta.url)))).toBe(hash);
++  expect(Object.isFrozen(pack.owner_provisional)&&Object.isFrozen(map)).toBe(true);
++ });
++ it('rejects the pilot through the ordinary reviewed pack loader',()=>{
++  expect(()=>FrozenPack.load([...ownerProvisionalPilot.pack.cards],ownerProvisionalPilot.pack.manifest)).toThrow();
++ });
++ it('rejects pilot pack at both release topic registry and ordinary map production loader',()=>{
++  const {pack}=ownerProvisionalPilot;
++  expect(()=>loadReleaseTopicBundles({schema_version:1,approved:[]},[pack])).toThrow();
++  expect(()=>FrozenTopicMap.load(bytes(),pack,{approval_id:'not-authority',approval_status:'APPROVED',pack_digest:pack.digest,map_sha256:registry.grant.bytes_sha256.map,taxonomy_sha256:registry.grant.bytes_sha256.taxonomy,semantic_sha256:registry.grant.bytes_sha256.semantic})).toThrow();
++ });
++ for(const change of ['card','map','decision','grant','extra'])it('rejects arbitrary modified compiled input '+change,()=>{
++  const input=structuredClone(registry) as typeof registry&{extra?:boolean};
++  if(change==='card')input.cards[0]=Buffer.from('{}').toString('base64');
++  if(change==='map')input.bytes.map=Buffer.from('{}').toString('base64');
++  if(change==='decision')input.grant.references['.docs/implementation/user-decisions.v4.json']='0'.repeat(64);
++  if(change==='grant')input.grant.production_approved=true;
++  if(change==='extra')input.extra=true;
++  expect(()=>loadOwnerProvisionalPilot(input)).toThrow('PILOT_REGISTRY_MISMATCH');
++ });
++ it('requires real capability identity, not a copied shape',()=>{
++  const {pack}=ownerProvisionalPilot,pins=pack.owner_provisional!;
++  const cap=ownerProvisionalCapability('local-pilot',pins);
++  expect(()=>FrozenPack.ownerProvisional([...pack.cards],pack.manifest,{...cap} as OwnerProvisionalCapability)).toThrow('OWNER_PROVISIONAL_CAPABILITY_REQUIRED');
++  expect(()=>FrozenTopicMap.ownerProvisional(bytes(),pack,{...cap} as OwnerProvisionalCapability)).toThrow();
++ });
++ it('requires authority exact pack and raw map hashes independently of registry checking',()=>{
++  const {pack}=ownerProvisionalPilot,pins=pack.owner_provisional!;
++  const wrong=ownerProvisionalCapability('local-pilot',{...pins,pack_digest:'sha256:'+'0'.repeat(64)});
++  expect(()=>FrozenPack.ownerProvisional([...pack.cards],pack.manifest,wrong)).toThrow('OWNER_PROVISIONAL_PACK_MISMATCH');
++  const cap=ownerProvisionalCapability('local-pilot',pins);
++  expect(()=>FrozenTopicMap.ownerProvisional({...bytes(),map:Buffer.from('{}')},pack,cap)).toThrow('OWNER_PROVISIONAL_MAP_MISMATCH');
++ });
++ it('keeps synthetic test brands incompatible with the pilot overlay',()=>{
++  const {pack}=ownerProvisionalPilot,draft=FrozenPack.load([...pack.cards],pack.manifest,true),cap=ownerProvisionalCapability('local-pilot',pack.owner_provisional!);
++  expect(draft.approval_scope).toBe('SYNTHETIC_FIXTURE');
++  expect(()=>FrozenTopicMap.ownerProvisional(bytes(),draft,cap)).toThrow();
++  expect(()=>FrozenTopicMap.syntheticFixture(bytes(),pack,syntheticTopicFixtureCapability())).toThrow();
++  const originalMap=FrozenTopicMap.syntheticFixture(bytes(),draft,syntheticTopicFixtureCapability());
++  expect(canonical(originalMap.pins)).toBe(canonical(ownerProvisionalPilot.map.pins));
++ });
++});
+--- A3/apps/api/src/topic-game-source.ts
++++ pilot01/apps/api/src/topic-game-source.ts
+@@ -1,9 +1,11 @@
+ import type pg from 'pg';
+ import {FrozenPack,FrozenTopicMap,type TopicMapPins} from '@venus/relationship-engine';
+-import {bundledTopicSources,sameTopicPins,RevocationLedger,type ReleaseTopicBundle} from '@venus/card-catalog';
+-import type {GameCatalog} from './catalog.js';
++import {bundledTopicSources,ownerProvisionalPilot,sameTopicPins,RevocationLedger,type ReleaseTopicBundle} from '@venus/card-catalog';
++import type {Catalog,GameCatalog} from './catalog.js';
+ import type {TopicGameSource} from './topic-games.js';
+ import {DomainError,requireThat} from './security.js';
++import {entryProfile} from './entry-profile.js';
++import {canonical} from '@venus/relationship-engine';
+ 
+ /** Release-only production source. Caller holds the existing global shared
+  * catalog transaction lock through admission and final enqueue. This class does
+@@ -14,7 +16,7 @@
+  private bundle(pins:TopicMapPins):ReleaseTopicBundle {
+   const value=bundledTopicSources.find(value=>sameTopicPins(value.map.pins,pins));
+   requireThat(value,'TOPIC_SOURCE_BUNDLE_UNAVAILABLE',503);
+-  requireThat(value.pack instanceof FrozenPack&&!value.pack.synthetic&&!value.map.synthetic,'TOPIC_SOURCE_UNREVIEWED',503);
++  requireThat(value.pack instanceof FrozenPack&&!value.pack.synthetic&&!value.map.synthetic&&value.pack.approval_scope==='REVIEWED_RELEASE'&&value.map.approval_scope==='REVIEWED_RELEASE','TOPIC_SOURCE_UNREVIEWED',503);
+   FrozenTopicMap.assertVerified(value.map,value.pack);
+   requireThat(sameTopicPins(value.map.pins,pins),'TOPIC_SOURCE_PINS_CHANGED',503);return value;
+  }
+@@ -26,7 +28,7 @@
+  }
+  async active(c:pg.PoolClient):Promise<{pack:FrozenPack;map:FrozenTopicMap}|null> {
+   const pack=await this.catalog.active(c);if(!pack)return null;
+-  requireThat(pack instanceof FrozenPack&&!pack.synthetic,'TOPIC_SOURCE_UNREVIEWED',503);
++  requireThat(pack instanceof FrozenPack&&!pack.synthetic&&pack.approval_scope==='REVIEWED_RELEASE','TOPIC_SOURCE_UNREVIEWED',503);
+   const value=bundledTopicSources.find(value=>value.active&&value.pack===pack);
+   if(!value)return null;
+   this.assertCurrent(value.map.pins);return Object.freeze({pack:value.pack,map:value.map});
+@@ -36,3 +38,59 @@
+   this.assertCurrent(pins);return Object.freeze({pack:value.pack,map:value.map});
+  }
+ }
++
++export type PilotAdmission=Readonly<{deploymentProfile:string|undefined;origin:string;privateTopicsEnabled:boolean}>;
++export function pilotAdmissionEnabled(config:PilotAdmission):boolean {
++ // Reuse the actual deployment origin validator; no alternative host allowlist.
++ const offer=entryProfile(config.deploymentProfile,config.origin);
++ return Boolean(offer&&config.deploymentProfile==='local-pilot'&&config.privateTopicsEnabled);
++}
++/** Normal V2 provider, restricted to the single compiled owner-authorized tuple.
++ * The catalog shared lock and both DB/file revocation fences remain authoritative. */
++export class OwnerProvisionalTopicGameSource implements TopicGameSource {
++ private readonly enabled:boolean;
++ constructor(private readonly catalog:GameCatalog,private readonly ledger:RevocationLedger,config:PilotAdmission){this.enabled=pilotAdmissionEnabled(config);}
++ private bundle(pins:TopicMapPins) {
++  requireThat(this.enabled,'TOPIC_SOURCE_UNAVAILABLE',503);
++  const value=ownerProvisionalPilot;
++  requireThat(sameTopicPins(value.map.pins,pins),'TOPIC_SOURCE_BUNDLE_UNAVAILABLE',503);
++  requireThat(value.pack.approval_scope==='OWNER_PROVISIONAL_LOCAL_PILOT'&&value.map.approval_scope===value.pack.approval_scope&&!value.pack.synthetic&&!value.map.synthetic,'TOPIC_SOURCE_UNREVIEWED',503);
++  FrozenTopicMap.assertVerified(value.map,value.pack);return value;
++ }
++ assertCurrent(pins:TopicMapPins):void {
++  const {pack}=this.bundle(pins);let state:ReturnType<RevocationLedger['read']>;
++  try{state=this.ledger.read();}catch{throw new DomainError('CATALOG_LEDGER_UNAVAILABLE',503);}
++  requireThat(!pack.cards.some(card=>state.entries.some(e=>e.withdrawal.card_id===card.id&&e.withdrawal.revision===card.revision)),'CATALOG_WITHDRAWN',503);
++ }
++ private async assertStoredIdentity(c:pg.PoolClient) {
++  const row=(await c.query<{synthetic:boolean;manifest:unknown}>('SELECT synthetic,manifest FROM game_packs WHERE digest=$1',[ownerProvisionalPilot.pack.digest])).rows[0];
++  requireThat(!row||row.synthetic===false&&canonical(row.manifest)===canonical(ownerProvisionalPilot.pack.manifest),'TOPIC_SOURCE_UNREVIEWED',503);
++ }
++ async active(c:pg.PoolClient) {
++  if(!this.enabled)return null;
++  const pack=await this.catalog.active(c);if(!pack)return null;
++  requireThat(pack===ownerProvisionalPilot.pack,'TOPIC_SOURCE_UNREVIEWED',503);
++  await this.assertStoredIdentity(c);this.assertCurrent(ownerProvisionalPilot.map.pins);return {pack,map:ownerProvisionalPilot.map};
++ }
++ async pinned(c:pg.PoolClient,pins:TopicMapPins) {
++  const value=this.bundle(pins);await this.catalog.assertPinned(c,value.pack.digest);
++  await this.assertStoredIdentity(c);this.assertCurrent(pins);return {pack:value.pack,map:value.map};
++ }
++}
++/** Legacy Games cannot restore draft manifests as reviewed releases. Keep its
++ * admission on reviewed packs; pinned withdrawal checks are still delegated. */
++export function legacyReleaseCatalog(catalog:GameCatalog):GameCatalog {
++ return {active:async c=>{const pack=await catalog.active(c);return pack?.approval_scope==='REVIEWED_RELEASE'?pack:null;},assertPinned:(c,digest)=>catalog.assertPinned(c,digest)};
++}
++/** A one-time fresh-install convenience, using the normal catalog CAS. A used,
++ * withdrawn or restored null pointer is never reactivated by startup. */
++export async function bootstrapPilotCatalog(catalog:Catalog):Promise<'ACTIVATED_FRESH'|'UNCHANGED'> {
++ const fresh=await catalog.rooms.transaction(async c=>{
++  const row=(await c.query<{active_digest:string|null;generation:string;used:boolean}>(`SELECT active_digest,generation,
++   (EXISTS(SELECT 1 FROM venus_catalog_events) OR EXISTS(SELECT 1 FROM rooms) OR EXISTS(SELECT 1 FROM game_sessions) OR EXISTS(SELECT 1 FROM game_packs)) AS used
++   FROM venus_catalog_state WHERE singleton=true`)).rows[0];
++  requireThat(row,'CATALOG_UNAVAILABLE',503);return row.active_digest===null&&row.generation==='0'&&!row.used;
++ },'exclusive');
++ if(!fresh)return 'UNCHANGED';
++ await catalog.activate(ownerProvisionalPilot.pack.digest,'0','owner-provisional-local-pilot-bootstrap');return 'ACTIVATED_FRESH';
++}
+--- A3/apps/api/src/topic-runtime.ts
++++ pilot01/apps/api/src/topic-runtime.ts
+@@ -2,7 +2,7 @@
+  * application; environment values select enablement/paths, never cards or maps.
+  * Taxonomy changes require an explicit compatibility/quiesce procedure. */
+ import {isAbsolute} from 'node:path';
+-import {bundledTopicSources} from '@venus/card-catalog';
++import {bundledTopicSources,ownerProvisionalPilot} from '@venus/card-catalog';
+ import {canonical,hash,requireThat} from './security.js';
+ import type {TopicPins} from './private-topic-ledger.js';
+ import type {TopicTaxonomyEntry} from './private-topic-preferences.js';
+@@ -11,10 +11,11 @@
+ export function topicGamesEnabled(value:string|undefined):boolean {
+  requireThat(value===undefined||value==='false'||value==='true','TOPIC_GAME_CONFIG_INVALID',503);return value==='true';
+ }
+-export function releasedRoomTopicProfile():ReleasedRoomTopicProfile|null {
+- const first=bundledTopicSources[0];if(!first)return null;
++export function releasedRoomTopicProfile(ownerProvisional=false):ReleasedRoomTopicProfile|null {
++ const sources=ownerProvisional?[ownerProvisionalPilot]:bundledTopicSources;
++ const first=sources[0];if(!first)return null;
+  const taxonomy=first.map.pins.taxonomy_digest,topics=first.map.topics;
+- requireThat(/^[a-f0-9]{64}$/.test(taxonomy)&&bundledTopicSources.every(value=>value.map.pins.taxonomy_digest===taxonomy&&canonical(value.map.topics)===canonical(topics)),
++ requireThat(/^[a-f0-9]{64}$/.test(taxonomy)&&sources.every(value=>value.map.pins.taxonomy_digest===taxonomy&&canonical(value.map.topics)===canonical(topics)),
+   'TOPIC_PROFILE_COMPATIBILITY_REQUIRED',503);
+  const vocabulary=Object.freeze(topics.map(t=>t.topic_id).sort());
+  const policy=hash(canonical({schema_version:1,policy_revision:'ROOM-TOPIC-1',taxonomy_digest:taxonomy,vocabulary}));
+--- A3/apps/api/src/server.ts
++++ pilot01/apps/api/src/server.ts
+@@ -10,7 +10,7 @@
+ import {Games} from './games.js';
+ import {migrateCatalog,catalogSchemaProbe} from './catalog-migrations.js';
+ import {Catalog} from './catalog.js';
+-import {RevocationLedger,bundledPacks} from '@venus/card-catalog';
++import {RevocationLedger,bundledPacks,ownerProvisionalPilot} from '@venus/card-catalog';
+ import {entryProfile} from './entry-profile.js';
+ import {migrateChat,chatSchemaProbe} from './chat-migrations.js';
+ import {privateChatEnabled} from './private-chat.js';
+@@ -21,7 +21,7 @@
+ import {PrivateTopicPreferences} from './private-topic-preferences.js';
+ import {TopicGames} from './topic-games.js';
+ import {RoomGames} from './room-games.js';
+-import {ReleaseTopicGameSource} from './topic-game-source.js';
++import {ReleaseTopicGameSource,OwnerProvisionalTopicGameSource,pilotAdmissionEnabled,legacyReleaseCatalog,bootstrapPilotCatalog} from './topic-game-source.js';
+ import {topicGamesEnabled,releasedRoomTopicProfile,topicStorageDirectories} from './topic-runtime.js';
+ import {requireThat} from './security.js';
+ let db:ReturnType<typeof database>|undefined;
+@@ -33,12 +33,17 @@
+   const offer=entryProfile(process.env.VENUS_DEPLOYMENT_PROFILE,origin.origin);
+   const privateTextChat=privateChatEnabled(process.env.VENUS_PRIVATE_TEXT_CHAT);
+   const privateTopicsEnabled=topicGamesEnabled(process.env.VENUS_PRIVATE_TOPICS);
++  const pilotConfig={deploymentProfile:process.env.VENUS_DEPLOYMENT_PROFILE,origin:origin.origin,privateTopicsEnabled};
++  const pilotEnabled=pilotAdmissionEnabled(pilotConfig);
+   db=database();const pool=db.pool;
+   const keys=Keyring.fromFile(process.env.KEYRING_FILE),ledger=new DeletionLedger(process.env.DELETION_LEDGER_FILE);
+   await migrate(pool);await migrateGames(pool);await migrateCatalog(pool);await migrateChat(pool);await migratePrivateTopics(pool);
+   const existing=(await pool.query<{present:boolean}>('SELECT EXISTS(SELECT 1 FROM rooms WHERE private_protocol=2) AS present')).rows[0]!.present;
+   let topicGames:TopicGames|undefined,privateTopics:PrivateTopicPreferences|undefined,registry:TopicRoomRegistry|undefined;
+-  const profile=privateTopicsEnabled||existing?releasedRoomTopicProfile():null;
++  // Existing pilot rooms retain taxonomy metadata for the source-independent boot
++  // revocation barrier even when admission is disabled. This does not grant cards.
++  const pilotMetadata=pilotEnabled||existing&&bundledPacks.length===0;
++  const profile=privateTopicsEnabled||existing?releasedRoomTopicProfile(pilotMetadata):null;
+   if(privateTopicsEnabled||existing) requireThat(profile,'TOPIC_RELEASE_PROFILE_REQUIRED',503);
+   if(profile) {
+     const incompatible=(await pool.query(`SELECT 1 FROM rooms r LEFT JOIN private_topic_room_births b ON b.room_id=r.id
+@@ -52,20 +57,20 @@
+   }
+   const rooms=new Rooms({pool,keys,ledger,origin:origin.origin,offer:()=>offer,...(registry?{privateProtocol:registry}:{})}),games=new Games(rooms,()=>null,false,privateTextChat,true);
+   const revocations=process.env.CATALOG_REVOCATION_LEDGER_FILE?new RevocationLedger(process.env.CATALOG_REVOCATION_LEDGER_FILE):null;
+-  const catalog=revocations?new Catalog(rooms,{withdrawPacks:async(c,digests)=>{await games.withdrawPacks(c,digests);await topicGames?.withdrawPacks(c,digests);}},revocations,bundledPacks):null;
+-  if(catalog)games.attachCatalog(catalog);
++  const catalog=revocations?new Catalog(rooms,{withdrawPacks:async(c,digests)=>{await games.withdrawPacks(c,digests);await topicGames?.withdrawPacks(c,digests);}},revocations,pilotEnabled?[...bundledPacks,ownerProvisionalPilot.pack]:bundledPacks):null;
++  if(catalog)games.attachCatalog(legacyReleaseCatalog(catalog));
+   if(profile&&registry) {
+     requireThat(catalog&&revocations,'CATALOG_LEDGER_REQUIRED',503);
+     privateTopics=new PrivateTopicPreferences(rooms,registry,profile.pins,profile.topics);
+-    topicGames=new TopicGames(rooms,{enabled:privateTopicsEnabled,privateTextChat,source:new ReleaseTopicGameSource(catalog,revocations),
++    topicGames=new TopicGames(rooms,{enabled:privateTopicsEnabled&&(!pilotMetadata||pilotEnabled),privateTextChat,source:pilotMetadata?new OwnerProvisionalTopicGameSource(catalog,revocations,pilotConfig):new ReleaseTopicGameSource(catalog,revocations),
+       safety:{read:privateTopics.readForPlanner.bind(privateTopics),assertCurrent:privateTopics.assertPlannerCurrent.bind(privateTopics),excludeLocked:privateTopics.excludeForPlannerLocked.bind(privateTopics)}});
+   }
+   rooms.attachGames(registry?new RoomGames(games,topicGames??null):games);
+   // Startup grants never survive a database restore or an API process restart.
+   // This barrier is source-independent and must complete before listen/admission.
+   await topicGames?.bootGate();
+-  // No approved production bundle exists yet. An operator-provisioned ledger may
+-  // reconcile restored state, but neither environment nor network can supply cards.
++  if(pilotEnabled&&catalog)await bootstrapPilotCatalog(catalog);
++  // Neither environment nor network can supply card bytes or approval records.
+   await catalog?.reconcile('startup');
+   await games.reconcilePublicPairPolicy();await rooms.maintain();
+   const app=await createApp({probe:async()=>{await schemaProbe(pool);await engineSchemaProbe(pool);await catalogSchemaProbe(pool);await chatSchemaProbe(pool);await privateTopicSchemaProbe(pool);},schemaGeneration,rooms,games,...(privateTopics?{privateTopics}:{}),...(topicGames?{topicGames}:{}),roomCreationProtocol:privateTopicsEnabled?2:1,version,staticRoot:fileURLToPath(new URL('../../web/dist',import.meta.url))});
+--- A3/apps/api/src/pilot-topic-source.test.ts
++++ pilot01/apps/api/src/pilot-topic-source.test.ts
+@@ -0,0 +1,72 @@
++import {mkdtempSync,rmSync,unlinkSync} from 'node:fs';
++import {tmpdir} from 'node:os';
++import {join} from 'node:path';
++import type pg from 'pg';
++import {afterEach,describe,it,expect,vi} from 'vitest';
++import {ownerProvisionalPilot,RevocationLedger} from '@venus/card-catalog';
++import {OwnerProvisionalTopicGameSource,pilotAdmissionEnabled,legacyReleaseCatalog,bootstrapPilotCatalog} from './topic-game-source.js';
++import type {Catalog,GameCatalog} from './catalog.js';
++import {releasedRoomTopicProfile} from './topic-runtime.js';
++import {unavailableTopicContent} from './topic-content-availability.js';
++const paths:string[]=[];afterEach(()=>{for(const path of paths.splice(0))rmSync(path,{recursive:true,force:true});});
++const config={deploymentProfile:'local-pilot',origin:'https://localhost',privateTopicsEnabled:true};
++function setup(){const dir=mkdtempSync(join(tmpdir(),'venus-pilot-source-'));paths.push(dir);const path=join(dir,'revocations.jsonl'),ledger=RevocationLedger.provision(path);
++ const catalog:GameCatalog={active:vi.fn(async()=>ownerProvisionalPilot.pack),assertPinned:vi.fn(async()=>{})};
++ const c={query:vi.fn(async()=>({rows:[],rowCount:0}))} as unknown as pg.PoolClient;
++ return {path,ledger,c,catalog,source:new OwnerProvisionalTopicGameSource(catalog,ledger,config)};}
++describe('normal V2 owner-provisional source deployment/restore/final fences',()=>{
++ it('requires explicit profile+operator enablement and reuses exact loopback validator',()=>{
++  expect(pilotAdmissionEnabled(config)).toBe(true);
++  for(const deploymentProfile of [undefined,'closed'])expect(pilotAdmissionEnabled({...config,deploymentProfile})).toBe(false);
++  expect(pilotAdmissionEnabled({...config,privateTopicsEnabled:false})).toBe(false);
++  for(const origin of ['https://venus.shmoza.net','http://localhost','https://localhost/path'])expect(()=>pilotAdmissionEnabled({...config,origin})).toThrow();
++ });
++ it('returns the compiled real pack/map, then restores exact pins via normal catalog checks',async()=>{
++  const f=setup(),value=await f.source.active(f.c);expect(value).toEqual({pack:ownerProvisionalPilot.pack,map:ownerProvisionalPilot.map});
++  expect(await f.source.pinned(f.c,ownerProvisionalPilot.map.pins)).toEqual(value);expect(f.catalog.assertPinned).toHaveBeenCalledWith(f.c,ownerProvisionalPilot.pack.digest);
++ });
++ it('does not admit on inactive catalog or operator flag-off; pinned old data stays denied',async()=>{
++  const f=setup();vi.mocked(f.catalog.active).mockResolvedValue(null);expect(await f.source.active(f.c)).toBeNull();
++  const disabled=new OwnerProvisionalTopicGameSource(f.catalog,f.ledger,{...config,privateTopicsEnabled:false});expect(await disabled.active(f.c)).toBeNull();
++  await expect(disabled.pinned(f.c,ownerProvisionalPilot.map.pins)).rejects.toMatchObject({code:'TOPIC_SOURCE_UNAVAILABLE'});
++  expect(()=>disabled.assertCurrent(ownerProvisionalPilot.map.pins)).toThrow();
++ });
++ it('rejects changed exact pins before touching the catalog',async()=>{
++  const f=setup();await expect(f.source.pinned(f.c,{...ownerProvisionalPilot.map.pins,map_sha256:'0'.repeat(64)})).rejects.toMatchObject({code:'TOPIC_SOURCE_BUNDLE_UNAVAILABLE'});
++  expect(f.catalog.assertPinned).not.toHaveBeenCalled();
++ });
++ for(const synthetic of [true,false])it('rejects historical DB identity conflict synthetic='+synthetic,async()=>{
++  const f=setup();vi.mocked(f.c.query).mockResolvedValue({rows:[{synthetic,manifest:synthetic?ownerProvisionalPilot.pack.manifest:{}}],rowCount:1} as never);
++  await expect(f.source.active(f.c)).rejects.toMatchObject({code:'TOPIC_SOURCE_UNREVIEWED'});
++  try{await f.source.active(f.c);}catch(error){expect(unavailableTopicContent(error)).toBe(true);}
++ });
++ it('accepts exact non-synthetic stored manifest without interpreting it as reviewed release',async()=>{
++  const f=setup();vi.mocked(f.c.query).mockResolvedValue({rows:[{synthetic:false,manifest:ownerProvisionalPilot.pack.manifest}],rowCount:1} as never);
++  expect((await f.source.pinned(f.c,ownerProvisionalPilot.map.pins)).pack).toBe(ownerProvisionalPilot.pack);
++ });
++ for(const at of ['active','pinned','final'])it('withdrawal remains failclosed at '+at,async()=>{
++  const f=setup(),card=ownerProvisionalPilot.pack.cards[0]!;
++  const withdraw=()=>f.ledger.append({card_id:card.id,revision:card.revision,operator_id:'machine-test',reason_code:'safety',at:'2026-10-20T00:00:00Z'});
++  if(at==='active')vi.mocked(f.catalog.active).mockImplementation(async()=>{withdraw();return ownerProvisionalPilot.pack;});
++  if(at==='pinned')vi.mocked(f.catalog.assertPinned).mockImplementation(async()=>{withdraw();});
++  if(at==='final'){expect(await f.source.active(f.c)).not.toBeNull();withdraw();expect(()=>f.source.assertCurrent(ownerProvisionalPilot.map.pins)).toThrow();}
++  else await expect(at==='active'?f.source.active(f.c):f.source.pinned(f.c,ownerProvisionalPilot.map.pins)).rejects.toMatchObject({code:'CATALOG_WITHDRAWN'});
++ });
++ it('fails closed if ledger disappears after admission',async()=>{const f=setup();await f.source.active(f.c);unlinkSync(f.path);expect(()=>f.source.assertCurrent(ownerProvisionalPilot.map.pins)).toThrow();});
++ it('keeps legacy V1 admission closed but delegates pinned withdrawal validation',async()=>{
++  const f=setup(),legacy=legacyReleaseCatalog(f.catalog);expect(await legacy.active(f.c)).toBeNull();await legacy.assertPinned(f.c,ownerProvisionalPilot.pack.digest);expect(f.catalog.assertPinned).toHaveBeenCalled();
++ });
++ it('provides taxonomy-only boot metadata without release admission or changing topic policy',()=>{
++  expect(releasedRoomTopicProfile()).toBeNull();const profile=releasedRoomTopicProfile(true)!;expect(profile.topics).toHaveLength(13);expect(profile.pins.taxonomy).toBe(ownerProvisionalPilot.map.pins.taxonomy_digest);
++ });
++ for(const row of [{active_digest:null,generation:'0',used:false},{active_digest:null,generation:'0',used:true},{active_digest:null,generation:'1',used:false},{active_digest:ownerProvisionalPilot.pack.digest,generation:'2',used:true}])it('bootstrap fresh CAS vs used/null/restart '+JSON.stringify(row),async()=>{
++  const query=vi.fn(async()=>({rows:[row]})),activate=vi.fn(async()=>{}),catalog={rooms:{transaction:async(fn:(c:unknown)=>unknown)=>fn({query})},activate} as unknown as Catalog;
++  const fresh=row.generation==='0'&&!row.used&&!row.active_digest;
++  expect(await bootstrapPilotCatalog(catalog)).toBe(fresh?'ACTIVATED_FRESH':'UNCHANGED');expect(activate).toHaveBeenCalledTimes(fresh?1:0);
++  if(fresh)expect(activate).toHaveBeenCalledWith(ownerProvisionalPilot.pack.digest,'0','owner-provisional-local-pilot-bootstrap');
++ });
++ it('does not retry a failed catalog CAS or ledger/withdrawal rejection',async()=>{
++  const fault=new Error('typed catalog refusal'),activate=vi.fn(async()=>{throw fault;}),catalog={rooms:{transaction:async(fn:(c:unknown)=>unknown)=>fn({query:async()=>({rows:[{active_digest:null,generation:'0',used:false}]})})},activate} as unknown as Catalog;
++  await expect(bootstrapPilotCatalog(catalog)).rejects.toBe(fault);expect(activate).toHaveBeenCalledOnce();
++ });
++});

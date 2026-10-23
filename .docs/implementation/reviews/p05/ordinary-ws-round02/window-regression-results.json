@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "suite": "OWS_REV_001_ASSERTION_REGRESSION",
+  "status": "PASS",
+  "actual_product_runtime": false,
+  "explicit_doubles_only": true,
+  "original_producer_sha256": "73590fb8bb0b55e0cf89b2e60383248749ea2f9328c70e45e9dde469f8683980",
+  "corrected_producer_sha256": "d8c7f822034d35dc654e285c6c0a930cae27ec23e5cc5afa1a4310666b52b453",
+  "checks": 15,
+  "results": [
+    {
+      "id": "BEFORE-05",
+      "expected": "PRODUCER_FALSE_NEGATIVE_CONFIRMED",
+      "control": "05",
+      "scenario": "active-callback",
+      "result": "PASS",
+      "injected_frames": 1,
+      "detail": {
+        "expected_domain_error": "CATALOG_LEDGER_UNAVAILABLE",
+        "http_status": 503,
+        "no_new_private_frames": true,
+        "ordinary_room_ws_ping_pong_alive": true,
+        "heartbeat_actual_pg_online": true
+      },
+      "error": null
+    },
+    {
+      "id": "AFTER-05-active-callback",
+      "expected": "EARLY_LEAK_REJECTED",
+      "control": "05",
+      "scenario": "active-callback",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Private callback enqueue after transition violates deny_all"
+    },
+    {
+      "id": "AFTER-05-duplicate-id",
+      "expected": "EARLY_LEAK_REJECTED",
+      "control": "05",
+      "scenario": "duplicate-id",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Private callback enqueue after transition violates deny_all"
+    },
+    {
+      "id": "AFTER-05-unknown-frame",
+      "expected": "EARLY_LEAK_REJECTED",
+      "control": "05",
+      "scenario": "unknown-frame",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Unknown private frame inside full transition window"
+    },
+    {
+      "id": "AFTER-05-prequeued",
+      "expected": "LEGITIMATE_PREFAULT_ENQUEUE_ACCEPTED",
+      "control": "05",
+      "scenario": "prequeued",
+      "result": "PASS",
+      "injected_frames": 1,
+      "detail": {
+        "expected_domain_error": "CATALOG_LEDGER_UNAVAILABLE",
+        "http_status": 503,
+        "no_new_private_enqueues": true,
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 0,
+        "received_full_window_private_frames": 1,
+        "received_known_pre_boundary_queued_frames": 1,
+        "received_fresh_pending_frames": 0,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0,
+        "ordinary_room_ws_ping_pong_alive": true,
+        "heartbeat_actual_pg_online": true
+      },
+      "error": null
+    },
+    {
+      "id": "BEFORE-06",
+      "expected": "PRODUCER_FALSE_NEGATIVE_CONFIRMED",
+      "control": "06",
+      "scenario": "active-callback",
+      "result": "PASS",
+      "injected_frames": 1,
+      "detail": {
+        "retained_active_game": true,
+        "feature_disabled": true,
+        "http_status": 503,
+        "no_new_private_frames": true,
+        "ordinary_room_ws_alive": true
+      },
+      "error": null
+    },
+    {
+      "id": "AFTER-06-active-callback",
+      "expected": "EARLY_LEAK_REJECTED",
+      "control": "06",
+      "scenario": "active-callback",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Private callback enqueue after transition violates deny_all"
+    },
+    {
+      "id": "AFTER-06-duplicate-id",
+      "expected": "EARLY_LEAK_REJECTED",
+      "control": "06",
+      "scenario": "duplicate-id",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Private callback enqueue after transition violates deny_all"
+    },
+    {
+      "id": "AFTER-06-unknown-frame",
+      "expected": "EARLY_LEAK_REJECTED",
+      "control": "06",
+      "scenario": "unknown-frame",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Unknown private frame inside full transition window"
+    },
+    {
+      "id": "AFTER-06-prequeued",
+      "expected": "LEGITIMATE_PREFAULT_ENQUEUE_ACCEPTED",
+      "control": "06",
+      "scenario": "prequeued",
+      "result": "PASS",
+      "injected_frames": 1,
+      "detail": {
+        "retained_active_game": true,
+        "feature_disabled": true,
+        "http_status": 503,
+        "no_new_private_enqueues": true,
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 0,
+        "received_full_window_private_frames": 1,
+        "received_known_pre_boundary_queued_frames": 1,
+        "received_fresh_pending_frames": 0,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0,
+        "ordinary_room_ws_alive": true
+      },
+      "error": null
+    },
+    {
+      "id": "AFTER-09-active-callback",
+      "expected": "EARLY_OLD_PROMPT_REJECTED",
+      "control": "09",
+      "scenario": "active-callback",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Private callback enqueue after transition violates deny_old_content"
+    },
+    {
+      "id": "AFTER-09-unknown-frame",
+      "expected": "EARLY_OLD_PROMPT_REJECTED",
+      "control": "09",
+      "scenario": "unknown-frame",
+      "result": "REJECTED",
+      "injected_frames": 1,
+      "error": "Unknown private frame inside full transition window"
+    },
+    {
+      "id": "AFTER-09-prequeued",
+      "expected": "LEGITIMATE_FRAME_ACCEPTED",
+      "control": "09",
+      "scenario": "prequeued",
+      "result": "PASS",
+      "injected_frames": 1,
+      "detail": {
+        "actual_owner_exclusion": true,
+        "protected_ledger_exclusion": true,
+        "successful_durable_narrow_observed": true,
+        "epoch_revoked": true,
+        "old_actual_refs": 1,
+        "old_refs_enqueued": 0,
+        "ordinary_old_prompt_not_delivered": true,
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 0,
+        "received_full_window_private_frames": 1,
+        "received_known_pre_boundary_queued_frames": 1,
+        "received_fresh_pending_frames": 0,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0,
+        "grant_observed_from_actual_ws_pg_generation": true
+      },
+      "error": null
+    },
+    {
+      "id": "AFTER-09-fresh-pending",
+      "expected": "LEGITIMATE_FRAME_ACCEPTED",
+      "control": "09",
+      "scenario": "fresh-pending",
+      "result": "PASS",
+      "injected_frames": 1,
+      "detail": {
+        "actual_owner_exclusion": true,
+        "protected_ledger_exclusion": true,
+        "successful_durable_narrow_observed": true,
+        "epoch_revoked": true,
+        "old_actual_refs": 1,
+        "old_refs_enqueued": 0,
+        "ordinary_old_prompt_not_delivered": true,
+        "observation_started_before_transition": true,
+        "actual_enqueue_boundary_observed": true,
+        "post_boundary_private_callbacks": 1,
+        "received_full_window_private_frames": 1,
+        "received_known_pre_boundary_queued_frames": 0,
+        "received_fresh_pending_frames": 1,
+        "raw_unknown_private_frames": 0,
+        "forbidden_post_boundary_private_callbacks": 0,
+        "grant_observed_from_actual_ws_pg_generation": true
+      },
+      "error": null
+    }
+  ],
+  "receipt_identity_and_no_failure_marker": true
+}

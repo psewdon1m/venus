@@ -1,0 +1,5 @@
+# OCI03 operational rebind independent review
+
+2026-10-20T15:42:05.208243+00:00 UTC — Review author06 frozen OCI03 operational rebind, restoredhistorical1274 only, not author. Ownnewpacket/journal only. NoDocker/ACK/producer writes. Verify exact executable+fixture02 binding, resource/imageproofs, activationprojection/failclosed and scope.
+
+2026-10-20T15:45:49.610278+00:00 UTC — Author102/method9/image8/resource10children exact; current/parent producer maps exact; 29executable+8fixture files unchanged; 14controls andbudgets unchanged; 81union/74runtime/73receipt maps exact. Resource4checks/PGinitialhealth2then0/cleanupempty verified. Own26pure/readonly controls PASS exit0; provenance exit0. Initial allCLIzero assumption failed retained, corrected precise readinesspoll; exploratory list-as-dict inspectionexit1 corrected. NoDocker/producer/ACKwrites; two-field rootactivationprojection explicitlyreviewed, no activationperformed. Source1274/1813 exact historical only. Writes COMPLETE; INDEX 65b411250150fe9850d0f3da60b5f873d7ac1141cc7a8b92882edb2f62ae4bf9 /19 files; HANDOFF af03bb9037076d8032a919c2e70d09a56af112e39f83c9a35b80a957f1d901f1.

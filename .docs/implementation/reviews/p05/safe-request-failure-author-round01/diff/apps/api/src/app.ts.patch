@@ -1,0 +1,18 @@
+--- before/apps/api/src/app.ts
++++ after/apps/api/src/app.ts
+@@ -9,6 +9,7 @@
+ import type {Games} from './games.js';
+ import type {PrivateTopicPreferences} from './private-topic-preferences.js';
+ import type {TopicGames} from './topic-games.js';
++import {requestErrorDiagnostic} from './request-error-diagnostic.js';
+ 
+ export interface AppOptions {
+   probe: () => Promise<void>; version: Version; staticRoot?: string;
+@@ -46,6 +47,7 @@
+   app.setErrorHandler((error, request, reply) => {
+     const code = error && typeof error === 'object' && 'statusCode' in error ? error.statusCode : 500;
+     const status = error instanceof DomainError ? error.statusCode : typeof code === 'number' && code >= 400 && code < 500 ? code : 500;
++    if(status===500&&!(error instanceof DomainError))app.log.error({event:'request_failed',request_id:request.id,...requestErrorDiagnostic(error)},'request_failed');
+     return reply.code(status).send({code: error instanceof DomainError?error.code:status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
+   });
+   await app.register(websocket,{options:{maxPayload:8192,perMessageDeflate:false}});

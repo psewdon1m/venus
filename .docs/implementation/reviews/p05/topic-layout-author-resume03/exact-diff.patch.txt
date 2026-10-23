@@ -1,0 +1,795 @@
+--- resume02/author-controls.mjs
++++ resume03/author-controls.mjs
+@@ -26,7 +26,7 @@
+  const native={css_zoom:'1',before_dpr:1,after_dpr:2,before_width:640,after_width:320,scroll_width:320};
+  await test('native200-positive',()=>assertNativeZoom(native));
+  for(const[name,mutate]of [['css-zoom',v=>v.css_zoom='2'],['overshoot225',v=>v.after_dpr=2.25],['no-reflow',v=>v.after_width=640],['overflow',v=>v.scroll_width=323]])await test(name+'-rejected',()=>{const v=clone(native);mutate(v);assert.throws(()=>assertNativeZoom(v));});
+- const binding=JSON.parse(readFileSync('.artifacts/p05-v2-layout-producer-resume02/binding.json','utf8')),ack={root_run_ack:true,independent_producer_review:'PASS',independent_review_index_sha256:'a'.repeat(64),producer_runtime_digest:'b'.repeat(64),source_identity:binding.source_identity,image:binding.image};
++ const binding=JSON.parse(readFileSync('.artifacts/p05-v2-layout-producer-resume03/binding.json','utf8')),ack={root_run_ack:true,independent_producer_review:'PASS',independent_review_index_sha256:'a'.repeat(64),producer_runtime_digest:'b'.repeat(64),source_identity:binding.source_identity,image:binding.image};
+  await test('binding-positive-inert',()=>assertBinding(binding,ack));
+  for(const[name,mutate]of [['runACKfalse',v=>v.root_run_ack=false],['review-pending',v=>v.independent_producer_review='PENDING'],['wrong-source',v=>v.source_identity='c'.repeat(64)],['wrong-image',v=>v.image='sha256:'+'d'.repeat(64)],['missing-review-index',v=>v.independent_review_index_sha256=null]])await test(name+'-rejected',()=>{const v=clone(ack);mutate(v);assert.throws(()=>assertBinding(binding,v));});
+  writeFileSync(join(dir,'a.mjs'),'one');const before=captureProducer(dir);
+@@ -58,6 +58,6 @@
+   await test('exact-focus-positive-inert',()=>{dom();const r=focusAudit();assertKeyboard({controls:[r],truncated:false},['game-stop']);});
+   await test('exact-focus-occlusion-rejected',()=>{const d=dom();d.doc.elementFromPoint=()=>({});const r=focusAudit();assert.throws(()=>assertKeyboard({controls:[r],truncated:false},['game-stop']));});
+  }finally{for(const[name,descriptor]of Object.entries(original))if(descriptor)Object.defineProperty(globalThis,name,descriptor);else delete globalThis[name];}
+- await test('actual-host-entrypoint-ACKfalse-no-allocation',()=>{const root=resolve('.artifacts/p05'),names=readdirSync(root).sort();const r=spawnSync(process.execPath,['.artifacts/p05-v2-layout-producer-resume02/run.mjs'],{encoding:'utf8',timeout:10000});assert.notEqual(r.status,0);assert(r.stderr.includes('ROOT_RUN_ACK_REQUIRED'));assert.deepEqual(readdirSync(root).sort(),names);});
++ await test('actual-host-entrypoint-ACKfalse-no-allocation',()=>{const root=resolve('.artifacts/p05'),names=readdirSync(root).sort();const r=spawnSync(process.execPath,['.artifacts/p05-v2-layout-producer-resume03/run.mjs'],{encoding:'utf8',timeout:10000});assert.notEqual(r.status,0);assert(r.stderr.includes('ROOT_RUN_ACK_REQUIRED'));assert.deepEqual(readdirSync(root).sort(),names);});
+ }finally{assert.equal(dirname(resolve(dir)),resolve(tmpdir()));assert(resolve(dir).startsWith(join(resolve(tmpdir()),'venus-layout-inert-')));rmSync(dir,{recursive:true,force:true});}
+ console.log(JSON.stringify({scope:'AUTHOR_FINITE_INERT_ONLY_NO_BROWSER_NO_DOCKER',count:results.length,results},null,2));
+--- resume02/binding.json
++++ resume03/binding.json
+@@ -1,10 +1,11 @@
+ {
+   "schema_version": 1,
+-  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+-  "included_files": 1813,
+-  "image": "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+-  "root_build_receipt_path": ".artifacts/p05-renewal-image-build-receipt01.json",
+-  "root_build_receipt_sha256": "2dae88a270c9a9a3fbc33386b09ae98585bebb49d6d26e1a3f6d95c8ddf443e5",
+-  "source_archive_sha256": "82fac3944a024439ddce48f98263e96fe1f67568205d18e93d540acc3c00109e",
+-  "status": "AUTHOR_DECLARED_BINDING_REQUIRES_INDEPENDENT_REVIEW"
++  "source_identity": "b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4",
++  "included_files": 1819,
++  "image": "sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5",
++  "root_build_receipt_path": ".artifacts/p05-unified-image-binding01/receipt.json",
++  "root_build_receipt_sha256": "9b9307c5f09ab5706fe678c67e6835f7c24bbd5c39b3c8208567b6b09581e5ed",
++  "source_snapshot_path": ".artifacts/p05-unified-source-freeze01.json",
++  "source_snapshot_sha256": "057094a30d58598598881625e31ee4bf7264a13942ce48e7825c04418194c7c3",
++  "status": "AUTHOR_REBOUND_REQUIRES_CURRENT_INDEPENDENT_REVIEW_NOT_RUN"
+ }
+--- resume02/build-driver.mjs
++++ resume03/build-driver.mjs
+@@ -3,16 +3,16 @@
+ import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+ import {createHash} from 'node:crypto';
+ import ts from 'typescript';
+-const root='.artifacts/p05-v2-layout-producer-resume02',source='.artifacts/p05-private-batch-browser-producer13/browser.mjs';
++const root='.artifacts/p05-v2-layout-producer-resume03',source='.artifacts/p05-private-batch-browser-producer18/browser.mjs';
+ const hash=b=>createHash('sha256').update(b).digest('hex'),raw=readFileSync(source),text=raw.toString('utf8');
+-assert.equal(hash(raw),'5b5e251c910ce1f27d7138723bc0bb2f4eccedd2e7d9cebc1405d559fda8f7d9');
++assert.equal(hash(raw),'564f7054c9c784284140aa9723d1f03c9439b8cdbfd182687176702f5b8b546e');
+ assert.equal(hash(readFileSync(root+'/private-batch-observer.mjs')),'8913015d820022cca873f0a8f819dcea054ef13e0591492b9d665244bdc59e8a');
+-assert.equal(hash(readFileSync(root+'/request-emission.mjs')),'f7b8a9ab3e4b5202cf0c0fa6c8dbf211b17463533aee2da7b2a3e72c4e6d5ed6');
++assert.equal(hash(readFileSync(root+'/request-emission.mjs')),'2441671d6ed6ef14e136a007974e1b87e5d0181adabe48fa164ad7d936cd8b0f');
+ const ast=ts.createSourceFile(source,text,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);assert.equal(ast.parseDiagnostics.length,0);
+-const names=['read','expectedPrivateScope','privateDom','normalPrivateReady','preparePrivateClick','assertPrivateTicket','click','fillPrivate','recordMutation','approval','create','joinRoom','ownTopics','configure','connected','start','coherentGame','ownUiRound','mutationClick','advance','seekPrivate','participants','invite','currentOfferTopics','topicReadinessPhase','topicUiReady','acceptTopics','adviceMutation','adviceUiReady','receivedPendingAdvice','acceptActionsUi'];
++const names=['read','expectedPrivateScope','privateDom','normalPrivateReady','preparePrivateClick','assertPrivateTicket','click','fillPrivate','recordMutation','approval','create','joinRoom','ownTopics','configure','connected','start','coherentGame','ownUiRound','mutationClick','advance','seekPrivate','startPrivate','participants','invite','currentOfferTopics','topicReadinessPhase','topicUiReady','acceptTopics','adviceMutation','adviceUiReady','receivedPendingAdvice','acceptActionsUi'];
+ mkdirSync(root+'/extracted',{recursive:true});const records=[];
+-const functions=names.map(name=>{const nodes=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name);assert.equal(nodes.length,1,name);const node=nodes[0],start=node.getStart(ast),end=node.end,value=text.slice(start,end),file='extracted/method13-'+name+'.txt';writeFileSync(root+'/'+file,value+'\n');records.push({name,source,start_character:start,end_character:end,exact_ast_text_sha256:hash(Buffer.from(value)),extraction:file});return value;});
+-const prelude=`/** Separate real V2 scenes. Exact source-bound METHOD13 helpers; no historical entrypoint evaluation. */
++const functions=names.map(name=>{const nodes=ast.statements.filter(n=>ts.isFunctionDeclaration(n)&&n.name?.text===name);assert.equal(nodes.length,1,name);const node=nodes[0],start=node.getStart(ast),end=node.end,value=text.slice(start,end),file='extracted/method18-'+name+'.txt';writeFileSync(root+'/'+file,value+'\n');records.push({name,source,start_character:start,end_character:end,exact_ast_text_sha256:hash(Buffer.from(value)),extraction:file});return value;});
++const prelude=`/** Separate real V2 scenes. Exact source-bound METHOD18 helpers; no historical entrypoint evaluation. */
+ import assert from 'node:assert/strict';
+ import {performance} from 'node:perf_hooks';
+ import {URLSearchParams} from 'node:url';
+@@ -22,6 +22,7 @@
+ import {offeredTopics,expectedOfferLabels,coherentRound,uiRoundMatches} from './observations.mjs';
+ import {createPrivateBatchObserver} from './private-batch-observer.mjs';
+ import {exactUiMutation} from './request-emission.mjs';
++import {safeFailedReadiness} from './readiness-diagnostics.mjs';
+ /* global document,window */
+ export function sceneDriver({browser,service,report,save=()=>{},viewport={width:1440,height:900}}){
+ let actors=[],phase='layout-prepare';
+@@ -31,5 +32,5 @@
+ const normalPrivateControls=new Set(['pair-accept','action-accept','topic-accept','topic-new','advice-offer','advice-accept','advice-edit','pair-chat-send','game-condition-submit']);
+ `;
+ const tail=readFileSync(root+'/driver-tail.txt','utf8');writeFileSync(root+'/scene-driver.mjs',prelude+functions.join('\n\n')+'\n\n'+tail+'\n}\n');
+-writeFileSync(root+'/driver-adaptation.json',JSON.stringify({schema_version:1,status:'AUTHOR_CODE_READY_INDEPENDENT_REVIEW_REQUIRED_NOT_RUN',method13_source_sha256:hash(raw),observer03_sha256:hash(readFileSync(root+'/private-batch-observer.mjs')),request_emission_sha256:hash(readFileSync(root+'/request-emission.mjs')),extractions:records,changes:['Separate real scenes and read-only safe metadata callbacks; all31 extracted METHOD13 helper AST texts exact','Validated observer03 callback supplies timed own/current projections; model-only, not application cache.accept','New per-scene actor lifecycle and ordered public selection, fixed20 rounds, no retry/seed/TTL changes','Advice/content/chat scene admission reuses exact METHOD13 normal preparation, request/receipt and post-commit own-read floors','All existing459 matrix IDs/native/role/sweep/resource thresholds retained'],production_source_changed:false,actual_run:false},null,2)+'\n');
++writeFileSync(root+'/driver-adaptation.json',JSON.stringify({schema_version:1,status:'AUTHOR_CODE_READY_INDEPENDENT_REVIEW_REQUIRED_NOT_RUN',method18_source_sha256:hash(raw),observer03_sha256:hash(readFileSync(root+'/private-batch-observer.mjs')),request_emission_sha256:hash(readFileSync(root+'/request-emission.mjs')),extractions:records,changes:['Separate real scenes and read-only safe metadata callbacks; all32 extracted METHOD18 helper AST texts exact','Validated observer03 callback supplies timed own/current projections; model-only, not application cache.accept','New per-scene actor lifecycle and ordered public selection, fixed20 rounds with exact METHOD18 max3 real-session private setup; no seed/history reset or TTL changes','Advice/content/chat scene admission reuses exact METHOD18 normal preparation, request/receipt and post-commit own-read floors','All existing459 matrix IDs/native/role/sweep/resource thresholds retained'],production_source_changed:false,actual_run:false},null,2)+'\n');
+ console.log(JSON.stringify({status:'AUTHOR_V2_LAYOUT_DRIVER_GENERATED_NOT_RUN',helpers:names.length,sha256:hash(readFileSync(root+'/scene-driver.mjs'))}));
+--- resume02/DESIGN.md
++++ resume03/DESIGN.md
+@@ -1,3 +1,15 @@
++# Resume03 binding and helper update (prospective author candidate)
++
++Current tuple: source b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4/1819, image sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5, receipt9b9307c5. This section supersedes only historical source/image/helper statements below. The accepted resume02 design/oracles remain otherwise unchanged; old method-only proof is not actual new-source acceptance.
++
++Thirty-two exact METHOD18 AST helpers replace31METHOD13 extractions, with exact compatible observer03, exact METHOD18 request-emission and readiness-diagnostics. Public scene setup remains one real UI session; private scenes use exact startPrivate(mode): at most3 same-room/mode real UI sessions of20 rounds, repeat only known no-private-draw, retain attempt records/history. There are8 private scene groups per51cell shard, so the unchanged24-row METHOD18 setup metadata bound fits. Scene measurement/native deadlines and all459IDs/nine51cell shards/oracles remain unchanged. The existing180s absolute real-scene setup budget is also unchanged; it can expire before all3allowed attempts complete, which remains an honestFAIL rather than extending a timer. No seed search, snapshot rewrite, new authorization or timer adjustment.
++
++No browser/Docker RUN is authorized. Existing durable independent-review/source/image/runtime digest and root-controlledACK gates remain failclosed. Root will not set ACK until actual METHOD18PASS and independent layout03 review. This author adds no new gate framework.
++
++The runtime remains an explicitly synthetic source/pack/map fixture (packf4bddf9f..., TG-TEST-1). It renders synthetic text, not actualr4cards. Human contentHOLD remains. Actualr4text wrapping/content coverage requires separately source-bound card/locale fixtures and reports; successful459synthetic cells cannot be renamed actualr4text proof. Details in README/author handoff.
++
++---
++
+ # P05 V2 layout / native zoom / keyboard — design01
+ 
+ AUTHOR implementation, actual NOT_RUN. PLAN-P05-LOCAL-UI (.docs/10_IMPLEMENTATION_PLAN.md:191) requires six widths, landscape/small height,200% nativezoom, keyboard, reduced motion, RU/EN/TR, pinned Chromium/Firefox/WebKit; contrast/hidden scroll checked. No production/real-device/Safari claims. This independent producer does not modify method10, included source or content. Its eventual result is a bounded V2 layout gate input, never wholeP05 acceptance.
+--- resume02/driver-adaptation.json
++++ resume03/driver-adaptation.json
+@@ -1,264 +1,272 @@
+ {
+   "schema_version": 1,
+   "status": "AUTHOR_CODE_READY_INDEPENDENT_REVIEW_REQUIRED_NOT_RUN",
+-  "method13_source_sha256": "5b5e251c910ce1f27d7138723bc0bb2f4eccedd2e7d9cebc1405d559fda8f7d9",
++  "method18_source_sha256": "564f7054c9c784284140aa9723d1f03c9439b8cdbfd182687176702f5b8b546e",
+   "observer03_sha256": "8913015d820022cca873f0a8f819dcea054ef13e0591492b9d665244bdc59e8a",
+-  "request_emission_sha256": "f7b8a9ab3e4b5202cf0c0fa6c8dbf211b17463533aee2da7b2a3e72c4e6d5ed6",
++  "request_emission_sha256": "2441671d6ed6ef14e136a007974e1b87e5d0181adabe48fa164ad7d936cd8b0f",
+   "extractions": [
+     {
+       "name": "read",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 6587,
+-      "end_character": 6877,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 6652,
++      "end_character": 6942,
+       "exact_ast_text_sha256": "b8ce9f0593e5dd6667396dcb3ecffe0196e7ead0fdb908f7ee899089e79b5c4c",
+-      "extraction": "extracted/method13-read.txt"
++      "extraction": "extracted/method18-read.txt"
+     },
+     {
+       "name": "expectedPrivateScope",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 7198,
+-      "end_character": 7590,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 7263,
++      "end_character": 7655,
+       "exact_ast_text_sha256": "b71d3f2225c751d21b0534b353a2003bb53c181c9b95c5cb45cf8874c41290bc",
+-      "extraction": "extracted/method13-expectedPrivateScope.txt"
++      "extraction": "extracted/method18-expectedPrivateScope.txt"
+     },
+     {
+       "name": "privateDom",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 7591,
+-      "end_character": 8154,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 7656,
++      "end_character": 8219,
+       "exact_ast_text_sha256": "c15ceda7f9eafd3e6e9d38a0cdce1b4251c95b3c5f725b13ea35ea2b53e80ad6",
+-      "extraction": "extracted/method13-privateDom.txt"
++      "extraction": "extracted/method18-privateDom.txt"
+     },
+     {
+       "name": "normalPrivateReady",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 8155,
+-      "end_character": 11086,
+-      "exact_ast_text_sha256": "09185d4d415e0af13a29969aa51518e33465941db53cb9eb274bbdb4d18e77b0",
+-      "extraction": "extracted/method13-normalPrivateReady.txt"
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 8220,
++      "end_character": 11267,
++      "exact_ast_text_sha256": "5b1e1c71f6a833551a73685b2dc0d550f77f96068b4893105f16b227c6adb318",
++      "extraction": "extracted/method18-normalPrivateReady.txt"
+     },
+     {
+       "name": "preparePrivateClick",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 11087,
+-      "end_character": 11802,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 11268,
++      "end_character": 11983,
+       "exact_ast_text_sha256": "8ccbac0e7245ad253fb56370c7d0706830240d51724595ea4cd05529852207f3",
+-      "extraction": "extracted/method13-preparePrivateClick.txt"
++      "extraction": "extracted/method18-preparePrivateClick.txt"
+     },
+     {
+       "name": "assertPrivateTicket",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 11803,
+-      "end_character": 12197,
+-      "exact_ast_text_sha256": "b7dfa24f6378574c2ec3fb9b31bde8a5073d24944061da5870d873b99c9d96fc",
+-      "extraction": "extracted/method13-assertPrivateTicket.txt"
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 11984,
++      "end_character": 13255,
++      "exact_ast_text_sha256": "6ed0d6a8dc879284f1f1a2a020755e4dafd0d54bced0d77621438c56d796d78f",
++      "extraction": "extracted/method18-assertPrivateTicket.txt"
+     },
+     {
+       "name": "click",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 12198,
+-      "end_character": 12734,
+-      "exact_ast_text_sha256": "4312fefd0ac637acf8fcdb73937e9341c690d33ae8e36f5792f88652a494ceab",
+-      "extraction": "extracted/method13-click.txt"
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 13256,
++      "end_character": 13805,
++      "exact_ast_text_sha256": "713c68033ebfde6d950ca6b31453557cb17ed439012dbc9d49963030e76bdfb9",
++      "extraction": "extracted/method18-click.txt"
+     },
+     {
+       "name": "fillPrivate",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 12735,
+-      "end_character": 13231,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 13806,
++      "end_character": 14302,
+       "exact_ast_text_sha256": "c99cc84a52d3c1cd8fcb9a8fee00e49483d489fb71b87c6602169c4ebc68b371",
+-      "extraction": "extracted/method13-fillPrivate.txt"
++      "extraction": "extracted/method18-fillPrivate.txt"
+     },
+     {
+       "name": "recordMutation",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 13624,
+-      "end_character": 13802,
+-      "exact_ast_text_sha256": "2a3e14895bbf1ada847aa11b31cb123b89d60608cdd48d95ae4f2acc14e3a822",
+-      "extraction": "extracted/method13-recordMutation.txt"
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 14695,
++      "end_character": 14874,
++      "exact_ast_text_sha256": "bfc43cfe99f22bc77afa762303ea0e4aec409f366de6974036b7b208f3838171",
++      "extraction": "extracted/method18-recordMutation.txt"
+     },
+     {
+       "name": "approval",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 16780,
+-      "end_character": 17027,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 17896,
++      "end_character": 18143,
+       "exact_ast_text_sha256": "d63c731a414ec683ba435b8d5c08e588f87e535d9f841f4634819418a1191375",
+-      "extraction": "extracted/method13-approval.txt"
++      "extraction": "extracted/method18-approval.txt"
+     },
+     {
+       "name": "create",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 17028,
+-      "end_character": 17988,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 18144,
++      "end_character": 19104,
+       "exact_ast_text_sha256": "e6e29c188f43df2b84a74ff406d1cc73a5aee34a4fe22e42ea2d22a31be25f92",
+-      "extraction": "extracted/method13-create.txt"
++      "extraction": "extracted/method18-create.txt"
+     },
+     {
+       "name": "joinRoom",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 17989,
+-      "end_character": 18628,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 19105,
++      "end_character": 19744,
+       "exact_ast_text_sha256": "3f0c45d2ea848fb856b92f238437f8b6645ba017adbd8a25cd534c8202586695",
+-      "extraction": "extracted/method13-joinRoom.txt"
++      "extraction": "extracted/method18-joinRoom.txt"
+     },
+     {
+       "name": "ownTopics",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 18629,
+-      "end_character": 18702,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 19745,
++      "end_character": 19818,
+       "exact_ast_text_sha256": "ad7352eb27f36a68f1d9a28813388b0e849b015a1890385b5b0e3262bad5ced8",
+-      "extraction": "extracted/method13-ownTopics.txt"
++      "extraction": "extracted/method18-ownTopics.txt"
+     },
+     {
+       "name": "configure",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 18703,
+-      "end_character": 19335,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 19819,
++      "end_character": 20451,
+       "exact_ast_text_sha256": "fe07a8cdd375616e74185b5e49065729fab602a7c6d7dc18eba08b493a405180",
+-      "extraction": "extracted/method13-configure.txt"
++      "extraction": "extracted/method18-configure.txt"
+     },
+     {
+       "name": "connected",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 19336,
+-      "end_character": 19552,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 20452,
++      "end_character": 20668,
+       "exact_ast_text_sha256": "e456a593f1bc966c90fa4083937838de42e7065b2fb398f0a8cb4948ba701c63",
+-      "extraction": "extracted/method13-connected.txt"
++      "extraction": "extracted/method18-connected.txt"
+     },
+     {
+       "name": "start",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 19553,
+-      "end_character": 20267,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 20669,
++      "end_character": 21383,
+       "exact_ast_text_sha256": "6488cd2bed7a4d4a8a5ad1c1cf3e9a8c2d45d91b434ce4caf0adb417a6a1cc02",
+-      "extraction": "extracted/method13-start.txt"
++      "extraction": "extracted/method18-start.txt"
+     },
+     {
+       "name": "coherentGame",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 20268,
+-      "end_character": 20573,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 21384,
++      "end_character": 21689,
+       "exact_ast_text_sha256": "d50810249b9c159127b16b7d095ce7e7862997c612f3bf1555fb5135cd15529e",
+-      "extraction": "extracted/method13-coherentGame.txt"
++      "extraction": "extracted/method18-coherentGame.txt"
+     },
+     {
+       "name": "ownUiRound",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 20574,
+-      "end_character": 20938,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 21690,
++      "end_character": 22054,
+       "exact_ast_text_sha256": "f56f9cf49c47424040260611e34d8101350d84e1eb6668ba4e41deea92a4c0dc",
+-      "extraction": "extracted/method13-ownUiRound.txt"
++      "extraction": "extracted/method18-ownUiRound.txt"
+     },
+     {
+       "name": "mutationClick",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 20939,
+-      "end_character": 21253,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 22055,
++      "end_character": 22369,
+       "exact_ast_text_sha256": "68cdefc9b67a9775c75e14dbae1cb01d44855d4c17a921da0802e2f5e8f8403e",
+-      "extraction": "extracted/method13-mutationClick.txt"
++      "extraction": "extracted/method18-mutationClick.txt"
+     },
+     {
+       "name": "advance",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 21254,
+-      "end_character": 21570,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 22370,
++      "end_character": 22686,
+       "exact_ast_text_sha256": "b18bc239b48d46a0e5e8303fcb1c27f81a0df065a7d509fc2ad08597b78bf90f",
+-      "extraction": "extracted/method13-advance.txt"
++      "extraction": "extracted/method18-advance.txt"
+     },
+     {
+       "name": "seekPrivate",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 21571,
+-      "end_character": 22654,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 22687,
++      "end_character": 23770,
+       "exact_ast_text_sha256": "039f3a3d693ccdf87fbab652a47cff6e7e371621d4f4e281b4150f7a4ef7d079",
+-      "extraction": "extracted/method13-seekPrivate.txt"
++      "extraction": "extracted/method18-seekPrivate.txt"
++    },
++    {
++      "name": "startPrivate",
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 37981,
++      "end_character": 39876,
++      "exact_ast_text_sha256": "985514ecf34869cba858c87817cce4584fa455fb37cb57aca61805e7586b5323",
++      "extraction": "extracted/method18-startPrivate.txt"
+     },
+     {
+       "name": "participants",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 22655,
+-      "end_character": 22735,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 23771,
++      "end_character": 23851,
+       "exact_ast_text_sha256": "3eb64f810756ab17e1f40d799fdca47ceda69c3b9a1cbd2075de0497d4d5833a",
+-      "extraction": "extracted/method13-participants.txt"
++      "extraction": "extracted/method18-participants.txt"
+     },
+     {
+       "name": "invite",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 22736,
+-      "end_character": 24543,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 23852,
++      "end_character": 25659,
+       "exact_ast_text_sha256": "dc727568187887a44d045adf201ac0f992bc247bbd435145912ca7709be134d1",
+-      "extraction": "extracted/method13-invite.txt"
++      "extraction": "extracted/method18-invite.txt"
+     },
+     {
+       "name": "currentOfferTopics",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 24544,
+-      "end_character": 24988,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 25660,
++      "end_character": 26104,
+       "exact_ast_text_sha256": "5125c4499a3623cb3f597224b3547b86cfd38da67c74df41dce36f670e9865ed",
+-      "extraction": "extracted/method13-currentOfferTopics.txt"
++      "extraction": "extracted/method18-currentOfferTopics.txt"
+     },
+     {
+       "name": "topicReadinessPhase",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 24989,
+-      "end_character": 25679,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 26105,
++      "end_character": 26795,
+       "exact_ast_text_sha256": "9b60b85349c9d337b481b5592169f1e8d332b722f52df107620c4a1677fbbf16",
+-      "extraction": "extracted/method13-topicReadinessPhase.txt"
++      "extraction": "extracted/method18-topicReadinessPhase.txt"
+     },
+     {
+       "name": "topicUiReady",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 25680,
+-      "end_character": 29047,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 26796,
++      "end_character": 30163,
+       "exact_ast_text_sha256": "58e29e949c4e0e3b04f97b24b0e6e563a6fc822f1d2150d91208f7523959d415",
+-      "extraction": "extracted/method13-topicUiReady.txt"
++      "extraction": "extracted/method18-topicUiReady.txt"
+     },
+     {
+       "name": "acceptTopics",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 29048,
+-      "end_character": 31514,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 30164,
++      "end_character": 32630,
+       "exact_ast_text_sha256": "20653d3240a5b06aeab0ac24bb7b85f776f0cccf4fa0e052fa0d2978f08ba224",
+-      "extraction": "extracted/method13-acceptTopics.txt"
++      "extraction": "extracted/method18-acceptTopics.txt"
+     },
+     {
+       "name": "adviceMutation",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 31515,
+-      "end_character": 32509,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 32631,
++      "end_character": 33625,
+       "exact_ast_text_sha256": "413e7eeddb37a8b526833b0eef9b243be19cc850a390bced9936e057269a3cb6",
+-      "extraction": "extracted/method13-adviceMutation.txt"
++      "extraction": "extracted/method18-adviceMutation.txt"
+     },
+     {
+       "name": "adviceUiReady",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 32510,
+-      "end_character": 32918,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 33626,
++      "end_character": 34034,
+       "exact_ast_text_sha256": "debfcdfbd454233094b01e8f5852fa75f58cde4e80c7cee893df8cd4dffd8b0f",
+-      "extraction": "extracted/method13-adviceUiReady.txt"
++      "extraction": "extracted/method18-adviceUiReady.txt"
+     },
+     {
+       "name": "receivedPendingAdvice",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 32919,
+-      "end_character": 33263,
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 34035,
++      "end_character": 34379,
+       "exact_ast_text_sha256": "3f06bce864fc56a742072fbab542f46e6c86c9a269f7ef619c56b7115feec5c0",
+-      "extraction": "extracted/method13-receivedPendingAdvice.txt"
++      "extraction": "extracted/method18-receivedPendingAdvice.txt"
+     },
+     {
+       "name": "acceptActionsUi",
+-      "source": ".artifacts/p05-private-batch-browser-producer13/browser.mjs",
+-      "start_character": 33264,
+-      "end_character": 34714,
+-      "exact_ast_text_sha256": "c0da652a8538c428e7b23ecb3421524a71e83f610b017b4a4da6e2c7d573d591",
+-      "extraction": "extracted/method13-acceptActionsUi.txt"
++      "source": ".artifacts/p05-private-batch-browser-producer18/browser.mjs",
++      "start_character": 34380,
++      "end_character": 35832,
++      "exact_ast_text_sha256": "a3e7b639cd2fdfbe8e99d969c45b54a0c379dac639d322c8cea3836c8fdeaf23",
++      "extraction": "extracted/method18-acceptActionsUi.txt"
+     }
+   ],
+   "changes": [
+-    "Separate real scenes and read-only safe metadata callbacks; all31 extracted METHOD13 helper AST texts exact",
++    "Separate real scenes and read-only safe metadata callbacks; all32 extracted METHOD18 helper AST texts exact",
+     "Validated observer03 callback supplies timed own/current projections; model-only, not application cache.accept",
+-    "New per-scene actor lifecycle and ordered public selection, fixed20 rounds, no retry/seed/TTL changes",
+-    "Advice/content/chat scene admission reuses exact METHOD13 normal preparation, request/receipt and post-commit own-read floors",
++    "New per-scene actor lifecycle and ordered public selection, fixed20 rounds with exact METHOD18 max3 real-session private setup; no seed/history reset or TTL changes",
++    "Advice/content/chat scene admission reuses exact METHOD18 normal preparation, request/receipt and post-commit own-read floors",
+     "All existing459 matrix IDs/native/role/sweep/resource thresholds retained"
+   ],
+   "production_source_changed": false,
+--- resume02/driver-tail.txt
++++ resume03/driver-tail.txt
+@@ -15,8 +15,8 @@
+  const inviteUrl=await create(actors[0]);for(let i=1;i<actors.length;i++)await joinRoom(actors[i],inviteUrl,i);
+  for(const a of actors){const p=await read(a,base(a)+'/me/private-protocol');assert.equal(p.private_protocol,2);}
+  if(scene==='setup')return {scene,actors,roles:[{role:'host',actor:actors[0]},{role:'guest',actor:actors[1]}],fixture:null};
+- for(const a of actors)await configure(a);const mode=scene==='truth_dare_choice'?'truth_or_dare':scene==='yes_but_condition'?'yes_but':'questions';await start(mode);
+- const f=scene==='public_questions'?await seekPublic():await seekPrivate();
++ for(const a of actors)await configure(a);const mode=scene==='truth_dare_choice'?'truth_or_dare':scene==='yes_but_condition'?'yes_but':'questions';
++ let f;if(scene==='public_questions'){await start(mode);f=await seekPublic();}else f=await startPrivate(mode);
+  const primary=actors.find(a=>a.id===f.plan.primary_member_id);assert(primary);
+  if(scene==='public_questions'){if(f.plan.interaction==='pair_public')await invite(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);await expect(primary.page.getByTestId('game-prompt')).toBeVisible();return {scene,actors,roles:[{role:'primary',actor:primary},{role:'other',actor:actors.find(a=>a!==primary)}],fixture:f};}
+  const pair=await invite(f,{side:scene!=='truth_dare_choice'}),secondary=pair.find(a=>a!==primary),observer=actors.find(a=>!pair.includes(a));assert(secondary&&observer);
+--- resume02/keyboard-replay.mjs
++++ resume03/keyboard-replay.mjs
+@@ -5,7 +5,7 @@
+ import ts from 'typescript';
+ import {absoluteBudget,bounded,assertFreshScope} from './probe-policy.mjs';
+ import {sha} from './runner-policy.mjs';
+-const source=readFileSync('.artifacts/p05-v2-layout-producer-resume02/measure.mjs','utf8'),ast=ts.createSourceFile('measure.mjs',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS),node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='activateSafety');assert(node);const exact=source.slice(node.getStart(ast),node.end),text=exact.replace(/^export /,'');
++const source=readFileSync('.artifacts/p05-v2-layout-producer-resume03/measure.mjs','utf8'),ast=ts.createSourceFile('measure.mjs',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS),node=ast.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='activateSafety');assert(node);const exact=source.slice(node.getStart(ast),node.end),text=exact.replace(/^export /,'');
+ const results=[];
+ async function replay(change={}){
+  const fixture={session:'s',game_rev:1,plan:{round_id:'r',round_index:1}},request={request_id:'11111111-1111-4111-8111-111111111111',side:'dare'},receipt={schema_version:2,request_id:request.request_id,game_rev:2};change.request?.(request);change.receipt?.(receipt);
+--- resume02/paint-context-controls.mjs
++++ resume03/paint-context-controls.mjs
+@@ -18,4 +18,4 @@
+  for(const [key,value]of contexts)for(const ancestor of [false,true])test((ancestor?'ancestor_':'node_')+key+'_'+value+'_unresolved_and_no_focus_pass',()=>{const f=setup();(ancestor?f.body:f.button).style[key]=value;const audit=domAudit();assert(audit.contrast_unresolved>0,key);assert.throws(()=>assertObservation(audit));const focus=focusAudit();assert.equal(focus.focus_contrast_unresolved,true);assert.equal(focus.focus_visible,false);assert.throws(()=>assertKeyboard({controls:[focus],truncated:false},['game-stop']));});
+  test('explicit_supported_defaults_do_not_invent_unresolved_compositing',()=>{const f=setup();f.button.style.backgroundColor='rgba(255, 255, 255, 0.5)';const audit=domAudit();assert.equal(audit.contrast_unresolved,0);assertObservation(audit);});
+ }finally{for(const key of keys){const d=original[key];if(d)Object.defineProperty(globalThis,key,d);else delete globalThis[key];}}
+-const result={status:'PASS',scope:'AUTHOR_FAKE_DOM_AND_COMPUTED_PAINT_CONTEXTS_ONLY_NO_BROWSER',count:rows.length,rows};writeFileSync('.artifacts/p05-v2-layout-producer-resume02/paint-context-controls.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:'PASS',count:rows.length}));
++const result={status:'PASS',scope:'AUTHOR_FAKE_DOM_AND_COMPUTED_PAINT_CONTEXTS_ONLY_NO_BROWSER',count:rows.length,rows};writeFileSync('.artifacts/p05-v2-layout-producer-resume03/paint-context-controls.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:'PASS',count:rows.length}));
+--- resume02/README.md
++++ resume03/README.md
+@@ -1,19 +1,11 @@
+-# P05 V2 layout459 — resume02 author correction candidate
++# P05 V2 layout459 resume03 — current source/helper rebind
+ 
+-CODE_READY, INDEPENDENT_REVIEW_REQUIRED, ACTUAL_NOT_RUN. This new producer preserves all459 IDs:360 normal core,45 native200 core,54 TD/YB supplements. Three pinned desktop engines and RU/EN/TR remain mandatory; Linux WebKit is not Safari or a real-device proof. Content470 remains HOLD. No product source, original producer or accepted historical proof is modified.
++AUTHOR_READY_METHOD_ONLY / independent review and actual browser18PASS pending / NOT_RUN. Current sourceb244/1819,image0b4; exact receipt and source snapshot are in binding.json. ROOT_RUN_ACKfalse. The inherited accepted resume02 oracles/matrix/measurement/DOM/native/keyboard/cleanup are unchanged;32source-bound METHOD18helpers supply current preparation. Matrix remains459=360normal+45native+54mode supplements,3engines xRU/EN/TR,nine51cell shards. LinuxWebKit is not Safari/device support. The exact METHOD18 create() helper selects online rooms, so this459matrix does not claim in-person browser layout/context-marker coverage. Actual IPHTTP and unit parity evidence is separate; any IPUI claim needs a complementary explicitly scoped observation.
+ 
+-The executable implementation includes seven real scene preparations per normal/native sweep, actual role identity from the plan,31 exact METHOD13 helper AST extractions, accepted observer03, native X11 window ownership/zoom/reset/capture, rendered DOM/contrast/reduced-motion checks, actual Tab traversal, keyboard mutation receipts, safe screenshots, fixed sweeps, owned cleanup and a strict459 aggregate. It uses real HTTPS/UI/cookie jars and the explicitly synthetic source/map fixture. No grant/TTL/native-clock/seed changes or silent room retries are introduced. FAIL remains FAIL; unsupported compositing or native behavior does not become a manual PASS.
++Current executable directory: .artifacts/p05-v2-layout-producer-resume03. After independent review and actualMETHOD18PASS, root may fill the existingACK with matching review/source/image/runtime digest and run node .artifacts/p05-v2-layout-producer-resume03/run.mjs with P05_LAYOUT_ENGINE and P05_LAYOUT_LOCALE. Aggregate allnine distinctactual shard directories using aggregate.mjs. Existing resource/ownedcleanup/before-after sourcepins and screenshot bounds remain strict. No single shard equals459PASS. No browser/Docker run occurred during authoring.
+ 
+-`binding.json` fixes source1274/1813, imageff371 and the root build receipt. `ROOT_RUN_ACK.json` remains false. Before allocation/Docker, `run.mjs` requires a real durable independent review path under `.docs/implementation/reviews/p05/`, its exact index hash, status PASS_METHOD_ONLY or PASS_LAYOUT_PRODUCER_METHOD_ONLY, matching source, matching runtime digest and explicit root ACK. Only root can fill these after independent acceptance. Copying an arbitrary PASS string is insufficient. The actual producer directory is `.artifacts/p05-v2-layout-producer-resume02`; the container mount is `/app/tests/p05-v2-layout-producer` to retain source dependency resolution.
++Synthetic source only: runtime.mjs derives the exact existing tests/p05-topic-lifecycle/harness.mjs with the two established substitutions and sourceFixture() from tests/p05-topic-games. Cards/map are synthetic,packdigestsha256:f4bddf9f1ea795e63991d1ee33d34b41b21a5d367be53923cbbc165954158abb/mapTG-TEST-1. It does not load the r4candidate or confer human/content acceptance.
+ 
+-After that review and ACK, root selects one engine/locale using `P05_LAYOUT_ENGINE` and `P05_LAYOUT_LOCALE` and runs `node .artifacts/p05-v2-layout-producer-resume02/run.mjs`. Each shard requires exactly51 cells and14 keyboard actions. All nine independently retained actual shard directories must then be passed to `aggregate.mjs output.json directory1 ... directory9`. The union must be exactly459 with matching source/image/runtime binding and unique hash-verified PNG evidence. Full-matrix screenshot limits remain1836 files/4GiB and3MiB per file. No single shard is whole-matrix PASS.
++Minimum separate boundary for r4text claims: use exact r4canonical card revision/hash and RU/EN/TR field hashes in an explicit isolated test-only content fixture (never activate HOLD as a production release). Reuse the same DOM surfaces/oracles, capture selected actual card/side/context/locale/field/substitution hashes and demonstrate actual text rendering at narrow/native200stress sizes. A fulltext-coverage claim needs an enumerated card xlocale xfield/side coverage ledger; random selectedcards or only longest-string samples cannot be called all-r4coverage. Remaining content can be reported NOT_SEEN until measured. A render-only stress fixture is not planner/admission/consent proof; the459synthetic integration matrix is complementary, not a substitute. No such r4fixture or newframework is implemented here; root decides the smallest additional evidence required by the final gate.
+ 
+-Author controls are finite fake/static/VM/cold-import checks only. They do not claim actual layout, native zoom, HTTP authorization, clean-source or full P05 acceptance. Strict accessibility checks may reveal product findings on actual execution; they are preserved for the pipeline to resolve. All initial lint failures and source adaptation details are retained in the durable author packet.
+-
+-## Independent findings corrected in resume02
+-
+-LAYOUT-R01-001: independent review JSON must expose top-level image and producer_runtime_digest in addition to PASS_METHOD_ONLY/PASS_LAYOUT_PRODUCER_METHOD_ONLY and source_identity. The host runner hashes those real JSON bytes, requires the exact image binding and mandatory64hex runtime digest, and compares that digest against both actual inventory and root ACK before allocation/Docker. Missing/contrary fields are refusal, not inferred acceptance.
+-
+-LAYOUT-R01-002: text/control/focus checks support flat sRGB alpha backgrounds only. Explicit unsupported filter/backdrop/blending/isolation/mask/clipping/text-shadow/transform/perspective contexts on the measured node or ancestors become unresolved/FAIL; nonopaque element/ancestor opacity is unresolved. Focus does not report a positive visible marker in an unresolved paint context. This is conservative method behavior, not a claim that these styles occur in Venus or that actual browser contrast passed.
+-
+-31 exact helper texts now derive from independently accepted METHOD13 browser5b5e251c910ce1f27d7138723bc0bb2f4eccedd2e7d9cebc1405d559fda8f7d9, review INDEXd871a3b677939fdae7fff04ed9dc5254830f1ff3d6617a10728fbc3894d48f41. Actual positive outcome remains a root-run prerequisite; helper method acceptance is not actual functional PASS. Observer03 and request-emission bytes remain unchanged.
++Finite controls are fake/VM/cold/static only. No successful real layout/native/contrast result, no production readiness, no wholeP05PASS. Historical resume02/checkpoint and original browserFAILs remain immutable.
+--- resume02/request-emission.mjs
++++ resume03/request-emission.mjs
+@@ -1,6 +1,11 @@
+ /** Method12 finite dispatch/receipt observer; no app authorization or click retries. */
+ import assert from 'node:assert/strict';
+ import {performance} from 'node:perf_hooks';
++import {setTimeout,clearTimeout} from 'node:timers';
++const allowedErrorCodes=new Set(['CLOSED','STALE','REPLAY','NOT_AVAILABLE','LIMIT','RATE_LIMIT','ROLE_DENIED','ROUND_NOT_ACTIVE','ROUND_STALE','ROUND_ACTOR_REQUIRED','CONVERSATION_UNAVAILABLE','PRIVATE_CONVERSATION_REQUIRED','CONSENT_NOT_ACTIVE','CONSENT_EXPIRED','INVALID_REQUEST','TOPIC_OFFER_UNAVAILABLE','TOPIC_TARGET_INVARIANT','TOPIC_ATTEMPT_LIMIT','TOPIC_SAFE_POOL_EXHAUSTED','TOPIC_SOURCE_UNAVAILABLE','SERVICE_UNAVAILABLE']);
++export function safeOfferMetadata(body){const ids=body?.topic_ids,valid=Array.isArray(ids)&&ids.length<=64&&ids.every(v=>['creative','music','romance'].includes(v));return{offer_expected_epoch:Number.isSafeInteger(body?.expected_epoch)&&body.expected_epoch>=0?body.expected_epoch:null,offer_topic_count:Array.isArray(ids)&&ids.length<=64?ids.length:null,offer_fixture_topic_ids:valid?[...ids]:null,offer_fixture_topics_valid:valid};}
++export function safeErrorMetadata(payload,status){const code=payload?.code;return{response_status:status,domain_error_code:allowedErrorCodes.has(code)?code:null,domain_error_code_unlisted:typeof code==='string'&&!allowedErrorCodes.has(code)};}
++
+ 
+ export async function exactUiMutation({page,path,kind,scope,control,prepare,click,afterClick,record,now=()=>performance.now()}){
+  const readiness=prepare?await prepare():null;
+@@ -23,10 +28,20 @@
+   assert(!readiness||emittedAt<readiness.deadline_monotonic_ms,'P05_REQUEST_EMISSION_OUTSIDE_OBSERVED_PRIVATE_DEADLINE');
+   if(afterClick)await afterClick();
+   const response=await responsePromise;
++  event.response_status=response.status();
++  let body,responseBody;
++  try{
++   body=request.postDataJSON();responseBody=response.request().postDataJSON();
++   assert.equal(typeof body?.request_id,'string');assert(/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(body.request_id));
++   assert.equal(responseBody?.request_id,body.request_id,'Response must belong to the one observed request');
++  }catch(error){event.response_request_correlation='UNAVAILABLE_OR_MISMATCH';event.error_metadata_unavailable=true;throw error;}
++  if(kind==='offer_topic')Object.assign(event,safeOfferMetadata(body));
++  if(event.response_status!==200){
++   let timer;try{const payload=await Promise.race([response.json(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('ERROR_METADATA_TIMEOUT')),1000);})]);Object.assign(event,safeErrorMetadata(payload,event.response_status));}
++   catch{event.error_metadata_unavailable=true;}finally{clearTimeout(timer);}
++  }
+   assert.equal(response.status(),200,'Exact UI mutation must commit');
+-  const body=request.postDataJSON(),responseBody=response.request().postDataJSON(),receipt=await response.json();
+-  assert.equal(typeof body.request_id,'string');assert(/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(body.request_id));
+-  assert.equal(responseBody.request_id,body.request_id,'Response must belong to the one observed request');
++  const receipt=await response.json();
+   assert.equal(receipt.request_id,body.request_id);assert.equal(receipt.schema_version,2);assert(Number.isSafeInteger(receipt.game_rev));
+   event.result='EXACT_RECEIPT_VERIFIED';return {body,receipt};
+  }catch(error){if(event.result==='NOT_DISPATCHED'&&emittedAt!==null)event.result='DISPATCHED_CLICK_FAILURE';event.failure=emittedAt===null?'NO_MATCHING_REQUEST_OBSERVED_BEFORE_DEADLINE_OR_CLICK_PRECONDITION':'DISPATCHED_RESPONSE_OR_RECEIPT_FAILURE';throw error;}
+--- resume02/resume-controls.mjs
++++ resume03/resume-controls.mjs
+@@ -6,15 +6,15 @@
+ import {resolve} from 'node:path';
+ import ts from 'typescript';
+ import {expectedCells} from './matrix.mjs';
+-const root='.artifacts/p05-v2-layout-producer-resume02',old='.artifacts/p05-v2-layout-producer',sha=b=>createHash('sha256').update(b).digest('hex'),rows=[];
++const root='.artifacts/p05-v2-layout-producer-resume03',old='.artifacts/p05-v2-layout-producer',sha=b=>createHash('sha256').update(b).digest('hex'),rows=[];
+ async function test(name,fn){await fn();rows.push({name,status:'PASS'});}
+ const adaptation=JSON.parse(readFileSync(root+'/driver-adaptation.json','utf8')),driver=readFileSync(root+'/scene-driver.mjs','utf8'),browser=readFileSync(root+'/browser.mjs','utf8');
+ const parse=(path,source)=>ts.createSourceFile(path,source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);
+-const original=parse('original.mjs',readFileSync('.artifacts/p05-private-batch-browser-producer13/browser.mjs','utf8'));
++const original=parse('original.mjs',readFileSync('.artifacts/p05-private-batch-browser-producer18/browser.mjs','utf8'));
+ const funcs=Object.fromEntries(original.statements.filter(ts.isFunctionDeclaration).map(n=>[n.name.text,n.getText(original)]));
+-await test('31_method13_extractions_exact_ast_hash_and_generated_text',()=>{assert.equal(adaptation.extractions.length,31);for(const record of adaptation.extractions){const extracted=readFileSync(root+'/'+record.extraction,'utf8').slice(0,-1);assert.equal(extracted,funcs[record.name]);assert.equal(sha(Buffer.from(extracted)),record.exact_ast_text_sha256);assert(driver.includes(extracted));}});
++await test('32_method18_extractions_exact_ast_hash_and_generated_text',()=>{assert.equal(adaptation.extractions.length,32);for(const record of adaptation.extractions){const extracted=readFileSync(root+'/'+record.extraction,'utf8').slice(0,-1);assert.equal(extracted,funcs[record.name]);assert.equal(sha(Buffer.from(extracted)),record.exact_ast_text_sha256);assert(driver.includes(extracted));}});
+ await test('observer03_module_exact_accepted_hash',()=>assert.equal(sha(readFileSync(root+'/private-batch-observer.mjs')),'8913015d820022cca873f0a8f819dcea054ef13e0591492b9d665244bdc59e8a'));
+-await test('request_observer_exact_accepted_hash',()=>assert.equal(sha(readFileSync(root+'/request-emission.mjs')),'f7b8a9ab3e4b5202cf0c0fa6c8dbf211b17463533aee2da7b2a3e72c4e6d5ed6'));
++await test('request_observer_exact_accepted_hash',()=>assert.equal(sha(readFileSync(root+'/request-emission.mjs')),'2441671d6ed6ef14e136a007974e1b87e5d0181adabe48fa164ad7d936cd8b0f'));
+ await test('fixed459_ids_and_prior_matrix_bytes_unchanged',()=>{assert.equal(sha(readFileSync(root+'/matrix.mjs')),sha(readFileSync(old+'/matrix.mjs')));const expected=JSON.parse(readFileSync(root+'/expected-cells.json','utf8'));const cells=Array.isArray(expected)?expected:expected.cells??expected.records;assert.equal(expectedCells().length,459);assert(cells);assert.deepEqual(expectedCells(),cells);});
+ await test('strict_policy_dom_oracles_unchanged',()=>{for(const name of ['probe-policy.mjs','matrix.mjs','x11.mjs','runtime.mjs'])assert.equal(sha(readFileSync(root+'/'+name)),sha(readFileSync(old+'/'+name)));});
+ await test('aggregate_keeps_fullmatrix_screenshot_cap_and_unique_evidence',()=>{const text=readFileSync(root+'/aggregate.mjs','utf8');assert(text.includes('DUPLICATE_ROLE_SCREENSHOT'));assert(text.includes('FULL_MATRIX_SCREENSHOT_BUDGET'));assert(text.includes('totalScreenshotBytes<=4*1024**3&&totalScreenshotCount<=1836'));});
+@@ -23,6 +23,6 @@
+ await test('context_close_precedes_observer_close_on_success_and_failure',()=>{const tail=readFileSync(root+'/driver-tail.txt','utf8');assert(tail.includes('try{await context.close();}finally{await privateBatches.close(a);}'));assert(tail.includes('try{await a.context.close();}catch(e){errors.push(e);}try{await privateBatches.close(a);}'));});
+ await test('no_internal_harness_seed_TTL_or_timer_override_added',()=>{assert(!driver.includes('h.tick('));assert(!driver.includes('Date.now='));assert(!driver.includes('performance.now='));assert(!driver.includes('setDefaultTimeout(60000)'));assert(driver.includes("game-rounds').fill('20')"));});
+ await test('native_keyboard_action_before_reset_and_cell_pass',()=>{const activation=browser.indexOf('if(native){report.keyboard_actions.push(await activateSafety(');const reset=browser.indexOf('await resetNative(',activation),pass=browser.indexOf("row.status='PASS'",activation);assert(activation>0&&reset>activation&&pass>reset);assert(browser.includes('if(!native){report.keyboard_actions.push(await activateSafety('));});
+-await test('host_runner_new_directory_and_durable_review_hash_fence',()=>{const run=readFileSync(root+'/run.mjs','utf8');assert(run.includes("resolve('.artifacts/p05-v2-layout-producer-resume02')"));const fence=run.indexOf('DURABLE_INDEPENDENT_REVIEW_HASH_MISMATCH'),allocation=run.indexOf("project='venus-v2-layout-");assert(fence>0&&allocation>fence);const ack=JSON.parse(readFileSync(root+'/ROOT_RUN_ACK.json','utf8'));assert.equal(ack.root_run_ack,false);assert.equal(ack.independent_review_path,null);});
++await test('host_runner_new_directory_and_durable_review_hash_fence',()=>{const run=readFileSync(root+'/run.mjs','utf8');assert(run.includes("resolve('.artifacts/p05-v2-layout-producer-resume03')"));const fence=run.indexOf('DURABLE_INDEPENDENT_REVIEW_HASH_MISMATCH'),allocation=run.indexOf("project='venus-v2-layout-");assert(fence>0&&allocation>fence);const ack=JSON.parse(readFileSync(root+'/ROOT_RUN_ACK.json','utf8'));assert.equal(ack.root_run_ack,false);assert.equal(ack.independent_review_path,null);});
+ await test('cold_import_all_runtime_entrypoints_has_no_side_effect_execution',async()=>{for(const name of ['scene-driver.mjs','browser.mjs','measure.mjs','x11.mjs','aggregate.mjs']){const module=await import(pathToFileURL(resolve(root+'/'+name)));assert(Object.keys(module).length>0,name);}});
+ const result={status:'PASS',scope:'AUTHOR_STATIC_AST_AND_COLD_IMPORT_ONLY_NOT_BROWSER',count:rows.length,rows};writeFileSync(root+'/resume-controls.json',JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:'PASS',count:rows.length}));
+--- resume02/ROOT_RUN_ACK.json
++++ resume03/ROOT_RUN_ACK.json
+@@ -5,6 +5,7 @@
+   "independent_review_index_sha256": null,
+   "independent_review_path": null,
+   "producer_runtime_digest": null,
+-  "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
+-  "image": "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4"
++  "source_identity": "b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4",
++  "image": "sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5",
++  "browser18_actual_PASS_prerequisite": "PENDING_ROOT_WILL_NOT_ACK_BEFORE_PASS"
+ }
+--- resume02/run.mjs
++++ resume03/run.mjs
+@@ -6,7 +6,7 @@
+ import {tmpdir} from 'node:os';
+ import {randomBytes} from 'node:crypto';
+ import {captureProducer,assertBinding,runtimeDigest,assertUnchanged,assertShard,sha} from './runner-policy.mjs';
+-const producer=resolve('.artifacts/p05-v2-layout-producer-resume02'),binding=JSON.parse(readFileSync(join(producer,'binding.json'),'utf8')),ack=JSON.parse(readFileSync(join(producer,'ROOT_RUN_ACK.json'),'utf8'));
++const producer=resolve('.artifacts/p05-v2-layout-producer-resume03'),binding=JSON.parse(readFileSync(join(producer,'binding.json'),'utf8')),ack=JSON.parse(readFileSync(join(producer,'ROOT_RUN_ACK.json'),'utf8'));
+ assertBinding(binding,ack);
+ assert(typeof ack.independent_review_path==='string'&&ack.independent_review_path.startsWith('.docs/implementation/reviews/p05/'),'DURABLE_INDEPENDENT_REVIEW_PATH_REQUIRED');
+ const reviewBytes=readFileSync(ack.independent_review_path);assert.equal(sha(reviewBytes),ack.independent_review_index_sha256,'DURABLE_INDEPENDENT_REVIEW_HASH_MISMATCH');
+--- resume02/runner-policy.mjs
++++ resume03/runner-policy.mjs
+@@ -9,7 +9,7 @@
+  return Object.fromEntries(readdirSync(root).sort().map(name=>{const p=join(root,name),s=lstatSync(p);assert(!s.isSymbolicLink(),'PRODUCER_SYMLINK_FORBIDDEN');assert(s.isFile()||s.isDirectory(),'PRODUCER_FILETYPE_FORBIDDEN');return [name,s.isFile()?{type:'file',sha256:sha(readFileSync(p)),bytes:s.size}:{type:'historical_or_extraction_directory'}];}));
+ }
+ export function assertBinding(binding,ack){
+- assert.equal(binding.schema_version,1);assert(/^[a-f0-9]{64}$/.test(binding.source_identity));assert.equal(binding.included_files,1813);assert(/^sha256:[a-f0-9]{64}$/.test(binding.image));assert(/^[a-f0-9]{64}$/.test(binding.root_build_receipt_sha256));
++ assert.equal(binding.schema_version,1);assert(/^[a-f0-9]{64}$/.test(binding.source_identity));assert.equal(binding.included_files,1819);assert(/^sha256:[a-f0-9]{64}$/.test(binding.image));assert(/^[a-f0-9]{64}$/.test(binding.root_build_receipt_sha256));
+  assert.equal(ack.root_run_ack,true,'ROOT_RUN_ACK_REQUIRED');assert.equal(ack.independent_producer_review,'PASS');assert(/^[a-f0-9]{64}$/.test(ack.independent_review_index_sha256));assert.equal(ack.source_identity,binding.source_identity);assert.equal(ack.image,binding.image);assert(/^[a-f0-9]{64}$/.test(ack.producer_runtime_digest));
+ }
+ export function runtimeDigest(inventory){const runtime=Object.fromEntries(Object.entries(inventory).filter(([name])=>name.endsWith('.mjs')||name==='binding.json'||name==='DESIGN.md'));return sha(Buffer.from(JSON.stringify(runtime)));}
+--- resume02/runner-replay.mjs
++++ resume03/runner-replay.mjs
+@@ -6,7 +6,7 @@
+ import ts from 'typescript';
+ import {captureProducer,assertBinding,runtimeDigest,assertUnchanged,assertShard,sha} from './runner-policy.mjs';
+ import {inertShard} from './inert-report-fixture.mjs';
+-const root='.artifacts/p05-v2-layout-producer-resume02',source=readFileSync(root+'/run.mjs','utf8'),ast=ts.createSourceFile('run.mjs',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);assert.equal(ast.parseDiagnostics.length,0);
++const root='.artifacts/p05-v2-layout-producer-resume03',source=readFileSync(root+'/run.mjs','utf8'),ast=ts.createSourceFile('run.mjs',source,ts.ScriptTarget.Latest,true,ts.ScriptKind.JS);assert.equal(ast.parseDiagnostics.length,0);
+ let text=source;for(const node of [...ast.statements].reverse())if(ts.isImportDeclaration(node))text=text.slice(0,node.getFullStart())+text.slice(node.end);
+ const binding=JSON.parse(readFileSync(root+'/binding.json','utf8')),buildBytes=readFileSync(binding.root_build_receipt_path),results=[];
+ function replay(change={}){
+@@ -26,7 +26,7 @@
+   else if(['ps','volume','network'].includes(argv[0])&&change.leftover===argv[0])stdout='inert-leftover';
+   if(options.stdio?.[1]!==undefined){write(fds.get(options.stdio[1]),stdout+stderr);return {status};}return {status,stdout,stderr};
+  };
+- const inventory=()=>{const entries=Object.fromEntries(Array.from({length:1813},(_,i)=>['file'+i,'0'.repeat(64)]));sourceCaptures++;if(change.sourceChanged&&sourceCaptures>1)entries.file0='1'.repeat(64);return {files:entries,source_identity:binding.source_identity};};
++ const inventory=()=>{const entries=Object.fromEntries(Array.from({length:1819},(_,i)=>['file'+i,'0'.repeat(64)]));sourceCaptures++;if(change.sourceChanged&&sourceCaptures>1)entries.file0='1'.repeat(64);return {files:entries,source_identity:binding.source_identity};};
+  const ctx={assert,spawnSync:command,execFileSync:()=>JSON.stringify(inventory()),readFileSync:(path,encoding)=>encoding?read(path).toString('utf8'):read(path),writeFileSync:write,mkdtempSync:prefix=>prefix+'inert',mkdirSync:()=>{},rmSync:path=>removals.push(path),openSync:path=>{const fd=nextFd++;fds.set(fd,path);return fd;},closeSync:()=>{},copyFileSync:()=>{},resolve,join,dirname,tmpdir:()=>resolve('.artifacts/INERT-TMP'),randomBytes:n=>Buffer.alloc(n,1),sha,assertBinding,runtimeDigest,assertUnchanged,assertShard,captureProducer:()=>{producerCaptures++;const p=structuredClone(producerBefore);if(change.producerAdded&&producerCaptures>1)p['added.mjs']={type:'file',sha256:'f'.repeat(64),bytes:1};if(change.producerChanged&&producerCaptures>1)p['run.mjs'].sha256='e'.repeat(64);return p;},process:{env:{},platform:'win32',exitCode:0},console:{log:()=>{}},Buffer,JSON};
+  let thrown=null;try{vm.runInNewContext(text,ctx,{timeout:10000});}catch(e){thrown=e;}
+  const result=files.get(resolve('.artifacts/p05/'+project+'/runner.json'));
+--- resume02/scene-driver.mjs
++++ resume03/scene-driver.mjs
+@@ -1,4 +1,4 @@
+-/** Separate real V2 scenes. Exact source-bound METHOD13 helpers; no historical entrypoint evaluation. */
++/** Separate real V2 scenes. Exact source-bound METHOD18 helpers; no historical entrypoint evaluation. */
+ import assert from 'node:assert/strict';
+ import {performance} from 'node:perf_hooks';
+ import {URLSearchParams} from 'node:url';
+@@ -8,6 +8,7 @@
+ import {offeredTopics,expectedOfferLabels,coherentRound,uiRoundMatches} from './observations.mjs';
+ import {createPrivateBatchObserver} from './private-batch-observer.mjs';
+ import {exactUiMutation} from './request-emission.mjs';
++import {safeFailedReadiness} from './readiness-diagnostics.mjs';
+ /* global document,window */
+ export function sceneDriver({browser,service,report,save=()=>{},viewport={width:1440,height:900}}){
+ let actors=[],phase='layout-prepare';
+@@ -45,7 +46,7 @@
+    Object.defineProperties(ticket,{expected:{value:exact},control:{value:control}});a.privateReady??=new Map();a.privateReady.set(control,ticket);row.status='READY';row.snapshot={...ticket};return ticket;
+   }
+   throw Error('METHOD12_PREPARATION_DEADLINE');
+- }finally{row.finished_monotonic_ms=performance.now();row.last_snapshot=last;save();}
++ }catch(error){row.failed_readiness=safeFailedReadiness(error.readiness??last,{actor:a,expected:wanted});throw error;}finally{row.finished_monotonic_ms=performance.now();row.last_snapshot=last;save();}
+ }
+ 
+ async function preparePrivateClick(a,control,path=null){
+@@ -57,20 +58,22 @@
+ }
+ 
+ function assertPrivateTicket(a,id,ticket){
+- assert(ticket&&ticket.control===id,'METHOD12_PRIVATE_TICKET_REQUIRED');assert(performance.now()<ticket.deadline_monotonic_ms,'METHOD12_PRIVATE_TICKET_EXPIRED');const current=privateBatches.snapshot(a,{control:id,expectedScope:ticket.expected});assert(current.ready&&current.cycle_id===ticket.cycle_id,'METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK');
++ let current=null,checkedAt=null;
++ try{assert(ticket&&ticket.control===id,'METHOD12_PRIVATE_TICKET_REQUIRED');checkedAt=performance.now();assert(checkedAt<ticket.deadline_monotonic_ms,'METHOD12_PRIVATE_TICKET_EXPIRED');current=privateBatches.snapshot(a,{control:id,expectedScope:ticket.expected});assert(current.ready&&current.cycle_id===ticket.cycle_id,'METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK');}
++ catch(error){const rows=report.private_ticket_failures??=[];if(rows.length>=128)report.private_ticket_failure_overflow=true;else rows.push({control:normalPrivateControls.has(id)?id:'UNLISTED',checked_monotonic_ms:checkedAt,failed_monotonic_ms:performance.now(),prepared_cycle_id:Number.isSafeInteger(ticket?.cycle_id)&&ticket.cycle_id>=0?ticket.cycle_id:null,ticket_deadline_monotonic_ms:Number.isFinite(ticket?.deadline_monotonic_ms)?ticket.deadline_monotonic_ms:null,reason:!ticket||ticket.control!==id?'TICKET_MISSING_OR_WRONG_CONTROL':!Number.isFinite(ticket.deadline_monotonic_ms)||checkedAt>=ticket.deadline_monotonic_ms?'TICKET_EXPIRED_OR_INVALID_DEADLINE':'BATCH_NOT_READY_OR_CHANGED',current:safeFailedReadiness(current,{actor:a,expected:{...ticket?.expected,minRev:ticket?.expected?.rev}})});save();throw error;}
+ }
+ 
+ async function click(a,id,prepared=null){
+  const ticket=normalPrivateControls.has(id)?prepared??await preparePrivateClick(a,id):null;
+  if(ticket)a.privateReady?.delete(id);
+- report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);await expect(l).toBeVisible();await expect(l).toBeEnabled();if(ticket)assertPrivateTicket(a,id,ticket);await l.click(ticket?{timeout:Math.max(1,Math.min(15000,ticket.deadline_monotonic_ms-performance.now()))}:{});
++ report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);if(!ticket){await expect(l).toBeVisible();await expect(l).toBeEnabled();}if(ticket)assertPrivateTicket(a,id,ticket);await l.click(ticket?{timeout:Math.max(1,Math.min(15000,ticket.deadline_monotonic_ms-performance.now()))}:{});
+ }
+ 
+ async function fillPrivate(a,id,value,submit){
+  const deadline=performance.now()+8000,ticket=await normalPrivateReady(a,id,{deadline});await a.page.getByTestId(id).fill(value);assertPrivateTicket(a,id,ticket);await expect(a.page.getByTestId(id)).toHaveValue(value);a.privateIntents??=new Map();a.privateIntents.set(submit,{scope:ticket.expected,field:{control:id,value}});a.privateReady.set(submit,Object.defineProperties({...ticket},{expected:{value:ticket.expected},control:{value:submit}}));
+ }
+ 
+-function recordMutation(event){const rows=report.mutation_dispatches??=[];assert(rows.length<256,'METHOD12_MUTATION_RECORD_CAP');rows.push({locale:event.locale??null,...event});}
++function recordMutation(event){const rows=report.mutation_dispatches??=[];assert(rows.length<2048,'METHOD12_MUTATION_RECORD_CAP');rows.push({locale:event.locale??null,...event});}
+ 
+ async function approval(a){await expect(a.page.getByTestId('create-room')).toBeDisabled();await a.page.getByTestId('accept-offer').check();await expect(a.page.getByTestId('create-room')).toBeDisabled();await a.page.getByTestId('adult18').check();}
+ 
+@@ -95,6 +98,31 @@
+ async function advance(snapshot){const host=actors[0],f=snapshot.fixture;await ownUiRound(host,f,'game-next');const receipt=await mutationClick(host,'game-next',`/api/v2/rooms/${host.room}/game/${f.session}/round/advance`);return coherentGame({session:f.session,index:f.plan.round_index+1,minRev:receipt.game_rev});}
+ 
+ async function seekPrivate(){let snapshot=await coherentGame(),session=snapshot.fixture.session;const seen=new Set();for(let n=0;n<20;n++){const f=snapshot.fixture,g=snapshot.view;assert.equal(f.session,session);assert.equal(f.plan.round_index,n+1,'Read settling must never skip planner rounds');assert(!seen.has(f.plan.round_id));seen.add(f.plan.round_id);if(f.plan.interaction==='pair_private'&&['pending','active'].includes(g.current_round.state))return f;if(!['completed','skipped','stopped'].includes(g.current_round.state)){const a=actors.find(a=>a.id===f.plan.primary_member_id);assert(a);await ownUiRound(a,f,'game-skip');const receipt=await mutationClick(a,'game-skip',`/api/v2/rooms/${a.room}/game/${f.session}/round/${f.plan.round_id}/response`,'skip');snapshot=await coherentGame({session,round:f.plan.round_id,index:f.plan.round_index,minRev:receipt.game_rev});assert(['completed','skipped','stopped'].includes(snapshot.view.current_round.state));}if(n===19)break;snapshot=await advance(snapshot);}throw Error('No real private encounter within declared20-round bound');}
++
++async function startPrivate(mode){
++ const rows=report.private_setup_sessions??=[],room=actors[0].room,sessionIds=new Set(),setup=rows.filter(r=>r.attempt===1).length+1;
++ assert(['questions','truth_or_dare','yes_but'].includes(mode),'METHOD18_PRIVATE_SETUP_MODE');
++ const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
++ assert(uuid.test(room)&&typeof phase==='string'&&phase.length<=80,'METHOD18_PRIVATE_SETUP_SCOPE');
++ for(let attempt=1;attempt<=3;attempt++){
++  assert(rows.length<24,'METHOD18_PRIVATE_SETUP_RECORD_CAP');
++  const row={setup,phase,mode,attempt,max_sessions:3,round_bound:20,room_id:room,session_id:null,outcome:'RUNNING'};rows.push(row);save();
++  let seeking=false;
++  try{
++   const started=await start(mode);assert.equal(actors[0].room,room,'METHOD18_PRIVATE_SETUP_ROOM_CHANGED');
++   assert(uuid.test(started.session)&&!sessionIds.has(started.session),'METHOD18_PRIVATE_SETUP_SESSION');sessionIds.add(started.session);row.session_id=started.session;save();
++   seeking=true;const found=await seekPrivate();seeking=false;
++   assert.equal(found.session,started.session,'METHOD18_PRIVATE_SETUP_SELECTED_SESSION');assert.equal(actors[0].room,room,'METHOD18_PRIVATE_SETUP_ROOM_CHANGED');
++   row.outcome='PRIVATE_SELECTED';row.selected_round_index=found.plan.round_index;row.selected_actual_session=found.session;
++   save();console.log(JSON.stringify({private_setup:row}));return found;
++  }catch(error){
++   const noDraw=seeking&&error instanceof Error&&error.constructor===Error&&error.name==='Error'&&error.message==='No real private encounter within declared20-round bound';
++   row.outcome=noDraw?'NO_PRIVATE_DRAW':'FAIL';if(noDraw)row.observed_rounds=20;save();console.log(JSON.stringify({private_setup:row}));
++   if(!noDraw)throw error;
++   if(attempt===3)throw Error('METHOD18_PRIVATE_SETUP_NO_ENCOUNTER_WITHIN_3_SESSIONS',{cause:error});
++  }
++ }
++}
+ 
+ function participants(f){return actors.filter(a=>f.plan.actors.includes(a.id));}
+ 
+@@ -148,9 +176,9 @@
+ }
+ 
+ async function acceptActionsUi(f){
+- const pair=participants(f);assert.equal(pair.length,2);const started=performance.now(),deadline=started+8000;
++ const pair=participants(f);assert.equal(pair.length,2);const started=performance.now(),deadline=started+12000;
+  let minRev=Math.max(f.game_rev,...pair.map(a=>a.lastGameView?.game_rev??-1));assert(Number.isSafeInteger(minRev)&&minRev>=0);
+- const phases=report.action_preparation_phases??=[];assert(phases.length<32,'METHOD13_ACTION_PHASE_CAP');const phase={started_monotonic_ms:started,deadline_monotonic_ms:deadline,budget_ms:8000,status:'FAILED',actors:[]};phases.push(phase);
++ const phases=report.action_preparation_phases??=[];assert(phases.length<32,'METHOD13_ACTION_PHASE_CAP');const phase={started_monotonic_ms:started,deadline_monotonic_ms:deadline,budget_ms:12000,status:'FAILED',actors:[]};phases.push(phase);
+  try{
+   for(const a of pair){
+    assert(performance.now()<deadline,'METHOD13_ACTION_PHASE_DEADLINE');
+@@ -181,8 +209,8 @@
+  const inviteUrl=await create(actors[0]);for(let i=1;i<actors.length;i++)await joinRoom(actors[i],inviteUrl,i);
+  for(const a of actors){const p=await read(a,base(a)+'/me/private-protocol');assert.equal(p.private_protocol,2);}
+  if(scene==='setup')return {scene,actors,roles:[{role:'host',actor:actors[0]},{role:'guest',actor:actors[1]}],fixture:null};
+- for(const a of actors)await configure(a);const mode=scene==='truth_dare_choice'?'truth_or_dare':scene==='yes_but_condition'?'yes_but':'questions';await start(mode);
+- const f=scene==='public_questions'?await seekPublic():await seekPrivate();
++ for(const a of actors)await configure(a);const mode=scene==='truth_dare_choice'?'truth_or_dare':scene==='yes_but_condition'?'yes_but':'questions';
++ let f;if(scene==='public_questions'){await start(mode);f=await seekPublic();}else f=await startPrivate(mode);
+  const primary=actors.find(a=>a.id===f.plan.primary_member_id);assert(primary);
+  if(scene==='public_questions'){if(f.plan.interaction==='pair_public')await invite(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);await expect(primary.page.getByTestId('game-prompt')).toBeVisible();return {scene,actors,roles:[{role:'primary',actor:primary},{role:'other',actor:actors.find(a=>a!==primary)}],fixture:f};}
+  const pair=await invite(f,{side:scene!=='truth_dare_choice'}),secondary=pair.find(a=>a!==primary),observer=actors.find(a=>!pair.includes(a));assert(secondary&&observer);

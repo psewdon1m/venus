@@ -1,0 +1,80 @@
+from pathlib import Path
+import json,hashlib,datetime,shutil
+R=Path('C:/.projects/venus');O=Path(__file__).resolve().parent;raw=R/'.artifacts/p05-oci-owned-cleanup-execution05'
+read=lambda p:json.loads(p.read_text(encoding='utf-8-sig'));sha=lambda b:hashlib.sha256(b).hexdigest();pin=lambda p:{'bytes':p.stat().st_size,'sha256':sha(p.read_bytes())};canon=lambda v:json.dumps(v,sort_keys=True,separators=(',',':')).encode()
+terminal=read(raw/'TERMINAL.json');commands=read(raw/'COMMANDS.json');authority=read(raw/'authority.json');external=R/'.artifacts/p05-oci-owned-cleanup-authority05.json';assert read(external)==authority and pin(external)['sha256']=='b9bea5aa2384b57ba977fae79c3d94d34853305afd2d25c8e41153c431a655e3'
+planpath=R/'.artifacts/p05-oci-owned-cleanup-plan05.json';plan=read(planpath);assert pin(planpath)['sha256']==authority['plan_sha256']==terminal['plan_sha256']=='9c2680bfff06f5af9f73fbd4d008be312cbffe6a696be3907d848f0c90c62056'
+assert authority['status']=='ROOT_EXACT13_CLEANUP_AUTHORIZED'and authority['exclusive_no_native_window']is True
+review=R/authority['independent_review_path'];assert pin(review)['sha256']==authority['independent_review_sha256']=='c39397dc05dc9f7d0ee676fc2019b590276343e1495b8e5170c69f2f05c30354'
+for n,p in read(review)['files'].items():assert pin(review.parent/n)==p,n
+executor=R/'.artifacts/p05-oci-owned-cleanup-execute05.py';assert pin(executor)['sha256']==authority['executor_sha256']=='687b22172e5d439ff906189722e4a60d900d093022866309e656c38b0334e5f1'
+assert sorted((x['project'],x['owner'])for x in plan['projects'])==[tuple(x)for x in authority['project_owner_pairs']]
+assert terminal['status']=='PASS_EXACT13_OWNED_EMPTY'and terminal['error']is None and terminal['projects']==13and terminal['planned_objects']==91and terminal['commands']==455and terminal['mutations_attempted']==104and terminal['elapsed_ms']<600000
+assert terminal['private_payload_read']is False and terminal['global_prune_or_force']is False and terminal['history_preserved']is True
+assert len(commands)==455and [c['n']for c in commands]==list(range(1,456))
+transcript=[]
+for c in commands:
+ assert c['exit_code']==0
+ stdout=(raw/f"{c['n']:04d}.stdout.txt").read_bytes();stderr=(raw/f"{c['n']:04d}.stderr.txt").read_bytes()
+ assert sha(stdout)==c['stdout_sha256']and sha(stderr)==c['stderr_sha256']and stderr==b''
+ elapsed=(datetime.datetime.fromisoformat(c['finished_utc'])-datetime.datetime.fromisoformat(c['started_utc'])).total_seconds();assert 0<=elapsed<=31
+ assert c['argv'][0]=='docker'and not any(v in ['--force','-f','prune','exec','start','run','build','rmi','system']for v in c['argv'][1:])
+ transcript.append({**c,'stdout_bytes':len(stdout),'stderr_bytes':len(stderr),'stdout':stdout.decode(),'stderr':''})
+cursor=0;counts={'initial_enumerations':0,'initial_inspections':0,'stop':0,'container_delete':0,'network_delete':0,'volume_delete':0,'final_empty_enumerations':0};ids_deleted=[]
+def take(argv,mutation=False):
+ global cursor
+ row=transcript[cursor];cursor+=1;assert row['argv']==argv and row['mutation']is mutation,(row['n'],argv);return row
+def expected(row):return {k:{x.get('id',x.get('name'))for x in row['current_observation'][k]}for k in ['containers','networks','volumes']}
+def enum(row,label,final=False):
+ for kind,args in [('containers',['ps','-aq','--no-trunc']),('networks',['network','ls','-q','--no-trunc']),('volumes',['volume','ls','-q'])]:
+  value=row['project']if label.endswith('project')else row['owner'];c=take(['docker',*args,'--filter','label='+label+'='+value]);found=set(c['stdout'].split());assert found==(set()if final else expected(row)[kind])
+  counts['final_empty_enumerations'if final else'initial_enumerations']+=1
+def inspect(row,p):
+ c=take(p['revalidate_command']);obj=json.loads(c['stdout']);assert obj['labels']['com.venus.oci.owner']==row['owner']and obj['labels']['com.venus.oci.project']==row['project']
+ if p['kind']=='containers':obj['mounts'].sort(key=lambda m:(m['destination'],m['name']or''));obj['networks'].sort(key=lambda n:n['name'])
+ if p['kind']=='networks':obj['attached_container_ids']=sorted(obj['attached_container_ids'].split())
+ assert sha(canon({k:obj[k]for k in p['revalidate_exact_fields']}))==p['immutable_identity_sha256_required'];return obj
+for row in plan['projects']:
+ for label in ['com.venus.oci.project','com.venus.oci.owner']:enum(row,label)
+ for p in row['proposed_commands_HOLD_NOT_EXECUTED']:
+  obj=inspect(row,p);counts['initial_inspections']+=1;assert p['status']=='HOLD_NOT_EXECUTED'
+  if p['kind']=='networks':assert set(obj['attached_container_ids'])<=expected(row)['containers']
+assert cursor==169 and not any(c['mutation']for c in commands[:169])
+for row in plan['projects']:
+ for p in row['proposed_commands_HOLD_NOT_EXECUTED']:
+  if p['kind']!='containers':continue
+  obj=inspect(row,p);identifier=p['identifier']
+  if obj['running']:
+   c=take(['docker','stop','--time','10',identifier],True);assert c['stdout'].strip()==identifier;counts['stop']+=1;obj=inspect(row,p)
+  assert not obj['running']and obj['state']in ['exited','created'];c=take(['docker','rm',identifier],True);assert c['stdout'].strip()==identifier;counts['container_delete']+=1;ids_deleted.append(identifier)
+for row in plan['projects']:
+ for p in row['proposed_commands_HOLD_NOT_EXECUTED']:
+  if p['kind']!='networks':continue
+  obj=inspect(row,p);assert obj['attached_container_ids']==[];c=take(['docker','network','rm',p['identifier']],True);assert c['stdout'].strip()==p['identifier'];counts['network_delete']+=1;ids_deleted.append(p['identifier'])
+for row in plan['projects']:
+ for p in row['proposed_commands_HOLD_NOT_EXECUTED']:
+  if p['kind']!='volumes':continue
+  inspect(row,p);c=take(['docker','volume','rm',p['identifier']],True);assert c['stdout'].strip()==p['identifier'];counts['volume_delete']+=1;ids_deleted.append(p['identifier'])
+for row in plan['projects']:
+ for label in ['com.venus.oci.project','com.venus.oci.owner']:enum(row,label,True)
+assert cursor==455and counts=={'initial_enumerations':78,'initial_inspections':91,'stop':13,'container_delete':26,'network_delete':13,'volume_delete':52,'final_empty_enumerations':78}
+assert len(ids_deleted)==len(set(ids_deleted))==91and sum(c['mutation']for c in commands)==104
+assert commands[next(i for i,c in enumerate(commands)if c['mutation'])]['n']==171
+# Rehash accepted preserved safe-host evidence once; no volume/database contents read.
+flat=R/'.docs/implementation/reviews/p05/oci-owned-cleanup-plan-independent-round04/INPUT_PINS.json';assert pin(flat)['sha256']=='576b7bcff7751c1685ec40131be1784f2ca61535b01dcc6c9d48789c89a20deb';preserved=0
+for n,p in read(flat).items():assert pin(R/n)==p,n;preserved+=1
+assert preserved==660;new_count=0
+for folder in ['oci25-a17-failure-diagnosis-independent-round01','oci26-a17-failure-diagnosis-independent-round01','oci27-a17-actual-independent-round01']:
+ index=R/'.docs/implementation/reviews/p05'/folder/'INDEX.json'
+ for n,p in read(index)['files'].items():assert pin(index.parent/n)==p,n;new_count+=1
+assert new_count==72
+success=plan['successful27_prerequisite'];assert success['project']not in {x['project']for x in plan['projects']}
+for n,p in success['basis'].items():assert pin(R/n)==p,n
+for row in plan['projects']:
+ for n,p in row['basis'].items():assert pin(R/n)==p,n
+dest=O/'raw';dest.mkdir(exist_ok=True)
+for n in ['TERMINAL.json','COMMANDS.json','authority.json']:shutil.copyfile(raw/n,dest/n)
+(O/'SAFE-TRANSCRIPT.json').write_text(json.dumps({'scope':'EXACT_PLANNED_METADATA_AND_NONFORCE_ACTION_OUTPUTS_NO_ENV_OR_VOLUME_DATA','commands':transcript},indent=2)+'\n')
+(O/'INPUT-PINS.json').write_text(json.dumps({'plan':pin(planpath),'authority':pin(external),'independent_plan':pin(review),'executor':pin(executor),'terminal':pin(raw/'TERMINAL.json'),'commands':pin(raw/'COMMANDS.json'),'inherited_preservation_map':pin(flat),'successful27_prerequisite':success},indent=2)+'\n')
+d={'status':'PASS_OWNED_CLEANUP_ONLY','plan_sha256':authority['plan_sha256'],'authority_sha256':pin(external)['sha256'],'executor_sha256':pin(executor)['sha256'],'independent_plan_sha256':pin(review)['sha256'],'historical_projects':13,'objects_deleted':91,'saved_commands':455,'all_exit_codes':0,'mutation_attempts':104,'counts':counts,'first_mutation_command':171,'initial_complete_preflight_commands':169,'all_peraction_identities_verified':True,'elapsed_ms':terminal['elapsed_ms'],'preserved_host_leaf_pins':660,'preserved_new25_26_27_children':72,'successful27_is_prerequisite_not_target':True,'private_or_DB_volume_backup_claim':False,'current_A18_OCI_claim':False,'current_Docker_queries':0,'review_mutations':0}
+(O/'AUDIT.json').write_text(json.dumps(d,indent=2)+'\n');print(json.dumps(d))

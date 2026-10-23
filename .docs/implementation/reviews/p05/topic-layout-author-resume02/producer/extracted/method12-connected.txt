@@ -1,0 +1,1 @@
+async function connected(){await expect.poll(async()=>{const room=await read(actors[0],base(actors[0]));return actors.every(a=>room.members.some(m=>m.id===a.id&&m.presence==='online'));},{timeout:20000}).toBe(true);}

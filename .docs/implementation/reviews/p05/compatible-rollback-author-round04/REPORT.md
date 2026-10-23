@@ -1,0 +1,9 @@
+# Operational OCI binding04 author handoff
+
+**AUTHOR_READY_FOR_INDEPENDENT_BINDING_REVIEW; NOT_RUN.** Producer `.artifacts/p05-compatible-rollback-producer04/INDEX.json` SHA `10659a29e2d60f90dfe952d991a29435f20e51f059dd6b4227a18e1b989df666` (140 files); exact mirror in producer/. Current source732ed8407556c3e39e4060fcb0c4985a03f7ad865a9cf642218b39dde182ad80/1826, Asha256:e076901479f7b7af94d54ada3698cf69a60d39caf57cf78f311945638f589898; true priorB=b244/0b4 unchanged.
+
+Root actual272pin receipt e6a366ba covers203source/64compiled/7SQL/UI3 and bothPG anchors, plus observed buildmetadataabsence/noappimports/autoremoval/sourcebeforeafter. All76runtimeanchor hashes equal historical03 A exactly; only the temporal test source/oracle and source-record changed. Historical03/02 and their proofs remain immutable. No Docker command or functional RUN was performed by this04 author revision.
+
+All23 independently accepted02 method MJS files remain raw-identical: liveD/liveE14 assertions,476MiB/900s resourceprofile and export-fault firsterror/native-retention correction unchanged. Only the binding-control script compares immediate03 and correctly expects compiledA equality; no runtime/oracle/framework change. Rebound source/image/receipt/maps/fullinventory/PROFILE/unauthorizedACKtemplate/docs. Nine binding/model checks PASS, syntax/lint0, fullcurrent732/1826 source exact; cold external unauthorizedACK rejected exit1 before allocation. Historical173 controls are not rerun or renamed current actual evidence.
+
+Root current appcarry/test-oracle review and independent operational binding acceptance must precede a new exact external rootACK. C45413PASS/TG14testoracleFAIL remains historical; this packet claims no current functional suite result. HumanHOLD, production and fullP05 acceptance unchanged. Writes COMPLETE; do not edit frozen04.

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "OWS-REVIEW-GAP-05",
+    "producer_sha256": "73590fb8bb0b55e0cf89b2e60383248749ea2f9328c70e45e9dde469f8683980",
+    "control_report_status": "PASS",
+    "injected_fault_window_private_frames": 1,
+    "actual_claim": {
+      "expected_domain_error": "CATALOG_LEDGER_UNAVAILABLE",
+      "http_status": 503,
+      "no_new_private_frames": true,
+      "ordinary_room_ws_ping_pong_alive": true,
+      "heartbeat_actual_pg_online": true
+    },
+    "interpretation": "Confirmed producer false-negative: extracted unchanged control ignores private frame delivered after fault before later starts snapshot. API/WS are explicit doubles here; this demonstrates assertion gap, not product leak."
+  },
+  {
+    "id": "OWS-REVIEW-GAP-06",
+    "producer_sha256": "73590fb8bb0b55e0cf89b2e60383248749ea2f9328c70e45e9dde469f8683980",
+    "control_report_status": "PASS",
+    "injected_fault_window_private_frames": 1,
+    "actual_claim": {
+      "retained_active_game": true,
+      "feature_disabled": true,
+      "http_status": 503,
+      "no_new_private_frames": true,
+      "ordinary_room_ws_alive": true
+    },
+    "interpretation": "Confirmed producer false-negative: extracted unchanged control ignores private frame delivered after fault before later starts snapshot. API/WS are explicit doubles here; this demonstrates assertion gap, not product leak."
+  }
+]

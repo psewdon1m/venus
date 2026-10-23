@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {loadFixture} from '../p05-topic-measurements/fixture.mjs';
+import {eligibilityRecord} from './session-adapter.mjs';
+import {exclusionSupport} from './support-precheck.mjs';
+const f=loadFixture('.artifacts/p05-topic-measurements/fixture-checkpoint02'),rows=[];
+for(const [capability,context,regime,expected]of [['DEFAULT_OFF','online','T0_ALL','CAPABILITY_UNAVAILABLE'],['CHAT_ON','online','T0_ALL','SUPPORTED_COMPLETE'],['CHAT_ON','in_person','T1_EMPTY','TOPIC_SAFE_EMPTY'],['DEFAULT_OFF','in_person','T4_PRIVATE_PRIOR','SUPPORTED_COMPLETE']]){
+ const d={section:'AUTHOR_FINITE_GUARD_COMPONENT',size:2,mode:'questions',context,capability,regime,stage:3,rounds:100,comfort:4,class_profile:'F',seed_literal:'venus:P05-FINITE-ELIGIBILITY-COMPONENT-NO-SAMPLED-CORPUS'};
+ const r=eligibilityRecord(f,d);assert.equal(r.private_status,expected);assert(r.parity_checks>0);rows.push({name:[capability,context,regime].join('/'),status:'PASS',private_status:r.private_status,private_candidates:r.counts.pair_private,hard_parity_checks:r.parity_checks});
+}
+for(const capability of ['DEFAULT_OFF','CHAT_ON']){
+ const r=exclusionSupport(f,{size:2,mode:'questions',context:'online',capability,regime:'T4_PRIVATE_PRIOR',seed_literal:'venus:P05-FINITE-EXCLUSION-SUPPORT-COMPONENT-NO-SAMPLED-CORPUS'});rows.push({name:'exclusion common support '+capability,status:'PASS',receipt:r});
+}
+console.log(JSON.stringify({status:'PASS_AUTHOR_FINITE_ELIGIBILITY_COMPONENT_ONLY',controls:rows,count:rows.length,selector_invocations:0,actual_mutator_sessions:0,Docker_calls:0,statistics_RUN:false},null,2));

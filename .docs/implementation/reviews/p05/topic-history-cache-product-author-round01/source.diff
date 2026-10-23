@@ -1,0 +1,39 @@
+--- A10/topic-games.ts
++++ historymemo/topic-games.ts
+@@ -8,6 +8,7 @@
+ import {chargeTopicChat,newTopicChatQuota,topicChatLimits} from './topic-chat-policy.js';
+ import {topicAad,storeTopicObject,loadTopicObject,checkedPins,topicGameView,candidateFromBinding,topicObjectLimits,type TopicGameRow,type TopicRoundRow,type TopicRoundData,type TopicLocale,type StoredConversation,type TopicCandidateBinding} from './topic-game-model.js';
+ import {TopicSnapshotCache} from './topic-snapshot-cache.js';
++import {TopicHistoryCache} from './topic-history-cache.js';
+ type Auth=Awaited<ReturnType<Rooms['access']>>;
+ export interface PlannerTopicSafetyProvider {
+  read(c:pg.PoolClient,roomId:string,exactMemberIds:readonly string[]):Promise<TopicSafetyState>;
+@@ -36,7 +37,9 @@
+ export class TopicGames implements RoomGameHooks {
+  readonly bootId=randomUUID();
+  private readonly snapshots=new TopicSnapshotCache<TopicSnapshot>();
+- clearSnapshotCache(){this.snapshots.clear();}
++ private readonly histories=new TopicHistoryCache<TopicPlannerHistory>();
++ // Existing boot/purge/service-close hooks clear both validation memos.
++ clearSnapshotCache(){this.snapshots.clear();this.histories.clear();}
+  constructor(readonly rooms:Rooms,readonly options:TopicGamesOptions){requireThat(typeof options.enabled==='boolean'&&(options.privateTextChat===undefined||typeof options.privateTextChat==='boolean')&&options.safety&&options.source,'TOPIC_GAME_CONFIG_INVALID',503);}
+  private privateTransportAvailable(snapshot:TopicSnapshot,data:Pick<TopicRoundData,'plan'>){return data.plan.interaction!=='pair_private'||this.options.privateTextChat===true&&['online','in_person'].includes(snapshot.baseline.context)&&snapshot.baseline.capabilities.includes('private_text_chat');}
+  /** Minimal authenticated snapshot read for revocation while source/allow stores
+@@ -58,7 +61,7 @@
+  private async safety(c:pg.PoolClient,s:TopicSnapshot,map:FrozenTopicMap){const ids=s.baseline.players.map(p=>p.id),state=await this.options.safety.read(c,s.baseline.room_id,ids);requireThat(state.room_id===s.baseline.room_id&&Number.isSafeInteger(state.revision)&&state.revision>=1&&state.members.length===ids.length&&new Set(state.members.map(m=>m.member_id)).size===ids.length&&state.members.every(m=>ids.includes(m.member_id)&&Number.isSafeInteger(m.revision)&&m.revision>=1&&[...m.allow_topic_ids,...m.excluded_topic_ids].every(t=>map.topics.some(v=>v.topic_id===t))&&!m.allow_topic_ids.some(t=>m.excluded_topic_ids.includes(t))),'TOPIC_SAFETY_INVALID',503);this.options.safety.assertCurrent(state.room_id,state);return state;}
+  private async snapshot(c:pg.PoolClient,g:TopicGameRow,pack:FrozenPack,map:FrozenTopicMap,membership=true){requireThat(g.snapshot_cipher,'TOPIC_SNAPSHOT_UNAVAILABLE',503);const s=this.snapshots.read({room:g.room_id,session:g.id,cipher:canonical(g.snapshot_cipher),pack,map},()=>this.keys.decrypt<TopicSnapshot>(g.snapshot_cipher!,topicAad.snapshot(g.room_id,g.id)),raw=>immutableTopicSnapshot(raw,pack,map));const ids=(await c.query<{member_id:string}>('SELECT member_id FROM game_participants WHERE room_id=$1 AND session_id=$2 ORDER BY member_id',[g.room_id,g.id])).rows.map(v=>v.member_id);requireThat(!membership||canonical(ids)===canonical(s.baseline.players.map(p=>p.id)),'SNAPSHOT_MEMBERSHIP_CHANGED',503);return s;}
+  private scope(g:TopicGameRow,id:string,kind:'history'|'conversation'|'chat'|'projection'){return {room:g.room_id,session:g.id,id,kind};}
+- private async history(c:pg.PoolClient,g:TopicGameRow,s:TopicSnapshot,p:FrozenPack,m:FrozenTopicMap){const h=await loadTopicObject<TopicPlannerHistory>(c,this.keys,this.scope(g,g.id,'history'));requireThat(h,'TOPIC_HISTORY_UNAVAILABLE',503);return immutableTopicHistory(h,s,p,m);}
++ private async history(c:pg.PoolClient,g:TopicGameRow,s:TopicSnapshot,p:FrozenPack,m:FrozenTopicMap){try{const h=await loadTopicObject<TopicPlannerHistory>(c,this.keys,this.scope(g,g.id,'history'));requireThat(h,'TOPIC_HISTORY_UNAVAILABLE',503);return this.histories.read({room:g.room_id,session:g.id,snapshot:s,pack:p,map:m},h,raw=>immutableTopicHistory(raw,s,p,m));}catch(error){this.histories.clear();throw error;}}
+  private async saveHistory(c:pg.PoolClient,l:Pick<Loaded,'game'|'history'>){await storeTopicObject(c,this.keys,this.scope(l.game,l.game.id,'history'),l.history);}
+  private async loaded(c:pg.PoolClient,room:string,id?:string):Promise<Loaded>{const game=await this.required(c,room,id),{pack,map}=await this.source(c,game),snapshot=await this.snapshot(c,game,pack,map),history=await this.history(c,game,snapshot,pack,map),round=await this.current(c,game);requireThat(round,'ROUND_UNAVAILABLE',503);const canonicalRound=history.rounds.at(-1);requireThat(canonicalRound&&canonical(canonicalRound)===canonical(round.data.plan),'TOPIC_HISTORY_ROUND_MISMATCH',503);const safety=await this.safety(c,snapshot,map),presence=await this.selectedFence(c,game),permissionDeadline=['pending','active'].includes(round.data.state)?Math.min(round.data.invitation?.active_until??round.data.invitation?.deadline??Infinity,round.data.action?.active_until??round.data.action?.deadline??Infinity):Infinity,l={game,...round,snapshot,history,pack,map,safety};Object.defineProperty(game,gameDeliveryFence,{configurable:true,value:()=>{this.options.source.assertCurrent(map.pins);this.options.safety.assertCurrent(game.room_id,l.safety);presence();requireThat(!['pending','active'].includes(round.data.state)||this.privateTransportAvailable(snapshot,round.data),'PRIVATE_CHAT_UNAVAILABLE',404);requireThat(this.now>=round.data.clock_floor&&this.now<permissionDeadline,'CONSENT_EXPIRED',409);}});return l;}
+  private async bump(c:pg.PoolClient,g:TopicGameRow,activity=true){const row=(await c.query<TopicGameRow>('UPDATE game_sessions SET state=$2,pause_reason=$3,rev=rev+1,current_round=$4,updated_at=$5 WHERE room_id=$6 AND id=$1 RETURNING *',[g.id,g.state,g.pause_reason,g.current_round,new Date(this.now),g.room_id])).rows[0];requireThat(row,'GAME_NOT_FOUND',404);Object.assign(g,row);await this.rooms.changed(c,g.room_id,activity);}
+@@ -290,7 +293,7 @@
+  async memberStateChanged(c:pg.PoolClient,room:string){const g=await this.row(c,room);if(!g||g.state!=='active'||await this.present(c,g))return;g.state='paused';g.pause_reason='transport';await this.clearPrivate(c,g);const r=await this.current(c,g);if(r&&r.data.plan.interaction==='pair_private'){this.close(r.data,'stopped');await this.saveRound(c,g,r.row,r.data,false);}else await this.bump(c,g,false);}
+  async removing(c:pg.PoolClient,room:string,member:string){const g=await this.row(c,room);if(!g||!['waiting','active','paused'].includes(g.state))return;const selected=(await c.query('SELECT 1 FROM game_participants WHERE room_id=$1 AND session_id=$2 AND member_id=$3',[room,g.id,member])).rowCount;if(selected){g.state='aborted';g.pause_reason=null;await this.clearPrivate(c,g);await this.bump(c,g,false);}}
+  async setupCleared(c:pg.PoolClient,room:string,member:string){await this.removing(c,room,member);}
+- async purge(c:pg.PoolClient,room:string){this.snapshots.forgetRoom(room);await c.query('DELETE FROM topic_game_requests WHERE room_id=$1',[room]);await c.query('DELETE FROM game_sessions WHERE room_id=$1',[room]);this.dispatchFloors.delete(room);}
++ async purge(c:pg.PoolClient,room:string){this.snapshots.forgetRoom(room);this.histories.forgetRoom(room);await c.query('DELETE FROM topic_game_requests WHERE room_id=$1',[room]);await c.query('DELETE FROM game_sessions WHERE room_id=$1',[room]);this.dispatchFloors.delete(room);}
+  /** Required startup barrier, before listen/admission. No source/allow ledger is
+   * needed to revoke. Keep real immutable snapshots/history/exclusions; discard
+   * private epochs, text/advice/chat/prepared refs and all pair acknowledgements. */

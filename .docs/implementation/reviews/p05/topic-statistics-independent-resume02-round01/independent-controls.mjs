@@ -1,0 +1,42 @@
+import assert from 'node:assert/strict';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import * as zlib from 'node:zlib';
+import {createHash} from 'node:crypto';
+import {tmpdir} from 'node:os';
+import vm from 'node:vm';
+import {pathToFileURL} from 'node:url';
+const folder=path.resolve('.artifacts/p05-topic-statistics-resume02'),out=path.resolve('.docs/implementation/reviews/p05/topic-statistics-independent-resume02-round01');
+const {durableSink}=await import(pathToFileURL(path.join(folder,'durable-sink.mjs')));
+const {checkSample}=await import(pathToFileURL(path.join(folder,'supervisor32.mjs')));
+const {limits}=await import(pathToFileURL(path.join(folder,'resource32-policy.mjs')));
+const {authorize}=await import(pathToFileURL(path.join(folder,'section-runner.mjs')));
+const {pairNormalization}=await import(pathToFileURL(path.join(folder,'pair-normalization.mjs')));
+const {evaluateCell,evaluatePooled}=await import(pathToFileURL(path.join(folder,'inference.mjs')));
+const {featureHash}=await import(pathToFileURL(path.join(folder,'protocol.mjs')));
+const {dictionary}=await import(pathToFileURL(path.resolve('.artifacts/p05-topic-measurements-method06/public-transcript.mjs')));
+const root=fs.mkdtempSync(path.join(tmpdir(),'venus-stats-review-')),owner='a'.repeat(32),controls=[],findings=[];
+const check=async(name,fn)=>{await fn();controls.push({name,status:'PASS'});};
+try{
+ await check('root authorization absent refuses before section loading',()=>assert.throws(()=>authorize(null,{})));
+ await check('default sink fsync append, full exact replay and prefix refusal',async()=>{const s=durableSink(path.join(root,'normal'),{guard:()=>{},owner});assert.equal(s.append('features',{v:1},{cell:'x'}).durable,true);const rows=[];for await(const r of s.replay('features',{cell:'x'}))rows.push(r);assert.deepEqual(rows,[{v:1}]);assert.equal(s.abort().status,'NOT_ACCEPTED_PREFIX_RETAINED');assert.throws(()=>s.append('features',{v:2}));});
+ await check('exact sink permits new durable receipt after injected fsync fault: counterexample',()=>{
+  const source=fs.readFileSync(path.join(folder,'durable-sink.mjs'),'utf8'),code=source.replace(/^import .*;\r?\n/gm,'').replace(/^export /gm,'');let injected=true;
+  const fixture=vm.runInNewContext(code+'\ndurableSink;',vm.createContext({...fs,...path,...zlib,assert,createHash,Buffer,fsyncSync:fd=>{if(injected){injected=false;throw Error('INJECTED_FSYNC_EIO');}return fs.fsyncSync(fd);}}));
+  const s=fixture(path.join(root,'fault'),{guard:()=>{},owner});assert.throws(()=>s.append('features',{first:true}),/INJECTED_FSYNC_EIO/);
+  const receipt=s.append('features',{second:true});assert.equal(receipt.durable,true);assert.equal(receipt.sequence,1);assert.throws(()=>s.seal());s.abort();
+  findings.push({id:'STATS-R02-R01-001',priority:2,confirmed:true,first_append:'FSYNC_EIO_THROWN',second_append_receipt:{durable:receipt.durable,sequence:receipt.sequence},seal_afterwards:'REJECTED_BYTE_LENGTH_MISMATCH',qualification:'Not a full-stage false PASS; component emits a positive durable receipt after a poisoned stream'});
+ });
+ const supervisor=fs.readFileSync(path.join(folder,'supervisor32.mjs'),'utf8'),start=supervisor.indexOf('async function killWorker()'),end=supervisor.indexOf('\n try{',start),body=supervisor.slice(start,end);assert(start>0&&end>start);
+ await check('exact Windows worker kill swallows taskkill failure without confirming termination: counterexample',async()=>{const worker={pid:12345,exitCode:null},calls=[];const kill=new Function('worker','process','bounded',body+';return killWorker;')(worker,{platform:'win32'},async(...v)=>{calls.push(v);throw Error('INJECTED_TASKKILL_FAILURE');});await kill();assert.equal(calls.length,1);assert.equal(worker.exitCode,null);findings.push({id:'STATS-R02-R01-002',priority:2,confirmed:true,taskkill_error:'SWALLOWED',worker_exitCode_after:null,qualification:'Inert worker object; no OS process or Docker operation'});});
+ await check('already exited worker is not killed',async()=>{let calls=0;const kill=new Function('worker','process','bounded',body+';return killWorker;')({pid:12345,exitCode:0},{platform:'win32'},()=>calls++);await kill();assert.equal(calls,0);});
+ const sample={global_cap_bytes:limits.global,native_reserved_bytes:limits.native,payload_allocated_bytes:0,archive_allocated_bytes:0,inputs_allocated_bytes:0,control_allocated_bytes:0,actual_host_free_bytes:String(limits.global+limits.reserve),actual_native_free_bytes:String(limits.global+limits.reserve)};
+ await check('fixed 32GiB ledger accepts reserve boundary',()=>assert(checkSample(sample)));
+ for(const k of ['payload','archive','inputs','control'])await check('physical partition cap refuses '+k,()=>assert.throws(()=>checkSample({...sample,[k+'_allocated_bytes']:limits[k]+1})));
+ for(const k of ['host','native'])await check('free reserve refuses '+k,()=>assert.throws(()=>checkSample({...sample,['actual_'+k+'_free_bytes']:String(limits.global+limits.reserve-1)})));
+ await check('normalizer cannot hide candidate reference or revision changes',()=>{const n=pairNormalization();assert.throws(()=>n.equal({candidate_ref:'a'.repeat(64)},{candidate_ref:'b'.repeat(64)}));assert.throws(()=>n.equal({rev:1},{rev:2}));});
+ const artificial=separated=>['G','F'].flatMap((cl,c)=>['train','holdout'].flatMap(split=>Array.from({length:split==='train'?100:400},(_,index)=>({descriptor:{section:'social',comparison:'GF',class_profile:cl,split,index},feature_dictionary_sha256:featureHash,dimension:1075,sparse:separated&&c===1?[[0,2]]:[],summary:{status:'COMPLETE'}}))));
+ for(const separated of [false,true])await check('bounded artificial1000-row inference '+(separated?'rejects exact class decoder':'retains tied AUC/count denominators'),async()=>{const rows=artificial(separated),cell=evaluateCell(rows,dictionary.names);let passes=0;const replay=async function*(){passes++;yield*rows;};const pooled=await evaluatePooled(replay,dictionary.names,{expectedCells:1});assert(passes<=5,'finite replay pass bound');assert.deepEqual(pooled.train_per_class,[100,100]);assert.deepEqual(pooled.holdout_per_class,[400,400]);assert.equal(pooled.metric.auc,separated?1:.5);assert.equal(pooled.status,separated?'FAIL':'PASS');assert.deepEqual(pooled.weights,cell.weights);assert.deepEqual(pooled.heldout_scores,cell.heldout_scores);assert.equal(pooled.structural_deterministic_decoders.length,separated?1:0);});
+}finally{assert.equal(path.dirname(path.resolve(root)),path.resolve(tmpdir()));assert(path.basename(root).startsWith('venus-stats-review-'));fs.rmSync(root,{recursive:true,force:true});}
+const result={status:'PASS_FINITE_CONTROLS_WITH_TWO_CONFIRMED_FINDINGS_NOT_IMPLEMENTATION_ACCEPTANCE',controls:controls.length,cases:controls,findings,actual_process_kills:0,Docker_calls:0,selector_sessions:0,producer_writes:0,actual_statistical_RUN:false};
+fs.writeFileSync(path.join(out,'independent-controls.json'),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify({status:result.status,controls:controls.length,findings:findings.length}));

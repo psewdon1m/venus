@@ -1,0 +1,11 @@
+--- ORIGINAL-A28/runner-policy.mjs
++++ ORIGINAL-A29/runner-policy.mjs
+@@ -11,7 +11,7 @@
+  return Object.fromEntries(readdirSync(root).sort().map(name=>{const p=join(root,name),s=lstatSync(p);assert(!s.isSymbolicLink(),'PRODUCER_SYMLINK_FORBIDDEN');assert(s.isFile()||s.isDirectory(),'PRODUCER_FILETYPE_FORBIDDEN');return [name,s.isFile()?{type:'file',sha256:sha(readFileSync(p)),bytes:s.size}:{type:'historical_or_extraction_directory'}];}));
+ }
+ export function assertBinding(binding,ack){
+- assert.equal(binding.schema_version,1);assert(/^[a-f0-9]{64}$/.test(binding.source_identity));assert.equal(binding.included_files,1883);assert(/^sha256:[a-f0-9]{64}$/.test(binding.image));assert(/^[a-f0-9]{64}$/.test(binding.root_build_receipt_sha256));
++ assert.equal(binding.schema_version,1);assert(/^[a-f0-9]{64}$/.test(binding.source_identity));assert.equal(binding.included_files,1884);assert(/^sha256:[a-f0-9]{64}$/.test(binding.image));assert(/^[a-f0-9]{64}$/.test(binding.root_build_receipt_sha256));
+  assert.equal(ack.root_run_ack,true,'ROOT_RUN_ACK_REQUIRED');assert.equal(ack.independent_producer_review,'PASS');assert(/^[a-f0-9]{64}$/.test(ack.independent_review_index_sha256));assert.equal(ack.source_identity,binding.source_identity);assert.equal(ack.image,binding.image);assert(/^[a-f0-9]{64}$/.test(ack.producer_runtime_digest));
+ }
+ export function runtimeDigest(inventory){const runtime=Object.fromEntries(Object.entries(inventory).filter(([name])=>name.endsWith('.mjs')||name==='binding.json'||name==='DESIGN.md'));return sha(Buffer.from(JSON.stringify(runtime)));}

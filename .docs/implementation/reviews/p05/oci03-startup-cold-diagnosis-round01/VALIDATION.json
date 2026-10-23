@@ -1,0 +1,41 @@
+{
+  "created_at": "2026-10-20T15:52:00.859091+00:00",
+  "scope": "BOUNDARY_MACHINE_COPY_WITH_INERT_GUARD_EXECUTE_STUBS_NOT_ORIGINAL_PRODUCT_RUN",
+  "tests": [
+    {
+      "name": "cli-cycle",
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        ".docs\\implementation\\reviews\\p05\\oci03-startup-cold-diagnosis-round01\\cycle\\driver.mjs"
+      ],
+      "exit_code": 13,
+      "stdout": "AUTHORITY_STUB_PASSED_NO_DOCKER\n",
+      "stderr": "Warning: Detected unsettled top-level await at file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci03-startup-cold-diagnosis-round01/cycle/driver.mjs:3\r\nif(process.argv[1]&&new URL(import.meta.url).pathname.endsWith('/driver.mjs'))await run();\r\n                                                                              ^\r\n\r\n\r\n\r\n"
+    },
+    {
+      "name": "cold-import-not-CLI",
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "--input-type=module",
+        "-e",
+        "await import(\"file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci03-startup-cold-diagnosis-round01/cycle/host-runner.mjs\");console.log('IMPORT_RESOLVED_NO_DOCKER')"
+      ],
+      "exit_code": 0,
+      "stdout": "IMPORT_RESOLVED_NO_DOCKER\n",
+      "stderr": ""
+    },
+    {
+      "name": "cli-acyclic-proof-helper",
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        ".docs\\implementation\\reviews\\p05\\oci03-startup-cold-diagnosis-round01\\acyclic\\driver.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "AUTHORITY_STUB_PASSED_NO_DOCKER\nEXECUTE_STUB_REACHED_NO_DOCKER\n",
+      "stderr": ""
+    }
+  ],
+  "reviewer_first_attempt": "three subprocesses behaved as expected; reviewer string-case assertion incorrectly checked Unsettled after capitalize; corrected lower-case check only",
+  "Docker_calls": 0,
+  "resource_constructors": 0
+}

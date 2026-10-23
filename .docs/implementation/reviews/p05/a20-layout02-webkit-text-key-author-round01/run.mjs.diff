@@ -1,0 +1,11 @@
+--- A20-01/run.mjs
++++ A20-02/run.mjs
+@@ -6,7 +6,7 @@
+ import {tmpdir} from 'node:os';
+ import {randomBytes} from 'node:crypto';
+ import {captureProducer,assertBinding,runtimeDigest,assertUnchanged,assertShard,sha} from './runner-policy.mjs';
+-const producer=resolve('.artifacts/p05-v2-layout-producer-a20-01'),binding=JSON.parse(readFileSync(join(producer,'binding.json'),'utf8')),ack=JSON.parse(readFileSync(join(producer,'ROOT_RUN_ACK.json'),'utf8'));
++const producer=resolve('.artifacts/p05-v2-layout-producer-a20-02'),binding=JSON.parse(readFileSync(join(producer,'binding.json'),'utf8')),ack=JSON.parse(readFileSync(join(producer,'ROOT_RUN_ACK.json'),'utf8'));
+ assert.equal(binding.status,'FINAL_A18_BOUND_INDEPENDENT_REVIEW_REQUIRED','FINAL_A18_BINDING_REQUIRED');assertBinding(binding,ack);assert.equal(ack.operational_resource_profile,'LAYOUT21_BROWSER_PID512','EXACT_OPERATIONAL_RESOURCE_PROFILE_REQUIRED');assert.equal(ack.browser_pids_limit,512,'EXACT_BROWSER_PID_LIMIT_REQUIRED');
+ assert(typeof ack.independent_review_path==='string'&&ack.independent_review_path.startsWith('.docs/implementation/reviews/p05/'),'DURABLE_INDEPENDENT_REVIEW_PATH_REQUIRED');
+ const reviewBytes=readFileSync(ack.independent_review_path);assert.equal(sha(reviewBytes),ack.independent_review_index_sha256,'DURABLE_INDEPENDENT_REVIEW_HASH_MISMATCH');

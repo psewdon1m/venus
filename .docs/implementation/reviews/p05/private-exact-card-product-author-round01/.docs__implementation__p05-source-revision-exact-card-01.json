@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "revision": "P05-PRIVATE-EXACT-CARD-01",
+  "previous_source_identity": "732ed8407556c3e39e4060fcb0c4985a03f7ad865a9cf642218b39dde182ad80",
+  "observed_bug": "Native fixed-seed N8/R100 session P05-EXACT-ID-REGRESSION-1 selected Q-0108 in round55 and again round78 for a different pair. Original sessionwide exact-ID zero remains normative.",
+  "engine_revision": "RE-1.P05-TOPIC-3",
+  "rng_domain_retained": "RE-1.P05-TOPIC-2",
+  "private_policy_revision_retained": "ROOM-TOPIC-2",
+  "changes": ["Current-session exact private IDs consumed by every attempted selection are excluded across all pairs", "Normal, targeted replacement and effective-alternative checks share the same candidate eligibility", "Restored history rejects same-session repeated exact private IDs"],
+  "unchanged": ["Public RNG and public history inputs", "Pair-scoped cross-session private semantic-family exclusions", "Consent, ACL, TTL, safety, chat quotas", "Snapshot/history wire schema and seven SQL migrations"],
+  "compatibility": "Engine2 snapshots are unsupported by engine3, fail closed at startup, and remain stored. Incompatible started prior sessions refuse new starts; histories are never silently reset or reinterpreted. Local pilot uses fresh rooms. This is not a live-compatible2-to3 migration.",
+  "rollback": "Quiesce/disable new private starts before engine2 fallback; preserve unsupported snapshots/history/exclusions. For strong live-compatible14 drill use separately reviewed genuine prebundle B3 and bundled A3, bothengine3; keep2-to3 refusal control separate.",
+  "ADR": ".docs/adr/ADR-027-p05-private-session-card-uniqueness.md",
+  "stage_PASS": false
+}

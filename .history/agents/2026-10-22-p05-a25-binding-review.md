@@ -1,0 +1,8 @@
+# P05 A25 compact binding/resource11 independent review
+
+## Assignment (UTC 2026-10-22)
+Root APP author; independently review exact source22/images23/UIa25/OCI37/resource11 after final author freeze. A24 native43PASS1FAIL7NOT_RUN pair-chat-input smallheight clipping remains FAIL. A25 four-line Tab-keyup/still-active/input-select-button-textarea instantcenter insertion, original native Tab and focus-visible handlers retained, no established caret cause. Source-only69443c45 exact proof; no UI success inferred. Narrow metadata/inverse/covered-component qualification, one reviewer/four roles. No old functional controls, new framework, Docker/models/native/archive-payload reads. Own immutable packet/journal, STOP after handoff.
+
+## 2026-10-22T20:39:27.9727078Z — frozen PASS_METHOD_ONLY
+Author80e5559e/29children/current1879sourceacb2/source6944/3 exact; image23 receipts299+122; backend69/67SQL7PG2CSS exactA24, four-line Tab-keyup inverse+1877otherpaths exact. UItwo-literal inverse+25rawexact/OCI40rawexact36/currentA81B78; resource11/guard09 metadataonly numeric10 exact. First local metadata-reader exit1 expected LF insertion against frozen CRLF, preserved ATTEMPT01-FAILURE; corrected literal CRLF only/readagain0, complete-byte inverse exact without normalizing APP. Existingcoldsource1879/runtime/map0 andinactiveUI1/OCI1beforeallocation. No APPfinding/Docker/native/oldcontrols/newframework/archivepayload reads. Rootindexa4bb unchanged.
+Immutable .docs/implementation/reviews/p05/a25-binding-resource11-independent-round01/INDEX.json SHAda82fdb47511a549aaef5361f7b48529b3d17be7bdb18bd94bfda673cbc0fffc/15children. ONE reviewer/fourroles; priorcomponentbounds retained; no currentnative/stagePASS. RootnotifiednewACK/freshguard09 requirement. COMPLETE_STOP.

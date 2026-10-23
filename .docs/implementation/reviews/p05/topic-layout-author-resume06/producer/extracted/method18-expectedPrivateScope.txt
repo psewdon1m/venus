@@ -1,0 +1,4 @@
+function expectedPrivateScope(a,expected={}){
+ const view=a.lastGameView;assert(view&&view.state==='active'&&['pending','active'].includes(view.round_state),'METHOD12_ACTIVE_UI_SCOPE_REQUIRED');
+ return {room:a.room,member:a.id,session:expected.session??view.session_id,round:expected.round??view.round_id,minRev:expected.minRev??view.game_rev,afterMonotonic:expected.afterMonotonic??null};
+}

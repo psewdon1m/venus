@@ -1,0 +1,11 @@
+--- 01/range-worker.mjs
++++ 02/range-worker.mjs
+@@ -20,7 +20,7 @@
+  catch(error){if(error&&typeof error==='object'&&error.domain_prefix)error.domain_prefix.public_frames=public_frames;throw error;}
+ }
+ export function validateAck(ack,range,bindingRaw,preregRaw,reviewRaw){
+- assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'PILOT_FIXED_RANGE_01');assert.equal(ack.no_actual_approval,false);assert.match(ack.owner,/^[a-f0-9]{32}$/);
++ assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'PILOT_FIXED_RANGE_02');assert.equal(ack.no_actual_approval,false);assert.match(ack.owner,/^[a-f0-9]{32}$/);
+  assert.deepEqual(ack.range,range);assert.equal(ack.binding_sha256,sha(bindingRaw));assert.equal(ack.prereg_sha256,sha(preregRaw));assert.equal(ack.method_review_sha256,sha(reviewRaw));
+  const b=JSON.parse(bindingRaw);assert.equal(b.source_identity,ack.source_identity);assert.equal(b.image,ack.image_id);
+  return ack;

@@ -1,0 +1,22 @@
+{
+  "status": "PASS_SOURCE_COUNTEREXAMPLE",
+  "source": "apps/api/src/room-routes.ts",
+  "sha256": "91d566bea3426b5851cef8b3c09d718469b26a6ef4555e27d055bc599c7f1ce1",
+  "actual": {
+    "polls": 20,
+    "ping_received_ms": 20000,
+    "ping_processed_ms": 60000,
+    "ping_queue_delay_ms": 40000,
+    "heartbeat_age_before_ping_ms": 60000,
+    "presence_45000_expired_before_ping": true
+  },
+  "counterfactual": {
+    "polls": 1,
+    "ping_received_ms": 20000,
+    "ping_processed_ms": 22000,
+    "ping_queue_delay_ms": 2000,
+    "heartbeat_age_before_ping_ms": 22000,
+    "presence_45000_expired_before_ping": false
+  },
+  "qualification": "Synthetic scheduler and 2s poll latency demonstrate source queue starvation; not actual18 latency or sole-cause proof. Counterfactual is VM-only, not a product edit."
+}

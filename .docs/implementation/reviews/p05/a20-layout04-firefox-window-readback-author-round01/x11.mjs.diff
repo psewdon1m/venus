@@ -1,0 +1,11 @@
+--- parent03/x11.mjs
++++ candidate04/x11.mjs
+@@ -67,7 +67,7 @@
+  await bounded(budget,'content-focus',()=>page.bringToFront());
+  const title='Venus layout '+randomUUID();await bounded(budget,'window-title',()=>page.evaluate(t=>{document.title=t;},title));
+  const engine=page.context().browser().browserType().name(),pattern=windowTitlePattern(title,engine);
+- const windows=await readyOwnedWindow(engine==='webkit'?async()=>{const ids=await windowInventory(()=>xdo(xserver.name,'search','--onlyvisible','--name','.'));return ids.filter(id=>{budget.check();return xdo(xserver.name,'getwindowname',id).includes(title);});}:()=>windowInventory(()=>xdo(xserver.name,'search','--onlyvisible','--name',pattern)),budget);
++ const windows=await readyOwnedWindow((engine==='webkit'||engine==='firefox')?async()=>{const ids=await windowInventory(()=>xdo(xserver.name,'search','--onlyvisible','--name','.'));return ids.filter(id=>{budget.check();return xdo(xserver.name,'getwindowname',id).includes(title);});}:()=>windowInventory(()=>xdo(xserver.name,'search','--onlyvisible','--name',pattern)),budget);
+  assert.equal(windows.length,1,'EXACT_V2_WINDOW_REQUIRED');const id=windows[0];assert(ownWindowTitle(title,engine,xdo(xserver.name,'getwindowname',id)),'EXACT_V2_WINDOW_REQUIRED');xdo(xserver.name,'windowraise',id);xdo(xserver.name,'windowfocus','--sync',id);assert.equal(xdo(xserver.name,'getwindowfocus'),id);
+  assert.equal(xdo(xserver.name,'getwindowfocus'),id);return id;
+ }

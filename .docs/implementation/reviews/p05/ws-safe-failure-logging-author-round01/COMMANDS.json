@@ -1,0 +1,55 @@
+{
+  "cwd": "C:\\.projects\\venus",
+  "node": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+  "commands": [
+    {
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "apps/api/src/request-error-diagnostic.test.ts",
+        "apps/api/src/room-socket-poll.test.ts"
+      ],
+      "native_exit": 1,
+      "output": "red.txt",
+      "result": "25FAIL38PASS_beforeproduction"
+    },
+    {
+      "argv": [
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "apps/api/src/request-error-diagnostic.test.ts",
+        "apps/api/src/app.test.ts",
+        "apps/api/src/room-socket-poll.test.ts",
+        "apps/api/src/room-socket-projection.test.ts",
+        "apps/api/src/room-games.test.ts",
+        "apps/api/src/topic-games-socket-projection.test.ts"
+      ],
+      "native_exit": 0,
+      "output": "green03.txt",
+      "result": "117PASS6FILES"
+    },
+    {
+      "argv": [
+        "node_modules/typescript/bin/tsc",
+        "-b",
+        "apps/api"
+      ],
+      "native_exit": 0,
+      "output": "api-tsc.txt"
+    },
+    {
+      "argv": [
+        "node_modules/eslint/bin/eslint.js",
+        "--config",
+        "C:/.projects/venus/eslint.config.mjs",
+        "apps/api/src/room-routes.ts",
+        "apps/api/src/request-error-diagnostic.ts",
+        "apps/api/src/room-socket-poll.test.ts",
+        "apps/api/src/request-error-diagnostic.test.ts"
+      ],
+      "native_exit": 0,
+      "output": "lint.txt"
+    }
+  ],
+  "intermediate_note": "green02 selected nonexistent app-error-diagnostic.test.ts alongside5real files (114PASS); finalgreen03 uses actualapp.test.ts/6files117PASS. Intermediate output retained, no falseclaim that absentselector ran."
+}

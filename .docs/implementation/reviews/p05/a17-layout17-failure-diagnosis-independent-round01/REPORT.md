@@ -1,0 +1,25 @@
+# Layout17 actual: focused independent failure diagnosis
+
+`ACTUAL_FAIL_RETAINED_FOCUSED_DIAGNOSIS_COMPLETE`. Actual remains **17 PASS /1 FAIL /33 NOT_RUN**, root exit **1**, saved cleanup **PASS**. No native/browser/Docker/API/SQL operation, APP/method/producer/ACK edit or rerun was performed. Static audit exits0; additional model controls are unnecessary to identify this saved failure.
+
+Exact inputs: source14/A17 `93221ba482331e3916e56f2e1866b5c7743fa72ad29320f2819a7a6fd1a2951d` /1871; image `sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2`; actual JS runtime digest `c9f2f15310a1f02aff053727638997775b41edd9698e799b9d4d39e62ff6be8c`; root ACK `ee331578015b074de195c691557f26c3507c5ae6ce1aaaf4e03e063a33783994`; method review INDEX `08a2f86de5bea07c3d1b42e026c3b1b7c27c05796f0cb2fb8cede929b9b58df3`. Run `.artifacts/p05-pilot-bundle-source14/.artifacts/p05/venus-v2-layout-752388f85e95`; root stdout/exit `.artifacts/p05-layout17-a17-chromium-ru01.*`. Duration from root timestamps is35,431ms. `INPUT_PINS.json` records freshly checked bytes/hashes, including all1871 materialized source files,73 current/copied producer files, exact method packet, saved inputs before/after and25 accepted screenshot hashes.
+
+## Confirmed operation and limits of cause
+
+Saved phase is `setup/native200/measurement`, cell `chromium/ru/setup/native200`. Both row and terminal failure identify `x11.mjs:62:400`. Column400 is exactly `execFileSync('ffmpeg',...)`, after window geometry validation, raise and focus. This is **native screenshot encoding failure**, not evidence that X11 window selection or focus failed. Saved browser-tests.txt contains:
+
+> ff_frame_thread_encoder_init failed
+
+It also reports output-stream encoder initialization failure. The native screenshot command uses x11grab, the owned window's measured dimensions/position, one frame, PNG output path and a timeout capped by min(15,000ms, remaining original budget). It leaves encoder threading implicit. The failed host screenshot file is absent; no failed role observation was persisted.
+
+The underlying reason for encoder initialization failure is **UNKNOWN**. No saved child exit/signal/error object, failed-capture dimensions, thread/pid/resource snapshot or encoder parameter validation distinguishes thread availability, resources, parameters or another encoder failure. Generic stderr suggestions are not proof of a width/height or resource cause. No OOM/pid/thread-limit, memory shortage, timeout or APP defect is established. Increasing resources, changing APP/CSS, weakening an oracle or extending a budget is not justified.
+
+The source order is more precise than “before measurement”: `native200()` runs for the prepared roles first. `measureRole()` then checks scene projection, DOM audit and keyboard before calling `nativeScreenshot()`. Its `onObservation` persistence occurs only after successful screenshot acceptance and final clock read. Thus saved `roles:[]` means the failed role observation was not persisted; the source/control path reached screenshot encoding. Its preceding local native zoom/audit/keyboard values are not exported and must not be represented as individually accepted proof. Later roles, native safety activation and normal row acceptance are unproved.
+
+## Passed scope and next action
+
+Nine entry cells and the first eight setup cells have actual PASS records. All36 RU entry text measurements across w320/native200 pass their unchanged text, clipping, strict bottom and audit checks, including Q-1168. The audit re-executed the existing pure `assertTextRows` over these saved observations. This supplies scoped actual evidence that METHOD17 proceeds through the prior real-text failure; it is not all324 typography/full459 acceptance. The25 persisted role captures have clean saved contrast fields; failed-role contrast is unexported. Page errors are empty.
+
+The minimal corrective scope is the native screenshot encoder invocation and its safe failure metadata. Explicitly bounding PNG encoder threading is a small candidate hardening of that capture path, since current threading is implicit; this diagnosis does **not** prove it will remedy the actual cause. A separate author should justify the exact argv change, preserve physical x11grab/owned-window geometry, one-frame PNG, redaction, no-overwrite, screenshot validation, all clocks and original timeout/quotas, then obtain independent method review and fresh root authorization. A repeated unmodified native run would not establish the missing cause. No alternate DOM screenshot or skipped capture can substitute for the native evidence oracle.
+
+Saved worker/runtime/scene/display cleanup is PASS with no cleanup failures; root saved remaining-owned container/network/volume files are empty. This is saved owned-run evidence, not fresh global Docker inspection. Presentation-only owner-text and synthetic-fixture qualifications persist; no auth/consent/private payload claim follows. Original FAIL remains intact. All owned writes freeze at INDEX publication: `COMPLETE_STOP`.

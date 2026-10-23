@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "status": "CONFIRMED_PRODUCER_BARRIER_GAP_ACTUAL_CAUSE_INCONCLUSIVE",
+  "scope": "INDEPENDENT_ARCHIVED_ENGINE2_BROWSER07_FAIL_DIAGNOSIS",
+  "created_at": "2026-10-19T20:16:22.878608+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "producer_author": "/root/p05_topics_ui",
+  "exact_inputs": [
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/index.json",
+      "sha256": "8833bcd66ea2c50ad70f8e7f7ecbe53c3701e5878f18b220a1009e1b4756708e"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/failure-details.json",
+      "sha256": "889dda505b19c4dee4d5779237669129049adc8db47c669d07513c164b9c78a6"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/delivery-metadata.json",
+      "sha256": "3e1fe554afa38466229af03cafb948cc4e18ea755eff5fc174c58aca86d4fc83"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/topic-browser-report.json",
+      "sha256": "5b77d97b4461fd2ab0a17aff3ed7cefddae3dc4f6850f002738574f42943c8a4"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/runner.json",
+      "sha256": "de9332581b14b614286fe83c6c5f57d92b4c6a39194dabdc3798d4839278902b"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/producer/browser.mjs",
+      "sha256": "f355c084ff1c2b3050785ba8a55d43e248373ea0b9ed009274686e41326eb24f"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/producer/observations.mjs",
+      "sha256": "df50eca39925ffb05da14f7408580b1aad037c781903f42abd943bc44621ab13"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-01/run/producer/delivery-diagnostics.mjs",
+      "sha256": "b1cef15bf446e55a4d5d616267a4dd2dd2095ee5cbe7fda172ab936aff7ebd8f"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "a04cc196ae20773acd179b33ecb413918f9628bb6b0a723c4714f2255becaf1a"
+    }
+  ],
+  "actual_packet_files_verified": 37,
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "actual_result": {
+    "status": "FAIL",
+    "PASS": 4,
+    "FAIL": 1,
+    "NOT_RUN": 11,
+    "cleanup": "PASS",
+    "metadata": "COMPLETE",
+    "HTTP": 404,
+    "WS": 228
+  },
+  "finding": {
+    "id": "BROWSER-PRODUCER-TOPIC-ACK-BARRIER",
+    "severity": "P2",
+    "problem": "acceptTopics awaits UI clicks but not matching topic POST/receipt completion; zero/one-ack negative checks and final prompt matcher can run before corresponding commits.",
+    "exact_inert_reproduction": {
+      "clicks_completed": 2,
+      "committed_acks": 0,
+      "zero_one_negative_checks": 6,
+      "prompt_matcher_started": true
+    },
+    "qualified_actual_cause": "Actual receipts both200 exacttuples by capture, but POST native times and exact matcher boundaries absent. No active prompt conversation DTO observed for EN/TR; completedserialbatch/cacheaccept not observed. Do not assert product/cache defect or full causal proof."
+  },
+  "checks": {
+    "exact_archived_helper_race_reproduced": 1,
+    "existing_exact_response_barrier_and_coherence_checks": 2,
+    "all_packet_hashes_verified": true,
+    "source_before_after_current_equal": true
+  },
+  "proposed_correction": {
+    "scope": "EXCLUDED_PRODUCER_ONLY_ROOT_ACK_REQUIRED",
+    "changes": [
+      "Use existing mutationClick for both topic-accept actions with exact POST conversation/commands route and kind respond_topic.",
+      "After each exactreceipt200 matching request_id, require coherentGame same session/round/index and minRev receipt.game_rev.",
+      "Retain zero-ack and first-ack no-prompt checks, fullunion label checks, both localized prompts and observer denial.",
+      "Retain same5000 prompt matcher, all16 scenarios, planner bound20, seed/TTL/leases; no polling/reseeding until a successful session or product weakening."
+    ],
+    "verification": "New immutable checkpoint, own exact old/new interleaving controls, independent review and rootACK before actual rerun. A future PASS is a new regression, not replacement of this FAIL."
+  },
+  "no_docker_browser_product_producer_writes": true,
+  "full_stage_pass": false
+}

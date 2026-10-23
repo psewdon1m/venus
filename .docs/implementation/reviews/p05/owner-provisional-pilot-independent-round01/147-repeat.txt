@@ -1,0 +1,25 @@
+
+ RUN  v5.0.5 C:/.projects/venus/.artifacts/p05-pilot-bundle-source01
+
+··x················································································································································
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/relationship-engine/src/topic-map.test.ts > explicit versioned topic-map loader, no runtime activation > rejects actual candidate02 HOLD even through explicit fixture entry
+Error: ENOENT: no such file or directory, open 'C:\.projects\venus\.artifacts\p05-pilot-bundle-source01\.docs\implementation\evidence\p05\topic-map-candidate-02\private-topic-map.candidate.v1.json'
+ ❯ packages/relationship-engine/src/topic-map.test.ts:50:18
+     48|   it('rejects actual candidate02 HOLD even through explicit fixture en…
+     49|     const base='.docs/implementation/evidence/p05/topic-map-candidate-…
+     50|     const b={map:readFileSync(base+'private-topic-map.candidate.v1.jso…
+       |                  ^
+     51|     const before=sha(b.map);expect(()=>FrozenTopicMap.syntheticFixture…
+     52|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 8 passed (9)
+      Tests  1 failed | 146 passed (147)
+   Start at  22:18:41
+   Duration  6.21s (tests 53%, import 29%, transform 18%)
+

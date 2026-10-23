@@ -1,0 +1,3 @@
+# Games20: actual corrected-source regression
+
+20/20 PASS, exit0, cleanup completed. Source aa1205/1823, image ef5; 269 combined image pins independently probe-bound by root. TG06 now actually holds pending topic29s, starts a fresh30s action offer after topic acceptance, waits5s beyond the former action deadline, separately accepts both actors, verifies primary Finish false/true, and preserves the original invitation deadline. Earlier failed primary-role test remains immutable. This is real PG/HTTP with synthetic catalog/fixture WS adapter, not browser/native timing or fullstage proof. Independent actual audit pending.

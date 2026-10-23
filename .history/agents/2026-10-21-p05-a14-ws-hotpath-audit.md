@@ -1,0 +1,5 @@
+# A14 read-only WebSocket hot-path audit
+
+2026-10-20T22:47:15.012014+00:00 UTC — Root task: inspect socketState/finalAccessFence/lifecycle/ledger/sendGame/privatepoll hot path, no app/native/test changes or causal starvation claim. FrozenA14 c481761f/1865; source equals A13 backend. Initial rg guessed ws.ts/websocket.ts nonexistent; source actually room-routes.ts. Prior7s74%fsync measurement explicitly obsolete before lockfix and not reused. Independentcost handles wholeactualproof; this scope sourcework plus minimal diagnostic recommendation only.
+
+2026-10-20T22:49:37.383905+00:00 UTC — Frozen 3aaf21cff53906f82e0674400e5f759f9713a34fe25e87d06b80a9cfb6904ae9. Proven eager bundle.game unused production/heartbeatchilddiscard;5authorityfence executions15warm lifecycle scans staticonly. ActualpollPending alreadybounds1, no backlogbugclaim. Guard uses metadataauthority not personal live/member forfinalauth (corrected by source read). No perfmeasurement/causalstarvation/retired74%carry. Proposed4filebackwardcompatible options awaitsrootACK; no source/native/test writes. Writes COMPLETE.

@@ -1,0 +1,236 @@
+bbf760f Preregister fixed whole native privacy support fixtures for P05
+ .../constructive-producer/CHECKS.json              |   91 +
+ .../constructive-producer/INDEX.json               |  257 +
+ .../constructive-producer/ORIGINAL-COVERAGE.json   |  343 +
+ .../constructive-producer/PREREG.json              |  116 +
+ .../constructive-producer/ROOT-ACK.template.json   |   68 +
+ .../constructive-producer/authority-template.py    |    5 +
+ .../constructive-producer/binding.json             |   75 +
+ .../constructive-producer/checks-attempt01.py      |   12 +
+ .../constructive-producer/checks.py                |   13 +
+ .../constructive-producer/checks01.stderr.txt      |    7 +
+ .../constructive-producer/checks01.stdout.txt      |    0
+ .../constructive-producer/checks02.stderr.txt      |    0
+ .../constructive-producer/checks02.stdout.txt      |    1 +
+ .../constructive-producer/consumer.mjs             |   88 +
+ .../controls-final.stderr.txt                      |    0
+ .../controls-final.stdout.txt                      |   31 +
+ .../constructive-producer/controls.mjs             |   23 +
+ .../constructive-producer/controls01.stderr.txt    |   20 +
+ .../constructive-producer/controls01.stdout.txt    |    0
+ .../constructive-producer/controls02.stderr.txt    |   57 +
+ .../constructive-producer/controls02.stdout.txt    |    0
+ .../constructive-producer/controls03.stderr.txt    |    0
+ .../constructive-producer/controls03.stdout.txt    |   31 +
+ .../falseACK-final.stderr.txt                      |   25 +
+ .../falseACK-final.stdout.txt                      |    0
+ .../constructive-producer/finite-final.stderr.txt  |    0
+ .../constructive-producer/finite-final.stdout.txt  |   31 +
+ .../constructive-producer/freeze.py                |   37 +
+ .../constructive-producer/host.mjs                 |   48 +
+ .../lint-attempt01.stderr.txt                      |    0
+ .../lint-attempt01.stdout.txt                      |    6 +
+ .../constructive-producer/lint.stderr.txt          |    0
+ .../constructive-producer/lint.stdout.txt          |    6 +
+ .../constructive-producer/matched-model.mjs        |   96 +
+ .../constructive-producer/matched-worker.mjs       |   44 +
+ .../constructive-producer/prepare.py               |   56 +
+ .../round02-falseACK-host.stderr.txt               |   25 +
+ .../round02-falseACK-host.stdout.txt               |    0
+ .../round02-finite-final.stderr.txt                |    0
+ .../round02-finite-final.stdout.txt                |   31 +
+ .../constructive-producer/round02-lint.stderr.txt  |    0
+ .../constructive-producer/round02-lint.stdout.txt  |    0
+ .../round02-syntax-0.stderr.txt                    |    0
+ .../round02-syntax-0.stdout.txt                    |    0
+ .../round02-syntax-1.stderr.txt                    |    0
+ .../round02-syntax-1.stdout.txt                    |    0
+ .../round02-syntax-2.stderr.txt                    |    0
+ .../round02-syntax-2.stdout.txt                    |    0
+ .../round02-syntax-3.stderr.txt                    |    0
+ .../round02-syntax-3.stdout.txt                    |    0
+ .../round02-syntax-4.stderr.txt                    |    0
+ .../round02-syntax-4.stdout.txt                    |    0
+ .../constructive-producer/syntax-0.stderr.txt      |    0
+ .../constructive-producer/syntax-0.stdout.txt      |    0
+ .../constructive-producer/syntax-1.stderr.txt      |    0
+ .../constructive-producer/syntax-1.stdout.txt      |    0
+ .../constructive-producer/syntax-2.stderr.txt      |    0
+ .../constructive-producer/syntax-2.stdout.txt      |    0
+ .../constructive-producer/syntax-3.stderr.txt      |    0
+ .../constructive-producer/syntax-3.stdout.txt      |    0
+ .../constructive-producer/syntax-4.stderr.txt      |    0
+ .../constructive-producer/syntax-4.stdout.txt      |    0
+ .../range02-producer/CARRY-AND-DIFFS.json          |  132 +
+ .../range02-producer/FINAL-COMMANDS.json           |   60 +
+ .../range02-producer/FINITE-HOST-INPUTS.json       |   28 +
+ .../range02-producer/PARENT-INPUTS.json            |   22 +
+ .../range02-producer/RANGE-PREREG.json             |  123 +
+ .../range02-producer/ROOT-ACK.template.json        |   15 +
+ .../range02-producer/binding.json                  |  358 +
+ .../range02-producer/c2/consumer.mjs               |  122 +
+ .../range02-producer/c2/descriptor.json            |  232 +
+ .../range02-producer/c2/finite-controls.mjs        |   71 +
+ .../range02-producer/m3/P03-extraction.json        |   21 +
+ .../range02-producer/m3/adapter.mjs                |   72 +
+ .../range02-producer/m3/descriptor.mjs             |   23 +
+ .../range02-producer/m3/diagnostics.mjs            |   30 +
+ .../range02-producer/m3/feature-dictionary.json    |  451 +
+ .../range02-producer/m3/feature-names.mjs          |   14 +
+ .../range02-producer/m3/features.mjs               |   25 +
+ .../range02-producer/m3/finite-controls.mjs        |   77 +
+ .../range02-producer/m3/invariant-definitions.mjs  |   17 +
+ .../range02-producer/m3/math.mjs                   |   33 +
+ .../range02-producer/m3/model.mjs                  |   96 +
+ .../range02-producer/m3/profile.mjs                |   14 +
+ .../range02-producer/pilot-loader.mjs              |   22 +
+ .../range02-producer/pure-closure-check.mjs        |   20 +
+ .../range02-producer/range-controls.mjs            |   63 +
+ .../range02-producer/range-plan.mjs                |   18 +
+ .../range02-producer/range-reduce.mjs              |   81 +
+ .../range02-producer/range-worker.mjs              |   51 +
+ .../range02-producer/range02-syntax-final.json     |  146 +
+ .../range02-producer/raw/durable-sink.mjs          |   37 +
+ .../range02-producer/raw/safe-metadata.mjs         |   33 +
+ .../range02-producer/relationship-policy.v1.json   |   68 +
+ .../repeat-independent-fairness.mjs                |   19 +
+ .../range02-producer/repeat-independent-footer.mjs |   20 +
+ .../range02-producer/replay-input.mjs              |   35 +
+ .../range02-producer/stream-reducers.mjs           |   19 +
+ .../range02-producer/syntax-final.json             |  233 +
+ .../ATTEMPTS.json                                  |   10 +
+ .../AUDIT.json                                     |   66 +
+ .../HANDOFF.md                                     |    3 +
+ .../INDEX.json                                     |  110 +
+ .../INPUT-PINS.json                                |   54 +
+ .../PROOF-PINS.json                                |   68 +
+ .../REPORT.md                                      |   17 +
+ .../audit-initial-falseACK-path-assumption.py.txt  |   79 +
+ .../a18-gate-bindings-independent-round01/audit.py |   79 +
+ .../browser-layout-cold.stderr.txt                 |    0
+ .../browser-layout-cold.stdout.txt                 |    1 +
+ .../freeze.py                                      |    6 +
+ .../layout-falseACK.stderr.txt                     |   22 +
+ .../layout-falseACK.stdout.txt                     |    0
+ .../oci-cold.mjs                                   |    9 +
+ .../oci-falseACK.stderr.txt                        |    1 +
+ .../oci-falseACK.stdout.txt                        |    0
+ .../oci-memory-authority.stderr.txt                |    0
+ .../oci-memory-authority.stdout.txt                |    1 +
+ .../CELL-COVERAGE.json                             | 8895 ++++++++++++++++++++
+ .../HANDOFF.md                                     |    5 +
+ .../INDEX.json                                     |  138 +
+ .../INPUT-PINS.json                                |  120 +
+ .../REPORT.md                                      |   29 +
+ .../SOURCE-PINS.json                               |   34 +
+ .../TRACE-DIFFERENCES.json                         |   89 +
+ .../VERIFICATION.json                              |   77 +
+ .../audit.mjs                                      |   51 +
+ .../freeze.py                                      |   15 +
+ .../safe/export-pins.json                          | 2508 ++++++
+ .../safe/export/raw/payload/FINAL_INDEX.json       |   43 +
+ .../safe/export/summary.json                       | 2466 ++++++
+ .../safe/host-report.json                          |   27 +
+ .../safe/p05-privacy-matched-a18-run01.exit.json   |    5 +
+ .../safe/p05-privacy-matched-a18-run01.txt         |    1 +
+ .../safe/p05-privacy-matched-root-ack.run02.json   |   99 +
+ .../safe/producer-after.json                       |   11 +
+ .../safe/producer-before.json                      |   11 +
+ .../safe/range-producer-after.json                 |   39 +
+ .../safe/range-producer-before.json                |   39 +
+ .../safe/worker-stderr.txt                         |    0
+ .../safe/worker-stdout.txt                         |   85 +
+ .../trace-diagnosis.mjs                            |   11 +
+ .../COLD-RESULT.json                               |   15 +
+ .../HANDOFF.md                                     |    3 +
+ .../HOST-LIFECYCLE-CARRY.json                      |    9 +
+ .../INDEX.json                                     |  129 +
+ .../INPUT-PINS.json                                |  316 +
+ .../PIN-RESULT.json                                |   28 +
+ .../REPORT.md                                      |   17 +
+ .../author-cold.stderr.txt                         |    0
+ .../author-cold.stdout.txt                         |   31 +
+ .../cold-attempt01.mjs.bytes                       |   25 +
+ .../cold-attempt01.stderr.txt                      |    1 +
+ .../cold.mjs                                       |   25 +
+ .../freeze.py                                      |   11 +
+ .../inputs/ORIGINAL-COVERAGE.json                  |  343 +
+ .../inputs/PREREG.json                             |  116 +
+ .../inputs/binding.json                            |   75 +
+ .../inputs/consumer.mjs                            |   88 +
+ .../inputs/host.mjs                                |   48 +
+ .../inputs/matched-worker.mjs                      |   44 +
+ .../pending-host-denial.stderr.txt                 |   25 +
+ .../pending-host-denial.stdout.txt                 |    0
+ .../pin-audit.py                                   |   18 +
+ .../HANDOFF.json                                   |   42 +
+ .../INDEX.json                                     |  354 +
+ .../INPUTS.json                                    |  108 +
+ .../REPORT.md                                      |   15 +
+ .../candidate/CHECKS.json                          |   91 +
+ .../candidate/INDEX.json                           |  257 +
+ .../candidate/ORIGINAL-COVERAGE.json               |  343 +
+ .../candidate/PREREG.json                          |  116 +
+ .../candidate/ROOT-ACK.template.json               |   68 +
+ .../candidate/authority-template.py                |    5 +
+ .../candidate/binding.json                         |   75 +
+ .../candidate/checks-attempt01.py                  |   12 +
+ .../candidate/checks.py                            |   13 +
+ .../candidate/checks01.stderr.txt                  |    7 +
+ .../candidate/checks01.stdout.txt                  |    0
+ .../candidate/checks02.stderr.txt                  |    0
+ .../candidate/checks02.stdout.txt                  |    1 +
+ .../candidate/consumer.mjs                         |   88 +
+ .../candidate/controls-final.stderr.txt            |    0
+ .../candidate/controls-final.stdout.txt            |   31 +
+ .../candidate/controls.mjs                         |   23 +
+ .../candidate/controls01.stderr.txt                |   20 +
+ .../candidate/controls01.stdout.txt                |    0
+ .../candidate/controls02.stderr.txt                |   57 +
+ .../candidate/controls02.stdout.txt                |    0
+ .../candidate/controls03.stderr.txt                |    0
+ .../candidate/controls03.stdout.txt                |   31 +
+ .../candidate/falseACK-final.stderr.txt            |   25 +
+ .../candidate/falseACK-final.stdout.txt            |    0
+ .../candidate/finite-final.stderr.txt              |    0
+ .../candidate/finite-final.stdout.txt              |   31 +
+ .../candidate/host.mjs                             |   48 +
+ .../candidate/lint-attempt01.stderr.txt            |    0
+ .../candidate/lint-attempt01.stdout.txt            |    6 +
+ .../candidate/lint.stderr.txt                      |    0
+ .../candidate/lint.stdout.txt                      |    6 +
+ .../candidate/matched-model.mjs                    |   96 +
+ .../candidate/matched-worker.mjs                   |   44 +
+ .../candidate/prepare.py                           |   56 +
+ .../candidate/round02-falseACK-host.stderr.txt     |   25 +
+ .../candidate/round02-falseACK-host.stdout.txt     |    0
+ .../candidate/round02-finite-final.stderr.txt      |    0
+ .../candidate/round02-finite-final.stdout.txt      |   31 +
+ .../candidate/round02-lint.stderr.txt              |    0
+ .../candidate/round02-lint.stdout.txt              |    0
+ .../candidate/round02-syntax-0.stderr.txt          |    0
+ .../candidate/round02-syntax-0.stdout.txt          |    0
+ .../candidate/round02-syntax-1.stderr.txt          |    0
+ .../candidate/round02-syntax-1.stdout.txt          |    0
+ .../candidate/round02-syntax-2.stderr.txt          |    0
+ .../candidate/round02-syntax-2.stdout.txt          |    0
+ .../candidate/round02-syntax-3.stderr.txt          |    0
+ .../candidate/round02-syntax-3.stdout.txt          |    0
+ .../candidate/round02-syntax-4.stderr.txt          |    0
+ .../candidate/round02-syntax-4.stdout.txt          |    0
+ .../candidate/syntax-0.stderr.txt                  |    0
+ .../candidate/syntax-0.stdout.txt                  |    0
+ .../candidate/syntax-1.stderr.txt                  |    0
+ .../candidate/syntax-1.stdout.txt                  |    0
+ .../candidate/syntax-2.stderr.txt                  |    0
+ .../candidate/syntax-2.stdout.txt                  |    0
+ .../candidate/syntax-3.stderr.txt                  |    0
+ .../candidate/syntax-3.stdout.txt                  |    0
+ .../candidate/syntax-4.stderr.txt                  |    0
+ .../candidate/syntax-4.stdout.txt                  |    0
+ .../consumer.mjs.diff                              |   81 +
+ .../host.diff                                      |   31 +
+ .../independent-finding/INDEX.json                 |   70 +
+ .../independent-finding/REPORT.md                  |   23 +
+ .../matched-worker.mjs.diff                        |   37 +
+ 234 files changed, 23602 insertions(+)

@@ -1,0 +1,3 @@
+function assertPrivateTicket(a,id,ticket){
+ assert(ticket&&ticket.control===id,'METHOD12_PRIVATE_TICKET_REQUIRED');assert(performance.now()<ticket.deadline_monotonic_ms,'METHOD12_PRIVATE_TICKET_EXPIRED');const current=privateBatches.snapshot(a,{control:id,expectedScope:ticket.expected});assert(current.ready&&current.cycle_id===ticket.cycle_id,'METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK');
+}

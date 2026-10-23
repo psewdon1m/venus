@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T13:39:15.698932+00:00",
+  "outcome": "CHANGES_REQUESTED",
+  "scope": "P05_BACKEND_PRIVATE_CHAT_QUIET_PAIR_SAFETY_EARLY_CODE_REVIEW",
+  "stage_acceptance": false,
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_dirty": true,
+  "reviewed_current_files": [
+    {
+      "path": "apps/api/src/private-chat.ts",
+      "sha256": "45375bf3a8c0f0fd771b64b89c196210eedbc672eb4dfb6ed2c2d00ccaf5397d"
+    },
+    {
+      "path": "apps/api/src/chat-migrations.ts",
+      "sha256": "47698c926550a033de5c035308a3e0ff555d2722a040610fef15d91270d94e7f"
+    },
+    {
+      "path": "apps/api/chat-migrations/001_private_chat.sql",
+      "sha256": "0a5a3efe60212d1bedbec107e94c8355fbc44041a409cc3b0ad6fbf85e920b6e"
+    },
+    {
+      "path": "apps/api/src/games.ts",
+      "sha256": "21636a49ab65ec5220a8c390116d56a17063a055a38108d3535d772f3a69724f"
+    },
+    {
+      "path": "apps/api/src/games-model.ts",
+      "sha256": "d8345dff0a0685e2e2f3a1ff36ad378c6793762a3ccfbcc53fab588a268952fa"
+    },
+    {
+      "path": "apps/api/src/game-routes.ts",
+      "sha256": "68fe5db38663b8dfcd93644f218183f2ae11e9203a1d2e8dc171390110f2067b"
+    },
+    {
+      "path": "apps/api/src/room-routes.ts",
+      "sha256": "d388e507ced66409c4ef3078b6d5fc14ec9aa3c623b083e33546a6b1da176056"
+    },
+    {
+      "path": "apps/api/src/rooms.ts",
+      "sha256": "cf2ea6bf2cd04ceca1e06b88221c66d2ef74b38b350c30ecb89ed78d113fef2f"
+    },
+    {
+      "path": "apps/api/src/server.ts",
+      "sha256": "60546c4a3643d29b0b9ccdca7c9724331e49468d3434cfbab360af6c602956bc"
+    },
+    {
+      "path": "packages/contracts/src/private-chat.ts",
+      "sha256": "b6f6351234923fb30f3fc8e1e1b31d492d30d26ee934d62ab9e2944aa6e68639"
+    },
+    {
+      "path": "packages/relationship-engine/src/public-pair-opt-in.ts",
+      "sha256": "e28fdea3058c885bdbabb150c78e066b4d4529d5d50732e55028931aa3163c3b"
+    },
+    {
+      "path": ".docs/P05_PRIVATE_CHAT.md",
+      "sha256": "2b4317402111066af5aa2a8b0dc1f4e5785d6f0fcee43e3ad39e9f612ac3344b"
+    },
+    {
+      "path": ".docs/adr/ADR-020-p05-quiet-public-pair.md",
+      "sha256": "4025ff60dbd5435f170cbf409c8d40150017a588afab4e49b6b5fd3afbeb8e23"
+    },
+    {
+      "path": ".docs/adr/ADR-021-p05-safety-neutral-reset.md",
+      "sha256": "81c55012893705552c29143b82702cf86339174205102dac8acc1d6f8b6b27de"
+    }
+  ],
+  "findings": [
+    {
+      "id": "B05-001",
+      "severity": "P1",
+      "status": "RESOLVED_DIRTY_CODE_RETEST",
+      "defect_source_sha256": "1a7f16a1d60adbcec0f917484dbba8b14748fa35a9f4e7d14a21e8e69baeabcc",
+      "issue": "Mismatched/missing current round resends old public pair receipt text",
+      "initial_failed_tests": 2,
+      "current_passed_tests": 3
+    },
+    {
+      "id": "B05-002",
+      "severity": "P2",
+      "status": "OPEN",
+      "file": "apps/api/src/private-chat.ts",
+      "issue": "Clock regression revives observed-expired grant; GET reads future sent history",
+      "failed_tests": 2
+    }
+  ],
+  "test_artifacts": [
+    {
+      "path": ".artifacts/p05-backend-review/review.config.mjs",
+      "sha256": "5532f51d926a6ebd721306a34288a4f42bafa418581bbe0d399146dbb817c5c4"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/stale-public-receipt.test.ts",
+      "sha256": "2536f3c36df3f862397f71c4867e6851b761edd086f49b1ad73075cbd1e1da93"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/stale-receipt-results.json",
+      "sha256": "43b63f1f348d0ee72a7ce096fb5b3a02ac3e61c9946edba0b7bde6deeb162fbc"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/chat-clock-regression.test.ts",
+      "sha256": "10d703901a643b14f994d0594a55cf30809698d38cda9e9ed3db61a364d8ca8d"
+    },
+    {
+      "path": ".artifacts/p05-backend-review/backend-adversarial-round01.json",
+      "sha256": "b68e6006b32d4a3295a53c6fa659f185542f8a13bb0b18909ee6344017c91160"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/p05/backend-round-01.md",
+    "sha256": "201dd322893238273cd292ff0aa014775e5013056f078ca2080b2abccbd7c085"
+  }
+}

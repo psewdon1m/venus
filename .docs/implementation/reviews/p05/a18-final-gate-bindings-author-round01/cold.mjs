@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {pathToFileURL} from 'node:url';
+import vm from 'node:vm';
+const root='C:/.projects/venus',dir=root+'/.artifacts/p05-pilot-bundle-source15/.artifacts/p05-v2-layout-producer-a18-01',policy=await import(pathToFileURL(dir+'/runner-policy.mjs')),read=path=>JSON.parse(readFileSync(path,'utf8')),ack=read(root+'/.artifacts/p05-browser24-a18-root-ack01.pending.json'),browser=readFileSync(root+'/.artifacts/p05-browser24-a18-run01.mjs','utf8');
+const gate="assert.equal(authority.status,'ROOT_RUN_ACK');",header=browser.slice(0,browser.indexOf(gate)+gate.length).replace(/^import .*;\r?\n/gm,'');let reads=0;
+assert.throws(()=>vm.runInNewContext(header,{assert,process:{env:{}},readFileSync(path){assert.equal(path,'C:/.projects/venus/.artifacts/p05-browser24-a18-root-ack01.json');reads++;return JSON.stringify(ack);}}),{code:'ERR_ASSERTION'});assert.equal(reads,1);
+for(const[name,pin]of Object.entries(ack.runtime_pins))assert.equal(createHash('sha256').update(readFileSync(root+'/.artifacts/p05-private-batch-browser-producer24/'+name)).digest('hex'),pin);
+const binding=read(dir+'/binding.json'),layoutAck=read(dir+'/ROOT_RUN_ACK.json');assert.throws(()=>policy.assertBinding(binding,layoutAck),/ROOT_RUN_ACK_REQUIRED/);assert.equal(layoutAck.operational_resource_profile,'LAYOUT21_BROWSER_PID512');assert.equal(layoutAck.browser_pids_limit,512);
+console.log(JSON.stringify({status:'PASS_NECESSARY_PENDING_AUTHORITY_COLD_ONLY',browser_pending_denied_before_inventory:true,browser_runtime_MJS:9,layout_pending_denied:true,layout_runtime_digest:policy.runtimeDigest(policy.captureProducer(dir)),native_runs:0,Docker_allocations:0,DB_connections:0}));

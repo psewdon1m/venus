@@ -1,0 +1,19 @@
+--- METHOD16/browser.mjs
++++ METHOD17/browser.mjs
+@@ -78,12 +78,14 @@
+  return normalPrivateReady(a,control,{deadline:samePrior?prior.phase_deadline_monotonic_ms:performance.now()+8000,expected:wanted,intendedValue:intent?.scope.session===wanted.session&&intent?.scope.round===wanted.round?intent.field:null});
+ }
+ function assertPrivateTicket(a,id,ticket){
+- assert(ticket&&ticket.control===id,'METHOD12_PRIVATE_TICKET_REQUIRED');assert(performance.now()<ticket.deadline_monotonic_ms,'METHOD12_PRIVATE_TICKET_EXPIRED');const current=privateBatches.snapshot(a,{control:id,expectedScope:ticket.expected});assert(current.ready&&current.cycle_id===ticket.cycle_id,'METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK');
++ let current=null,checkedAt=null;
++ try{assert(ticket&&ticket.control===id,'METHOD12_PRIVATE_TICKET_REQUIRED');checkedAt=performance.now();assert(checkedAt<ticket.deadline_monotonic_ms,'METHOD12_PRIVATE_TICKET_EXPIRED');current=privateBatches.snapshot(a,{control:id,expectedScope:ticket.expected});assert(current.ready&&current.cycle_id===ticket.cycle_id,'METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK');}
++ catch(error){const rows=report.private_ticket_failures??=[];if(rows.length>=128)report.private_ticket_failure_overflow=true;else rows.push({control:normalPrivateControls.has(id)?id:'UNLISTED',checked_monotonic_ms:checkedAt,failed_monotonic_ms:performance.now(),prepared_cycle_id:Number.isSafeInteger(ticket?.cycle_id)&&ticket.cycle_id>=0?ticket.cycle_id:null,ticket_deadline_monotonic_ms:Number.isFinite(ticket?.deadline_monotonic_ms)?ticket.deadline_monotonic_ms:null,reason:!ticket||ticket.control!==id?'TICKET_MISSING_OR_WRONG_CONTROL':!Number.isFinite(ticket.deadline_monotonic_ms)||checkedAt>=ticket.deadline_monotonic_ms?'TICKET_EXPIRED_OR_INVALID_DEADLINE':'BATCH_NOT_READY_OR_CHANGED',current:safeFailedReadiness(current,{actor:a,expected:{...ticket?.expected,minRev:ticket?.expected?.rev}})});save();throw error;}
+ }
+ async function click(a,id,prepared=null){
+  const ticket=normalPrivateControls.has(id)?prepared??await preparePrivateClick(a,id):null;
+  if(ticket)a.privateReady?.delete(id);
+- report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);await expect(l).toBeVisible();await expect(l).toBeEnabled();if(ticket)assertPrivateTicket(a,id,ticket);await l.click(ticket?{timeout:Math.max(1,Math.min(15000,ticket.deadline_monotonic_ms-performance.now()))}:{});
++ report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);if(!ticket){await expect(l).toBeVisible();await expect(l).toBeEnabled();}if(ticket)assertPrivateTicket(a,id,ticket);await l.click(ticket?{timeout:Math.max(1,Math.min(15000,ticket.deadline_monotonic_ms-performance.now()))}:{});
+ }
+ async function fillPrivate(a,id,value,submit){
+  const deadline=performance.now()+8000,ticket=await normalPrivateReady(a,id,{deadline});await a.page.getByTestId(id).fill(value);assertPrivateTicket(a,id,ticket);await expect(a.page.getByTestId(id)).toHaveValue(value);a.privateIntents??=new Map();a.privateIntents.set(submit,{scope:ticket.expected,field:{control:id,value}});a.privateReady.set(submit,Object.defineProperties({...ticket},{expected:{value:ticket.expected},control:{value:submit}}));

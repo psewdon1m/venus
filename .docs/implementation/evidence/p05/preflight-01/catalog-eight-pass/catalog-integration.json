@@ -1,0 +1,83 @@
+{
+  "synthetic_fixture_only": true,
+  "production_approval": false,
+  "transport": "real PostgreSQL/filesystem; direct production service calls and one real internal HTTP replay case, no TLS/browser proof",
+  "records": [
+    {
+      "id": "B05-003-STOP-missing",
+      "status": "PASS",
+      "detail": {
+        "real_pg_committed_stop": true,
+        "room_emit_committed": true,
+        "catalog_new_start_fail_closed": true
+      }
+    },
+    {
+      "id": "B05-003-STOP-utf8",
+      "status": "PASS",
+      "detail": {
+        "real_pg_committed_stop": true,
+        "room_emit_committed": true,
+        "catalog_new_start_fail_closed": true
+      }
+    },
+    {
+      "id": "B05-003-STOP-partial",
+      "status": "PASS",
+      "detail": {
+        "real_pg_committed_stop": true,
+        "room_emit_committed": true,
+        "catalog_new_start_fail_closed": true
+      }
+    },
+    {
+      "id": "B05-003-NEUTRAL",
+      "status": "PASS",
+      "detail": {
+        "real_pg_aborted": true,
+        "snapshot_unchanged": true,
+        "preferences_neutral": true
+      }
+    },
+    {
+      "id": "B05-003-LEAVE",
+      "status": "PASS",
+      "detail": {
+        "real_pg_leave_committed": true,
+        "stale_socket_denied": true
+      }
+    },
+    {
+      "id": "B05-001-HTTP-REPLAY",
+      "status": "PASS",
+      "detail": {
+        "real_internal_http": true,
+        "real_pg_encrypted_idempotency": true,
+        "original_public_round_observed": true,
+        "stopped_round_redacted": true,
+        "committed_session_and_revision_preserved": true
+      }
+    },
+    {
+      "id": "B05-003-WITHDRAW",
+      "status": "PASS",
+      "detail": {
+        "actual_fsynced_ledger": true,
+        "actual_pg_abort_committed": true,
+        "intermediate_emit_did_not_rollback": true,
+        "snapshot_cleared": true,
+        "public_dispatch_clear_only": true
+      }
+    },
+    {
+      "id": "B05-003-RECONCILE",
+      "status": "PASS",
+      "detail": {
+        "durable_intent_before_pg": true,
+        "reconciliation_committed": true,
+        "repeat_did_not_revive": true
+      }
+    }
+  ],
+  "status": "PASS"
+}

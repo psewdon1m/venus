@@ -1,0 +1,245 @@
+--- A25/.docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md
++++ A26/.docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md
+@@ -0,0 +1,15 @@
++# ADR-030 · Совместимое продолжение после исчерпания публичного пула
++
++Дата: 2026-10-23 (Europe/Istanbul, UTC+03:00). Статус: `IMPLEMENTED_FOCUSED_PASS / INDEPENDENT_AND_FULL_MEASUREMENT_PENDING`.
++
++Исходный M3 остановился на точном случае `venus:P03-M2:holdout:FG:G:5:yes_but:in_person:399`: выбраны 98 из 100 раундов, затем получен `TOPIC_SAFE_POOL_EXHAUSTED`. [Причинный разбор](../implementation/reviews/p05/inference23999-causal-diagnosis-round01/REPORT.md) подтвердил исчерпание публичной ветки: 93 использованных публичных карточки и две оставшиеся карточки, заблокированные семантической историей. При этом для каждой из десяти пар оставались 30 допустимых приватных карточек, использованы только 5 из разрешённых 25 приватных возможностей. Новые карточки или ослабление фильтров не нужны. Исходный FAIL сохраняется.
++
++Если обычный публичный пул пуст, а исходные baseline, стадия и лимит допускают приватную возможность, планировщик использует существующую приватную ветку. Решение о возможности не читает скрытые разрешения тем, исключения, приватные candidate IDs или результат предыдущей попытки. Выбор пары и карточки, точные и семантические запреты повторов, безопасная пустота, согласия и все последующие серверные проверки остаются прежними. Пустой приватный результат не заменяется публичной карточкой и не запускает повторный подбор ради положительного ответа. Если приватная возможность недопустима, исходный типизированный отказ сохраняется.
++
++Выбор имеет отдельную ревизию `RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1`, экспортируемую как `TOPIC_SELECTION_REVISION`. Воспроизведение требует точных source bytes, этой ревизии, seed и catalogue/map pins. Одного значения `TOPIC_ALGORITHM` для идентичности реализации недостаточно. RNG domain и порядок случайных вызовов на прежних успешных путях сохраняются; новая ветка расширяет путь, на котором прежняя реализация завершалась отказом.
++
++Сериализованный `RE-1.P05-TOPIC-3` сохраняется как семейство совместимого snapshot/history reader. Новых полей snapshot, history или round нет. В отличие от [ADR-027](ADR-027-p05-private-session-card-uniqueness.md), исправление не вводит нового запрета на ранее допустимые истории: восстановление проверяет прежние shape, bindings, стадии, eligibility, уникальность и лимиты, а не повторяет случайный выбор возможности. Новые приватные раунды имеют прежнюю допустимую форму. Изменение токена на TOPIC-4 заставило бы B4 прерывать совместимые сессии в bootGate без необходимости изменения формата.
++
++Откат восстанавливает согласованный прежний bundle. B4 может читать допустимую историю и выполнять прежние boot/revocation/lifecycle операции, но возвращает известный отказ будущего advance при исчерпании публичного пула. Совместимость чтения и жизненного цикла не означает одинаковое будущее планирование. Истории и receipts при откате не переписываются; приватные разрешения не восстанавливаются из старого состояния. Сильный ограниченный OCI-гейт повторно проверяется на точных новых байтах.
++
++Приёмка требует независимой проверки baseline-only решения, guards и совместимости; целевых положительных и отрицательных регрессий; полного нового исходного C2/M3 с прежними counts, seeds и thresholds; актуальных UI/OCI и чистых quality/CI гейтов. Прежние результаты не переименовываются в результаты новой реализации, смешанный source carry не используется. Это исправление P05; P06 не начинается.
+--- A25/.docs/adr/current-index.json
++++ A26/.docs/adr/current-index.json
+@@ -77,6 +77,14 @@
+       "status": "IMPLEMENTED_FOCUSED_PASS_INDEPENDENT_AND_ACTUAL_PENDING",
+       "authority": ".docs/implementation/user-decisions.v4.json",
+       "decision_id": "U-019"
++    },
++    {
++      "id": "ADR-030",
++      "path": ".docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md",
++      "status": "IMPLEMENTED_FOCUSED_PASS_INDEPENDENT_AND_FULL_MEASUREMENT_PENDING",
++      "authority": ".docs/implementation/p05-source-revision-public-exhaustion-focus-08.json",
++      "serialized_history_family": "RE-1.P05-TOPIC-3",
++      "selection_revision": "RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1"
+     }
+   ],
+   "historical_extensions": [
+--- A25/.docs/implementation/p05-source-revision-public-exhaustion-focus-08.json
++++ A26/.docs/implementation/p05-source-revision-public-exhaustion-focus-08.json
+@@ -0,0 +1,81 @@
++{
++  "schema_version": 1,
++  "revision": "P05-PUBLIC-EMPTY-PRIVATE-AND-EXPLICIT-INVITE-SELECTION-08",
++  "kind": "COMPATIBLE_PLANNER_DOMAIN_EXTENSION_AND_FRONTEND_SELECTION_FIX",
++  "parent_source_identity": "acb2945827a8961a3137df0938d6982d90c841d80d6f9fde6fe048374c397cc4",
++  "parent_source_count": 1879,
++  "selection_revision": "RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1",
++  "serialized_history_family": "RE-1.P05-TOPIC-3",
++  "ADR": ".docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md",
++  "changed_source_files": {
++    "apps/web/src/room-shell.tsx": "2bcf1f8a5835f47f7bcdaa8e935676f0433cf46d28b8484734dfdb977ec15ff9",
++    "packages/relationship-engine/src/topic-planner.ts": "14ccbb92b9daefaf2b80158ffdbc06b7f82eba0ea18afde9ee34135d46c341d1",
++    "packages/relationship-engine/src/topic-planner.test.ts": "de857fe4e81454cd6f489269847666627751677242e74437b550cdf93c7b40d7",
++    "packages/relationship-engine/src/index.ts": "4d028d0abb143dd55324604b6c17f4043b1f7b6f7a8cf713a9a50e9ed0d4e341",
++    ".docs/adr/current-index.json": "a724f729971e636cbddb44b9661399daa58f4eae4ff299a3812ffb2b6628d88e",
++    ".docs/adr/ADR-030-p05-public-exhaustion-compatible-recovery.md": "3bc9785407d12162b3b27344e4fa6440d440ede4720b6c0a15f1fe3144cc7443"
++  },
++  "before_source_files": {
++    "apps/web/src/room-shell.tsx": "0b32ece8232f42a07f5c39515c574bf4c8a8a9f0a0f7498acee4acbeebc42298",
++    "packages/relationship-engine/src/topic-planner.ts": "73f1cc9696665dd5c362cd471d832fbc81b04d105810322cf9103dfb720f3c35",
++    "packages/relationship-engine/src/topic-planner.test.ts": "e56a7c0c1d06179a360855503e03e7869fe0902bb9f5689fb50ebd088f809b88",
++    "packages/relationship-engine/src/index.ts": "3702bb857f136463562c1942ba6fe17248ff7122103fe89da5106f30b92edf01",
++    ".docs/adr/current-index.json": "d0debd3e98b05549facaca9605636e17a765053cfd55ae6f141a9069ce9beaa4"
++  },
++  "planner_behavior": "Reuse the existing private branch only when public pool is empty and baseline private options/stage/original25percent cap permit. Opportunity existence never reads hidden effective topics/exclusions/candidate IDs. Existing private candidate can remain safely empty; no resampling or unsafe substitution. Normal successful paths retain RNG domains and draw order.",
++  "frontend_behavior": "Invitation selection is explicit onClick/currentTarget.select, rather than unsolicited onFocus/Tab selection. Native Ctrl+A remains. Main focus/keyup and three textarea handlers, CSS, nativeTab, all UI criteria and budgets unchanged. Trace proves late scroll rollback after correct handlers; selection/caret origin is a strong structural inference, not a traced Firefox-internal task.",
++  "failure_inputs": {
++    "inference_case": 23999,
++    "seed": "venus:P03-M2:holdout:FG:G:5:yes_but:in_person:399",
++    "R": 100,
++    "completed": 98,
++    "public_used": 93,
++    "private_used": 5,
++    "minimum_remaining_legal_private_per_pair": 30,
++    "diagnosis_INDEX_sha256": "1ee488b603b8fb901375f19749c57e0c0bc0fbea163e1892e53243cb5b13099f",
++    "original05_terminal_sha256": "16f3460e08044c9793f86c4fa1f137e96f2abe1d68fdf5ede32e4add232b8526",
++    "focus_diagnostic_project": "venus-v2-layout-0f953f18807b",
++    "focus_original_first_sha256": "76cda74d15bdbeb72005b19841a7b4d95e2746684bf78ef8f4173aa02f51a509",
++    "focus_causal_trace_sha256": "198dfb162cc2bc55ebb9215c938f51eb304573ed30062432865a36fdcdf5c927",
++    "focus_report_sha256": "0227f3cd516d23082b6a3062548f1c4ea9ac4ba44588075242ded50d630dcc70"
++  },
++  "validation": {
++    "before_planner_fix": {
++      "exit": 1,
++      "PASS": 67,
++      "FAIL": 2,
++      "scope": "Focused69 existing+3regressions; two reproduce public exhaustion"
++    },
++    "first_after_fix": {
++      "exit": 1,
++      "PASS": 68,
++      "FAIL": 1,
++      "finding": "New counterfactual test changed hidden topics without increasing safety revision; original TOPIC_SAFETY_REWIND correctly refused. Fixture corrected to revision2, production guard unchanged."
++    },
++    "corrected_focused": {
++      "exit": 0,
++      "PASS": 69
++    },
++    "compiler_exit": 0,
++    "web_typecheck_exit": 0,
++    "focused_lint_exit": 0,
++    "host_JS_exit": 0,
++    "host_JS_PASS": 1107,
++    "host_JS_platform_SKIP": 207,
++    "host_JS_files": 76,
++    "host_JS_seconds": 29.45,
++    "host_preflight_exact_four_changed_code_bytes": true,
++    "normative_ADR_revision_metadata_added_after_host_preflight": true,
++    "native_current_source_and_clean_quality_PENDING": true
++  },
++  "unchanged": [
++    "Cards470r4 and provisional owner scope/digest",
++    "Snapshot/history/round closed shapes, SQL, API/wire schemas, ACL/consent/TTL/finalfences",
++    "TOPIC_RANDOM_DOMAIN and ordinary successful-path RNG order",
++    "Original full C2/M3 case counts/seeds/thresholds, first genuine focus/layout oracle/deadlines"
++  ],
++  "compatibility": "Retain history reader family3; separate selection patch identity and exact source bind changed sampler. No new serialized fields. Full uniform new-source C2/M3 rerun, no mixed source carry. Fresh current9UI/original14OCI/quality/CI and independent gates required.",
++  "rollback": "Restore coherent B4/previous bundle; valid history remains readable and private epochs stay revoked. Earlier future public-exhaustion refusal and invite selection scroll limitation can return. Bounded read/boot/lifecycle compatibility, not identical future planning.",
++  "full_stage_PASS": false,
++  "P06_started": false
++}
+--- A25/apps/web/src/room-shell.tsx
++++ A26/apps/web/src/room-shell.tsx
+@@ -35,7 +35,7 @@
+   return <section className="room-shell" data-testid="room-shell">
+     <header className="room-heading"><div><p className="eyebrow">{t.yourRoom}</p><h1 data-testid="room-title">{room.meeting_context==='online'?t.online:t.inPerson}</h1></div><p role="status" data-testid="connection-status">{t[connection]}</p></header>
+     <div className="room-grid"><section className="panel"><h2>{t.members} · {room.members.length}/8</h2><ul data-testid="member-list" className="member-list">{room.members.map(m=><li key={m.id}><span>{m.display_name}{m.id===prefs.owner_member_id?<small> · {t.you}</small>:null}</span><small>{m.role==='host'?t.host:t.member} · {m.presence==='online'?t.present:m.presence==='reconnecting'?t.reconnecting:t.absent} · {m.setup_ready?t.setupReady:t.setupPending}</small></li>)}</ul>
+-      {me?.role==='host'?<><label>{t.inviteLink}<input data-testid="room-invite" value={invite} readOnly onFocus={e=>e.target.select()}/></label>
++      {me?.role==='host'?<><label>{t.inviteLink}<input data-testid="room-invite" value={invite} readOnly onClick={e=>e.currentTarget.select()}/></label>
+         <label>{t.meetingContext}<select data-testid="room-context" disabled={busy||prefs.locked} value={room.meeting_context} onChange={e=>{const input={meeting_context:e.target.value,expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};void perform(async()=>{await api.request(`/api/v1/rooms/${room.room_id}/context`,input,'PATCH');await refresh();});}}><option value="online">{t.online}</option><option value="in_person">{t.inPerson}</option></select></label></>:null}
+     </section>
+     <PreferencesForm key={prefs.owner_member_id+':'+prefs.rev} {...{api,room,prefs,t,busy,perform,refresh,locale}}/></div>
+--- A25/packages/relationship-engine/src/index.ts
++++ A26/packages/relationship-engine/src/index.ts
+@@ -8,7 +8,7 @@
+ export const engineAvailability={available:false,prerequisite:'EXIT-P03/P04/P05'} as const;
+ export {FrozenTopicMap,TOPIC_MAP_VERSION} from './topic-map.js';
+ export type {TopicMapPins,TopicMapBytes,TrustedTopicPins,TopicReference,TopicMapEntry} from './topic-map.js';
+-export {TOPIC_ALGORITHM,TOPIC_PRIVATE_POLICY,TOPIC_RECOVERY_POLICY,immutableTopicSnapshot,immutableTopicHistory,createTopicHistory,selectNextTopicRound,replaceTopicCandidate,recordTopicOutcome,topicPublicProjection,preflightTopics} from './topic-planner.js';
++export {TOPIC_ALGORITHM,TOPIC_SELECTION_REVISION,TOPIC_PRIVATE_POLICY,TOPIC_RECOVERY_POLICY,immutableTopicSnapshot,immutableTopicHistory,createTopicHistory,selectNextTopicRound,replaceTopicCandidate,recordTopicOutcome,topicPublicProjection,preflightTopics} from './topic-planner.js';
+ export type {TopicSnapshot,TopicSafetyState,TopicHistoryRecord,TopicAttempt,TopicRound,TopicPlannerHistory,TopicPlanningResult} from './topic-planner.js';
+ export {TOPIC_TARGETED_REPLACEMENT_VERSION,replaceTopicCandidateForTopics} from './topic-planner.js';
+ export type {TargetedTopicReplacementRequest} from './topic-planner.js';
+--- A25/packages/relationship-engine/src/topic-planner.test.ts
++++ A26/packages/relationship-engine/src/topic-planner.test.ts
+@@ -59,6 +59,42 @@
+ }
+ const mutable=<T>(v:T)=>v as unknown as Record<string,unknown>;
+ const unorderedPair=(actors:readonly string[])=>[...actors].sort().join(':');
++describe('public repertoire exhaustion with remaining private opportunities',()=>{
++ function depleted(s:TopicSnapshot,completed=10){
++  const state=safety(s);let history=createTopicHistory(s,pack,map);
++  for(let n=0;n<completed;n++){
++   const next=selectNextTopicRound(s,history,pack,map,state);history=next.history;
++   if(next.round.card)history=recordTopicOutcome(s,history,pack,map,{expected_history_revision:history.revision,round_id:next.round.round_id,offer_epoch:null,card:next.round.card,outcome:'disclosed'}).history;
++  }
++  const seen=new Set(history.public_history.flatMap(r=>map.entry(r.card_id).semantic_family_ids)),prior:TopicHistoryRecord[]=[];
++  for(const card of pack.cards){
++   if(card.mode!==s.baseline.mode||card.interaction==='pair_private'||!map.allowed(card)||!card.meeting_contexts.includes(s.baseline.context)||card.participants_required>s.baseline.players.length)continue;
++   const families=map.entry(card.id).semantic_family_ids;if(families.some(id=>seen.has(id)))continue;
++   families.forEach(id=>seen.add(id));prior.push({...row(card.id,prior.length+1,s.baseline.players.slice(0,card.participants_required).map(p=>p.id)),context:s.baseline.context,stage:4});
++  }
++  return immutableTopicHistory({...history,public_history:[...prior,...history.public_history].map((r,i)=>({...r,sequence:i+1}))},s,pack,map);
++ }
++ it('uses remaining private opportunities without exceeding the existing session cap',()=>{
++  const s=snapshot('P05-PUBLIC-EMPTY-PRIVATE-1'),state=safety(s);let history=depleted(s);
++  for(let n=0;n<5;n++){
++   const next=selectNextTopicRound(s,history,pack,map,state);history=next.history;
++   expect(next.round.interaction).toBe('pair_private');expect(next.round.requires_action_consent).toBe(true);expect(next.round.card).not.toBeNull();
++  }
++  expect(history.rounds.filter(r=>r.interaction==='pair_private')).toHaveLength(5);
++  expect(()=>selectNextTopicRound(s,history,pack,map,state)).toThrow('TOPIC_SAFE_POOL_EXHAUSTED');
++ });
++ it('keeps the public opportunity independent of hidden topic allowance, including safe-empty',()=>{
++  const s=snapshot('P05-PUBLIC-EMPTY-PRIVATE-1'),history=depleted(s);
++  const allowed=selectNextTopicRound(s,history,pack,map,safety(s)),empty=selectNextTopicRound(s,history,pack,map,safety(s,[],2));
++  expect(allowed.round.card).not.toBeNull();expect(empty.round.card).toBeNull();expect(empty.round.interaction).toBe('pair_private');
++  expect(topicPublicProjection(allowed.round,allowed.history)).toEqual(topicPublicProjection(empty.round,empty.history));
++ });
++ it('still refuses without the baseline private channel or before the private progression stage',()=>{
++  const noChat=snapshot('P05-PUBLIC-EMPTY-NO-CHAT',{context:'online',capabilities:[]}),early=snapshot('P05-PUBLIC-EMPTY-EARLY');
++  expect(()=>selectNextTopicRound(noChat,depleted(noChat),pack,map,safety(noChat))).toThrow('TOPIC_SAFE_POOL_EXHAUSTED');
++  expect(()=>selectNextTopicRound(early,depleted(early,0),pack,map,safety(early))).toThrow('TOPIC_SAFE_POOL_EXHAUSTED');
++ });
++});
+ describe('sessionwide private exact-card uniqueness',()=>{
+  it('never reoffers an exact private ID to another pair in the same native session',()=>{
+   const s=snapshot('P05-EXACT-ID-REGRESSION-1',{total_rounds:100,context:'online'},8),state=safety(s);
+--- A25/packages/relationship-engine/src/topic-planner.ts
++++ A26/packages/relationship-engine/src/topic-planner.ts
+@@ -12,6 +12,9 @@
+  * transactionally, and repeats all admission/consent/TTL guards at final enqueue.
+  * Pure planning does not grant invitation/action consent or private delivery. */
+ export const TOPIC_ALGORITHM = 'RE-1.P05-TOPIC-3' as const;
++// Compatible partial-function extension; serialized history readers remain v3.
++// Exact source + this patch identity + seed + pins identify selection behaviour.
++export const TOPIC_SELECTION_REVISION = 'RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1' as const;
+ // Selection semantics are versioned separately from the retained RNG domain.
+ // The exact-ID correction never makes public scheduling consume private history.
+ export const TOPIC_RANDOM_DOMAIN = 'RE-1.P05-TOPIC-2' as const;
+@@ -296,10 +299,10 @@
+   const stage=progressionStage(index,s.total_rounds),base=options(snapshot,pack,map,stage),privates=base.filter(o=>o.kind==='pair_private');
+   const publicRows=history.public_history;
+   const rng=new Random(s.seed,{domain:'public-schedule',room_id:s.room_id,session_id:s.session_id,index,public_history:publicRows,pins:map.pins});
+-  const opportunity=privates.length>0&&history.rounds.filter(r=>r.interaction==='pair_private').length<Math.ceil(.25*s.total_rounds)
+-    &&rng.next()<(stage<3?0:stage===3?.22:.4);
++  const privateAvailable=privates.length>0&&history.rounds.filter(r=>r.interaction==='pair_private').length<Math.ceil(.25*s.total_rounds);
++  const opportunity=privateAvailable&&rng.next()<(stage<3?0:stage===3?.22:.4);
+   const roundId=rng.uuid();let round:TopicRound;
+-  if(opportunity){
++  const selectPrivate=():TopicRound=>{
+     const privateRng=new Random(s.seed,{domain:'private-option',room_id:s.room_id,session_id:s.session_id,index,round_id:roundId,pins:map.pins,
+       private_history:history.private_history,public_history:publicRows});
+     let pool=privates;
+@@ -308,14 +311,21 @@
+       &&effectivePrivateCards(history,o.actors,o.cards,map,state).length>0))
+       pool=pool.filter(o=>pairKey(o.actors)!==pairKey(previous.actors));
+     const selected=pickOption(privateRng,pool,[...publicRows,...history.private_history]);
+-    round={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:'pair_private',actors:[...selected.actors],
++    const selectedRound:TopicRound={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:'pair_private',actors:[...selected.actors],
+       primary_member_id:selected.actors[0]!,card:null,requires_action_consent:true,disclosure:'selected',
+       baseline_private_max_intensity:Math.max(...privates.flatMap(o=>o.cards.map(c=>c.min_comfort))),attempts:[]};
+-    const attempt=candidate(snapshot,history,round,pack,map,state,1,0);round={...round,card:attempt.card,attempts:[attempt]};
+-  }else{
++    const attempt=candidate(snapshot,history,selectedRound,pack,map,state,1,0);return {...selectedRound,card:attempt.card,attempts:[attempt]};
++  };
++  if(opportunity)round=selectPrivate();
++  else{
+     let pool=base.filter(o=>o.kind!=='pair_private').map(o=>({...o,cards:o.cards.filter(c=>!blocked(c,publicRows,map))})).filter(o=>o.cards.length);
+     const intensity=previousPublicIntensity(snapshot,history,pack,map);
+     if(intensity>=2&&rng.next()<.35){const softer=pool.map(o=>({...o,cards:o.cards.filter(c=>c.min_comfort<intensity)})).filter(o=>o.cards.length);if(softer.length)pool=softer;}
++    // This trigger is public/baseline only. Hidden topic availability must not
++    // determine whether an opportunity exists; the unchanged private branch may
++    // still return a truthful safe-empty candidate with all consent guards.
++    if(pool.length===0&&privateAvailable)round=selectPrivate();
++    else{
+     assertEngine(pool.length>0,'TOPIC_SAFE_POOL_EXHAUSTED');
+     const pairs=pool.filter(o=>o.kind==='pair_public'),general=pool.filter(o=>o.kind==='group'||o.kind==='solo');
+     if(pairs.length&&general.length)pool=rng.next()<[.2,.4,.6,.6][stage-1]!?pairs:general;
+@@ -324,6 +334,7 @@
+     const count=appearances(publicRows),primary=actors[0]??rng.weighted(s.players,p=>1/(1+(count.get(p.id)??0))).id;
+     round={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:card.interaction,actors,primary_member_id:primary,card:ref(card),
+       requires_action_consent:card.consent==='bilateral',disclosure:'selected',baseline_private_max_intensity:0,attempts:[]};
++    }
+   }
+   let next:TopicPlannerHistory={...history,revision:history.revision+1,safety_revision:state.revision,safety_digest:safetyDigest(state),rounds:[...history.rounds,round]};
+   if(round.card&&round.interaction==='pair_private'){const card=pack.card(round.card.card_id);

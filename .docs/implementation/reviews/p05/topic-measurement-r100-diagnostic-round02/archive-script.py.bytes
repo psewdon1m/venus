@@ -1,0 +1,59 @@
+import json,gzip,hashlib,math,io,zipfile,subprocess,datetime
+from pathlib import Path
+from collections import Counter
+root=Path('.').resolve(); src=root/'.artifacts/p05/r100-v2-bbe5705b853d'; out=root/'.docs/implementation/reviews/p05/topic-measurement-r100-diagnostic-round02';out.mkdir(exist_ok=False)
+h=lambda b:hashlib.sha256(b).hexdigest()
+load=lambda p:json.loads(p.read_text(encoding='utf-8'))
+def put(n,d): (out/n).write_text(json.dumps(d,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+pins=load(src/'input-pins.json'); checks=[]
+for row in pins['mapping']:
+ b=(src/row['snapshot_path']).read_bytes();assert h(b)==row['sha256'];assert h((root/row['original_path']).read_bytes())==row['sha256'];checks.append({'path':row['original_path'],'sha256':h(b)})
+before=load(src/'source-before.json');after=load(src/'source-after.json');assert before==after
+progress=[load(p) for p in sorted((src/'progress').glob('*.json'))];assert [r['rounds_completed'] for r in progress]==list(range(1,78));last=progress[-1]
+streams={}
+for name in ['public','synthetic-private']:
+ rows=[];allraw=[];hist=Counter();payload=0;chunks=[];errors=[]
+ for p in sorted((src/'diagnostic'/name).glob('*.gz')):
+  gz=p.read_bytes()
+  try:
+   raw=gzip.decompress(gz);assert len(raw)<=4*1024**2
+   for line in raw.splitlines():
+    r=json.loads(line);rows.append(r);payload+=len((r.get('raw_serialized_UTF8',r.get('raw',''))).encode('utf-8'))
+   allraw.append(raw);hist.update(raw);chunks.append({'path':p.relative_to(src).as_posix(),'gzip_bytes':len(gz),'raw_bytes':len(raw),'gzip_sha256':h(gz),'raw_sha256':h(raw)})
+  except Exception as e:errors.append({'path':p.relative_to(src).as_posix(),'error':str(e)})
+ raw=b''.join(allraw);batch=[];pending=[];size=0
+ for line in raw.splitlines(keepends=True):
+  if size+len(line)>4*1024**2:
+   b=b''.join(pending);z=gzip.compress(b,compresslevel=6,mtime=0);batch.append({'raw_bytes':len(b),'gzip_bytes':len(z),'raw_sha256':h(b)});pending=[];size=0
+  pending.append(line);size+=len(line)
+ if pending:
+  b=b''.join(pending);z=gzip.compress(b,compresslevel=6,mtime=0);batch.append({'raw_bytes':len(b),'gzip_bytes':len(z),'raw_sha256':h(b)})
+ streams[name]={'records':len(rows),'raw_NDJSON_UTF8_bytes':len(raw),'payload_UTF8_bytes':payload,'raw_sha256':h(raw),'retained_gzip_bytes':sum(c['gzip_bytes'] for c in chunks),'valid_chunks':len(chunks),'invalid_chunks':errors,'Shannon_bits_per_byte':-sum(n/len(raw)*math.log2(n/len(raw)) for n in hist.values()),'byte_histogram':[hist[i] for i in range(256)],'chunks':chunks,'same_retained_bytes_regrouped_4MiB_python_gzip6':{'gzip_bytes':sum(c['gzip_bytes'] for c in batch),'chunks':batch,'scope':'Postmortem re-encoding of retained exact NDJSON, Python gzip6; not missing full-session output, Node bitwise gzip parity or fullmatrix compression proof'}}
+assert streams['public']['records']==last['public_records'];assert streams['synthetic-private']['records']==last['private_records']
+assert streams['public']['raw_NDJSON_UTF8_bytes']==last['public_raw_bytes'];assert streams['synthetic-private']['raw_NDJSON_UTF8_bytes']==last['private_raw_bytes']
+assert streams['public']['retained_gzip_bytes']==last['public_gzip_bytes'];assert streams['synthetic-private']['retained_gzip_bytes']==last['private_gzip_bytes']
+cleanup=subprocess.run(['docker','ps','-aq','--filter','label=com.venus.measurement.owner=5ff7fcb42f211af266ed45823448a392'],capture_output=True,text=True,check=True);assert cleanup.stdout.strip()==''
+put('fresh-cleanup.json',{'at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'command':['docker','ps','-aq','--filter','label=com.venus.measurement.owner=5ff7fcb42f211af266ed45823448a392'],'exit_code':cleanup.returncode,'stdout':cleanup.stdout,'stderr':cleanup.stderr,'owned_container_count':0})
+report={'status':'HARD_WALL_STOPPED_NOT_ACCEPTED','scope':'NON_GATING_OPERATIONAL_DIAGNOSTIC_ONLY','source_identity':before['identity'],'included_files':len(before['files']),'source_before_after_equal':True,'snapshot_and_original_pins_verified':len(checks),'producer_files':len(pins['producer']),'compiled_files':len(pins['compiled']),'image_source_files':len(pins['image_source']),'pins':checks,'last_completed':last,'terminal':load(src/'terminal.json'),'launcher':load(src/'launcher.json'),'host_space':load(src/'host-space-after.json'),'image_pins_verified':len(load(src/'image-pins-observed.json')['imagePins']),'streams':streams,'resource_attribution':{'completed_checkpoint_CPU_ms':last['cpu_ms']['user']+last['cpu_ms']['system'],'wall_minus_process_CPU_ms':last['wall_ms']-last['cpu_ms']['user']-last['cpu_ms']['system'],'interpretation':'Large unaccounted wall gap; per-layer filesystem/native-boundary timing absent. Process CPU excludes Docker VM/kernel/host operations and does not prove any single bottleneck. RSS is sampled completed-round prefix, not terminal process peak. No extrapolated ETA.'},'limitations':['77 completed-round progress receipts; no final100 summary, feature vector or invariant aggregate. In-memory current round or pending chunk lost at hardkill is not completed evidence.','Pure actual-mutator memory/SQL/auth seams; not PG/HTTP/ordinaryWS/runtime fidelity.','Source snapshots inside recursively checked Windows output bind tree; metadata overhead is a hypothesis pending a separately timed fixed-profile experiment.','Node child hardwall300000ms; launcher308867ms includes setup/stop/final checks.','One authorized attempt; old120sSTOP immutable; no extra run or sample/seed/count/threshold change.','Raw valid prefix byte/entropy statistics do not certify fullR100 or matrix storage/time feasibility.','Source unchanged e9; future source/compiled identity requires fresh pins, never rename old proof.'],'statistics_RUN':False,'runtime_fidelity':False,'full_matrix_feasibility':False,'P05_PASS':False}
+put('report.json',report)
+buf=io.BytesIO()
+with zipfile.ZipFile(buf,'w',zipfile.ZIP_DEFLATED,compresslevel=6) as z:
+ for p in sorted(src.rglob('*')):
+  if p.is_file():z.writestr(p.relative_to(src).as_posix(),p.read_bytes())
+zipbytes=buf.getvalue();assert len(zipbytes)<20*1024**2;(out/'exact-run.zip').write_bytes(zipbytes)
+put('archive.json',{'original_path':src.relative_to(root).as_posix(),'archive':'exact-run.zip','sha256':h(zipbytes),'zip_files':len(zipfile.ZipFile(io.BytesIO(zipbytes)).namelist()),'raw_original_bytes':sum(p.stat().st_size for p in src.rglob('*') if p.is_file()),'archive_bytes':len(zipbytes),'raw_map':[{'path':p.relative_to(src).as_posix(),'sha256':h(p.read_bytes()),'bytes':p.stat().st_size} for p in sorted(src.rglob('*')) if p.is_file()]})
+(out/'REPORT.md').write_text('''# R100v2 operational diagnostic
+
+**HARD_WALL_STOPPED_NOT_ACCEPTED.** One fixed-seed attempt on e9b9d972/1813 and image d316b97d reached77 completed rounds at296453.8ms. The300000ms watchdog killed the child(137); launcher exited1 after308867.1ms including setup, termination and final checks. Owned container cleanup is complete. No additional run occurred.
+
+At the last durable checkpoint process CPU was47309.783ms(user16414.552/system30895.231); sampled RSS290222080bytes. The wall/CPU gap is249144.016ms. Per-layer I/O timing is absent: this identifies unaccounted wall without proving a particular metadata cause. Inputs were inside the recursively checked output bind tree; separated Linux-native output is a proposed method, not a retroactive explanation.
+
+All2341 public and114 synthetic-private retained records decode exactly. NDJSON totals4866859/106782bytes; retained gzip278447/6596bytes. Postmortem entropy and gzip6 regrouping concern only this exact retained prefix. No final100 summary exists. This cannot establish fullR100 or matrix storage/time feasibility or ETA.
+
+Source before/after,96 snapshot inputs(25producer,64compiled,7source), actual image pins and originals match. Raw ZIP preserves every file/progress/FAIL status. Host minimum sampled free27610689536bytes exceeded declared10GiB+20MiB. Sampling is not atomic disk protection.
+
+Pure memory-adapter evidence does not prove PG/HTTP/ordinaryWS fidelity, statistical gates, human450 release or fullP05. Counts/seeds/thresholds unchanged; original120sSTOP remains immutable.
+''',encoding='utf-8')
+(out/'archive-script.py.bytes').write_bytes(Path(__file__).read_bytes())
+entries=[{'path':p.relative_to(out).as_posix(),'sha256':h(p.read_bytes()),'bytes':p.stat().st_size} for p in sorted(out.rglob('*')) if p.is_file()];put('INDEX.json',{'scope':'immutable failed diagnostic archive; not gate acceptance','files':entries})
+print(json.dumps({'packet':out.relative_to(root).as_posix(),'index_sha256':h((out/'INDEX.json').read_bytes()),'archive_sha256':h(zipbytes),'files':len(entries),'rounds':77,'prefix_gzip_bytes':streams['public']['retained_gzip_bytes']+streams['synthetic-private']['retained_gzip_bytes']}))

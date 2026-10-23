@@ -1,0 +1,9 @@
+# Corrective author02: P05-ROLLBACK-EXPORT-FAULT-001
+
+Immutable inputs: producer01 INDEX684f3ea06fb1754c494edf5d3d1123e6ac3c7023e2dedde732386737473f652c; independent01 INDEX2b4f4106a2167fd86389a7e88f30912eb49fe8bb24d785e748a9d9115a155153. Original failed source/contract counterexample is preserved as bytes. This revision corrects that one P2 and prior B factual documentation; no app/card changes or actual RUN.
+
+The host export catch sets export_error, latches FAIL before selecting cleanup disposition, and sets first_error only when no primary error exists (preferring the prior typed phase error). The prior failed/manual path is reused: stop PG, keep keeper/native volumes. It does not execute success-path secret erasure or volume deletion. The success contract rejects export_error (including malformed false/object/string), so schema aggregation cannot relabel an export failure PASS.
+
+Six new exact-source finite controls execute the actual catch body and actual failed cleanup IfStatement with inert commands, and replay the independent schema mutation against the current exact positive fixture. Existing controls add one export-error negative. These establish bounded method behavior only, not an actual Docker timeout, evidence export or14-phase run. Actual14 still requires independent repeat and exact external rootACK. All unchanged root900s/476MiB/state512 caps, Aaa1205/ef5/Bb244/0b4, liveD/E oracles and fixture limits from01 remain.
+
+The old01-versus04 delta artifacts are retained with historical01 filenames; current predecessor-source-delta records02 versus immutable01. Old results/attempts in the clone remain historical trace; final current check outputs and AUTHOR_CHECKS distinguish the new173 finite controls. Working INDEX is created only after author writes stop, then mirrored in durable author-round02.

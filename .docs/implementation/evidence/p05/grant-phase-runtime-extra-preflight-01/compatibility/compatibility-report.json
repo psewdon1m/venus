@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "suite": "P05_TOPIC_COMPATIBILITY",
+  "status": "PASS",
+  "runtime_cleanup": "completed",
+  "checks": [
+    {
+      "id": "P05-COMPAT-01",
+      "status": "PASS",
+      "detail": {
+        "actual_http_admission_and_topic_chat": true,
+        "actual_pg": true,
+        "algorithm": "RE-1.P05-TOPIC-2",
+        "history_objects": 1,
+        "history_chunks": 2,
+        "projection_count_before": 1,
+        "private_ref_count_before": 1,
+        "production_server_cmd": false
+      }
+    },
+    {
+      "id": "P05-COMPAT-02",
+      "status": "PASS",
+      "detail": {
+        "explicit_fixture_authenticated_header_revision_edit_only": true,
+        "old_actual_engine_execution_claimed": false,
+        "old_round_history_not_reinterpreted": true
+      }
+    },
+    {
+      "id": "P05-COMPAT-03",
+      "status": "PASS",
+      "detail": {
+        "actual_boot_method_without_available_source": true,
+        "unsupported_active_aborted": 1,
+        "history_snapshot_retained": true,
+        "private_objects_refs_removed": true,
+        "projection_count_before": 1,
+        "private_ref_count_before": 1,
+        "projection_count_after": 0,
+        "private_ref_count_after": 0,
+        "actual_http_aborted_view": true,
+        "actual_process_restart": false,
+        "ordinary_bootstrap_prerequisite_claimed": false
+      }
+    },
+    {
+      "id": "P05-COMPAT-04",
+      "status": "PASS",
+      "detail": {
+        "actual_http_unsupported_prior_denied": true,
+        "status": 503,
+        "code": "TOPIC_SNAPSHOT_VERSION_UNSUPPORTED",
+        "start": {
+          "status": 409,
+          "code": "TOPIC_SNAPSHOT_VERSION_UNSUPPORTED",
+          "waiting_row_unchanged": true,
+          "new_receipt_count": 0
+        },
+        "no_prior_cipher_or_history_rewrite": true
+      }
+    },
+    {
+      "id": "P05-COMPAT-05",
+      "status": "PASS",
+      "detail": {
+        "explicit_fixture_partial_restore_missing_old_aborted_snapshot": true,
+        "actual_sql_constraints_enforced": true,
+        "actual_http_status": 503,
+        "code": "TOPIC_HISTORY_UNAVAILABLE",
+        "start": {
+          "status": 503,
+          "code": "TOPIC_HISTORY_UNAVAILABLE",
+          "waiting_row_unchanged": true,
+          "new_receipt_count": 0
+        },
+        "history_preserved": true,
+        "no_arbitrary_all_fields_tamper_claim": true
+      }
+    },
+    {
+      "id": "P05-COMPAT-06",
+      "status": "PASS",
+      "detail": {
+        "actual_protected_prestart_abort": true,
+        "clean_unstarted_prior_does_not_block_new_game": true,
+        "planned_rounds": 20,
+        "actual_http_start": true
+      }
+    }
+  ],
+  "source_fixture_only": true,
+  "metadata_faults": "EXPLICIT_AUTHENTICATED_HEADER_AND_PARTIAL_SQL_RESTORE_FIXTURES",
+  "full_process_restart": false,
+  "production_server_cmd": false,
+  "full_restore": false,
+  "full_p05_pass": false
+}

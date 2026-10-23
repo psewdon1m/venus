@@ -1,0 +1,62 @@
+{
+  "created_at": "2026-10-20T15:08:49.992461+00:00",
+  "status": "NOT_RUN_EXTERNAL_DOCKER_BLOCKER",
+  "actual_resource_checks_executed": 0,
+  "created_containers": 0,
+  "created_volumes": 0,
+  "created_networks": 0,
+  "ports": [],
+  "Docker_pull": false,
+  "Docker_build": false,
+  "actual_OCI_switches": 0,
+  "probe_sha256": "25fca130a33196cf142341a1beba3412a0c2c1aec17791323544f6a6f6bde9ca",
+  "host_report_cap_bytes": 2097152,
+  "whole_probe_deadline_seconds": 180,
+  "native_reserved_mib": 298,
+  "accepted_policy_native_ceiling_mib": 320,
+  "cold_description_exit_code": 0,
+  "finite_owner_controls": 6,
+  "execution_authorization": "ROOT_STOPPED_NO_NEW_ACK_AFTER_DOCKER_STATE_CHANGE",
+  "external_preflight": {
+    "created_at": "2026-10-20T15:07:47.124521+00:00",
+    "scope": "READ_ONLY_NO_RESOURCE_CREATION",
+    "commands": [
+      {
+        "args": [
+          "context",
+          "show"
+        ],
+        "exit_code": 0,
+        "stdout": "desktop-linux\n",
+        "stderr": ""
+      },
+      {
+        "args": [
+          "info",
+          "--format",
+          "{{.ID}} {{.ServerVersion}} {{.Driver}} {{.OperatingSystem}}"
+        ],
+        "exit_code": "TIMEOUT15s",
+        "stdout": "",
+        "stderr": "read-only Docker CLI timeout"
+      },
+      {
+        "args": [
+          "image",
+          "inspect",
+          "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+          "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+          "--format",
+          "{{.Id}}"
+        ],
+        "exit_code": 1,
+        "stdout": "\n",
+        "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\nfailed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n"
+      }
+    ],
+    "actual_functional_RUN": false
+  },
+  "statistics_RUN": false,
+  "human470": "HOLD_UNCHANGED",
+  "full_P05_PASS": false
+}

@@ -1,0 +1,32 @@
+{
+  "status": "AUTHOR_ACTUAL_TINY_HOST_SCANNER_CONTROLS_PASS_NOT_OCI",
+  "created_at": "2026-10-20T14:36:29.153506+00:00",
+  "scanner_source": ".docs/implementation/reviews/p05/topic-measurement-method-preparation-round07/producer/allocated-tree.py",
+  "scanner_sha256": "7adcdaf51b40191ee5abf76def60292aa4a49364a62721968c68cd0ef7ebb4de",
+  "external_dependency_review": "METHOD07_INDEPENDENT_REVIEW_PENDING_AT_CAPTURE",
+  "checks": [
+    {
+      "name": "actual owned empty NTFS directory",
+      "exit_code": 0,
+      "elapsed_ms": 62.36109999008477,
+      "stdout": "{\"allocated_bytes\": 0, \"logical_bytes\": 0, \"files\": 0, \"metric\": \"NTFS FileStandardInfo AllocationSize\"}\r\n",
+      "stderr": ""
+    },
+    {
+      "name": "actual owned ten tiny files allocated metric",
+      "exit_code": 0,
+      "elapsed_ms": 63.79370007198304,
+      "stdout": "{\"allocated_bytes\": 4176, \"logical_bytes\": 50, \"files\": 10, \"metric\": \"NTFS FileStandardInfo AllocationSize\"}\r\n",
+      "stderr": ""
+    },
+    {
+      "name": "actual named NTFS stream rejected",
+      "exit_code": 1,
+      "elapsed_ms": 61.57140003051609,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\r\n  File \"C:\\.projects\\venus\\.artifacts\\p05-oci-rollback-producer-resume01\\oci-host-allocation.py\", line 6, in <module>\r\n    row=inspect_tree(sys.argv[1]);print(json.dumps({'allocated_bytes':row['allocated_bytes'],'logical_bytes':row['logical_bytes'],'files':row['files'],'metric':row['metric']}))\r\n        ^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\.projects\\venus\\.artifacts\\p05-oci-rollback-producer-resume01\\oci_allocated_tree.py\", line 71, in inspect_tree\r\n    streams();records=[];seen=set()\r\n    ^^^^^^^^^\r\n  File \"C:\\.projects\\venus\\.artifacts\\p05-oci-rollback-producer-resume01\\oci_allocated_tree.py\", line 65, in streams\r\n    windows_streams(path)\r\n  File \"C:\\.projects\\venus\\.artifacts\\p05-oci-rollback-producer-resume01\\oci_allocated_tree.py\", line 30, in windows_streams\r\n    if info.name!='::$DATA':raise ValueError('ALTERNATE_STREAM_OR_ENUMERATOR_UNAVAILABLE')\r\n                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nValueError: ALTERNATE_STREAM_OR_ENUMERATOR_UNAVAILABLE\r\n"
+    }
+  ],
+  "owned_cleanup": "completed",
+  "Docker_commands": 0
+}

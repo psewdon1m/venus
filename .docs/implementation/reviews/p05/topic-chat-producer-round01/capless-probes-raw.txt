@@ -1,0 +1,39 @@
+[
+  {
+    "name": "valid_twenty_rounds",
+    "expected": "ACCEPT",
+    "actual": "ACCEPT",
+    "matches_expected": true,
+    "distinct_rounds": 20,
+    "advance_calls": 20,
+    "detail": {
+      "actual_rounds": 20,
+      "private_opportunities": 0,
+      "immutable_snapshot_bytes_unchanged": true,
+      "capless_after_reenable": false
+    }
+  },
+  {
+    "name": "successful_but_noop_advance",
+    "expected": "REJECT",
+    "actual": "ACCEPT",
+    "matches_expected": false,
+    "distinct_rounds": 1,
+    "advance_calls": 20,
+    "detail": {
+      "actual_rounds": 20,
+      "private_opportunities": 0,
+      "immutable_snapshot_bytes_unchanged": true,
+      "capless_after_reenable": false
+    }
+  },
+  {
+    "name": "private_opportunity_rejected",
+    "expected": "REJECT",
+    "actual": "REJECT",
+    "matches_expected": true,
+    "distinct_rounds": 0,
+    "advance_calls": 0,
+    "error": "Expected \"actual\" to be strictly unequal to:\n\n'pair_private'"
+  }
+]

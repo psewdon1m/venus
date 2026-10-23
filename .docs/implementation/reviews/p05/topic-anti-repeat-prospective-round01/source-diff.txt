@@ -1,0 +1,46 @@
+--- included895/topic-planner.ts
++++ excluded/ef1e1122-engine2
+@@ -11,7 +11,7 @@
+  * Caller authenticates histories/registry/ledger, commits returned immutable state
+  * transactionally, and repeats all admission/consent/TTL guards at final enqueue.
+  * Pure planning does not grant invitation/action consent or private delivery. */
+-export const TOPIC_ALGORITHM = 'RE-1.P05-TOPIC-1' as const;
++export const TOPIC_ALGORITHM = 'RE-1.P05-TOPIC-2' as const;
+ export const TOPIC_PRIVATE_POLICY = 'ROOM-TOPIC-1' as const;
+ export const TOPIC_RECOVERY_POLICY = 'PUBLIC_BASELINE_PRIVATE_CEILING_35_PERCENT' as const;
+ export type TopicSnapshot = Readonly<{
+@@ -261,13 +261,18 @@
+     pack_digest:map.pins.pack_digest,map_sha256:map.pins.map_sha256,repertoire_digest:map.pins.repertoire_digest,
+     mode:card.mode,context:snapshot.baseline.context,interaction:card.interaction,actors:[...round.actors],primary_member_id:round.primary_member_id,stage:round.stage,disclosure};
+ }
++function effectivePrivateCards(history:TopicPlannerHistory,actors:readonly string[],cards:readonly Card[],map:FrozenTopicMap,state:TopicSafetyState):Card[] {
++  const pairRows=history.private_history.filter(row=>pairKey(row.actors)===pairKey(actors));
++  return cards.filter(card=>!blocked(card,history.public_history,map)&&!blocked(card,pairRows,map)&&actors.every(actor=>{
++    const member=state.members.find(m=>m.member_id===actor);
++    return member&&map.entry(card.id).topic_ids.every(topic=>member.allow_topic_ids.includes(topic)&&!member.excluded_topic_ids.includes(topic));
++  }));
++}
+ function candidate(snapshot:TopicSnapshot,history:TopicPlannerHistory,round:TopicRound,pack:FrozenPack,map:FrozenTopicMap,state:TopicSafetyState,
+   epoch:number,counter:number):TopicAttempt {
+   const pairRows=history.private_history.filter(row=>pairKey(row.actors)===pairKey(round.actors));
+   let cards=options(snapshot,pack,map,round.stage).find(o=>o.kind==='pair_private'&&canonical(o.actors)===canonical(round.actors))?.cards??[];
+-  cards=cards.filter(c=>!blocked(c,history.public_history,map)&&!blocked(c,pairRows,map)&&round.actors.every(actor=>{
+-    const member=state.members.find(m=>m.member_id===actor);return member&&map.entry(c.id).topic_ids.every(topic=>member.allow_topic_ids.includes(topic)&&!member.excluded_topic_ids.includes(topic));
+-  }));
++  cards=effectivePrivateCards(history,round.actors,cards,map,state);
+   const rng=new Random(snapshot.baseline.seed,{domain:'private-candidate',room_id:snapshot.baseline.room_id,session_id:snapshot.baseline.session_id,round_id:round.round_id,actors:round.actors,offer_epoch:epoch,
+     candidate_counter:counter,safety_revision:state.revision,pins:map.pins});
+   const previous=pairRows.at(-1),intensity=previous?pack.card(previous.card_id).min_comfort:0;
+@@ -288,8 +293,10 @@
+     const privateRng=new Random(s.seed,{domain:'private-option',room_id:s.room_id,session_id:s.session_id,index,round_id:roundId,pins:map.pins,
+       private_history:history.private_history,public_history:publicRows});
+     let pool=privates;
+-    const previous=history.private_history.at(-1);
+-    if(previous&&pool.some(o=>pairKey(o.actors)!==pairKey(previous.actors)))pool=pool.filter(o=>pairKey(o.actors)!==pairKey(previous.actors));
++    const previous=history.rounds.findLast(round=>round.interaction==='pair_private')??history.private_history.at(-1);
++    if(previous&&pool.some(o=>pairKey(o.actors)!==pairKey(previous.actors)
++      &&effectivePrivateCards(history,o.actors,o.cards,map,state).length>0))
++      pool=pool.filter(o=>pairKey(o.actors)!==pairKey(previous.actors));
+     const selected=pickOption(privateRng,pool,[...publicRows,...history.private_history]);
+     round={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:'pair_private',actors:[...selected.actors],
+       primary_member_id:selected.actors[0]!,card:null,requires_action_consent:true,disclosure:'selected',

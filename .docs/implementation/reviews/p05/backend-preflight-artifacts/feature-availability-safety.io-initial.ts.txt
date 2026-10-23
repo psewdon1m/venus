@@ -1,0 +1,15 @@
+import {describe,it,expect,vi} from 'vitest';
+import {Games} from '../../apps/api/src/games.js';
+import {DomainError} from '../../apps/api/src/security.js';
+import type {Rooms} from '../../apps/api/src/rooms.js';
+import pg from 'pg';
+function fixture(error:Error,state='aborted'){
+ const games=new Games({now:()=>1000} as Rooms,()=>null,true),a=games as unknown as Record<string,unknown>;
+ a.row=vi.fn(async()=>({id:'session',state}));a.pack=vi.fn(async()=>{throw error;});games.attachCatalog({active:async()=>{throw error;},assertPinned:async()=>{}});
+ return ()=>games.featureAvailable({} as pg.PoolClient,'room');
+}
+describe('room feature projection cannot disable safety writes on catalogue faults',()=>{
+ for(const state of ['active','aborted'] as const)it(`reports unavailable on ledger mismatch with ${state} game`,async()=>{await expect(fixture(new DomainError('CATALOG_RECONCILIATION_REQUIRED',503),state)()).resolves.toBe(false);});
+ for(const [label,error] of [['actual-ledger-domain',new Error('CATALOG_LEDGER_PARTIAL_WRITE')],['actual-ledger-IO',Object.assign(new Error('stat ledger missing'),{code:'ENOENT'})],['fatal-UTF8',new TypeError('The encoded data was not valid for encoding utf-8')]] as const)it(`reports unavailable on ${label} without rolling back safety writes`,async()=>{await expect(fixture(error)()).resolves.toBe(false);});
+ it('does not swallow real PostgreSQL errors that invalidate the transaction',async()=>{const error=new pg.DatabaseError('SQL failure',0,'error');await expect(fixture(error)()).rejects.toBe(error);});
+});

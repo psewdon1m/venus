@@ -1,0 +1,81 @@
+{
+  "status": "PASS_FINITE_REPEAT_WITH_NEW_PRIVACY_FINDING",
+  "controls": 15,
+  "cases": [
+    {
+      "name": "original fsync counterexample now refuses every positive receipt",
+      "status": "PASS"
+    },
+    {
+      "name": "normal closed sink remains exactly replayable",
+      "status": "PASS"
+    },
+    {
+      "name": "zero-process native terminal with successful manager accepts",
+      "status": "PASS"
+    },
+    {
+      "name": "manager nonzero",
+      "status": "PASS"
+    },
+    {
+      "name": "unconfirmed descendant",
+      "status": "PASS"
+    },
+    {
+      "name": "STOP_FAILED cannot pass",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong owner",
+      "status": "PASS"
+    },
+    {
+      "name": "invalid owner cannot spawn manager",
+      "status": "PASS"
+    },
+    {
+      "name": "inert entry prevents target import on wrong owner handshake",
+      "status": "PASS"
+    },
+    {
+      "name": "inert entry prevents target import on closed stdin",
+      "status": "PASS"
+    },
+    {
+      "name": "inert entry prevents target import on oversized handshake",
+      "status": "PASS"
+    },
+    {
+      "name": "explicit valid fixture handshake permits target import",
+      "status": "PASS"
+    },
+    {
+      "name": "ledger first/secondary error projection filters message/name/code canaries",
+      "status": "PASS"
+    },
+    {
+      "name": "workerStop is unprojected in typed terminal: privacy counterexample",
+      "status": "PASS"
+    },
+    {
+      "name": "sink abort exposes arbitrary error name/code: same projection finding",
+      "status": "PASS"
+    }
+  ],
+  "findings": [
+    {
+      "id": "STATS-R03-R01-001",
+      "priority": 2,
+      "location": "failure-ledger.mjs emit(status,workerStop)",
+      "confirmed": "Raw worker_stop errors/first_stop_failure bypass safe error projection",
+      "synthetic_canary_only": true,
+      "additional_location": "durable-sink.mjs errorInfo()/abort() arbitrary name/code"
+    }
+  ],
+  "prior_STicky_IO": "CLOSED_FINITE_REPEAT",
+  "prior_worker_stop": "CONFIRMATION_CONTRACT_AND_GATE_PASS_ACTUAL_TESTS_SEPARATE",
+  "Docker_calls": 0,
+  "actual_foreign_resources": 0,
+  "full_statistical_RUN": false
+}

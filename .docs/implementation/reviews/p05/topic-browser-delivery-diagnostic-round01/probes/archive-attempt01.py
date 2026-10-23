@@ -1,0 +1,48 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import json,hashlib,sys,shutil
+root=Path.cwd();base=root/'.artifacts/p05-topic-browser-delivery-diagnostic';packet=root/'.docs/implementation/evidence/p05/topic-browser-preflight-02';out=root/'.docs/implementation/reviews/p05/topic-browser-delivery-diagnostic-round01'
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+assert sha(packet/'index.json')=='121e6512da5e5d6ab3780e150b6b8ccaf7d7e8144d296bdcce9ef9b37f21940c';idx=json.loads((packet/'index.json').read_text())
+for row in idx['files']:
+ p=packet/row['path'];assert p.stat().st_size==row['bytes'] and sha(p)==row['sha256'],row['path']
+actual=json.loads((packet/'run/topic-browser-report.json').read_text());details=json.loads((packet/'run/failure-details.json').read_text());assert [r['status'] for r in actual['records']]==['PASS']*4+['FAIL']+['NOT_RUN']*11
+probe=json.loads((base/'probes.json').read_text());assert probe['checks']==3 and probe['status']=='PASS'
+sys.path.insert(0,str(root/'tools'));from stage_inventory import inventory,identity
+files=inventory();assert identity(files)=='895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04' and len(files)==1808
+paths=['apps/web/src/topic-games-panel.tsx','apps/web/src/topic-state.ts','apps/web/src/presentation-clock.ts','apps/web/src/game-operations.ts','apps/web/src/game-controls.ts','apps/web/src/game-state.ts','apps/web/src/room-shell.tsx','apps/web/src/main.tsx','apps/web/src/api.ts','apps/web/src/topic-test-harness.ts','apps/api/src/topic-games.ts','apps/api/src/room-games.ts','apps/api/src/room-routes.ts']
+out.mkdir(exist_ok=False,parents=True);(out/'source').mkdir();(out/'probes').mkdir();inputs=[]
+for path in paths:
+ p=root/path;shutil.copyfile(p,out/'source'/path.replace('/','__'));inputs.append({'path':path,'sha256':sha(p)})
+for p in base.iterdir():
+ if p.is_file() and p.name!='archive.py':shutil.copyfile(p,out/'probes'/p.name)
+for name in ['index.json','run/failure-details.json','run/topic-browser-report.json']:
+ shutil.copyfile(packet/name,out/(name.replace('/','__')))
+proposal={'status':'PROPOSED_DIAGNOSTIC_ONLY_REQUIRES_AUTHOR_PRODUCER_FREEZE_AND_ROOT_ACK','product_edits':False,'runtime_reseed_or_retry_now':False,'scope':'Keep original16 scenarios/assertions; add bounded readonly metadata, no weakened lease/timeout or automatic retries. May be applied to next source revision with exact proof boundaries; it cannot retroactively diagnose actual895 with certainty.','metadata':['Per actor private target/conversation/chat request method/path, browser request timing start/responseEnd, status/error code, received scope session/round/game_rev/epoch/revision and expected last observed UI scope at request/response.','Only state/offer-own-accepted/prompt-present/advice-count/chat-count booleans, server_time/expires_at/duration and full body digest; never token, text, cookie, CSRF or raw target body in evidence.','Record bounded last WS metadata including type/schema/stream/audience/target-match/stream_rev/room_rev/payload session/game_rev/round/epoch where present, no payload text. Record overflow explicitly.','Record UI requestfailed/error counters, actual native elapsed and independent monotonic timing. Compare serial self-actions→target→conversation→chat wall span to5s without extending it.','Validate captured synthetic response shapes with exact pinned frontend validators in an excluded readonly module; report booleans/scope mismatches, not sanitized invented positive DTOs.'],'gate':'Producer remains author-disjoint reviewed and exact-pinned; root ACK before RUN. Diagnostic failure retained; no actual/release/stage PASS from metadata-only results. If these do not distinguish generation/effect clears, a separately declared client trace instrumentation proposal is needed; do not silently patch the delivered bundle.'}
+report={'schema_version':1,'status':'DIAGNOSIS_INCONCLUSIVE_EXACT_EVIDENCE_PRESERVED','scope':'INDEPENDENT_BROWSER05_SOURCE_AND_SAVED_EVIDENCE_DIAGNOSTIC_ONLY','created_at':datetime.now(timezone.utc).isoformat(),'reviewer':'/root/p05_topics_ui_review','source_identity':identity(files),'included_files':len(files),'source_copies':inputs,'actual_packet_index_sha256':sha(packet/'index.json'),'actual_packet_files_verified':len(idx['files']),'actual_result':{'status':'FAIL','passed':4,'case05':'PRIVATE_PROMPT_NOT_FOUND_AFTER_BILATERAL_RESPOND_TOPIC200','not_run':11,'cleanup':'PASS','page_errors':0},'known_observations':['Both RU/TR last authenticated self-actions have chat/offer_advice/accept_action true and respond_topic false for current session/round rev36; own UI prompt/conversation/action accept absent while refusal/safety controls remain.','Actual05 error specifically misses getByTestId(private-prompt) SYNTHETIC RU within5s; WS live in failure snapshot.','Saved diagnostics do not include private GET status/DTO/timing or last frame metadata, so valid active server own booleans do not prove accepted current client content cache.'],'inert_probes':probe,'rejected_or_unconfirmed_hypotheses':['AuthBoundary.bind returns same object without identity/transport change; Object.freeze does not copy. Same-auth-per-render premise rejected.','Actual unmodified TSX recovers after one stable game.private_cleared frame and remains visible through repeated250ms renders with stable deps; repeated clearing hypothesis not reproduced under that condition.','Valid target/conversation/chat delivered as a complete batch after5100ms is rejected by intended5s lease, reproducing absent cache symptom with no product error. Actual02 timings missing; this is an alternative, not confirmed actual cause.'],'findings':[],'no_product_bug_confirmed':True,'next_probe_proposal':proposal,'product_or_browser_producer_edits':False,'docker_or_browser_run_by_reviewer':False,'source_read_checkpoint':'Source895 copies complete and hashes stable; current live895 reads no longer needed. Root may coordinate unfreeze; any later evidence must bind to its new revision.','full_stage_pass':False,'human450':'HOLD_UNCHANGED'}
+(out/'report.json').write_text(json.dumps(report,indent=2)+'\n');(out/'NEXT_PROBE_PROPOSAL.json').write_text(json.dumps(proposal,indent=2)+'\n')
+(out/'REPORT.md').write_text('''# Browser case05 — independent source diagnostic round01
+
+**DIAGNOSIS_INCONCLUSIVE_EXACT_EVIDENCE_PRESERVED. No product bug is confirmed.** Source895/1808 read checkpoint is complete; root may coordinate unfreeze without losing these exact source bytes. No Docker/browser replay or product/producer edit occurred.
+
+All34 actual02 packet files/index121e6512 verified. Actual outcome remains four PASS, case05 FAIL, eleven NOT_RUN, cleanup PASS and no page errors. Failure is a missing RU private-prompt after two successful respond_topic requests. Current RU/TR own metadata says chat/offer_advice/accept_action true and respond_topic false, yet private conversation/prompt/action accept DOM is absent and safety controls remain. This establishes a server/UI discrepancy at observation time; it does not show why the client content cache rejected or cleared a batch.
+
+## Source-bound checks
+
+Three actual unmodified TSX/cache inert scheduler probes PASS. AuthBoundary.bind retains the same token absent identity/transport changes; Object.freeze does not create a token. With a stable game.private_cleared frame and stable dependencies, the TSX recovers and keeps its private prompt through repeated250ms renders. Thus that repeated-clear hypothesis is not reproduced under its stated premise.
+
+A complete valid target/conversation/chat batch received5100ms after request start is rejected by the intended5s lease and leaves target/conversation null. This can produce the same visible absence safely, but actual02 has no private GET/batch duration data. It is a diagnostic alternative, not a confirmed cause or permission to extend TTL. Real DTO validation/scope/generation errors also remain unexcluded.
+
+The initial own probe assertion used deepStrictEqual on cross-realm VM objects and failed despite same:true. Source/error note are preserved; comparison was normalized in the probe only and all three controls passed. No included harness/product change.
+
+## Minimal next observation
+
+NEXT_PROBE_PROPOSAL.json describes an excluded producer-only extension retaining all16 assertions: bounded private GET timing/status/scope/validator metadata, prompt/advice/chat presence/count booleans, request-to-complete-batch timing versus5s, and last WS schema/type/revision/target-match metadata. No tokens/text/cookies/raw private bodies, no timeout/lease increase and no automatic reseed/retry. Exact producer review and root RUN ACK are still required. Metadata may be collected on the next revised source with its own identity; that cannot retroactively prove the old actual cause. If insufficient, client trace instrumentation must be separately proposed rather than silently changing the delivered bundle.
+
+Current UI/API source files are copied and hashed in source/report.json. Human450 HOLD, actual browser PASS, full browser matrix, full P05 and production acceptance remain unproven.
+''',encoding='utf8')
+for row in inputs:assert sha(root/row['path'])==row['sha256']
+assert identity(inventory())==report['source_identity']
+rows=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file()]
+(out/'index.json').write_text(json.dumps({'status':report['status'],'files':rows},indent=2)+'\n')
+print(json.dumps({'status':report['status'],'files':len(rows),'hashes':{n:sha(out/n) for n in ['REPORT.md','report.json','index.json']}},indent=2))

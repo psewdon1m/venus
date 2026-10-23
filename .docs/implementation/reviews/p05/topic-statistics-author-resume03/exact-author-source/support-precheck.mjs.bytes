@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {makeSnapshot,makeHistory,makeSafety} from '../p05-topic-measurements/profiles.mjs';
+import {certificate,hardEligible} from '../p05-topic-measurements/support.mjs';
+import {sha} from './protocol.mjs';
+/** Fixed common support before any exclusion inference outcome is measured. */
+export function exclusionSupport(f,d){
+ const input={...d,rounds:100,comfort:4,class_profile:'F'},snapshot=makeSnapshot(f,input),history=makeHistory(f,snapshot,d.regime),members=snapshot.baseline.players,states=['E0','E1','E2'].map(e=>makeSafety(snapshot,d.regime,e)),privateSupported=d.context==='in_person'||d.capability==='CHAT_ON',rows=[];
+ const common=sets=>[...sets[0]].filter(x=>sets.every(s=>s.has(x))).sort(),families=ids=>new Set(ids.flatMap(id=>f.map.entry(id).semantic_family_ids)),pubUsed=families(history.public_history.map(r=>r.card_id));
+ for(let a=0;a<members.length;a++)for(let b=a+1;b<members.length;b++){
+  const actors=[members[a].id,members[b].id],sets=states.map(state=>certificate(f,snapshot,history,state,actors,3).after_targeted_topics),intersection=common(sets.map(families));
+  if(privateSupported)assert(intersection.length>=75,'EXCLUSION_COMMON_PRIVATE_SUPPORT_GAP');else assert.equal(intersection.length,0,'UNSUPPORTED_CAPABILITY_HAS_PRIVATE_SUPPORT');
+  rows.push({actors,common_private_family_count:intersection.length,family_sha256:sha(intersection),required_max_attempt_families:privateSupported?75:0,status:privateSupported?'SUPPORTED_COMPLETE':'NA_PRIVATE_CAPABILITY'});
+ }
+ const publicIds=f.pack.cards.filter(card=>card.mode===d.mode&&card.interaction!=='pair_private'&&f.map.allowed(card)&&f.map.entry(card.id).semantic_family_ids.every(x=>!pubUsed.has(x))&&hardEligible(card,snapshot,card.interaction==='group'?[]:card.interaction==='solo'?[members[0].id]:[members[0].id,members[1].id],1)).map(c=>c.id),publicFamilies=[...families(publicIds)].sort();assert(publicFamilies.length>=100,'EXCLUSION_COMMON_PUBLIC_SUPPORT_GAP');
+ return{descriptor:{size:d.size,mode:d.mode,context:d.context,capability:d.capability,regime:d.regime},status:'COMMON_SUPPORT_CERTIFICATE_ONLY_NOT_INFERENCE',public_common_families:publicFamilies.length,public_family_sha256:sha(publicFamilies),private_pairs:rows,seed_literal:input.seed_literal,human_content_approval:false};
+}

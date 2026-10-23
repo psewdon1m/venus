@@ -1,0 +1,44 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/room-socket-poll.test.ts (2 tests | 2 failed) 9ms
+   ❯ bounded ordinary room WS polling (2)
+     × coalesces slow poll ticks so queued polls cannot starve a heartbeat 7ms
+     × retains fail-closed storage errors and stops polling after socket close 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > coalesces slow poll ticks so queued polls cannot starve a heartbeat
+TypeError: app.route is not a function
+ ❯ registerRooms apps/api/src/room-routes.ts:108:19
+    106|     {method:'POST',path:'/leave',schema:'RevisionMutation',op:'leave'},
+    107|     {method:'POST',path:'/close',schema:'RevisionMutation',op:'close'}
+    108|   ] as const) app.route({method:route.method,url:'/api/v1/rooms/:roomI…
+       |                   ^
+    109|     const id=roomId(request),session=await memberGuard(request);const …
+    110|     if(route.op==='leave') {
+ ❯ fixture apps/api/src/room-socket-poll.test.ts:30:2
+ ❯ apps/api/src/room-socket-poll.test.ts:44:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  apps/api/src/room-socket-poll.test.ts > bounded ordinary room WS polling > retains fail-closed storage errors and stops polling after socket close
+TypeError: app.route is not a function
+ ❯ registerRooms apps/api/src/room-routes.ts:108:19
+    106|     {method:'POST',path:'/leave',schema:'RevisionMutation',op:'leave'},
+    107|     {method:'POST',path:'/close',schema:'RevisionMutation',op:'close'}
+    108|   ] as const) app.route({method:route.method,url:'/api/v1/rooms/:roomI…
+       |                   ^
+    109|     const id=roomId(request),session=await memberGuard(request);const …
+    110|     if(route.op==='leave') {
+ ❯ fixture apps/api/src/room-socket-poll.test.ts:30:2
+ ❯ apps/api/src/room-socket-poll.test.ts:57:11
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed (2)
+   Start at  20:24:29
+   Duration  273ms (import 65%, transform 27%, tests 6%, worker 2%)
+

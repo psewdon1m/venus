@@ -1,0 +1,78 @@
+{
+  "status": "FINAL_CHECKS_PASS_WITH_PRESERVED_ATTEMPTS",
+  "entries": [
+    {
+      "command": ".venv/Scripts/python.exe .../verify-and-adapt.py",
+      "attempt": 1,
+      "exit_code": 1,
+      "cause": "Reviewer snapshot suffix assumption: browser.mjs.bytes missing",
+      "retained": "verify-and-adapt-attempt01.py"
+    },
+    {
+      "command": ".venv/Scripts/python.exe .../verify-and-adapt.py",
+      "attempt": 2,
+      "exit_code": 1,
+      "cause": "Reviewer snapshot suffix assumption: DESIGN.md actually .md.bytes",
+      "retained": "verify-and-adapt-attempt02.py"
+    },
+    {
+      "command": ".venv/Scripts/python.exe .docs/implementation/reviews/p05/topic-browser-method12-independent-review-round01/verify-and-adapt.py",
+      "attempt": 3,
+      "exit_code": 0,
+      "result": "35 author files,9 runtime pins,1813 host+ZIP file hashes; observer review children PASS"
+    },
+    {
+      "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe .docs/implementation/reviews/p05/topic-browser-method12-independent-review-round01/author-integration-rerun.mjs",
+      "exit_code": 0,
+      "checks": 17
+    },
+    {
+      "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe .docs/implementation/reviews/p05/topic-browser-method12-independent-review-round01/author-request-rerun.mjs",
+      "exit_code": 0,
+      "checks": 13
+    },
+    {
+      "command": "node .../independent-controls.mjs",
+      "attempt": 1,
+      "exit_code": 1,
+      "cause": "Reviewer Windows ESM import path scheme",
+      "retained": "independent-controls-attempt01.mjs"
+    },
+    {
+      "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe .docs/implementation/reviews/p05/topic-browser-method12-independent-review-round01/independent-controls.mjs",
+      "attempt": 2,
+      "exit_code": 0,
+      "checks": 22
+    },
+    {
+      "command": "rg -n 'identity|sha256|files.items|sort_keys' .artifacts/p05-renewal*freeze*.py",
+      "exit_code": 123,
+      "cause": "Reviewer literal wildcard path on Windows; rg --files enumeration succeeded subsequently"
+    },
+    {
+      "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe node_modules/eslint/bin/eslint.js --config .artifacts/p05-method12-eslint.config.mjs [eight exact producer .mjs files]",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "",
+      "files": [
+        "browser.mjs",
+        "delivery-diagnostics.mjs",
+        "frontend-validators.mjs",
+        "observations.mjs",
+        "private-batch-observer.mjs",
+        "request-emission.mjs",
+        "run.mjs",
+        "runtime.mjs"
+      ]
+    },
+    {
+      "command": ".venv/Scripts/python.exe .docs/implementation/reviews/p05/topic-browser-method12-independent-review-round01/final-checks.py",
+      "exit_code": 0,
+      "result": "8 syntax checks/current source identity1813/existing image proof5 children PASS; exact argv/results in final-checks.json"
+    }
+  ],
+  "docker": "NOT_RUN",
+  "browser": "NOT_RUN",
+  "selector": "NOT_RUN",
+  "product_changes": "NONE"
+}

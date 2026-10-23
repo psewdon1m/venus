@@ -1,0 +1,47 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/request-error-diagnostic.test.ts (35 tests | 2 failed) 20ms
+   ❯ literal server error diagnostic privacy (35)
+     × rejects a top-level Proxy before own-descriptor reflection 6ms
+     × rejects a Proxy anywhere in a native-error prototype chain before instanceof or descriptor lookup 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > literal server error diagnostic privacy > rejects a top-level Proxy before own-descriptor reflection
+AssertionError: expected 1 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 1
+
+ ❯ apps/api/src/request-error-diagnostic.test.ts:53:244
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  apps/api/src/request-error-diagnostic.test.ts > literal server error diagnostic privacy > rejects a Proxy anywhere in a native-error prototype chain before instanceof or descriptor lookup
+AssertionError: expected { error_kind: 'Error', …(1) } to deeply equal { error_kind: 'UNKNOWN', …(1) }
+
+- Expected
++ Received
+
+  {
+-   "error_kind": "UNKNOWN",
++   "error_kind": "Error",
+    "failure_code": "UNKNOWN",
+  }
+
+ ❯ apps/api/src/request-error-diagnostic.test.ts:56:323
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  2 failed | 36 passed (38)
+   Start at  23:28:32
+   Duration  497ms (import 49%, tests 33%, transform 16%, worker 2%)
+

@@ -1,0 +1,5 @@
+function topicReadinessPhase(kind,flowStarted,participants){
+ const phases=report.topic_preparation_phases??=[];assert(phases.length<128,'Bounded topic preparation phases overflow');
+ const started=performance.now(),phase_id=phases.length+1,record={phase_id,kind,method:'FUNCTIONAL_PREPARATION_PHASES_10',budget_ms:8000,started_monotonic_ms:started,deadline_monotonic_ms:started+8000,flow_started_monotonic_ms:flowStarted,expected_actors:participants.map(a=>a.id),completed_actors:[],failed_actors:[],status:'RUNNING',elapsed_ms:0,total_preparation_elapsed_ms:started-flowStarted};phases.push(record);
+ return {started,deadline:started+8000,flow_started:flowStarted,phase_id,kind,record};
+}

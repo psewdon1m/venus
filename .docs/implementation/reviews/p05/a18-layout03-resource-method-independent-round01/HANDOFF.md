@@ -1,0 +1,3 @@
+PASS_METHOD_ONLY helper078871/authority45f031 exact; top-level pins supplied. Primary03 methodbe3d/runtime781cc explicitly new procedure, not unchanged02. Complete helper inverse restores accepted02 metadata parent;13methodchildren/false03ACK verify. Same approved resources/fresh/foreign/cap/disk guards.
+
+Nine fixed engine/locale shards/max1 each, one concurrent/manual only, fresh≤60s SAMEguards before EVERY start; first ACK snapshot not later-shard freshness proof. StopfirstFAIL/no retry, verifycleanup betweenstarts, C2reducer mustcleanup first, noothernewheavy/original8reconfiguration. RootinitialChromeRU only thencheckresult. ActualACKconfirmation/native/layout acceptance pending. No tests/native/shared writes. COMPLETE_STOP.

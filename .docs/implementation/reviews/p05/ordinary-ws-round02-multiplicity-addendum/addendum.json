@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-19T18:21:21.258472+00:00",
+  "related_finding": "OWS-REV-002",
+  "original_report_index_sha256": "f2dabf1e84de20bbeef956a899d494028496deb1af2b604e451235627edf22e1",
+  "observer_sha256": "61ebcfe6fa07dc8ca5db2504eebb1cdafed05ea3a0af9c0be32235402ac6231d",
+  "status": "ADDITIONAL_CONFIRMED_ASSERTION_FALSE_NEGATIVES",
+  "observations": [
+    "An already-received pre-window enqueue can be reused to excuse a replay after fault.",
+    "One pre-window enqueue can excuse two identical post-boundary received frames.",
+    "Legitimate single late pre-window enqueue remains a positive control."
+  ],
+  "required": "Each received frame must consume a distinct exact recorded enqueue; frames received before the observation window consume historical records too. Payload/ACL fingerprint and multiplicity are both necessary.",
+  "product_leak_proven": false,
+  "original_report_unchanged": true
+}

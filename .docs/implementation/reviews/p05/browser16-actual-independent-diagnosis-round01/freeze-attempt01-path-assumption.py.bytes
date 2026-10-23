@@ -1,0 +1,58 @@
+from pathlib import Path
+from datetime import datetime,timezone
+import hashlib,json,shutil
+ROOT=Path('C:/.projects/venus');E=ROOT/'.docs/implementation/evidence/p05/recovery-method16-chromium-actual01';R=E/'run';B=ROOT/'.artifacts/p05-browser16-independent-diagnosis01';OUT=ROOT/'.docs/implementation/reviews/p05/browser16-actual-independent-diagnosis-round01';sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert sha(E/'INDEX.json')=='850875d11638e3e01afaea3685d4a3bea548ceaf3fec5eb313528a62e1ae9bfa'
+ix=json.loads((E/'INDEX.json').read_bytes());assert len(ix['files'])==48
+for row in ix['files']:
+ p=E/row['path'];assert p.stat().st_size==row['bytes']and sha(p)==row['sha256']
+report=json.loads((R/'topic-browser-report.json').read_bytes());failure=json.loads((R/'failure-details.json').read_bytes());delivery=json.loads((R/'delivery-metadata.json').read_bytes());runner=json.loads((R/'runner.json').read_bytes());pins=json.loads((R/'producer-pins.json').read_bytes())
+assert [(n,sum(x['status']==n for x in report['records']))for n in ['PASS','FAIL','NOT_RUN']]==[('PASS',5),('FAIL',1),('NOT_RUN',10)]
+assert failure['message']=='METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK'and failure['last_control']['locale']=='tr'and failure['last_control']['control']=='advice-accept'
+assert runner['cleanup']=='PASS'and runner['source_and_producer_unchanged']is True
+assert json.loads((R/'inputs-before.json').read_bytes())==json.loads((R/'inputs-after.json').read_bytes())
+for name,h in pins.items():assert sha(R/'producer'/name)==h
+for n in ['remaining-containers.txt','remaining-volumes.txt','remaining-networks.txt']:assert not(R/n).read_text().strip()
+pre=report['private_preparation'][-1];event=report['mutation_dispatches'][-1];assert pre['status']=='READY'and pre['control']==event['control']=='advice-accept'
+t=pre['snapshot'];assert t['cycle_id']==t['accepted_cycle_id']==28 and t['ready']and event['readiness']==t
+assert event['click_finished_monotonic_ms']is event['request_observed_monotonic_ms']is None and event['result']=='NOT_DISPATCHED'
+rows=[x for x in delivery['http']if x['locale']=='tr'and x['route']['kind']in ['current','self-actions']and 73000<=x['started_native_ms']<=76000]
+timeline=[{k:x.get(k)for k in ['id','locale','cycle','started_native_ms','response_native_ms','body_complete_native_ms','status','request_response_ui_equal']}|{'kind':x['route']['kind'],'dto_rev':x['dto'].get('rev'),'dto_session':x['dto'].get('session'),'dto_round':x['dto'].get('round'),'error_code':x['dto'].get('error_code')}for x in rows]
+own=next(x for x in timeline if x['kind']=='self-actions'and x['started_native_ms']==75306.466898);assert own['status']==200 and own['dto_rev']==29
+controls=json.loads((B/'controls-result.json').read_bytes());assert len(controls['controls'])==16 and controls['case_bodies_15_to_16_identical']==16
+observed={'status':'PASS_READONLY_ACTUAL_FAILURE_DIAGNOSIS_NOT_BROWSER_ACCEPTANCE','actual_index_sha256':sha(E/'INDEX.json'),'verified_children':48,'producer_pins':len(pins),'case_status':{'PASS':5,'FAIL':1,'NOT_RUN':10},'cleanup':'PASS','prepared_cycle':28,'prepared_monotonic_ms':t['prepared_monotonic_ms'],'prepared_lease_remaining_ms':t['lease_remaining_ms'],'ticket_deadline_monotonic_ms':t['deadline_monotonic_ms'],'click_started_monotonic_ms':event['click_started_monotonic_ms'],'new_same_scope_own_request_started_monotonic_ms':own['started_native_ms'],'request_after_click_start_ms':own['started_native_ms']-event['click_started_monotonic_ms'],'matching_POST_observed':False,'assertion_timestamp_observed':False,'assertion_current_snapshot_observed':False,'current_scope_rev_at_failure':failure['actual_fixture']['game_rev'],'actual_primary_condition_within_combined_assert':'UNOBSERVED_NOT_READY_VS_CYCLE_CHANGED','timeline':timeline,'helper_snapshot_scope':'PASSIVE_OBSERVER_MODEL_ONLY_NOT_APP_CACHE_OR_AUTH','actual_Docker_calls':0,'actual_repeat':False}
+(B/'actual-diagnosis.json').write_text(json.dumps(observed,indent=2)+'\n',encoding='utf8')
+assert not OUT.exists();OUT.mkdir(parents=True)
+for name in ['controls.mjs','controls-result.json','actual-diagnosis.json']:shutil.copyfile(B/name,OUT/name)
+for name in ['INDEX.json','REPORT.md']:shutil.copyfile(E/name,OUT/('actual-'+name))
+for name in ['browser.mjs','private-batch-observer.mjs','readiness-diagnostics.mjs','request-emission.mjs']:shutil.copyfile(R/'producer'/name,OUT/(name+'.bytes'))
+(OUT/'REPORT.md').write_text('''# Independent browser16 actual diagnosis
+
+Verdict: **DIAGNOSIS_COMPLETE_SUPPORTED_MINIMAL_CORRECTION_NOT_BROWSER_PASS**. Actual16 remains FAIL:5PASS,case06structured-advice-edit-revoke FAIL,10NOT_RUN; cleanupPASS. All48 frozen evidence children and10 producer pins independently verified; source/producer before/after receipts agree and owned container/volume/network inventories are empty. No Docker or actual browser repeat was performed. Root's initial44file estimate was superseded by the actual frozen48file index850875d1.
+
+## What is confirmed
+
+The final advice-accept/TR preparation was READY at75282.799832ms, complete same-scope rev29 passive cycle28/accepted28, lease remaining1789.976033ms, minimum250ms; ticket deadline77072.775865ms and original phase deadline78069.396883ms. exactUiMutation started click75285.375081ms (~2.575ms later). assertPrivateTicket threw METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK before locator.click; click_finished/request_observed remain null, resultNOT_DISPATCHED. Thus the test did not reach its actual UI actuator or observe a matching POST for this attempted acceptance. This is not a server's rejected advice POST.
+
+Actual delivery metadata records a same-scope TR current GET response at75298.123215ms/bodycomplete75307.832166ms (session/round unchanged, game_rev29), followed by self-actions request75306.466898ms,21.091817ms after click start. That request completed200/body75628.796518ms with the same game_rev29 and valid offer_advice permission. The production fixture captured after failure is still active round11/rev29 and the TR advice-accept DOM is visible/enabled. Nearby private WS frames carry same scope, not proof of a generation boundary. Delivery metadata is complete/no overflow/truncation and explicitly does not observe actual cache.accept/React authorization.
+
+Observer source replaces the batch/increments sequence/clears accepted and model immediately on a new self-actions GET request, before its response. click currently performs two additional asynchronous Playwright expect visible/enabled operations after normalPrivateReady already checked privateDom and took a coherent final same-cycle snapshot. Those awaits admit passive request/observer interleaving before the synchronous ticket assertion. This is a concrete source-level race surface, consistent with recorded polling timing.
+
+## What is not proved by this actual attempt
+
+The failed assert combines !current.ready OR changedcycle; current snapshot, current cycle and exact assertion timestamp were not persisted. Therefore one cannot assert that this particular self-actions request was definitely the sole cause or exclude lease_remaining<250, another observer reset, etc. Ticket's explicit expired assertion did not fire, but a short250ms readiness lease can fail before absolute expiry. Do not infer longer TTL, successful product cache authorization, stale server tuple, or a broken application from this evidence. The last READY row is a past observation, not a failure-time snapshot. safeFailedReadiness is currently called only inside normalPrivateReady's catch; it cannot reveal this later synchronous ticket failure.
+
+## Supported minimal correction and controls
+
+For a nonnull protected ticket only, omit the two redundant expect awaits; keep assertPrivateTicket immediately/synchronously before locator.click, same absolute deadline/control/expectedscope/ready/cycle checks and same actuator timeout. Nonprotected controls retain their existing expects. normalPrivateReady still checks visible document, matchingroom and visible/enabled control/currentround, minimumlease and before/final coherent scope/cycle. Playwright's actual click actionability and exact request-emission/receipt/auth/TTL/negative-oracle checks remain. No UI/mutation retry, token injection, cache override, artificialpollpause or TTL increase is justified.
+
+Sixteen model controls execute the exact frozen click/assert functions and a private in-memory one-line conditional-await proposal only; actual producer files are not changed. A synthetic newbatch interleaving during the first redundant expect deterministically reproduces failbeforeactuator in original, while proposed path reaches one fake actuator without that artificial await. Already stale, forbidden, expired and wrong-control tickets remain denied with zeroactuator calls in both; actuator error causes one call/no retry; unprotected controls still use both expects. All16cases' callback AST bodies match producer15 exactly. This proves the proposed scheduling reduction and preserved finite fences, not actual browser success or exclusive actual cause.
+
+Add a bounded allowlisted failure diagnostic at the ticket assertion using the same passive current snapshot, control, monotonicnow, preparedcycle/currentcycle and lease/deadline reason; preserve model-only/cache_accept_observed=false/auth_generation_observed=false. Existing safeFailedReadiness can project the current snapshot with expected tuple/minRev mapping, without raw DTOs/tokens/prompts/advice. Cap records/count and avoid arbitrary raw exception text. This allows a future actual failure to distinguish !ready/shortlease/newcycle without weakening checks. Root will author METHOD17 and obtain independent code review/new exact actual binding before any rerun.
+
+Source scope remains restored historical1274/A29e39; this is not current live stage/full browser matrix/P05 or human content approval. Original16 FAIL remains preserved, human450/470 HOLD/P06 boundary unchanged.
+''',encoding='utf8')
+(OUT/'HANDOFF.json').write_text(json.dumps({'status':'DIAGNOSIS_COMPLETE_SUPPORTED_MINIMAL_CORRECTION_NOT_BROWSER_PASS','created_at':datetime.now(timezone.utc).isoformat(),'writes':'COMPLETE','actual_index_sha256':sha(E/'INDEX.json'),'verified_children':48,'model_controls':16,'actual_primary_cause':'UNPROVEN_COMBINED_ASSERT_CURRENT_SNAPSHOT_ABSENT','recommendation':'Root METHOD17 skip only redundant protected-ticket DOMexpect awaits; strict immediate ticket assertion/deadline/no-retry unchanged; bounded failure-time passive snapshot diagnostic','actual_Docker_calls':0,'actual_repeat':False,'full_P05_PASS':False},indent=2)+'\n',encoding='utf8')
+files=[{'path':p.name,'bytes':p.stat().st_size,'sha256':sha(p)}for p in sorted(OUT.iterdir())if p.is_file()]
+(OUT/'INDEX.json').write_text(json.dumps({'status':'DIAGNOSIS_COMPLETE_SUPPORTED_MINIMAL_CORRECTION_NOT_BROWSER_PASS','created_at':datetime.now(timezone.utc).isoformat(),'files':files},indent=2)+'\n',encoding='utf8')
+print(json.dumps({'index':str(OUT/'INDEX.json'),'index_sha256':sha(OUT/'INDEX.json'),'children':len(files),'report_sha256':sha(OUT/'REPORT.md'),'handoff_sha256':sha(OUT/'HANDOFF.json')}))

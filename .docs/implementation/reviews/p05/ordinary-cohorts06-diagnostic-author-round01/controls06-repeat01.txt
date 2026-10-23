@@ -1,0 +1,78 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ "export const sha=bytes=>createHash('sha256').update(bytes).digest('hex');\r\n" +
++   'export function publicIdentity(round,pack,seen){\r\n' +
++   " assert.equal(round.kind,'public','Every neutral selected round must actually release a public card');\r\n" +
++   ' const card=pack.card(round.card_id);assert.equal(card.revision,round.card_revision);assert.equal(card.mode,round.mode);\r\n' +
++   " assert(!seen.has(card.id),'Exact selected/released ID repeated in this session');seen.add(card.id);return card;\r\n" +
++   '}\r\n' +
++   'export function receipt(body,id){assert.equal(body.schema_version,2);assert.equal(body.request_id,id);assert(Number.isSafeInteger(body.game_rev)&&body.game_rev>=1);return body;}\r\n' +
++   "export function safeFailure(error){return {name:['AssertionError','Error','TypeError','SyntaxError','AbortError'].includes(error?.name)?error.name:'UNLISTED',code:['ERR_ASSERTION','ABORT_ERR','ERR_INVALID_URL','ECONNREFUSED','ECONNRESET','ETIMEDOUT','UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT','UND_ERR_SOCKET'].includes(error?.code)?error.code:null,assertion_code:['PROFILE_OR_TOTAL_DEADLINE','WS_FAILURE','REQUEST_CAP','UNEXPECTED_API_STATUS','CLEANUP_ROUTE_ONLY'].includes(error?.message?.split('\\n',1)[0])?error.message.split('\\n',1)[0]:'PROBE_ASSERTION_FAILED'};}\r\n" +
++   'export function assertText(round,card,locale,names){\r\n' +
++   " const sub=value=>value.replace(/\\{P([12])\\}/g,(_m,i)=>names[round.actors[Number(i)-1]]??'');\r\n" +
++   ' const text=card.text[locale];\r\n' +
++   " if(card.mode==='questions')assert.deepEqual(round.text,{question:sub(text.question)});\r\n" +
++   " else if(card.mode==='truth_or_dare')assert.deepEqual(round.text,{prompt:sub(text[round.choice])});\r\n" +
++   ' else assert.deepEqual(round.text,{proposal:sub(text.proposal),responder:sub(text.responder)});\r\n' +
++   '}\r\n'
+- "export const sha=bytes=>createHash('sha256').update(bytes).digest('hex');\n" +
+-   'export function publicIdentity(round,pack,seen){\n' +
+-   " assert.equal(round.kind,'public','Every neutral selected round must actually release a public card');\n" +
+-   ' const card=pack.card(round.card_id);assert.equal(card.revision,round.card_revision);assert.equal(card.mode,round.mode);\n' +
+-   " assert(!seen.has(card.id),'Exact selected/released ID repeated in this session');seen.add(card.id);return card;\n" +
+-   '}\n' +
+-   'export function receipt(body,id){assert.equal(body.schema_version,2);assert.equal(body.request_id,id);assert(Number.isSafeInteger(body.game_rev)&&body.game_rev>=1);return body;}\n' +
+-   "export function safeFailure(error){return {name:['AssertionError','Error','TypeError','SyntaxError','AbortError'].includes(error?.name)?error.name:'UNLISTED',code:['ERR_ASSERTION','ABORT_ERR','ERR_INVALID_URL','ECONNREFUSED','ECONNRESET','ETIMEDOUT','UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT','UND_ERR_SOCKET'].includes(error?.code)?error.code:null,assertion_code:['PROFILE_OR_TOTAL_DEADLINE','WS_FAILURE','REQUEST_CAP','UNEXPECTED_API_STATUS','CLEANUP_ROUTE_ONLY'].includes(error?.message?.split('\\n',1)[0])?error.message.split('\\n',1)[0]:'PROBE_ASSERTION_FAILED'};}\n" +
+-   'export function assertText(round,card,locale,names){\n' +
+-   " const sub=value=>value.replace(/\\{P([12])\\}/g,(_m,i)=>names[round.actors[Number(i)-1]]??'');\n" +
+-   ' const text=card.text[locale];\n' +
+-   " if(card.mode==='questions')assert.deepEqual(round.text,{question:sub(text.question)});\n" +
+-   " else if(card.mode==='truth_or_dare')assert.deepEqual(round.text,{prompt:sub(text[round.choice])});\n" +
+-   ' else assert.deepEqual(round.text,{proposal:sub(text.proposal),responder:sub(text.responder)});\n' +
+-   '}\n'
+
+    at file:///C:/.projects/venus/.artifacts/p05-ordinary-real470-probe06/controls.mjs:28:18
+    at check (file:///C:/.projects/venus/.artifacts/p05-ordinary-real470-probe06/controls.mjs:5:32)
+    at file:///C:/.projects/venus/.artifacts/p05-ordinary-real470-probe06/controls.mjs:28:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: "export const sha=bytes=>createHash('sha256').update(bytes).digest('hex');\r\n" +
+    'export function publicIdentity(round,pack,seen){\r\n' +
+    " assert.equal(round.kind,'public','Every neutral selected round must actually release a public card');\r\n" +
+    ' const card=pack.card(round.card_id);assert.equal(card.revision,round.card_revision);assert.equal(card.mode,round.mode);\r\n' +
+    " assert(!seen.has(card.id),'Exact selected/released ID repeated in this session');seen.add(card.id);return card;\r\n" +
+    '}\r\n' +
+    'export function receipt(body,id){assert.equal(body.schema_version,2);assert.equal(body.request_id,id);assert(Number.isSafeInteger(body.game_rev)&&body.game_rev>=1);return body;}\r\n' +
+    "export function safeFailure(error){return {name:['AssertionError','Error','TypeError','SyntaxError','AbortError'].includes(error?.name)?error.name:'UNLISTED',code:['ERR_ASSERTION','ABORT_ERR','ERR_INVALID_URL','ECONNREFUSED','ECONNRESET','ETIMEDOUT','UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT','UND_ERR_SOCKET'].includes(error?.code)?error.code:null,assertion_code:['PROFILE_OR_TOTAL_DEADLINE','WS_FAILURE','REQUEST_CAP','UNEXPECTED_API_STATUS','CLEANUP_ROUTE_ONLY'].includes(error?.message?.split('\\n',1)[0])?error.message.split('\\n',1)[0]:'PROBE_ASSERTION_FAILED'};}\r\n" +
+    'export function assertText(round,card,locale,names){\r\n' +
+    " const sub=value=>value.replace(/\\{P([12])\\}/g,(_m,i)=>names[round.actors[Number(i)-1]]??'');\r\n" +
+    ' const text=card.text[locale];\r\n' +
+    " if(card.mode==='questions')assert.deepEqual(round.text,{question:sub(text.question)});\r\n" +
+    " else if(card.mode==='truth_or_dare')assert.deepEqual(round.text,{prompt:sub(text[round.choice])});\r\n" +
+    ' else assert.deepEqual(round.text,{proposal:sub(text.proposal),responder:sub(text.responder)});\r\n' +
+    '}\r\n',
+  expected: "export const sha=bytes=>createHash('sha256').update(bytes).digest('hex');\n" +
+    'export function publicIdentity(round,pack,seen){\n' +
+    " assert.equal(round.kind,'public','Every neutral selected round must actually release a public card');\n" +
+    ' const card=pack.card(round.card_id);assert.equal(card.revision,round.card_revision);assert.equal(card.mode,round.mode);\n' +
+    " assert(!seen.has(card.id),'Exact selected/released ID repeated in this session');seen.add(card.id);return card;\n" +
+    '}\n' +
+    'export function receipt(body,id){assert.equal(body.schema_version,2);assert.equal(body.request_id,id);assert(Number.isSafeInteger(body.game_rev)&&body.game_rev>=1);return body;}\n' +
+    "export function safeFailure(error){return {name:['AssertionError','Error','TypeError','SyntaxError','AbortError'].includes(error?.name)?error.name:'UNLISTED',code:['ERR_ASSERTION','ABORT_ERR','ERR_INVALID_URL','ECONNREFUSED','ECONNRESET','ETIMEDOUT','UND_ERR_CONNECT_TIMEOUT','UND_ERR_HEADERS_TIMEOUT','UND_ERR_SOCKET'].includes(error?.code)?error.code:null,assertion_code:['PROFILE_OR_TOTAL_DEADLINE','WS_FAILURE','REQUEST_CAP','UNEXPECTED_API_STATUS','CLEANUP_ROUTE_ONLY'].includes(error?.message?.split('\\n',1)[0])?error.message.split('\\n',1)[0]:'PROBE_ASSERTION_FAILED'};}\n" +
+    'export function assertText(round,card,locale,names){\n' +
+    " const sub=value=>value.replace(/\\{P([12])\\}/g,(_m,i)=>names[round.actors[Number(i)-1]]??'');\n" +
+    ' const text=card.text[locale];\n' +
+    " if(card.mode==='questions')assert.deepEqual(round.text,{question:sub(text.question)});\n" +
+    " else if(card.mode==='truth_or_dare')assert.deepEqual(round.text,{prompt:sub(text[round.choice])});\n" +
+    ' else assert.deepEqual(round.text,{proposal:sub(text.proposal),responder:sub(text.responder)});\n' +
+    '}\n',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

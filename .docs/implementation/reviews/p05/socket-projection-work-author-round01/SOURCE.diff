@@ -1,0 +1,176 @@
+--- A14/apps/api/src/rooms.ts
++++ candidate/apps/api/src/rooms.ts
+@@ -30,7 +30,7 @@
+   removing(c:pg.PoolClient,roomId:string,memberId:string):Promise<void>;
+   setupCleared(c:pg.PoolClient,roomId:string,memberId:string):Promise<void>;
+   purge(c:pg.PoolClient,roomId:string):Promise<void>;
+-  socketView(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',after:number):Promise<{game:GameView|null;privateEvents:PrivateReference[]}>;
++  socketView(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',after:number,options?:{includePublicGame?:boolean}):Promise<{game:GameView|null;privateEvents:PrivateReference[]}>;
+   privateDelivery(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',eventId:string):Promise<PrivateDelivery|null>;
+ }
+ export function revision(value:string|number) {const n=Number(value);requireThat(Number.isSafeInteger(n)&&n>=0,'REVISION_OVERFLOW',503);return n;}
+@@ -357,7 +357,7 @@
+       return {roomId,memberId:a.member.id,generation:revision(member.rows[0]!.socket_generation),sessionHash:a.sessionHash};
+     });
+   }
+-  async liveGrant(grant:SocketGrant,heartbeat=false) {return (await this.socketState(grant,heartbeat)).room;}
++  async liveGrant(grant:SocketGrant,heartbeat=false) {return (await this.socketState(grant,heartbeat,0,heartbeat?{projection:'none'}:{})).room;}
+   /** Enqueue synchronously under the same room lock used by every revoke mutation.
+    * This read-only dispatch transaction only projects previously committed state. */
+   async dispatchPrivate(grant:SocketGrant,eventId:string,enqueue:(event:PrivateDelivery,roomRev:number)=>void) {
+@@ -389,7 +389,7 @@
+       if(game) enqueue(game,revision(room.rev));
+     });
+   }
+-  async socketState(grant:SocketGrant,heartbeat=false,afterPrivate=0) {
++  async socketState(grant:SocketGrant,heartbeat=false,afterPrivate=0,options:{projection?:'full'|'private'|'none'}={}) {
+     return this.transaction(async c=>{
+       const room=await this.room(c,grant.roomId);requireThat(room.state==='open'&&!this.options.ledger.contains(room.id)&&this.now()-room.last_activity_at.getTime()<timers.idle,'ROOM_CLOSED');
+       const member=await c.query<MemberRow>(`SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id WHERE m.room_id=$1 AND m.id=$2 AND m.socket_generation=$3 AND m.slot IS NOT NULL AND m.removed_at IS NULL AND s.token_hash=$4 AND s.revoked_at IS NULL AND s.expires_at>$5`,[grant.roomId,grant.memberId,grant.generation,grant.sessionHash,new Date(this.now())]);
+@@ -397,7 +397,9 @@
+       const originalCredentialFence=this.protocol(room)===2?await this.finalAccessFence(c,{room,member:member.rows[0]!,sessionHash:grant.sessionHash},false,grant.generation):null;
+       originalCredentialFence?.();
+       if(heartbeat) {await c.query("UPDATE room_members SET presence='online',heartbeat_at=$3,reserved_until=$4 WHERE room_id=$1 AND id=$2",[grant.roomId,grant.memberId,new Date(this.now()),new Date(this.now()+timers.reservation)]);await c.query('UPDATE room_sessions SET expires_at=$2 WHERE token_hash=$1',[grant.sessionHash,new Date(this.now()+timers.idle)]);if(member.rows[0]!.presence!=='online') {await this.games?.memberStateChanged(c,room.id);await this.emit(c,room,false);}}
+-      const bundle=await this.games?.socketView(c,room.id,grant.memberId,member.rows[0]!.locale,afterPrivate);
++      // Internal V2 work selection only; publication still uses fresh dispatch fences.
++      const projection=this.protocol(room)===2?(options.projection??'full'):'full';
++      const bundle=projection==='none'?undefined:projection==='private'?await this.games?.socketView(c,room.id,grant.memberId,member.rows[0]!.locale,afterPrivate,{includePublicGame:false}):await this.games?.socketView(c,room.id,grant.memberId,member.rows[0]!.locale,afterPrivate);
+       const view=await this.view(c,await this.room(c,room.id));
+       if(originalCredentialFence) {
+         (await this.finalAccessFence(c,{room,member:member.rows[0]!,sessionHash:grant.sessionHash},false,grant.generation))();
+--- A14/apps/api/src/room-routes.ts
++++ candidate/apps/api/src/room-routes.ts
+@@ -182,7 +182,7 @@
+           const id=roomId(request);grant=await rooms.connect(id,credential(request),frame.ticket);
+           clearTimeout(deadline);pending.delete(socket);
+           const key=id+':'+grant.memberId;const old=sockets.get(key);if(old) old.socket.close(4409,'Connection replaced');
+-          sockets.set(key,{socket,grant});const bundle=await rooms.socketState(grant);lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);await sendGame(socket,grant,bundle,true);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;
++          sockets.set(key,{socket,grant});const bundle=await rooms.socketState(grant,false,0,{projection:'private'});lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);await sendGame(socket,grant,bundle,true);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;
+         } else {
+           requireThat(frame.type==='ping'&&Object.keys(frame).length===1,'INVALID_REQUEST',400);
+           const now=performance.now();requireThat(now-lastPing>=500,'RATE_LIMITED',429);lastPing=now;await rooms.liveGrant(grant,true);socket.send(JSON.stringify({type:'pong'}));
+@@ -194,7 +194,7 @@
+       // a poll backlog ahead of the heartbeat on the same serialized chain.
+       if(!grant||socket.readyState!==1||pollPending)return;
+       pollPending=true;
+-      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(()=>socket.close(4401,'Connection unavailable')).finally(()=>{pollPending=false;});
++      chain=chain.then(async()=>{if(!grant||socket.readyState!==1) return;const bundle=await rooms.socketState(grant,false,lastPrivate,{projection:'private'}),changed=bundle.room.room_rev>lastRevision;if(changed) {lastRevision=bundle.room.room_rev;send(socket,grant,bundle.room);}await sendGame(socket,grant,bundle,changed);lastPrivate=bundle.privateEvents.at(-1)?.revision??lastPrivate;}).catch(()=>socket.close(4401,'Connection unavailable')).finally(()=>{pollPending=false;});
+     },1000);ticker.unref();
+     socket.on('close',()=>{
+       clearTimeout(deadline);clearInterval(ticker);pending.delete(socket);
+--- A14/apps/api/src/room-games.ts
++++ candidate/apps/api/src/room-games.ts
+@@ -20,6 +20,6 @@
+  async removing(c:pg.PoolClient,roomId:string,memberId:string) {return (await this.implementation(c,roomId)).removing(c,roomId,memberId);}
+  async setupCleared(c:pg.PoolClient,roomId:string,memberId:string) {return (await this.implementation(c,roomId)).setupCleared(c,roomId,memberId);}
+  async purge(c:pg.PoolClient,roomId:string) {return (await this.implementation(c,roomId)).purge(c,roomId);}
+- async socketView(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',after:number) {const selected=await this.implementation(c,roomId);try{return await selected.socketView(c,roomId,memberId,locale,after);}catch(error){if(selected===this.topics&&unavailableTopicContent(error))return {game:null,privateEvents:[]};throw error;}}
++ async socketView(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',after:number,options?:{includePublicGame?:boolean}) {const selected=await this.implementation(c,roomId);try{return selected===this.topics&&options?await selected.socketView(c,roomId,memberId,locale,after,options):await selected.socketView(c,roomId,memberId,locale,after);}catch(error){if(selected===this.topics&&unavailableTopicContent(error))return {game:null,privateEvents:[]};throw error;}}
+  async privateDelivery(c:pg.PoolClient,roomId:string,memberId:string,locale:'ru'|'en'|'tr',eventId:string) {const selected=await this.implementation(c,roomId);try{return await selected.privateDelivery(c,roomId,memberId,locale,eventId);}catch(error){if(selected===this.topics&&unavailableTopicContent(error))return null;throw error;}}
+ }
+--- A14/apps/api/src/topic-games.ts
++++ candidate/apps/api/src/topic-games.ts
+@@ -328,6 +328,6 @@
+   for(const {room_id:room} of rooms){await this.rooms.lockRoom(c,room);const rows=(await c.query<TopicGameRow>("SELECT g.* FROM game_sessions g JOIN topic_game_sessions t ON t.session_id=g.id AND t.room_id=g.room_id WHERE g.room_id=$1 AND g.pack_digest=ANY($2::text[]) AND g.state IN ('waiting','active','paused') ORDER BY g.seq LIMIT 4097 FOR UPDATE OF g",[room,digests])).rows;requireThat(rows.length<=4096,'TOPIC_WITHDRAW_CAPACITY',503);for(const g of rows){g.state='aborted';g.pause_reason=null;await this.clearPrivate(c,g);await this.bump(c,g,false);}}
+  }
+  async quiesce(c:pg.PoolClient,room:string){const g=await this.row(c,room);if(g&&['active','paused'].includes(g.state)){g.state='aborted';g.pause_reason=null;await this.clearPrivate(c,g);await this.bump(c,g,false);}}
+- async socketView(c:pg.PoolClient,room:string,member:string,locale:TopicLocale,after:number){if(!this.options.enabled)return {game:null,privateEvents:[]};const g=await this.row(c,room);if(!g)return {game:null,privateEvents:[]};if(g.state==='active'){const l=await this.loaded(c,room,g.id);const actor=l.data.plan.actors.includes(member);if(actor&&l.data.conversation_id){try{const result=await this.prepareProjection(c,l,member,locale);if(isDeferred(result))return {game:await this.view(c,g,locale),privateEvents:[]};}catch(e){if(!(e instanceof DomainError)&&!(e instanceof EngineError))throw e;}}}const refs=(await c.query<{event_id:string;stream_rev:string}>('SELECT event_id,stream_rev FROM topic_game_private_refs WHERE room_id=$1 AND member_id=$2 AND stream_rev>$3 ORDER BY stream_rev LIMIT 101',[room,member,after])).rows;requireThat(refs.length<=100,'PRIVATE_EVENT_CAPACITY',503);return {game:await this.view(c,g,locale),privateEvents:refs.map(r=>({eventId:r.event_id,revision:revision(r.stream_rev)}))};}
++ async socketView(c:pg.PoolClient,room:string,member:string,locale:TopicLocale,after:number,options:{includePublicGame?:boolean}={}){if(!this.options.enabled)return {game:null,privateEvents:[]};const g=await this.row(c,room);if(!g)return {game:null,privateEvents:[]};if(g.state==='active'){const l=await this.loaded(c,room,g.id);const actor=l.data.plan.actors.includes(member);if(actor&&l.data.conversation_id){try{const result=await this.prepareProjection(c,l,member,locale);if(isDeferred(result))return {game:options.includePublicGame===false?null:await this.view(c,g,locale),privateEvents:[]};}catch(e){if(!(e instanceof DomainError)&&!(e instanceof EngineError))throw e;}}}const refs=(await c.query<{event_id:string;stream_rev:string}>('SELECT event_id,stream_rev FROM topic_game_private_refs WHERE room_id=$1 AND member_id=$2 AND stream_rev>$3 ORDER BY stream_rev LIMIT 101',[room,member,after])).rows;requireThat(refs.length<=100,'PRIVATE_EVENT_CAPACITY',503);return {game:options.includePublicGame===false?null:await this.view(c,g,locale),privateEvents:refs.map(r=>({eventId:r.event_id,revision:revision(r.stream_rev)}))};}
+  async privateDelivery(c:pg.PoolClient,room:string,member:string,locale:TopicLocale,eventId:string):Promise<PrivateDelivery|null>{if(!this.options.enabled)return null;const ref=(await c.query<{session_id:string;round_id:string;game_rev:string;stream_rev:string}>('SELECT session_id,round_id,game_rev,stream_rev FROM topic_game_private_refs WHERE room_id=$1 AND member_id=$2 AND event_id=$3',[room,member,eventId])).rows[0];if(!ref)return null;const l=await this.loaded(c,room,ref.session_id);if(l.row.id!==ref.round_id||l.game.rev!==ref.game_rev||!this.privateTransportAvailable(l.snapshot,l.data))return null;await this.actor(c,l.game,l.row.id,member);const value=await this.prepared(c,l,member,locale);return value?this.withFence({eventId,revision:revision(ref.stream_rev),type:'private_conversation_v2',payload:value},()=>this.checkDelivery(value)):null;}
+ }
+--- A14/apps/api/src/room-games.test.ts
++++ candidate/apps/api/src/room-games.test.ts
+@@ -37,4 +37,8 @@
+   const f=fixture(1),error=new DomainError('CATALOG_LEDGER_UNAVAILABLE',503);f.legacy.publicDelivery.mockRejectedValue(error);
+   await expect(f.router.publicDelivery(f.c,'room','en')).rejects.toBe(error);expect(f.topics.publicDelivery).not.toHaveBeenCalled();
+  });
++ for(const protocol of [1,2])it(`internal private-only projection option forwards only to V2, protocol${protocol}`,async()=>{
++  const f=fixture(protocol);await f.router.socketView(f.c,'room','member','en',0,{includePublicGame:false});
++  expect((protocol===2?f.topics:f.legacy).socketView).toHaveBeenCalledWith(...(protocol===2?[f.c,'room','member','en',0,{includePublicGame:false}]:[f.c,'room','member','en',0]));
++ });
+ });
+--- A14/apps/api/src/room-socket-poll.test.ts
++++ candidate/apps/api/src/room-socket-poll.test.ts
+@@ -43,6 +43,8 @@
+  it('coalesces slow poll ticks so queued polls cannot starve a heartbeat',async()=>{
+   const f=await fixture();try{
+    await vi.advanceTimersByTimeAsync(6000);expect(f.service.socketState).toHaveBeenCalledTimes(2);
++   expect(f.service.socketState).toHaveBeenNthCalledWith(1,expect.anything(),false,0,{projection:'private'});
++   expect(f.service.socketState).toHaveBeenNthCalledWith(2,expect.anything(),false,0,{projection:'private'});
+    f.socket.emit('message',Buffer.from(JSON.stringify({type:'ping'})));
+    await vi.advanceTimersByTimeAsync(0);f.releasePoll();await vi.advanceTimersByTimeAsync(0);
+    expect(f.order).toEqual(['poll:1','poll:2','heartbeat']);
+--- A14/apps/api/src/room-socket-projection.test.ts
++++ candidate/apps/api/src/room-socket-projection.test.ts
+@@ -0,0 +1,50 @@
++import {describe,it,expect,vi} from 'vitest';
++import type pg from 'pg';
++import {Rooms,gameDeliveryFence,type RoomGameHooks,type FencedGameView} from './rooms.js';
++import {type DeletionLedger,type Keyring} from './security.js';
++import type {RoomPrivateProtocolHooks} from './room-private-protocol.js';
++
++/** Real Rooms transaction/credential/final-dispatch paths with a deterministic
++ * SQL service double. Native PG/filesystem transport proof remains separate. */
++function fixture(protocol=2){
++ let now=100,expires=150,credentialReads=0,retired=false,expireAtFinal=false;
++ const room={id:'room',private_protocol:protocol,state:'open',rev:'1',last_activity_at:new Date(100),meeting_context:'online'},
++  member={id:'member',room_id:'room',socket_generation:'1',slot:1,presence:'online',removed_at:null,locale:'en'};
++ const checks=vi.fn(()=>{if(retired)throw Error('retired');});
++ const guard=vi.fn(async()=>{checks();return checks;});
++ const query=vi.fn(async(sql:string,values?:unknown[])=>{
++  if(sql.startsWith('SELECT * FROM rooms'))return {rows:[room],rowCount:1};
++  if(sql.startsWith('SELECT m.* FROM room_members m JOIN room_sessions'))return {rows:[member],rowCount:1};
++  if(sql.startsWith('SELECT offer_version,offer_digest'))return {rows:[{offer_version:'v',offer_digest:'digest'}],rowCount:1};
++  if(sql.startsWith('SELECT s.expires_at')){credentialReads++;if(expireAtFinal&&credentialReads===2)now=200;return {rows:[{expires_at:new Date(expires),offer_version:'v',offer_digest:'digest',socket_generation:'1',slot:1}],rowCount:1};}
++  if(sql.startsWith('UPDATE room_sessions SET expires_at'))expires=(values![1] as Date).getTime();
++  if(sql.startsWith('SELECT m.*,COALESCE'))return {rows:[],rowCount:0};
++  return {rows:[],rowCount:0};
++ });
++ const client={query,release:vi.fn()},pool={connect:vi.fn(async()=>client)} as unknown as pg.Pool;
++ const rooms=new Rooms({pool,keys:{} as Keyring,ledger:{contains:()=>false} as unknown as DeletionLedger,origin:'https://fixture.invalid',offer:()=>({version:'v',digest:'digest',text:{ru:'',en:'',tr:''},synthetic:true}),now:()=>now,privateProtocol:{guard} as unknown as RoomPrivateProtocolHooks});
++ const child={featureAvailable:vi.fn(async()=>false),socketView:vi.fn(async()=>({game:null,privateEvents:[{eventId:'event',revision:1}]})),publicDelivery:vi.fn(async()=>null as FencedGameView|null)};
++ rooms.attachGames(child as unknown as RoomGameHooks);
++ const grant={roomId:'room',memberId:'member',generation:1,sessionHash:'session'};
++ return {rooms,child,grant,guard,checks,query,revoke:()=>{retired=true;},expireAtFinal:()=>{expireAtFinal=true;}};
++}
++describe('internal V2 socket projection work selection preserves credential fences',()=>{
++ it('default direct caller retains child projection, while private-only asks for private preparation',async()=>{
++  const f=fixture();await f.rooms.socketState(f.grant);expect(f.child.socketView).toHaveBeenLastCalledWith(expect.anything(),'room','member','en',0);
++  const bundle=await f.rooms.socketState(f.grant,false,9,{projection:'private'});expect(f.child.socketView).toHaveBeenLastCalledWith(expect.anything(),'room','member','en',9,{includePublicGame:false});expect(bundle.privateEvents).toEqual([{eventId:'event',revision:1}]);
++ });
++ it('V2 heartbeat skips all child projection but renews presence/session and rechecks current authority',async()=>{
++  const f=fixture();await f.rooms.liveGrant(f.grant,true);expect(f.child.socketView).not.toHaveBeenCalled();expect(f.guard).toHaveBeenCalledTimes(2);expect(f.checks).toHaveBeenCalledTimes(5);
++  expect(f.query.mock.calls.some(([sql])=>sql.startsWith('UPDATE room_members SET'))).toBe(true);expect(f.query.mock.calls.some(([sql])=>sql.startsWith('UPDATE room_sessions SET'))).toBe(true);expect(f.query.mock.calls.some(([sql])=>sql==='COMMIT')).toBe(true);
++ });
++ it('renewed heartbeat cannot revive the original credential expiring during later IO',async()=>{
++  const f=fixture();f.expireAtFinal();await expect(f.rooms.liveGrant(f.grant,true)).rejects.toMatchObject({code:'AUTH_REQUIRED'});expect(f.child.socketView).not.toHaveBeenCalled();expect(f.query.mock.calls.some(([sql])=>sql==='ROLLBACK')).toBe(true);
++ });
++ it('V1 ignores V2-only projection selection and keeps legacy heartbeat work unchanged',async()=>{
++  const f=fixture(1);await f.rooms.liveGrant(f.grant,true);expect(f.child.socketView).toHaveBeenCalledWith(expect.anything(),'room','member','en',0);expect(f.guard).not.toHaveBeenCalled();
++ });
++ it('public enqueue still invokes fresh current publication fences rather than a discarded bundle',async()=>{
++  const f=fixture(),check=vi.fn(),value={} as FencedGameView;Object.defineProperty(value,gameDeliveryFence,{value:check});f.child.publicDelivery.mockResolvedValue(value);const enqueue=vi.fn();await f.rooms.dispatchGame(f.grant,enqueue);expect(check).toHaveBeenCalledOnce();expect(f.guard).toHaveBeenCalledOnce();expect(enqueue).toHaveBeenCalledWith(value,1);
++  f.child.publicDelivery.mockImplementation(async()=>{f.revoke();return value;});enqueue.mockClear();await expect(f.rooms.dispatchGame(f.grant,enqueue)).rejects.toThrow('retired');expect(enqueue).not.toHaveBeenCalled();
++ });
++});
+--- A14/apps/api/src/topic-games-socket-projection.test.ts
++++ candidate/apps/api/src/topic-games-socket-projection.test.ts
+@@ -0,0 +1,18 @@
++import {describe,it,expect,vi} from 'vitest';
++import type pg from 'pg';
++import {TopicGames} from './topic-games.js';
++import type {Rooms} from './rooms.js';
++/** Executes the actual socketView control path. Subordinate domain operations
++ * are observed here; this is not actual private consent/ACL/PG acceptance. */
++function fixture(){
++ const unused=vi.fn(async()=>{throw Error('not reached');}),games=new TopicGames({} as Rooms,{enabled:true,source:{active:unused,pinned:unused,assertCurrent:vi.fn()},safety:{read:unused,excludeLocked:unused,assertCurrent:vi.fn()}});
++ const methods=games as unknown as {row:(...args:unknown[])=>Promise<unknown>;loaded:(...args:unknown[])=>Promise<unknown>;prepareProjection:(...args:unknown[])=>Promise<unknown>;view:(...args:unknown[])=>Promise<unknown>};
++ vi.spyOn(methods,'row').mockResolvedValue({state:'active',id:'game'});const loaded=vi.spyOn(methods,'loaded').mockResolvedValue({data:{plan:{actors:['member']},conversation_id:'conversation'}}),prepared=vi.spyOn(methods,'prepareProjection').mockResolvedValue({});
++ const view=vi.spyOn(methods,'view').mockResolvedValue({proof:'public'}),query=vi.fn(async()=>({rows:[{event_id:'event',stream_rev:'3'}]})),c={query} as unknown as pg.PoolClient;
++ return {games,c,loaded,prepared,view,query};
++}
++describe('V2 private-only socket view skips unused public projection',()=>{
++ it('preserves default full projection and exact private refs',async()=>{const f=fixture();expect(await f.games.socketView(f.c,'room','member','en',0)).toEqual({game:{proof:'public'},privateEvents:[{eventId:'event',revision:3}]});expect(f.view).toHaveBeenCalledOnce();expect(f.loaded).toHaveBeenCalledOnce();expect(f.prepared).toHaveBeenCalledOnce();});
++ it('skips only public view while loading/preparing private content and querying exact refs',async()=>{const f=fixture();expect(await f.games.socketView(f.c,'room','member','en',2,{includePublicGame:false})).toEqual({game:null,privateEvents:[{eventId:'event',revision:3}]});expect(f.view).not.toHaveBeenCalled();expect(f.loaded).toHaveBeenCalledOnce();expect(f.prepared).toHaveBeenCalledOnce();expect(f.query).toHaveBeenCalledWith(expect.stringContaining('stream_rev>$3'),['room','member',2]);});
++ it('does not mask unknown private preparation failures or skip private capacity bounds',async()=>{const f=fixture();f.prepared.mockRejectedValue(new Error('storage'));await expect(f.games.socketView(f.c,'room','member','en',0,{includePublicGame:false})).rejects.toThrow('storage');expect(f.view).not.toHaveBeenCalled();f.prepared.mockResolvedValue({});f.query.mockResolvedValue({rows:Array.from({length:101},()=>({event_id:'event',stream_rev:'3'}))});await expect(f.games.socketView(f.c,'room','member','en',0,{includePublicGame:false})).rejects.toMatchObject({code:'PRIVATE_EVENT_CAPACITY'});});
++});

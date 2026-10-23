@@ -1,0 +1,10 @@
+"""Read-only external Docker state evidence; never create/start/pull/build."""
+from pathlib import Path
+import subprocess,json,datetime
+out=Path('.docs/implementation/reviews/p05/oci-resource-feasibility-actual-round01');cmd=r'C:\Program Files\Docker\Docker\resources\bin\docker.exe'
+rows=[]
+for args in [['context','show'],['info','--format','{{.ID}} {{.ServerVersion}} {{.Driver}} {{.OperatingSystem}}'],['image','inspect','sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4','postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8','--format','{{.Id}}']]:
+ try:
+  r=subprocess.run([cmd,'--context','desktop-linux',*args],capture_output=True,timeout=15);assert len(r.stdout)+len(r.stderr)<=65536;rows.append({'args':args,'exit_code':r.returncode,'stdout':r.stdout.decode('utf8','replace'),'stderr':r.stderr.decode('utf8','replace')})
+ except subprocess.TimeoutExpired:rows.append({'args':args,'exit_code':'TIMEOUT15s','stdout':'','stderr':'read-only Docker CLI timeout'})
+(out/'external-preflight.json').write_text(json.dumps({'created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'scope':'READ_ONLY_NO_RESOURCE_CREATION','commands':rows,'actual_functional_RUN':False},indent=2)+'\n');print(json.dumps(rows))

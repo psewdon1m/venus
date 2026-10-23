@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "scope": "AUTHOR_DISJOINT_ORDINARY_WS_CORRECTIVE_PRODUCER_REVIEW_BEFORE_DOCKER",
+  "status": "FAIL",
+  "reviewer": "/root/p05_topics_ui_review",
+  "created_at": "2026-10-19T18:20:24.394035+00:00",
+  "pins": {
+    "integration.mjs": "d8c7f822034d35dc654e285c6c0a930cae27ec23e5cc5afa1a4310666b52b453",
+    "runner.mjs": "d9ce62373b7255854c28909be15f9a811f7504b1809b455a27b554dcec9b7abe",
+    "observation.mjs": "61ebcfe6fa07dc8ca5db2504eebb1cdafed05ea3a0af9c0be32235402ac6231d",
+    "window-regressions.mjs": "b37c982c0a9391aa9d999dbbe57a49405ac00b6f19f7192928505b0078c54ca4",
+    "window-regression-results.json": "dae4979cb10c8304c3508a9241a673c67c77e89c84dff10ca1825d2be47c489d",
+    "HANDOFF.json": "53a0d3cc7a6482e06f500119c833ee1e39cc4a5f53f7c59995a4899ea5537a59",
+    "DESIGN-REVISION-03.md": "50fe3a5ebc4f9a6cbc41721b45b3f0eee7fb14869822498e7e4fc8cbf1fdb9d8"
+  },
+  "docker_run": false,
+  "author_regressions_rerun": {
+    "checks": 15,
+    "exit_code": 0
+  },
+  "previous_findings": [
+    {
+      "id": "OWS-REV-001",
+      "status": "WINDOW_BOUNDARY_FIX_PRESENT_ACCEPTANCE_PENDING",
+      "evidence": "Observation now starts before transitions, dispatch observer delegates real original callback, durable narrow activates exact post-success boundary; author15regressions rerun. New unknown-frame masquerade gap prevents acceptance."
+    }
+  ],
+  "findings": [
+    {
+      "id": "OWS-REV-002",
+      "severity": "P2",
+      "category": "TEST_FALSE_NEGATIVE",
+      "title": "Altered private frame can masquerade as a known pre-boundary enqueue",
+      "path": ".artifacts/p05-ordinary-ws/observation.mjs",
+      "reproduction": "node .artifacts/p05-ordinary-ws-review/fingerprint-counterexamples-round02.mjs",
+      "observed": "Exact helper returns PASS for same known event_id/type/epoch/prompt_present with changed prompt text, foreign target_member_id, foreign room_id or wrong audience. Unchanged legitimate prequeued frame also PASS. Four independent negative assertions fail.",
+      "cause": "Received match compares partial callback metadata to actor identity rather than validating frame ACL envelope; no complete payload digest.",
+      "requested_change": "Record a cryptographic digest of the complete JSON-transmitted payload, no raw text, and compare exact payload digest plus required envelope room/target/audience/schema/stream/type/event ID and revisions. Preserve primary post-boundary callback assertion even for same IDs, then repeat independent negative probes and actual runtime.",
+      "product_leak_proven": false
+    }
+  ],
+  "root_attempt01": {
+    "index_sha256": "81d521bdd385399579633f38bd9c7b370bd55475b0a0da09dd3fe97c61a4162e",
+    "inspection": "all28 artifacts and10PASS/cleanup verified; root metadata link correction addendum acknowledged, original immutable"
+  },
+  "limitations": [
+    "Only explicit-double producer/helper probes; no product leak claimed.",
+    "Corrected producer Docker NOT_RUN.",
+    "No product/included/producer writes by reviewer; full P05/production/browser/restore gate not claimed."
+  ]
+}

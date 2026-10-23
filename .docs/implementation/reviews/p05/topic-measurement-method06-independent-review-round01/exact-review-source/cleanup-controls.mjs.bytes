@@ -1,0 +1,44 @@
+import assert from 'node:assert/strict';
+import {cleanupOwned} from '../p05-topic-measurements-method06/owned-cleanup.mjs';
+import {createHash} from 'node:crypto';
+import {readFileSync} from 'node:fs';
+const owner='e'.repeat(32),image='sha256:'+'a'.repeat(64),container='venus-r100-v3-0123456789ab',volume=container+'-output';
+const ids=['0123456789ab'+'1'.repeat(52),'abcdef012345'+'2'.repeat(52)];
+const rows=[];
+async function replay(mode='ok',exportVerified=true){
+ let live=[...ids],vol=[volume],clock=0;const calls=[];
+ const docker=async(a,o)=>{
+  assert(o.timeout>0&&o.timeout<=30000);calls.push({args:a,timeout:o.timeout});
+  if(mode==='deadline')clock+=31000;
+  if(mode==='failed-list'&&a[0]==='ps')return{code:1,stdout:''};
+  if(a[0]==='ps'){
+   assert(a.includes('--no-trunc'));assert(a.includes('label=com.venus.measurement.owner='+owner));
+   let listing=[...live];if(live.length){if(mode==='short')listing=listing.map(x=>x.slice(0,12));if(mode==='uppercase')listing=[ids[1].toUpperCase()];if(mode==='duplicate-list')listing=[ids[0],ids[0]];if(mode==='invalid')listing=['--evil'];}
+   return{code:0,stdout:listing.join('\n')};
+  }
+  if(a[0]==='volume'&&a[1]==='ls')return{code:0,stdout:vol.join('\n')};
+  if(a[0]==='inspect'){
+   assert.deepEqual(a.slice(1),ids);let data=ids.map((Id,i)=>({Id,Name:'/'+container+(i?'-probe':''),Config:{Labels:{'com.venus.measurement.owner':owner}},Image:image,State:{Running:mode!=='stopped'}}));
+   if(mode==='foreign-owner')data[1].Config.Labels['com.venus.measurement.owner']='other';
+   if(mode==='foreign-image')data[1].Image='sha256:'+'9'.repeat(64);
+   if(mode==='foreign-name')data[1].Name='/'+container+'-evil';
+   if(mode==='missing')data.pop();if(mode==='reordered')data.reverse();if(mode==='duplicate-inspect')data[1]=data[0];if(mode==='prefix-collision')data[0].Id=ids[0].slice(0,12)+'f'.repeat(52);if(mode==='object')data={length:2};if(mode==='null-row')data[1]=null;
+   return{code:0,stdout:mode==='invalid-json'?'[':JSON.stringify(data)};
+  }
+  if(a[0]==='kill'){assert.deepEqual(a.slice(1),ids);return{code:mode==='kill-failure'?1:0,stdout:''};}
+  if(a[0]==='rm'){assert.deepEqual(a,['rm','-f',...ids]);if(mode==='rm-failure')return{code:1,stdout:''};live=[];return{code:0,stdout:''};}
+  if(a[0]==='volume'&&a[1]==='inspect')return{code:0,stdout:JSON.stringify([{Name:mode==='foreign-volume-name'?'alien':volume,Labels:{'com.venus.measurement.owner':mode==='foreign-volume-owner'?'other':owner}}])};
+  if(a[0]==='volume'&&a[1]==='rm'){assert.equal(a[2],volume);vol=[];return{code:0,stdout:''};}
+  throw Error('unexpected adapter operation');
+ };
+ const result=await cleanupOwned({docker,owner,image,container,volume,exportVerified,now:()=>clock});
+ assert.equal(result.artifact_write_calls,0);return{result,calls};
+}
+async function check(name,fn){try{await fn();rows.push({name,status:'PASS'});}catch(e){rows.push({name,status:'FAIL',error:e.message});}}
+for(const mode of ['ok','stopped'])await check(mode+' canonical exact IDs clean successfully',async()=>{const{result,calls}=await replay(mode);assert.equal(result.cleanup,'completed');assert.equal(result.workerStopped,true);assert.equal(calls.filter(x=>x.args[0]==='kill').length,mode==='stopped'?0:1);});
+for(const mode of ['short','uppercase','duplicate-list','invalid','missing','reordered','duplicate-inspect','prefix-collision','object','null-row','invalid-json','foreign-owner','foreign-image','foreign-name','failed-list','deadline'])await check(mode+' refuses before any destructive command',async()=>{const{result,calls}=await replay(mode);assert.equal(result.cleanup,'retained');assert.equal(result.workerStopped,false);assert(result.error);assert(!calls.some(x=>['kill','rm'].includes(x.args[0])||(x.args[0]==='volume'&&x.args[1]==='rm')));});
+for(const mode of ['kill-failure','rm-failure','foreign-volume-owner','foreign-volume-name'])await check(mode+' retains unverified resource and never removes volume',async()=>{const{result,calls}=await replay(mode);assert.equal(result.cleanup,'retained');assert(result.error);assert(!calls.some(x=>x.args[0]==='volume'&&x.args[1]==='rm'));});
+await check('unverified export stops worker but retains exact volume',async()=>{const{result,calls}=await replay('ok',false);assert.equal(result.cleanup,'retained');assert.equal(result.workerStopped,true);assert.deepEqual(result.remaining,{containers:[],volumes:[volume]});assert(!calls.some(x=>x.args[0]==='volume'&&['inspect','rm'].includes(x.args[1])));});
+const pin=p=>createHash('sha256').update(readFileSync(new URL(p,import.meta.url))).digest('hex');
+console.log(JSON.stringify({status:rows.every(r=>r.status==='PASS')?'PASS_INDEPENDENT_FINITE_ONLY':'FAIL',controls:rows,count:rows.length,source:{cleanup:pin('../p05-topic-measurements-method06/owned-cleanup.mjs'),review_controls:pin('./cleanup-controls.mjs')},Docker_calls:0,prepare_calls:0,selector_invocations:0,statistics_RUN:false},null,2));
+if(rows.some(r=>r.status!=='PASS'))process.exitCode=1;

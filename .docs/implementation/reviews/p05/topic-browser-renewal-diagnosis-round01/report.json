@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "status": "CONFIRMED_PRODUCT_PASSIVE_EXPIRY_CANCELS_FRESH_RENEWAL",
+  "created_at": "2026-10-19T21:42:49.451220+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "exact_inputs": [
+    {
+      "path": ".docs/implementation/evidence/p05/grant-phase-topic-browser-preflight-01/index.json",
+      "sha256": "ebf3eaa2267ad86f3c1c720e2e25b318f4e2abae01faf253ec359e754a738ca9"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/grant-phase-topic-browser-preflight-01/run/topic-browser-report.json",
+      "sha256": "db3db6566df87a2220b1f284715d0ea9c0c1f10ee4b60ae4c9e4998f08ffd0ea"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/grant-phase-topic-browser-preflight-01/run/failure-details.json",
+      "sha256": "138c0039e0a35942cde9467f44a2c672013f7f0a3a1b33885cc21015fcc0a096"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/grant-phase-topic-browser-preflight-01/run/delivery-metadata.json",
+      "sha256": "b64f0a4462c09b375e5d6d7c29ef6b77572e4ecc539e5a4bf11f73eaca963ecd"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/grant-phase-topic-browser-preflight-01/run/runner.json",
+      "sha256": "08fec0ec67486aa7751d7fe61f7ad9b8cec9e25c7f4b264c578588a58807dc55"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/grant-phase-topic-browser-preflight-01/run/producer/browser.mjs",
+      "sha256": "ab4ff3441240d186f7634acbb01891f1a5f20f18a800cb456fe3bcb64f702c01"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "3a687304a86f7743c1fbae35f2f7c9ad2c4cf64948d54f134cc68739bcf736b4"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "apps/web/src/topic-test-harness.ts",
+      "sha256": "b40944c141bf4beae788ff1c069d7a53862deaeb2d1d82ea51cd4a67cd1aff7f"
+    },
+    {
+      "path": "apps/web/src/room-shell.tsx",
+      "sha256": "0b32ece8232f42a07f5c39515c574bf4c8a8a9f0a0f7498acee4acbeebc42298"
+    },
+    {
+      "path": "apps/web/src/game-controls.ts",
+      "sha256": "21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c"
+    }
+  ],
+  "actual_packet_files_verified": 39,
+  "source_identity": "13b24714f3dd2d6e2ea08e911042defb4ce0161b956a9bcc74af533d3795120e",
+  "included_files": 1813,
+  "image": "sha256:5e30414ad64516422b61f630aa37639fb1920e795e2c7008752131a5c961647e",
+  "actual_result": {
+    "PASS": 4,
+    "FAIL": 1,
+    "NOT_RUN": 11,
+    "cleanup": "PASS",
+    "HTTP": 602,
+    "WS_retained": 256,
+    "old_WS_ring_evictions": 62,
+    "observer_status": "COMPLETE",
+    "pending": 0,
+    "observer_truncated": false
+  },
+  "finding": {
+    "id": "TG-UI-PASSIVE-EXPIRY-001",
+    "severity": "P2",
+    "scope": "Client renewal availability; no authorization bypass or stale-text exposure.",
+    "source": "visible() calls clear() at previous until; clear increments generation. Same-scope in-flight renewal read becomes noncurrent, so own-response guard returns before target. Old-display expiration is conflated with explicit revocation.",
+    "actual_linkage": "RU85 ownstart115786.677\u2192permissiondeadline120786.677; batchcomplete118699.921 and promptREADY118906.979. RU86 currentbody120755.625 and ownrequest120755.190 before oldexpiry, ownbody121422.736200 after; no target/conversation/chat in86. Next full87batch completes126761.360 near end of original localized5000 window after TRREADY121817.994. No private-clear/transport error appears in retained relevant WS window. Exact cache generation call was not instrumented; mandatory source guard and exact counterexample support this mechanism without claiming a hidden internal trace.",
+    "recommended_fix": "Separate passive expired-value destruction from generation-revoking explicit clear. An expired displayed grant must immediately drop prompt/advice/chat, while an already issued same-scope read may finish and publish only if its own fresh permission and all scope/generation/phase/epoch guards pass. Explicit revoke/bind/disconnect/Stop/Other/identity changes must continue cancelling old reads."
+  },
+  "own_exact_cache_and_unmodified_TSX_controls": 4,
+  "method10_budgets_and_permission_TTL_unchanged": true,
+  "qualifications": [
+    "Reproducer proves a fresh within5s batch can be cancelled by passive expiry and shows recovery on next cycle; it does not claim every future cycle permanently starves. Repeated gaps depend on scheduling.",
+    "Localized matcher native start/end were not directly instrumented; phase-ready end gives an approximate sequential start, and final87body lands near its end. Do not infer the exact final React render or matcher poll time.",
+    "Earlier WS frames were evicted from bounded ring; retained earliest25858ms precedes the entire relevant stage. No claim of zero WS ring evictions.",
+    "No source/producer edits or new functionalDocker/browser run. Raw actual cache internalstate/return not logged; source/timing/guard linkage plus exactcounterexample is explicit.",
+    "Human450/fullP05/production remain separate."
+  ],
+  "full_stage_pass": false
+}

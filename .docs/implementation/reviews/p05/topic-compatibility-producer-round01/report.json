@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_BEFORE_ACTUAL_RUN",
+  "created_at": "2026-10-19T19:55:43.479868+00:00",
+  "reviewer": "/root/p05_topic_games_review",
+  "author": "/root",
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "included_harness_sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+  "producer_inputs": [
+    {
+      "path": ".artifacts/p05-topic-compatibility/DESIGN.md",
+      "snapshot": "producer/DESIGN.md.bytes",
+      "sha256": "7d937ee3bb0d352359296e7e74d24b869342a88679508336e3cd8341891aca8b",
+      "bytes": 2614
+    },
+    {
+      "path": ".artifacts/p05-topic-compatibility/integration.mjs",
+      "snapshot": "producer/integration.mjs.bytes",
+      "sha256": "f84b2d9cb8e3a95dcbda4be47ea9fd3d2239d6eaadf15c5880fffc64e5e9a1d9",
+      "bytes": 8584
+    },
+    {
+      "path": ".artifacts/p05-topic-compatibility/runner.mjs",
+      "snapshot": "producer/runner.mjs.bytes",
+      "sha256": "c985c42b9905b3f1f10d81d17f4313ad5e07bd78055082023da0597f8d63bb14",
+      "bytes": 7365
+    },
+    {
+      "path": ".artifacts/p05-topic-compatibility/prepare-runner.mjs",
+      "snapshot": "producer/prepare-runner.mjs.bytes",
+      "sha256": "a90578d2725b71c81c3e8596e66277fdd2f48e0c36c0ae3c9ba08ccfde7ae6a1",
+      "bytes": 1611
+    }
+  ],
+  "findings": [
+    {
+      "id": "COMPAT-PR-001",
+      "severity": "P2",
+      "status": "OPEN",
+      "scope": "producercoverage only",
+      "summary": "Cases04/05 only exercise availability denial; actual start with unsupported/missing prior is not called. Add exactdraft_rev POST/start denial and prove newwaiting game/history unchanged."
+    },
+    {
+      "id": "COMPAT-PR-002",
+      "severity": "P2",
+      "status": "OPEN",
+      "scope": "producercleanup proof",
+      "summary": "No positive private refs/projection baseline before postbootzero assertions; capture and require >0 to prove those existing artifacts were revoked."
+    },
+    {
+      "id": "COMPAT-PR-003",
+      "severity": "P3",
+      "status": "DOCUMENTATION_CLARIFICATION",
+      "summary": "DBpassword resides in generatedhosttempfile untilcleanup; narrow tmpfs-only statement to runtimeappkey/sessiondata, no secret exposure observed."
+    }
+  ],
+  "runner_inert_controls": 14,
+  "syntax_exit_codes": [
+    0,
+    0,
+    0
+  ],
+  "prepare_derivation_exact": true,
+  "wrong_base_rejected": true,
+  "functional_runs": 0,
+  "Docker_runs": 0,
+  "product_or_producer_mutations": false,
+  "full_stage_pass": false,
+  "next": "Author fixes integration/DESIGN, preserves oldcandidate; exactnewcheckpoint +independentrepeat before rootRUN_ACK"
+}

@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED",
+  "reviewer": "/root/p05_topics_ui",
+  "producer_author": "/root/p05_topics_ui_review",
+  "scope": "INDEPENDENT_STATIC_PRODUCER_REVIEW",
+  "docker": "NOT_RUN",
+  "actual_pg": "NOT_RUN",
+  "full_stage_pass": false,
+  "findings": [
+    {
+      "severity": "P2",
+      "id": "TCP-PRODUCER-R01",
+      "title": "Final input drift does not fail runner",
+      "line": 20,
+      "path": ".artifacts/p05-topic-chat-policy/runner.mjs"
+    },
+    {
+      "severity": "P2",
+      "id": "TCP-PRODUCER-R02",
+      "title": "Runtime cleanup omitted from report gate",
+      "line": 17,
+      "path": ".artifacts/p05-topic-chat-policy/runner.mjs"
+    },
+    {
+      "severity": "P2",
+      "id": "TCP-PRODUCER-R03",
+      "title": "Capless twenty-round proof counts loop iterations",
+      "line": 22,
+      "path": ".artifacts/p05-topic-chat-policy/integration.mjs"
+    }
+  ],
+  "checks": {
+    "runner_syntax_exit": 0,
+    "integration_static": {
+      "total": 19,
+      "passed": 19,
+      "exit_code": 0
+    },
+    "exact_inputs_unchanged": true,
+    "runner_control_flow": {
+      "scenarios": 13,
+      "false_acceptances": 4,
+      "exit_code": 1,
+      "expected_results_matched": 9
+    },
+    "capless_helper": {
+      "scenarios": 3,
+      "false_acceptances": 1,
+      "exit_code": 1,
+      "expected_results_matched": 2
+    },
+    "integration_syntax_exit": 0
+  },
+  "source_boundary": {
+    "whole_tree_freeze_lifted_by_root": true,
+    "handoff_files": 1806,
+    "review_inputs": "inputs-before.json",
+    "handoff_identity": "4d99b11cdcd36cade7abf45d37b5e6c82884ab76972782c5dd30472a20944803",
+    "current_capture": "current-source-inventory.json"
+  },
+  "producer_sha256": {
+    "integration": "1d7cb0c585899859eb4ccf1bc735545afc196322be2cbdcea854d05d912ac835",
+    "design": "6de6aa6e2ab20eb9f7fb5b90190a3a98d97814d4ea4df95f26e0459ed5268bfb",
+    "runner": "518984539bffcd3365e1e076747301f6423397c78970925edbbd74b60b223fd9"
+  }
+}

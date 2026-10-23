@@ -1,0 +1,1 @@
+async function coherentGame(expected={}){let result=null;await expect.poll(async()=>{const f=await service.plan(actors[0].room),g=await current(actors[0]);if(!coherentRound(f,g,expected))return false;result={fixture:f,view:g};return true;},{timeout:8000,intervals:[50,100,250]}).toBe(true);return result;}

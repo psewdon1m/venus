@@ -1,0 +1,10 @@
+--- frozen05/scenarios.mjs
++++ corrective06/scenarios.mjs
+@@ -28,6 +28,7 @@
+  if(!bundled){assert.equal(response.status,404);assert.equal(response.body.statusCode,404);assert.equal(response.body.error,'Not Found');return{endpoint:'ABSENT_B3',status:404,version_bound_NA:true};}
+  assert.equal(response.status,200);const v=response.body;assert.deepEqual(Object.keys(v).sort(),['chat','conversation','own','schema_version','target']);assert.equal(v.schema_version,2);assert.equal(v.target,null);assert.equal(v.conversation,null);assert.equal(v.chat,null);
+  const own=v.own;assert.equal(own.schema_version,2);assert.equal(own.room_id,f.room);assert.equal(own.session_id,f.game);assert.equal(own.round_id,f.plan.round_id);assert.equal(own.member_id,member);
++ assert(Number.isSafeInteger(own.game_rev)&&own.game_rev>=0);assert(Number.isSafeInteger(own.room_rev)&&own.room_rev>=0);
+  assert.deepEqual(Object.keys(own).sort(),['conversation_actions','expires_at','game_rev','member_id','room_id','room_rev','round_actions','round_id','schema_version','server_time','session_actions','session_id']);
+  assert.deepEqual(own.conversation_actions,{offer_topic:false,other_question:false,respond_topic:false,offer_advice:false,chat:false});
+  assert.deepEqual(Object.keys(own.round_actions).sort(),['accept_action','accept_invitation','choose_dare','choose_truth','decline_invitation','finish','propose_condition','skip','withdraw_action']);

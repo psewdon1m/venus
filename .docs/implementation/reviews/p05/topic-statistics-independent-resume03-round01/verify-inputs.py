@@ -1,0 +1,18 @@
+from pathlib import Path
+import json,hashlib
+ROOT=Path.cwd();OUT=Path(__file__).resolve().parent;P=ROOT/'.artifacts/p05-topic-statistics-resume03';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+idx=ROOT/'.docs/implementation/reviews/p05/topic-statistics-author-resume03/INDEX.json';assert sha(idx)=='093b03d831bac208680dfdea56d3842bb48b062d5a9fc76bae027cdb6844aaac';j=json.loads(idx.read_text(encoding='utf-8'))
+for r in j['files']:
+ p=idx.parent/r['path'];assert sha(p)==r['sha256'] and p.stat().st_size==r['bytes']
+assert sha(idx.parent/'HANDOFF.json')=='d1a8d9d3d0a0122154fb81638341878aedd5a37cf30d37dbaacaa17cba2f9cb7'
+copies=[]
+for p in P.iterdir():
+ if p.is_file():
+  matches=[r['path'] for r in j['files'] if r['sha256']==sha(p)];assert matches,p.name;copies.append({'path':p.name,'sha256':sha(p),'frozen_copies':matches})
+old=ROOT/'.artifacts/p05-topic-statistics-resume02'
+for n in ['protocol.mjs','consumers.mjs','inference.mjs','resource32-policy.mjs','worker.mjs','prerequisites.mjs','session-adapter.mjs','derive-runtime.mjs','actual-session.mjs','coalesced-observer.mjs','FEASIBILITY.json']:assert sha(P/n)==sha(old/n),n
+dispatch=(old/'section-runner.mjs').read_text(encoding='utf-8');assert dispatch.count('P05-STATS-RESUME02')==3;assert dispatch.replace('P05-STATS-RESUME02','P05-STATS-RESUME03')==(P/'section-runner.mjs').read_text(encoding='utf-8')
+h=json.loads((idx.parent/'HANDOFF.json').read_text(encoding='utf-8'));assert h['Docker_final_producer_accepted'] is False and h['actual_runtime84_RUN'] is False and h['full_statistical_RUN'] is False and h['full_P05_PASS'] is False
+text=(P/'owned-job.py').read_text(encoding='utf-8');assert 'limits.basic.flags=0x2000|0x8' in text and 'limits.basic.active_limit=32' in text and 'AssignProcessToJobObject' in text and 'active_processes' in text and 'taskkill' not in text.split('import argparse',1)[1]
+result={'status':'PASS_FROZEN_CORRECTIVE_WIP_INPUTS_ONLY','author_children':len(j['files']),'working_files':copies,'unchanged_workload_consumer_inference_resource_and_runtime_WIP':True,'Docker_or_statistical_acceptance':False}
+(OUT/'inputs-verification.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps({'status':result['status'],'author_children':len(j['files']),'working_files':len(copies)}))

@@ -1,0 +1,33 @@
+/** OCI21 public diagnostic only: fixed paths, fixed numeric projection, one file. */
+export function browserResourceDiagnostic(){
+ const number=value=>{if(typeof value==='bigint')return value>=0n&&value<=BigInt(Number.MAX_SAFE_INTEGER)?Number(value):null;if(typeof value==='string'&&/^\d{1,16}\n?$/.test(value)){const n=Number(value);return Number.isSafeInteger(n)&&n>=0?n:null;}return null;};
+ const text=path=>{try{const value=readFileSync(path,'utf8');return value.length<=4096?value:null;}catch{return null;}};
+ const scalar=path=>number(text(path));
+ const event=(path,keys)=>{const value=text(path),result=Object.fromEntries(keys.map(key=>[key,null]));if(value!==null)for(const line of value.split('\n')){const pair=/^([a-z_]+) (\d{1,16})$/.exec(line);if(pair&&Object.hasOwn(result,pair[1]))result[pair[1]]=number(pair[2]);}return result;};
+ let total=null,free=null;try{const s=statfsSync('/tmp',{bigint:true});total=number(s.blocks*s.bsize);free=number(s.bavail*s.bsize);}catch{/* explicit null/unknown below */}
+ const result={pids_current:scalar('/sys/fs/cgroup/pids.current'),pids_events:event('/sys/fs/cgroup/pids.events',['max']),memory_current:scalar('/sys/fs/cgroup/memory.current'),memory_events:event('/sys/fs/cgroup/memory.events',['oom','oom_kill']),tmp_total_bytes:total,tmp_free_bytes:free};
+ return{...result,unknown:Object.values(result).some(value=>value===null||typeof value==='object'&&Object.values(value).some(n=>n===null))};
+}
+export function createBrowserDiagnostic(lease,gates){
+ const name='browser-diagnostic.json',path='/evidence/'+name,steps=new Set(DIAGNOSTIC_STATIC_STEPS);
+ let fd=null,timer=null,failed=false,sample=0;
+ const stop=()=>{if(timer!==null){clearInterval(timer);timer=null;}};
+ function persist(phase,step,state,error){
+  try{
+   assert(['A1','B2','A3'].includes(phase));assert(steps.has(step));assert(['AWAITING','CAUGHT_FAILURE'].includes(state));assert(sample<1000,'BROWSER_DIAGNOSTIC_SAMPLE_BOUND');
+   const json=Buffer.from(JSON.stringify({status:'DIAGNOSTIC_NOT_ACCEPTANCE',phase,diagnostic_step:step,state,sample:++sample,resources:browserResourceDiagnostic(),API_quiescence:gates.slice(0,4).map(g=>g.diagnostic()),gate_overflow:gates.length>4,...(error?{error:safeError(error,phase)}:{})})+'\n');
+   assert(json.length<=4096,'BROWSER_DIAGNOSTIC_SIZE_BOUND');const data=Buffer.alloc(4096,32);json.copy(data);lease.assert(data.length);
+   if(fd===null){lease.write('/evidence',name,data);fd=openSync(path,constants.O_WRONLY|constants.O_NOFOLLOW);assert(fstatSync(fd).isFile());}
+   else{const s=statfsSync('/evidence',{bigint:true});assert(s.bavail*s.bsize>=BigInt(data.length+4096),'QRB_OUTPUT_QUOTA');assert.equal(writeSync(fd,data,0,data.length,0),data.length);}
+  }catch{failed=true;stop();throw Error('BROWSER_DIAGNOSTIC_WRITE_FAILED');}
+ }
+ return{
+  async awaiting(phase,step,operation){
+   assert(timer===null,'BROWSER_DIAGNOSTIC_OVERLAP');persist(phase,step,'AWAITING');
+   timer=setInterval(()=>{try{persist(phase,step,'AWAITING');}catch{/* failure latched, never converted into zero/success */}},1000);timer.unref();
+   try{const result=await operation();assert(!failed,'BROWSER_DIAGNOSTIC_WRITE_FAILED');return result;}finally{stop();}
+  },
+  caught(error,phase,step){stop();persist(phase,step,'CAUGHT_FAILURE',error);},
+  close(){stop();if(fd!==null){try{closeSync(fd);}catch{failed=true;}fd=null;}return !failed;},
+ };
+}

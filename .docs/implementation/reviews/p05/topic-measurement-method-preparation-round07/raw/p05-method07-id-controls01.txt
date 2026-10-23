@@ -1,0 +1,89 @@
+{
+  "status": "PASS_AUTHOR_FINITE_ONLY",
+  "cases": [
+    {
+      "name": "ordinary Docker defaults12char but no-trunc list matches inspect64char",
+      "status": "PASS",
+      "details": {
+        "listed_and_inspected_ID_length": 64,
+        "default_without_no_trunc_ID_length": 12,
+        "artifact_write_calls": 0
+      }
+    },
+    {
+      "name": "two canonical full IDs preserve inspect input ordering and exact roles",
+      "status": "PASS"
+    },
+    {
+      "name": "foreign owner full-ID resource retained before kill or rm",
+      "status": "PASS"
+    },
+    {
+      "name": "bad generated name full-ID resource retained before kill or rm",
+      "status": "PASS"
+    },
+    {
+      "name": "wrong image full-ID resource retained before kill or rm",
+      "status": "PASS"
+    },
+    {
+      "name": "unverified export kills/removes canonical worker but retains owned volume",
+      "status": "PASS"
+    },
+    {
+      "name": "ps list failure retains resources and never infers stopped worker",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed duplicate missing reordered and short-prefix collision mappings fail closed",
+      "status": "PASS",
+      "details": [
+        {
+          "case": "short",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        },
+        {
+          "case": "duplicate-list",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        },
+        {
+          "case": "invalid-list",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        },
+        {
+          "case": "collision",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        },
+        {
+          "case": "duplicate-inspect",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        },
+        {
+          "case": "missing-inspect",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        },
+        {
+          "case": "reordered-inspect",
+          "status": "PASS",
+          "no_kill_or_rm": true
+        }
+      ]
+    }
+  ],
+  "top_level_cases": 8,
+  "malformed_mapping_branches": 7,
+  "source": {
+    "owned-cleanup.mjs": "29c9fc4f9ac178e32bc9e1a3b7a945c3fa15236fae70ecaa0142fa2267df585d",
+    "method06-id-controls.mjs": "fd8a1d9c692c8486c1b963882909de46285b91646e14e35d2786c4b45bd35d4d"
+  },
+  "Docker_calls": 0,
+  "artifact_write_interface_calls": 0,
+  "selector_invocations": 0,
+  "statistics_RUN": false
+}

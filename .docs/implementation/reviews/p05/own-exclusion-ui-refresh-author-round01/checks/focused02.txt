@@ -1,0 +1,29 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts (6 tests | 1 failed) 771ms
+   ❯ own permanent exclusion command refreshes only its own settings (6)
+     × late settings save cannot overwrite newer own exclusion or leave the refreshed form pending 84ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-own-exclusion-refresh.test.ts > own permanent exclusion command refreshes only its own settings > late settings save cannot overwrite newer own exclusion or leave the refreshed form pending
+TypeError: Cannot read properties of null (reading 'props')
+ ❯ evalmachine.<anonymous>:39:623
+ ❯ topicScenario apps/web/src/topic-test-harness.ts:41:9
+     39| `;
+     40| export async function topicScenario(source:string):Promise<unknown> {
+     41|  return await vm.runInNewContext(harness+'\n(async()=>{'+source+'})()'…
+       |         ^
+     42| }
+     43|
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts:30:116
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 2 passed (3)
+      Tests  1 failed | 26 passed (27)
+   Start at  23:55:45
+   Duration  1.91s (tests 79%, import 16%, transform 5%)
+

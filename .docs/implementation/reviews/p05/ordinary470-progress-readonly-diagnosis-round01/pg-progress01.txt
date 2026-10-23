@@ -1,0 +1,37 @@
+BEGIN
+         observed_utc          
+-------------------------------
+ 2026-10-20 19:55:46.910807+00
+(1 row)
+
+ seq |   mode    | state  | current_round | rev |         created_at         |         updated_at         |  since_update   
+-----+-----------+--------+---------------+-----+----------------------------+----------------------------+-----------------
+   2 | questions | active |            12 |  40 | 2026-10-20 19:51:51.595+00 | 2026-10-20 19:55:45.416+00 | 00:00:01.495541
+(1 row)
+
+ round_index |   state   |         created_at         
+-------------+-----------+----------------------------
+          12 | active    | 2026-10-20 19:55:27.112+00
+          11 | completed | 2026-10-20 19:54:57.947+00
+          10 | completed | 2026-10-20 19:54:41.703+00
+           9 | completed | 2026-10-20 19:54:24.909+00
+(4 rows)
+
+  backend_type  |        state        | wait_event_type | wait_event |    query_age    |    xact_age     | blocking 
+----------------+---------------------+-----------------+------------+-----------------+-----------------+----------
+ client backend | active              | Lock            | advisory   | 00:00:00.289201 | 00:00:00.289794 | {1367}
+ client backend | idle                | Client          | ClientRead | 00:00:03.701096 |                 | {}
+ client backend | idle                | Client          | ClientRead | 00:00:00.350943 |                 | {}
+ client backend | idle                | Client          | ClientRead | 00:00:00.65932  |                 | {}
+ client backend | idle in transaction | Client          | ClientRead | 00:00:00.10352  | 00:00:00.657367 | {}
+ client backend | idle                | Client          | ClientRead | 00:00:00.240464 |                 | {}
+ client backend | active              |                 |            | 00:00:00.002786 | 00:00:00.002786 | {}
+(7 rows)
+
+   presence   | count | max_heartbeat_age 
+--------------+-------+-------------------
+ reconnecting |     2 | 00:04:05.605741
+ online       |     3 | 00:00:07.891738
+(2 rows)
+
+COMMIT

@@ -1,0 +1,10 @@
+/** QRB_BOUND_ONLY_1: explicitly not the old advancing2s guard schema. */
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,lstatSync,existsSync,statfsSync} from 'node:fs';
+import {join} from 'node:path';
+export class ResourceLease{
+ constructor(config){this.config=config;}
+ assert(nextBytes=0){assert(Number.isSafeInteger(nextBytes)&&nextBytes>=0&&nextBytes<=2*1024**2);assert.equal(this.config.resource_profile,'QRB_BOUND_ONLY_1');assert(Number.isSafeInteger(this.config.whole_deadline_epoch_ms));assert(Date.now()<this.config.whole_deadline_epoch_ms,'QRB_WHOLE_DEADLINE');const r=JSON.parse(readFileSync('/control/bound-profile.json'));assert.equal(r.owner,this.config.owner);assert.equal(r.profile,'QRB_BOUND_ONLY_1');assert.equal(r.deadline_epoch_ms,this.config.whole_deadline_epoch_ms);const s=statfsSync(this.config.privateRoot,{bigint:true});assert(s.bavail*s.bsize>=BigInt(nextBytes+4096),'QRB_PRIVATE_QUOTA');return r;}
+ async initial(){this.assert();}
+ write(root,name,value,{privateFile=false}={}){assert(['/private','/evidence'].includes(root));assert(/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(name));const data=Buffer.isBuffer(value)?value:Buffer.from(value);this.assert(data.length);assert(data.length<=2*1024**2);const target=join(root,name);assert(lstatSync(root).isDirectory()&&!lstatSync(root).isSymbolicLink());assert(!existsSync(target));const s=statfsSync(root,{bigint:true});assert(s.bavail*s.bsize>=BigInt(data.length+4096),'QRB_OUTPUT_QUOTA');writeFileSync(target,data,{flag:'wx',mode:privateFile?0o600:0o644});return target;}
+}
