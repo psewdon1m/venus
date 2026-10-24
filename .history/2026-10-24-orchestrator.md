@@ -30,3 +30,5 @@
 2026-10-24T19:43:13.5657374+00:00 — Actual install round03 exit1 correctly stayed closed: pinned PG image absent; direct retained-volume diagnosis1/No such image, no DB container. Fixed product initialize to pull/verify exact installed-template PG pin before DB creation. Unit06+07 exit0/27PASS0FAIL0SKIP. Lint06 exit1/no-regex-spaces on four literal spaces; equivalent {4} correction, lint07exit0. Install public failure now includes safe operation/exit metadata; fixture failure locations filenames/lines only. Initial diagnostic network cleanup PS guard refused because empty property count representation; Python exact label/nooccupants verified, owned network removed0. Round03FAIL preserved; no P07.
 
 2026-10-24T19:48:21.090624+00:00 — fix(p06): seed synthetic snapshot through valid transactional game states; freeze initial-source-freeze07 bda1f4a825edcda4d5f5c9b35226583be6f7afb8b0167ab19d005d41225ce05c/1942. No P07.
+
+2026-10-24T19:56:24.567353+00:00 — test(p06): close mandatory 502 port offline-image and exact restore-count gaps; freeze initial-source-freeze08 e3dc32ac0fd039e674f2ca0e5fd69a1a48595137168f7af474f59200825c1999/1942. No P07.

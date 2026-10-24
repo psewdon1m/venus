@@ -1,0 +1,247 @@
+{
+  "status": "FAIL",
+  "source_git": "c1823103ef53ab4b926b7cf853a0c9bbd0644af4",
+  "source_identity": "bda1f4a825edcda4d5f5c9b35226583be6f7afb8b0167ab19d005d41225ce05c",
+  "note": "Partial actual PASS install/ACL/reader/Chromium/disk/pull/permissions/fullPG health+migration restore. Failure: fixture Node PID1 ignored self SIGKILL, active job committedB instead of dying. Fixed fixture --init with explicit exit137; added independently requested API502/offline-load/occupied-port/count comparison within same drill.",
+  "partial_checks": [
+    {
+      "id": "P06-INSTALL",
+      "status": "PASS",
+      "version": "0.0.9001",
+      "OCI": "sha256:44769538dd3ad14640638528dd8fb0439dbd8965074244d2715caa4ef5ae7a60",
+      "config_digest": "sha256:44769538dd3ad14640638528dd8fb0439dbd8965074244d2715caa4ef5ae7a60"
+    },
+    {
+      "id": "P06-UPDATE-ACL",
+      "status": "PASS",
+      "distinct_UIDs": {
+        "executor": 1001,
+        "operator": 1002,
+        "consumer": 1000
+      },
+      "room_host_denied": true,
+      "foreign_origin_denied": true,
+      "command_fields_denied": true
+    },
+    {
+      "id": "P06-INDEPENDENT-READER",
+      "status": "PASS",
+      "app_edge_IP": "172.22.0.2",
+      "db_not_on_reader_network": true,
+      "app_internals_not_mounted": true
+    },
+    {
+      "id": "P06-OPERATOR-NATIVE-UI",
+      "status": "PASS",
+      "browser": "Chromium",
+      "version": "156.0.8078.4",
+      "job_id": "217e0240-970a-4482-b952-58a08d1a4454",
+      "actual_UI_create_confirm_reload_reauth_cancel": true,
+      "no_browser_credential_storage": true,
+      "page_errors": 0
+    },
+    {
+      "id": "P06-DISK-NO-MUTATION",
+      "status": "PASS",
+      "real_available_bytes": 999242874880,
+      "required_bytes": 1125899906842624,
+      "healthy_A": true
+    },
+    {
+      "id": "P06-REAL-PULL-FAILURE",
+      "status": "PASS",
+      "healthy_A": true,
+      "no_quiesce_no_mutation": true,
+      "original_error": "COMMAND_FAILED",
+      "operation": "docker_pull"
+    },
+    {
+      "id": "P06-PERMISSIONS-NO-MUTATION",
+      "status": "PASS",
+      "actual_executor_UID": 1001,
+      "readonly_backup_directory": true,
+      "original_errno": "EACCES",
+      "healthy_A": true
+    },
+    {
+      "id": "P06-REAL-HEALTH-FAULT",
+      "status": "PASS",
+      "actual_Docker_start_failure": true,
+      "real_PG_restore": true,
+      "backup_committed_records_lost": 0,
+      "original_observable_error": "HEALTH_FAILED",
+      "failure_kind": "INTENTIONAL_FIXTURE_PROCESS_EXIT70"
+    },
+    {
+      "id": "P06-REAL-MIGRATION-FAULT",
+      "status": "PASS",
+      "actual_Docker_start_failure": true,
+      "real_PG_restore": true,
+      "backup_committed_records_lost": 0,
+      "original_observable_error": "HEALTH_FAILED",
+      "failure_kind": "POSTGRES_TRANSACTION_ERROR_ROLLED_BACK"
+    }
+  ],
+  "files": {
+    "001.txt": {
+      "sha256": "b5bb65c444a6eea5fe102c52962a7394cbc6b24f4cdc39579b5bf2f1ff74b478",
+      "bytes": 206
+    },
+    "002.txt": {
+      "sha256": "b96871ed68fc169f00e472b1357a68d69b114ef081c9edc9358327ab8cabea21",
+      "bytes": 2305
+    },
+    "003.txt": {
+      "sha256": "f97288cd68684506504c781b49eb8aee028df65083aefb8c451a676eda86fafe",
+      "bytes": 2821
+    },
+    "004.txt": {
+      "sha256": "0383f4e66f5784a9729edcee9b5ad22455204829bec8511c2fedb7cf68295f44",
+      "bytes": 2351
+    },
+    "005.txt": {
+      "sha256": "6f0ba8f17818d8f6c9416f52c2edfd9af5d47b55a7c51ab8da84a00c7ed417e8",
+      "bytes": 65
+    },
+    "006.txt": {
+      "sha256": "e00fd9bf56b41d2dd397fe3d9f357711b4e12042de27fedfd448d485c326ec1c",
+      "bytes": 9051
+    },
+    "007.txt": {
+      "sha256": "8bb6ebbf220fefc34f2a97c69b97bcb0e14906fadec48789718368ed621d7063",
+      "bytes": 5305
+    },
+    "008.txt": {
+      "sha256": "ac671148d9246e3e9208e458129ec27462503846bef484e78b1da36586e2e9af",
+      "bytes": 3752
+    },
+    "009.txt": {
+      "sha256": "58fa1d57f9d79636fd9f45a153055f285002be9f02d207cc35c3f795fae84099",
+      "bytes": 5305
+    },
+    "010.txt": {
+      "sha256": "a153cc42e110265cf3ce5f1f20c4cfde308c52859162e076eb36281fc0247828",
+      "bytes": 3750
+    },
+    "011.txt": {
+      "sha256": "6d51e70b10b7d3d09772c10231f136fd202a967064c168d9ea42d45b10bb7180",
+      "bytes": 1746
+    },
+    "012.txt": {
+      "sha256": "fbec3df2618fabac59e174765b8ac6bc1e1d8e3dc6ca28de715f6e2599152d5d",
+      "bytes": 3967
+    },
+    "013.txt": {
+      "sha256": "0887e14e2d212a5e656453072c764f898b98c659a589483b6fd04e927c6a04d8",
+      "bytes": 1840
+    },
+    "014.txt": {
+      "sha256": "32e0966366073d824124bc73eb1c886e219fca1c987dba7191002a3ed8575b18",
+      "bytes": 3973
+    },
+    "015.txt": {
+      "sha256": "a15ced4acc90977b63dcaeff0a4e2e5457641b85c59e7f0d577dc0e67141fe94",
+      "bytes": 2210
+    },
+    "016.txt": {
+      "sha256": "42bfe856f72bae3886048456949354a8511752196534db3ced26b232b9366633",
+      "bytes": 2870
+    },
+    "017.txt": {
+      "sha256": "5fa40cee7205e6c3e510f4c248db6802b2dd0d97bffdb01aa8809153680c4add",
+      "bytes": 26
+    },
+    "018.txt": {
+      "sha256": "e6703e93b377e47da080c1ff6e79a50a9559a33944575870e711725e7ff421d1",
+      "bytes": 344
+    },
+    "019.txt": {
+      "sha256": "42ef67411198ad77af3b819b31d230a3af37fc3af3ee6b71bca75f975185be2a",
+      "bytes": 16488
+    },
+    "020.txt": {
+      "sha256": "8733ac6285c11cf4c3c3d1387622d4bb8626a0884ba774315fb638eca7b3f927",
+      "bytes": 52
+    },
+    "021.txt": {
+      "sha256": "06bb6fd0a2a54538ba7d15f1746c7506fbcb940ba66abee40073e734c2e4e4f9",
+      "bytes": 8775
+    },
+    "022.txt": {
+      "sha256": "3ebaa5a0572364aac0ff9f51e8ec52d92f55938f8ec4b93014499873b9e5901f",
+      "bytes": 13
+    },
+    "023.txt": {
+      "sha256": "a58f357d07cefb3189cf53a0066293c46af4eb3b0f00e013cbce96da279cf30c",
+      "bytes": 9799
+    },
+    "024.txt": {
+      "sha256": "08a4dd5fa5e298254e27a4d784e9bc973f02ec197c22d630e15d3908ac9e1387",
+      "bytes": 13
+    },
+    "025.txt": {
+      "sha256": "23f902165adf65f1c47a626821e9e525cda9008ff391e0c8836ce3c321edb3f3",
+      "bytes": 11097
+    },
+    "026.txt": {
+      "sha256": "dcc04975b93222641cfe18d2490dd0f381df3bfa728dc84739667028718c258c",
+      "bytes": 13
+    },
+    "027.txt": {
+      "sha256": "e00fd9bf56b41d2dd397fe3d9f357711b4e12042de27fedfd448d485c326ec1c",
+      "bytes": 9051
+    },
+    "028.txt": {
+      "sha256": "087570873c08ee635848a8d79b66bdb895f74b154a851eb64d9b58c09552fbe8",
+      "bytes": 13
+    },
+    "029.txt": {
+      "sha256": "fd60b729ee297baa6c6b66ea888abab15880936572eb8986503af7400b42a323",
+      "bytes": 26
+    },
+    "030.txt": {
+      "sha256": "9b0486942112c6b04dc5b068bd25ecfd44990c31a3ec7fb6f181a115d202da0b",
+      "bytes": 15521
+    },
+    "031.txt": {
+      "sha256": "0d3b3396a2df290d6af4df1f70f223a72ddbeefd0a6b24acd5a2490e15d2fe0a",
+      "bytes": 13
+    },
+    "032.txt": {
+      "sha256": "5cab46b2ada1e8d0cb3877f59c85f61cc88152dba1a56d69b6d7ae1fbcc42ed0",
+      "bytes": 12653
+    },
+    "033.txt": {
+      "sha256": "a92f0bfbcb33a6961f424bb5dbf67829570171b08faa89d7856f906a458e91fb",
+      "bytes": 13
+    },
+    "034.txt": {
+      "sha256": "f5df4de60965b2703fd6188b231d4e014fae0dd5941c04cae281451392684b4f",
+      "bytes": 26
+    },
+    "035.txt": {
+      "sha256": "d9b494ca78beb10af30e1389adc625ab271d112659938df6abd880c55640eb0c",
+      "bytes": 13
+    },
+    "036.txt": {
+      "sha256": "97ba2143eb975827980b92b5208c19b46ed41d5fb9405d0d9d5cb006a29a3f90",
+      "bytes": 13
+    },
+    "report.json": {
+      "sha256": "4b169bfcafdbc8c83bb8326fa8e82cda470da6db3f51ef33f644d22eecbb215b",
+      "bytes": 7612
+    },
+    "lint09.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "lint09.exit.txt": {
+      "sha256": "13bf7b3039c63bf5a50491fa3cfd8eb4e699d1ba1436315aef9cbe5711530354",
+      "bytes": 3
+    },
+    "DRILL.json": {
+      "sha256": "45f8a812f85d0a2ce650e47982d7ce362a8acd65bb74f06d07e37318eefe0638",
+      "bytes": 22024
+    }
+  }
+}

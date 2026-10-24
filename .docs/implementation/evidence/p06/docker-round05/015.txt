@@ -1,0 +1,58 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p06-browser
+#1 transferring dockerfile: 1.01kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [ 1/11] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 167.04kB 0.0s done
+#4 DONE 0.0s
+
+#5 [ 3/11] COPY package.json package-lock.json .npmrc ./
+#5 CACHED
+
+#6 [ 6/11] COPY packages/contracts/package.json packages/contracts/
+#6 CACHED
+
+#7 [ 8/11] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#7 CACHED
+
+#8 [ 4/11] COPY apps/api/package.json apps/api/
+#8 CACHED
+
+#9 [ 9/11] COPY packages/card-catalog/package.json packages/card-catalog/
+#9 CACHED
+
+#10 [ 5/11] COPY apps/web/package.json apps/web/
+#10 CACHED
+
+#11 [10/11] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium
+#11 CACHED
+
+#12 [ 2/11] WORKDIR /app
+#12 CACHED
+
+#13 [ 7/11] COPY packages/i18n/package.json packages/i18n/
+#13 CACHED
+
+#14 [11/11] COPY tests/p06/operator-browser.mjs operator-browser.mjs
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:b451df043c54c1bd2a09d71f29c46b7a11cdeff9387c3eb8e42225bce304f23c done
+#15 exporting config sha256:b377f1c49d112d159d5de72013e2f596186d0aed889ee094ac61d235549b495f done
+#15 exporting attestation manifest sha256:31c426244a3f20d99a71f33e930e55c54d538c0dbf57b9cec32f4c32d93959ce 0.0s done
+#15 exporting manifest list sha256:0d47ba565cc676b1c32fbe2b700dc88e5a71b6e39d2b6362fff6729aa0fbca87 done
+#15 naming to docker.io/library/venus-p06-d0eccea902-browser:fixture done
+#15 unpacking to docker.io/library/venus-p06-d0eccea902-browser:fixture 0.0s done
+#15 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/vazuh6w3ilj6m3crbfh6gh4cw
