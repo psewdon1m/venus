@@ -95,3 +95,13 @@
 - All118retained67PASS34N_A7finalartifactpending10proddeferred,8gatesexplicit; E07historicald3fGID118closedunchangedcomponent, oldquality03/actual10/unit10 notrelabeledcf2d. Priorreviews02/github/racediagnosis indexedfileschecked0mismatch.
 - Readmistake guessedvenus-preview.yml absent; corrected actualvenus-preview-image.yml fromsource map. Duringwrite an accidental trailing text= command was rejected after successfulSOURCE_REBIND/DECISIONwrites; no externalfilemutation; report/indexthencompleted and 118uniqueIDs/8gatesverified. FAIL preservedhere.
 - NEWengineering-signing-round05 INDEX SHA256 8be4ad92699eedf855a472b7df19e6ca4563edb53556675d9d4ae8c1f87ab23d. Allownwritesfinished, sourcepre-signconditional; no fullCI/stagePASS, noP07. COMPLETE_STOP.
+
+## 2026-10-24T22:08:34Z — bounded Docker image identity portability diagnosis
+- Parent requests read-only appportability diagnosis while fiveCI runs. DockerDesktop29 previewmanifest0653678 versusconfig90cd; inspectbyconfigmissing; driver config-as-local-ID mayrejectsupportedinstall/offlinerollback. No failedqualifiedserviceinstallclaimed: previewexactprobe rejected RELEASE_IDENTITY beforepull as expected.
+- Allowed ownjournal/newboundedreport only; no source/tests/Docker/API/Git/secret access. Review exact source/nativeproof, propose minimal trust-preserving OCI/config/localoperations separation; STOPafterreport.
+
+## 2026-10-24T22:10:45Z — image identity concretefinding / COMPLETE_STOP
+- Confirmed source/nativeproof: Desktop Id andDescriptor=OCI0653678 whilebuildconfig90cd; ensureImage comparesIdtocfg, save/load/start usecfgaslocalID. release_inputs andsameenginefixtures deriveconfigfromId, hidingdifference. LocalDockerDesktop accepted scope, no classic-only N_A. No actualfailedsignedserviceinstallclaimed; previewprobeRELEASE_IDENTITY runtime0 expected.
+- previewpublication8files hash/lengthchecked0mismatch; probe16files hasheschecked0mismatch. Proposed smallestsemanticseparation: signedOCI+actualconfigbytes/descriptor checkedindependently, verifiedlocalalias/Idforoperations, exactarchivehash+bothsignedidentities/labelsboundofflinecache, norelyonregistryafterload. Existingfixturemechanism only; no testsrun/requestednewframework.
+- Readerrors preserved: missinginfraREADME error2, wildcardADR031/previewpaths Windowsrgerror123; relevantexactpathsreadsuccessfully. No source/runtime/API/Git/privatevaluesaccess.
+- NEWengineering-image-identity-round01 INDEX SHA256 0b5018f569284652ae0f321b86f3ee69655d001593a23d37758c2b9971407c11. Concreteblockerrequiresfix/relevantproof; priorreviewsimmutable. Allownwritesfinished, COMPLETE_STOP.

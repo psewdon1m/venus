@@ -1,12 +1,18 @@
 /** One bounded disposable Docker Linux drill; never operates another project. */
 import {spawnSync} from 'node:child_process';
-import {mkdirSync,writeFileSync,readFileSync} from 'node:fs';
+import {mkdirSync,writeFileSync,readFileSync,rmSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {randomBytes,createHash} from 'node:crypto';
+import {dockerArchiveConfig} from './venus-operator/image-archive.mjs';
 const nonce=randomBytes(5).toString('hex'),project='venus-p06-'+nonce,output=resolve('.artifacts/p06',project),label='net.shmoza.venus.p06='+nonce;
 mkdirSync(output,{recursive:true});let sequence=0;const commands=[];const containers=[],volumes=[];let failure;
 function command(args,{timeout=600000,allowFailure=false}={}){const started=Date.now(),r=spawnSync('docker',args,{encoding:'utf8',maxBuffer:32*1024*1024,timeout});const file=String(++sequence).padStart(3,'0')+'.txt';writeFileSync(join(output,file),(r.stdout??'')+(r.stderr??''));commands.push({sequence,command:args.slice(0,3),exit:r.status,ms:Date.now()-started,output:file});if(!allowFailure&&(r.error||r.status!==0))throw new Error('DOCKER_'+args[0].toUpperCase()+'_FAILED_'+sequence);return r;}
 const checked=args=>command(args).stdout.trim();const inspect=ref=>JSON.parse(checked(['image','inspect',ref]))[0];
+function configDigest(image,reference){
+ if(image.Id!==reference.split('@')[1])return image.Id;
+ const archive=join(output,'config-'+sequence+'.tar');
+ try{command(['image','save','--output',archive,image.Id]);return dockerArchiveConfig(archive).config_digest;}finally{rmSync(archive,{force:true});}
+}
 const report={format:1,scope:'P06_DISPOSABLE_LOCAL_LINUX_DOCKER_NOT_PRODUCTION',project,status:'FAIL',source_dirty:null,commands,cleanup:'PENDING',test_keys_only:true,production_signing_environment:false};
 function requireOwned(value,code){if(!value)throw new Error(code);}
 try{
@@ -19,8 +25,8 @@ try{
  if(candidate){command(['pull',candidate.image_reference]);imageA={reference:candidate.image_reference,oci_digest:candidate.oci_digest,config_digest:candidate.config_digest,version:candidate.version};report.mode='EXACT_SERVICE_IMAGE_INSTALL_WITH_FIXTURE_KEY_ONLY';}
  else{
   const registry=project+'-registry';containers.push(registry);command(['run','-d','--name',registry,'--label',label,'--cpus','0.5','--memory','128m','--pids-limit','64','-p','127.0.0.1::5000','registry:2.8.3']);const state=JSON.parse(checked(['inspect',registry]))[0];const port=state.NetworkSettings.Ports['5000/tcp'][0].HostPort;registryAddress='127.0.0.1:'+port+'/venus';
-  for(const [name,version]of [['a','0.0.9001'],['b','0.0.9002']]){const tag=registryAddress+':fixture-'+nonce+'-'+name;command(['build','--platform','linux/amd64','-f','infra/venus/Dockerfile','--build-arg','SOURCE_REVISION='+sha,'--build-arg','RELEASE_VERSION='+version,'-t',tag,'.']);let data=inspect(tag);if(!data.RepoDigests?.some(r=>r.startsWith(registryAddress+'@'))){command(['push',tag]);data=inspect(tag);}const reference=data.RepoDigests.find(r=>r.startsWith(registryAddress+'@'));if(!reference)throw new Error('FIXTURE_OCI_DIGEST_REQUIRED');const value={reference,oci_digest:reference.split('@')[1],config_digest:data.Id,version};if(name==='a')imageA=value;else imageB=value;}
-  for(const [kind,version]of [['health','0.0.9003'],['migration','0.0.9004']]){const tag=registryAddress+':fixture-'+nonce+'-'+kind;command(['build','--platform','linux/amd64','-f','tests/p06/Dockerfile.failing','--build-arg','BASE_IMAGE='+registryAddress+':fixture-'+nonce+'-b','--build-arg','FIXTURE_VERSION='+version,'--build-arg','FIXTURE_KIND='+kind,'-t',tag,'.']);let data=inspect(tag);if(!data.RepoDigests?.some(r=>r.startsWith(registryAddress+'@'))){command(['push',tag]);data=inspect(tag);}const reference=data.RepoDigests.find(r=>r.startsWith(registryAddress+'@'));const value={reference,oci_digest:reference.split('@')[1],config_digest:data.Id,version};if(kind==='health')imageHealthFail=value;else imageMigrationFail=value;}
+  for(const [name,version]of [['a','0.0.9001'],['b','0.0.9002']]){const tag=registryAddress+':fixture-'+nonce+'-'+name;command(['build','--platform','linux/amd64','-f','infra/venus/Dockerfile','--build-arg','SOURCE_REVISION='+sha,'--build-arg','RELEASE_VERSION='+version,'-t',tag,'.']);let data=inspect(tag);if(!data.RepoDigests?.some(r=>r.startsWith(registryAddress+'@'))){command(['push',tag]);data=inspect(tag);}const reference=data.RepoDigests.find(r=>r.startsWith(registryAddress+'@'));if(!reference)throw new Error('FIXTURE_OCI_DIGEST_REQUIRED');const value={reference,oci_digest:reference.split('@')[1],config_digest:configDigest(data,reference),version};if(name==='a')imageA=value;else imageB=value;}
+  for(const [kind,version]of [['health','0.0.9003'],['migration','0.0.9004']]){const tag=registryAddress+':fixture-'+nonce+'-'+kind;command(['build','--platform','linux/amd64','-f','tests/p06/Dockerfile.failing','--build-arg','BASE_IMAGE='+registryAddress+':fixture-'+nonce+'-b','--build-arg','FIXTURE_VERSION='+version,'--build-arg','FIXTURE_KIND='+kind,'-t',tag,'.']);let data=inspect(tag);if(!data.RepoDigests?.some(r=>r.startsWith(registryAddress+'@'))){command(['push',tag]);data=inspect(tag);}const reference=data.RepoDigests.find(r=>r.startsWith(registryAddress+'@'));const value={reference,oci_digest:reference.split('@')[1],config_digest:configDigest(data,reference),version};if(kind==='health')imageHealthFail=value;else imageMigrationFail=value;}
   const browserTag=project+'-browser:fixture';command(['build','--platform','linux/amd64','-f','infra/venus/Dockerfile.p06-browser','-t',browserTag,'.']);browserImage=inspect(browserTag).Id;report.browser_image=browserImage;report.mode='FIXTURE_AB_FULL_LOCAL_DRILL';report.fixture_image_transport='EXACT_LOCALLY_BUILT_OCI_CACHE_WITH_PUSH_ONLY_IF_ENGINE_REQUIRES_IT';
  }
  const volume=project+'-host';volumes.push(volume);checked(['volume','create','--label',label,volume]);const hostRoot=JSON.parse(checked(['volume','inspect',volume]))[0].Mountpoint;const driver=project+'-driver';containers.push(driver);

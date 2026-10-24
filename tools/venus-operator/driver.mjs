@@ -3,6 +3,7 @@ import path from 'node:path';
 import {spawn} from 'node:child_process';
 import {randomUUID} from 'node:crypto';
 import {json,read,writeJson,atomic,requireValue,directory,HEX,UUID,fileHash,canonical,syncDirectory} from './files.mjs';
+import {dockerArchiveConfig} from './image-archive.mjs';
 const MAX_DUMP=128*1024*1024;
 export function command(program,args,{input,file_input,timeout=180000,max=MAX_DUMP}={}){
  return new Promise((resolve,reject)=>{const child=spawn(program,args,{shell:false,stdio:['pipe','pipe','pipe'],env:{PATH:process.env.PATH,DOCKER_HOST:process.env.DOCKER_HOST,HOME:process.env.HOME}});let length=0;const out=[];let done=false,diagnostic='';
@@ -33,19 +34,46 @@ export class DockerDriver{
   requireValue(release.schema.generation===1,'SCHEMA_UNSUPPORTED');
   if(existing)await this.healthy();
  }
- async ensureImage(release){let image;try{image=await this.image(release.image.reference);}catch{await this.docker(['pull',release.image.reference],{timeout:600000});image=await this.image(release.image.reference);}
-  requireValue(image.Id===release.image.config_digest&&image.RepoDigests?.includes(release.image.reference),'IMAGE_DIGEST_MISMATCH');
-  const labels=image.Config.Labels??{};requireValue(labels['org.opencontainers.image.revision']===release.main_sha&&labels['org.opencontainers.image.version']===release.version,'IMAGE_SOURCE_MISMATCH');return image.Id;
+ imageMapFile(release){requireValue(HEX.test(release.image.oci_digest),'IMAGE_DIGEST_MISMATCH');return path.join(this.c.local_root,'image-identity-'+release.image.oci_digest.slice(7)+'.json');}
+ imageLabels(release,labels){requireValue(labels?.['org.opencontainers.image.revision']===release.main_sha&&labels?.['org.opencontainers.image.version']===release.version,'IMAGE_SOURCE_MISMATCH');}
+ imageMapMatches(release,image){try{const file=this.imageMapFile(release),stat=fs.lstatSync(file);requireValue(stat.isFile()&&!stat.isSymbolicLink()&&stat.nlink===1&&(stat.mode&0o777)===0o600&&(typeof process.getuid!=='function'||stat.uid===process.getuid()),'IMAGE_MAP_UNSAFE');const m=json(file);return m.format===1&&m.image_id===image.Id&&m.reference===release.image.reference&&m.config_digest===release.image.config_digest;}catch{return false;}}
+ bindImage(release,image){requireValue(image.Id===release.image.config_digest||image.Id===release.image.oci_digest,'IMAGE_DIGEST_MISMATCH');this.imageLabels(release,image.Config.Labels);writeJson(this.imageMapFile(release),{format:1,image_id:image.Id,reference:release.image.reference,config_digest:release.image.config_digest});return image;}
+ verifyArchive(release,file){const config=dockerArchiveConfig(file);requireValue(config.config_digest===release.image.config_digest,'IMAGE_CONFIG_MISMATCH');this.imageLabels(release,config.labels);return config;}
+ async verifyLocalImage(release,image){
+  requireValue(image.Id===release.image.config_digest||image.Id===release.image.oci_digest,'IMAGE_DIGEST_MISMATCH');this.imageLabels(release,image.Config.Labels);
+  if(image.Id!==release.image.config_digest&&!this.imageMapMatches(release,image)){
+   requireValue(image.RepoDigests?.includes(release.image.reference),'IMAGE_DIGEST_MISMATCH');
+   const file=path.join(this.c.local_root,'.image-config-'+randomUUID()+'.tar');
+   try{await this.docker(['image','save','--output',file,image.Id],{timeout:600000,max:1024*1024});fs.chmodSync(file,0o600);this.verifyArchive(release,file);}finally{fs.rmSync(file,{force:true});}
+  }
+  return this.bindImage(release,image);
  }
- async savePrevious(current){const image=await this.image(current.manifest.image.config_digest);requireValue(image.Id===current.manifest.image.config_digest,'PREVIOUS_IMAGE_MISSING');const destination=path.join(this.c.local_root,'offline-previous.tar'),receiptFile=path.join(this.c.local_root,'offline-previous.json');try{const receipt=json(receiptFile);if(receipt.image_id===image.Id&&fileHash(destination)===receipt.archive_sha256)return receipt;}catch{ /* re-create from the current verified image before mutation */ }const temp=destination+'.new';fs.rmSync(temp,{force:true});await this.docker(['image','save','--output',temp,image.Id],{timeout:600000,max:1024*1024});fs.chmodSync(temp,0o600);const fd=fs.openSync(temp,'r');try{fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(temp,destination);syncDirectory(this.c.local_root);const receipt={image_id:image.Id,archive_sha256:fileHash(destination)};writeJson(receiptFile,receipt);return receipt;}
- async loadPrevious(current,receipt){try{const image=await this.image(current.manifest.image.config_digest);requireValue(image.Id===current.manifest.image.config_digest,'PREVIOUS_IMAGE_MISMATCH');return;}catch{requireValue(receipt?.image_id===current.manifest.image.config_digest&&HEX.test(receipt.archive_sha256),'PREVIOUS_IMAGE_MISSING');const file=path.join(this.c.local_root,'offline-previous.tar');requireValue(fileHash(file)===receipt.archive_sha256,'PREVIOUS_ARCHIVE_CORRUPT');await this.docker(['image','load','--input',file],{timeout:600000,max:1024*1024});const image=await this.image(current.manifest.image.config_digest);requireValue(image.Id===receipt.image_id,'PREVIOUS_IMAGE_MISMATCH');}}
+ async localImage(release){
+  for(const ref of [release.image.config_digest,release.image.oci_digest]){let image;try{image=await this.image(ref);}catch{continue;}return this.verifyLocalImage(release,image);}
+  throw new Error('PREVIOUS_IMAGE_MISSING');
+ }
+ async ensureImage(release){let image;try{image=await this.image(release.image.reference);}catch{await this.docker(['pull',release.image.reference],{timeout:600000});image=await this.image(release.image.reference);}
+  requireValue(image.RepoDigests?.includes(release.image.reference),'IMAGE_DIGEST_MISMATCH');return (await this.verifyLocalImage(release,image)).Id;
+ }
+ async savePrevious(current){
+  const release=current.manifest,image=await this.localImage(release),destination=path.join(this.c.local_root,'offline-previous.tar'),receiptFile=path.join(this.c.local_root,'offline-previous.json');
+  try{const receipt=json(receiptFile);if(receipt.image_id===image.Id&&receipt.config_digest===release.image.config_digest&&receipt.reference===release.image.reference&&fileHash(destination)===receipt.archive_sha256)return receipt;}catch{ /* re-create the verified current archive before mutation */ }
+  const temp=destination+'.new';fs.rmSync(temp,{force:true});await this.docker(['image','save','--output',temp,image.Id],{timeout:600000,max:1024*1024});fs.chmodSync(temp,0o600);this.verifyArchive(release,temp);
+  const fd=fs.openSync(temp,'r');try{fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(temp,destination);syncDirectory(this.c.local_root);
+  const receipt={image_id:image.Id,config_digest:release.image.config_digest,reference:release.image.reference,archive_sha256:fileHash(destination)};writeJson(receiptFile,receipt);return receipt;
+ }
+ async loadPrevious(current,receipt){const release=current.manifest;try{await this.localImage(release);return;}catch{
+  requireValue(receipt&&(receipt.image_id===release.image.config_digest||receipt.image_id===release.image.oci_digest)&&receipt.config_digest===release.image.config_digest&&receipt.reference===release.image.reference&&HEX.test(receipt.archive_sha256),'PREVIOUS_IMAGE_MISSING');
+  const file=path.join(this.c.local_root,'offline-previous.tar');requireValue(fileHash(file)===receipt.archive_sha256,'PREVIOUS_ARCHIVE_CORRUPT');this.verifyArchive(release,file);
+  await this.docker(['image','load','--input',file],{timeout:600000,max:1024*1024});const image=await this.image(receipt.image_id);requireValue(image.Id===receipt.image_id,'PREVIOUS_IMAGE_MISMATCH');this.bindImage(release,image);
+ }}
  serving(open){writeJson(path.join(this.c.local_root,'control','serving.json'),{format:1,serving:open},0o444);}
  async stop(){const app=await this.container('app',false);if(app)await this.docker(['stop','--time','15',app]);requireValue(!(await this.inspect('app'))?.State?.Running,'QUIESCE_FAILED');}
- async start(release){await this.compose(['up','-d','--no-build','--pull','never','app'],release.image.config_digest,release.image.oci_digest);}
+ async start(release){const image=await this.localImage(release);await this.compose(['up','-d','--no-build','--pull','never','app'],image.Id,release.image.oci_digest);}
  async initialize(release){
   const pin=/^ {4}image: (postgres:[a-z0-9.-]+@sha256:[a-f0-9]{64})$/m.exec(read(this.c.compose_template,1024*1024).toString().replace(/\r\n/g,'\n'))?.[1];requireValue(pin,'DATABASE_IMAGE_PIN_REQUIRED');
   let image;try{image=await this.image(pin);}catch{await this.docker(['pull',pin],{timeout:600000});image=await this.image(pin);}requireValue(image.RepoDigests?.some(ref=>ref.endsWith('@'+pin.split('@')[1])),'DATABASE_IMAGE_DIGEST_MISMATCH');
-  await this.compose(['up','-d','--no-build','--pull','never','db'],release.image.config_digest,release.image.oci_digest);for(let i=0;i<60;i++){try{const db=await this.container('db');await this.docker(['exec',db,'pg_isready','-U','venus','-d','venus']);return;}catch{await new Promise(resolve=>setTimeout(resolve,500));}}throw new Error('DATABASE_NOT_READY');}
+  const app=await this.localImage(release);await this.compose(['up','-d','--no-build','--pull','never','db'],app.Id,release.image.oci_digest);for(let i=0;i<60;i++){try{const db=await this.container('db');await this.docker(['exec',db,'pg_isready','-U','venus','-d','venus']);return;}catch{await new Promise(resolve=>setTimeout(resolve,500));}}throw new Error('DATABASE_NOT_READY');}
  async healthy(expected){const app=await this.container('app');for(let i=0;i<60;i++){try{await this.docker(['exec',app,'node','-e',"Promise.all([fetch('http://127.0.0.1:4300/health/ready'),fetch('http://127.0.0.1:4300/api/v1/version')]).then(async([r,v])=>{if(!r.ok||!v.ok)process.exit(1);const m=JSON.parse(process.argv[1]),a=await v.json();if(m&&(a.service!=='venus'||a.version!==m.version||a.source_revision!==m.main_sha||a.image_digest!==m.image.oci_digest))process.exit(1)}).catch(()=>process.exit(1))",JSON.stringify(expected??null)],{timeout:5000,max:65536});return;}catch{await new Promise(resolve=>setTimeout(resolve,500));}}throw new Error('HEALTH_FAILED');}
  cleanupBackupTemps(jobId){requireValue(UUID.test(jobId),'JOB_ID');const dir=path.join(this.c.local_root,'backups');let removed=0;for(const suffix of ['.dump.tmp','.vbackup.tmp']){const file=path.join(dir,jobId+suffix);let stat;try{stat=fs.lstatSync(file);}catch(error){if(error.code==='ENOENT')continue;throw error;}requireValue(stat.isFile()&&!stat.isSymbolicLink()&&stat.nlink===1&&stat.uid===process.getuid()&&(stat.mode&0o777)===0o600,'BACKUP_TEMP_UNSAFE');fs.unlinkSync(file);removed++;}if(removed)syncDirectory(dir);return {removed};}
  expireBackups(now=Date.now()){const dir=path.join(this.c.local_root,'backups');let removed=0;for(const name of fs.readdirSync(dir)){if(!/^[a-f0-9-]{36}\.vbackup$/.test(name))continue;const file=path.join(dir,name),s=fs.lstatSync(file);if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1||(s.mode&0o777)!==0o600)continue;const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);let old=false;try{const prefix=Buffer.alloc(12);if(fs.readSync(fd,prefix,0,12,0)!==12||prefix.subarray(0,8).toString()!=='VENUSBK1')continue;const size=prefix.readUInt32BE(8);if(size<1||size>65536)continue;const header=Buffer.alloc(size);if(fs.readSync(fd,header,0,size,12)!==size)continue;const manifest=JSON.parse(header.toString());old=manifest.format==='VENUS-HOST-BACKUP-1'&&Number.isFinite(Date.parse(manifest.created_at))&&now-Date.parse(manifest.created_at)>=7*86400000-3600000;}catch{ /* corrupt files are retained for explicit repair, never called successful */ }finally{fs.closeSync(fd);}if(old){fs.unlinkSync(file);removed++;}}if(removed)syncDirectory(dir);return {removed};}
