@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "status": "STATIC_PRODUCER_PREFLIGHT_PASS",
+  "scope": "AUTHOR_DISJOINT_BROWSER_CHECKPOINT04_RACE_CORRECTION_REVIEW",
+  "created_at": "2026-10-19T19:23:47.520604+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "producer_author": "/root/p05_topics_ui",
+  "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "included_files": 1808,
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-browser/browser.mjs",
+      "sha256": "82e1df517cead8f6f79d0a01093774dda70d620519e5aa78924d9671c8bfa6d7"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/runtime.mjs",
+      "sha256": "3baf673f606e230d3fcb12d3bef6b7118c3c5daee57ed95564148671f57c2688"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/run.mjs",
+      "sha256": "5f3fd2bf7a3f28cb940352658d5e0b317df9702370517b0c9a2942f1d84263e0"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/observations.mjs",
+      "sha256": "df50eca39925ffb05da14f7408580b1aad037c781903f42abd943bc44621ab13"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/DESIGN.md",
+      "sha256": "a2195a7d7b0126d4b8ba6ff981d2649e29833e943626caaca2b7554274a7838d"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/README.md",
+      "sha256": "4c1a4c38443517d795614e2cec670d291d10b315c6ef41804db2f3c7294d09f9"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/static-result.json",
+      "sha256": "f5f445c6dde9f69c16399d8fe784d8489c4e8e27247d724a4eabaf4bead019ef"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/lint-static.json",
+      "sha256": "87e7b3f8a53ca67135e6d499c87a76af118b414b6e6b8afff3d8ec7c9bd86ddb"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/HANDOFF.json",
+      "sha256": "c17fdbb73c77c3f143daef43fa9c0d6a872570eaf73489b54c2603b6b79e0e6a"
+    },
+    {
+      "path": "tests/p05-topic-lifecycle/harness.mjs",
+      "sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    }
+  ],
+  "before_after_unchanged": true,
+  "snapshot_index_sha256": "5a1d3a396c4dd54384e5015dcf295e4310705557bf640e47c439fbd59926b590",
+  "snapshot_verified_files": 23,
+  "image": "sha256:00c46c7a5fd255dcebb43ec34decc1b27234a67f83ffead8d4828238fe96700a",
+  "image_binding": "Unchanged00c46 image/source895 metadata from prior round02; no new image/container execution.",
+  "harness_sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+  "derivative_sha256": "cbe7371b43d98721dcd7b641e55084929abfaa9123254d1a2240307b8b25d779",
+  "exact_two_replacements": true,
+  "findings": [],
+  "probes": {
+    "own_new_race_controls": 25,
+    "own_prior_semantic_oracles": 41,
+    "own_runner_VM": 11,
+    "copied_author_races": 18,
+    "copied_author_prior": 30,
+    "syntax_checks_exit0": 4,
+    "lint_exit_code": 0,
+    "old_race_interleave_reproduced": true
+  },
+  "failed_actual01": {
+    "status": "FAILED_ACTUAL_ARCHIVE_INTEGRITY_PASS_NOT_RUNTIME_PASS",
+    "files": 30,
+    "archive_index_sha256": "31a3296345b877e98c1b58d4ee3a03ba109342ea2b992eeddc3d03af0d3437a5",
+    "actual_case01_03": "PASS",
+    "case04": "FAIL",
+    "case05_16": "NOT_RUN",
+    "cleanup": "PASS",
+    "source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+    "failure_diagnosis": "source-supported interleaving hypothesis; original exact failed locator unavailable due truncation"
+  },
+  "diagnosis_limit": "Actual01 precise failed locator was truncated. Exact AST proves a plausible interleaving mechanism, not the retrospective actual cause.",
+  "gates": "16 original unique IDs and required functional assertions retained; runner cleanup/pageerror/input drift checks unchanged.",
+  "docker": "NOT_RUN",
+  "actual_browser": "NOT_RUN_BY_REVIEWER",
+  "full_stage_pass": false,
+  "limitations": [
+    "Static producer acceptance for corrected checkpoint04 only; actual retry needs root ACK and independently audited terminal evidence.",
+    "Saved actual01 remains FAIL:01\u201303PASS04FAIL05\u201316NOT_RUN.",
+    "No product/UI or producer writes by reviewer; no source promotion.",
+    "Full browser/layout/device matrix, human450 HOLD, full P05 and production gates remain outside bounded report."
+  ]
+}

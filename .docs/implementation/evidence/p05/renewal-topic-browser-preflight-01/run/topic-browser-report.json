@@ -1,0 +1,1070 @@
+{
+  "schema_version": 1,
+  "scope": "P05_V2_ACTUAL_FUNCTIONAL_BROWSER_SLICE",
+  "status": "FAIL",
+  "engine": "chromium",
+  "synthetic_fixture_only": true,
+  "production_approval": false,
+  "real_devices": false,
+  "full_matrix": false,
+  "records": [
+    {
+      "id": "P05-TB-01",
+      "name": "HTTPS-three-contexts",
+      "status": "PASS",
+      "detail": {
+        "https_loopback": true,
+        "three_isolated_contexts": true,
+        "locales": [
+          "ru",
+          "en",
+          "tr"
+        ],
+        "real_react_dom": true
+      },
+      "elapsed_ms": 1359
+    },
+    {
+      "id": "P05-TB-02",
+      "name": "adult18-ui-admission",
+      "status": "PASS",
+      "detail": {
+        "actual_ui_create_join": true,
+        "meeting_context": "online",
+        "explicit_both_checkboxes": true,
+        "distinct_browser_sessions": true,
+        "adult_rows": 3,
+        "cookie_descriptors": [
+          {
+            "locale": "ru",
+            "cookies": [
+              {
+                "name": "venus_room_session",
+                "path": "/api/v1/rooms/d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              },
+              {
+                "name": "venus_room_session",
+                "path": "/api/v2/rooms/d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              },
+              {
+                "name": "__Host-venus-admission",
+                "path": "/",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              }
+            ]
+          },
+          {
+            "locale": "en",
+            "cookies": [
+              {
+                "name": "venus_room_session",
+                "path": "/api/v1/rooms/d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              },
+              {
+                "name": "venus_room_session",
+                "path": "/api/v2/rooms/d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              },
+              {
+                "name": "__Host-venus-admission",
+                "path": "/",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              }
+            ]
+          },
+          {
+            "locale": "tr",
+            "cookies": [
+              {
+                "name": "venus_room_session",
+                "path": "/api/v1/rooms/d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              },
+              {
+                "name": "venus_room_session",
+                "path": "/api/v2/rooms/d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              },
+              {
+                "name": "__Host-venus-admission",
+                "path": "/",
+                "secure": true,
+                "httpOnly": true,
+                "sameSite": "Strict"
+              }
+            ]
+          }
+        ]
+      },
+      "elapsed_ms": 1367
+    },
+    {
+      "id": "P05-TB-03",
+      "name": "own-settings-isolation",
+      "status": "PASS",
+      "detail": {
+        "empty_defaults_all_three": true,
+        "own_allow_isolation": true,
+        "actual_forms": true
+      },
+      "elapsed_ms": 1880
+    },
+    {
+      "id": "P05-TB-04",
+      "name": "questions-private-invitation",
+      "status": "PASS",
+      "detail": {
+        "mode": "questions",
+        "actual_pair_actors": 2,
+        "observer_private_empty": true,
+        "real_planner": true
+      },
+      "elapsed_ms": 56970
+    },
+    {
+      "id": "P05-TB-05",
+      "name": "bilateral-topic-no-early-prompt",
+      "status": "PASS",
+      "detail": {
+        "zero_and_one_accept_no_prompt": true,
+        "both_accept_localized_prompt": true,
+        "full_union_visible": true,
+        "observer_no_private_projection": true
+      },
+      "elapsed_ms": 12875
+    },
+    {
+      "id": "P05-TB-06",
+      "name": "structured-advice-edit-revoke",
+      "status": "FAIL",
+      "error_name": "Error",
+      "error_message": "expect(locator).toContainText(expected) failed\n\nLocator: getByTestId('advice-text')\nExpected substring: \"SYNTHETIC ADVICE ONE\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toContainText\" getByTestId('advice-text') with timeout 5000ms\n  - waiting for getByTestId('advice-text')\n",
+      "error_stack": "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByTestId('advice-text')\nExpected substring: \"SYNTHETIC ADVICE ONE\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toContainText\" getByTestId('advice-text') with timeout 5000ms\n  - waiting for getByTestId('advice-text')\n\n    at captureRawStack (/app/node_modules/playwright-core/lib/coreBundle.js:9282:17)\n    at callMatcherAsStep (/app/node_modules/playwright/lib/matchers/expect.js:13316:57)\n    at Object.toContainText (/app/node_modules/playwright/lib/matchers/expect.js:13308:23)\n    at /app/tests/p05-topic-browser/browser.mjs:97:400\n    at async check (/app/tests/p05-topic-browser/browser.mjs:33:210)\n    at async file:///app/tests/p05-topic-browser/browser.mjs:97:2",
+      "elapsed_ms": 9402
+    },
+    {
+      "id": "P05-TB-07",
+      "name": "epoch-chat-other-question",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-08",
+      "name": "truth-dare-new-topic-action-finish",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-09",
+      "name": "yes-but-condition-fresh-consent",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-10",
+      "name": "own-pause-resume",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-11",
+      "name": "websocket-disconnect-safety",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-12",
+      "name": "native-elapsed-wall-rollback",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-13",
+      "name": "source-outage-safety",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-14",
+      "name": "held-response-new-epoch",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-15",
+      "name": "permanent-exclusion-own-only",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "P05-TB-16",
+      "name": "final-real-storage-summary",
+      "status": "NOT_RUN"
+    }
+  ],
+  "page_errors": [],
+  "request_metadata": [
+    {
+      "locale": "ru",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v2/rooms",
+      "status": 201,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/rooms/:id/ws-ticket",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/invitations/resolve",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/rooms/:id/join",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/rooms/:id/ws-ticket",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/invitations/resolve",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/rooms/:id/join",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "adult18-ui-admission",
+      "path": "/api/v1/rooms/:id/ws-ticket",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/private-topics",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/preferences",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/private-topics",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/preferences",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/private-topics",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/preferences",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "own-settings-isolation",
+      "path": "/api/v1/rooms/:id/me/private-topics",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/prepare",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/start",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "en",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "skip",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/advance",
+      "status": 200,
+      "kind": null,
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "accept",
+      "scope": "invitation",
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "questions-private-invitation",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/response",
+      "status": 200,
+      "kind": "accept",
+      "scope": "invitation",
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "ru",
+      "phase": "bilateral-topic-no-early-prompt",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/conversation/commands",
+      "status": 200,
+      "kind": "respond_topic",
+      "scope": null,
+      "decision": "accept",
+      "has_exact_offer_tuple": true
+    },
+    {
+      "locale": "tr",
+      "phase": "bilateral-topic-no-early-prompt",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/conversation/commands",
+      "status": 200,
+      "kind": "respond_topic",
+      "scope": null,
+      "decision": "accept",
+      "has_exact_offer_tuple": true
+    },
+    {
+      "locale": "ru",
+      "phase": "structured-advice-edit-revoke",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/conversation/commands",
+      "status": 200,
+      "kind": "offer_advice",
+      "scope": null,
+      "decision": null,
+      "has_exact_offer_tuple": false
+    },
+    {
+      "locale": "tr",
+      "phase": "structured-advice-edit-revoke",
+      "path": "/api/v2/rooms/:id/game/:id/round/:id/conversation/commands",
+      "status": 200,
+      "kind": "respond_advice",
+      "scope": null,
+      "decision": "accept",
+      "has_exact_offer_tuple": false
+    }
+  ],
+  "screenshots": [
+    {
+      "locale": "ru",
+      "phase": "own-setup",
+      "file": "chromium-ru-own-setup.png"
+    },
+    {
+      "locale": "en",
+      "phase": "own-setup",
+      "file": "chromium-en-own-setup.png"
+    },
+    {
+      "locale": "tr",
+      "phase": "own-setup",
+      "file": "chromium-tr-own-setup.png"
+    },
+    {
+      "locale": "ru",
+      "phase": "quiet-invitation",
+      "file": "chromium-ru-quiet-invitation.png"
+    },
+    {
+      "locale": "en",
+      "phase": "quiet-invitation",
+      "file": "chromium-en-quiet-invitation.png"
+    },
+    {
+      "locale": "tr",
+      "phase": "quiet-invitation",
+      "file": "chromium-tr-quiet-invitation.png"
+    },
+    {
+      "locale": "ru",
+      "phase": "bilateral-topic",
+      "file": "chromium-ru-bilateral-topic.png"
+    },
+    {
+      "locale": "en",
+      "phase": "bilateral-topic",
+      "file": "chromium-en-bilateral-topic.png"
+    },
+    {
+      "locale": "tr",
+      "phase": "bilateral-topic",
+      "file": "chromium-tr-bilateral-topic.png"
+    },
+    {
+      "locale": "ru",
+      "phase": "structured-advice-edit-revoke",
+      "file": "chromium-ru-failure.png",
+      "kind": "failure"
+    },
+    {
+      "locale": "en",
+      "phase": "structured-advice-edit-revoke",
+      "file": "chromium-en-failure.png",
+      "kind": "failure"
+    },
+    {
+      "locale": "tr",
+      "phase": "structured-advice-edit-revoke",
+      "file": "chromium-tr-failure.png",
+      "kind": "failure"
+    }
+  ],
+  "remaining_matrix": [
+    "Other desktop engines unless separately executed",
+    "Full RU/EN/TR x modes x states",
+    "216 historical layout cases/current V2 layout matrix",
+    "Native200%zoom/keyboardfocus/contrast/reducedmotion complete matrix",
+    "Real phones/audio DEFERRED_OWNER",
+    "Full P05 privacy/fairness/restore/CI/clean-source gate",
+    "Human catalog450 approval HOLD"
+  ],
+  "cleanup": "PASS",
+  "browser_version": "156.0.8078.4",
+  "fixture": {
+    "original_sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd",
+    "derivative_sha256": "cbe7371b43d98721dcd7b641e55084929abfaa9123254d1a2240307b8b25d779",
+    "exact_semantic_replacements": [
+      {
+        "before": "new PrivateTopicPreferences(rooms,registry,pins)",
+        "after": "new PrivateTopicPreferences(rooms,registry,pins,source.map.topics)"
+      },
+      {
+        "before": "privateTopics:preferences,logger:false",
+        "after": "privateTopics:preferences,roomCreationProtocol:2,staticRoot:resolve('apps/web/dist'),logger:false"
+      }
+    ],
+    "module_resolution": "Owned temporary mirror links to frozen /app paths; original import bytes unchanged",
+    "synthetic_source_only": true,
+    "production_approval": false,
+    "pins": {
+      "pack_digest": "sha256:f4bddf9f1ea795e63991d1ee33d34b41b21a5d367be53923cbbc165954158abb",
+      "map_revision": "TG-TEST-1",
+      "taxonomy_revision": "TG-TEST-1",
+      "semantic_revision": "TG-TEST-1",
+      "map_sha256": "e277079fc561596768458edc32a1085cad924819a45f810b67d9b0b3b4ba6088",
+      "taxonomy_sha256": "2d31c0c6ac06068661bb3bcce486d80d0b87a4ae890007b37f3b0da5394442b3",
+      "semantic_sha256": "2002228e85672d8316f45953d9bb10d4406747cbf93146e7c7b58bb20131e159",
+      "taxonomy_digest": "a4efdf1cbed5269085492aa9645169ad3271fd28e2f4045bc11d571a38c945ed",
+      "semantic_policy_digest": "25ca557cbba689ebcfc3476e470e62a722d36d9b1cbcddb39358b2ab44270919",
+      "repertoire_digest": "f2619c32f0980164b4240f69f7c6ef39757d55f62f1e71a03d4c5c48a3e24a99"
+    },
+    "pack_digest": "sha256:f4bddf9f1ea795e63991d1ee33d34b41b21a5d367be53923cbbc165954158abb",
+    "taxonomy_labels_identical_across_locales": true,
+    "clock": "Existing fixture h.tick driven native performance elapsed at50ms, epoch1000000; browser performance remains native"
+  },
+  "last_control": {
+    "phase": "structured-advice-edit-revoke",
+    "locale": "tr",
+    "member_id": "22fbd764-a926-4968-b998-76e13bd5ef6c",
+    "control": "advice-accept",
+    "started_monotonic_ms": 78673.969914
+  },
+  "topic_preparation_phases": [
+    {
+      "phase_id": 1,
+      "kind": "before_first_ack",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "budget_ms": 8000,
+      "started_monotonic_ms": 66378.152055,
+      "deadline_monotonic_ms": 74378.152055,
+      "flow_started_monotonic_ms": 66378.026379,
+      "expected_actors": [
+        "05dd6c87-c002-4d02-bb0a-b6ecd08bf6a0"
+      ],
+      "completed_actors": [
+        "05dd6c87-c002-4d02-bb0a-b6ecd08bf6a0"
+      ],
+      "failed_actors": [],
+      "status": "READY",
+      "elapsed_ms": 37.05541000000085,
+      "total_preparation_elapsed_ms": 37.18108599999687
+    },
+    {
+      "phase_id": 2,
+      "kind": "before_second_ack",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "budget_ms": 8000,
+      "started_monotonic_ms": 68389.669165,
+      "deadline_monotonic_ms": 76389.669165,
+      "flow_started_monotonic_ms": 66378.026379,
+      "expected_actors": [
+        "22fbd764-a926-4968-b998-76e13bd5ef6c"
+      ],
+      "completed_actors": [
+        "22fbd764-a926-4968-b998-76e13bd5ef6c"
+      ],
+      "failed_actors": [],
+      "status": "READY",
+      "elapsed_ms": 1063.1228050000063,
+      "total_preparation_elapsed_ms": 3074.765591000003
+    },
+    {
+      "phase_id": 3,
+      "kind": "after_second_commit",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "budget_ms": 8000,
+      "started_monotonic_ms": 71365.006162,
+      "deadline_monotonic_ms": 79365.006162,
+      "flow_started_monotonic_ms": 66378.026379,
+      "expected_actors": [
+        "05dd6c87-c002-4d02-bb0a-b6ecd08bf6a0",
+        "22fbd764-a926-4968-b998-76e13bd5ef6c"
+      ],
+      "completed_actors": [
+        "05dd6c87-c002-4d02-bb0a-b6ecd08bf6a0",
+        "22fbd764-a926-4968-b998-76e13bd5ef6c"
+      ],
+      "failed_actors": [],
+      "status": "READY",
+      "elapsed_ms": 3062.8738779999985,
+      "total_preparation_elapsed_ms": 8049.853661000001
+    }
+  ],
+  "topic_readiness": [
+    {
+      "step": "before_first_ack",
+      "phase_id": 1,
+      "phase_kind": "before_first_ack",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "locale": "ru",
+      "member_id": "05dd6c87-c002-4d02-bb0a-b6ecd08bf6a0",
+      "expected": {
+        "room_id": "d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "min_game_rev": 30
+      },
+      "preparation_budget_ms": 8000,
+      "result": "READY",
+      "observed": {
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "game_rev": 30,
+        "state": "active",
+        "round_state": "pending"
+      },
+      "own_scope_matches": true,
+      "dom": {
+        "own_room_matches": true,
+        "round_visible": true,
+        "round_index_matches": true,
+        "control_visible": true,
+        "control_enabled": true
+      },
+      "dom_sample": "OBSERVED",
+      "same_observation": true,
+      "preparation_elapsed_ms": 37.05541000000085,
+      "total_preparation_elapsed_ms": 37.18108599999687,
+      "remaining_ms": 7962.944589999999
+    },
+    {
+      "step": "before_second_ack",
+      "phase_id": 2,
+      "phase_kind": "before_second_ack",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "locale": "tr",
+      "member_id": "22fbd764-a926-4968-b998-76e13bd5ef6c",
+      "expected": {
+        "room_id": "d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "min_game_rev": 31
+      },
+      "preparation_budget_ms": 8000,
+      "result": "READY",
+      "observed": {
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "game_rev": 31,
+        "state": "active",
+        "round_state": "pending"
+      },
+      "own_scope_matches": true,
+      "dom": {
+        "own_room_matches": true,
+        "round_visible": true,
+        "round_index_matches": true,
+        "control_visible": true,
+        "control_enabled": true
+      },
+      "dom_sample": "OBSERVED",
+      "same_observation": true,
+      "preparation_elapsed_ms": 1063.1228050000063,
+      "total_preparation_elapsed_ms": 3074.765591000003,
+      "remaining_ms": 6936.877194999994
+    },
+    {
+      "step": "after_second_ack",
+      "phase_id": 3,
+      "phase_kind": "after_second_commit",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "locale": "ru",
+      "member_id": "05dd6c87-c002-4d02-bb0a-b6ecd08bf6a0",
+      "expected": {
+        "room_id": "d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "min_game_rev": 32
+      },
+      "preparation_budget_ms": 8000,
+      "result": "READY",
+      "observed": {
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "game_rev": 32,
+        "state": "active",
+        "round_state": "pending"
+      },
+      "own_scope_matches": true,
+      "dom": {
+        "own_room_matches": true,
+        "round_visible": true,
+        "round_index_matches": true,
+        "control_visible": true,
+        "control_enabled": true
+      },
+      "dom_sample": "OBSERVED",
+      "same_observation": true,
+      "preparation_elapsed_ms": 2257.280463999996,
+      "total_preparation_elapsed_ms": 7244.260246999998,
+      "remaining_ms": 5742.719536000004
+    },
+    {
+      "step": "after_second_ack",
+      "phase_id": 3,
+      "phase_kind": "after_second_commit",
+      "method": "FUNCTIONAL_PREPARATION_PHASES_10",
+      "locale": "tr",
+      "member_id": "22fbd764-a926-4968-b998-76e13bd5ef6c",
+      "expected": {
+        "room_id": "d01d0cc9-16d4-4c8d-b428-b3f9341a5aa0",
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "min_game_rev": 32
+      },
+      "preparation_budget_ms": 8000,
+      "result": "READY",
+      "observed": {
+        "session_id": "b0daa818-e78f-4e8c-808a-364fab3e7d22",
+        "round_id": "a6c1605f-dca5-48f5-8720-9fddb0415532",
+        "round_index": 14,
+        "game_rev": 32,
+        "state": "active",
+        "round_state": "pending"
+      },
+      "own_scope_matches": true,
+      "dom": {
+        "own_room_matches": true,
+        "round_visible": true,
+        "round_index_matches": true,
+        "control_visible": true,
+        "control_enabled": true
+      },
+      "dom_sample": "OBSERVED",
+      "same_observation": true,
+      "preparation_elapsed_ms": 3062.8738779999985,
+      "total_preparation_elapsed_ms": 8049.853661000001,
+      "remaining_ms": 4937.1261220000015
+    }
+  ],
+  "delivery_diagnostics": {
+    "file": "delivery-metadata.json",
+    "status": "COMPLETE",
+    "observer_truncated": false,
+    "http": 395,
+    "ws": 254,
+    "overflow": {
+      "http": 0,
+      "ws": 0,
+      "observer_work": 0,
+      "conversation": 0
+    },
+    "pending": 0,
+    "diagnostic_errors": 0,
+    "cache_accept_observed": false
+  },
+  "failure_details": "failure-details.json",
+  "failure": {
+    "phase": "structured-advice-edit-revoke",
+    "name": "Error",
+    "message": "expect(locator).toContainText(expected) failed\n\nLocator: getByTestId('advice-text')\nExpected substring: \"SYNTHETIC ADVICE ONE\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toContainText\" getByTestId('advice-text') with timeout 5000ms\n  - waiting for getByTestId('advice-text')\n",
+    "stack": "Error: expect(locator).toContainText(expected) failed\n\nLocator: getByTestId('advice-text')\nExpected substring: \"SYNTHETIC ADVICE ONE\"\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"toContainText\" getByTestId('advice-text') with timeout 5000ms\n  - waiting for getByTestId('advice-text')\n\n    at captureRawStack (/app/node_modules/playwright-core/lib/coreBundle.js:9282:17)\n    at callMatcherAsStep (/app/node_modules/playwright/lib/matchers/expect.js:13316:57)\n    at Object.toContainText (/app/node_modules/playwright/lib/matchers/expect.js:13308:23)\n    at /app/tests/p05-topic-browser/browser.mjs:97:400\n    at async check (/app/tests/p05-topic-browser/browser.mjs:33:210)\n    at async file:///app/tests/p05-topic-browser/browser.mjs:97:2",
+    "last_control": {
+      "phase": "structured-advice-edit-revoke",
+      "locale": "tr",
+      "member_id": "22fbd764-a926-4968-b998-76e13bd5ef6c",
+      "control": "advice-accept",
+      "started_monotonic_ms": 78673.969914
+    },
+    "details": "failure-details.json"
+  },
+  "transport": []
+}

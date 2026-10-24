@@ -1,0 +1,33 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts (12 tests | 1 failed) 1319ms
+   ❯ own permanent exclusion command refreshes only its own settings (12)
+     × consumes preserved draft after a successful reload so later failed Save and Refresh cannot resurrect a removed addition 88ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-own-exclusion-refresh.test.ts > own permanent exclusion command refreshes only its own settings > consumes preserved draft after a successful reload so later failed Save and Refresh cannot resurrect a removed addition
+AssertionError: expected Object{ b: true, posts: 2, reads: 3 } to deeply equal { b: false, posts: 2, reads: 3 }
+
+- Expected
++ Received
+
+  {
+-   "b": false,
++   "b": true,
+    "posts": 2,
+    "reads": 3,
+  }
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts:50:5
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 11 passed (12)
+   Start at  01:39:55
+   Duration  1.71s (tests 83%, import 13%, transform 4%)
+

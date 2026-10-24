@@ -1,0 +1,1118 @@
+{
+  ".docs/10_IMPLEMENTATION_PLAN.md": [
+    {
+      "line": 170,
+      "text": "1. Не менее 100 reviewed оригинальных карточек каждого режима; у каждой RU/EN/TR, provenance, reviewer/date и проверенные права. `CARD-001…015` применены к полному каталогу; обязательные проверки не пропущены."
+    },
+    {
+      "line": 171,
+      "text": "2. Для всех поддерживаемых mode/context/size/stage/comfort/resolved-class сегментов сформирован coverage реальным predicate P03. Невозможные сочетания отмечены как недопустимые по правилам, а не как пробел контента."
+    },
+    {
+      "line": 172,
+      "text": "3. Для каждого размера 2…8, обоих контекстов и каждого режима поддерживаемые нейтральные профили comfort0 завершают 20 раундов без повторов. Для Yes, But с запрещёнными всеми парами получаем отказ до Start; 20 раундов для такого профиля не обещаются. Для 1…100 раундов Start разрешается только при достаточном безопасном пуле; shortage виден до начала."
+    }
+  ],
+  ".docs/implementation/p03-measurement-protocol-v3.json": [
+    {
+      "line": 39,
+      "text": "    \"public_common_support\": \"min_comfort0, scopes none/acquaintance, no physical/going-away; sensitive cards retain original private scope; private pair must have >=ceil(.25*total_rounds) common friend_or_more comfort1 nonphysical/non-goingaway cards\","
+    },
+    {
+      "line": 40,
+      "text": "    \"limitations\": \"X veto and J/comfort/context/capability hard exclusions remain observable; no universal zero social-inference guarantee\""
+    },
+    {
+      "line": 56,
+      "text": "    \"total_rounds\": \"1+(index%100)\","
+    },
+    {
+      "line": 57,
+      "text": "    \"mode\": \"index%3\","
+    },
+    {
+      "line": 58,
+      "text": "    \"context\": \"floor(index/3)%2\","
+    },
+    {
+      "line": 59,
+      "text": "    \"profile\": \"Exact measurementDesign random_profile byte derivation gives comfort%5 and label%6; simulated private_text_chat capability is declared for both contexts so mixed-context fixture metadata has its required capability, not production availability\","
+    },
+    {
+      "line": 60,
+      "text": "    \"max_violations\": 0,"
+    },
+    {
+      "line": 61,
+      "text": "    \"max_repeated_cards_per_session\": 0,"
+    },
+    {
+      "line": 62,
+      "text": "    \"fifteen_checks\": \"List each normative invariant independently with actual assertion and counter. Planner guards/replay and pure consent are directly simulated; authenticated transport/host ACL/room revocation require referenced real-PG tests and must not be inferred from selector output.\","
+    },
+    {
+      "line": 63,
+      "text": "    \"safe_refusals\": \"Report reason/seed/completed prefix separately; refusals are not completed sessions or safety violations unless safety invariant failed\""
+    },
+    {
+      "line": 108,
+      "text": "    \"strata\": \"N2..8 selected game players x 3 modes x 2 contexts, all42 cells independently sampled\","
+    },
+    {
+      "line": 109,
+      "text": "    \"observer_membership\": \"With2..7 selected players, an unselected authenticated room observer can occupy an available room slot. At8 selected players the room is full: this probe uses only the public-channel projection visible to a participant outside the target pair; their own edges and targeted private frames are outside this declared classifier model. N2 remains included because an unselected third room member is possible. No ninth member is assumed.\","
+    },
+    {
+      "line": 110,
+      "text": "    \"train_per_class_per_stratum\": 100,"
+    },
+    {
+      "line": 111,
+      "text": "    \"holdout_per_class_per_stratum\": 400,"
+    },
+    {
+      "line": 112,
+      "text": "    \"sampling_rationale\": \"4200 train and16800 holdout per class/comparison pooled, plus400 balanced held-out samples/class/cell; limits CPU while checking every cell and excluding pooled cancellation\","
+    },
+    {
+      "line": 113,
+      "text": "    \"total_rounds\": \"1+(index%100)\","
+    },
+    {
+      "line": 114,
+      "text": "    \"comfort\": 4,"
+    },
+    {
+      "line": 115,
+      "text": "    \"capabilities\": \"private_text_chat in both simulated contexts, satisfying mixed-context fixture metadata; not product availability\","
+    },
+    {
+      "line": 116,
+      "text": "    \"seed_train\": \"venus:P03-M2:train:<comparison>:<class>:<size>:<mode>:<context>:<index>\","
+    },
+    {
+      "line": 117,
+      "text": "    \"seed_holdout\": \"venus:P03-M2:holdout:<comparison>:<class>:<size>:<mode>:<context>:<index>\","
+    },
+    {
+      "line": 118,
+      "text": "    \"profile\": \"Other edges FR; target first unordered pair F=FR/FR,G=CR/FR,M=CR/CR. Same size/mode/context/round-count distribution for both classes.\","
+    },
+    {
+      "line": 119,
+      "text": "    \"observer\": \"Public-channel projection visible to an authenticated room member: room/game public snapshots and generic private round state, public text/roles/card ID, response state, choice/proposal revision, stream/revision/server-time/payload lengths; targeted private frames, actor-only HTTP responses, encrypted storage and raw edges are outside this probe. Membership limitations are explicit above.\","
+    },
+    {
+      "line": 120,
+      "text": "    \"transcript_adapter\": \"Production publicRound/gameView shape, solo primary recovered from rendered P1 name even if actors is empty. Consistent synthetic lifecycle policy supplies pending/active/terminal states, accepts/choice/finish and clock delays independent of secret class; declare generated metadata and distinguish real HTTP/WS tests. Include public text-role, card-histogram, generic counts by stage, lifecycle/revision/count/size features; never private card IDs.\","
+    },
+    {
+      "line": 121,
+      "text": "    \"classifier\": \"Diagonal LDA: train class1 mean minus class0 mean divided by pooled variance+1e-9, midpoint intercept, orientation fixed by train. Train pooled and per-stratum independently; no holdout orientation selection.\","
+    },
+    {
+      "line": 122,
+      "text": "    \"auc\": \"Mann-Whitney probability class1 score>class0 score, ties .5\","
+    },
+    {
+      "line": 123,
+      "text": "    \"ci95\": \"Hanley-McNeil: Q1=A/(2-A),Q2=2*A*A/(1+A); SE2=[A*(1-A)+(n1-1)*(Q1-A*A)+(n0-1)*(Q2-A*A)]/(n1*n0); clipped normal A+/-1.96SE\","
+    },
+    {
+      "line": 124,
+      "text": "    \"max_ci95_upper_pooled_and_each_stratum\": 0.65,"
+    },
+    {
+      "line": 125,
+      "text": "    \"structural_blockers\": \"Any explicit secret transport field or unique deterministic class decoder in compatible repertoire, state/timing/size/role metadata blocks regardless of pooled AUC. Inspect all declared cells; structural production-transport tests required separately.\","
+    },
+    {
+      "line": 126,
+      "text": "    \"limitations\": \"Fixed linear probes and approximate CIs do not establish universal privacy against arbitrary classifiers or participant conduct. No physical action performance is simulated or guaranteed. Actual private chat comes P05.\""
+    },
+    {
+      "line": 127,
+      "text": "  },"
+    },
+    {
+      "line": 128,
+      "text": "  \"failure_policy\": \"Retain initial FAIL with source/protocol identity and seeds; changed algorithm/threshold/profile requires new preregistered revision and independent review before rerun; no posthoc seed selection or hidden pooling M3 diagnostic failures are retained; any subsequent changed measured input requires a new preregistration revision before rerun.\","
+    },
+    {
+      "line": 129,
+      "text": "  \"revision_boundary\": \"Additional diagnostics/assertions/verifier for normative RE-016 and accepted cap/anti-repeat obligations. Production engine algorithm, policy, all M1/M2 seed strings, profiles, sample counts, sampler probabilities, classifiers and original numerical thresholds are unchanged. No completed failed statistical outcome was used to select seeds or adjust thresholds; all M2 partials remain retained.\","
+    },
+    {
+      "line": 151,
+      "text": "    \"eligibility\": \"Count successfully selected rounds with >=1 hard-eligible unused private option. Before/after private cap are distinct. Compute candidate availability before anti-repeat/recovery/interaction branch gates; common friend_or_more comfort1 nonphysical/non-goingaway pool must cover ceil(.25*total_rounds). Safe refusals retain seed/prefix outside completed-round denominators.\","
+    },
+    {
+      "line": 152,
+      "text": "    \"raw_distributions\": \"For each selected round report interaction(group,solo,pair_public,pair_private) and selected card min_comfort0..4 by stratum. Report private_selected/rounds and private_selected/private_eligible_after_cap as descriptive ratios, never replacing eligibility denominator with total sessions.\","
+    }
+  ],
+  ".docs/adr/ADR-015-p03-engine-and-measurements.md": [
+    {
+      "line": 15,
+      "text": "Preregistered deterministic seed corpus: prefix `venus:P03-M1:train` для отдельных диагностик и `venus:P03-M1:test:<size>:<index>` для финальных10000сессий на каждый размер2…8, всего70000. Финальные seeds не подбираются по результатам; failures сохраняются. Все3режима,2контекста, comfort0…4, шесть directed labels и1…100 rounds входят в corpus/отдельные exhaustive boundary tests. Каждый committed round проверяется по15invariants; безопасный отказ учитывается отдельно и не выдаётся за завершённую игру."
+    },
+    {
+      "line": 16,
+      "text": ""
+    },
+    {
+      "line": 17,
+      "text": "Критерии до измерений:0safety violations;0card repeats в одной сессии; private<=ceil(.25*Nrounds), stage1/2private=0. При допустимых unused alternatives исключается повтор одной private пары подряд. В exchangeable balanced profiles aggregate max−min shares<=0.02; individualshare<=0.5. G/F opportunity frequency на matched eligible pools: ratio>1 с нижней95%CI>1. Публичные сравнения F/G,F/M,G/M при одинаковых observable confounders: held-out classifier AUC с верхней95%CI<=0.65. Metadata/body projections проходят exact forbidden-field checks; уникальный deterministic class decoder блокирует гейт. Нулевой observational/social inference не обещается."
+    },
+    {
+      "line": 18,
+      "text": ""
+    },
+    {
+      "line": 19,
+      "text": "Предлагаемая anti-inference реализация до measurement:95% uniform admissible-pair probability +5% RE-1 numeric pair-weight prior, с downweight по уже committed history. Это сохраняет ненулевую мягкую инициативу G при общей поддержке распределений. Новый mix — technical proposed baseline этого ADR; numeric matrix/guards RE-1 не изменяются. Общий каталог не должен создавать публичный deterministic class/comfort decoder: sensitive class, positive-comfort и physical content требуют scoped private delivery либо отказа pack compatibility. Public common-support cards используют comfort0 и none/acquaintance scope. Область этого conservative surface guard проверяется независимым entry/privacy review до финального допуска."
+    },
+    {
+      "line": 20,
+      "text": ""
+    },
+    {
+      "line": 21,
+      "text": "Обучение classifier и границы CI фиксируются в [machine protocol P03-M1](../implementation/p03-measurement-protocol.json) до первой финальной выборки: diagonal linear discriminant на отдельных train seeds, Mann-Whitney AUC с ties0.5, Hanley–McNeil normal95%CI. Private admission также требует достаточного common friend_or_more/comfort1 pool для всего private budget, чтобы class-specific exhaustion time не декодировал класс; guard не меняет исходные interaction. Если критерий не пройден, сохранить FAIL и исходный protocol+hash; любое изменение алгоритма/порога создаёт следующую revision с новым независимым review. Скрывать неудачу подбором seeds/threshold запрещено. Thresholds — технические допуски для synthetic evaluation, не обещание anonymity реальных встреч."
+    }
+  ],
+  ".docs/adr/ADR-016-p03-progressive-evidence.md": [
+    {
+      "line": 7,
+      "text": "EXIT-P03 requires every RE-001…018. RE-016 includes actual progressive distributions by stage. M2 recorded global pair shares, G/F and inference, but did not record the measured private eligibility/progression distribution, per-session cap or alternative-pair decisions. The fixed sampler probabilities and source inspection alone cannot replace that evidence. The independent final evidence reviewer corrected an earlier nonblocking interpretation before acceptance."
+    },
+    {
+      "line": 8,
+      "text": ""
+    },
+    {
+      "line": 9,
+      "text": "M2 source14482d2 remains unaccepted. Its local quality, OCI and runtime tests passed; Linux CI failed on permissions in the rollback test fixture. Partial statistical sections were interrupted and retained in `../implementation/evidence/p03/attempt-14482d2/`. Neither the preregistration tag nor historical failed reports are overwritten."
+    },
+    {
+      "line": 10,
+      "text": ""
+    },
+    {
+      "line": 11,
+      "text": "## Decision"
+    },
+    {
+      "line": 12,
+      "text": ""
+    },
+    {
+      "line": 13,
+      "text": "M3 retains algorithm RE-1.P03-M1, policy RE-1, the exact M1/M2 seed strings, profiles, samples, sampler probabilities, classifiers and numerical thresholds. It adds independent observation of the unchanged production planner: stage/eligibility/interaction/comfort distributions in168cells, raw per-session private proposal counts, zero early-private and cap violations, and last-private-pair alternative decisions with explicit no-alternative exceptions. An observer computes candidate availability before anti-repeat/recovery/branch selection and never feeds a decision to the planner."
+    }
+  ],
+  ".docs/adr/ADR-026-local-pilot-provisional-card-pass.md": [
+    {
+      "line": 5,
+      "text": "Прямая команда владельца: «Карточки пока считаем pass. Добивай гейты этапа 5». [U-019](../implementation/user-decisions.v4.json) принимает текущий набор470 r4 для standalone local friends pilot. Точные catalog SHA256 `dfb3a2871d2e988be97cc89cbd50a362eeffa5e60ae0c5258a4219c646f0a270`, pack `sha256:d1a7cb38be173c673665c30ae8e91792940438b675f8830d72503eebed9985d4`."
+    },
+    {
+      "line": 6,
+      "text": ""
+    },
+    {
+      "line": 7,
+      "text": "Ожидание139 ответов и исходный owner450 HOLD больше не блокируют человеческое принятие содержания этого набора в данном scope. Старые документы, незаполненные поля и исходные статусы сохраняются: решение не приписывает владельцу проведённую построчную RU/EN/TR проверку. Это временное продуктовое принятие, а не юридическое заключение или разрешение публичного production launch."
+    },
+    {
+      "line": 8,
+      "text": ""
+    },
+    {
+      "line": 9,
+      "text": "Технические требования не отменяются: реальное покрытие, семантическая карта, безопасность, согласия, runtime, интерфейс, статистические гейты и независимая приёмка остаются обязательными. Подмена synthetic draft нормальным runtime bundle без проверки его точных привязок запрещена. Активация требует отдельной прослеживаемой ревизии release registry после технической готовности; исходные draft snapshots не редактируются."
+    }
+  ],
+  ".docs/P05_TOPIC_ADVICE_DESIGN.md": [
+    {
+      "line": 72,
+      "text": "**Public sequence не зависит от скрытого private semantic history/exclusions.** Публичные semantic families исключаются по уже публично показанным карточкам; private selection учитывает public history и private историю конкретной пары. Private history не фильтрует будущий public pool. Это особенно важно для смешанных `SEM-17` (YB-1113 private / YB-1126 public) и `SEM-18` (YB-1133 private / YB-1005 public / TD-1005 solo): blanket room-level used-cluster создаёт decoder. Пока эти смешанные семьи не разнесены редакторски или не доказана новая схема общего support, для topic-enabled выпуска они не принимаются как закрытые: либо консервативно вывести **всю смешанную семью** из нового versioned repertoire независимо от наличия private события, либо получить новые differentiated families и review. Нельзя отключать только публичную половину после тайного private события. Исторический pack при этом не редактируется; новый repertoire/map digest и C2 обязательны."
+    },
+    {
+      "line": 73,
+      "text": ""
+    },
+    {
+      "line": 74,
+      "text": "Остаточный предел приватности: партнёр видит отказ/отсутствие продолжения и способен делать бытовые выводы; нельзя обещать нулевую inferability по факту ответа. Не показывать ему чужой список exclusions, название отвергнутой темы, мотив, точные остатки пула или per-topic availability API. Ответ инициатору на недопустимое предложение — generic receipt/ограниченный timeout, без кода «второй запретил music». Исследование public/private inference — отдельный gate, а не обещание на основании отсутствия поля в JSON."
+    },
+    {
+      "line": 90,
+      "text": "| C2/fairness/privacy | Новые deterministic preflight/C2: 2…8, оба контекста, все режимы/стадии/1…100, default/chat caps, разные allow/exclude профили и смена тем; safe-refusal учитывается отдельно. Новые M3-style fairness/public-inference measurements и strata по exclusions/semantic families. Старый C2 и M3 не переименовываются в новые доказательства |"
+    },
+    {
+      "line": 91,
+      "text": ""
+    },
+    {
+      "line": 92,
+      "text": "Порядок: (1) freeze taxonomy/map candidate и versioned contracts с разбором mixed families; (2) выполнить migrations/ledger+V2 planner и отрицательные API/SQL tests; (3) UI/structured advice и реальные Docker browser races; (4) пересчитать coverage/fairness/privacy, независимые reviewer rounds до PASS. Human approval контента остаётся отдельным. Для rollback остановить новые V2 starts, отозвать все V2 moments/grants/advice, сохранить ledger exclusions, вернуть совместимый reader/UI и не выдавать старый pack за проверенный с новой policy. Promotion трёх requirements разрешён только после полного набора source-bound доказательств; сейчас `DESIGN_ONLY`."
+    }
+  ],
+  ".artifacts/p05-pilot-corpus-ranges02/m3/descriptor.mjs": [
+    {
+      "line": 3,
+      "text": "export const counts=Object.freeze({invariants:70000,fairness:84000,gf:1000000,inference:126000});"
+    },
+    {
+      "line": 4,
+      "text": "const stratum=index=>({size:2+Math.floor(index/6),mode:modes[Math.floor(index/2)%3],context:contexts[index%2]});"
+    },
+    {
+      "line": 5,
+      "text": "export function caseAt(section,ordinal){"
+    },
+    {
+      "line": 6,
+      "text": " assert(Object.hasOwn(counts,section));assert(Number.isSafeInteger(ordinal)&&ordinal>=0&&ordinal<counts[section]);"
+    },
+    {
+      "line": 7,
+      "text": " if(section==='invariants'){const size=2+Math.floor(ordinal/10000),index=ordinal%10000;return {section,ordinal,size,index,mode:modes[index%3],context:contexts[Math.floor(index/3)%2],rounds:1+index%100,kind:'random',pairClass:'F',seed:`venus:P03-M1:test:${size}:${index}`};}"
+    },
+    {
+      "line": 8,
+      "text": " if(section==='fairness'){const index=ordinal%2000,s=stratum(Math.floor(ordinal/2000));return {section,ordinal,...s,index,rounds:20,kind:'exchangeable',pairClass:'F',seed:`venus:P03-M2:fairness:${s.size}:${s.mode}:${s.context}:${index}`};}"
+    },
+    {
+      "line": 9,
+      "text": " if(section==='gf')return {section,ordinal,index:ordinal,size:4,mode:'questions',context:'in_person',rounds:20,kind:'gf',pairClass:'PAIRED_G_F',first_round_only:true,seed:`venus:P03-M1:gf:${ordinal}`};"
+    },
+    {
+      "line": 10,
+      "text": " const comparison=['FG','FM','GM'][Math.floor(ordinal/42000)],s=stratum(Math.floor((ordinal%42000)/1000)),local=ordinal%1000,pairClass=comparison[Math.floor(local/500)],within=local%500,split=within<100?'train':'holdout',index=within<100?within:within-100;"
+    },
+    {
+      "line": 11,
+      "text": " return {section,ordinal,...s,comparison,pairClass,split,index,rounds:1+index%100,kind:'exchangeable',seed:`venus:P03-M2:${split}:${comparison}:${pairClass}:${s.size}:${s.mode}:${s.context}:${index}`};"
+    },
+    {
+      "line": 17,
+      "text": " model:'DOMAIN_MODEL_NOT_ACTUAL_AUTH: native createTopicHistory(empty), selectNextTopicRound, actual pure consent/topic FSMs and recordTopicOutcome. No SIMULATION_ONLY rebrand/truncate/private-brand bypass.',"
+    },
+    {
+      "line": 18,
+      "text": " lifecycle:'No Start-preflight admission claim. Each direct domain-model selection and controlled all-accept mutation produces production topicGameView; truth always selected; one explicit controlled first private YesBut condition before the topic offer, no public condition/advice/chat injected. Native bilateral invitation, topic (private) then action; safe-empty skips; terminal finish. One modeled ms/revision per observed mutation, fixed common clock/name tokens, every mutation observed. Counters/timestamps are controlled model values, not actual DB/WS revisions.',"
+    },
+    {
+      "line": 19,
+      "text": " refusal:'A direct native-domain selector refusal retains its own exact selected/completed prefix and history, not a reconstructed preflight prefix. Any non-typed failure aborts, no retry. API Start preflight may reject earlier; its unavailable internal prefix is not inferred.',"
+    },
+    {
+      "line": 20,
+      "text": " wire_boundary:'Production topicGameView only. Modeled envelope/observation schedule is NOT actual WS poll/barrier/coalescing/final-auth proof; mandatory finite actual wire parity remains separate.',"
+    },
+    {
+      "line": 21,
+      "text": " formulas:{fairness:'K=pair offers,D=2K; per-session max individual <=.5, per-cell aggregate share gap<=.02;42cells/2000R20, late eligibility and selected playable private positive',gf:'1M matched first-stage opportunities at N4/C1/questions/in_person/R20 snapshot; pairedRatioCI exact P03, CI95 lower>1; zero denominators FAIL',inference:'FG/FM/GM each42cells,100train+400holdout/class, exact trainLDA/aucCI/decoder; separately-trained pooled4200/16800/class/comparison, upperCI95<=.65; no pooled cancellation or holdout orientation',invariants:'70k original random profiles;15named rows,0violations;168stage rows. Pure/domain checks distinguished from actual auth/retention required evidence.'},"
+    }
+  ],
+  ".artifacts/p05-pilot-corpus-ranges02/m3/profile.mjs": [
+    {
+      "line": 7,
+      "text": "function profile(seed,size,mode,context,total,kind='exchangeable',pairClass='F') {"
+    },
+    {
+      "line": 8,
+      "text": "  const players=Array.from({length:size},(_,i)=>({id:playerId(i),comfort:kind==='random'?parseInt(hash(seed+':player:'+i).slice(0,8),16)%5:kind==='gf'?1:4,edges:{}}));"
+    },
+    {
+      "line": 9,
+      "text": "  for(let a=0;a<size;a++) for(let b=0;b<size;b++) if(a!==b) players[a].edges[players[b].id]={relation:kind==='random'?labels[parseInt(hash(seed+':edge:'+a+':'+b).slice(0,8),16)%6]:'friendship',explicit:true};"
+    },
+    {
+      "line": 10,
+      "text": "  if(kind!=='random'&&pairClass!=='F') {players[0].edges[players[1].id].relation='crush';if(pairClass==='M') players[1].edges[players[0].id].relation='crush';}"
+    },
+    {
+      "line": 11,
+      "text": "  return immutableSnapshot({schema:1,session_id:'22222222-2222-4222-8222-222222222222',room_id:'11111111-1111-4111-8111-111111111111',engine_revision:algorithmRevision,policy_revision:'RE-1',policy_digest:policyDigest,pack_digest:pack.digest,seed:hash(seed),mode,context,total_rounds:total,players,capabilities:['private_text_chat']},pack);"
+    },
+    {
+      "line": 12,
+      "text": "}"
+    },
+    {
+      "line": 13,
+      "text": " return profile;"
+    }
+  ],
+  ".artifacts/p05-pilot-corpus-ranges02/m3/model.mjs": [
+    {
+      "line": 8,
+      "text": "const draftRejection=new WeakMap();"
+    },
+    {
+      "line": 9,
+      "text": "export function modelSession(env,descriptor,{onFrame=()=>{},onRound=()=>{}}={}){"
+    },
+    {
+      "line": 10,
+      "text": " const {engine:e,pack,map,planner:p,renderer}=env,snapshot=env.makeSnapshot(descriptor),s=snapshot.baseline;"
+    },
+    {
+      "line": 11,
+      "text": " const safety={room_id:s.room_id,revision:1,members:s.players.map(player=>({member_id:player.id,revision:1,allow_topic_ids:map.topics.map(t=>t.topic_id),excluded_topic_ids:[]}))};"
+    },
+    {
+      "line": 12,
+      "text": " let history=p.createTopicHistory(snapshot,pack,map),completed=0,tick=0,gameRev=1,current=null,selected=0;"
+    },
+    {
+      "line": 13,
+      "text": " assert.equal(history.provenance,'RUNTIME'); // Native constructor, never rebranding simulation history."
+    },
+    {
+      "line": 90,
+      "text": "   current.state='completed';if(current.action)current.action=e.consentResponse(current.action,round.primary_member_id,'finish',stamp());emit('finish');completed++;"
+    },
+    {
+      "line": 91,
+      "text": "  }"
+    },
+    {
+      "line": 92,
+      "text": "  game.state='completed';emit('session_complete');"
+    },
+    {
+      "line": 93,
+      "text": " }catch(error){if(error?.code!=='TOPIC_SAFE_POOL_EXHAUSTED'){const failure=error&&typeof error==='object'?error:new Error('DOMAIN_FAILURE');failure.domain_prefix={model:'DOMAIN_MODEL_NOT_ACTUAL_AUTH',status:'FAIL_DOMAIN_PREFIX_NOT_COMPLETE',selected_rounds:selected,completed_rounds:completed,history,raw_rounds:rawRounds,last_selected_round:history.rounds.at(-1)??null,invariants:rows,features:projection.finish(completed)};throw failure;}refusal={reason:error.code,selected_prefix:selected,completed_prefix:completed,history_revision:history.revision};}"
+    },
+    {
+      "line": 94,
+      "text": " assert.equal(invitations.reduce((a,b)=>a+b,0),2*K);assert(Kprivate<=Math.ceil(.25*s.total_rounds));"
+    },
+    {
+      "line": 95,
+      "text": " return {descriptor,model:'DOMAIN_MODEL_NOT_ACTUAL_AUTH',actual_transport:false,history_provenance:history.provenance,status:refusal?'SAFE_REFUSAL':'COMPLETE_DOMAIN_MODEL',requested_rounds:s.total_rounds,selected_rounds:selected,completed_rounds:completed,refusal,history,counts:{K,D:2*K,Kprivate,private_playable:playablePrivate,private_safe_empty:Kprivate-playablePrivate,invitations,current_session_exact_ID_repeats:legacyGlobalIdRepeats,legacy_global_ID_repeats:legacyGlobalIdRepeats,legacy_global_ID_zero:legacyGlobalIdRepeats===0,stages},invariants:rows,raw_rounds:rawRounds,features:projection.finish(completed),missing_oracles:['Actual auth/WS/HTTP/close/source/clock/final fence proof','Exact Start-preflight admission parity','Additional exclusion/privatehistory inferability strata common support and actualwire parity']};"
+    }
+  ],
+  ".artifacts/p05-pilot-corpus-ranges02/m3/adapter.mjs": [
+    {
+      "line": 39,
+      "text": "export function fairnessCell(records){"
+    },
+    {
+      "line": 40,
+      "text": " assert.equal(records.length,2000,'exact2000percell');const first=records[0].descriptor,seen=new Set(),invitations=Array(first.size).fill(0);let K=0,maxShare=0,zero=0,refusals=0,lateEligible=0,lateSelected=0,legacyRepeats=0;"
+    },
+    {
+      "line": 41,
+      "text": " for(const record of records){const d=record.descriptor;assert.equal(d.section,'fairness');assert.equal(d.size,first.size);assert.equal(d.mode,first.mode);assert.equal(d.context,first.context);assert.deepEqual(d,caseAt('fairness',d.ordinal));assert(!seen.has(d.index));seen.add(d.index);refusals+=Number(record.status!=='COMPLETE_DOMAIN_MODEL');legacyRepeats+=record.counts.legacy_global_ID_repeats;"
+    },
+    {
+      "line": 42,
+      "text": "  assert.equal(record.requested_rounds,d.rounds);assert(Number.isSafeInteger(record.selected_rounds)&&Number.isSafeInteger(record.completed_rounds)&&record.completed_rounds>=0&&record.completed_rounds<=record.selected_rounds&&record.selected_rounds<=d.rounds);if(record.status==='COMPLETE_DOMAIN_MODEL')assert.equal(record.completed_rounds,d.rounds);"
+    },
+    {
+      "line": 43,
+      "text": "  const c=record.counts;assert.equal(c.D,2*c.K);assert.equal(c.invitations.reduce((a,b)=>a+b,0),c.D);K+=c.K;if(c.D)maxShare=Math.max(maxShare,...c.invitations.map(n=>n/c.D));else zero++;c.invitations.forEach((n,i)=>invitations[i]+=n);"
+    },
+    {
+      "line": 44,
+      "text": "  assert([c.K,c.D,c.Kprivate,c.private_playable,c.private_safe_empty,...c.invitations].every(n=>Number.isSafeInteger(n)&&n>=0));assert.equal(c.invitations.length,d.size);assert.equal(c.private_playable+c.private_safe_empty,c.Kprivate);"
+    },
+    {
+      "line": 45,
+      "text": "  assert.equal(record.raw_rounds.length,record.selected_rounds);const pairs=record.raw_rounds.filter(r=>r.interaction.startsWith('pair_')),privates=pairs.filter(r=>r.interaction==='pair_private');assert.equal(c.K,pairs.length);assert.equal(c.Kprivate,privates.length);assert.equal(c.private_playable,privates.filter(r=>r.card!==null).length);assert(c.Kprivate<=Math.ceil(.25*d.rounds));"
+    },
+    {
+      "line": 46,
+      "text": "  assert(privates.every(r=>r.stage>=3));const ids=record.raw_rounds.flatMap(r=>r.card?[r.card.card_id]:[]);assert.equal(c.current_session_exact_ID_repeats,ids.length-new Set(ids).size);assert.equal(c.current_session_exact_ID_repeats,0);"
+    },
+    {
+      "line": 47,
+      "text": "  for(const [stage,row]of Object.entries(c.stages))if(Number(stage)>=3){assert(Number.isSafeInteger(row.private_eligible_after_cap)&&row.private_eligible_after_cap>=0&&row.private_eligible_after_cap<=row.rounds);lateEligible+=row.private_eligible_after_cap;lateSelected+=row.private_playable;}"
+    },
+    {
+      "line": 48,
+      "text": " }"
+    },
+    {
+      "line": 49,
+      "text": " const D=2*K,shares=invitations.map(n=>D?n/D:null),gap=D?Math.max(...shares)-Math.min(...shares):null;"
+    },
+    {
+      "line": 50,
+      "text": " return {status:!refusals&&D&&maxShare<=.5&&gap<=.02&&lateEligible>0&&lateSelected>0?'PASS_PURE_DOMAIN_FAIRNESS_CELL_NOT_STAGE':'NOT_ACCEPTED',K,D,invitations,individual_shares:shares,aggregate_gap:gap,max_individual_session_share:maxShare,zero_pair_sessions:zero,retained_refusals:refusals,late_eligible:lateEligible,late_playable_selected:lateSelected,legacy_global_ID_repeats:legacyRepeats,legacy_zero_compatibility_requires_disposition:legacyRepeats>0,actual_transport:false};"
+    },
+    {
+      "line": 51,
+      "text": "}"
+    },
+    {
+      "line": 52,
+      "text": "export function evaluateInference(records,names,{pooled=false}={}){"
+    },
+    {
+      "line": 53,
+      "text": " const perClassTrain=pooled?4200:100,perClassHoldout=pooled?16800:400;assert.equal(records.length,2*(perClassTrain+perClassHoldout));"
+    },
+    {
+      "line": 54,
+      "text": " const training=[[],[]],holdout=[[],[]],seen=new Set(),first=records[0].descriptor;let refusals=0;"
+    },
+    {
+      "line": 55,
+      "text": " for(const r of records){const d=r.descriptor;assert.deepEqual(d,caseAt('inference',d.ordinal));assert.equal(d.comparison,first.comparison);if(!pooled)for(const k of ['size','mode','context'])assert.equal(d[k],first[k]);assert(!seen.has(d.ordinal));seen.add(d.ordinal);assert.deepEqual(r.features.names,names);const vector=r.features.features;assert.equal(vector.length,names.length);assert(vector.every(Number.isFinite));refusals+=Number(r.status!=='COMPLETE_DOMAIN_MODEL');(d.split==='train'?training:holdout)[d.comparison.indexOf(d.pairClass)].push(vector);}"
+    },
+    {
+      "line": 56,
+      "text": " assert(training.every(v=>v.length===perClassTrain));assert(holdout.every(v=>v.length===perClassHoldout));"
+    },
+    {
+      "line": 57,
+      "text": " const classifier=trainLDA(...training),scores=holdout.map(rows=>rows.map(classifier.score)),metric=aucCI(...scores),decoders=deterministicDecoders(training,holdout,names);"
+    },
+    {
+      "line": 58,
+      "text": " return {status:!refusals&&metric.status==='PASS'&&!decoders.length?'PASS_DOMAIN_MODEL_LDA_ONLY_NOT_WIRE_OR_STAGE':'NOT_ACCEPTED',feature_dictionary_sha256:sha(JSON.stringify(names)),metric,heldout_scores:scores,weights:Array.from(classifier.weights),coefficient_sha256:sha(Buffer.from(classifier.weights.buffer)),intercept:classifier.intercept,structural_deterministic_decoders:decoders,refusals_retained:refusals,pooling:pooled?'SEPARATELY_TRAINED_POOLED_RAW_ROWS_NOT_CELL_SCORES':'PER_CELL',actual_wire_parity:'PENDING'};"
+    }
+  ],
+  ".artifacts/p05-pilot-corpus-ranges02/range-reduce.mjs": [
+    {
+      "line": 28,
+      "text": "export function assertBoundDescriptor(section,row){assert.equal(row.section,section);assert.deepEqual(row.result.descriptor,caseAt(section.slice(3),row.ordinal),'DESCRIPTOR_OUTER_ORDINAL_MISMATCH');}"
+    },
+    {
+      "line": 29,
+      "text": "export function validatePreflightRaw(result,cell){"
+    },
+    {
+      "line": 30,
+      "text": " assert.deepEqual(result.cell,cell);assert.equal(result.actual_transport,false);assert.equal(result.simulation_only,true);"
+    },
+    {
+      "line": 31,
+      "text": " if(result.status==='SAFE_REFUSAL'){assert.equal(result.error_code,'TOPIC_SAFE_POOL_EXHAUSTED');assert.equal(result.prefix_available,false);assert.equal(result.history,null);assert.equal(result.planned_rounds,null);return;}"
+    },
+    {
+      "line": 40,
+      "text": "   const ids=r.candidate_identities.map(c=>c.card_id);assert.equal(new Set(ids).size,ids.length);assert.equal(r.all_eligible.card_ids,ids.length);"
+    },
+    {
+      "line": 41,
+      "text": "   for(const c of r.candidate_identities){const card=env.pack.card(c.card_id);assert.equal(card.revision,c.revision);assert.equal(card.interaction,c.interaction);assert.deepEqual(env.map.entry(c.card_id).semantic_family_ids,c.semantic_family_ids);}"
+    },
+    {
+      "line": 42,
+      "text": "   assert.deepEqual(r.neutral_card_ids,r.candidate_identities.filter(c=>c.interaction!=='pair_private').map(c=>c.card_id));assert.equal(r.neutral.card_ids,r.neutral_card_ids.length);assert.equal(r.private_baseline.card_ids,r.private_baseline_card_ids.length);"
+    },
+    {
+      "line": 43,
+      "text": "   if(cell.cap==='ON'&&cell.regime==='all_allow'&&cell.stage===3&&cell.comfort===1&&cell.pairClass==='F'&&r.private_baseline.card_ids<25)summary.mandatory_baseline_failures.push({ordinal:row.ordinal,required_private:25,actual:r.private_baseline.card_ids});"
+    },
+    {
+      "line": 44,
+      "text": "  }else if(section==='c2-trajectory'){"
+    },
+    {
+      "line": 45,
+      "text": "   validatePreflightRaw(r,cell);if(r.status==='SAFE_REFUSAL'){summary.refusals.push({ordinal:row.ordinal,cell,error_code:r.error_code,prefix_available:false});if(cell.profile==='neutral_C0_F'&&cell.rounds===20)summary.mandatory_baseline_failures.push({ordinal:row.ordinal,required_neutral:20});}"
+    },
+    {
+      "line": 46,
+      "text": "   if(cell.profile==='all_X')assert.equal(r.status,'SAFE_REFUSAL');"
+    },
+    {
+      "line": 47,
+      "text": "  }else{"
+    },
+    {
+      "line": 48,
+      "text": "   validatePreflightRaw(r.first,cell);summary.canary_dispositions.push({ordinal:row.ordinal,cell,cross_session_mode:typeof r.cross_session_mode==='string'?r.cross_session_mode:r.cross_session_mode.status,targeted_change:r.targeted_change?.status??r.targeted_change,public_planner_independence:r.public_planner_independence??'PRECONDITION_NOT_ESTABLISHED'});"
+    },
+    {
+      "line": 55,
+      "text": "export async function reduceM3(section,manifest,env){"
+    },
+    {
+      "line": 56,
+      "text": " function* validated(){let ordinal=0;for(const row of records(manifest)){assert.equal(row.ordinal,ordinal++);assertBoundDescriptor(section,row);if(section==='m3-gf')yield row.result;else yield verifyModelRaw(row.result,env);}assert.equal(ordinal,counts[section]);}"
+    },
+    {
+      "line": 57,
+      "text": " if(section==='m3-invariants')return invariantsSection(validated());"
+    },
+    {
+      "line": 58,
+      "text": " if(section==='m3-gf')return reduceGf(validated());"
+    },
+    {
+      "line": 59,
+      "text": " if(section==='m3-fairness'){"
+    },
+    {
+      "line": 60,
+      "text": "  const cells=[];let group=[];for(const r of validated()){group.push({descriptor:r.descriptor,status:r.status,requested_rounds:r.requested_rounds,selected_rounds:r.selected_rounds,completed_rounds:r.completed_rounds,counts:r.counts,raw_rounds:r.raw_rounds});if(group.length===2000){cells.push({cell:group[0].descriptor,result:fairnessCell(group)});group=[];}}"
+    },
+    {
+      "line": 61,
+      "text": "  assert.equal(group.length,0);assert.equal(cells.length,42);return {status:cells.every(c=>c.result.status==='PASS_PURE_DOMAIN_FAIRNESS_CELL_NOT_STAGE')?'PASS_PURE_FAIRNESS_ONLY_NOT_STAGE':'NOT_ACCEPTED',cells};"
+    },
+    {
+      "line": 62,
+      "text": " }"
+    },
+    {
+      "line": 63,
+      "text": " const names=JSON.parse(fs.readFileSync(path.join(here,'m3/feature-dictionary.json'))).names,cells=[];let group=[];"
+    },
+    {
+      "line": 64,
+      "text": " for(const r of validated()){group.push(compactInference(r,names));if(group.length===1000){cells.push({cell:group[0].descriptor,result:evaluateInference(group,names)});group=[];}}"
+    },
+    {
+      "line": 65,
+      "text": " assert.equal(group.length,0);assert.equal(cells.length,126);const pooled=[];"
+    },
+    {
+      "line": 66,
+      "text": " for(const [index,comparison]of ['FG','FM','GM'].entries()){"
+    },
+    {
+      "line": 67,
+      "text": "  const start=index*42000,end=start+42000,inputs=manifest.inputs.filter(r=>r.range.start<end&&r.range.end>start),rows=[];"
+    },
+    {
+      "line": 68,
+      "text": "  // Each input is reverified in full. Only this comparison's raw feature vectors"
+    },
+    {
+      "line": 69,
+      "text": "  // remain resident; a new pooled model is trained, never pooled cell scores."
+    },
+    {
+      "line": 70,
+      "text": "  for(const row of records({...manifest,inputs})){assertBoundDescriptor(section,row);if(row.ordinal>=start&&row.ordinal<end){assert.equal(row.result.descriptor.comparison,comparison);rows.push(compactInference(row.result,names));}}"
+    },
+    {
+      "line": 71,
+      "text": "  pooled.push({comparison,result:evaluateInference(rows,names,{pooled:true})});"
+    },
+    {
+      "line": 72,
+      "text": " }"
+    },
+    {
+      "line": 73,
+      "text": " return {status:[...cells,...pooled].every(c=>c.result.status==='PASS_DOMAIN_MODEL_LDA_ONLY_NOT_WIRE_OR_STAGE')?'PASS_DOMAIN_INFERENCE_ONLY_NOT_WIRE_OR_STAGE':'NOT_ACCEPTED',cells,pooled};"
+    },
+    {
+      "line": 74,
+      "text": "}"
+    },
+    {
+      "line": 75,
+      "text": "export async function main(args){"
+    }
+  ],
+  ".artifacts/p05-full-original-lanes03.mjs": [
+    {
+      "line": 12,
+      "text": "export function strictSectionRefusal(section,summary){"
+    },
+    {
+      "line": 13,
+      "text": " assert(Number.isSafeInteger(summary.typed_refusals)&&summary.typed_refusals>=0&&summary.typed_refusals<=summary.completed);"
+    },
+    {
+      "line": 14,
+      "text": " return ['m3-inference','m3-fairness'].includes(section)&&summary.typed_refusals>0;"
+    },
+    {
+      "line": 15,
+      "text": "}"
+    },
+    {
+      "line": 16,
+      "text": "export function validatePlan(plan){"
+    },
+    {
+      "line": 17,
+      "text": " assert.equal(plan.status,'PREASSIGNED_ORIGINAL_RANGES_PENDING_ROOT_ACTIVATION');assert.equal(plan.lanes,8);assert.equal(plan.jobs.length,2609);"
+    },
+    {
+      "line": 18,
+      "text": " assert.deepEqual(plan.counts,{'c2-static':47040,'c2-trajectory':37072,'c2-canary':336,'m3-invariants':70000,'m3-fairness':84000,'m3-gf':1000000,'m3-inference':126000});"
+    },
+    {
+      "line": 19,
+      "text": " assert.deepEqual(plan.chunks,{'c2-static':5000,'c2-trajectory':100,'c2-canary':100,'m3-invariants':100,'m3-fairness':500,'m3-gf':10000,'m3-inference':100});"
+    },
+    {
+      "line": 20,
+      "text": " assert.equal(plan.prefixes.length,7);assert.deepEqual(plan.prefixes.map(p=>p.section),Object.keys(plan.counts));"
+    },
+    {
+      "line": 90,
+      "text": "  child.on('close',(code,signal)=>{try{for(const stream of ['stdout','stderr'])fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.'+stream+'.txt'),Buffer.concat(log[stream]),{flag:'wx'});"
+    },
+    {
+      "line": 91,
+      "text": "   let report=null;const reportFile=path.join(plan.output_parent,job.owner,'host-report.json');try{report=JSON.parse(fs.readFileSync(reportFile));}catch{/* exact missing report is failure */}"
+    },
+    {
+      "line": 92,
+      "text": "   const executionOk=code===0&&!signal&&!overflow&&!record.spawn_error&&report?.status==='RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE'&&report.cleanup==='COMPLETE'&&report.export_verified===true&&report.writer_stopped===true&&report.producer_unchanged===true&&report.owner===job.owner&&JSON.stringify(report.range)===JSON.stringify(job.range);"
+    },
+    {
+      "line": 93,
+      "text": "   let strictRefusal=false,typedRefusals=null;"
+    },
+    {
+      "line": 94,
+      "text": "   if(executionOk){const exportRoot=path.join(plan.output_parent,job.owner,'export'),verified=JSON.parse(fs.readFileSync(path.join(plan.output_parent,job.owner,'export-pins.json'))),raw=fs.readFileSync(path.join(exportRoot,'summary.json'));assert.equal(sha(raw),verified.files.find(f=>f.path==='summary.json')?.sha256);const summary=JSON.parse(raw);assert.deepEqual(summary,verified.summary);assert.equal(summary.owner,job.owner);assert.deepEqual(summary.range,job.range);strictRefusal=strictSectionRefusal(job.range.section,summary);typedRefusals=summary.typed_refusals;}"
+    },
+    {
+      "line": 95,
+      "text": "   const ok=executionOk&&!strictRefusal;"
+    },
+    {
+      "line": 96,
+      "text": "   const done={...record,finished_at:new Date().toISOString(),ok,native_range_execution_ok:executionOk,strict_section_refusal_blocks_acceptance:strictRefusal,typed_refusals:typedRefusals,exit_code:code,signal,log_bytes:length,overflow,host_report:reportFile,host_report_sha256:fs.existsSync(reportFile)?sha(fs.readFileSync(reportFile)):null};fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.json'),bytes(done),{flag:'wx'});if(!ok)fail(done);resolve(done);"
+    },
+    {
+      "line": 97,
+      "text": "  }catch(error){const done={...record,ok:false,exit_code:code,signal,code:error.code??'HOST_RECEIPT_COLLECTION_FAILED'};fail(done);resolve(done);}"
+    }
+  ],
+  "packages/relationship-engine/src/engine.ts": [
+    {
+      "line": 11,
+      "text": "export function progressionStage(round:number,total:number) {"
+    },
+    {
+      "line": 12,
+      "text": "  assertEngine(Number.isInteger(total)&&total>=1&&total<=100&&Number.isInteger(round)&&round>=1&&round<=total,'ROUND_INDEX_INVALID');"
+    },
+    {
+      "line": 13,
+      "text": "  return Math.min(4,1+Math.floor(4*(round-1)/Math.max(1,total-1)));"
+    },
+    {
+      "line": 36,
+      "text": "export function eligible(card:Card,snapshot:Snapshot,actors:readonly string[],stage:number) {"
+    },
+    {
+      "line": 37,
+      "text": "  if(card.mode!==snapshot.mode||!card.meeting_contexts.includes(snapshot.context)||card.min_progression_stage>stage||!card.required_capabilities.every(c=>snapshot.capabilities.includes(c))) return false;"
+    },
+    {
+      "line": 38,
+      "text": "  const pair=card.interaction.startsWith('pair_'),privatePair=card.interaction==='pair_private';"
+    },
+    {
+      "line": 39,
+      "text": "  if(new Set(actors).size!==actors.length||actors.some(id=>!snapshot.players.some(p=>p.id===id))||actors.length!==(pair?2:card.interaction==='solo'?1:0)) return false;"
+    },
+    {
+      "line": 40,
+      "text": "  const affected=card.interaction==='group'?snapshot.players:snapshot.players.filter(p=>actors.includes(p.id));"
+    },
+    {
+      "line": 41,
+      "text": "  if(!comfortAllows(card,affected)) return false;"
+    },
+    {
+      "line": 42,
+      "text": "  if(snapshot.context==='online'&&(card.requires_physical_contact||card.requires_going_away)) return false;"
+    },
+    {
+      "line": 43,
+      "text": "  if(card.requires_physical_contact&&(card.min_comfort!==4||card.consent!=='bilateral'||stage<3)) return false;"
+    },
+    {
+      "line": 44,
+      "text": "  if(privatePair&&(stage<3||card.min_comfort<1||card.consent!=='bilateral'||(snapshot.context==='online'&&!snapshot.capabilities.includes('private_text_chat')))) return false;"
+    },
+    {
+      "line": 45,
+      "text": "  // Common-support public repertoire avoids a public card-ID decoder of private class/comfort."
+    },
+    {
+      "line": 46,
+      "text": "  if(!privatePair&&(card.min_comfort!==0||!['none','acquaintance'].includes(card.relationship_scope)||card.requires_physical_contact||card.requires_going_away)) return false;"
+    },
+    {
+      "line": 47,
+      "text": "  if(pair) {"
+    },
+    {
+      "line": 48,
+      "text": "    const a=snapshot.players.find(p=>p.id===actors[0])!,b=snapshot.players.find(p=>p.id===actors[1])!;"
+    },
+    {
+      "line": 49,
+      "text": "    const {pairClass}=resolvePair(a,b);if(pairClass==='X') return false;"
+    },
+    {
+      "line": 50,
+      "text": "    const minimum=policy.relationship_scope_min_class[card.relationship_scope] as PairClass;"
+    },
+    {
+      "line": 51,
+      "text": "    if(classes.indexOf(pairClass)<classes.indexOf(minimum)) return false;"
+    },
+    {
+      "line": 52,
+      "text": "  } else if(card.relationship_scope!=='none') return false;"
+    }
+  ],
+  "packages/relationship-engine/src/topic-planner.ts": [
+    {
+      "line": 206,
+      "text": "  prior: Readonly<{public_history: readonly TopicHistoryRecord[]; private_history: readonly TopicHistoryRecord[]}> = {public_history:[],private_history:[]}): TopicPlannerHistory {"
+    },
+    {
+      "line": 207,
+      "text": "  ownKeys(prior,['public_history','private_history']);"
+    },
+    {
+      "line": 208,
+      "text": "  assertEngine([...prior.public_history,...prior.private_history].every(row => row.session_id !== snapshot.baseline.session_id), 'TOPIC_HISTORY_SESSION_REUSE');"
+    },
+    {
+      "line": 209,
+      "text": "  return immutableTopicHistory({schema:2,provenance:'RUNTIME',room_id:snapshot.baseline.room_id,session_id:snapshot.baseline.session_id,pins_digest:snapshot.pins_digest,"
+    },
+    {
+      "line": 210,
+      "text": "    revision:0,safety_revision:0,safety_digest:null,rounds:[],public_history:prior.public_history,private_history:prior.private_history},snapshot,pack,map);"
+    },
+    {
+      "line": 232,
+      "text": "function options(snapshot: TopicSnapshot, pack: FrozenPack, map: FrozenTopicMap, stage: number): Option[] {"
+    },
+    {
+      "line": 233,
+      "text": "  let stages=optionCache.get(snapshot);if(!stages){stages=new Map();optionCache.set(snapshot,stages);}const cached=stages.get(stage);if(cached)return cached;"
+    },
+    {
+      "line": 234,
+      "text": "  const s=snapshot.baseline, result: Option[]=[], modeCards=pack.cards.filter(c=>c.mode===s.mode&&map.allowed(c));"
+    },
+    {
+      "line": 235,
+      "text": "  const add=(kind:Interaction,actors:string[],pairClass:PairClass='X')=>{"
+    },
+    {
+      "line": 236,
+      "text": "    // V2 private delivery always needs its frozen transport capability in either context."
+    },
+    {
+      "line": 237,
+      "text": "    if(kind==='pair_private'&&!s.capabilities.includes('private_text_chat'))return;"
+    },
+    {
+      "line": 238,
+      "text": "    const cards=modeCards.filter(c=>c.interaction===kind&&eligible(c,s,actors,stage));"
+    },
+    {
+      "line": 239,
+      "text": "    if(kind==='pair_private'&&cards.filter(c=>c.relationship_scope==='friend_or_more'&&c.min_comfort===1&&!c.requires_physical_contact&&!c.requires_going_away).length<Math.ceil(.25*s.total_rounds))return;"
+    },
+    {
+      "line": 240,
+      "text": "    if(cards.length)result.push({kind,actors,cards,pairClass});"
+    },
+    {
+      "line": 241,
+      "text": "  };"
+    },
+    {
+      "line": 242,
+      "text": "  add('group',[]); for(const p of s.players)add('solo',[p.id]);"
+    },
+    {
+      "line": 243,
+      "text": "  for(let a=0;a<s.players.length;a++)for(let b=a+1;b<s.players.length;b++){"
+    },
+    {
+      "line": 244,
+      "text": "    const p=s.players[a]!,q=s.players[b]!,{pairClass,initiator}=resolvePair(p,q);if(pairClass==='X')continue;"
+    },
+    {
+      "line": 245,
+      "text": "    add('pair_public',[p.id,q.id],pairClass);add('pair_private',initiator===q.id?[q.id,p.id]:[p.id,q.id],pairClass);"
+    },
+    {
+      "line": 246,
+      "text": "  }"
+    },
+    {
+      "line": 247,
+      "text": "  freeze(result);stages.set(stage,result);return result;"
+    },
+    {
+      "line": 248,
+      "text": "}"
+    },
+    {
+      "line": 249,
+      "text": "function blocked(card:Card, rows:readonly TopicHistoryRecord[], map:FrozenTopicMap) {"
+    },
+    {
+      "line": 250,
+      "text": "  const families=map.entry(card.id).semantic_family_ids;"
+    },
+    {
+      "line": 251,
+      "text": "  return rows.some(row=>row.card_id===card.id||map.entry(row.card_id).semantic_family_ids.some(id=>families.includes(id)));"
+    },
+    {
+      "line": 293,
+      "text": "export function selectNextTopicRound(snapshot:TopicSnapshot,history:TopicPlannerHistory,pack:FrozenPack,map:FrozenTopicMap,state:TopicSafetyState):TopicPlanningResult {"
+    },
+    {
+      "line": 294,
+      "text": "  assertSnapshot(snapshot,pack,map);validateCurrentHistory(history,snapshot,pack,map);safety(state,snapshot,map);assertSafetyProgress(history,state);"
+    },
+    {
+      "line": 295,
+      "text": "  const s=snapshot.baseline,index=history.rounds.length+1;assertEngine(index<=s.total_rounds,'TOPIC_SESSION_COMPLETE');"
+    },
+    {
+      "line": 296,
+      "text": "  const stage=progressionStage(index,s.total_rounds),base=options(snapshot,pack,map,stage),privates=base.filter(o=>o.kind==='pair_private');"
+    },
+    {
+      "line": 297,
+      "text": "  const publicRows=history.public_history;"
+    },
+    {
+      "line": 298,
+      "text": "  const rng=new Random(s.seed,{domain:'public-schedule',room_id:s.room_id,session_id:s.session_id,index,public_history:publicRows,pins:map.pins});"
+    },
+    {
+      "line": 299,
+      "text": "  const opportunity=privates.length>0&&history.rounds.filter(r=>r.interaction==='pair_private').length<Math.ceil(.25*s.total_rounds)"
+    },
+    {
+      "line": 300,
+      "text": "    &&rng.next()<(stage<3?0:stage===3?.22:.4);"
+    },
+    {
+      "line": 301,
+      "text": "  const roundId=rng.uuid();let round:TopicRound;"
+    },
+    {
+      "line": 302,
+      "text": "  if(opportunity){"
+    },
+    {
+      "line": 303,
+      "text": "    const privateRng=new Random(s.seed,{domain:'private-option',room_id:s.room_id,session_id:s.session_id,index,round_id:roundId,pins:map.pins,"
+    },
+    {
+      "line": 304,
+      "text": "      private_history:history.private_history,public_history:publicRows});"
+    },
+    {
+      "line": 305,
+      "text": "    let pool=privates;"
+    },
+    {
+      "line": 306,
+      "text": "    const previous=history.rounds.findLast(round=>round.interaction==='pair_private')??history.private_history.at(-1);"
+    },
+    {
+      "line": 307,
+      "text": "    if(previous&&pool.some(o=>pairKey(o.actors)!==pairKey(previous.actors)"
+    },
+    {
+      "line": 308,
+      "text": "      &&effectivePrivateCards(history,o.actors,o.cards,map,state).length>0))"
+    },
+    {
+      "line": 309,
+      "text": "      pool=pool.filter(o=>pairKey(o.actors)!==pairKey(previous.actors));"
+    },
+    {
+      "line": 310,
+      "text": "    const selected=pickOption(privateRng,pool,[...publicRows,...history.private_history]);"
+    },
+    {
+      "line": 311,
+      "text": "    round={schema:2,room_id:s.room_id,session_id:s.session_id,pins_digest:snapshot.pins_digest,round_id:roundId,round_index:index,stage,mode:s.mode,interaction:'pair_private',actors:[...selected.actors],"
+    },
+    {
+      "line": 312,
+      "text": "      primary_member_id:selected.actors[0]!,card:null,requires_action_consent:true,disclosure:'selected',"
+    },
+    {
+      "line": 313,
+      "text": "      baseline_private_max_intensity:Math.max(...privates.flatMap(o=>o.cards.map(c=>c.min_comfort))),attempts:[]};"
+    },
+    {
+      "line": 314,
+      "text": "    const attempt=candidate(snapshot,history,round,pack,map,state,1,0);round={...round,card:attempt.card,attempts:[attempt]};"
+    },
+    {
+      "line": 315,
+      "text": "  }else{"
+    },
+    {
+      "line": 316,
+      "text": "    let pool=base.filter(o=>o.kind!=='pair_private').map(o=>({...o,cards:o.cards.filter(c=>!blocked(c,publicRows,map))})).filter(o=>o.cards.length);"
+    },
+    {
+      "line": 317,
+      "text": "    const intensity=previousPublicIntensity(snapshot,history,pack,map);"
+    },
+    {
+      "line": 318,
+      "text": "    if(intensity>=2&&rng.next()<.35){const softer=pool.map(o=>({...o,cards:o.cards.filter(c=>c.min_comfort<intensity)})).filter(o=>o.cards.length);if(softer.length)pool=softer;}"
+    },
+    {
+      "line": 319,
+      "text": "    assertEngine(pool.length>0,'TOPIC_SAFE_POOL_EXHAUSTED');"
+    },
+    {
+      "line": 320,
+      "text": "    const pairs=pool.filter(o=>o.kind==='pair_public'),general=pool.filter(o=>o.kind==='group'||o.kind==='solo');"
+    }
+  ],
+  ".artifacts/p05-privacy-matched-operational01/consumer.mjs": [
+    {
+      "line": 9,
+      "text": " assert(Number.isSafeInteger(ordinal)&&ordinal>=0&&ordinal<count);"
+    },
+    {
+      "line": 10,
+      "text": " const cell=Math.floor(ordinal/2),rounds=ordinal%2?100:20;"
+    },
+    {
+      "line": 11,
+      "text": " return {section:'PRIVACY_MATCHED_STRUCTURAL_CANDIDATE_01',ordinal,cell,size:2+Math.floor(cell/6),mode:['questions','truth_or_dare','yes_but'][Math.floor(cell/2)%3],context:['online','in_person'][cell%2],rounds,kind:'exchangeable',pairClass:'F',seed:`venus:P05:privacy:matched01:${cell}:R${rounds}`};"
+    },
+    {
+      "line": 12,
+      "text": "}"
+    },
+    {
+      "line": 13,
+      "text": "export function classifyPair(base,variant,{changed,effective}){"
+    },
+    {
+      "line": 14,
+      "text": " const sequence=r=>r.raw_rounds.map(x=>({round_id:x.round_id,round_index:x.round_index,stage:x.stage,kind:x.interaction==='pair_private'?'generic':x.interaction,...(x.interaction==='pair_private'?{}:{card:x.card,actors:x.actors,primary_member_id:x.primary_member_id})}));"
+    },
+    {
+      "line": 15,
+      "text": " const sequence_equal=isDeepStrictEqual(sequence(base),sequence(variant));"
+    },
+    {
+      "line": 16,
+      "text": " const payloads=r=>r.public_frames.map(x=>({modeled_tick:x.modeled_tick,payload:x.payload}));"
+    },
+    {
+      "line": 17,
+      "text": " const public_trace_equal=isDeepStrictEqual(payloads(base),payloads(variant));"
+    },
+    {
+      "line": 18,
+      "text": " const positive_private=base.counts.private_playable>0&&variant.counts.private_playable>0;"
+    },
+    {
+      "line": 19,
+      "text": " const full_common=changed&&effective&&positive_private&&base.status==='COMPLETE_DOMAIN_MODEL'&&variant.status==='COMPLETE_DOMAIN_MODEL'&&base.counts.private_safe_empty===0&&variant.counts.private_safe_empty===0;"
+    },
+    {
+      "line": 31,
+      "text": " const priorDescriptor={...descriptor,seed:descriptor.seed+':prior',rounds:20};"
+    },
+    {
+      "line": 32,
+      "text": " const priorEnv={...env,makeSnapshot:d=>{const native=env.makeSnapshot(d);return p.immutableTopicSnapshot({...native,baseline:e.immutableSnapshot({...native.baseline,session_id:'33333333-3333-4333-8333-333333333333'},pack)},pack,map);}};"
+    },
+    {
+      "line": 33,
+      "text": " const prior=capture(priorEnv,priorDescriptor),priorPublic=prior.history.public_history,priorPrivate=prior.history.private_history;"
+    },
+    {
+      "line": 34,
+      "text": " const commonPrior={public_history:priorPublic,private_history:[]};"
+    },
+    {
+      "line": 35,
+      "text": " const safety={room_id:snapshot.baseline.room_id,revision:1,members:snapshot.baseline.players.map(player=>({member_id:player.id,revision:1,allow_topic_ids:topics,excluded_topic_ids:[]}))};"
+    },
+    {
+      "line": 36,
+      "text": " const topic=topics[descriptor.cell%topics.length];"
+    },
+    {
+      "line": 37,
+      "text": " // Native supported preference form: exclusion also removes it from allow;"
+    },
+    {
+      "line": 38,
+      "text": " // conversation creation rejects overlapping allow/exclude arrays."
+    },
+    {
+      "line": 39,
+      "text": " const excluded={...safety,members:safety.members.map((m,i)=>({...m,allow_topic_ids:i===0?m.allow_topic_ids.filter(t=>t!==topic):m.allow_topic_ids,excluded_topic_ids:i===0?[topic]:[]}))};"
+    },
+    {
+      "line": 40,
+      "text": " const base=capture(env,descriptor,{initialSafety:safety,prior:commonPrior});"
+    },
+    {
+      "line": 41,
+      "text": " const exclusion=capture(env,descriptor,{initialSafety:excluded,prior:commonPrior});"
+    },
+    {
+      "line": 42,
+      "text": " const semantic=capture(env,descriptor,{initialSafety:safety,prior:{public_history:priorPublic,private_history:priorPrivate}});"
+    },
+    {
+      "line": 43,
+      "text": " assert.equal(e.digest(env.makeSnapshot(descriptor)),publicIdentity,'same native public snapshot');"
+    },
+    {
+      "line": 44,
+      "text": " const affected=pack.cards.filter(card=>card.mode===descriptor.mode&&card.interaction==='pair_private'&&map.allowed(card)&&map.entry(card.id).topic_ids.includes(topic)&&snapshot.baseline.players.some(a=>snapshot.baseline.players.some(b=>a.id!==b.id&&e.eligible(card,snapshot.baseline,[a.id,b.id],4)))).map(c=>c.id);"
+    },
+    {
+      "line": 45,
+      "text": " return {descriptor,model:'DOMAIN_MODEL_NOT_ACTUAL_AUTH',actual_transport:false,approved_method:false,public_snapshot_sha256:publicIdentity,target_exclusion_topic:topic,excluded_member_ordinal:0,affected_eligible_private_card_ids:affected,prior_status:prior.status,prior_private_family_ids:[...new Set(priorPrivate.flatMap(row=>map.entry(row.card_id).semantic_family_ids))].sort(),"
+    },
+    {
+      "line": 46,
+      "text": "  comparisons:{exclusion:classifyPair(base,exclusion,{changed:true,effective:affected.length>0}),semantic:classifyPair(base,semantic,{changed:priorPrivate.length>0,effective:priorPrivate.length>0})},"
+    },
+    {
+      "line": 47,
+      "text": "  raw:{prior,base,exclusion,semantic},missing_oracles:['Independent before-results structural theorem and method acceptance','Final source/image equivalence and existing bounded rootACK before execution','Actual HTTP/WS final delivery, observation scheduling, timing and coalescing parity'],full_P05_PASS:false};"
+    }
+  ],
+  ".artifacts/p05-privacy-matched-operational01/matched-model.mjs": [
+    {
+      "line": 9,
+      "text": "export function modelSession(env,descriptor,{onFrame=()=>{},onRound=()=>{},initialSafety=null,prior={public_history:[],private_history:[]}}={}){"
+    },
+    {
+      "line": 10,
+      "text": " const {engine:e,pack,map,planner:p,renderer}=env,snapshot=env.makeSnapshot(descriptor),s=snapshot.baseline;"
+    },
+    {
+      "line": 11,
+      "text": " const safety=initialSafety??{room_id:s.room_id,revision:1,members:s.players.map(player=>({member_id:player.id,revision:1,allow_topic_ids:map.topics.map(t=>t.topic_id),excluded_topic_ids:[]}))};"
+    },
+    {
+      "line": 12,
+      "text": " let history=p.createTopicHistory(snapshot,pack,map,prior),completed=0,tick=0,gameRev=1,current=null,selected=0;"
+    }
+  ]
+}

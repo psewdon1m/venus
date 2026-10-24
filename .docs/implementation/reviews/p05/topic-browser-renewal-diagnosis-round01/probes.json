@@ -1,0 +1,41 @@
+{
+  "scope": "EXACT_INCLUDED_CACHE_AND_UNMODIFIED_TSX_DETERMINISTIC_HOOK_API_SCHEDULER_NOT_NEW_BROWSER_RUN",
+  "rows": [
+    {
+      "id": "control_renewal_without_passive_expiry",
+      "status": "PASS",
+      "old_until": 5000,
+      "new_read_started": 4900,
+      "new_own_permission_until": 9900,
+      "received": 7000,
+      "remainedCurrent": true,
+      "accepted": true
+    },
+    {
+      "id": "passive_expiry_cancels_valid_same_scope_renewal",
+      "status": "PASS",
+      "old_until": 5000,
+      "new_read_started": 4900,
+      "new_own_permission_until": 9900,
+      "received": 7000,
+      "remainedCurrent": false,
+      "accepted": false
+    },
+    {
+      "id": "explicit_clear_still_must_cancel_preclear_read",
+      "status": "PASS"
+    },
+    {
+      "id": "actual_unmodified_TSX_passive_old_lease_expiry_skips_fresh_own_response_until_next_cycle",
+      "status": "PASS",
+      "observed": {
+        "before": true,
+        "requestPending": true,
+        "expiredPrivateHidden": true,
+        "freshOwnResponseIgnored": true,
+        "renewalPrompt": false,
+        "nextCyclePrompt": true
+      }
+    }
+  ]
+}

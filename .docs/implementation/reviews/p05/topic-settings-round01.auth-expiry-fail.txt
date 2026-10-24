@@ -1,0 +1,46 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ .docs/implementation/reviews/p05/topic-settings-round01.probes.test.ts (1 test | 1 failed) 12ms
+   × TOPICSET001: auth expiry before irreversible narrowing causes no durable mutation 11ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  .docs/implementation/reviews/p05/topic-settings-round01.probes.test.ts > TOPICSET001: auth expiry before irreversible narrowing causes no durable mutation
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 1 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      Object {
+        "exclude": Array [
+          "music",
+        ],
+        "expectedRevision": 0,
+        "operationId": "892e71bf-0ec4-46f1-aa54-3691ce7375be",
+        "ownerId": "2cd1c326-1397-44dd-a914-a73a70af0c72",
+        "roomId": "9bd7f0e2-d516-45e7-9e69-35724220079e",
+      },
+    ]
+
+
+Number of calls: 1
+
+ ❯ .docs/implementation/reviews/p05/topic-settings-round01.probes.test.ts:32:23
+     30| it('TOPICSET001: auth expiry before irreversible narrowing causes no d…
+     31|  const f=fixture();f.expireAtCount();await expect(f.exclude()).rejects…
+     32|  expect(f.narrow).not.toHaveBeenCalled();expect(f.excluded()).toEqual(…
+       |                       ^
+     33| });
+     34|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  19:25:49
+   Duration  220ms (transform 61%, import 21%, tests 13%, worker 5%)
+

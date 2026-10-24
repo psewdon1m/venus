@@ -1,0 +1,5 @@
+# METHOD15 — correlate rejected-response diagnostics
+
+AUTHOR_READY_METHOD_ONLY / independent review required / NOT_RUN. Corrects METHOD14-R01-001 from immutable independent review6cf87fd7. Both observed request UUID validity and response request UUID equality are checked before offer/error metadata projection. Missing, malformed or mismatched correlation sets an explicit unavailable/mismatch flag, records no domain code and throws. Status200 and successful receipt UUID/schema/revision remain mandatory. Browser bytes remain exact METHOD13; no click retry, timeout/seed/TTL/product change.
+
+30 finite fake-event controls PASS, including5 new non200 UUID negative cases; syntax2/2 and lint exit0. No actual HTTP/browser proof or explanation of prior409 is claimed. Existing source1274 is only the unchanged historical1813-file subset; parallel P04-r3 additions drift current whole-tree identity, recorded separately. Actual execution requires a new qualified runtime/image binding after Docker recovery. Inherited run.mjs is not an authorized entrypoint. Original FAILs, human content HOLD and P06 restriction persist.

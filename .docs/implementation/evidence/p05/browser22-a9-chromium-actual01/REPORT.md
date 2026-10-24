@@ -1,0 +1,3 @@
+# A9 Chromium actual METHOD22
+
+Actual16: {'PASS': 14, 'FAIL': 1, 'NOT_RUN': 1}; runner FAIL, cleanup PASS, source/producer unchanged True. Frozen source6562438b1850/image58d8c700, independent METHOD22be3615d5+operationalaaba3771/rootACK0d02901b. First14PASS, including exact hostabort13 and lateprivateepoch14.15FAIL permanentexclusion ownonly: backendpersisted exclusion/peerunchanged, own allowromance checkbox stillcheckeddisabled. Productsettingsrefresh correction inprogress,16NOT_RUN. Synthetic functional scope, not normal470 or fullstage. No oraclewaiver; layout actual remains blocked on full16PASS.

@@ -1,0 +1,65 @@
+ Container venus-p05-3c43ad5377a5-db-1  Running
+✔ P05-CHAT-01 actual bilateral invitation ACL, host and other pair/room exclusion (2474.48121ms)
+✔ P05-CHAT-02 ciphertext/AAD, no plaintext in SQL persistence, independent request idempotency (1032.893239ms)
+✔ P05-CHAT-03 actual request validation and persistent rate/volume bounds (1636.673214ms)
+✔ P05-CHAT-04 full buffer retains latest32 and bounds encrypted rows (1988.128563ms)
+✔ P05-CHAT lifecycle decline clears SQL transcript and old access (1464.977913ms)
+✔ P05-CHAT lifecycle skip clears SQL transcript and old access (1215.499353ms)
+✔ P05-CHAT lifecycle stop clears SQL transcript and old access (1144.693708ms)
+✔ P05-CHAT lifecycle finish clears SQL transcript and old access (1164.052697ms)
+✔ P05-CHAT lifecycle disconnect clears SQL transcript and old access (1382.067952ms)
+✔ P05-CHAT lifecycle leave clears SQL transcript and old access (1220.700288ms)
+✔ P05-CHAT lifecycle setup-withdrawal clears SQL transcript and old access (1213.627819ms)
+✔ P05-CHAT lifecycle close clears SQL transcript and old access (1375.025738ms)
+✔ P05-CHAT-CONTEXT in-person immutable snapshot never advertises online text transport (305.116655ms)
+✔ P05-CHAT-EXPIRY awaited SQL read + concurrent revoke respects final clock fence (1385.590721ms)
+✖ P05-CHAT-RESTORE cold restart and restored revoked rows do not recreate grants (1940.074318ms)
+✖ P05-CHAT-REVOKED-RESTORE same-boot rollback cannot resurrect withdrawn grant (1332.265944ms)
+✔ P05-CHAT-MIGRATION additive generation/hash checks fail closed (12.494123ms)
+✔ P05-QUIET-PUBLIC 8-member actual HTTP/WS zero/one/two acknowledgements and withdrawal (5480.270375ms)
+✔ P05-QUIET-PUBLIC decline after one acknowledgement never exposes selected actors or prompt (3577.004174ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 17
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 31525.103212
+
+✖ failing tests:
+
+test at tests/p05-chat/integration.mjs:248:1
+✖ P05-CHAT-RESTORE cold restart and restored revoked rows do not recreate grants (1940.074318ms)
+  AssertionError [ERR_ASSERTION]: {"offer_id":"fa181169-998f-4abd-98c0-e0e3a81a4899","session_id":"59afa183-d77f-4864-b51f-b6ba2849b7a6","round_id":"df4d9711-15e9-4599-bd8e-f89ce79b479c","state":"active","card_id":"Q-0113","card_revision":1,"actors":["0ea4d5de-474a-4fff-830a-24f7853b43c0","1e467c10-ebf0-4d16-a585-ab5c7308c23d"],"prompt":"SYNTHETIC RU Q-113. Neutral SYNTHETIC CHAT 0 and SYNTHETIC CHAT 1 test.","expires_at":"2026-10-19T14:15:26.470Z","proposal_revision":1}
+      at denied (file:///app/tests/p05-chat/integration.mjs:83:80)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///app/tests/p05-chat/integration.mjs:264:5
+      at async record (file:///app/tests/p05-chat/integration.mjs:23:51)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/p05-chat/integration.mjs:271:1
+✖ P05-CHAT-REVOKED-RESTORE same-boot rollback cannot resurrect withdrawn grant (1332.265944ms)
+  AssertionError [ERR_ASSERTION]: {"offer_id":"ebb34970-55d0-4a24-8190-fc7499690daf","session_id":"f6ac4cbb-0f89-429d-a1f3-d427d1859115","round_id":"f336c702-93ba-49a7-a95f-f991f7171fa8","state":"active","card_id":"Q-0148","card_revision":1,"actors":["970e3d04-b678-4cd8-a079-2ffec158c625","edc19270-c653-4426-b6e7-b23d64293112"],"prompt":"SYNTHETIC TR Q-148. Neutral SYNTHETIC CHAT 1 and SYNTHETIC CHAT 0 test.","expires_at":"2026-10-19T14:15:28.624Z","proposal_revision":1}
+      at denied (file:///app/tests/p05-chat/integration.mjs:83:80)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///app/tests/p05-chat/integration.mjs:278:5
+      at async record (file:///app/tests/p05-chat/integration.mjs:23:51)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+

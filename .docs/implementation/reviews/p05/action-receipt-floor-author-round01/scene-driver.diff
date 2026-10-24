@@ -1,0 +1,33 @@
+--- diag04/scene-driver.mjs
++++ staged/scene-driver.mjs
+@@ -86,7 +86,7 @@
+  const match=path?.match(/\/game\/([^/]+)\/round\/([^/]+)\//),expected=match?{session:match[1],round:match[2]}:{},wanted=expectedPrivateScope(a,expected),prior=a.privateReady?.get(control),intent=a.privateIntents?.get(control);
+  a.privateReady?.delete(control);
+  const samePrior=prior&&prior.expected.session===wanted.session&&prior.expected.round===wanted.round;
+- return normalPrivateReady(a,control,{deadline:samePrior?prior.phase_deadline_monotonic_ms:performance.now()+8000,expected:wanted,intendedValue:intent?.scope.session===wanted.session&&intent?.scope.round===wanted.round?intent.field:null});
++ return normalPrivateReady(a,control,{deadline:samePrior?prior.phase_deadline_monotonic_ms:performance.now()+8000,expected:samePrior?{...wanted,minRev:Math.max(wanted.minRev,prior.expected.rev)}:wanted,intendedValue:intent?.scope.session===wanted.session&&intent?.scope.round===wanted.round?intent.field:null});
+ }
+ 
+ function assertPrivateTicket(a,id,ticket){
+@@ -106,8 +106,8 @@
+  }
+ }
+ 
+-async function fillPrivate(a,id,value,submit){
+- const deadline=performance.now()+8000,ticket=await normalPrivateReady(a,id,{deadline});await a.page.getByTestId(id).fill(value);assertPrivateTicket(a,id,ticket);await expect(a.page.getByTestId(id)).toHaveValue(value);a.privateIntents??=new Map();a.privateIntents.set(submit,{scope:ticket.expected,field:{control:id,value}});a.privateReady.set(submit,Object.defineProperties({...ticket},{expected:{value:ticket.expected},control:{value:submit}}));
++async function fillPrivate(a,id,value,submit,expected={}){
++ const deadline=performance.now()+8000,ticket=await normalPrivateReady(a,id,{deadline,expected});await a.page.getByTestId(id).fill(value);assertPrivateTicket(a,id,ticket);await expect(a.page.getByTestId(id)).toHaveValue(value);a.privateIntents??=new Map();a.privateIntents.set(submit,{scope:ticket.expected,field:{control:id,value}});a.privateReady.set(submit,Object.defineProperties({...ticket},{expected:{value:ticket.expected},control:{value:submit}}));
+ }
+ 
+ function recordMutation(event){const rows=report.mutation_dispatches??=[];assert(rows.length<2048,'METHOD12_MUTATION_RECORD_CAP');rows.push({locale:event.locale??null,...event});}
+@@ -252,8 +252,8 @@
+  if(scene==='public_questions'){if(f.plan.interaction==='pair_public')await invite(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);await expect(primary.page.getByTestId('game-prompt')).toBeVisible();return {scene,actors,roles:[{role:'primary',actor:primary},{role:'other',actor:actors.find(a=>a!==primary)}],fixture:f};}
+  const pair=await invite(f,{side:scene!=='truth_dare_choice'}),secondary=pair.find(a=>a!==primary),observer=actors.find(a=>!pair.includes(a));assert(secondary&&observer);
+  if(scene==='private_active'){
+-  await acceptTopics(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);
+-  await fillPrivate(primary,'advice-input','SYNTHETIC LAYOUT ADVICE','advice-offer');let receipt=await adviceMutation(primary,'advice-offer',f,'offer_advice');
++  await acceptTopics(f);const actionReady=f.plan.requires_action_consent?await acceptActionsUi(f):null;
++  await fillPrivate(primary,'advice-input','SYNTHETIC LAYOUT ADVICE','advice-offer',actionReady?{session:f.session,round:f.plan.round_id,minRev:actionReady.minRev}:{});let receipt=await adviceMutation(primary,'advice-offer',f,'offer_advice');
+   await adviceUiReady([secondary],f,receipt.game_rev,'advice-accept','layout_pending');const pending=await receivedPendingAdvice(secondary,f);
+   receipt=await adviceMutation(secondary,'advice-accept',f,'respond_advice',{advice_id:pending.advice_id,proposal_revision:pending.revision,epoch:pending.epoch,decision:'accept'});
+   await adviceUiReady(pair,f,receipt.game_rev,'advice-text','layout_accepted');

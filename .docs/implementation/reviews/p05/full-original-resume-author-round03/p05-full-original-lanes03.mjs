@@ -1,0 +1,104 @@
+/** One-off fixed preregistered lanes; invokes unchanged accepted host03. No retries/resampling. */
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {spawn} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {fileURLToPath} from 'node:url';
+import {producerPins,validateAuthority,verifyRangeExport} from './p05-fixedrange-host03.mjs';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const bytes=o=>Buffer.from(JSON.stringify(o,null,2)+'\n');
+export function plannedAck(base,job){return {...base,status:'ROOT_RUN_ACK',no_actual_approval:false,owner:job.owner,range:job.range};}
+export function strictSectionRefusal(section,summary){
+ assert(Number.isSafeInteger(summary.typed_refusals)&&summary.typed_refusals>=0&&summary.typed_refusals<=summary.completed);
+ return ['m3-inference','m3-fairness'].includes(section)&&summary.typed_refusals>0;
+}
+export function validatePlan(plan){
+ assert.equal(plan.status,'PREASSIGNED_ORIGINAL_RANGES_PENDING_ROOT_ACTIVATION');assert.equal(plan.lanes,8);assert.equal(plan.jobs.length,2609);
+ assert.deepEqual(plan.counts,{'c2-static':47040,'c2-trajectory':37072,'c2-canary':336,'m3-invariants':70000,'m3-fairness':84000,'m3-gf':1000000,'m3-inference':126000});
+ assert.deepEqual(plan.chunks,{'c2-static':5000,'c2-trajectory':100,'c2-canary':100,'m3-invariants':100,'m3-fairness':500,'m3-gf':10000,'m3-inference':100});
+ assert.equal(plan.prefixes.length,7);assert.deepEqual(plan.prefixes.map(p=>p.section),Object.keys(plan.counts));
+ for(const prefix of plan.prefixes){const count=prefix.section==='m3-gf'?1000:100;assert.deepEqual(prefix.range,{section:prefix.section,start:0,count,end:count});}
+ const sections=Object.keys(plan.counts),owners=new Set(),expected=[],sectionNext=Object.fromEntries(sections.map(s=>[s,s==='m3-gf'?1000:100]));
+ for(const prefix of plan.prefixes){assert(!owners.has(prefix.owner));owners.add(prefix.owner);}
+ for(const [i,job]of plan.jobs.entries()){
+  assert.equal(job.ordinal,i);assert.equal(job.lane,i%8);assert.match(job.owner,/^[a-f0-9]{32}$/);assert(!owners.has(job.owner));owners.add(job.owner);
+  const r=job.range;assert(sections.includes(r.section));assert.equal(r.start,sectionNext[r.section]);assert.equal(r.count,Math.min(plan.chunks[r.section],plan.counts[r.section]-r.start));assert(r.count>0);assert.equal(r.end,r.start+r.count);sectionNext[r.section]=r.end;
+  assert.equal(job.ack_sha256,sha(bytes(plannedAck(plan.ack_base,job))));expected.push(job.ordinal);
+ }
+ assert.deepEqual(sectionNext,plan.counts);assert.deepEqual(plan.lane_jobs,Array.from({length:8},(_,l)=>expected.filter(i=>i%8===l)));
+ assert.equal(plan.jobs.reduce((a,j)=>a+j.range.count,0)+1600,Object.values(plan.counts).reduce((a,n)=>a+n,0));return true;
+}
+export async function fixedLanes(plan,run,stopped,fail){
+ const records=[];
+ await Promise.all(plan.lane_jobs.map(async(ids,lane)=>{
+  for(const id of ids){if(stopped())break;const job=plan.jobs[id];let result;
+   try{result=await run(job,lane);}catch{result={ok:false,code:'ONEOFF_HOST_START_OR_COLLECTION_FAILED'};}
+   records.push({ordinal:id,lane,...result});if(!result.ok){fail({ordinal:id,lane,...result});break;}
+  }
+ }));return records.sort((a,b)=>a.ordinal-b.ordinal);
+}
+export function carryShape(plan,terminal,stop,summary,locations){
+ assert.equal(terminal.status,'STOPPED_AFTER_FAILURE_NO_RETRY');assert.equal(terminal.manifest_sha256,'9b107dccf958551968e6e1fe758595754c219a66ac6bd66fcacdb26ff62e59c2');assert.equal(terminal.stop_marker_write_error,null);assert.equal(terminal.planned_jobs,2609);assert.equal(terminal.completed_jobs,62);assert.equal(terminal.records.length,62);
+ assert.equal(stop.kind,'OPERATOR_DRAIN_FOR_ISOLATED_FUNCTIONAL_APPLICATION_GATES');assert.equal(stop.not_native_case_failure,true);assert(!Object.hasOwn(stop,'first_observed_failure'));assert.equal(stop.inflight_policy,'LET_ACCEPTED_HOST_FINALLY_STOP_EXPORT_CLEANUP_COMPLETE_NO_NEW_JOBS');
+ assert.equal(summary.status,'OPERATOR_DRAIN_SUCCESSFUL_COMPLETED_RANGES_NOT_FULL_CORPUS');assert.equal(summary.completed_jobs,62);assert.equal(summary.remaining_NOT_RUN,2547);assert.equal(summary.native_case_failure,false);assert.equal(summary.immutable_plan_sha256,terminal.manifest_sha256);assert.equal(locations.length,62);
+ const seen=new Set(),owners=new Set();for(const record of terminal.records){assert(Number.isSafeInteger(record.ordinal)&&record.ordinal>=0&&record.ordinal<plan.jobs.length);const j=plan.jobs[record.ordinal];assert(!seen.has(j.ordinal)&&!owners.has(j.owner));seen.add(j.ordinal);owners.add(j.owner);assert.equal(record.owner,j.owner);assert.equal(record.lane,j.lane);assert.deepEqual(record.range,j.range);assert.equal(record.ok,true);assert.equal(record.native_range_execution_ok,true);assert.equal(record.strict_section_refusal_blocks_acceptance,false);assert.equal(record.exit_code,0);assert.equal(record.signal,null);assert.equal(record.overflow,false);assert(!record.spawn_error);assert(!record.code);assert.match(record.host_report_sha256,/^[a-f0-9]{64}$/);const loc=locations.filter(x=>x.ordinal===j.ordinal);assert.equal(loc.length,1);assert.equal(loc[0].owner,j.owner);assert.deepEqual(loc[0].range,j.range);assert.equal(path.resolve(loc[0].raw_root),path.resolve(plan.output_parent,j.owner,'export'));}
+ for(const lane of plan.lane_jobs){const ids=lane.filter(id=>seen.has(id));assert.deepEqual(ids,lane.slice(0,ids.length),'CARRIED_JOBS_MUST_BE_STARTED_PREFIX_OF_EACH_ORIGINAL_LANE');}
+ return [...seen].sort((a,b)=>a-b);
+}
+export function remainingPlan(plan,carried,runRoot){const done=new Set(carried);assert.equal(done.size,62);return {...plan,run_root:runRoot,lane_jobs:plan.lane_jobs.map(ids=>ids.filter(id=>!done.has(id)))};}
+export function verifyCarry(plan,carry){
+ assert.equal(carry.schema,1);assert.equal(carry.parent_manifest_sha256,'9b107dccf958551968e6e1fe758595754c219a66ac6bd66fcacdb26ff62e59c2');assert.equal(carry.parent_runner_sha256,plan.oneoff_sha256);assert.equal(path.resolve(carry.parent_runner),path.resolve(plan.oneoff_runner));assert.equal(sha(fs.readFileSync(carry.parent_runner)),plan.oneoff_sha256);assert.equal(carry.drain_index_sha256,'420898c4fb5bda4f8e51c2835bcdad8d2f7fa7c7ce2e834f7355e83737930e0e');assert.equal(sha(fs.readFileSync(carry.drain_index)),carry.drain_index_sha256);assert.equal(path.resolve(carry.parent_run_root),path.resolve(plan.run_root));
+ const base=path.dirname(carry.drain_index),index=JSON.parse(fs.readFileSync(carry.drain_index));for(const f of index.files){const p=path.resolve(base,f.path);assert.equal(path.relative(base,p).startsWith('..'),false);const raw=fs.readFileSync(p);assert.equal(raw.length,f.bytes);assert.equal(sha(raw),f.sha256);}
+ const read=name=>JSON.parse(fs.readFileSync(path.join(base,name))),terminal=read('BATCH_TERMINAL.json'),stop=read('STOP.json'),summary=read('SUMMARY.json'),locations=read('RAW-LOCATIONS.json'),carried=carryShape(plan,terminal,stop,summary,locations);
+ assert.deepEqual(carried,carry.carried_ordinals);assert.equal(carry.completed_jobs,62);assert.equal(carry.remaining_jobs,2547);assert.equal(carry.accepted_prefix_cases_not_rerun,1600);assert.equal(carry.native_failure_claim,false);assert.equal(path.resolve(carry.new_run_root),path.resolve('C:/.projects/venus/.artifacts/p05-full-original-execution03'));assert.deepEqual(carry.remaining_lane_jobs,remainingPlan(plan,carried,carry.new_run_root).lane_jobs);
+ for(const name of ['BATCH_TERMINAL.json','STOP.json','activation.json'])assert.equal(sha(fs.readFileSync(path.join(plan.run_root,name))),sha(fs.readFileSync(path.join(base,name))));
+ const externalActivation=fs.readFileSync(carry.parent_activation_path);assert.equal(sha(externalActivation),terminal.activation_sha256);assert.equal(sha(externalActivation),carry.parent_activation_sha256);assert.deepEqual(JSON.parse(externalActivation),read('activation.json'));
+ const expectedAckNames=terminal.records.map(x=>x.owner+'.json').sort(),expectedLogs=terminal.records.flatMap(x=>[x.owner+'.json',x.owner+'.stdout.txt',x.owner+'.stderr.txt']).sort();assert.deepEqual(fs.readdirSync(path.join(plan.run_root,'acks')).sort(),expectedAckNames);assert.deepEqual(fs.readdirSync(path.join(plan.run_root,'logs')).sort(),expectedLogs);
+ let exportedBytes=0,rawRows=0;const receipts=[];
+ for(const record of terminal.records){const job=plan.jobs[record.ordinal],ack=plannedAck(plan.ack_base,job),live=path.join(plan.output_parent,job.owner),archived=path.join(base,'ranges',job.owner),loc=locations.find(x=>x.ordinal===job.ordinal);assert.equal(sha(fs.readFileSync(path.join(plan.run_root,'acks',job.owner+'.json'))),job.ack_sha256);assert.equal(sha(bytes(ack)),job.ack_sha256);assert.deepEqual(JSON.parse(fs.readFileSync(path.join(plan.run_root,'logs',job.owner+'.json'))),record);
+  const reportRaw=fs.readFileSync(path.join(live,'host-report.json'));assert.equal(sha(reportRaw),record.host_report_sha256);assert.equal(sha(reportRaw),sha(fs.readFileSync(path.join(archived,'host-report.json'))));const report=JSON.parse(reportRaw);for(const k of ['writer_stopped','export_verified','producer_unchanged'])assert.equal(report[k],true);assert.equal(report.timeout,false);assert.equal(report.worker_exit,0);assert.equal(report.cleanup,'COMPLETE');assert.deepEqual(report.cleanup_errors,[]);assert.equal(report.status,'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE');assert.equal(report.owner,job.owner);assert.deepEqual(report.range,job.range);assert.equal(report.source_identity,ack.source_identity);assert.equal(report.image,ack.image_id);
+  const exportRaw=fs.readFileSync(path.join(live,'export-pins.json'));assert.equal(sha(exportRaw),loc.export_pins_sha256);assert.equal(sha(exportRaw),sha(fs.readFileSync(path.join(archived,'export-pins.json'))));const saved=JSON.parse(exportRaw),fresh=verifyRangeExport(loc.raw_root,ack,job.range),normalize=v=>({...v,files:[...v.files].sort((a,b)=>a.path.localeCompare(b.path))});assert.deepEqual(normalize(fresh),normalize(saved));const s=fresh.summary;assert.equal(s.status,'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE');assert.equal(s.completed,job.range.count);assert.equal(s.full_section_PASS,false);assert.equal(s.full_P05_PASS,false);for(const k of ['owner','source_identity','binding_sha256','prereg_sha256','method_review_sha256'])assert.equal(s[k],ack[k]);assert.equal(s.image,ack.image_id);assert.deepEqual(s.range,job.range);assert.equal(strictSectionRefusal(job.range.section,s),false);assert.equal(s.typed_refusals,record.typed_refusals);exportedBytes+=fresh.bytes;rawRows+=fresh.records;receipts.push({ordinal:job.ordinal,owner:job.owner,host_report_sha256:sha(reportRaw),export_pins_sha256:sha(exportRaw),records:fresh.records,head:fresh.head,bytes:fresh.bytes});
+ }
+ const remaining=plan.jobs.filter(j=>!carried.includes(j.ordinal));assert.equal(remaining.length,2547);for(const j of remaining)assert(!fs.existsSync(path.join(plan.output_parent,j.owner)),'REMAINING_OWNER_ALREADY_HAS_STARTED_OR_FAILED_OUTPUT');
+ return {status:'VERIFIED_OPERATOR_DRAIN_CARRY_ONLY_NOT_STATISTICAL_ACCEPTANCE',carried_ordinals:carried,remaining_lane_jobs:carry.remaining_lane_jobs,exported_bytes:exportedBytes,authenticated_raw_rows:rawRows,receipts};
+}
+export function validateResumeActivation(original,carry,manifestRaw,carryRaw,activation,runnerHash){
+ assert.equal(activation.status,'ROOT_BATCH_RESUME_ACK');assert.equal(activation.no_actual_approval,false);assert.equal(activation.maximum_workers,8);assert.equal(activation.manifest_sha256,sha(manifestRaw));assert.equal(activation.oneoff_sha256,runnerHash);assert.equal(activation.parent_oneoff_sha256,original.oneoff_sha256);assert.equal(activation.carry_sha256,sha(carryRaw));assert.equal(activation.drain_index_sha256,carry.drain_index_sha256);assert.equal(activation.run_root,carry.new_run_root);
+ const reviewRaw=fs.readFileSync(activation.operational_review_path);assert.equal(sha(reviewRaw),activation.operational_review_sha256);assert.match(JSON.parse(reviewRaw).status,/^PASS(?:_|$)/);
+ const witnessRaw=fs.readFileSync(activation.prereg_witness_path);assert.equal(sha(witnessRaw),activation.prereg_witness_sha256);const w=JSON.parse(witnessRaw);assert.equal(w.clean_status,true);assert.match(w.commit,/^[a-f0-9]{40}$/);assert.equal(w.commit,activation.prereg_commit);assert.match(w.status,/^CLEAN_/);assert.equal(w.manifest_sha256,sha(manifestRaw));const hashes=Object.values(w.files);for(const h of [runnerHash,sha(carryRaw),activation.operational_review_sha256])assert(hashes.includes(h),'ADDITIVE_CLEAN_PREREG_MUST_PIN_NEW_RUNNER_CARRY_AND_REVIEW');assert(Number.isFinite(Date.parse(activation.issued_at))&&Number.isFinite(Date.parse(w.created_at))&&Date.parse(activation.issued_at)>=Date.parse(w.created_at));
+ return true;
+}
+export async function main(args=process.argv.slice(2)){
+ assert.equal(args.length,3);const [manifestFile,carryFile,activationFile]=args.map(p=>path.resolve(p));
+ const manifestRaw=fs.readFileSync(manifestFile),original=JSON.parse(manifestRaw),carryRaw=fs.readFileSync(carryFile),carry=JSON.parse(carryRaw),activation=JSON.parse(fs.readFileSync(activationFile));validatePlan(original);assert.equal(sha(manifestRaw),carry.parent_manifest_sha256);validateResumeActivation(original,carry,manifestRaw,carryRaw,activation,sha(fs.readFileSync(fileURLToPath(import.meta.url))));
+ const verifiedCarry=verifyCarry(original,carry),plan=remainingPlan(original,verifiedCarry.carried_ordinals,carry.new_run_root);
+ for(const [file,hash]of Object.entries(plan.inputs))assert.equal(sha(fs.readFileSync(file)),hash,file);
+ assert.deepEqual(producerPins(plan.ack_base.producer_root),plan.ack_base.producer_pins);
+ const binding=fs.readFileSync(path.join(plan.ack_base.producer_root,'binding.json')),prereg=fs.readFileSync(path.join(plan.ack_base.producer_root,'RANGE-PREREG.json')),review=fs.readFileSync(plan.consumer_review);
+ for(const job of plan.jobs)validateAuthority(plannedAck(plan.ack_base,job),binding,prereg,review,plan.ack_base.producer_pins,plan.inputs[plan.host_runner]);
+ for(const prefix of plan.prefixes){assert.equal(sha(fs.readFileSync(prefix.ack_path)),prefix.ack_sha256);assert.equal(sha(fs.readFileSync(prefix.report_path)),prefix.report_sha256);const report=JSON.parse(fs.readFileSync(prefix.report_path));assert.equal(report.status,'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE');assert.equal(report.cleanup,'COMPLETE');assert.equal(report.export_verified,true);assert.equal(report.producer_unchanged,true);assert.deepEqual(report.range,prefix.range);}
+ assert(!fs.existsSync(plan.run_root),'NO_BATCH_RESTART_OR_RETRY');fs.mkdirSync(plan.run_root);fs.mkdirSync(path.join(plan.run_root,'acks'));fs.mkdirSync(path.join(plan.run_root,'logs'));
+ fs.writeFileSync(path.join(plan.run_root,'activation.json'),bytes(activation),{flag:'wx'});fs.writeFileSync(path.join(plan.run_root,'verified-carry.json'),bytes(verifiedCarry),{flag:'wx'});
+ let stopFlag=false,stopWriteError=null;const stop=path.join(plan.run_root,'STOP.json'),fail=record=>{stopFlag=true;try{fs.writeFileSync(stop,bytes({at:new Date().toISOString(),first_observed_failure:record,inflight_policy:'LET_ACCEPTED_HOST_FINALLY_STOP_EXPORT_CLEANUP_COMPLETE_NO_NEW_JOBS'}),{flag:'wx'});}catch(error){if(error.code!=='EEXIST')stopWriteError=error.code??'STOP_MARKER_WRITE_FAILED';}};
+ const newRecords=await fixedLanes(plan,(job,lane)=>new Promise(resolve=>{
+  const ackRaw=bytes(plannedAck(plan.ack_base,job));assert.equal(sha(ackRaw),job.ack_sha256);const ackFile=path.join(plan.run_root,'acks',job.owner+'.json');fs.writeFileSync(ackFile,ackRaw,{flag:'wx'});
+  const record={ordinal:job.ordinal,lane,owner:job.owner,started_at:new Date().toISOString(),range:job.range};const log={stdout:[],stderr:[]},length={stdout:0,stderr:0};let overflow=false;
+  const child=spawn(process.execPath,[plan.host_runner,ackFile,plan.consumer_review],{cwd:plan.cwd,windowsHide:true,stdio:['ignore','pipe','pipe']});
+  for(const stream of ['stdout','stderr'])child[stream].on('data',data=>{length[stream]+=data.length;if(length[stream]<=2*1024**2)log[stream].push(data);else{overflow=true;fail({...record,code:'HOST_LOG_OVERFLOW_NO_CHILD_KILL'});}});
+  child.on('error',error=>{record.spawn_error=error.code??'SPAWN_FAILED';});
+  child.on('close',(code,signal)=>{try{for(const stream of ['stdout','stderr'])fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.'+stream+'.txt'),Buffer.concat(log[stream]),{flag:'wx'});
+   let report=null;const reportFile=path.join(plan.output_parent,job.owner,'host-report.json');try{report=JSON.parse(fs.readFileSync(reportFile));}catch{/* exact missing report is failure */}
+   const executionOk=code===0&&!signal&&!overflow&&!record.spawn_error&&report?.status==='RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE'&&report.cleanup==='COMPLETE'&&report.export_verified===true&&report.writer_stopped===true&&report.producer_unchanged===true&&report.owner===job.owner&&JSON.stringify(report.range)===JSON.stringify(job.range);
+   let strictRefusal=false,typedRefusals=null;
+   if(executionOk){const exportRoot=path.join(plan.output_parent,job.owner,'export'),verified=JSON.parse(fs.readFileSync(path.join(plan.output_parent,job.owner,'export-pins.json'))),raw=fs.readFileSync(path.join(exportRoot,'summary.json'));assert.equal(sha(raw),verified.files.find(f=>f.path==='summary.json')?.sha256);const summary=JSON.parse(raw);assert.deepEqual(summary,verified.summary);assert.equal(summary.owner,job.owner);assert.deepEqual(summary.range,job.range);strictRefusal=strictSectionRefusal(job.range.section,summary);typedRefusals=summary.typed_refusals;}
+   const ok=executionOk&&!strictRefusal;
+   const done={...record,finished_at:new Date().toISOString(),ok,native_range_execution_ok:executionOk,strict_section_refusal_blocks_acceptance:strictRefusal,typed_refusals:typedRefusals,exit_code:code,signal,log_bytes:length,overflow,host_report:reportFile,host_report_sha256:fs.existsSync(reportFile)?sha(fs.readFileSync(reportFile)):null};fs.writeFileSync(path.join(plan.run_root,'logs',job.owner+'.json'),bytes(done),{flag:'wx'});if(!ok)fail(done);resolve(done);
+  }catch(error){const done={...record,ok:false,exit_code:code,signal,code:error.code??'HOST_RECEIPT_COLLECTION_FAILED'};fail(done);resolve(done);}
+  });
+ }),()=>stopFlag||fs.existsSync(stop),fail);
+ const carriedRecords=JSON.parse(fs.readFileSync(path.join(path.dirname(carry.drain_index),'BATCH_TERMINAL.json'))).records.map(r=>({...r,carried_from_parent:true})),records=[...carriedRecords,...newRecords].sort((a,b)=>a.ordinal-b.ordinal);assert.equal(new Set(records.map(r=>r.ordinal)).size,records.length);const complete=records.length===plan.jobs.length&&records.every(r=>r.ok)&&!stopFlag&&!fs.existsSync(stop);
+ const terminal={status:complete?'ALL_FIXED_RANGES_EXECUTED_NOT_STATISTICAL_ACCEPTANCE':'STOPPED_AFTER_FAILURE_NO_RETRY',manifest_sha256:sha(manifestRaw),activation_sha256:sha(fs.readFileSync(activationFile)),completed_jobs:records.length,carried_jobs:carriedRecords.length,executed_this_run:newRecords.length,carry_sha256:sha(carryRaw),parent_manifest_unchanged:true,planned_jobs:plan.jobs.length,stop_marker_write_error:stopWriteError,records,full_C2_PASS:false,full_M3_PASS:false,full_P05_PASS:false};
+ fs.writeFileSync(path.join(plan.run_root,'BATCH_TERMINAL.json'),bytes(terminal),{flag:'wx'});console.log(JSON.stringify({status:terminal.status,completed_jobs:records.length,planned_jobs:plan.jobs.length,full_P05_PASS:false}));process.exitCode=complete?0:1;return terminal;
+}
+if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))await main();

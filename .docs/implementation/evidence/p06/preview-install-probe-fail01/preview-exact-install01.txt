@@ -1,0 +1,13 @@
+{"status":"FAIL","path":"C:\\.projects\\venus\\.artifacts\\p06-preview-clean01\\.artifacts\\p06\\venus-p06-b493e9a1b7\\report.json","sha256":"9bbc88448826bbb774e175a2a6dde4df98fa80030bc2e4fbbf94fcf50bb3c9e9","cleanup":"COMPLETE_OWNED_CONTAINERS_NETWORKS_STOPPED"}
+file:///C:/.projects/venus/.artifacts/p06-preview-clean01/tools/p06-integration.mjs:8
+function command(args,{timeout=600000,allowFailure=false}={}){const started=Date.now(),r=spawnSync('docker',args,{encoding:'utf8',maxBuffer:32*1024*1024,timeout});const file=String(++sequence).padStart(3,'0')+'.txt';writeFileSync(join(output,file),(r.stdout??'')+(r.stderr??''));commands.push({sequence,command:args.slice(0,3),exit:r.status,ms:Date.now()-started,output:file});if(!allowFailure&&(r.error||r.status!==0))throw new Error('DOCKER_'+args[0].toUpperCase()+'_FAILED_'+sequence);return r;}
+                                                                                                                                                                                                                                                                                                                                                                                                                                         ^
+
+Error: DOCKER_RUN_FAILED_8
+    at command (file:///C:/.projects/venus/.artifacts/p06-preview-clean01/tools/p06-integration.mjs:8:426)
+    at file:///C:/.projects/venus/.artifacts/p06-preview-clean01/tools/p06-integration.mjs:28:12
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.22.0

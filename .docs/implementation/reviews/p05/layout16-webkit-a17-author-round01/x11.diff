@@ -1,0 +1,24 @@
+--- layout15/x11.mjs
++++ layout16/x11.mjs
+@@ -15,16 +15,18 @@
+  return {browser,async close(){let error;try{await browser.close();}catch(e){error=e;}try{await server.close();}catch(e){error??=e;}const child=server.process();if(child.exitCode===null&&child.signalCode===null){const exited=once(child,'exit');child.kill('SIGKILL');await Promise.race([exited,delay(5000)]);error??=Error('BROWSER_FORCED_KILL');}if(error)throw error;}};
+ }
+ // Only exact vendor suffixes measured on these pinned owned browsers are allowed.
+-// WebKit remains exact-title-only: its native identity/template is unresolved.
++// WebKit's measured Playwright prefix still contains the full exact own nonce.
+ const chromiumWindowSuffix=' - Google Chrome for Testing';
+ const firefoxWindowSuffix=' \u2014 Nightly';
++const webkitWindowPrefix='\u{1f3ad} Playwright: ';
++function vendorWindowPrefix(engine){return engine==='webkit'?webkitWindowPrefix:'';}
+ function vendorWindowSuffix(engine){return engine==='chromium'?chromiumWindowSuffix:engine==='firefox'?firefoxWindowSuffix:'';}
+ function checkWindowNonce(title){assert(typeof title==='string'&&/^Venus layout [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(title),'EXACT_V2_WINDOW_REQUIRED');}
+ export function windowTitlePattern(title,engine){
+- checkWindowNonce(title);const suffix=vendorWindowSuffix(engine);return '^'+title+(suffix?'('+suffix+')?':'')+'$';
++ checkWindowNonce(title);const prefix=vendorWindowPrefix(engine),suffix=vendorWindowSuffix(engine);return '^'+(prefix?'('+prefix+')?':'')+title+(suffix?'('+suffix+')?':'')+'$';
+ }
+ export function ownWindowTitle(title,engine,value){
+- checkWindowNonce(title);const suffix=vendorWindowSuffix(engine);return typeof value==='string'&&(value===title||(suffix!==''&&value===title+suffix));
++ checkWindowNonce(title);const prefix=vendorWindowPrefix(engine),suffix=vendorWindowSuffix(engine);return typeof value==='string'&&(value===title||value===prefix+title+suffix);
+ }
+ export async function readyOwnedWindow(query,budget,wait=delay){
+  for(;;){

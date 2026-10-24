@@ -1,0 +1,32 @@
+# Constructive native support supplement — proposed, not run
+
+Status: PROSPECTIVE_QA_SUPPORT_SUPPLEMENT_REQUIRES_NONAUTHOR_METHOD_REVIEW. It grants no execution authority. Original84 records, classification, seed rules, raw export and NOT_COVERED stay immutable. No owner permission is requested; protection and original42-cell/statistical norms are unchanged.
+
+| Fixed source descriptor | Supplemental comparison | Existing native prior20 private rows | Current complete executed-prefix playable counts E0/E1/E2 | Terminal |
+|---|---|---:|---|---|
+|cell3 R100, N2 TD in_person|semantic|3|14/14/14|typed public-pool refusal95|
+|cell13 R100, N4 questions in_person|both|4|15/15/15|typed public-pool refusal95|
+|cell14 R100, N4 TD online|both|3|7/7/7|typed public-pool refusal88|
+|cell20 R100, N5 TD online|both|5|10/10/10|typed public-pool refusal93|
+|cell34 R100, N7 YB online|semantic|4|5/5/5|typed public-pool refusal82|
+
+These five existing descriptors cover eight missing comparison/cell branches. All those current arms have zero safe-empty. Before credit, verify complete retained raw descriptor/input/history and the **whole** matched executed transcript through the same typed refusal, including selected/completed prefixes, equal public sequence/payload/ticks and actual nonempty prior semantic change. Do not cut the R100 transcript at a convenient private round or manufacture a shorter completed session. Native `createTopicHistory` and selected/recorded outcomes remain native; a stored refused prefix is explicitly a refused native prefix. Reuse exact compatible raw/replay evidence first; a deterministic replay is verification of the same inputs, not another statistical draw. If unequal/refusal boundaries differ or any provenance/source mismatch occurs, FAIL/NOT_COVERED remains. This branch-coverage rule is a proposed method revision, not a retrospective change to PREREG01's full-common classifier.
+
+Exact input ordinals are7/27/29/41/69 respectively, using unmodified `caseAt` descriptors and seeds `venus:P05:privacy:matched01:<cell>:R100`. Prior seed is that exact string plus`:prior`, total20, original fixed prior session ID`33333333-3333-4333-8333-333333333333`; preserve its entire native public and private streams. Current E0/E1 share the entire prior public stream with no private stream, E2 adds the entire genuine prior private stream. Keep current declaredR100 and original fresh constructor; replay native select/outcome/controlled lifecycle until the same naturally emitted typed refusal, retaining **every** earlier selected round/frame/outcome and the final failed selection boundary. Never choose a later “good” private checkpoint, shorten total_rounds or select a prefix by observed equality. Inputs are fixed by the seven missing cells, not a search among transcripts. CONSTRUCTION-INPUTS.json pins those descriptor/coverage inputs.
+
+Exactly two new fixture descriptors:
+
+|Fixture ID|Original public descriptor unchanged|Only new hidden input|
+|---|---|---|
+|SUPPORT-EXCLUSION-C02-ABSURD-01|cell2 R20/N2/TD/online; seed `venus:P05:privacy:matched01:2:R20`|member0 excludes `absurd_fiction`, removes it from allow|
+|SUPPORT-EXCLUSION-C15-ABSURD-01|cell15 R20/N4/TD/in_person; seed `venus:P05:privacy:matched01:15:R20`|same supported exclusion|
+
+Load exact current real470 owner-provisional pack/map03. Retain original full native prior20 public history and no prior-private history for both baseline/exclusion arms, exactly as the original comparison; do not fabricate or truncate either history. Carry the exact compatible original baseline or execute its exact replay. No new session ID/RNG seed/profile/relationship/comfort/context/stage/capability is selected in response to an outcome. The private filter uses actual native state and recordTopicOutcome; no forced round/card/actor, SQL history rewrite, synthetic pair grant or consent is presented as actual transport.
+
+Required fixture assertions: valid supported allow/exclude shape; exclusion really removes eligible candidates and leaves actual eligible alternatives; both native current sessions complete20 with at least one disclosed private prompt and zero safe-empty; exact public selector sequence; exact controlled public payload/ticks under the same declared lifecycle; full input/raw/native history replay and zero original invariants/exact-ID repeats. Original `creative_expression` all-empty outcomes remain separate negative observations and are never replaced. Any failure stops this fixture; no retry, alternative seed/topic, resampling, extra room or broadening allowed. Static22-card/19-family support is a feasibility input, not a promised measured result.
+
+Coverage output must retain all42 cells and both comparison types: their original84 dispositions, newly qualified whole-refusal-prefix branches and distinct supplemental fixture references. A cell is closed only by accepted exact source-coupling plus its actual supplemental evidence; no absent positive row is filled by default or copied from another cell. All original126k/per-cell+pooled CI/decoder and other six section gates remain separate. Actual HTTP/WS equivalence is separate; modeled state/frame counts never become real cadence/UUID/time evidence.
+
+The original product/plan requires new exclusion/semantic evidence and original inference across42 strata; it does not literally prescribe this84-case support classifier. **The accepted proof route does prescribe42 common cells and complete, zero-empty arms** (PREREG01 `required_common_cells_per_comparison`, consumer `full_common`), so this draft cannot unilaterally declare that route passed. It proposes an additional acceptance area: complete actually executed native prefixes with coincident safe refusal, exact privacy/source coupling and constructive positive controls, while retaining original completion/coverage statuses. Only independent prospective source/method acceptance can establish that this area discharges the missing42-cell branch obligation without lower protection. If it is judged a waiver, nothing runs or is reclassified: revise the prospective native fixture design first. Owner approval to weaken protection is neither assumed nor requested.
+
+No new runtime is requested for this document. After nonauthor method acceptance, root binds exact code/data/source/replay/owner/output/resource pins through the existing worker/rootACK. No additional84k or automatic84×3 transport matrix is proposed. No production/card-rights/human approval is inferred.

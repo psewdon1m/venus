@@ -1,0 +1,69 @@
+--- reviewed-engine2
++++ frozen-engine3
+@@ -11,7 +11,10 @@
+  * Caller authenticates histories/registry/ledger, commits returned immutable state
+  * transactionally, and repeats all admission/consent/TTL guards at final enqueue.
+  * Pure planning does not grant invitation/action consent or private delivery. */
+-export const TOPIC_ALGORITHM = 'RE-1.P05-TOPIC-2' as const;
++export const TOPIC_ALGORITHM = 'RE-1.P05-TOPIC-3' as const;
++// Selection semantics are versioned separately from the retained RNG domain.
++// The exact-ID correction never makes public scheduling consume private history.
++export const TOPIC_RANDOM_DOMAIN = 'RE-1.P05-TOPIC-2' as const;
+ export const TOPIC_PRIVATE_POLICY = 'ROOM-TOPIC-2' as const;
+ export const TOPIC_RECOVERY_POLICY = 'PUBLIC_BASELINE_PRIVATE_CEILING_35_PERCENT' as const;
+ export type TopicSnapshot = Readonly<{
+@@ -60,7 +63,7 @@
+ class Random {
+   private index = 0;
+   constructor(private readonly seed: string, private readonly domain: unknown) {}
+-  bytes() { return createHmac('sha256', Buffer.from(this.seed, 'hex')).update(TOPIC_ALGORITHM + ':' + canonical(this.domain) + ':' + this.index++).digest(); }
++  bytes() { return createHmac('sha256', Buffer.from(this.seed, 'hex')).update(TOPIC_RANDOM_DOMAIN + ':' + canonical(this.domain) + ':' + this.index++).digest(); }
+   next() { return this.bytes().readUIntBE(0, 6) / 281474976710656; }
+   choose<T>(values: readonly T[]) { assertEngine(values.length > 0, 'TOPIC_SAFE_POOL_EXHAUSTED'); return values[Math.floor(this.next() * values.length)]!; }
+   weighted<T>(values: readonly T[], weight: (value: T) => number) {
+@@ -89,7 +92,7 @@
+ }
+ function records(input: readonly TopicHistoryRecord[], snapshot: TopicSnapshot, pack: FrozenPack, map: FrozenTopicMap, privateOnly: boolean): void {
+   assertEngine(Array.isArray(input) && input.length <= 30000, 'TOPIC_HISTORY_LIMIT');
+-  const seen = new Set<string>(),semanticSeen=new Map<string,Set<string>>(),roundRows=new Map<string,TopicHistoryRecord[]>();
++  const seen = new Set<string>(),sessionCards=new Set<string>(),semanticSeen=new Map<string,Set<string>>(),roundRows=new Map<string,TopicHistoryRecord[]>();
+   for (let i=0; i<input.length; i++) {
+     const row = input[i]!;
+     ownKeys(row, ['card_id','card_revision','card_sha256','sequence','room_id','session_id','round_id','pack_digest','map_sha256','repertoire_digest','mode','context','interaction','actors','primary_member_id','stage','disclosure']);
+@@ -105,6 +108,10 @@
+       && (row.actors.length===0||row.primary_member_id===row.actors[0]), 'TOPIC_HISTORY_SCOPE_INVALID');
+     const key = `${row.session_id}:${row.round_id}:${row.card_id}`;
+     assertEngine(!seen.has(key), 'TOPIC_HISTORY_DUPLICATE'); seen.add(key);
++    if(privateOnly){
++      const sessionCard=`${row.session_id}:${row.card_id}`;
++      assertEngine(!sessionCards.has(sessionCard),'TOPIC_HISTORY_EXACT_CARD_REPEAT');sessionCards.add(sessionCard);
++    }
+     const roundKey=`${row.session_id}:${row.round_id}`,sameRound=roundRows.get(roundKey)??[];
+     assertEngine(privateOnly?sameRound.length<3&&sameRound.every(prior=>canonical(prior.actors)===canonical(row.actors)
+       &&prior.primary_member_id===row.primary_member_id&&prior.mode===row.mode&&prior.context===row.context&&prior.stage===row.stage):sameRound.length===0, 'TOPIC_HISTORY_DUPLICATE_ROUND');
+@@ -265,7 +272,8 @@
+ }
+ function effectivePrivateCards(history:TopicPlannerHistory,actors:readonly string[],cards:readonly Card[],map:FrozenTopicMap,state:TopicSafetyState):Card[] {
+   const pairRows=history.private_history.filter(row=>pairKey(row.actors)===pairKey(actors));
+-  return cards.filter(card=>!blocked(card,history.public_history,map)&&!blocked(card,pairRows,map)&&actors.every(actor=>{
++  const sessionIds=new Set(history.private_history.filter(row=>row.session_id===history.session_id).map(row=>row.card_id));
++  return cards.filter(card=>!sessionIds.has(card.id)&&!blocked(card,history.public_history,map)&&!blocked(card,pairRows,map)&&actors.every(actor=>{
+     const member=state.members.find(m=>m.member_id===actor);
+     return member&&map.entry(card.id).topic_ids.every(topic=>member.allow_topic_ids.includes(topic)&&!member.excluded_topic_ids.includes(topic));
+   }));
+@@ -384,13 +392,9 @@
+   // Filter the complete actual repertoire BEFORE drawing; one arbitrary card
+   // missing a target is never evidence that the target pool is empty.
+   let pool=options(snapshot,pack,map,round.stage).find(o=>o.kind==='pair_private'&&canonical(o.actors)===canonical(round.actors))?.cards??[];
+-  pool=pool.filter(card=>{
++  pool=effectivePrivateCards(history,round.actors,pool,map,state).filter(card=>{
+     const subjects=map.entry(card.id).topic_ids;
+-    return targets.every(target=>subjects.includes(target))&&!blocked(card,history.public_history,map)&&!blocked(card,pairRows,map)
+-      &&round.actors.every(actor=>{
+-        const member=state.members.find(m=>m.member_id===actor);
+-        return member&&subjects.every(topic=>member.allow_topic_ids.includes(topic)&&!member.excluded_topic_ids.includes(topic));
+-      });
++    return targets.every(target=>subjects.includes(target));
+   });
+   const rng=new Random(snapshot.baseline.seed,{domain:'private-targeted-candidate',operation_revision:TOPIC_TARGETED_REPLACEMENT_VERSION,
+     target_topic_ids:targets,room_id:snapshot.baseline.room_id,session_id:snapshot.baseline.session_id,round_id:round.round_id,actors:round.actors,

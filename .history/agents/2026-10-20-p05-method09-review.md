@@ -1,0 +1,5 @@
+# Independent METHOD09 bounded correction review
+
+- 2026-10-20T15:46:29.6449673Z UTC — Non-author review of root METHOD09 frozen authorINDEX111aad8afa3befa7ca0d96918087bb9723737b9994738b2f114cf67b2826ba43 /61children. Scope diagnosis6998ee07 twoP2: failclosed supervisor writer IO/no reentry/no retry, typed firstfailure+boundedcaptured stdout/stderr/requiredIPC, strict21fieldterminal. Own injected controls and exactdiff; no actual09Docker/prepare/RUN or product/source writes. New report under topic-measurement-method09-independent-review-round01, oldproofs untouched.
+
+- 2026-10-20T15:49:05.3492373Z UTC — Independent18finite controls/observations and61author/43workingpins verified. One P2 P05-METHOD09-TERMINAL-IO-001 exact final-terminal-first rename injection: failclosed status but typed io_failure remainsnull because report snapshot predates write and reconciliation omits it. No falsePASS. Root acknowledged minimal newMETHOD10 reconciliation; no frozen09 edit. Durable findingspacket frozen; no actualDocker/prepare/RUN. Ready for boundedMETHOD10 independentrepeat.

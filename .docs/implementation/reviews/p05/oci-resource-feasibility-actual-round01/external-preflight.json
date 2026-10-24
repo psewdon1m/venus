@@ -1,0 +1,39 @@
+{
+  "created_at": "2026-10-20T15:07:47.124521+00:00",
+  "scope": "READ_ONLY_NO_RESOURCE_CREATION",
+  "commands": [
+    {
+      "args": [
+        "context",
+        "show"
+      ],
+      "exit_code": 0,
+      "stdout": "desktop-linux\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "info",
+        "--format",
+        "{{.ID}} {{.ServerVersion}} {{.Driver}} {{.OperatingSystem}}"
+      ],
+      "exit_code": "TIMEOUT15s",
+      "stdout": "",
+      "stderr": "read-only Docker CLI timeout"
+    },
+    {
+      "args": [
+        "image",
+        "inspect",
+        "sha256:ff371010e110cbcc56e029d8396f1195bbcb8b41866ba9e1be73dde2b6da09c4",
+        "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+        "--format",
+        "{{.Id}}"
+      ],
+      "exit_code": 1,
+      "stdout": "\n",
+      "stderr": "failed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\nfailed to connect to the docker API at npipe:////./pipe/dockerDesktopLinuxEngine; check if the path is correct and if the daemon is running: open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n"
+    }
+  ],
+  "actual_functional_RUN": false
+}

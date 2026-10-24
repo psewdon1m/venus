@@ -1,0 +1,1 @@
+async function read(a,suffix){const response=await a.context.request.get(service.origin+suffix,{headers:{origin:service.origin,'x-csrf-token':a.csrf}});assert.equal(response.status(),200,`Authenticated read failed: ${suffix.split('/').at(-1)} ${response.status()}`);return response.json();}

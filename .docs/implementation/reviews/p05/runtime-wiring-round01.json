@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "review": "P05_RUNTIME_WIRING_ROUND01",
+  "reviewer": "p05_topic_games_review",
+  "author_independent": true,
+  "created_at": "2026-10-19T17:55:51.109092+00:00",
+  "status": "CHANGES_REQUESTED",
+  "scope": "STATIC_PER_FILE_CAPTURE_WITH_DIRECT_METHOD_PROBE_NOT_GLOBAL_FROZEN_RUNTIME",
+  "full_stage_acceptance": false,
+  "docker_executed": false,
+  "pins": {
+    "apps/api/src/server.ts": "726268af1a41b56b7f0119f7fd915a3b9ca07241236e9c490b64c3572b0ce492",
+    "apps/api/src/topic-runtime.ts": "017ade5ff4a66b6d1702fc43daf463e8ef1142769c666b4c34d06b9c51382826",
+    "apps/api/src/topic-room-directories.ts": "1bee0233980c965f722bd5a7d3fa0ffd1bdcbd90b2617645bd6da484842b3e10",
+    "apps/api/src/topic-room-registry.ts": "23de303a222dc9e30c6b50f86219662c9735076468ac7db4303cb8ac1b1a659e",
+    "apps/api/src/topic-room-lifecycle.ts": "ed7694aa3f5dbab2238d0518d153c12c24332206ce90de338814e4b561ec688c",
+    "apps/api/src/private-topic-preferences.ts": "f5caae8aa2035a2e7bf6efa513bd6a2b6bdb6559fe2f74465a85809b3d9e4cdb",
+    "apps/api/src/rooms.ts": "82d7ea293656e614cb483ac6d0b1cadb424687ec1021a96aa72aa0a54abbe0d9",
+    "apps/api/src/topic-game-source.ts": "8f4ca30e42ea0b410b7ac6064f1cf6059129502c64e837bb00a05e62f4f53bd1",
+    "apps/api/src/topic-games.ts": "8154111ff8a85923c315c183fd4f3a1c9b547da4c8a025baaa3c407ae2832b83",
+    "apps/api/src/room-games.ts": "a57bc8a5ea9e8590c7aa1f0f8fce6aba9cb46469f03bf2b401ca6ce9b2f6a226",
+    "apps/api/src/games.ts": "5a67fd363bf6cab2179d064ebad7cbc10e1fe29a6930d33488c69c7737b62438",
+    "apps/api/src/room-routes.ts": "91d566bea3426b5851cef8b3c09d718469b26a6ef4555e27d055bc599c7f1ce1",
+    "apps/api/src/app.ts": "f058b86e9699a8157a5e18fea31b80ef746cb1c59488db8639407ec83d59a610",
+    "apps/api/src/catalog.ts": "b51f1fae9b8b400b3eec80aeb7e38721d9bd3fe29f31452c945dd61dbcbee6f5",
+    "apps/api/src/private-topic-migrations.ts": "5a33a2049fe659c7ac0918bcb5f574c960cb311a4e2fb044a8903ede497a07ee",
+    "apps/api/src/entry-profile.ts": "331b4ff73a70078bde4abc164ee7954e680bd487d46df1d99ce2127820446332",
+    "packages/card-catalog/src/topic-bundles.ts": "9168677bb685aec01928615c9c22969330dd40607c6a9da05896bca0933abc27",
+    "packages/card-catalog/src/bundles.ts": "997d83d94343f64588101cc6eb0d423bd73e3dbc995ec571fd6e0ec1a4535daf",
+    "packages/card-catalog/src/revocations.ts": "fe0327936cb7ffbfebc058dac13b757d2a69f347545a97a76d63882b4757dfe9",
+    "infra/venus/compose.yml": "a7ac3709c2df8b37fe650afa4005519dab461e46487abbfd874cc6cee92eea60",
+    "infra/venus/Dockerfile": "a6d90f661ed5f46aa7dfa7541a6d37e67925ce54ad2fb54c9cbb4dd7914e9fd7"
+  },
+  "findings": [
+    {
+      "id": "RW-001",
+      "severity": "P2",
+      "status": "OPEN_ON_CAPTURE",
+      "file": "infra/venus/compose.yml",
+      "line": 9,
+      "title": "Required catalogue ledger configuration not forwarded by ordinary compose",
+      "proof": "STATIC_CONFIG_CONTROL_FLOW"
+    },
+    {
+      "id": "RW-002",
+      "severity": "P2",
+      "status": "OPEN_ON_CAPTURE",
+      "file": "apps/api/src/topic-games.ts",
+      "line": 218,
+      "title": "Feature-off retained games terminate ordinary room websocket path",
+      "proof": "CAPTURED_METHODS_WITH_EXPLICIT_SQL_DOUBLES",
+      "states": [
+        "active",
+        "paused",
+        "completed"
+      ],
+      "actual_error": "TOPIC_GAMES_DISABLED"
+    },
+    {
+      "id": "RW-003",
+      "severity": "P2",
+      "status": "OPEN",
+      "file": "apps/api/src/topic-games.ts",
+      "line": 218,
+      "title": "Enabled catalogue outage terminates ordinary room websocket path",
+      "proof": "CAPTURED_METHODS_WITH_EXPLICIT_SOURCE_SQL_DOUBLES",
+      "states": [
+        "active",
+        "paused",
+        "completed"
+      ],
+      "actual_error": "CATALOG_LEDGER_UNAVAILABLE",
+      "late_fence_race_executed": false
+    }
+  ],
+  "tests": {
+    "first_probe": {
+      "pass": 1,
+      "fail": 4,
+      "exit_code": 1
+    },
+    "expanded_probe": {
+      "pass": 1,
+      "fail": 7,
+      "exit_code": 1
+    },
+    "real_ws": false,
+    "real_pg": false
+  },
+  "remaining": [
+    "Independent new-byte recheck after RW001/RW002 corrections",
+    "Resolve RW003 expected source outage including final enqueue",
+    "Actual cold/bootstrap/featureoff/recovery/ordinary WS tests",
+    "Old-volume upgrade evidence",
+    "Full source freeze and final stage gate"
+  ]
+}

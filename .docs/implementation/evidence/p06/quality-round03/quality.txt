@@ -1,0 +1,286 @@
+
+> venus@0.0.0 quality
+> npm run lint && npm run typecheck && npm test && npm run test:p05:reporter && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:catalog-r2 && npm run test:negative
+
+
+> venus@0.0.0 lint
+> eslint apps packages tools/*.mjs tools/venus-operator/*.mjs tools/venus-operator/ui/*.js tests/**/*.mjs
+
+
+> venus@0.0.0 typecheck
+> tsc -b && tsc -p apps/web/tsconfig.json
+
+
+> venus@0.0.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/workspace[39m
+
+ [32m✓[39m apps/api/src/topic-room-lifecycle.test.ts [2m([22m[2m142 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 5089[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/topic-planner.test.ts [2m([22m[2m69 tests[22m[2m)[22m[33m 21864[2mms[22m[39m
+   [32m✓[39m sessionwide private exact-card uniqueness [2m(3)[22m
+     [33m[2m✓[22m[39m never reoffers an exact private ID to another pair in the same native session[33m 2299[2mms[22m[39m
+     [33m[2m✓[22m[39m consumes replacement attempts across pairs while retaining private public-schedule isolation[33m 2813[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects an authenticated-shaped current history containing the same ID in different pairs[33m 781[2mms[22m[39m
+   [32m✓[39m complete private opportunity history after empty topic setup [2m(2)[22m
+     [33m[2m✓[22m[39m keeps the previous actual pair across public rounds and avoids it when an effective unused alternative exists[33m 5597[2mms[22m[39m
+   [32m✓[39m versioned topic planner without content activation or runtime delivery [2m(39)[22m
+     [33m[2m✓[22m[39m keeps full public projections identical across private settings, histories, IDs, intensity, safety revisions and outcomes[33m 526[2mms[22m[39m
+     [33m[2m✓[22m[39m binds public semantic history across mode and session, without card-ID-only dedupe[33m 626[2mms[22m[39m
+     [33m[2m✓[22m[39m runs base guard/cap/progression profiles for2..8, all modes and both contexts[33m 1734[2mms[22m[39m
+     [33m[2m✓[22m[39m preserves veto and comfort/context guards and reports true shortage[33m 1857[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps anti-consecutive private pair where baseline alternatives exist[33m 1730[2mms[22m[39m
+ [32m✓[39m apps/api/src/private-topic-ledger.test.ts [2m([22m[2m89 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 1275[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/private-conversation.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32m✓[39m apps/api/src/private-topic-preferences.test.ts [2m([22m[2m81 tests[22m[2m)[22m[32m 259[2mms[22m[39m
+ [32m✓[39m apps/web/src/topic-panel.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 2071[2mms[22m[39m
+ [32m✓[39m apps/web/src/topic-state.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m apps/web/src/game-controls-panel.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 1398[2mms[22m[39m
+ [32m✓[39m apps/web/src/game-controls.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-round-view.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m apps/web/src/topic-own-exclusion-refresh.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 1448[2mms[22m[39m
+   [32m✓[39m own permanent exclusion command refreshes only its own settings [2m(12)[22m
+     [33m[2m✓[22m[39m reloads authenticated own record after successful command; excluded allow is unchecked/disabled and peer stays unchanged[33m 301[2mms[22m[39m
+ [32m✓[39m apps/web/src/game-races.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 948[2mms[22m[39m
+ [32m✓[39m packages/card-catalog/src/catalog.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 5411[2mms[22m[39m
+   [32m✓[39m P04 catalogue authoring and independent review boundary [2m(9)[22m
+     [33m[2m✓[22m[39m distinguishes a missing required in-person channel from a real private content shortage[33m 666[2mms[22m[39m
+     [33m[2m✓[22m[39m never promotes drafts without complete signed independent review; changes invalidate it[33m 3754[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects example-origin and wrong-role material even with a signed record[33m 798[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-game-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/topic-map.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/engine.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 413[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-condition-lifecycle.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m apps/api/src/request-error-diagnostic.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m apps/api/src/p05-private-channel.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-chat-guards.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m apps/api/src/room-socket-poll.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-history-cache-integration.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-registry.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m tools/p03-measurements.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m apps/api/src/private-chat.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-algorithm-compatibility.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m packages/card-catalog/src/topic-bundles.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 67[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-game-idempotency.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m apps/api/src/room-private-protocol.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m apps/api/src/room-routes-v2.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 226[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-projection-reuse.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m apps/api/src/pilot-topic-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-room-directories.test.ts [2m([22m[2m20 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m apps/api/src/app.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 98[2mms[22m[39m
+ [32m✓[39m apps/web/src/topic-round-view.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 1188[2mms[22m[39m
+ [32m✓[39m apps/api/src/self-actions-delivery.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/consent.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-ephemeral-lock.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-snapshot-cache-integration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m packages/card-catalog/src/pilot-bundle.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 271[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-runtime.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m apps/api/src/room-socket-projection.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m apps/api/src/private-chat-delivery.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m apps/api/src/room-games.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m apps/web/src/topic-settings.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 620[2mms[22m[39m
+ [32m✓[39m apps/api/src/game-self-actions.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-history-cache.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 323[2mms[22m[39m
+ [32m✓[39m apps/api/src/private-chat-routes.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 128[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-game-model.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 293[2mms[22m[39m
+ [32m✓[39m apps/api/src/games-model.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-games.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-offer-throttle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-snapshot-cache.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m apps/web/src/topic-controls.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m apps/api/src/games-delivery.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/p05-feature-availability.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-context-fixture.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/public-pair-opt-in.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-action-consent.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-games-socket-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/p05-public-receipt.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m apps/web/src/game-operations.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m apps/web/src/game-state.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-chat-policy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m apps/web/src/session-api.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m apps/web/src/presentation-clock.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m apps/web/src/private-state.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-games-feature-off.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m apps/api/src/topic-round-view-route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m apps/api/src/protected-runtime.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m apps/web/src/game-setup.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m apps/api/src/entry-profile.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m tools/ci-policy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m apps/web/src/api.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+Batch request: B-20261018-Q-001 errors= 0
+Batch request: <invalid> errors= 17
+ERROR BATCH-001 'batch_id' is a required property
+ERROR BATCH-001 'pack_id' is a required property
+ERROR BATCH-001 'schema_version' is a required property
+ERROR BATCH-001 'policy_revision' is a required property
+ERROR BATCH-001 'mode' is a required property
+ERROR BATCH-001 'count' is a required property
+ERROR BATCH-001 'id_range' is a required property
+ERROR BATCH-001 'meeting_contexts' is a required property
+ERROR BATCH-001 'allowed_interactions' is a required property
+ERROR BATCH-001 'relationship_scope_distribution' is a required property
+ERROR BATCH-001 'comfort_distribution' is a required property
+ERROR BATCH-001 'progression_distribution' is a required property
+ERROR BATCH-001 'languages' is a required property
+ERROR BATCH-001 'forbidden_categories' is a required property
+ERROR BATCH-001 'source_catalog_digest' is a required property
+ERROR BATCH-001 'requested_by' is a required property
+ERROR BATCH-001 'human_review_required' is a required property
+ [32m✓[39m tools/catalog-request-snapshot.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 206[2mms[22m[39m
+ [32m✓[39m tools/github-ci.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 27[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m77 passed[39m[22m[90m (77)[39m
+[2m      Tests [22m [1m[32m1315 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (1318)[39m
+[2m   Start at [22m 20:22:01
+[2m   Duration [22m 63.71s[2m (tests 78%, import 19%, transform 3%)[22m
+
+[2m    Isolate [22m [33m77 workers spawned[39m[2m · ~76ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~5.75s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+> venus@0.0.0 test:p05:reporter
+> node --test tests/p05/report-contract.test.mjs
+
+✔ X11 genuinely empty query is distinct from transient BadWindow with partial output (2.171505ms)
+✔ X11 inventory fails after bounded BadWindow retries and on non-transient failures (0.64258ms)
+✔ independent normative fixture has 30 unique cases,216 layouts,27 native observations (5.976575ms)
+✔ receipt rejects missing engine (1.206116ms)
+✔ receipt rejects duplicate engine (0.48167ms)
+✔ receipt rejects unknown case (0.584747ms)
+✔ receipt rejects missing case (0.425216ms)
+✔ receipt rejects duplicate case (0.384304ms)
+✔ receipt rejects failed record (0.430677ms)
+✔ receipt rejects missing layout (1.378176ms)
+✔ receipt rejects duplicate layout (0.510692ms)
+✔ receipt rejects wrong actual viewport (0.762338ms)
+✔ receipt rejects missing native (1.149962ms)
+✔ receipt rejects duplicate native (0.860384ms)
+✔ receipt rejects unmeasured native (0.611799ms)
+✔ receipt rejects native reset absent (0.562945ms)
+✔ receipt rejects shared process (0.705544ms)
+✔ receipt rejects main zoom leaked (0.64208ms)
+✔ receipt rejects wrong toolchain (0.244295ms)
+✔ receipt rejects runtime cleanup incomplete (0.301029ms)
+✔ receipt rejects display cleanup incomplete (0.177621ms)
+✔ receipt rejects pageerror (0.176342ms)
+✔ receipt rejects error overflow (0.155359ms)
+✔ receipt rejects missing overflow witness (0.16014ms)
+✔ receipt rejects native reused main room (0.785349ms)
+✔ receipt rejects native altered main game (0.561295ms)
+✔ receipt rejects native inactive scene (0.545014ms)
+✔ receipt rejects native reused main identity (0.842712ms)
+✔ targeted and full receipts cannot interchange (0.267696ms)
+✔ pageerrors acceptance rejects both actual errors and overflow independently (0.201703ms)
+✔ caller selection overrides inherited narrowing (0.15156ms)
+✔ actual wrapper refuses narrowed inner report despite Docker success and inherited selectors (36.370299ms)
+✔ actual wrapper accepts correctly requested targeted report (37.374936ms)
+✔ actual wrapper rejects forged full PASS missing matrix cells (40.751137ms)
+✔ actual wrapper rejects pageerror even if inner status says PASS (39.451931ms)
+✔ actual probe timeout cleanup: owned (35.544402ms)
+✔ actual probe timeout cleanup: inspectUnconfirmed (34.00275ms)
+✔ actual probe timeout cleanup: wrongOwner (33.500434ms)
+✔ actual probe timeout cleanup: removeFailed (37.033675ms)
+✔ self-actions component receipt requires actual nonempty unique checks and matching scope (0.902316ms)
+✔ actual self-actions wrapper selects the fixed service suite without claiming browser matrix (36.78258ms)
+✔ actual self-actions wrapper rejects missing or empty component receipt despite a browser PASS (68.63758ms)
+✔ actual failed service test process cannot be overridden by its PASS receipt (33.204765ms)
+✔ self-actions rejects conflicting modes and unused browser selectors before creating resources (176.63987ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 698.637762
+
+> venus@0.0.0 check:schemas
+> python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check
+
+PASS: JSON Schema 2020-12 and OpenAPI local references
+Checked RE-1 six labels × six = 36 directed combinations; errors=0
+PASS: policy config invariants only. Actual consent/access/inference requires app tests.
+
+> venus@0.0.0 check:i18n
+> node tools/check-i18n.mjs
+
+PASS: RU/EN/TR locale keys and nonempty strings
+
+> venus@0.0.0 test:python
+> python -B -m unittest discover -s tools -p test_*.py
+
+
+> venus@0.0.0 check:docs
+> python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py
+
+Venus docs: 1904 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+PASS: required files, linked assets and snapshot hashes
+{"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
+PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
+PASS: EXIT-P01 source, CI, negative/container evidence and independent reports bound
+PASS: EXIT-P02 source/CI/HTTP/WS/PostgreSQL/browser/OCI and independent reviews bound
+PASS: EXIT-P03 source/CI/runtime/preregistered measurements/independent reviews bound
+Checked 31143 packaged paths; errors=0
+PASS: packaged bytes match manifest; provenance/signatures require release verification.
+
+> venus@0.0.0 build
+> tsc -b && npm run build -w @venus/web
+
+
+> @venus/web@0.0.0 build
+> vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.39 kB │ gzip:   0.27 kB
+dist/assets/index-BoNI8E-V.css    9.58 kB │ gzip:   2.72 kB
+dist/assets/index-CQ4hcLem.js   347.42 kB │ gzip: 105.35 kB
+
+✓ built in 188ms
+
+> venus@0.0.0 test:catalog-r2
+> node tools/check-catalog-r2.mjs
+
+Validated 450 files, 450 parsed; errors=0
+PASS: structural/semantic checks only; human review still mandatory.
+
+DRAFT CHECK COMPLETE: 450 cards; human review remains REQUIRED. Output /workspace/.artifacts/catalog-r2-check/full-check
+
+ilures": 0, "errors": 0, "skipped": [], "active_draft_cards": 450, "coverage_dir": ".artifacts/catalog-r2-check/full-check", "approval_scope": "AUTOMATED_DRAFT_REGRESSION_ONLY", "human_approval": false}
+test_actual_full_C2_bound_to_final450 (__main__.FullCandidateTests.test_actual_full_C2_bound_to_final450) ... ok
+test_actual_public_and_private_profiles (__main__.FullCandidateTests.test_actual_public_and_private_profiles) ... ok
+test_balanced150_and30_categories (__main__.FullCandidateTests.test_balanced150_and30_categories) ... ok
+test_copied_revision_lineage_and_exact_untouched_bytes (__main__.FullCandidateTests.test_copied_revision_lineage_and_exact_untouched_bytes) ... ok
+test_draft_rights_and_physical_guards (__main__.FullCandidateTests.test_draft_rights_and_physical_guards) ... ok
+test_exact_active_selection_excludes_removed_and_quarantine (__main__.FullCandidateTests.test_exact_active_selection_excludes_removed_and_quarantine) ... ok
+test_known12_turkish_repairs (__main__.FullCandidateTests.test_known12_turkish_repairs) ... ok
+test_named_semantic_pairs_changed_outputs (__main__.FullCandidateTests.test_named_semantic_pairs_changed_outputs) ... ok
+test_original450_and_frozen379_unchanged (__main__.FullCandidateTests.test_original450_and_frozen379_unchanged) ... ok
+test_owned_ledger_history522_selects450_current (__main__.FullCandidateTests.test_owned_ledger_history522_selects450_current) ... ok
+test_packaged_readonly_original_ledger_snapshot (__main__.FullCandidateTests.test_packaged_readonly_original_ledger_snapshot) ... ok
+test_requests_reserved_before_new_draft_events (__main__.FullCandidateTests.test_requests_reserved_before_new_draft_events) ... ok
+test_round02_actor_number_repairs (__main__.FullCandidateTests.test_round02_actor_number_repairs) ... ok
+test_schema_roles_and_locale_parity (__main__.FullCandidateTests.test_schema_roles_and_locale_parity) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.521s
+
+OK
+
+Draft catalog receipts: .artifacts/catalog-r2-check
+
+> venus@0.0.0 test:negative
+> node tools/negative-gates.mjs
+
+PASS: schema, locale, type and unit corruption rejected; source unchanged
+............................................................................................................................
+----------------------------------------------------------------------
+Ran 124 tests in 13.875s
+
+OK

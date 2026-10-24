@@ -1,0 +1,5 @@
+
+## 2026-10-22T18:56:37.650171+00:00
+Prepare-only existingUI04→A21-01 andOCI31→32 metadata rebind copier; source18 frozen4d9d822d/1875/corea2c0d52e. Images18notbuilt/pinsnotavailable; nofinalfreeze orDocker/runtime/oracle/APPchange permitted. Root owns imagebuild/I-Oslot.
+
+2026-10-22T19:02:01.058481+00:00 Rootexplicitlyauthorizedfinalmetadataafterimages18pins. Copier fixedrootreceipts andcompiled69/67SQL7PG2CSS correspondence; UI2literal inverses/25MJSexact04 andOCI40recursiveMJSexact31/currentA81B78 verified. Existingbindingread/verifyIncluded/runtime0,2syntax0/UIinactive1expected/OCIinactive1expected. AuthorinitialrawNOT_AUTHORIZED expectationFAIL corrected byreadingexisting safe typedprojection without rerun. NoDocker/native/APP action. FrozenauthorINDEXc64c146afc413859aacbbc66cfed9a72cd9867b412d9c07e6b13e844c2da2e1b UIruntime06942120e5a388e01494a86cbfea24b6a65a0363b6d943aeab36bf81ebbc88c5 UIINDEX743a2d0a3b7b55b2dd9f5912f11e36947cdce455d2f2df58b38cb21e210de424 OCIINDEX6171469724e820d6e4a8811f58248025da26d84d45fb3dfdccef315a6a93f852. Source18. COMPLETE_STOP pendingindependent/resource06.

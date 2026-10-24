@@ -1,0 +1,116 @@
+{
+  "status": "PASS_HOST_STARTUP_METHOD_ONLY",
+  "controls": 14,
+  "cases": [
+    {
+      "name": "exact declaration preserved producerMap",
+      "status": "PASS"
+    },
+    {
+      "name": "exact declaration preserved verifyIncluded",
+      "status": "PASS"
+    },
+    {
+      "name": "driver run including all awaits exact",
+      "status": "PASS"
+    },
+    {
+      "name": "hostrunner only import target and CRLF-to-LF changed",
+      "status": "PASS"
+    },
+    {
+      "name": "driver reexports identical inert function objects",
+      "status": "PASS"
+    },
+    {
+      "name": "real readonly proof verifies source1813 and producer map",
+      "status": "PASS"
+    },
+    {
+      "name": "new real driver CLI with explicit machine stubs executes exactly once",
+      "status": "PASS"
+    },
+    {
+      "name": "old full module cycle remains exit13",
+      "status": "PASS"
+    },
+    {
+      "name": "source failure refuses execution",
+      "status": "PASS"
+    },
+    {
+      "name": "changed producer map refuses execution",
+      "status": "PASS"
+    },
+    {
+      "name": "stale ACK index refuses execution",
+      "status": "PASS"
+    },
+    {
+      "name": "pending binding refuses execution",
+      "status": "PASS"
+    },
+    {
+      "name": "guard API mismatch refuses after hash-valid map",
+      "status": "PASS"
+    },
+    {
+      "name": "unauthorized ACK refuses execution",
+      "status": "PASS"
+    }
+  ],
+  "subprocesses": [
+    {
+      "name": "new real driver CLI with explicit machine stubs executes exactly once",
+      "status": 0,
+      "stdout": "EXECUTE_ONCE_EXPLICIT_STUB_NO_DOCKER\n",
+      "stderr": ""
+    },
+    {
+      "name": "old full module cycle remains exit13",
+      "status": 13,
+      "stdout": "",
+      "stderr": "Warning: Detected unsettled top-level await at file:///C:/Temp/venus-oci04-review-zxMPGU/2/producer/driver.mjs:14\r\nif(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const ack=process.argv.find(a=>a.startsWith('--run-with-ack='));if(!ack)console.log(JSON.stringify({status:'NOT_RUN',root_ack_required:true,resource_guard:'NOT_READY_UNLESS_FROZEN_IN_BINDING',Docker_calls:0,producer_only:true}));else try{await run(ack.slice(15));}catch(e){console.log(JSON.stringify({status:'NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN',error_name:e.name,source_mutations:false}));process.exitCode=1;}}\r\n                                                                                                                                                                                                                                                                                                                             ^\r\n\r\n\r\n\r\n"
+    },
+    {
+      "name": "source failure refuses execution",
+      "status": 1,
+      "stdout": "{\"status\":\"NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN\",\"error_name\":\"Error\",\"source_mutations\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "changed producer map refuses execution",
+      "status": 1,
+      "stdout": "{\"status\":\"NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN\",\"error_name\":\"AssertionError\",\"source_mutations\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "stale ACK index refuses execution",
+      "status": 1,
+      "stdout": "{\"status\":\"NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN\",\"error_name\":\"AssertionError\",\"source_mutations\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "pending binding refuses execution",
+      "status": 1,
+      "stdout": "{\"status\":\"NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN\",\"error_name\":\"AssertionError\",\"source_mutations\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "guard API mismatch refuses after hash-valid map",
+      "status": 1,
+      "stdout": "{\"status\":\"NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN\",\"error_name\":\"AssertionError\",\"source_mutations\":false}\n",
+      "stderr": ""
+    },
+    {
+      "name": "unauthorized ACK refuses execution",
+      "status": 1,
+      "stdout": "{\"status\":\"NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN\",\"error_name\":\"AssertionError\",\"source_mutations\":false}\n",
+      "stderr": ""
+    }
+  ],
+  "actual_Docker_calls": 0,
+  "producer_writes": 0,
+  "actual_OCI04": "NOT_RUN",
+  "fixture_qualification": "Actual driver/module graph with explicit source verification, guard and execute stubs. No functional resource or OCI14 acceptance."
+}

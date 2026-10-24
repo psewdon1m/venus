@@ -1,0 +1,57 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.operator
+#1 transferring dockerfile: 883B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${DOCKER_CLI_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 122.67kB 0.0s done
+#4 DONE 0.0s
+
+#5 [dockercli 1/1] FROM docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04
+#5 resolve docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04 0.0s done
+#5 DONE 0.0s
+
+#6 [runtime 1/6] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#6 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#6 DONE 0.0s
+
+#7 [runtime 2/6] COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
+#7 CACHED
+
+#8 [runtime 3/6] COPY --from=dockercli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+#8 CACHED
+
+#9 [runtime 4/6] WORKDIR /opt/venus
+#9 CACHED
+
+#10 [runtime 5/6] COPY tools/venus-operator tools/venus-operator
+#10 DONE 0.0s
+
+#11 [runtime 6/6] COPY infra/venus/compose.standalone.yml infra/venus/compose.standalone.yml
+#11 DONE 0.0s
+
+#12 [fixture 1/1] COPY tests/p06 tests/p06
+#12 DONE 0.0s
+
+#13 exporting to image
+#13 exporting layers 0.1s done
+#13 exporting manifest sha256:b43fc7acf29bb53b11bef0331755ef1caabf283e1630db36cc0f9a28a214b947 0.0s done
+#13 exporting config sha256:b13e51cf85da495b5a4a659c904dcf2aed67f9cc4b2532521217e73eba53863e 0.0s done
+#13 exporting attestation manifest sha256:234be3d067a2af54b515d61289605abb3e2f003a26dedfe8ca52d50e9a6ab34d 0.0s done
+#13 exporting manifest list sha256:3b17f731e3daf8fc6450a9757b4bfaecda58f32ab8d0cda3cfe93b1d81b1a852 done
+#13 naming to docker.io/library/venus-p06-72e32a3d91-helper:fixture done
+#13 unpacking to docker.io/library/venus-p06-72e32a3d91-helper:fixture 0.1s done
+#13 DONE 0.3s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${DOCKER_CLI_IMAGE} results in empty or invalid base image name (line 2)
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/oveqfg9l69w6uai4erjjg28k9

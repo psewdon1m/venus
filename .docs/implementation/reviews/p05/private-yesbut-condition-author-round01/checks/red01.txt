@@ -1,0 +1,209 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts (8 tests | 6 failed) 33ms
+   ❯ private YesBut condition is required content, not a premature replacement (8)
+     × does not create a topic offer before the first condition 12ms
+     × creates the first offer immediately from the first condition with zero acknowledgements 6ms
+     × rejects a private finish without the required condition 6ms
+     × refuses an early edit before any content, consent, binding or epoch change 2ms
+     × at exactly five seconds replaces content with a new topic and fresh action consent requirement 1ms
+     × keeps the three-attempt cap and refuses the fourth condition without mutation 2ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 6 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > does not create a topic offer before the first condition
+AssertionError: expected { schema_version: 2, …(2) } to be null
+
+- Expected:
+null
+
++ Received:
+{
+  "bindings": [
+    {
+      "candidate_ref": "candidate-37b83cbd3a5532d095aac8dc79be26b89bebddc9c3fa7a603a5134175f47c150",
+      "card_id": "YB-TEST",
+      "card_revision": 1,
+      "card_sha256": "699b53fadeb926b7629e5c29d716578f3c1fece22b883735c3b6bd4ef2974ed4",
+      "condition": null,
+      "side": null,
+    },
+  ],
+  "schema_version": 2,
+  "state": {
+    "advice": [],
+    "advice_attempts": {
+      "alice": 0,
+      "bob": 0,
+    },
+    "candidates": [
+      {
+        "candidate_ref": "candidate-37b83cbd3a5532d095aac8dc79be26b89bebddc9c3fa7a603a5134175f47c150",
+        "card_id": "YB-TEST",
+        "card_revision": 1,
+        "card_sha256": "699b53fadeb926b7629e5c29d716578f3c1fece22b883735c3b6bd4ef2974ed4",
+        "prompt": {
+          "en": "Synthetic proposal Synthetic responder",
+          "ru": "Synthetic proposal Synthetic responder",
+          "tr": "Synthetic proposal Synthetic responder",
+        },
+        "topic_ids": [
+          "creative",
+        ],
+      },
+    ],
+    "clock_floor": 1000,
+    "created_at": 1000,
+    "declined_topics": [],
+    "epoch": 1,
+    "last_offer_at": 1000,
+    "offer": {
+      "acks": [],
+      "binding_hash": "7c0798aade5d20937bb7920ce64861b0c6f6d1d54f57c2b68f8fd3004b986604",
+      "candidate_ref": "candidate-37b83cbd3a5532d095aac8dc79be26b89bebddc9c3fa7a603a5134175f47c150",
+      "created_at": 1000,
+      "epoch": 1,
+      "expires_at": 31000,
+      "offer_id": "9349a1bc-aa0f-41a8-8260-04f18c76480e",
+      "proposal_revision": 1,
+      "state": "pending",
+      "token": "534cf5b4468dfa20e2968277a5e7e155e87db56ab67610ad9c53e8b952cc1056",
+    },
+    "parent_expires_at": 181000,
+    "pins": {
+      "map_digest": "2222222222222222222222222222222222222222222222222222222222222222",
+      "pack_digest": "1111111111111111111111111111111111111111111111111111111111111111",
+      "taxonomy_digest": "3333333333333333333333333333333333333333333333333333333333333333",
+    },
+    "preferences": {
+      "alice": {
+        "allow": [
+          "creative",
+        ],
+        "excluded": [],
+        "revision": 1,
+      },
+      "bob": {
+        "allow": [
+          "creative",
+        ],
+        "excluded": [],
+        "revision": 1,
+      },
+    },
+    "revision": 2,
+    "schema": "venus.private-conversation.v1",
+    "scope": {
+      "actors": [
+        "alice",
+        "bob",
+      ],
+      "room_id": "room",
+      "round_id": "round",
+      "session_id": "session",
+    },
+    "state": "open",
+    "topic_attempts": 1,
+    "topics": [
+      {
+        "labels": {
+          "en": "Creative",
+          "ru": "Творчество",
+          "tr": "Yaratıcılık",
+        },
+        "topic_id": "creative",
+      },
+    ],
+    "used_candidate_refs": [
+      "candidate-37b83cbd3a5532d095aac8dc79be26b89bebddc9c3fa7a603a5134175f47c150",
+    ],
+    "used_offer_ids": [
+      "9349a1bc-aa0f-41a8-8260-04f18c76480e",
+    ],
+    "used_tokens": [
+      "534cf5b4468dfa20e2968277a5e7e155e87db56ab67610ad9c53e8b952cc1056",
+    ],
+  },
+}
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:39:125
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > creates the first offer immediately from the first condition with zero acknowledgements
+AssertionError: expected undefined to match object { topic_attempts: 1, …(2) }
+
+- Expected:
+{
+  "last_offer_at": 1000,
+  "offer": {
+    "acks": [],
+    "state": "pending",
+  },
+  "topic_attempts": 1,
+}
+
++ Received:
+undefined
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:40:307
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > rejects a private finish without the required condition
+AssertionError: expected Error: Request could not be completed { …(2) } to match object { code: 'CONDITION_REQUIRED' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "CONDITION_REQUIRED",
++ DomainError {
++   "code": "ACTION_CONSENT_REQUIRED",
+  }
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:41:136
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > refuses an early edit before any content, consent, binding or epoch change
+TypeError: Cannot read properties of null (reading 'state')
+ ❯ Object.acceptTopics apps/api/src/topic-condition-lifecycle.test.ts:34:64
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:42:130
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > at exactly five seconds replaces content with a new topic and fresh action consent requirement
+TypeError: Cannot read properties of null (reading 'state')
+ ❯ Object.acceptTopics apps/api/src/topic-condition-lifecycle.test.ts:34:64
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:43:150
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > keeps the three-attempt cap and refuses the fourth condition without mutation
+AssertionError: expected undefined to be 3 // Object.is equality
+
+- Expected:
+3
+
++ Received:
+undefined
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:44:261
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  6 failed | 2 passed (8)
+   Start at  22:55:47
+   Duration  361ms (import 64%, transform 21%, tests 14%, worker 2%)
+

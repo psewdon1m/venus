@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "status": "HOLD_SOURCE_POLICY_TEST_MISMATCH",
+  "independent_nonauthor": true,
+  "source_git": "195e2302899687e11cecde1920d64a040714745e",
+  "source_identity": "3a4eae5c3aef4ff8acf9a6cdb3ba6c0321614d8eabd0b61a632db850c2f9b3f6",
+  "source_files": 1948,
+  "pre_sign_pass": false,
+  "full_stage_PASS": false,
+  "authority": "U-021/ADR-033",
+  "source_authority_and_least_privilege": "PASS_FOR_REVIEWED_DELTA",
+  "findings": [
+    {
+      "id": "S03-01",
+      "priority": "P2",
+      "status": "OPEN_FOR_REVIEWED_195e_SOURCE",
+      "file": "tools/ci-policy.test.ts",
+      "lines": "8-10",
+      "trigger": "Existing quality executes policy unit after ci.yml removes automatic p03-measurements.",
+      "impact": "Deterministic job-list assertion failure and obsolete matrix dereference; pre-sign04 cannot accept this source as quality-compatible.",
+      "minimal_fix": "In existing unit expect5automaticjobs; read manual p03-statistics.yml for unchanged4sections and120min budget; preserve actionpin/head/P04 checks; run this1existingunit and freeze corrected source.",
+      "runtime_tests_executed_by_reviewer": false
+    }
+  ],
+  "ci_policy_design": {
+    "automatic_jobs": 5,
+    "required_contexts_exact5": true,
+    "statistics_algorithm_samples_thresholds_unchanged": true,
+    "manual_statistics_sections": [
+      "invariants",
+      "fairness",
+      "gf",
+      "inference"
+    ],
+    "manual_trigger_only": true,
+    "all_other_protection_fields_unchanged": true,
+    "strict_preserved": true
+  },
+  "preview_design": {
+    "signing_secret": false,
+    "version": "0.0.0",
+    "least_privilege": "PASS_SOURCE_ONLY",
+    "permissions": [
+      "contents:read",
+      "packages:write"
+    ],
+    "qualified_release_or_stage_claim": false,
+    "signing_environment": false,
+    "tag": "p06-preview-SHA"
+  },
+  "ci_policy_evidence": {
+    "sha256": "77e3bdf178dfeef20b3bf7c2e176938495d489ad146cfd68c9cf0c0fd86ff926",
+    "hash_size_mismatches": 0,
+    "statistics_cancelled_not_PASS": true,
+    "indexed_files": 7,
+    "path": ".docs/implementation/evidence/p06/ci-policy-u02101/INDEX.json"
+  },
+  "historical_d3f_results": "FIVE_SUCCESS_FOUR_CANCELLED_NOT_ALL_NINE_PASS",
+  "new_CI_and_preview_actual_status": "NOT_ACCEPTED_BY_THIS_SOURCE_ONLY_FAIL_ROUND",
+  "root_fix_after_finding": "PARENT_REPORTS_EXISTING_UNIT1PASS_EXIT0_PENDING_NEW_FREEZE04_REVIEW",
+  "owner_Public_after_preview": "REPORTED_BY_PARENT_NOT_INDEPENDENTLY_VERIFIED_HERE",
+  "prior_part12": {
+    "PASS": 67,
+    "PENDING_FINAL_SIGNED_ARTIFACT_ONLY": 7,
+    "N_A": 34,
+    "total": 118,
+    "preserved_without_reclassification": true,
+    "DEFERRED_PRODUCTION_NOT_LOCAL_PASS": 10
+  },
+  "reviewer_tests_API_runtime_Git_admin_actions": false,
+  "reviewer_private_key_or_credential_reads": false,
+  "P07_started": false,
+  "write_status": "COMPLETE_STOP_PENDING_NEWFREEZE04"
+}

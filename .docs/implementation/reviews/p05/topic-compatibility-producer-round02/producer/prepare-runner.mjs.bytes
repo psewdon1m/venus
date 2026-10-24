@@ -1,0 +1,11 @@
+/** Adapt the already reviewed ownership/final-input runner, not product code. */
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const raw=readFileSync('.artifacts/p05-topic-chat-policy/runner.mjs','utf8');
+assert.equal(createHash('sha256').update(raw).digest('hex'),'c77b72308b42dc3262c55015afa1793c31cdfc8d5396a03ec515627a4c6da8e4');
+let text=raw.replaceAll('p05-topic-chat-policy','p05-topic-compatibility').replaceAll('venus-topic-chat-policy','venus-topic-compatibility').replaceAll('chat-policy.mjs','compatibility.mjs').replaceAll('chat-policy-report.json','compatibility-report.json').replaceAll('P05_TOPIC_CHAT_POLICY','P05_TOPIC_COMPATIBILITY').replaceAll('P05-TCP-','P05-COMPAT-').replaceAll('length:12','length:6').replaceAll('checks.length!==12','checks.length!==6').replaceAll('size!==12','size!==6').replaceAll('ACTUAL_TOPIC_CHAT_POLICY_REAL_PG_HTTP_WITH_EXPLICIT_QUOTA_BOUNDARY_FIXTURE','ACTUAL_TOPIC_COMPATIBILITY_PG_HTTP_WITH_EXPLICIT_HEADER_AND_PARTIAL_RESTORE_FIXTURES');
+const anchor='before=inventory();beforePins=pins();';assert.equal(text.split(anchor).length,2);
+text=text.replace(anchor,"before=inventory();if(before.identity!=='ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571'||Object.keys(before.files).length!==1811)throw Error('Expected exact engine2 frozen source');beforePins=pins();");
+writeFileSync('.artifacts/p05-topic-compatibility/runner.mjs',text);
+console.log(JSON.stringify({status:'RUNNER_PREPARED_NOT_RUN',sha256:createHash('sha256').update(text).digest('hex')}));

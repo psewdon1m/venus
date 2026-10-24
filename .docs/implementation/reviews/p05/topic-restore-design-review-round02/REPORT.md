@@ -1,0 +1,9 @@
+# Restore DESIGN04 — independent receipt compatibility review
+
+**DESIGN04_RECEIPT_COMPATIBILITY_ACCEPTED_FOR_PRODUCER_NOT_RUN.** No design finding. The amendment preserves14 controls, untouched D, future TTL, exact raw whole-DB/sequence equality across pg_restore and the read-only boot observer before reconcile/listen.
+
+Source inspection and three deterministic probes executing the original production methods with explicit SQL/auth doubles confirm the distinction. Non-chat exact retries can return their original receipt after current authorization without invoking the old command; dispatchReceipt does not restore grants. Fresh request IDs follow command validation, roll back stale operations without a new receipt and may run revocation-only persistTimeFailure maintenance. Chat retry/dispatch additionally require current chat policy. These are inert source-bound checks, not HTTP/PostgreSQL/restore evidence.
+
+Accepting an exact old200 requires the full original canonical receipt plus no grant/ack/private-reference/history/request/revision effect. A successful generic response is insufficient. Fresh old-tuple requests must receive explicit4xx with no revival; ciphertext changes cannot be treated as grants or automatically exempted. Inspect decrypted semantic changes and precise revoked/floor effects. Admission accounting is an explicit protected-request counter exception only, checked by scope/window/count; raw pg_restore equality retains zero exceptions.
+
+Concrete producer changes remain independently reviewable. Preserve old strict predicates as historical evidence; do not modify product behavior to force old receipt denial. The inherited895 image/source references require refresh for current ef009/1811 before RUN. No Docker, pg_dump/restore, Node restart, product or producer writes occurred. Human450 and full P05 are unaffected.

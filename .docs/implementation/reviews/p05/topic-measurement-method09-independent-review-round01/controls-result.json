@@ -1,0 +1,608 @@
+{
+  "status": "FINDING_TERMINAL_FIRST_IO_FAILURE_NOT_COPIED_TO_REPORT",
+  "source_sha256": "2ebb60c3763f4e93f980cdfebca037b1c33f91decfe896c4854109373ee0139f",
+  "controls": [
+    {
+      "name": "exact supervisor none",
+      "status": "PASS_OBSERVED"
+    },
+    {
+      "name": "exact supervisor rename-first",
+      "status": "PASS_OBSERVED"
+    },
+    {
+      "name": "exact supervisor write-first",
+      "status": "PASS_OBSERVED"
+    },
+    {
+      "name": "exact supervisor rename-terminal",
+      "status": "PASS_OBSERVED"
+    },
+    {
+      "name": "exact supervisor stop-fails",
+      "status": "PASS_OBSERVED"
+    },
+    {
+      "name": "typed IO redacts unknown error message and fields",
+      "status": "PASS"
+    },
+    {
+      "name": "stdout exact boundary extra=0",
+      "status": "PASS"
+    },
+    {
+      "name": "stdout exact boundary extra=1",
+      "status": "PASS"
+    },
+    {
+      "name": "stderr exact boundary extra=0",
+      "status": "PASS"
+    },
+    {
+      "name": "stderr exact boundary extra=1",
+      "status": "PASS"
+    },
+    {
+      "name": "spawn failure captured redacted",
+      "status": "PASS"
+    },
+    {
+      "name": "missing capture fails explicit",
+      "status": "PASS"
+    },
+    {
+      "name": "typed Python envelope accepted",
+      "status": "PASS"
+    },
+    {
+      "name": "reject Python raw traceback",
+      "status": "PASS"
+    },
+    {
+      "name": "reject Python wrong stage",
+      "status": "PASS"
+    },
+    {
+      "name": "reject Python unknown reason",
+      "status": "PASS"
+    },
+    {
+      "name": "reject Python extra payload",
+      "status": "PASS"
+    },
+    {
+      "name": "reject Python overflow",
+      "status": "PASS"
+    }
+  ],
+  "observations": [
+    {
+      "fault": "none",
+      "writes": 5,
+      "renames": 5,
+      "dockerCalls": 0,
+      "report": {
+        "io_failure": null,
+        "status": "SUPERVISOR_COMPLETE_NON_GATING",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "container": "venus-r100-v3-0123456789ab",
+        "volume": "venus-r100-v3-0123456789ab-output",
+        "phase": "DONE",
+        "events": [
+          {
+            "phase": "BOOTSTRAP",
+            "elapsed_ms": 0
+          },
+          {
+            "phase": "DONE",
+            "elapsed_ms": 250
+          }
+        ],
+        "capacity_fault": null,
+        "last_actual_host_sample": {
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "counter": 14,
+          "available_bytes": "214748364800",
+          "reserve_bytes": 10737418240,
+          "global_cap_bytes": 134217728,
+          "host_output_allowed": true,
+          "capacity_fault": null,
+          "stop_requested": false,
+          "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-RZrsBo",
+          "host_filesystem_metric": "actual host statfs bavail*bsize",
+          "UTC_diagnostic_only": "2026-10-20T15:47:41.309Z"
+        },
+        "actual_space_samples_after_stop": 0,
+        "worker_stop_confirmed": true,
+        "elapsed_monotonic_ms": 250,
+        "minimum_actual_host_free_bytes": "214748364800",
+        "guard_counter": 14,
+        "manual_cleanup_required": false,
+        "statistics_RUN": false,
+        "full_P05_PASS": false,
+        "terminal_receipt_written": true
+      },
+      "terminal_message": {
+        "type": "terminal",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "report": {
+          "io_failure": null,
+          "status": "SUPERVISOR_COMPLETE_NON_GATING",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-0123456789ab",
+          "volume": "venus-r100-v3-0123456789ab-output",
+          "phase": "DONE",
+          "events": [
+            {
+              "phase": "BOOTSTRAP",
+              "elapsed_ms": 0
+            },
+            {
+              "phase": "DONE",
+              "elapsed_ms": 250
+            }
+          ],
+          "capacity_fault": null,
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 14,
+            "available_bytes": "214748364800",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": true,
+            "capacity_fault": null,
+            "stop_requested": false,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-RZrsBo",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-20T15:47:41.309Z"
+          },
+          "actual_space_samples_after_stop": 0,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 250,
+          "minimum_actual_host_free_bytes": "214748364800",
+          "guard_counter": 14,
+          "manual_cleanup_required": false,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": true
+        }
+      }
+    },
+    {
+      "fault": "rename-first",
+      "writes": 1,
+      "renames": 1,
+      "dockerCalls": 1,
+      "report": {
+        "io_failure": {
+          "name": "Error",
+          "code": "EPERM",
+          "errno": -13,
+          "syscall": "rename"
+        },
+        "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "container": "venus-r100-v3-0123456789ab",
+        "volume": "venus-r100-v3-0123456789ab-output",
+        "events": [
+          {
+            "phase": "FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED",
+            "elapsed_ms": 250
+          }
+        ],
+        "reason": "CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+        "capacity_fault": {
+          "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+          "counter": 5,
+          "at_elapsed_ms": 0
+        },
+        "last_actual_host_sample": {
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "counter": 9,
+          "available_bytes": "214748364800",
+          "reserve_bytes": 10737418240,
+          "global_cap_bytes": 134217728,
+          "host_output_allowed": false,
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+            "counter": 5,
+            "at_elapsed_ms": 0
+          },
+          "stop_requested": true,
+          "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-WCgmgO",
+          "host_filesystem_metric": "actual host statfs bavail*bsize",
+          "UTC_diagnostic_only": "2026-10-20T15:47:41.312Z"
+        },
+        "actual_space_samples_after_stop": 5,
+        "worker_stop_confirmed": true,
+        "elapsed_monotonic_ms": 250,
+        "minimum_actual_host_free_bytes": "214748364800",
+        "guard_counter": 9,
+        "manual_cleanup_required": true,
+        "statistics_RUN": false,
+        "full_P05_PASS": false,
+        "terminal_receipt_written": false
+      },
+      "terminal_message": {
+        "type": "terminal",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "report": {
+          "io_failure": {
+            "name": "Error",
+            "code": "EPERM",
+            "errno": -13,
+            "syscall": "rename"
+          },
+          "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-0123456789ab",
+          "volume": "venus-r100-v3-0123456789ab-output",
+          "events": [
+            {
+              "phase": "FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED",
+              "elapsed_ms": 250
+            }
+          ],
+          "reason": "CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+            "counter": 5,
+            "at_elapsed_ms": 0
+          },
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 9,
+            "available_bytes": "214748364800",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": false,
+            "capacity_fault": {
+              "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+              "counter": 5,
+              "at_elapsed_ms": 0
+            },
+            "stop_requested": true,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-WCgmgO",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-20T15:47:41.312Z"
+          },
+          "actual_space_samples_after_stop": 5,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 250,
+          "minimum_actual_host_free_bytes": "214748364800",
+          "guard_counter": 9,
+          "manual_cleanup_required": true,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": false
+        }
+      }
+    },
+    {
+      "fault": "write-first",
+      "writes": 1,
+      "renames": 0,
+      "dockerCalls": 1,
+      "report": {
+        "io_failure": {
+          "name": "Error",
+          "code": "ENOSPC",
+          "errno": -13,
+          "syscall": "write"
+        },
+        "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "container": "venus-r100-v3-0123456789ab",
+        "volume": "venus-r100-v3-0123456789ab-output",
+        "events": [
+          {
+            "phase": "FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED",
+            "elapsed_ms": 250
+          }
+        ],
+        "reason": "CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC",
+        "capacity_fault": {
+          "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC",
+          "counter": 4,
+          "at_elapsed_ms": 0
+        },
+        "last_actual_host_sample": {
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "counter": 8,
+          "available_bytes": "214748364800",
+          "reserve_bytes": 10737418240,
+          "global_cap_bytes": 134217728,
+          "host_output_allowed": false,
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC",
+            "counter": 4,
+            "at_elapsed_ms": 0
+          },
+          "stop_requested": true,
+          "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-lnmwxs",
+          "host_filesystem_metric": "actual host statfs bavail*bsize",
+          "UTC_diagnostic_only": "2026-10-20T15:47:41.314Z"
+        },
+        "actual_space_samples_after_stop": 5,
+        "worker_stop_confirmed": true,
+        "elapsed_monotonic_ms": 250,
+        "minimum_actual_host_free_bytes": "214748364800",
+        "guard_counter": 8,
+        "manual_cleanup_required": true,
+        "statistics_RUN": false,
+        "full_P05_PASS": false,
+        "terminal_receipt_written": false
+      },
+      "terminal_message": {
+        "type": "terminal",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "report": {
+          "io_failure": {
+            "name": "Error",
+            "code": "ENOSPC",
+            "errno": -13,
+            "syscall": "write"
+          },
+          "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-0123456789ab",
+          "volume": "venus-r100-v3-0123456789ab-output",
+          "events": [
+            {
+              "phase": "FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED",
+              "elapsed_ms": 250
+            }
+          ],
+          "reason": "CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC",
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC",
+            "counter": 4,
+            "at_elapsed_ms": 0
+          },
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 8,
+            "available_bytes": "214748364800",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": false,
+            "capacity_fault": {
+              "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:ENOSPC",
+              "counter": 4,
+              "at_elapsed_ms": 0
+            },
+            "stop_requested": true,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-lnmwxs",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-20T15:47:41.314Z"
+          },
+          "actual_space_samples_after_stop": 5,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 250,
+          "minimum_actual_host_free_bytes": "214748364800",
+          "guard_counter": 8,
+          "manual_cleanup_required": true,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": false
+        }
+      }
+    },
+    {
+      "fault": "rename-terminal",
+      "writes": 5,
+      "renames": 5,
+      "dockerCalls": 0,
+      "report": {
+        "io_failure": null,
+        "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "container": "venus-r100-v3-0123456789ab",
+        "volume": "venus-r100-v3-0123456789ab-output",
+        "phase": "DONE",
+        "events": [
+          {
+            "phase": "BOOTSTRAP",
+            "elapsed_ms": 0
+          },
+          {
+            "phase": "DONE",
+            "elapsed_ms": 250
+          }
+        ],
+        "reason": "; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+        "capacity_fault": {
+          "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+          "counter": 18,
+          "at_elapsed_ms": 250
+        },
+        "last_actual_host_sample": {
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "counter": 17,
+          "available_bytes": "214748364800",
+          "reserve_bytes": 10737418240,
+          "global_cap_bytes": 134217728,
+          "host_output_allowed": true,
+          "capacity_fault": null,
+          "stop_requested": false,
+          "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-S94jwH",
+          "host_filesystem_metric": "actual host statfs bavail*bsize",
+          "UTC_diagnostic_only": "2026-10-20T15:47:41.317Z"
+        },
+        "actual_space_samples_after_stop": 0,
+        "worker_stop_confirmed": true,
+        "elapsed_monotonic_ms": 250,
+        "minimum_actual_host_free_bytes": "214748364800",
+        "guard_counter": 17,
+        "manual_cleanup_required": true,
+        "statistics_RUN": false,
+        "full_P05_PASS": false,
+        "terminal_receipt_written": false
+      },
+      "terminal_message": {
+        "type": "terminal",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "report": {
+          "io_failure": null,
+          "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-0123456789ab",
+          "volume": "venus-r100-v3-0123456789ab-output",
+          "phase": "DONE",
+          "events": [
+            {
+              "phase": "BOOTSTRAP",
+              "elapsed_ms": 0
+            },
+            {
+              "phase": "DONE",
+              "elapsed_ms": 250
+            }
+          ],
+          "reason": "; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+            "counter": 18,
+            "at_elapsed_ms": 250
+          },
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 17,
+            "available_bytes": "214748364800",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": true,
+            "capacity_fault": null,
+            "stop_requested": false,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-S94jwH",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-20T15:47:41.317Z"
+          },
+          "actual_space_samples_after_stop": 0,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 250,
+          "minimum_actual_host_free_bytes": "214748364800",
+          "guard_counter": 17,
+          "manual_cleanup_required": true,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": false
+        }
+      }
+    },
+    {
+      "fault": "stop-fails",
+      "writes": 1,
+      "renames": 1,
+      "dockerCalls": 1,
+      "report": {
+        "io_failure": {
+          "name": "Error",
+          "code": "EPERM",
+          "errno": -13,
+          "syscall": "rename"
+        },
+        "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "container": "venus-r100-v3-0123456789ab",
+        "volume": "venus-r100-v3-0123456789ab-output",
+        "events": [
+          {
+            "phase": "FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED",
+            "elapsed_ms": 250
+          }
+        ],
+        "reason": "CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; Expected values to be strictly equal:\n\n1 !== 0\n; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+        "capacity_fault": {
+          "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+          "counter": 5,
+          "at_elapsed_ms": 0
+        },
+        "last_actual_host_sample": {
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "counter": 9,
+          "available_bytes": "214748364800",
+          "reserve_bytes": 10737418240,
+          "global_cap_bytes": 134217728,
+          "host_output_allowed": false,
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+            "counter": 5,
+            "at_elapsed_ms": 0
+          },
+          "stop_requested": true,
+          "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-egWWqA",
+          "host_filesystem_metric": "actual host statfs bavail*bsize",
+          "UTC_diagnostic_only": "2026-10-20T15:47:41.319Z"
+        },
+        "actual_space_samples_after_stop": 5,
+        "worker_stop_confirmed": true,
+        "elapsed_monotonic_ms": 250,
+        "minimum_actual_host_free_bytes": "214748364800",
+        "guard_counter": 9,
+        "manual_cleanup_required": true,
+        "statistics_RUN": false,
+        "full_P05_PASS": false,
+        "terminal_receipt_written": false
+      },
+      "terminal_message": {
+        "type": "terminal",
+        "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "report": {
+          "io_failure": {
+            "name": "Error",
+            "code": "EPERM",
+            "errno": -13,
+            "syscall": "rename"
+          },
+          "status": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED",
+          "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "container": "venus-r100-v3-0123456789ab",
+          "volume": "venus-r100-v3-0123456789ab-output",
+          "events": [
+            {
+              "phase": "FAILURE_PREFIX_EXPORTED_BEFORE_CAPACITY_FAULT_AND_CLEANED",
+              "elapsed_ms": 250
+            }
+          ],
+          "reason": "CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; Expected values to be strictly equal:\n\n1 !== 0\n; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM; CAPACITY_FAULT:SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+          "capacity_fault": {
+            "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+            "counter": 5,
+            "at_elapsed_ms": 0
+          },
+          "last_actual_host_sample": {
+            "owner": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "counter": 9,
+            "available_bytes": "214748364800",
+            "reserve_bytes": 10737418240,
+            "global_cap_bytes": 134217728,
+            "host_output_allowed": false,
+            "capacity_fault": {
+              "reason": "SUPERVISOR_RECEIPT_WRITE_FAILED:EPERM",
+              "counter": 5,
+              "at_elapsed_ms": 0
+            },
+            "stop_requested": true,
+            "host_output_path": "C:\\.projects\\venus\\.artifacts\\p05-method09-independent01\\fixture-egWWqA",
+            "host_filesystem_metric": "actual host statfs bavail*bsize",
+            "UTC_diagnostic_only": "2026-10-20T15:47:41.319Z"
+          },
+          "actual_space_samples_after_stop": 5,
+          "worker_stop_confirmed": true,
+          "elapsed_monotonic_ms": 250,
+          "minimum_actual_host_free_bytes": "214748364800",
+          "guard_counter": 9,
+          "manual_cleanup_required": true,
+          "statistics_RUN": false,
+          "full_P05_PASS": false,
+          "terminal_receipt_written": false
+        }
+      }
+    }
+  ],
+  "Docker_calls": 0,
+  "statistics_RUN": false,
+  "actual_R100_RUN": false,
+  "private_payload": "ONLY_SYNTHETIC_SENTINEL_NOT_PRIVATE_DATA"
+}

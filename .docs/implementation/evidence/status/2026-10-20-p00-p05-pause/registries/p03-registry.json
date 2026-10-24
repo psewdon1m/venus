@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "stage": "P03",
+  "gate": "EXIT-P03",
+  "status": "PASSED",
+  "branch": "feature/p03-engine",
+  "baseline_tag": "p02-accepted-20261018",
+  "baseline_sha": "12a028b174cc03a4a8ea1398f321d23c6a4c6e98",
+  "adr": [
+    "ADR-015",
+    "ADR-016"
+  ],
+  "protocol": "P03-M3",
+  "checks": [
+    {
+      "id": "P03-RE-001-018",
+      "status": "PASSED",
+      "required": "production engine exhaustive/property + real API evidence for all18RE scenarios",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+      }
+    },
+    {
+      "id": "P03-70000",
+      "status": "PASSED",
+      "required": "10000synthetic sessions per group size2..8;15invariants,1..100rounds,allmodes/contexts/comforts",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+      }
+    },
+    {
+      "id": "P03-SNAPSHOT",
+      "status": "PASSED",
+      "required": "golden/pinning/DBidempotence/activepausedsettingslock/safety",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+      }
+    },
+    {
+      "id": "P03-CONSENT-ACL",
+      "status": "PASSED",
+      "required": "authenticated PostgreSQL/HTTP/WS actor/host/spectator/outsider/expiry/revoke/race tests",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+      }
+    },
+    {
+      "id": "P03-FAIRNESS-INFERENCE",
+      "status": "PASSED",
+      "required": "preregistered thresholds+seeds;distributions+CIs;zero deterministic technical class decoder",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+      }
+    },
+    {
+      "id": "P03-COMPATIBILITY",
+      "status": "PASSED",
+      "required": "pinned pack/policy/reconnect/locale/spectator persistence;quiesced previousP02 OCIrollback",
+      "evidence": {
+        "path": ".docs/implementation/evidence/p03/gate-report.json",
+        "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+      }
+    }
+  ],
+  "public_games": "BLOCKED_UNTIL_REVIEWED_PACK_P04_AND_G1_P05",
+  "public_entry": "BLOCKED_UNTIL_OWNER_APPROVED_OFFER_P05",
+  "pending_user_decisions_for_local_P03": [],
+  "protocol_path": ".docs/implementation/p03-measurement-protocol-v3.json",
+  "preflight_runtime": {
+    "tests": 19,
+    "status": "PASS",
+    "source_dirty": true,
+    "not_gate_acceptance": true,
+    "historical_only": true
+  },
+  "attempts": [
+    {
+      "source_sha": "14482d28b4a2d18be22f5e3939b6161f004fbfe2",
+      "status": "NOT_ACCEPTED",
+      "ci_run": 39155359289,
+      "packet": ".docs/implementation/evidence/p03/attempt-14482d2/attempt.json",
+      "statistics": "INTERRUPTED"
+    },
+    {
+      "source_sha": "8b6101bfeb54b00d789b58e046907af4e783cef8",
+      "status": "HISTORICAL_ACCEPTED_TECHNICAL_GATE",
+      "ci_run": 39156750574,
+      "packet": "p03-m3-proof-timeout-20261019:.docs/implementation/evidence/p03/gate-report.json",
+      "statistics": "ALL_FOUR_FULL_M3_PASS",
+      "historical_tag": "p03-m3-proof-timeout-20261019"
+    },
+    {
+      "source_sha": "bc55e1722adf5c1ee669d42bfde7ef103ccc598d",
+      "status": "NOT_DELIVERED_TIMEOUT",
+      "ci_run": 39162076940,
+      "packet": ".docs/implementation/evidence/p03/attempt-bc55e17/attempt.json",
+      "statistics": "GF_FAIRNESS_INVARIANTS_PASS_INFERENCE_125_OF_126_INTERRUPTED"
+    },
+    {
+      "source_sha": "8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b",
+      "status": "ACCEPTED_TECHNICAL_GATE",
+      "ci_run": 39166967939,
+      "packet": ".docs/implementation/evidence/p03/gate-report.json",
+      "statistics": "ALL_FOUR_FRESH_EXACT_SOURCE_CI_M3_PASS",
+      "prior_timeout_preserved": ".docs/implementation/evidence/p03/attempt-bc55e17/attempt.json"
+    }
+  ],
+  "source_sha": "8f3405d9ef1397c6adcd9f7aba42a5fd7382ef9b",
+  "source_identity_sha256": "63a3b972c49214e52c6136204506969c4b35e99bb13b98887e7517fa5e47678a",
+  "gate_report": {
+    "path": ".docs/implementation/evidence/p03/gate-report.json",
+    "sha256": "bfe4aa99af9255f87c49d81ad2fe395c64926f3e8835d2f10a37c18fb07f13bb"
+  },
+  "ci_run": 39166967939,
+  "requirement_coverage": {
+    "path": ".docs/implementation/evidence/p03/effective-coverage.json",
+    "sha256": "da6011b821d262da4b36ca692fd07449284a5b7ff6aa6feff469a0fbd41e2f68"
+  },
+  "reviews": [
+    {
+      "path": ".docs/implementation/reviews/p03/final-evidence.json",
+      "sha256": "17f539684ec109e97bdad5366d5aa74f5389f367c21541502d559defa5ab5632"
+    },
+    {
+      "path": ".docs/implementation/reviews/p03/final-implementation.json",
+      "sha256": "e3b741c4f5de85b78ee8e9c0e21717b73c4aa6b2d2441d8ef3572978f18c3b6f"
+    }
+  ],
+  "delivery": {
+    "status_at_this_commit": "TECHNICAL_GATE_PASSED_PROTECTED_PROOF_CI_AND_MERGE_PENDING",
+    "pull_request": "https://github.com/psewdon1m/venus/pull/3",
+    "original_history_anchor": "p03-proof-20261019 must point to the final successful original proof HEAD, retaining measured8f ancestry after protected rebase. Explicit recovery fetch: git fetch origin tag p03-proof-20261019.",
+    "terminal_receipt": "Annotated immutable tag p03-accepted-20261019 on actual merged main commit; its JSON annotation is the terminal continuation of the P03 journal and records actual proof CI8/8, PR merge and final main identity. Read with git cat-file tag p03-accepted-20261019.",
+    "scope_after_delivery": "STOP_AFTER_P03_BY_EXPLICIT_USER_REQUEST; P04 NOT_STARTED"
+  }
+}

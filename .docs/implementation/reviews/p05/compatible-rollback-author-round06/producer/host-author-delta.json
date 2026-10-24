@@ -1,0 +1,78 @@
+[
+  {
+    "before": "import {producerMap,verifyIncluded} from './source-proof.mjs';",
+    "after": "import {producerMap,verifyIncluded} from './source-proof.mjs';\nimport {BoundProfile,profile,safeError} from './bound-profile.mjs';"
+  },
+  {
+    "before": "export async function executePlan(binding,ack,external,sourceMap){",
+    "after": "export async function executePlan(binding,ack,sourceMap){"
+  },
+  {
+    "before": "assert.equal(binding.resource_guard.status,'INDEPENDENTLY_REVIEWED_READY');",
+    "after": "assert.equal(binding.resource_profile,'QRB_BOUND_ONLY_1');"
+  },
+  {
+    "before": "async function before(nextBytes=0,phase=activePhase){",
+    "after": "async function before(nextBytes=0,phase=activePhase,outputPath=null){"
+  },
+  {
+    "before": "metadata_headroom_bytes:1048576",
+    "after": "output_path:outputPath"
+  },
+  {
+    "before": "await before(raw.length);const p=join(output,name)",
+    "after": "await before(raw.length,activePhase,name);const p=join(output,name)"
+  },
+  {
+    "before": "{timeout=30000,cap=65536,record=true}={}){await before();",
+    "after": "{timeout=30000,cap=65536,record=true}={}){await before();timeout=Math.min(timeout,guard.remaining());"
+  },
+  {
+    "before": "['create',...ipcArguments(role)",
+    "after": "['create','--pull=never',...ipcArguments(role)"
+  },
+  {
+    "before": "'--memory',memory,'--cpus',cpus",
+    "after": "'--memory',memory,'--memory-swap',memory,'--cpus',cpus"
+  },
+  {
+    "before": "'--mount','type=bind,src='+join(output,'evidence')+',dst=/evidence'+(role==='keeper'?',readonly':'')",
+    "after": "...volume('evidence','/evidence',{readonly:role==='keeper'})"
+  },
+  {
+    "before": "'--env','DB_HOST=db','--env','DB_PASSWORD_FILE=/private/db-password'",
+    "after": "'--env','DB_HOST=db','--env','DB_PASSWORD_FILE=/private/db-password','--env','VENUS_P05_ISOLATED_FIXTURE=1'"
+  },
+  {
+    "before": "await write('authority-ack.json',ack);",
+    "after": "await write('authority-ack.json',ack);await write('control/bound-profile.json',{owner,profile:'QRB_BOUND_ONLY_1',deadline_epoch_ms:guard.deadlineEpoch});"
+  },
+  {
+    "before": "{db:'size=248m,mode=0700',authority:'size=32m,mode=0700',private:'size=8m,mode=0700,uid=0,gid=0'}",
+    "after": "{db:'size=240m,mode=0700,uid=999,gid=999',authority:'size=32m,mode=0700',private:'size=8m,mode=0700,uid=0,gid=0',evidence:'size=64m,mode=0700'}"
+  },
+  {
+    "before": "await command(['start',names.get('keeper')]);",
+    "after": "await command(['start',names.get('keeper')]);guard.setKeeper(names.get('keeper'));await verifyNativeQuotas();"
+  },
+  {
+    "before": "{owner,guardFile:'/control/guard.json',privateRoot:'/private',caFile:ca}",
+    "after": "{owner,guardFile:'/control/bound-profile.json',privateRoot:'/private',caFile:ca,whole_deadline_epoch_ms:guard.deadlineEpoch,resource_profile:'QRB_BOUND_ONLY_1'}"
+  },
+  {
+    "before": "['create',...ipcArguments('db'),'--name'",
+    "after": "['create','--pull=never',...ipcArguments('db'),'--read-only','--user','999:999','--cap-drop','ALL','--security-opt','no-new-privileges:true','--tmpfs','/tmp:size=2m,mode=1777','--tmpfs','/var/run/postgresql:size=2m,mode=0775,uid=999,gid=999','--name'"
+  },
+  {
+    "before": "'--memory','512m','--cpus'",
+    "after": "'--memory','512m','--memory-swap','512m','--cpus'"
+  },
+  {
+    "before": "{owner,guardFile:'/control/guard.json',certFile:ca,keyFile:testKey}",
+    "after": "{owner,guardFile:'/control/bound-profile.json',certFile:ca,keyFile:testKey,whole_deadline_epoch_ms:guard.deadlineEpoch,resource_profile:'QRB_BOUND_ONLY_1'}"
+  },
+  {
+    "before": "{owner,guardFile:'/control/guard.json',caFile:ca}",
+    "after": "{owner,guardFile:'/control/bound-profile.json',caFile:ca,whole_deadline_epoch_ms:guard.deadlineEpoch,resource_profile:'QRB_BOUND_ONLY_1'}"
+  }
+]

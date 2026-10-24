@@ -1,0 +1,26 @@
+--- 01/apps/api/src/request-error-diagnostic.ts
++++ 02/apps/api/src/request-error-diagnostic.ts
+@@ -17,6 +17,15 @@
+  Function.prototype.toString.call(preparer.value).replace(/\r\n/g,'\n')==='function ErrorPrepareStackTrace(error, trace) {\n  return internalPrepareStackTrace(error, trace);\n}'?preparer.value:undefined;
+ type ErrorKind='TypeError'|'RangeError'|'ReferenceError'|'SyntaxError'|'URIError'|'EvalError'|'AggregateError'|'Error'|'UNKNOWN';
+ export interface RequestErrorDiagnostic {error_kind:ErrorKind;failure_code:string;source_module?:typeof modules[number];source_line?:number;source_column?:number}
++function safePrototypeChain(value:unknown):boolean{
++ if(!value||typeof value!=='object'||types.isProxy(value))return false;
++ let current:object|null=value;
++ for(let depth=0;current&&depth<8;depth++){
++  if(types.isProxy(current))return false;
++  current=Object.getPrototypeOf(current);
++ }
++ return current===null;
++}
+ function data(value:unknown,key:string):unknown{
+  try{if(!value||typeof value!=='object')return undefined;const d=Object.getOwnPropertyDescriptor(value,key);return d&&'value'in d?d.value:undefined;}catch{return undefined;}
+ }
+@@ -63,6 +72,7 @@
+ }
+ /** Server-only literal projection. Never pass an error object to the logger. */
+ export function requestErrorDiagnostic(error:unknown):RequestErrorDiagnostic{
++ if(!safePrototypeChain(error))return {error_kind:'UNKNOWN',failure_code:'UNKNOWN'};
+  const error_kind=kind(error),code=data(error,'code');
+  const failure_code=typeof code==='string'&&failureCodes.has(code)?code:
+   error_kind==='Error'&&code===undefined&&data(error,'message')==='Query read timeout'?'QUERY_TIMEOUT':'UNKNOWN';

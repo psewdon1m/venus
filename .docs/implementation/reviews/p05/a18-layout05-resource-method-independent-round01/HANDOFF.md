@@ -1,0 +1,1 @@
+PASS_METHOD_ONLY resource activation rebind only. Exact helper3cefb0f1/authority6a41fbc5 pinned. Separate05 functional method PASS required; then fresh manual window and exact issuedACK confirmation before first shard. Same9/max1/concurrency1/stopFAIL/no retry/fresh every start/original8+foreign unchanged/no other new heavy. No native execution. COMPLETE_STOP.

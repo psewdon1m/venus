@@ -1,0 +1,14 @@
+{
+  "status": "PROPOSED_DIAGNOSTIC_ONLY_REQUIRES_AUTHOR_PRODUCER_FREEZE_AND_ROOT_ACK",
+  "product_edits": false,
+  "runtime_reseed_or_retry_now": false,
+  "scope": "Keep original16 scenarios/assertions; add bounded readonly metadata, no weakened lease/timeout or automatic retries. May be applied to next source revision with exact proof boundaries; it cannot retroactively diagnose actual895 with certainty.",
+  "metadata": [
+    "Per actor private target/conversation/chat request method/path, browser request timing start/responseEnd, status/error code, received scope session/round/game_rev/epoch/revision and expected last observed UI scope at request/response.",
+    "Only state/offer-own-accepted/prompt-present/advice-count/chat-count booleans, server_time/expires_at/duration and full body digest; never token, text, cookie, CSRF or raw target body in evidence.",
+    "Record bounded last WS metadata including type/schema/stream/audience/target-match/stream_rev/room_rev/payload session/game_rev/round/epoch where present, no payload text. Record overflow explicitly.",
+    "Record UI requestfailed/error counters, actual native elapsed and independent monotonic timing. Compare serial self-actions\u2192target\u2192conversation\u2192chat wall span to5s without extending it.",
+    "Validate captured synthetic response shapes with exact pinned frontend validators in an excluded readonly module; report booleans/scope mismatches, not sanitized invented positive DTOs."
+  ],
+  "gate": "Producer remains author-disjoint reviewed and exact-pinned; root ACK before RUN. Diagnostic failure retained; no actual/release/stage PASS from metadata-only results. If these do not distinguish generation/effect clears, a separately declared client trace instrumentation proposal is needed; do not silently patch the delivered bundle."
+}

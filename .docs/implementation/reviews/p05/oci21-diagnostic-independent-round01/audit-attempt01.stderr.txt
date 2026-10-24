@@ -1,0 +1,233 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: inverse must equal exact UTF-8 OCI20 bytes
++ actual - expected
+
++ '/** Actual image UI in a single pinned Chromium; no replacement React/DOM bundle. */\n' +
++   '/* global document */\n' +
++   "import assert from 'node:assert/strict';\n" +
++   "import {verifyOwnIPC} from './ipc-policy.mjs';\n" +
++   "import {readFileSync,existsSync} from 'node:fs';\n" +
++   "import {resolve} from 'node:path';\n" +
++   "import {fileURLToPath} from 'node:url';\n" +
++   "import {X509Certificate,createHash} from 'node:crypto';\n" +
++   "import {performance} from 'node:perf_hooks';\n" +
++   "import {imageRequire} from './image-modules.mjs';\n" +
++   "import {ResourceLease} from './resource-lease.mjs';\n" +
++   "import {safeError} from './bound-profile.mjs';\n" +
++   '/** Browser-native transport hold only; no clock/DOM/cache/database mutation. */\n' +
++   'export async function installApiQuiescence(context,room,lease){\n' +
++   " const origin='https://localhost:8443',current=origin+'/api/v2/rooms/'+room+'/game/current';\n" +
++   " const own=(url,ws=false)=>{try{const u=new URL(String(url));return u.origin===(ws?'wss://localhost:8443':origin)&&u.pathname.startsWith('/api/');}catch{return false;}};\n" +
++   ' let held=false,disposing=false,failure=null,blockedHTTP=0,blockedWS=0,completedCurrent=0;\n' +
++   ' const active=new Set(),forwarded=new WeakSet(),successful=new WeakSet();\n' +
++   " const latch=()=>{failure??=Error('BROWSER_API_QUIESCENCE_FAILED');};\n" +
++   " const health=()=>{lease.assert();if(failure)throw failure;assert(active.size<=256,'BROWSER_API_INFLIGHT_BOUND');};\n" +
++   " context.on('request',request=>{if(own(request.url())){if(active.size>=256)latch();else active.add(request);}});\n" +
++   " context.on('response',response=>{const request=response.request();if(!held&&forwarded.has(request)&&request.method()==='GET'&&request.url()===current&&response.status()===200)successful.add(request);});\n" +
++   " context.on('requestfinished',request=>{active.delete(request);if(!held&&forwarded.has(request)&&successful.has(request))completedCurrent++;});\n" +
++   " context.on('requestfailed',request=>{active.delete(request);});\n" +
++   ' await context.route(url=>own(url),async route=>{\n' +
++   "  try{if(held||failure){blockedHTTP++;await route.abort('blockedbyclient');}else{forwarded.add(route.request());await route.continue();}}\n" +
++   '  catch{if(!disposing)latch();}\n' +
++   ' });\n' +
++   ' await context.routeWebSocket(url=>own(url,true),async route=>{\n' +
++   "  try{if(held||failure){blockedWS++;await route.close({code:1001,reason:'Fixture API hold'});}else route.connectToServer();}\n" +
++   '  catch{if(!disposing)latch();}\n' +
++   ' });\n' +
++   " const until=async predicate=>{const deadline=performance.now()+120000;while(!predicate()){health();assert(performance.now()<deadline,'BROWSER_API_QUIESCENCE_DEADLINE');await new Promise(r=>setTimeout(r,25));}health();};\n" +
++   ' return {\n' +
++   '  async hold(){held=true;await until(()=>active.size===0);return this.snapshot();},\n' +
++   "  release(){health();assert(held,'BROWSER_API_RELEASE_WITHOUT_HOLD');held=false;return completedCurrent;},\n" +
++   "  async resumedCurrent(cursor){assert(!held,'BROWSER_API_STILL_HELD');assert(Number.isSafeInteger(cursor)&&cursor>=0);await until(()=>completedCurrent>cursor);return this.snapshot();},\n" +
++   '  snapshot(){health();return{held,inflight_HTTP:active.size,blocked_HTTP:blockedHTTP,blocked_WS:blockedWS,completed_current_GET200:completedCurrent};},\n' +
++   '  diagnostic(){const values=[active.size,blockedHTTP,blockedWS,completedCurrent],bounded=value=>Number.isSafeInteger(value)&&value>=0&&value<=1000000?value:null;return{held,disposing,failure_latched:failure!==null,inflight_HTTP:bounded(active.size),blocked_HTTP:bounded(blockedHTTP),blocked_WS:bounded(blockedWS),completed_current_GET200:bounded(completedCurrent),counter_overflow:values.some(value=>bounded(value)===null)};},\n' +
++   '  dispose(){held=true;disposing=true;}\n' +
++   ' };\n' +
++   '}\n' +
++   "export async function browser(config){verifyOwnIPC('browser');const require=imageRequire(),{chromium}=require('playwright'),lease=new ResourceLease({...config,privateRoot:'/tmp'});await lease.initial();const spki=createHash('sha256').update(new X509Certificate(readFileSync(config.caFile)).publicKey.export({type:'spki',format:'der'})).digest('base64');let runtime,diagnosticStep='CHROMIUM_LAUNCH',diagnosticPhase='A1';const contexts=[],gates=[],report={status:'FAIL',engine:'chromium',page_errors:0,clock_scope:'EXPLICIT_FIXED_DATE_FIXTURE_NOT_NATURAL_TTL',TLS_scope:'CHROMIUM_EXACT_PUBLIC_FIXTURE_SPKI_PIN_PLUS_INDEPENDENT_NODE_CA_VERIFICATION',prior_known_bug:'b244 timing P2 and unbounded WS poll queue / heartbeat-starvation P2; fixed fixtureclock compatibility does not close either natural-time behavior',raw_private_evidence_exported:false};\n" +
++   " const write=(name,data)=>lease.write('/evidence',name,JSON.stringify(data,null,2)+'\\n'),wait=async name=>{const limit=performance.now()+120000,path='/private/browser-command-'+name+'.json';while(performance.now()<limit){lease.assert();if(existsSync(path)){const v=JSON.parse(readFileSync(path));assert.equal(v.owner,config.owner);assert.equal(v.command,name);return;}await new Promise(r=>setTimeout(r,50));}throw Error('BROWSER_PHASE_DEADLINE');};\n" +
++   " const read=name=>JSON.parse(readFileSync('/private/'+name+'.json'));\n" +
++   " async function page(f,a,clock){const context=await runtime.newContext({viewport:{width:1280,height:800},ignoreHTTPSErrors:false,serviceWorkers:'block'});contexts.push(context);const gate=await installApiQuiescence(context,f.room,lease);gates.push(gate);await context.addCookies([{name:'venus_room_session',value:a.credential,url:'https://localhost:8443',httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();page.setDefaultTimeout(12000);await page.clock.setFixedTime(new Date(clock));page.on('pageerror',()=>{report.page_errors++;});await page.goto('https://localhost:8443/#room='+f.room);await page.getByTestId('room-shell').waitFor();return page;}\n" +
++   ` async function hidden(page){await page.waitForFunction(()=>document.querySelectorAll('[data-testid="private-prompt"],[data-testid="pair-chat"],[data-testid="advice-text"]').length===0,undefined,{timeout:12000});lease.assert();}\n` +
++   " try{diagnosticStep='CHROMIUM_LAUNCH';runtime=await chromium.launch({headless:true,args:['--ignore-certificate-errors-spki-list='+spki,'--disable-dev-shm-usage']});report.version=runtime.version();diagnosticStep='A1_STATE_READ';const aState=read('state-A1-seed'),a=aState.A,who=a.members.find(x=>x.id===a.excludedActor);assert(who);diagnosticStep='A1_PAGE_OPEN';const retainedA=await page(a,who,1000000);diagnosticStep='A1_PRIVATE_WAIT';await retainedA.getByTestId('private-prompt').waitFor();diagnosticStep='A1_PRIVATE_ASSERT';assert((await retainedA.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));diagnosticStep='A1_READY_WRITE';write('browser-A1-ready.json',{status:'RETAINED_A_PRIVATE_POSITIVE',real_image_UI:true});\n" +
++   "  diagnosticStep='NARROW_COMMAND_WAIT';await wait('NARROWED');diagnosticStep='NARROW_PRIVATE_HIDDEN';await hidden(retainedA);diagnosticStep='NARROW_HOLD_DRAIN';const beforeB2=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='NARROW_READY_WRITE';write('browser-narrowed-ready.json',{status:'NARROWED_PRIVATE_CLEARED',API_quiescence:beforeB2});diagnosticPhase='B2';diagnosticStep='B2_COMMAND_WAIT';await wait('B2');diagnosticStep='B2_CLOCK_UPDATE';await retainedA.clock.setFixedTime(new Date(1001000));diagnosticStep='B2_RELEASE';const retainedCursor=gates[0].release();diagnosticStep='B2_RESUMED_CURRENT';await gates[0].resumedCurrent(retainedCursor);diagnosticStep='B2_RETAINED_HIDDEN';await hidden(retainedA);diagnosticStep='B2_STATE_READ';const b=read('state-B2-final'),e=b.E,eActor=e.members.find(x=>x.id===e.excludedActor),freshB=await (diagnosticStep='B2_FRESH_PAGE_OPEN',page(e,eActor,1001000));diagnosticStep='B2_PRIVATE_WAIT';await freshB.getByTestId('private-prompt').waitFor();diagnosticStep='B2_PRIVATE_ASSERT';assert((await freshB.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));\n" +
++   "  diagnosticStep='B2_HOST_PAGE_OPEN';const host=await page(b.A,b.A.host,1001000);const stop=host.getByTestId('game-stop');diagnosticStep='B2_STOP_WAIT';await stop.waitFor();diagnosticStep='B2_STOP_ENABLED';assert(await stop.isEnabled());diagnosticStep='B2_STOP_CLICK';await stop.click();diagnosticStep='B2_GAME_STATE_WAIT';await host.getByTestId('game-state').waitFor();diagnosticStep='B2_HOST_CONTEXT_CLOSE';gates[2].dispose();await host.context().close();diagnosticStep='B2_OBSERVER_PAGE_OPEN';const observer=await page(b.A,b.A.members[3],1001000);diagnosticStep='B2_LEAVE_CLICK';await observer.getByTestId('leave-room').click();diagnosticStep='B2_ROOM_DETACHED';await observer.getByTestId('room-shell').waitFor({state:'detached'});report.actual_B_UI=true;report.retained_A_cleared=true;report.fresh_B_page=true;report.browser_safe_exit=true;diagnosticStep='B2_HOLD_DRAIN';const beforeA3=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='B2_READY_WRITE';write('browser-B2-ready.json',{status:'B2_UI_AND_SAFE_EXITS_PASS',E_untouched:true,API_quiescence:beforeA3});\n" +
++   "  diagnosticPhase='A3';diagnosticStep='A3_COMMAND_WAIT';await wait('A3');diagnosticStep='A3_CLOCK_UPDATE';await freshB.clock.setFixedTime(new Date(1002000));diagnosticStep='A3_RELEASE';const freshBCursor=gates[1].release();diagnosticStep='A3_RESUMED_CURRENT';await gates[1].resumedCurrent(freshBCursor);diagnosticStep='A3_PRIVATE_HIDDEN';await hidden(freshB);report.old_B_private_cleared_on_A3=true;diagnosticStep='A3_PAGE_ERRORS_ASSERT';assert.equal(report.page_errors,0);diagnosticStep='COMPLETE';report.status='BROWSER_CONTROLS_COMPLETE';\n" +
++   " }catch(error){report.error=safeError(error,diagnosticPhase);report.error_name=report.error.name;report.failed_step=diagnosticStep;report.API_quiescence=gates.slice(0,4).map(g=>g.diagnostic());report.gate_overflow=gates.length>4;report.status='FAIL';}\n" +
++   " finally{for(const gate of gates)gate.dispose();let clean=true;for(const c of contexts)try{await c.close();}catch{clean=false;}try{await runtime?.close();}catch{clean=false;}report.cleanup=clean?'completed':'failed';if(!clean)report.status='FAIL';try{write('browser-terminal.json',report);}catch{report.status='FAIL';}console.log(JSON.stringify({status:report.status,cleanup:report.cleanup,page_errors:report.page_errors}));}return report;}\n" +
++   'if(process.argv[1]&'... 319 more characters
+- '/** Actual image UI in a single pinned Chromium; no replacement React/DOM bundle. */\r\n' +
+-   '/* global document */\r\n' +
+-   "import assert from 'node:assert/strict';\r\n" +
+-   "import {verifyOwnIPC} from './ipc-policy.mjs';\r\n" +
+-   "import {readFileSync,existsSync} from 'node:fs';\r\n" +
+-   "import {resolve} from 'node:path';\r\n" +
+-   "import {fileURLToPath} from 'node:url';\r\n" +
+-   "import {X509Certificate,createHash} from 'node:crypto';\r\n" +
+-   "import {performance} from 'node:perf_hooks';\r\n" +
+-   "import {imageRequire} from './image-modules.mjs';\r\n" +
+-   "import {ResourceLease} from './resource-lease.mjs';\r\n" +
+-   "import {safeError} from './bound-profile.mjs';\r\n" +
+-   '/** Browser-native transport hold only; no clock/DOM/cache/database mutation. */\r\n' +
+-   'export async function installApiQuiescence(context,room,lease){\r\n' +
+-   " const origin='https://localhost:8443',current=origin+'/api/v2/rooms/'+room+'/game/current';\r\n" +
+-   " const own=(url,ws=false)=>{try{const u=new URL(String(url));return u.origin===(ws?'wss://localhost:8443':origin)&&u.pathname.startsWith('/api/');}catch{return false;}};\r\n" +
+-   ' let held=false,disposing=false,failure=null,blockedHTTP=0,blockedWS=0,completedCurrent=0;\r\n' +
+-   ' const active=new Set(),forwarded=new WeakSet(),successful=new WeakSet();\r\n' +
+-   " const latch=()=>{failure??=Error('BROWSER_API_QUIESCENCE_FAILED');};\r\n" +
+-   " const health=()=>{lease.assert();if(failure)throw failure;assert(active.size<=256,'BROWSER_API_INFLIGHT_BOUND');};\r\n" +
+-   " context.on('request',request=>{if(own(request.url())){if(active.size>=256)latch();else active.add(request);}});\r\n" +
+-   " context.on('response',response=>{const request=response.request();if(!held&&forwarded.has(request)&&request.method()==='GET'&&request.url()===current&&response.status()===200)successful.add(request);});\r\n" +
+-   " context.on('requestfinished',request=>{active.delete(request);if(!held&&forwarded.has(request)&&successful.has(request))completedCurrent++;});\r\n" +
+-   " context.on('requestfailed',request=>{active.delete(request);});\r\n" +
+-   ' await context.route(url=>own(url),async route=>{\r\n' +
+-   "  try{if(held||failure){blockedHTTP++;await route.abort('blockedbyclient');}else{forwarded.add(route.request());await route.continue();}}\r\n" +
+-   '  catch{if(!disposing)latch();}\r\n' +
+-   ' });\r\n' +
+-   ' await context.routeWebSocket(url=>own(url,true),async route=>{\r\n' +
+-   "  try{if(held||failure){blockedWS++;await route.close({code:1001,reason:'Fixture API hold'});}else route.connectToServer();}\r\n" +
+-   '  catch{if(!disposing)latch();}\r\n' +
+-   ' });\r\n' +
+-   " const until=async predicate=>{const deadline=performance.now()+120000;while(!predicate()){health();assert(performance.now()<deadline,'BROWSER_API_QUIESCENCE_DEADLINE');await new Promise(r=>setTimeout(r,25));}health();};\r\n" +
+-   ' return {\r\n' +
+-   '  async hold(){held=true;await until(()=>active.size===0);return this.snapshot();},\r\n' +
+-   "  release(){health();assert(held,'BROWSER_API_RELEASE_WITHOUT_HOLD');held=false;return completedCurrent;},\r\n" +
+-   "  async resumedCurrent(cursor){assert(!held,'BROWSER_API_STILL_HELD');assert(Number.isSafeInteger(cursor)&&cursor>=0);await until(()=>completedCurrent>cursor);return this.snapshot();},\r\n" +
+-   '  snapshot(){health();return{held,inflight_HTTP:active.size,blocked_HTTP:blockedHTTP,blocked_WS:blockedWS,completed_current_GET200:completedCurrent};},\r\n' +
+-   '  diagnostic(){const values=[active.size,blockedHTTP,blockedWS,completedCurrent],bounded=value=>Number.isSafeInteger(value)&&value>=0&&value<=1000000?value:null;return{held,disposing,failure_latched:failure!==null,inflight_HTTP:bounded(active.size),blocked_HTTP:bounded(blockedHTTP),blocked_WS:bounded(blockedWS),completed_current_GET200:bounded(completedCurrent),counter_overflow:values.some(value=>bounded(value)===null)};},\r\n' +
+-   '  dispose(){held=true;disposing=true;}\r\n' +
+-   ' };\r\n' +
+-   '}\r\n' +
+-   "export async function browser(config){verifyOwnIPC('browser');const require=imageRequire(),{chromium}=require('playwright'),lease=new ResourceLease({...config,privateRoot:'/tmp'});await lease.initial();const spki=createHash('sha256').update(new X509Certificate(readFileSync(config.caFile)).publicKey.export({type:'spki',format:'der'})).digest('base64');let runtime,diagnosticStep='CHROMIUM_LAUNCH',diagnosticPhase='A1';const contexts=[],gates=[],report={status:'FAIL',engine:'chromium',page_errors:0,clock_scope:'EXPLICIT_FIXED_DATE_FIXTURE_NOT_NATURAL_TTL',TLS_scope:'CHROMIUM_EXACT_PUBLIC_FIXTURE_SPKI_PIN_PLUS_INDEPENDENT_NODE_CA_VERIFICATION',prior_known_bug:'b244 timing P2 and unbounded WS poll queue / heartbeat-starvation P2; fixed fixtureclock compatibility does not close either natural-time behavior',raw_private_evidence_exported:false};\r\n" +
+-   " const write=(name,data)=>lease.write('/evidence',name,JSON.stringify(data,null,2)+'\\n'),wait=async name=>{const limit=performance.now()+120000,path='/private/browser-command-'+name+'.json';while(performance.now()<limit){lease.assert();if(existsSync(path)){const v=JSON.parse(readFileSync(path));assert.equal(v.owner,config.owner);assert.equal(v.command,name);return;}await new Promise(r=>setTimeout(r,50));}throw Error('BROWSER_PHASE_DEADLINE');};\r\n" +
+-   " const read=name=>JSON.parse(readFileSync('/private/'+name+'.json'));\r\n" +
+-   " async function page(f,a,clock){const context=await runtime.newContext({viewport:{width:1280,height:800},ignoreHTTPSErrors:false,serviceWorkers:'block'});contexts.push(context);const gate=await installApiQuiescence(context,f.room,lease);gates.push(gate);await context.addCookies([{name:'venus_room_session',value:a.credential,url:'https://localhost:8443',httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();page.setDefaultTimeout(12000);await page.clock.setFixedTime(new Date(clock));page.on('pageerror',()=>{report.page_errors++;});await page.goto('https://localhost:8443/#room='+f.room);await page.getByTestId('room-shell').waitFor();return page;}\r\n" +
+-   ` async function hidden(page){await page.waitForFunction(()=>document.querySelectorAll('[data-testid="private-prompt"],[data-testid="pair-chat"],[data-testid="advice-text"]').length===0,undefined,{timeout:12000});lease.assert();}\r\n` +
+-   " try{diagnosticStep='CHROMIUM_LAUNCH';runtime=await chromium.launch({headless:true,args:['--ignore-certificate-errors-spki-list='+spki,'--disable-dev-shm-usage']});report.version=runtime.version();diagnosticStep='A1_STATE_READ';const aState=read('state-A1-seed'),a=aState.A,who=a.members.find(x=>x.id===a.excludedActor);assert(who);diagnosticStep='A1_PAGE_OPEN';const retainedA=await page(a,who,1000000);diagnosticStep='A1_PRIVATE_WAIT';await retainedA.getByTestId('private-prompt').waitFor();diagnosticStep='A1_PRIVATE_ASSERT';assert((await retainedA.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));diagnosticStep='A1_READY_WRITE';write('browser-A1-ready.json',{status:'RETAINED_A_PRIVATE_POSITIVE',real_image_UI:true});\r\n" +
+-   "  diagnosticStep='NARROW_COMMAND_WAIT';await wait('NARROWED');diagnosticStep='NARROW_PRIVATE_HIDDEN';await hidden(retainedA);diagnosticStep='NARROW_HOLD_DRAIN';const beforeB2=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='NARROW_READY_WRITE';write('browser-narrowed-ready.json',{status:'NARROWED_PRIVATE_CLEARED',API_quiescence:beforeB2});diagnosticPhase='B2';diagnosticStep='B2_COMMAND_WAIT';await wait('B2');diagnosticStep='B2_CLOCK_UPDATE';await retainedA.clock.setFixedTime(new Date(1001000));diagnosticStep='B2_RELEASE';const retainedCursor=gates[0].release();diagnosticStep='B2_RESUMED_CURRENT';await gates[0].resumedCurrent(retainedCursor);diagnosticStep='B2_RETAINED_HIDDEN';await hidden(retainedA);diagnosticStep='B2_STATE_READ';const b=read('state-B2-final'),e=b.E,eActor=e.members.find(x=>x.id===e.excludedActor),freshB=await (diagnosticStep='B2_FRESH_PAGE_OPEN',page(e,eActor,1001000));diagnosticStep='B2_PRIVATE_WAIT';await freshB.getByTestId('private-prompt').waitFor();diagnosticStep='B2_PRIVATE_ASSERT';assert((await freshB.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));\r\n" +
+-   "  diagnosticStep='B2_HOST_PAGE_OPEN';const host=await page(b.A,b.A.host,1001000);const stop=host.getByTestId('game-stop');diagnosticStep='B2_STOP_WAIT';await stop.waitFor();diagnosticStep='B2_STOP_ENABLED';assert(await stop.isEnabled());diagnosticStep='B2_STOP_CLICK';await stop.click();diagnosticStep='B2_GAME_STATE_WAIT';await host.getByTestId('game-state').waitFor();diagnosticStep='B2_HOST_CONTEXT_CLOSE';gates[2].dispose();await host.context().close();diagnosticStep='B2_OBSERVER_PAGE_OPEN';const observer=await page(b.A,b.A.members[3],1001000);diagnosticStep='B2_LEAVE_CLICK';await observer.getByTestId('leave-room').click();diagnosticStep='B2_ROOM_DETACHED';await observer.getByTestId('room-shell').waitFor({state:'detached'});report.actual_B_UI=true;report.retained_A_cleared=true;report.fresh_B_page=true;report.browser_safe_exit=true;diagnosticStep='B2_HOLD_DRAIN';const beforeA3=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='B2_READY_WRITE';write('browser-B2-ready.json',{status:'B2_UI_AND_SAFE_EXITS_PASS',E_untouched:true,API_quiescence:beforeA3});\r\n" +
+-   "  diagnosticPhase='A3';diagnosticStep='A3_COMMAND_WAIT';await wait('A3');diagnosticStep='A3_CLOCK_UPDATE';await freshB.clock.setFixedTime(new Date(1002000));diagnosticStep='A3_RELEASE';const freshBCursor=gates[1].release();diagnosticStep='A3_RESUMED_CURRENT';await gates[1].resumedCurrent(freshBCursor);diagnosticStep='A3_PRIVATE_HIDDEN';await hidden(freshB);report.old_B_private_cleared_on_A3=true;diagnosticStep='A3_PAGE_ERRORS_ASSERT';assert.equal(report.page_errors,0);diagnosticStep='COMPLETE';report.status='BROWSER_CONTROLS_COMPLETE';\r\n" +
+-   " }catch(error){report.error=safeError(error,diagnosticPhase);report.error_name=report.error.name;report.failed_step=diagnosticStep;report.API_quiescence=gates.slice(0,4).map(g=>g.diagnostic());report.gate_overflow=gates.length>4;report.status='FAIL';}\r\n" +
+-   " finally{for(const gate of gates)gate.dispose();let clean=true;for(const c of contexts)try{await c.close();}catch{clean=false;}try{await runtime?.close();}catch{clean=false;}report.cleanup=clean?'completed':'failed';if(!clean)report.status='FAIL';try{write('browser-terminal.json',report);}catch{report.status='FAIL';}console.log(JSON.stringify({status:report.status,cleanup:report.cleanup,page_errors:report"... 373 more characters
+
+    at file:///C:/.projects/venus/.docs/implementation/reviews/p05/oci21-diagnostic-independent-round01/audit.mjs:32:8
+    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    at async node:internal/modules/esm/loader:647:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '/** Actual image UI in a single pinned Chromium; no replacement React/DOM bundle. */\n' +
+    '/* global document */\n' +
+    "import assert from 'node:assert/strict';\n" +
+    "import {verifyOwnIPC} from './ipc-policy.mjs';\n" +
+    "import {readFileSync,existsSync} from 'node:fs';\n" +
+    "import {resolve} from 'node:path';\n" +
+    "import {fileURLToPath} from 'node:url';\n" +
+    "import {X509Certificate,createHash} from 'node:crypto';\n" +
+    "import {performance} from 'node:perf_hooks';\n" +
+    "import {imageRequire} from './image-modules.mjs';\n" +
+    "import {ResourceLease} from './resource-lease.mjs';\n" +
+    "import {safeError} from './bound-profile.mjs';\n" +
+    '/** Browser-native transport hold only; no clock/DOM/cache/database mutation. */\n' +
+    'export async function installApiQuiescence(context,room,lease){\n' +
+    " const origin='https://localhost:8443',current=origin+'/api/v2/rooms/'+room+'/game/current';\n" +
+    " const own=(url,ws=false)=>{try{const u=new URL(String(url));return u.origin===(ws?'wss://localhost:8443':origin)&&u.pathname.startsWith('/api/');}catch{return false;}};\n" +
+    ' let held=false,disposing=false,failure=null,blockedHTTP=0,blockedWS=0,completedCurrent=0;\n' +
+    ' const active=new Set(),forwarded=new WeakSet(),successful=new WeakSet();\n' +
+    " const latch=()=>{failure??=Error('BROWSER_API_QUIESCENCE_FAILED');};\n" +
+    " const health=()=>{lease.assert();if(failure)throw failure;assert(active.size<=256,'BROWSER_API_INFLIGHT_BOUND');};\n" +
+    " context.on('request',request=>{if(own(request.url())){if(active.size>=256)latch();else active.add(request);}});\n" +
+    " context.on('response',response=>{const request=response.request();if(!held&&forwarded.has(request)&&request.method()==='GET'&&request.url()===current&&response.status()===200)successful.add(request);});\n" +
+    " context.on('requestfinished',request=>{active.delete(request);if(!held&&forwarded.has(request)&&successful.has(request))completedCurrent++;});\n" +
+    " context.on('requestfailed',request=>{active.delete(request);});\n" +
+    ' await context.route(url=>own(url),async route=>{\n' +
+    "  try{if(held||failure){blockedHTTP++;await route.abort('blockedbyclient');}else{forwarded.add(route.request());await route.continue();}}\n" +
+    '  catch{if(!disposing)latch();}\n' +
+    ' });\n' +
+    ' await context.routeWebSocket(url=>own(url,true),async route=>{\n' +
+    "  try{if(held||failure){blockedWS++;await route.close({code:1001,reason:'Fixture API hold'});}else route.connectToServer();}\n" +
+    '  catch{if(!disposing)latch();}\n' +
+    ' });\n' +
+    " const until=async predicate=>{const deadline=performance.now()+120000;while(!predicate()){health();assert(performance.now()<deadline,'BROWSER_API_QUIESCENCE_DEADLINE');await new Promise(r=>setTimeout(r,25));}health();};\n" +
+    ' return {\n' +
+    '  async hold(){held=true;await until(()=>active.size===0);return this.snapshot();},\n' +
+    "  release(){health();assert(held,'BROWSER_API_RELEASE_WITHOUT_HOLD');held=false;return completedCurrent;},\n" +
+    "  async resumedCurrent(cursor){assert(!held,'BROWSER_API_STILL_HELD');assert(Number.isSafeInteger(cursor)&&cursor>=0);await until(()=>completedCurrent>cursor);return this.snapshot();},\n" +
+    '  snapshot(){health();return{held,inflight_HTTP:active.size,blocked_HTTP:blockedHTTP,blocked_WS:blockedWS,completed_current_GET200:completedCurrent};},\n' +
+    '  diagnostic(){const values=[active.size,blockedHTTP,blockedWS,completedCurrent],bounded=value=>Number.isSafeInteger(value)&&value>=0&&value<=1000000?value:null;return{held,disposing,failure_latched:failure!==null,inflight_HTTP:bounded(active.size),blocked_HTTP:bounded(blockedHTTP),blocked_WS:bounded(blockedWS),completed_current_GET200:bounded(completedCurrent),counter_overflow:values.some(value=>bounded(value)===null)};},\n' +
+    '  dispose(){held=true;disposing=true;}\n' +
+    ' };\n' +
+    '}\n' +
+    "export async function browser(config){verifyOwnIPC('browser');const require=imageRequire(),{chromium}=require('playwright'),lease=new ResourceLease({...config,privateRoot:'/tmp'});await lease.initial();const spki=createHash('sha256').update(new X509Certificate(readFileSync(config.caFile)).publicKey.export({type:'spki',format:'der'})).digest('base64');let runtime,diagnosticStep='CHROMIUM_LAUNCH',diagnosticPhase='A1';const contexts=[],gates=[],report={status:'FAIL',engine:'chromium',page_errors:0,clock_scope:'EXPLICIT_FIXED_DATE_FIXTURE_NOT_NATURAL_TTL',TLS_scope:'CHROMIUM_EXACT_PUBLIC_FIXTURE_SPKI_PIN_PLUS_INDEPENDENT_NODE_CA_VERIFICATION',prior_known_bug:'b244 timing P2 and unbounded WS poll queue / heartbeat-starvation P2; fixed fixtureclock compatibility does not close either natural-time behavior',raw_private_evidence_exported:false};\n" +
+    " const write=(name,data)=>lease.write('/evidence',name,JSON.stringify(data,null,2)+'\\n'),wait=async name=>{const limit=performance.now()+120000,path='/private/browser-command-'+name+'.json';while(performance.now()<limit){lease.assert();if(existsSync(path)){const v=JSON.parse(readFileSync(path));assert.equal(v.owner,config.owner);assert.equal(v.command,name);return;}await new Promise(r=>setTimeout(r,50));}throw Error('BROWSER_PHASE_DEADLINE');};\n" +
+    " const read=name=>JSON.parse(readFileSync('/private/'+name+'.json'));\n" +
+    " async function page(f,a,clock){const context=await runtime.newContext({viewport:{width:1280,height:800},ignoreHTTPSErrors:false,serviceWorkers:'block'});contexts.push(context);const gate=await installApiQuiescence(context,f.room,lease);gates.push(gate);await context.addCookies([{name:'venus_room_session',value:a.credential,url:'https://localhost:8443',httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();page.setDefaultTimeout(12000);await page.clock.setFixedTime(new Date(clock));page.on('pageerror',()=>{report.page_errors++;});await page.goto('https://localhost:8443/#room='+f.room);await page.getByTestId('room-shell').waitFor();return page;}\n" +
+    ` async function hidden(page){await page.waitForFunction(()=>document.querySelectorAll('[data-testid="private-prompt"],[data-testid="pair-chat"],[data-testid="advice-text"]').length===0,undefined,{timeout:12000});lease.assert();}\n` +
+    " try{diagnosticStep='CHROMIUM_LAUNCH';runtime=await chromium.launch({headless:true,args:['--ignore-certificate-errors-spki-list='+spki,'--disable-dev-shm-usage']});report.version=runtime.version();diagnosticStep='A1_STATE_READ';const aState=read('state-A1-seed'),a=aState.A,who=a.members.find(x=>x.id===a.excludedActor);assert(who);diagnosticStep='A1_PAGE_OPEN';const retainedA=await page(a,who,1000000);diagnosticStep='A1_PRIVATE_WAIT';await retainedA.getByTestId('private-prompt').waitFor();diagnosticStep='A1_PRIVATE_ASSERT';assert((await retainedA.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));diagnosticStep='A1_READY_WRITE';write('browser-A1-ready.json',{status:'RETAINED_A_PRIVATE_POSITIVE',real_image_UI:true});\n" +
+    "  diagnosticStep='NARROW_COMMAND_WAIT';await wait('NARROWED');diagnosticStep='NARROW_PRIVATE_HIDDEN';await hidden(retainedA);diagnosticStep='NARROW_HOLD_DRAIN';const beforeB2=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='NARROW_READY_WRITE';write('browser-narrowed-ready.json',{status:'NARROWED_PRIVATE_CLEARED',API_quiescence:beforeB2});diagnosticPhase='B2';diagnosticStep='B2_COMMAND_WAIT';await wait('B2');diagnosticStep='B2_CLOCK_UPDATE';await retainedA.clock.setFixedTime(new Date(1001000));diagnosticStep='B2_RELEASE';const retainedCursor=gates[0].release();diagnosticStep='B2_RESUMED_CURRENT';await gates[0].resumedCurrent(retainedCursor);diagnosticStep='B2_RETAINED_HIDDEN';await hidden(retainedA);diagnosticStep='B2_STATE_READ';const b=read('state-B2-final'),e=b.E,eActor=e.members.find(x=>x.id===e.excludedActor),freshB=await (diagnosticStep='B2_FRESH_PAGE_OPEN',page(e,eActor,1001000));diagnosticStep='B2_PRIVATE_WAIT';await freshB.getByTestId('private-prompt').waitFor();diagnosticStep='B2_PRIVATE_ASSERT';assert((await freshB.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));\n" +
+    "  diagnosticStep='B2_HOST_PAGE_OPEN';const host=await page(b.A,b.A.host,1001000);const stop=host.getByTestId('game-stop');diagnosticStep='B2_STOP_WAIT';await stop.waitFor();diagnosticStep='B2_STOP_ENABLED';assert(await stop.isEnabled());diagnosticStep='B2_STOP_CLICK';await stop.click();diagnosticStep='B2_GAME_STATE_WAIT';await host.getByTestId('game-state').waitFor();diagnosticStep='B2_HOST_CONTEXT_CLOSE';gates[2].dispose();await host.context().close();diagnosticStep='B2_OBSERVER_PAGE_OPEN';const observer=await page(b.A,b.A.members[3],1001000);diagnosticStep='B2_LEAVE_CLICK';await observer.getByTestId('leave-room').click();diagnosticStep='B2_ROOM_DETACHED';await observer.getByTestId('room-shell').waitFor({state:'detached'});report.actual_B_UI=true;report.retained_A_cleared=true;report.fresh_B_page=true;report.browser_safe_exit=true;diagnosticStep='B2_HOLD_DRAIN';const beforeA3=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='B2_READY_WRITE';write('browser-B2-ready.json',{status:'B2_UI_AND_SAFE_EXITS_PASS',E_untouched:true,API_quiescence:beforeA3});\n" +
+    "  diagnosticPhase='A3';diagnosticStep='A3_COMMAND_WAIT';await wait('A3');diagnosticStep='A3_CLOCK_UPDATE';await freshB.clock.setFixedTime(new Date(1002000));diagnosticStep='A3_RELEASE';const freshBCursor=gates[1].release();diagnosticStep='A3_RESUMED_CURRENT';await gates[1].resumedCurrent(freshBCursor);diagnosticStep='A3_PRIVATE_HIDDEN';await hidden(freshB);report.old_B_private_cleared_on_A3=true;diagnosticStep='A3_PAGE_ERRORS_ASSERT';assert.equal(report.page_errors,0);diagnosticStep='COMPLETE';report.status='BROWSER_CONTROLS_COMPLETE';\n" +
+    " }catch(error){report.error=safeError(error,diagnosticPhase);report.error_name=report.error.name;report.failed_step=diagnosticStep;report.API_quiescence=gates.slice(0,4).map(g=>g.diagnostic());report.gate_overflow=gates.length>4;report.status='FAIL';}\n" +
+    " finally{for(const gate of gates)gate.dispose();let clean=true;for(const c of contexts)try{await c.close();}catch{clean=false;}try{await runtime?.close();}catch{clean=false;}report.cleanup=clean?'completed':'failed';if(!clean)report.status='FAIL';try{write('browser-terminal.json',report);}catch{report.status='FAIL';}console.log(JSON.stringify({status:report.status,cleanup:report.cleanup,page_errors:report.page_errors}));}return report;}\n" +
+    'if(process.argv[1]&'... 319 more characters,
+  expected: '/** Actual image UI in a single pinned Chromium; no replacement React/DOM bundle. */\r\n' +
+    '/* global document */\r\n' +
+    "import assert from 'node:assert/strict';\r\n" +
+    "import {verifyOwnIPC} from './ipc-policy.mjs';\r\n" +
+    "import {readFileSync,existsSync} from 'node:fs';\r\n" +
+    "import {resolve} from 'node:path';\r\n" +
+    "import {fileURLToPath} from 'node:url';\r\n" +
+    "import {X509Certificate,createHash} from 'node:crypto';\r\n" +
+    "import {performance} from 'node:perf_hooks';\r\n" +
+    "import {imageRequire} from './image-modules.mjs';\r\n" +
+    "import {ResourceLease} from './resource-lease.mjs';\r\n" +
+    "import {safeError} from './bound-profile.mjs';\r\n" +
+    '/** Browser-native transport hold only; no clock/DOM/cache/database mutation. */\r\n' +
+    'export async function installApiQuiescence(context,room,lease){\r\n' +
+    " const origin='https://localhost:8443',current=origin+'/api/v2/rooms/'+room+'/game/current';\r\n" +
+    " const own=(url,ws=false)=>{try{const u=new URL(String(url));return u.origin===(ws?'wss://localhost:8443':origin)&&u.pathname.startsWith('/api/');}catch{return false;}};\r\n" +
+    ' let held=false,disposing=false,failure=null,blockedHTTP=0,blockedWS=0,completedCurrent=0;\r\n' +
+    ' const active=new Set(),forwarded=new WeakSet(),successful=new WeakSet();\r\n' +
+    " const latch=()=>{failure??=Error('BROWSER_API_QUIESCENCE_FAILED');};\r\n" +
+    " const health=()=>{lease.assert();if(failure)throw failure;assert(active.size<=256,'BROWSER_API_INFLIGHT_BOUND');};\r\n" +
+    " context.on('request',request=>{if(own(request.url())){if(active.size>=256)latch();else active.add(request);}});\r\n" +
+    " context.on('response',response=>{const request=response.request();if(!held&&forwarded.has(request)&&request.method()==='GET'&&request.url()===current&&response.status()===200)successful.add(request);});\r\n" +
+    " context.on('requestfinished',request=>{active.delete(request);if(!held&&forwarded.has(request)&&successful.has(request))completedCurrent++;});\r\n" +
+    " context.on('requestfailed',request=>{active.delete(request);});\r\n" +
+    ' await context.route(url=>own(url),async route=>{\r\n' +
+    "  try{if(held||failure){blockedHTTP++;await route.abort('blockedbyclient');}else{forwarded.add(route.request());await route.continue();}}\r\n" +
+    '  catch{if(!disposing)latch();}\r\n' +
+    ' });\r\n' +
+    ' await context.routeWebSocket(url=>own(url,true),async route=>{\r\n' +
+    "  try{if(held||failure){blockedWS++;await route.close({code:1001,reason:'Fixture API hold'});}else route.connectToServer();}\r\n" +
+    '  catch{if(!disposing)latch();}\r\n' +
+    ' });\r\n' +
+    " const until=async predicate=>{const deadline=performance.now()+120000;while(!predicate()){health();assert(performance.now()<deadline,'BROWSER_API_QUIESCENCE_DEADLINE');await new Promise(r=>setTimeout(r,25));}health();};\r\n" +
+    ' return {\r\n' +
+    '  async hold(){held=true;await until(()=>active.size===0);return this.snapshot();},\r\n' +
+    "  release(){health();assert(held,'BROWSER_API_RELEASE_WITHOUT_HOLD');held=false;return completedCurrent;},\r\n" +
+    "  async resumedCurrent(cursor){assert(!held,'BROWSER_API_STILL_HELD');assert(Number.isSafeInteger(cursor)&&cursor>=0);await until(()=>completedCurrent>cursor);return this.snapshot();},\r\n" +
+    '  snapshot(){health();return{held,inflight_HTTP:active.size,blocked_HTTP:blockedHTTP,blocked_WS:blockedWS,completed_current_GET200:completedCurrent};},\r\n' +
+    '  diagnostic(){const values=[active.size,blockedHTTP,blockedWS,completedCurrent],bounded=value=>Number.isSafeInteger(value)&&value>=0&&value<=1000000?value:null;return{held,disposing,failure_latched:failure!==null,inflight_HTTP:bounded(active.size),blocked_HTTP:bounded(blockedHTTP),blocked_WS:bounded(blockedWS),completed_current_GET200:bounded(completedCurrent),counter_overflow:values.some(value=>bounded(value)===null)};},\r\n' +
+    '  dispose(){held=true;disposing=true;}\r\n' +
+    ' };\r\n' +
+    '}\r\n' +
+    "export async function browser(config){verifyOwnIPC('browser');const require=imageRequire(),{chromium}=require('playwright'),lease=new ResourceLease({...config,privateRoot:'/tmp'});await lease.initial();const spki=createHash('sha256').update(new X509Certificate(readFileSync(config.caFile)).publicKey.export({type:'spki',format:'der'})).digest('base64');let runtime,diagnosticStep='CHROMIUM_LAUNCH',diagnosticPhase='A1';const contexts=[],gates=[],report={status:'FAIL',engine:'chromium',page_errors:0,clock_scope:'EXPLICIT_FIXED_DATE_FIXTURE_NOT_NATURAL_TTL',TLS_scope:'CHROMIUM_EXACT_PUBLIC_FIXTURE_SPKI_PIN_PLUS_INDEPENDENT_NODE_CA_VERIFICATION',prior_known_bug:'b244 timing P2 and unbounded WS poll queue / heartbeat-starvation P2; fixed fixtureclock compatibility does not close either natural-time behavior',raw_private_evidence_exported:false};\r\n" +
+    " const write=(name,data)=>lease.write('/evidence',name,JSON.stringify(data,null,2)+'\\n'),wait=async name=>{const limit=performance.now()+120000,path='/private/browser-command-'+name+'.json';while(performance.now()<limit){lease.assert();if(existsSync(path)){const v=JSON.parse(readFileSync(path));assert.equal(v.owner,config.owner);assert.equal(v.command,name);return;}await new Promise(r=>setTimeout(r,50));}throw Error('BROWSER_PHASE_DEADLINE');};\r\n" +
+    " const read=name=>JSON.parse(readFileSync('/private/'+name+'.json'));\r\n" +
+    " async function page(f,a,clock){const context=await runtime.newContext({viewport:{width:1280,height:800},ignoreHTTPSErrors:false,serviceWorkers:'block'});contexts.push(context);const gate=await installApiQuiescence(context,f.room,lease);gates.push(gate);await context.addCookies([{name:'venus_room_session',value:a.credential,url:'https://localhost:8443',httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();page.setDefaultTimeout(12000);await page.clock.setFixedTime(new Date(clock));page.on('pageerror',()=>{report.page_errors++;});await page.goto('https://localhost:8443/#room='+f.room);await page.getByTestId('room-shell').waitFor();return page;}\r\n" +
+    ` async function hidden(page){await page.waitForFunction(()=>document.querySelectorAll('[data-testid="private-prompt"],[data-testid="pair-chat"],[data-testid="advice-text"]').length===0,undefined,{timeout:12000});lease.assert();}\r\n` +
+    " try{diagnosticStep='CHROMIUM_LAUNCH';runtime=await chromium.launch({headless:true,args:['--ignore-certificate-errors-spki-list='+spki,'--disable-dev-shm-usage']});report.version=runtime.version();diagnosticStep='A1_STATE_READ';const aState=read('state-A1-seed'),a=aState.A,who=a.members.find(x=>x.id===a.excludedActor);assert(who);diagnosticStep='A1_PAGE_OPEN';const retainedA=await page(a,who,1000000);diagnosticStep='A1_PRIVATE_WAIT';await retainedA.getByTestId('private-prompt').waitFor();diagnosticStep='A1_PRIVATE_ASSERT';assert((await retainedA.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));diagnosticStep='A1_READY_WRITE';write('browser-A1-ready.json',{status:'RETAINED_A_PRIVATE_POSITIVE',real_image_UI:true});\r\n" +
+    "  diagnosticStep='NARROW_COMMAND_WAIT';await wait('NARROWED');diagnosticStep='NARROW_PRIVATE_HIDDEN';await hidden(retainedA);diagnosticStep='NARROW_HOLD_DRAIN';const beforeB2=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='NARROW_READY_WRITE';write('browser-narrowed-ready.json',{status:'NARROWED_PRIVATE_CLEARED',API_quiescence:beforeB2});diagnosticPhase='B2';diagnosticStep='B2_COMMAND_WAIT';await wait('B2');diagnosticStep='B2_CLOCK_UPDATE';await retainedA.clock.setFixedTime(new Date(1001000));diagnosticStep='B2_RELEASE';const retainedCursor=gates[0].release();diagnosticStep='B2_RESUMED_CURRENT';await gates[0].resumedCurrent(retainedCursor);diagnosticStep='B2_RETAINED_HIDDEN';await hidden(retainedA);diagnosticStep='B2_STATE_READ';const b=read('state-B2-final'),e=b.E,eActor=e.members.find(x=>x.id===e.excludedActor),freshB=await (diagnosticStep='B2_FRESH_PAGE_OPEN',page(e,eActor,1001000));diagnosticStep='B2_PRIVATE_WAIT';await freshB.getByTestId('private-prompt').waitFor();diagnosticStep='B2_PRIVATE_ASSERT';assert((await freshB.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));\r\n" +
+    "  diagnosticStep='B2_HOST_PAGE_OPEN';const host=await page(b.A,b.A.host,1001000);const stop=host.getByTestId('game-stop');diagnosticStep='B2_STOP_WAIT';await stop.waitFor();diagnosticStep='B2_STOP_ENABLED';assert(await stop.isEnabled());diagnosticStep='B2_STOP_CLICK';await stop.click();diagnosticStep='B2_GAME_STATE_WAIT';await host.getByTestId('game-state').waitFor();diagnosticStep='B2_HOST_CONTEXT_CLOSE';gates[2].dispose();await host.context().close();diagnosticStep='B2_OBSERVER_PAGE_OPEN';const observer=await page(b.A,b.A.members[3],1001000);diagnosticStep='B2_LEAVE_CLICK';await observer.getByTestId('leave-room').click();diagnosticStep='B2_ROOM_DETACHED';await observer.getByTestId('room-shell').waitFor({state:'detached'});report.actual_B_UI=true;report.retained_A_cleared=true;report.fresh_B_page=true;report.browser_safe_exit=true;diagnosticStep='B2_HOLD_DRAIN';const beforeA3=await Promise.all(gates.map(g=>g.hold()));diagnosticStep='B2_READY_WRITE';write('browser-B2-ready.json',{status:'B2_UI_AND_SAFE_EXITS_PASS',E_untouched:true,API_quiescence:beforeA3});\r\n" +
+    "  diagnosticPhase='A3';diagnosticStep='A3_COMMAND_WAIT';await wait('A3');diagnosticStep='A3_CLOCK_UPDATE';await freshB.clock.setFixedTime(new Date(1002000));diagnosticStep='A3_RELEASE';const freshBCursor=gates[1].release();diagnosticStep='A3_RESUMED_CURRENT';await gates[1].resumedCurrent(freshBCursor);diagnosticStep='A3_PRIVATE_HIDDEN';await hidden(freshB);report.old_B_private_cleared_on_A3=true;diagnosticStep='A3_PAGE_ERRORS_ASSERT';assert.equal(report.page_errors,0);diagnosticStep='COMPLETE';report.status='BROWSER_CONTROLS_COMPLETE';\r\n" +
+    " }catch(error){report.error=safeError(error,diagnosticPhase);report.error_name=report.error.name;report.failed_step=diagnosticStep;report.API_quiescence=gates.slice(0,4).map(g=>g.diagnostic());report.gate_overflow=gates.length>4;report.status='FAIL';}\r\n" +
+    " finally{for(const gate of gates)gate.dispose();let clean=true;for(const c of contexts)try{await c.close();}catch{clean=false;}try{await runtime?.close();}catch{clean=false;}report.cleanup=clean?'completed':'failed';if(!clean)report.status='FAIL';try{write('browser-terminal.json',report);}catch{report.status='FAIL';}console.log(JSON.stringify({status:report.status,cleanup:report.cleanup,page_errors:report"... 373 more characters,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

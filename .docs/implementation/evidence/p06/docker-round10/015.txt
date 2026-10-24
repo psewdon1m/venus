@@ -1,0 +1,59 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p06-browser
+#1 transferring dockerfile: 1.01kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load build context
+#3 transferring context: 167.63kB 0.0s done
+#3 DONE 0.0s
+
+#4 [ 1/11] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [ 7/11] COPY packages/i18n/package.json packages/i18n/
+#5 CACHED
+
+#6 [ 9/11] COPY packages/card-catalog/package.json packages/card-catalog/
+#6 CACHED
+
+#7 [ 6/11] COPY packages/contracts/package.json packages/contracts/
+#7 CACHED
+
+#8 [ 8/11] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#8 CACHED
+
+#9 [10/11] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium
+#9 CACHED
+
+#10 [ 3/11] COPY package.json package-lock.json .npmrc ./
+#10 CACHED
+
+#11 [ 2/11] WORKDIR /app
+#11 CACHED
+
+#12 [ 4/11] COPY apps/api/package.json apps/api/
+#12 CACHED
+
+#13 [ 5/11] COPY apps/web/package.json apps/web/
+#13 CACHED
+
+#14 [11/11] COPY tests/p06/operator-browser.mjs operator-browser.mjs
+#14 CACHED
+
+#15 exporting to image
+#15 exporting layers done
+#15 exporting manifest sha256:aa08a9e37f09e2d21caa4ed10c5022e7a98d516c8c8fe663dab43e010a1fe89f
+#15 exporting manifest sha256:aa08a9e37f09e2d21caa4ed10c5022e7a98d516c8c8fe663dab43e010a1fe89f done
+#15 exporting config sha256:0498315298c1824f59d406bf582b32a46354b374d28d9d58db972b0dd83cf92c done
+#15 exporting attestation manifest sha256:61374f96ae59b471b2044e3f49e6dde39ea2c893396e8adf3614c9047373b644 0.0s done
+#15 exporting manifest list sha256:9cd644114b1ce786d13bfaffa80e4d77ec2fe74b521fab3fd0de43c34e43cb94 0.0s done
+#15 naming to docker.io/library/venus-p06-287e589d95-browser:fixture done
+#15 unpacking to docker.io/library/venus-p06-287e589d95-browser:fixture 0.0s done
+#15 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/lntvl4yf7n5njq1ourahww8kd

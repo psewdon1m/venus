@@ -1,0 +1,106 @@
+{
+  "scope": "ONE_CONSTANT_FIREFOX_FOREGROUND_NOT_APP_OR_UI_GATE",
+  "started_utc": "2026-10-22T18:38:50.387645+00:00",
+  "owner": "1617ba562b754540944318937b52a56b",
+  "container": "venus-firefox-foreground-diag01-1617ba562b75",
+  "image": "sha256:5d976ffbcf579bea9f9b6a51af314e2e23eee995cdaeab0dcf046c541bb63e3a",
+  "calls": [
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-firefox-foreground-diag01-1617ba562b75"
+      ],
+      "exit": 1
+    },
+    {
+      "args": [
+        "create",
+        "--pull=never",
+        "--name",
+        "venus-firefox-foreground-diag01-1617ba562b75",
+        "--label",
+        "venus.p05.diagnostic-owner=1617ba562b754540944318937b52a56b",
+        "--init",
+        "--network",
+        "none",
+        "--user",
+        "1000:1000",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--shm-size",
+        "1g",
+        "--memory",
+        "3g",
+        "--memory-swap",
+        "3g",
+        "--cpus",
+        "2",
+        "--pids-limit",
+        "512",
+        "--tmpfs",
+        "/tmp:size=1g,mode=1777,exec",
+        "--tmpfs",
+        "/home/node:size=64m,uid=1000,gid=1000",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p05-firefox-foreground-diagnostic01,target=/out",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p05-firefox-foreground-diagnostic01,target=/app/diagnostic,readonly",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p05-pilot-bundle-source17/.artifacts/p05-v2-layout-producer-a20-03,target=/app/tests/p05-v2-layout-producer,readonly",
+        "--entrypoint",
+        "node",
+        "sha256:5d976ffbcf579bea9f9b6a51af314e2e23eee995cdaeab0dcf046c541bb63e3a",
+        "/app/diagnostic/probe.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-firefox-foreground-diag01-1617ba562b75"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "start",
+        "--attach",
+        "venus-firefox-foreground-diag01-1617ba562b75"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-firefox-foreground-diag01-1617ba562b75"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "rm",
+        "venus-firefox-foreground-diag01-1617ba562b75"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "venus-firefox-foreground-diag01-1617ba562b75"
+      ],
+      "exit": 1
+    }
+  ],
+  "exit_code": 0,
+  "cleanup": "COMPLETE_OWNED_CONTAINER_ABSENT",
+  "error": null,
+  "finished_utc": "2026-10-22T18:38:54.542876+00:00"
+}

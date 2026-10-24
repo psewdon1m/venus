@@ -1,0 +1,19 @@
+--- A31-02/scene-driver.mjs
++++ A31-03/scene-driver.mjs
+@@ -65,8 +65,6 @@
+    if(a.room===wanted.room&&a.id===wanted.member&&new URLSearchParams(new URL(a.page.url()).hash.slice(1)).get('room')===wanted.room&&own.room_id===wanted.room&&own.member_id===wanted.member&&own.session_id===wanted.session&&own.round_id===wanted.round&&Number.isSafeInteger(current.game_rev)&&current.game_rev>=wanted.min_rev&&own.game_rev===current.game_rev&&current.session_id===wanted.session&&current.round_id===wanted.round){
+     reason='TIMES_INVALID';
+     if(times.every(Number.isFinite)&&times.every(t=>t>=0&&t<=at)&&current.started_monotonic_ms<=current.received_monotonic_ms&&own.started_monotonic_ms<=own.received_monotonic_ms){
+-     reason='OWN_PREDATES_CURRENT';
+-     if(own.started_monotonic_ms>=current.started_monotonic_ms){
+       reason='ADVANCE_NOT_GRANTED';
+       if(own.session_actions?.advance===true){
+        reason='LEASE_INVALID';
+@@ -74,7 +72,6 @@
+         deadline=Math.min(wanted.deadline,deadlineCeiling,own.started_monotonic_ms+Math.min(5000,ttl));remaining=deadline-at;reason=remaining>=minimum?'READY':'LEASE_INSUFFICIENT';
+        }
+       }
+-     }
+     }
+    }
+   }

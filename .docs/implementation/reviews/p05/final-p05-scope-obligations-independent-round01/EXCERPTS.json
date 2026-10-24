@@ -1,0 +1,112 @@
+[
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 37,
+    "text": "У каждой отдельной проверки результат `PASS`, `FAIL`, `NOT_RUN` или доказательный `N/A`. `NOT_RUN`, отсутствующий отчёт и `FAIL` блокируют переход. `N/A` допустим только для неприменимого условия с объяснением, областью действия и проверяющим. Нельзя использовать `N/A` вместо обязательной функции выбранного объёма поставки."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 45,
+    "text": "1. Все входные зависимости этапа закрыты на совместимых версиях."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 47,
+    "text": "3. Доказательства относятся к проверяемому Git SHA, контрактам и, где применимо, OCI digest, policy revision, pack digest и версии схемы БД."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 52,
+    "text": "При провале прекращается зависимая работа или включение затронутой функции; независимые ветки плана могут продолжаться. После исправления повторяются проваленная проверка и проверки затронутых зависимостей. Изменение кода, policy, каталога или окружения требует анализа актуальности прежних результатов; доказательства на другую ревизию не переносятся молча."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 154,
+    "text": "2. На минимум 10 000 синтетических сессий для каждого размера группы 2…8 нет нарушений 15 инвариантов §15 документа 08. Дополнительно exhaustively проверены пары/comfort/context/stage; невозможные профили дают безопасный отказ, а не ослабление фильтра."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 157,
+    "text": "5. Выполнены fairness и inference simulations. Допуски и методика приняты до запуска измерений; отчёт показывает распределения, ограничения для двух участников и отсутствие публичных class/weight/initiator/чужих comfort/edges. Любой выявленный детерминированный канал раскрытия блокирует переход."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 188,
+    "text": "1. Все 10 критических E2E сценариев из §8 документа 04 и релевантные CI-R/I/P проходят; три режима завершаются для 2…8 игроков в обоих контекстах на reviewed pack. Проверены общий card ID при разных locale, truth/dare с общей границей риска и собственное «но» второго игрока."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 190,
+    "text": "3. Приватные приглашения, тексты и сообщения не попадают host/посторонним. Если private chat включён — проверены ACL, TTL, отзыв, disconnect и удаление; если выключен — все зависимые карточки сервером недопустимы."
+  },
+  {
+    "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+    "line": 192,
+    "text": "5. ADR-005/006/007 с дополнением ADR-019 имеют реализованные ограничения и тесты; threat/privacy review закрыт в scope. `PLAN-P05-AGE`: 18+ по умолчанию не отмечено, отсутствие/отказ/подделка поля блокируют server admission, подтверждение и версия entry-policy фиксируются минимально. Mock notice маркирован тестовым и версионирован; его принятие не выставляет 18+ автоматически и не выдаётся за реальные legal документы. Каталог и покрытие соответствуют принятой новой ревизии P04."
+  },
+  {
+    "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+    "line": 72,
+    "text": "**Public sequence не зависит от скрытого private semantic history/exclusions.** Публичные semantic families исключаются по уже публично показанным карточкам; private selection учитывает public history и private историю конкретной пары. Private history не фильтрует будущий public pool. Это особенно важно для смешанных `SEM-17` (YB-1113 private / YB-1126 public) и `SEM-18` (YB-1133 private / YB-1005 public / TD-1005 solo): blanket room-level used-cluster создаёт decoder. Пока эти смешанные семьи не разнесены редакторски или не доказана новая схема общего support, для topic-enabled выпуска они не принимаются как закрытые: либо консервативно вывести **всю смешанную семью** из нового versioned repertoire независимо от наличия private события, либо получить новые differentiated families и review. Нельзя отключать только публичную половину после тайного private события. Исторический pack при этом не редактируется; новый repertoire/map digest и C2 обязательны."
+  },
+  {
+    "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+    "line": 74,
+    "text": "Остаточный предел приватности: партнёр видит отказ/отсутствие продолжения и способен делать бытовые выводы; нельзя обещать нулевую inferability по факту ответа. Не показывать ему чужой список exclusions, название отвергнутой темы, мотив, точные остатки пула или per-topic availability API. Ответ инициатору на недопустимое предложение — generic receipt/ограниченный timeout, без кода «второй запретил music». Исследование public/private inference — отдельный gate, а не обещание на основании отсутствия поля в JSON."
+  },
+  {
+    "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+    "line": 90,
+    "text": "| C2/fairness/privacy | Новые deterministic preflight/C2: 2…8, оба контекста, все режимы/стадии/1…100, default/chat caps, разные allow/exclude профили и смена тем; safe-refusal учитывается отдельно. Новые M3-style fairness/public-inference measurements и strata по exclusions/semantic families. Старый C2 и M3 не переименовываются в новые доказательства |"
+  },
+  {
+    "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+    "line": 92,
+    "text": "Порядок: (1) freeze taxonomy/map candidate и versioned contracts с разбором mixed families; (2) выполнить migrations/ledger+V2 planner и отрицательные API/SQL tests; (3) UI/structured advice и реальные Docker browser races; (4) пересчитать coverage/fairness/privacy, независимые reviewer rounds до PASS. Human approval контента остаётся отдельным. Для rollback остановить новые V2 starts, отозвать все V2 moments/grants/advice, сохранить ledger exclusions, вернуть совместимый reader/UI и не выдавать старый pack за проверенный с новой policy. Promotion трёх requirements разрешён только после полного набора source-bound доказательств; сейчас `DESIGN_ONLY`."
+  },
+  {
+    "path": ".docs/adr/ADR-026-local-pilot-provisional-card-pass.md",
+    "line": 9,
+    "text": "Технические требования не отменяются: реальное покрытие, семантическая карта, безопасность, согласия, runtime, интерфейс, статистические гейты и независимая приёмка остаются обязательными. Подмена synthetic draft нормальным runtime bundle без проверки его точных привязок запрещена. Активация требует отдельной прослеживаемой ревизии release registry после технической готовности; исходные draft snapshots не редактируются."
+  },
+  {
+    "path": ".docs/adr/ADR-016-p03-progressive-evidence.md",
+    "line": 7,
+    "text": "EXIT-P03 requires every RE-001…018. RE-016 includes actual progressive distributions by stage. M2 recorded global pair shares, G/F and inference, but did not record the measured private eligibility/progression distribution, per-session cap or alternative-pair decisions. The fixed sampler probabilities and source inspection alone cannot replace that evidence. The independent final evidence reviewer corrected an earlier nonblocking interpretation before acceptance."
+  },
+  {
+    "path": ".docs/adr/ADR-016-p03-progressive-evidence.md",
+    "line": 13,
+    "text": "M3 retains algorithm RE-1.P03-M1, policy RE-1, the exact M1/M2 seed strings, profiles, samples, sampler probabilities, classifiers and numerical thresholds. It adds independent observation of the unchanged production planner: stage/eligibility/interaction/comfort distributions in168cells, raw per-session private proposal counts, zero early-private and cap violations, and last-private-pair alternative decisions with explicit no-alternative exceptions. An observer computes candidate availability before anti-repeat/recovery/branch selection and never feeds a decision to the planner."
+  },
+  {
+    "path": ".docs/adr/ADR-016-p03-progressive-evidence.md",
+    "line": 17,
+    "text": "The exact protocol, runner, diagnostic observer, public renderer, fixtures and policy inputs are committed and hashed before the M3 corpus. A separate immutable preregistration tag is used. Gate validation rejects partial/probe/dirty/changed-source evidence and inconsistent raw histograms, sessions or counter denominators. Any later measured-input change requires another preregistration revision."
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/privacy-matched-independent-round01/REPORT.md",
+    "line": 15,
+    "text": "This is a legitimate prospective compact complement to the newly required semantic/exclusion strata: universal selector reasoning plus fixed branch/support observations, not a new inference estimator. The earlier extra84,000 proposal was not an adopted numeric norm. No additional84k or expanded crossproduct is required by this review. Conversely this84-case method does not substitute for the original126k FG/FM/GM measurements,100train/400holdout per class/cell, separately trained pooled analysis, upper95% CI≤.65, or deterministic-decoder block. Original70k/84k/1M/126k and C2 counts remain unchanged."
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/privacy-matched-independent-round01/REPORT.md",
+    "line": 21,
+    "text": "Summary requires exact84 ordered descriptors and full native replay of the retained raw triplets, recomputes classification, and rejects projected-status-only evidence. Unexpected failures retain completed arms/failed-arm prefix and stop without retry/other-arm continuation. Real replay and support are not yet measured. If fixed real470 cases lack common support, preserve NOT_COVERED and make a prospective explicit disposition; do not reseed or infer a pass from synthetic controls."
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/a17-source-browser-cohorts-independent-round01/REPORT.md",
+    "line": 20,
+    "text": "The A9 pure qualification extends through accepted A16 `ed5a8650...`: all28 enumerated closure modules equal A16;27 remain whole-byte exact A9, while rooms.js retains the qualified revision-only slice (`86ea9ad1...`) and inherited import/initialization/reachability proof under `12946590...`. No claim that all28 whole modules equal A9 or that old A9 native corpus runs were executed on A17. Original C2/M3/matched and stage gates are not newly accepted."
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/c2-static-full-independent-round01/REPORT.md",
+    "line": 3,
+    "text": "PASS_FULL_ORIGINAL_C2_STATIC_ACTUAL_ONLY_NOT_FULL_C2_OR_STAGE. No finding within this static component. Actual packet INDEX `6525b019fdba7f3139a98ec340f82908220031fda550ba2db41197445467d8fa` and every indexed child verified before/after. All 47,040 original static cases are authenticated: accepted first100 cost prefix plus ten disjoint remaining ranges, 11 unique owners, 39 compressed segments and 11 reconciled sealed footers. The retained local exports total 133,996,521 bytes. No raw corpus was copied into Git."
+  },
+  {
+    "path": ".docs/implementation/reviews/p05/c2-static-full-independent-round01/REPORT.md",
+    "line": 17,
+    "text": "This PASS accepts actual full original STATIC execution and its authenticated static reduction only. Trajectories, canaries, other M3 sections, matched privacy strata, actual auth/wire/retention and current-source compatibility remain separate gates. No full C2, M3, P05, professional content, production, or P06 acceptance follows. Writes COMPLETE."
+  }
+]

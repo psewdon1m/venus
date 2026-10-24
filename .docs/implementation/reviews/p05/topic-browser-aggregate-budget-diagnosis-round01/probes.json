@@ -1,0 +1,121 @@
+{
+  "scope": "EXACT_ARCHIVED_HELPER_AND_CURRENT_UNCHANGED_CACHE_IN_EXPLICIT_VIRTUALTIME_DOM_FIXTURES_NOT_BROWSER_ACCEPTANCE",
+  "rows": [
+    {
+      "id": "exact09_aggregate_budget_exhausts_with_only809ms_for_postcommit_phase",
+      "status": "PASS",
+      "observed": {
+        "pass": false,
+        "now": 8000,
+        "report": {
+          "topic_readiness": [
+            {
+              "step": "after_second_ack",
+              "locale": "ru",
+              "member_id": "member",
+              "expected": {
+                "room_id": "room",
+                "session_id": "session",
+                "round_id": "round",
+                "round_index": 16,
+                "min_game_rev": 36
+              },
+              "preparation_budget_ms": 8000,
+              "result": "FAILED",
+              "observed": {
+                "session_id": "session",
+                "round_id": "round",
+                "round_index": 16,
+                "game_rev": 36,
+                "state": "active",
+                "round_state": "pending"
+              },
+              "own_scope_matches": true,
+              "dom": {
+                "own_room_matches": true,
+                "round_visible": true,
+                "round_index_matches": true,
+                "control_visible": false,
+                "control_enabled": true
+              },
+              "dom_sample": "OBSERVED",
+              "same_observation": true,
+              "preparation_elapsed_ms": 8000,
+              "remaining_ms": 0
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "same_exact_helper_separate_prospective_postcommit_phase_accepts_within2900ms",
+      "status": "PASS",
+      "observed": {
+        "pass": true,
+        "now": 10091,
+        "report": {
+          "topic_readiness": [
+            {
+              "step": "after_second_ack",
+              "locale": "ru",
+              "member_id": "member",
+              "expected": {
+                "room_id": "room",
+                "session_id": "session",
+                "round_id": "round",
+                "round_index": 16,
+                "min_game_rev": 36
+              },
+              "preparation_budget_ms": 8000,
+              "result": "READY",
+              "observed": {
+                "session_id": "session",
+                "round_id": "round",
+                "round_index": 16,
+                "game_rev": 36,
+                "state": "active",
+                "round_state": "pending"
+              },
+              "own_scope_matches": true,
+              "dom": {
+                "own_room_matches": true,
+                "round_visible": true,
+                "round_index_matches": true,
+                "control_visible": true,
+                "control_enabled": true
+              },
+              "dom_sample": "OBSERVED",
+              "same_observation": true,
+              "preparation_elapsed_ms": 2900,
+              "remaining_ms": 5100
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "per_phase_bound_still_rejects_wrong_scope",
+      "status": "PASS"
+    },
+    {
+      "id": "per_phase_bound_still_rejects_never_ready",
+      "status": "PASS"
+    },
+    {
+      "id": "separate_phase_does_not_wait_unbounded_or_reset_each_poll",
+      "status": "PASS"
+    },
+    {
+      "id": "original09_expired_stage_still_fails_not_reclassified_PASS",
+      "status": "PASS"
+    },
+    {
+      "id": "exact_TopicCache_rejects_expired5s_permission_even_if_test_preparation_extended",
+      "status": "PASS"
+    },
+    {
+      "id": "fresh_permission_has_own_original5s_bound_not_test_deadline",
+      "status": "PASS"
+    }
+  ]
+}

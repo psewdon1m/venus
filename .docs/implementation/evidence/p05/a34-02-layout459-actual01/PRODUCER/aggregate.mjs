@@ -1,0 +1,17 @@
+/** Combine nine actual immutable shard directories; inert synthetic cells are never an input mode. */
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,existsSync} from 'node:fs';
+import {join,resolve,basename} from 'node:path';
+import {pathToFileURL} from 'node:url';
+import {assertMatrix} from './matrix.mjs';
+import {assertShard,sha} from './runner-policy.mjs';
+export function aggregate(directories){
+ assert.equal(directories.length,9);assert.equal(new Set(directories.map(d=>resolve(d))).size,9);const records=[],inputs=[],keys=new Set();let binding=null,totalScreenshotBytes=0,totalScreenshotCount=0,totalPreparations=0,totalActions=0;
+ for(const directory of directories){const raw=readFileSync(join(directory,'layout-report.json')),report=JSON.parse(raw),runnerRaw=readFileSync(join(directory,'runner.json')),runner=JSON.parse(runnerRaw);assert.equal(runner.status,'PASS');assert.equal(runner.cleanup,'PASS');assert.equal(runner.full_matrix,false);assert.equal(runner.scope,'ONE_51_CELL_V2_LAYOUT_SHARD');assertShard(report,runner.engine,runner.locale);const key=runner.engine+'/'+runner.locale;assert(!keys.has(key));keys.add(key);
+  const next={source_identity:runner.source_identity,image:runner.image,producer_runtime_digest:runner.producer_runtime_digest};assert(/^[a-f0-9]{64}$/.test(next.source_identity));assert(/^sha256:[a-f0-9]{64}$/.test(next.image));assert(/^[a-f0-9]{64}$/.test(next.producer_runtime_digest));if(binding)assert.deepEqual(next,binding);else binding=next;
+  const evidenceNames=new Set();for(const row of report.records)for(const role of row.roles){assert.equal(basename(role.evidence_file),role.evidence_file);assert(!evidenceNames.has(role.evidence_file),'DUPLICATE_ROLE_SCREENSHOT');evidenceNames.add(role.evidence_file);const file=join(directory,role.evidence_file);assert(existsSync(file));const png=readFileSync(file);assert.equal(png.subarray(0,8).toString('hex'),'89504e470d0a1a0a');assert.equal(sha(png),role.capture.sha256);assert.equal(png.length,role.capture.bytes);assert(png.length<=3*1024*1024,'SCREENSHOT_FILE_BUDGET');totalScreenshotBytes+=png.length;totalScreenshotCount++;assert(totalScreenshotBytes<=4*1024**3&&totalScreenshotCount<=1836,'FULL_MATRIX_SCREENSHOT_BUDGET');}
+  totalPreparations+=report.sweep_preparations.length;totalActions+=report.keyboard_actions.length;records.push(...report.records);inputs.push({directory:resolve(directory),report_sha256:sha(raw),runner_sha256:sha(runnerRaw),engine:runner.engine,locale:runner.locale});
+ }
+ assert.equal(totalPreparations,135);assert.equal(totalActions,135);return {schema_version:1,scene_preparations:totalPreparations,keyboard_actions:totalActions,...assertMatrix(records),scope:'ACTUAL_V2_LAYOUT459_MATRIX_NOT_FULL_P05',binding,inputs,records,screenshots:{bytes:totalScreenshotBytes,count:totalScreenshotCount},production:false,real_devices:false,full_stage_acceptance:false};
+}
+if(process.argv[1]&&import.meta.url===pathToFileURL(resolve(process.argv[1])).href){const[out,...directories]=process.argv.slice(2);assert(out);const result=aggregate(directories);writeFileSync(out,JSON.stringify(result,null,2)+'\n',{flag:'wx'});console.log(JSON.stringify({status:result.status,cells:result.cells,scope:result.scope}));}

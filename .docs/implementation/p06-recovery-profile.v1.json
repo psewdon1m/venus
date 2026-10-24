@@ -1,0 +1,20 @@
+{
+  "format": "VENUS-LOCAL-RECOVERY-1",
+  "profile": "standalone-local-pilot-v2",
+  "fixed_before_first_test": true,
+  "initial_version": "fixture A; real first service release venus-v0.0.1 is separate",
+  "target_version": "fixture B; test-only Ed25519 key is never service signing readiness",
+  "write_boundary": "All consumer writers stopped before pg_dump; serving gate remains closed until commit or verified recovery",
+  "backup": "Full PostgreSQL custom-format stream in VENUSBK1 framed owner-only host file; atomic temp/fsync/rename/directory-fsync; no keys/env/tokens/protected-ledger rollback",
+  "restore": "Fresh database with retained authoritative protected host ledgers and separately supplied keyring; validate synthetic plaintext/preferences/snapshots and record counts/foreign keys",
+  "expected_loss_of_backup_committed_records": 0,
+  "post_backup_writes": "Blocked during transactional update; separate drill writes after backup must be explicitly measured/reported, never hidden",
+  "fault_phases": ["PREFLIGHT", "PULLING", "IMAGE_VERIFIED", "QUIESCING", "QUIESCED", "BACKUP_DURABLE", "MUTATION_STARTED", "CANDIDATE_STARTED", "HEALTH_VERIFIED", "COMMITTED"],
+  "phase_fault_outcome": "Before mutation: healthy A unchanged or gated explicit recovery if executor killed. After mutation: backup-based compatible A recovery with current ledgers; failed recovery leaves serving closed. Original error and recovery outcome are distinct.",
+  "restart": "Never restore automatically; unfinished journal requires explicit operator recovery; ordinary consumer restart runs monotonic reconciliation before serving",
+  "measurements_required": ["source identity", "exact image IDs and OCI digests", "schema", "actor UIDs", "backup SHA/size/mode/age", "job ID/events and original error", "recovery duration", "write boundary", "restored counts and decrypted synthetic preferences", "post-backup records", "ledger heads and old-backup/new-ledger non-resurrection", "resource limits and owned cleanup"],
+  "resource_plan": {"concurrent_full_drills": 1, "app_cpu": 2, "app_memory_mib": 1024, "db_cpu": 1, "db_memory_mib": 512, "executor_memory_mib": 1024, "operator_memory_mib": 128, "backup_max_mib": 128, "no_p05_full_corpus_or_browser459_rerun_without_related_change": true},
+  "production_RPO_RTO": "NOT_APPROVED_NO_SLA_CLAIM",
+  "external_backup_copy": "OUTSIDE_VENUS_NOT_TESTED_OR_CLAIMED",
+  "public_DNS_TLS_UDP_and_real_devices": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS"
+}

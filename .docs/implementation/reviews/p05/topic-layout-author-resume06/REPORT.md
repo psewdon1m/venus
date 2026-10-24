@@ -1,0 +1,9 @@
+# Layout06: A7-only operational binding
+
+AUTHOR_OPERATIONAL06_ONLY_NOT_RUN. Carry method727092bb accepted04/root05: all browser/worker/sharedMETHOD21/helper/matrix/DOM/native/typography oracles unchanged. Only four existing files change: binding.json(finalA7/source1846/test9f5a receipts), false ROOT_RUN_ACK, run.mjs producer directory/status literals05→06/A4→A7, runner-policy exact sourcecount1842→1846. No459=9×51/3engines×RUENTr/width/native200/180ssetup/deadline/rate/assertion changes, no newframework/cases.
+
+54field-locale/23realr4cards presentation supplement and byte-exact text fixtures remain;162logical text rows/324stress receipts acrossthreeengines, not all470visualfunctionalproof. Static all470renderbudget comes from separate accepted loader. Synthetic online/fullflows and actualpack typography remain distinct; no actualIPauth/API proof is invented. Shared passive observer uses actual bundle timing; no fakecacheacceptance or grant extension.
+
+A7 `b2100207d12e90615fb0a62f4b5e410d9a4c8c20fc2db2bc1eae4bc409dca5b6`/1846 testimage `sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937`, rootfull284receipt `be58c037e550cc48a25401a3139b7f010a76963b57067c5c3b3c791f026654bd`. Current frontend/validators and packdata unchanged; wholeimage not assumed equal. Runtime digest from unchanged capture policy is89ea3cf1954a5fc2f171dd4d44540368879442fbf167e57574b3e7fcf09b0843. Accepted source/math controls carry by exact bytes; five targeted bindingcontrols PASS plus falseACK rejection/2syntax/lint0. NoactualDOM/rendering/Docker/shard happened.
+
+Root MUST obtain final METHOD21A7 actual16PASS before layout ACK; this prerequisite is still PENDING in template. Parent must copy exact final independent layout06 review into A7excluded.docs and bind its source/image/runtime fields. NoACK/RUN/fullmatrix/cleancommit/P05PASS. Historical copied04/05 logs remain scoped to their original inputs. Writes COMPLETE.

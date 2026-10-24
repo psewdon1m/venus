@@ -1,0 +1,3 @@
+# A20 — focused form fields remain visible
+
+Existing WebKit entry/w320 first Tab sample clips join-invite by16.890625px. The common main focus bubble handler scrolls only the existing input/select target box nearest/instant, after child selection handlers. Four added source lines; all other main bytes and1872 existing source paths are exact A19. Existing textarea handlers remain. No new test harness or tests were added. Typecheck/lint0; full host JS1104PASS207platformSKIP0 on exact changed main bytes. The source revision JSON was added after that host preflight; fresh clean quality and all current UI9x51/324 remain required. Historical A19 Chrome51 is not a current-source geometry proof. Rollback is the coherent A19 web bundle.

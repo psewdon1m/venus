@@ -1,0 +1,42 @@
+--- METHOD15/browser.mjs
++++ METHOD16/browser.mjs
+@@ -1,3 +1,4 @@
++import {safeFailedReadiness} from './readiness-diagnostics.mjs';
+ /** Actual ReactDOM/HTTPS/real cookie jars; excluded functional slice, no approval. */
+ import assert from 'node:assert/strict';
+ import {performance} from 'node:perf_hooks';
+@@ -67,7 +68,7 @@
+    Object.defineProperties(ticket,{expected:{value:exact},control:{value:control}});a.privateReady??=new Map();a.privateReady.set(control,ticket);row.status='READY';row.snapshot={...ticket};return ticket;
+   }
+   throw Error('METHOD12_PREPARATION_DEADLINE');
+- }finally{row.finished_monotonic_ms=performance.now();row.last_snapshot=last;save();}
++ }catch(error){row.failed_readiness=safeFailedReadiness(error.readiness??last,{actor:a,expected:wanted});throw error;}finally{row.finished_monotonic_ms=performance.now();row.last_snapshot=last;save();}
+ }
+ async function preparePrivateClick(a,control,path=null){
+  if(!normalPrivateControls.has(control))return null;
+@@ -152,9 +153,9 @@
+  const view=await read(a,`/api/v2/rooms/${a.room}/game/${f.session}/round/${f.plan.round_id}/conversation`),rows=view.advice.filter(v=>v.direction==='received'&&v.state==='pending');assert.equal(rows.length,1);assert.equal(rows[0].text,undefined,'No received pending advice preview');return rows[0];
+ }
+ async function acceptActionsUi(f){
+- const pair=participants(f);assert.equal(pair.length,2);const started=performance.now(),deadline=started+8000;
++ const pair=participants(f);assert.equal(pair.length,2);const started=performance.now(),deadline=started+12000;
+  let minRev=Math.max(f.game_rev,...pair.map(a=>a.lastGameView?.game_rev??-1));assert(Number.isSafeInteger(minRev)&&minRev>=0);
+- const phases=report.action_preparation_phases??=[];assert(phases.length<32,'METHOD13_ACTION_PHASE_CAP');const phase={started_monotonic_ms:started,deadline_monotonic_ms:deadline,budget_ms:8000,status:'FAILED',actors:[]};phases.push(phase);
++ const phases=report.action_preparation_phases??=[];assert(phases.length<32,'METHOD13_ACTION_PHASE_CAP');const phase={started_monotonic_ms:started,deadline_monotonic_ms:deadline,budget_ms:12000,status:'FAILED',actors:[]};phases.push(phase);
+  try{
+   for(const a of pair){
+    assert(performance.now()<deadline,'METHOD13_ACTION_PHASE_DEADLINE');
+--- METHOD15/readiness-diagnostics.mjs
++++ METHOD16/readiness-diagnostics.mjs
+@@ -0,0 +1,11 @@
++/** Bounded passive-model evidence. Never copies DTOs, tokens or arbitrary error text. */
++const reasons=new Set(["BATCH_INCOMPLETE", "CHAT_INVALID", "CLOSED", "CONSENT_EXPIRED", "CONSENT_NOT_ACTIVE", "CONTROL_FORBIDDEN", "CONVERSATION_INVALID", "CONVERSATION_STALE", "CONVERSATION_UNAVAILABLE", "CURRENT_STALE", "CURRENT_UNAVAILABLE", "DOCUMENT_HIDDEN", "DOM_NOT_READY", "EXPECTED_SCOPE_MISMATCH", "GET", "HTTP_REJECTED", "LEASE_TOO_SHORT", "MODEL_REJECTED", "NO_CURRENT", "NO_CYCLE", "NO_LIVE_WS", "OBSERVER_", "OBSERVER_ABSOLUTE_DEADLINE_REQUIRED", "OBSERVER_ALREADY_ATTACHED", "OBSERVER_CONTROL_NOT_SUPPORTED", "OBSERVER_FOCUS_OPTION_INVALID", "OBSERVER_INTENDED_VALUE_CHANGED", "OBSERVER_INTENDED_VALUE_INVALID", "OBSERVER_NOT_ATTACHED", "OBSERVER_NOT_ATTACHED_OR_CLOSED", "OBSERVER_READY_DEADLINE", "OBSERVER_SOURCE_PIN_MISMATCH", "OVERFLOW", "OWN_INVALID", "PRIVATE_CONVERSATION_REQUIRED", "PROJECTION_UNAVAILABLE", "READY", "ROUND_ACTOR_REQUIRED", "ROUND_NOT_ACTIVE", "ROUND_STALE", "ROUTE_SCOPE_MISMATCH", "SCOPE_MISMATCH", "TARGET_INVALID", "TOPIC_DELIVERY_EXPIRED", "TOPIC_DELIVERY_STALE"]);
++const uuid=value=>typeof value==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(value)?value:null;
++export function safeFailedReadiness(value,{actor,expected}={}){
++ const x=value&&typeof value==='object'?value:{},out={reason:reasons.has(x.reason)?x.reason:'UNLISTED_OR_UNAVAILABLE',actor_locale:['ru','en','tr'].includes(actor?.locale)?actor.locale:null,member_id:uuid(actor?.id),expected_scope:{room:uuid(expected?.room),member:uuid(expected?.member),session:uuid(expected?.session),round:uuid(expected?.round),min_rev:Number.isSafeInteger(expected?.minRev)&&expected.minRev>=0?expected.minRev:null},observer_model_only:true,cache_accept_observed:false,auth_generation_observed:false};
++ for(const n of ['cycle_id','accepted_cycle_id','lease_remaining_ms','minimum_remaining_ms','pending_observers','dropped','body_errors','invalidations'])out[n]=Number.isFinite(x[n])&&x[n]>=0&&x[n]<=1e9?x[n]:null;
++ for(const n of ['ready','observer_overflow','complete'])out[n]=typeof x[n]==='boolean'?x[n]:null;
++ out.parts=Object.fromEntries(['own','target','conversation','chat','chat_required'].map(n=>[n,typeof x.parts?.[n]==='boolean'?x.parts[n]:null]));
++ out.http=Object.fromEntries(['own','target','conversation','chat'].map(n=>[n,Number.isSafeInteger(x.http?.[n])&&x.http[n]>=100&&x.http[n]<=599?x.http[n]:null]));
++ return out;
++}

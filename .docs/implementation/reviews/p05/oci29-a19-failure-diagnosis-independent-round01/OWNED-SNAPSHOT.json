@@ -1,0 +1,283 @@
+{
+  "observed_at_utc": "2026-10-21T16:32:24.708774+00:00",
+  "project": "venus-p05-oci-8f430f802c66",
+  "owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+  "query_scope": "EXACT_OWNER_AND_PROJECT_ONLY_WHITELIST_FIELDS_NO_ENV",
+  "objects": {
+    "container": [
+      {
+        "id": "020746a063d2399b33455820603c1ecebd29bd22dd178b7ec5da6b32b257ea6f",
+        "name": "/venus-p05-oci-8f430f802c66-db",
+        "image": "sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+        "running": false,
+        "status": "exited",
+        "exit_code": 0,
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66",
+          "com.venus.oci.role": "db"
+        },
+        "mounts": [
+          {
+            "type": "volume",
+            "name": "venus-p05-oci-8f430f802c66-db",
+            "destination": "/var/lib/postgresql/data",
+            "rw": true
+          },
+          {
+            "type": "volume",
+            "name": "venus-p05-oci-8f430f802c66-private",
+            "destination": "/private",
+            "rw": false
+          }
+        ]
+      },
+      {
+        "id": "49b486e20cd2aa3aa34e4c39e12dd8594f072badb33e453e1fff3b8921bb105b",
+        "name": "/venus-p05-oci-8f430f802c66-keeper",
+        "image": "sha256:ecdcc558940c70ed6ed83345f8e331f51fd2eb440c6b3f59937dd2dd0d0fe252",
+        "running": true,
+        "status": "running",
+        "exit_code": 0,
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66",
+          "com.venus.oci.role": "keeper"
+        },
+        "mounts": [
+          {
+            "type": "volume",
+            "name": "venus-p05-oci-8f430f802c66-evidence",
+            "destination": "/evidence",
+            "rw": false
+          },
+          {
+            "type": "bind",
+            "name": null,
+            "destination": "/control",
+            "rw": false
+          },
+          {
+            "type": "volume",
+            "name": "venus-p05-oci-8f430f802c66-private",
+            "destination": "/private",
+            "rw": false
+          },
+          {
+            "type": "volume",
+            "name": "venus-p05-oci-8f430f802c66-authority",
+            "destination": "/authority",
+            "rw": false
+          },
+          {
+            "type": "volume",
+            "name": "venus-p05-oci-8f430f802c66-db",
+            "destination": "/retained-db",
+            "rw": false
+          },
+          {
+            "type": "bind",
+            "name": null,
+            "destination": "/run/p05-oci-producer",
+            "rw": false
+          }
+        ]
+      }
+    ],
+    "volume": [
+      {
+        "name": "venus-p05-oci-8f430f802c66-authority",
+        "driver": "local",
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66"
+        }
+      },
+      {
+        "name": "venus-p05-oci-8f430f802c66-db",
+        "driver": "local",
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66"
+        }
+      },
+      {
+        "name": "venus-p05-oci-8f430f802c66-evidence",
+        "driver": "local",
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66"
+        }
+      },
+      {
+        "name": "venus-p05-oci-8f430f802c66-private",
+        "driver": "local",
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66"
+        }
+      }
+    ],
+    "network": [
+      {
+        "id": "503135ff224b744ef75788f85b73b20446ab41eee3c9c58efffac517b8dd8bc6",
+        "name": "venus-p05-oci-8f430f802c66-isolated",
+        "driver": "bridge",
+        "labels": {
+          "com.venus.oci.owner": "15c9560d4f0ab1d8e08e14c6a7987eb3",
+          "com.venus.oci.project": "venus-p05-oci-8f430f802c66"
+        },
+        "containers": {}
+      }
+    ]
+  },
+  "dual_label_inventories": {
+    "container": [
+      "020746a063d2399b33455820603c1ecebd29bd22dd178b7ec5da6b32b257ea6f",
+      "49b486e20cd2aa3aa34e4c39e12dd8594f072badb33e453e1fff3b8921bb105b"
+    ],
+    "volume": [
+      "venus-p05-oci-8f430f802c66-authority",
+      "venus-p05-oci-8f430f802c66-db",
+      "venus-p05-oci-8f430f802c66-evidence",
+      "venus-p05-oci-8f430f802c66-private"
+    ],
+    "network": [
+      "503135ff224b744ef75788f85b73b20446ab41eee3c9c58efffac517b8dd8bc6"
+    ]
+  },
+  "calls": [
+    {
+      "args": [
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=15c9560d4f0ab1d8e08e14c6a7987eb3"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.project=venus-p05-oci-8f430f802c66"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "--format",
+        "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"image\":{{json .Image}},\"running\":{{json .State.Running}},\"status\":{{json .State.Status}},\"exit_code\":{{json .State.ExitCode}},\"labels\":{{json .Config.Labels}},\"mounts\":{{json .Mounts}}}",
+        "020746a063d2399b33455820603c1ecebd29bd22dd178b7ec5da6b32b257ea6f"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "container",
+        "inspect",
+        "--format",
+        "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"image\":{{json .Image}},\"running\":{{json .State.Running}},\"status\":{{json .State.Status}},\"exit_code\":{{json .State.ExitCode}},\"labels\":{{json .Config.Labels}},\"mounts\":{{json .Mounts}}}",
+        "49b486e20cd2aa3aa34e4c39e12dd8594f072badb33e453e1fff3b8921bb105b"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.venus.oci.owner=15c9560d4f0ab1d8e08e14c6a7987eb3"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.venus.oci.project=venus-p05-oci-8f430f802c66"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "volume",
+        "inspect",
+        "--format",
+        "{\"name\":{{json .Name}},\"driver\":{{json .Driver}},\"labels\":{{json .Labels}}}",
+        "venus-p05-oci-8f430f802c66-authority"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "volume",
+        "inspect",
+        "--format",
+        "{\"name\":{{json .Name}},\"driver\":{{json .Driver}},\"labels\":{{json .Labels}}}",
+        "venus-p05-oci-8f430f802c66-db"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "volume",
+        "inspect",
+        "--format",
+        "{\"name\":{{json .Name}},\"driver\":{{json .Driver}},\"labels\":{{json .Labels}}}",
+        "venus-p05-oci-8f430f802c66-evidence"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "volume",
+        "inspect",
+        "--format",
+        "{\"name\":{{json .Name}},\"driver\":{{json .Driver}},\"labels\":{{json .Labels}}}",
+        "venus-p05-oci-8f430f802c66-private"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "network",
+        "ls",
+        "-q",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=15c9560d4f0ab1d8e08e14c6a7987eb3"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "network",
+        "ls",
+        "-q",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.project=venus-p05-oci-8f430f802c66"
+      ],
+      "exit": 0
+    },
+    {
+      "args": [
+        "network",
+        "inspect",
+        "--format",
+        "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"driver\":{{json .Driver}},\"labels\":{{json .Labels}},\"containers\":{{json .Containers}}}",
+        "503135ff224b744ef75788f85b73b20446ab41eee3c9c58efffac517b8dd8bc6"
+      ],
+      "exit": 0
+    }
+  ]
+}

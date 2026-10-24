@@ -1,0 +1,5 @@
+# METHOD15 independent repeat
+
+2026-10-20T15:17:05.2516095Z UTC — Repeat rootfix METHOD14-R01-001 withnewMETHOD15 inputINDEX6a9b629e19a7da71b448a80e3960b35af04f49b8744ed72b7b22013de7f77212/23. Ownreviewpacket/journal only. Historical1274/1813subset/currentcontentdriftqualified; noDocker/source/producerwrites; noactual409cause orfunctionalPASS claim. Verify originalUUIDcounterexample, malformed/errors/timeout/privacy. Finalmanifestafter ownwrites COMPLETE.
+
+2026-10-20T15:19:35.0978398Z UTC — PASS_METHOD_ONLY diagnosticscope, METHOD14-R01-001closed/no newP1P2. Exactoriginalcounterexample nowrejectsbeforejson+offer/errorprojection; null/invalidobserved/responseUUIDsfailsafe.43finitePASS(30repeatedauthor+13own),23authorhashes/9pins/historical1813subset/currentdriftverified. Finalcommandsall0; initialreadguessesrawfoldermissingcorrectedviaactualinventory. NoDocker/images/source/producerwrites. WritesCOMPLETEafternewindex/handoff; rootmaynextrebindonlyafterparallelwriters/imageavailability. Actual409causeUNRECORDED/fullstageNOTPASS unchanged.

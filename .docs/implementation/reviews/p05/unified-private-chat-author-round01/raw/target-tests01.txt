@@ -1,0 +1,41 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-panel.test.ts (17 tests | 1 failed) 1772ms
+   ❯ actual TopicGamesPanel scoped V2 flow (17)
+     × sends in-person chat through the same exact V2 conversation scope and clears it on transport loss 96ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > sends in-person chat through the same exact V2 conversation scope and clears it on transport loss
+AssertionError: expected Object{ marker: true, …(3) } to match object { marker: true, post: { …(2) }, …(2) }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  {
+    "hidden": true,
+    "marker": true,
+    "post": {
+      "body": {
+-       "conversation_id": "conversation",
++       "conversation_id": "c-s",
+        "epoch": 1,
+        "text": "OWN IN PERSON TEXT",
+      },
+      "path": "/api/v2/rooms/room/game/s/round/round-s/conversation/chat",
+    },
+
+ ❯ apps/web/src/topic-panel.test.ts:60:6
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 3 passed (4)
+      Tests  1 failed | 143 passed (144)
+   Start at  19:42:49
+   Duration  18.17s (tests 91%, import 5%, transform 3%)
+

@@ -1,0 +1,38 @@
+{
+  "entries": [
+    {
+      "command": "node .../controls.mjs",
+      "exit_code": 0,
+      "controls_pass": 8,
+      "confirmed_P2_counterexamples": 1
+    },
+    {
+      "command": "python .../verify.py",
+      "attempt": 1,
+      "exit_code": 1,
+      "cause": "Correct refusal of whole-tree1274 claim after concurrent additions"
+    },
+    {
+      "command": "node .../author-rerun.mjs",
+      "attempt": 1,
+      "exit_code": 1,
+      "cause": "Dependent rerun tried before adapted script existed; preserved note"
+    },
+    {
+      "command": "python .../verify.py",
+      "attempt": 2,
+      "exit_code": 0,
+      "scope": "23file hashes/9pins/historical1813 unchanged subset + current drift captured"
+    },
+    {
+      "command": "node .../author-rerun.mjs",
+      "attempt": 2,
+      "exit_code": 0,
+      "controls": 25
+    }
+  ],
+  "functional_run": false,
+  "Docker_calls": 0,
+  "producer_edits": false,
+  "product_edits": false
+}

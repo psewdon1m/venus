@@ -1,0 +1,19 @@
+[
+  {
+    "id": "P05-C2-PRIVATE-COUNT-ORACLE-001",
+    "priority": "P2",
+    "status": "OPEN",
+    "path": ".artifacts/p05-r4-v2-c2-consumer01/consumer.mjs",
+    "line": 63,
+    "title": "Private playable/safe-empty counts are trusted without reconciliation to actual round cards",
+    "trigger": "The exact author fake result has one pair_private round. Change its card to null and remove its private_history record, but retain summary private_playable=1/private_safe_empty=0. Existing runPreflight accepts it and returns PLANNED_SIMULATION_ONLY.",
+    "counterexample": "safe-empty-counterexample.mjs",
+    "observed_exit": 1,
+    "counterexample_scope": "Exact consumer helper + existing author finite fake fixture only; no actual r4 preflight or product defect demonstrated.",
+    "current_native_API_scope": "Current preflightTopics source correctly derives both counters from history. Finding is a missing independent measurement oracle, not evidence current native planner misreports.",
+    "effect": "A mismatched or regressed summary can convert a raw safe-empty opportunity into reported positive private coverage. Sum-to-opportunities alone does not establish playable/private-safe-empty parity.",
+    "minimal_fix": "Require safe integer nonnegative opportunity/playable/empty counters and independently derive playable and safe-empty counts from history.rounds filtered by pair_private and card presence; require exact equality to each counter before choosing status/output. Preserve legitimate safe-empty/refusal semantics and no retry. Add positive empty/playable plus mismatched/null-card/non-null-card/negative-counter controls in an additive revision.",
+    "new_framework_required": false,
+    "actual_C2_RUN_authorized": false
+  }
+]

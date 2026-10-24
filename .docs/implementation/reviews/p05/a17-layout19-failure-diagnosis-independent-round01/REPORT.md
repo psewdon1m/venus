@@ -1,0 +1,25 @@
+# Layout19 actual: independent foreground-query diagnosis
+
+`ACTUAL_FAIL_RETAINED_FOCUSED_DIAGNOSIS_COMPLETE`. Actual remains **27 PASS /1 FAIL /23 NOT_RUN**, root exit1, saved cleanup PASS. No native/browser/Docker/API/SQL workload, APP/method/producer/ACK/source change or new framework occurred.
+
+Run `.artifacts/p05-pilot-bundle-source14/.artifacts/p05/venus-v2-layout-3a8f31389808`; root stdout/exit `.artifacts/p05-layout19-a17-chromium-ru01.*`; duration112,043ms. Exact ACK `8d19d74681a9965416b27a7bc358b08dc5debeefdbbeb9f4830d6e1ec356a19f`; method INDEX `ac42561f296529a8af2faafecf2f9fb497c92c21ac95a7e101d288413975c26c`; runtime `472eb9ec42fa95836b10431c9d03f9b67e41f9ee6a831c60593463516606f643`; A17 source `93221ba482331e3916e56f2e1866b5c7743fa72ad29320f2819a7a6fd1a2951d` /1871; image `sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2`. Audit exit0 verifies method packet, ACK, JS runtime,73 current/copied producer files, all1871 materialized source bytes, before/after source maps and45 saved screenshot hashes. Exact pins are in INPUT_PINS.json.
+
+## Established failure class
+
+New checkpoints positively identify `private_offer/w320`, role **primary**, checkpoint **FOREGROUND**, with no role measurement persisted. Terminal/row failure is **Error / ASSERTION_OR_OPERATION_FAILED**, `x11.mjs:41:63`. Column63 is the `xdo(search --onlyvisible --name exactNoncePattern)` callback passed through windowInventory; it is not the later focus check or a DOM assertion. Saved browser stdout records private encounter selection at round17, but no raw query observation/status/code/signal/stderr is retained.
+
+The distinction matters: existing windowInventory converts status1 plus empty stderr/stdout to an empty array. readyOwnedWindow polls an empty array under its original budget; its exhausted check produces AssertionError. The saved Error at the query callback instead supports a propagated query-operation failure, such as an unaccepted child error/timeout or exhausted recognized transient. **Its exact subtype and deep cause remain UNKNOWN.** No EAGAIN, timeout, BadWindow, hidden window/tab, title-update delay, resource exhaustion or APP defect is asserted. Absence of raw query stderr in browser-tests.txt does not prove the child had none.
+
+Source establishes a prospective ordering hazard: windowFor sets document.title, then searches visible OS windows, and invokes its existing page.bringToFront only after a match and OS focus. If activation is needed for the target to become searchable, the activating operation cannot be reached. This source dependency does not establish that it caused the actual propagated Error.
+
+Two finite controls, exit0, execute the actual inventory and extracted owned-window helper with inert dependencies. They verify ordinary empty-query handling versus hard/exhausted-transient error propagation, then demonstrate current ordering failing a synthetic activation-required model while a candidate moving the same single bringToFront before title/search succeeds with the same title/raise/focus checks. The synthetic old-order failure is AssertionError, **different from the actual Error**; it proves only the ordering hazard. No native behavior or actual remedy is inferred.
+
+## Narrow next action
+
+Root accepted a separate prospective author scope: move the **same single existing bringToFront** before title/search, preserving exact nonce/vendor matching, uniqueness, window/process ownership, raise/focus and final focus checks. Keep all original deadlines, query/poll limits, zoom, geometry, quota and final assertion rules; query failures must still fail. Do not broaden search to arbitrary windows or retry user actions.
+
+Also persist one bounded safe error record before cleanup: fixed status/code/signal fields with explicit unknowns, allowlisted stderr class and byte count/hash, with no raw argv/stdout/stderr/titles or private payload. If needed, one on-error numeric resource snapshot may reuse the reviewed OCI21 fixed cgroup pids/memory/events whitelist and unsupported-null qualification. No timer, profiler, new controller or resource/timeout increase is warranted. Such future metadata can distinguish failure classes; it must not override acceptance or fabricate the missing actual values. Separate author/independent method/root-ACK/actual review remains required.
+
+Entry, setup and public_questions nine-cell groups actually PASS:27 cells. All36 RU entry text measurements pass existing saved assertTextRows; not all324 typography. This supports METHOD19's public progression in this scope, without retroactively identifying Layout18's role/cause or proving private/native/full459 success. Private_offer remains FAIL at foreground. Saved component cleanup passes and remaining-owned object files are empty; no fresh global Docker inventory is claimed. Presentation-only/synthetic qualifications persist.
+
+An initial review patch used a nonexistent context line and was rejected without changing a file; the corrected append and audit/countermodels passed. All owned writes freeze at INDEX publication: **COMPLETE_STOP**.

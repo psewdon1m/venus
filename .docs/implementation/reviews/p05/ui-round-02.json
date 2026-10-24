@@ -1,0 +1,115 @@
+{
+  "reviewer_id": "/root/p04_evidence_review",
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity_sha256": "45bc2f73be6dd440b331fd32e7b4478a7c237e61afa5ddb1ac9bcee7241155f2",
+  "scopes": [
+    "frontend"
+  ],
+  "status": "CHANGES_REQUESTED",
+  "open_findings": [
+    "P05-UI-003"
+  ],
+  "schema_version": 1,
+  "profile": "standalone-local-pilot-v2",
+  "reviewed_at_utc": "2026-10-19T13:56:48.823007+00:00",
+  "source_dirty": true,
+  "acceptance_scope": "SCOPED_DIRTY_FRONTEND_CODE_REVIEW_ONLY",
+  "stage_accepted": false,
+  "report_path": ".docs/implementation/reviews/p05/ui-round-02.md",
+  "report_sha256": "9d6203ff6a27790dbb4f50af467057d38d957683805555ac04f3ce7f0b8b375d",
+  "resolved_findings": [
+    "P05-UI-001",
+    "P05-UI-002"
+  ],
+  "findings": [
+    {
+      "id": "P05-UI-003",
+      "priority": "P1",
+      "status": "OPEN",
+      "file": "apps/web/src/games-panel.tsx",
+      "start": 57,
+      "end": 75,
+      "title": "Fence cached private JSX and callbacks synchronously when room/member changes",
+      "reproduction": "After private A/B data and failed chat retry are present, render same GamesPanel for outsider member C (present in current room) or another room before passive effects. The returned JSX still contains old private prompt. Calling saved DOM retry after new-identity render and before effects sends old private payload again.",
+      "required_fix": "Store owner room/member/session/round identity with private cache; render only matching envelope immediately. Fence operations against render-current auth identity before effects, reject old async reads/private callbacks on the identity transition. Do not rely solely on passive useEffect clear or ancestor remount.",
+      "expected_retest": "First returned tree for different room/member contains no old private prompt/condition/chat/input. Old DOM callback before passive effects sends no payload. Delayed old private response after identity transition cannot repopulate cache. Original UI001/UI002 and13 passing expanded cases remain PASS."
+    }
+  ],
+  "scoped_source_unchanged": true,
+  "inspected_inputs": [
+    {
+      "path": "apps/web/src/games-panel.tsx",
+      "sha256": "19d3f37e1bf11f25a1bfc7636c0a488f2952b348fef514d47902c4760bd0fe66",
+      "bytes": 24959
+    },
+    {
+      "path": "apps/web/src/game-operations.ts",
+      "sha256": "0524a84d946f96b41eb17f2d0e9e83551479871aefcdbcaf8f1874b95bb2a3e1",
+      "bytes": 1649
+    },
+    {
+      "path": "apps/web/src/game-operations.test.ts",
+      "sha256": "c7342015a52863c380a65475c2de3e4c0c8dc2465b9b642bc637989ee32aaaf6",
+      "bytes": 1632
+    },
+    {
+      "path": "apps/web/src/game-state.ts",
+      "sha256": "5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46",
+      "bytes": 3472
+    },
+    {
+      "path": "apps/web/src/private-state.ts",
+      "sha256": "be22a3b41802f80dac4731588201fecd6359066094a8be26f80d5f12b298a4bc",
+      "bytes": 2573
+    },
+    {
+      "path": "apps/web/src/game-copy.ts",
+      "sha256": "f76e51efadc02e29c7cf0d4aa18c57275e9723c3552db95dbafcf5c472aed2fe",
+      "bytes": 13292
+    },
+    {
+      "path": "apps/web/src/api.ts",
+      "sha256": "d761808aca8273081a856cc5c1431cd91a709c375f80d1989c2b20efa4c4fcb3",
+      "bytes": 3174
+    },
+    {
+      "path": "apps/web/src/room-shell.tsx",
+      "sha256": "197c3688843df1d2adaf5c57b973f11c73395095f7c94b00b58453cf3c0d4727",
+      "bytes": 8500
+    },
+    {
+      "path": "apps/web/src/main.tsx",
+      "sha256": "0106dbc19960a31109ab51c9471999c49347b33f4a9df0eb8f1bb72ca105f787",
+      "bytes": 10218
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/ui-round-02.adversarial.mjs",
+      "sha256": "cad5287d310c42b3078beb8a4aae6ea61f73f0acdaa0d4f72fe9e71c952741f8",
+      "bytes": 14414
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/ui-round-02.adversarial.json",
+      "sha256": "a9247a5ed91ee2a1a29897032a4dd90e17f68cc8c54428eceb2a0d43ea260003",
+      "bytes": 4197
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/ui-round-02.before.json",
+      "sha256": "7931c7a9e30db81b0b6a60a9c852ad477463986b8fdad3286f97a04624d71729",
+      "bytes": 1130
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/ui-round-02.after.json",
+      "sha256": "1ff4490115ab015fcb9e4d12d685910fedc519a854ba29f63c7cb24b663f47ac",
+      "bytes": 1130
+    }
+  ],
+  "actual_exit_code": 1,
+  "tests": {
+    "cases": 16,
+    "passed": 13,
+    "failed": 3,
+    "failed_finding": "P05-UI-003"
+  },
+  "browser_E2E_executed_by_reviewer": false,
+  "journal_path": ".history/agents/2026-10-19-p05-ui-review.md"
+}

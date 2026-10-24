@@ -1,0 +1,149 @@
+
+> venus@0.0.0 test:p03
+> node tools/p03-integration.mjs
+
+P03 isolated Docker scope: venus-p03-87aa592e9d9b; only this project and its volumes will be removed.
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.93kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 1.2s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 151B done
+#3 DONE 0.0s
+
+#4 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 2.65kB done
+#5 DONE 0.0s
+
+#6 [stage-1  4/11] COPY --from=build /app/packages ./packages
+#6 CACHED
+
+#7 [stage-1  5/11] COPY --from=build /app/apps/api/dist ./apps/api/dist
+#7 CACHED
+
+#8 [build  5/15] COPY apps/web/package.json apps/web/
+#8 CACHED
+
+#9 [build 10/15] RUN npm ci
+#9 CACHED
+
+#10 [build 11/15] COPY tsconfig*.json ./
+#10 CACHED
+
+#11 [build 14/15] RUN test -n "12a028b174cc03a4a8ea1398f321d23c6a4c6e98" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+#11 CACHED
+
+#12 [build 13/15] COPY packages packages
+#12 CACHED
+
+#13 [stage-1  8/11] COPY --from=build /app/apps/api/migrations ./apps/api/migrations
+#13 CACHED
+
+#14 [stage-1 10/11] COPY --from=build /app/package.json /app/build-metadata.json ./
+#14 CACHED
+
+#15 [build  4/15] COPY apps/api/package.json apps/api/
+#15 CACHED
+
+#16 [stage-1  7/11] COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+#16 CACHED
+
+#17 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#17 CACHED
+
+#18 [build  3/15] COPY package.json package-lock.json .npmrc ./
+#18 CACHED
+
+#19 [stage-1  9/11] COPY --from=build /app/apps/web/dist ./apps/web/dist
+#19 CACHED
+
+#20 [stage-1  3/11] COPY --from=build /app/node_modules ./node_modules
+#20 CACHED
+
+#21 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+#21 CACHED
+
+#22 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+#22 CACHED
+
+#23 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#23 CACHED
+
+#24 [build 12/15] COPY apps apps
+#24 CACHED
+
+#25 [build 15/15] RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
+#25 CACHED
+
+#26 [stage-1  6/11] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+#26 CACHED
+
+#27 [stage-1 11/11] RUN mkdir -p /var/lib/venus && chown node:node /var/lib/venus
+#27 CACHED
+
+#28 [build  2/15] WORKDIR /app
+#28 CACHED
+
+#29 exporting to image
+#29 exporting layers done
+#29 exporting manifest sha256:8c11735ecfdd5d66004d556c371dd26b60652121fe24a1d401ff718de15d77a5 done
+#29 exporting config sha256:a83fd212eebb2f820af84b7de5c6d3bb27a7ac33d9aa6c71b6255eb2a9246a5e done
+#29 exporting attestation manifest sha256:65c0da149d27834bf71bd855c0caeccfc12a469b4f503bc8d5c07713608c7c77 0.0s done
+#29 exporting manifest list sha256:a5e828523f18fef7503769e8616aa06d66b05bfd4edc0927f40086528fe21790 0.0s done
+#29 naming to docker.io/library/venus-p03-87aa592e9d9b-previous:local done
+#29 unpacking to docker.io/library/venus-p03-87aa592e9d9b-previous:local 0.0s done
+#29 DONE 0.2s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ehxsiozhwrdoa7m3j5c6bm255
+ Network venus-p03-87aa592e9d9b_default  Creating
+ Network venus-p03-87aa592e9d9b_default  Created
+ Container venus-p03-87aa592e9d9b-db-1  Creating
+ Container venus-p03-87aa592e9d9b-db-1  Created
+ Container venus-p03-87aa592e9d9b-db-1  Starting
+ Container venus-p03-87aa592e9d9b-db-1  Started
+ Container venus-p03-87aa592e9d9b-db-1  Waiting
+ Container venus-p03-87aa592e9d9b-db-1  Healthy
+▶ EXIT-P03 actual PostgreSQL / HTTPS / WS
+  ✔ checks extension migration repeat/checksum/future generation and real readiness (59.7774ms)
+  ✔ serializes concurrent start and same-key duplicate advance without extra rounds (782.5714ms)
+  ✔ pins encrypted snapshot and locks preferences/context in active and safety pause (469.7779ms)
+  ✔ requires exact actors, independent invitation/action consent and terminal decline (2227.9054ms)
+  ✔ keeps YesBut condition actor scoped and invalidates old proposal acknowledgements (631.3275ms)
+  ✔ denies private access on clock rollback and exact invitation/action deadline (6517.8125ms)
+  ✔ revalidates a prepared private reference after committed revoke before dispatch (2067.1611ms)
+  ✔ clears old actor recipients when stop and advance happen before the next WS poll (2353.353ms)
+  ✔ delivers actual WS private prompt only to selected actors and clears it after decline (2810.3867ms)
+  ✔ replays the original finish alias and rejects conflicting payloads (670.3991ms)
+  ✔ retains exact old pack/snapshot across restart, refreshed pack, locale and spectator (2270.9797ms)
+  ✔ fails closed on unknown persisted policy/pack and an empty safe pool without weakening X veto (3059.0667ms)
+  ✔ enforces actual SQL actor scope, exactly two consent actors and one running game (341.3253ms)
+  ✔ makes decline terminal in both serial orders and concurrent HTTP races (6563.6053ms)
+  ✔ transport pause/reconnect preserves snapshot and never revives consent or safety pause (3206.1101ms)
+  ✔ stop, leave and room close revoke HTTP/WS and room close deletes private engine rows (12241.0647ms)
+  ✔ does not substitute a new same-name identity for a departed pinned actor (2293.7971ms)
+  ✔ restores exact encrypted engine scope but reapplies ledger and expiry before access (6112.7123ms)
+  ✔ quiesces with API stopped, runs accepted P02 OCI against upgraded DB and returns without reviving consent (11102.8513ms)
+✔ EXIT-P03 actual PostgreSQL / HTTPS / WS (66929.4634ms)
+ℹ tests 19
+ℹ suites 1
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 67266.3783
+ Container venus-p03-87aa592e9d9b-db-1  Stopping
+ Container venus-p03-87aa592e9d9b-db-1  Stopped
+ Container venus-p03-87aa592e9d9b-db-1  Removing
+ Container venus-p03-87aa592e9d9b-db-1  Removed
+ Network venus-p03-87aa592e9d9b_default  Removing
+ Network venus-p03-87aa592e9d9b_default  Removed

@@ -1,0 +1,45 @@
+# P05 role round04 — PARTIAL / SOURCE_COMPONENT_PASS; ROLE006 OPEN
+
+Independent `/root/p04_evidence_review`, 2026-10-19T15:45:39.450990+00:00. **Bounded recipient-role/self-actions component and ROLE001–005 corrections pass their stated source/component checks. ROLE006 remains open; combined P05 is not accepted.** This is dirty synthetic local Docker preflight, not clean Git proof, a full browser/device matrix, production/media acceptance or human content approval.
+
+## Exact source and release of writers
+
+Source identity `e17a8befeb7a90051dd437f12dd1edd56e9a51dcb4d5716efda0a27a8e63b8f0`,1733 included files; context HEAD `b5436cde02dd09aa049ce0103cab58d9642e8c70` remains dirty. Recoverable included archive raw SHA `26bd9faa1b25ed12e5ee9430925e46ab132aeb6b7fea9926f1150d1678b0be9d`,12916889bytes, under `evidence/p05/self-actions-preflight-03/`. Independently verified all1733 unique ZIP members, every raw hash, recomputed inventory identity, and all current working files at initial pin. Sent SOURCE_SNAPSHOT_READY before other writers resumed. Copied73 exact API/UI/contracts/engine/test source files into own excluded `frozen-source/`, verified unchanged at completion; later current-workspace changes are outside this review. Archive excludes evolving evidence/history/registries/manifest, so it is not a full checkout.
+
+Core frozen hashes: Games `962bcedac6d8d09c1e9f8728007752464018c90fb35dac5c8e9e8acf464af0c3`; OwnControls `941968339143cb178c8ca3b1c06a0cb5a89d2027214b2e51369d300108596a50`; GamesPanel `6338a208b79f71f471903508e73ee8109c9774b0e085346e85a838b0095eb4b8`; actual suite `85cb777922e784916da97e71d77c4793a56029267eb2756a6b87e50cf1e46ed6`. Raw receipts and complete inventory are in `inputs-before.json` and `runtime-index.json`.
+
+## Independent source/module checks
+
+No included source/test/manifest edits and no Docker rerun by reviewer. Actual archived modules execute with explicit React hook/API/SQL/clock seams and workspace installed dependencies. They are not independently executed HTTP/PostgreSQL/browser scenarios.
+
+- 32 roles/8states: actual Games/ownActions and TSX,0 enabled-control→authoritative-denial mismatches. Hidden public group primary gets Finish/Skip; selected nonactor/nonselected host/spectator do not. Participant Stop/Pause differs from host Abort. Locked private TD has no alternatives.
+- 27 OwnControls/actualTSX controls: monotonic expiry→safety/neutral reset→rewind, relative lease/skew, fresh false and duplicate response, binding ABA, reconnect, privateclear, foreignrecipient/shape, update-rewind and late response. Saved JSX Finish callbacks send no POST after TTL/revision/identity/transport/newsession/newrevision/clear/removal before effects.
+- 10 actual Rooms/dispatcher scenarios with SQL-return doubles pass: baseline, authexpiry crossing/equality/finalquery crossing/revoked, roomTTL, leasecap, degradedcatalogue, entry mismatch and clockrewind. Authentication failure blocks all metadata; authenticated degraded state keeps own session safety and denies ordinary Finish.
+- 4 new ROLE005 variants pass. Shared frame/self-actions rev6 cannot authorize old rendered rev5 Next or old Finish callback. Stop, Pause, Abort and own neutral reset each remain callable in that same-session revision mismatch. Once actual rendered/current state reaches6, Next is restored and posts expected_rev6. Thus the fix does not remove the independent session safety lane.
+- 3 incoming-frame negatives pass: foreign room, wrong audience and stale room revision cannot make future metadata enable Next; previously confirmed own Stop remains.
+
+Source correction explicitly requires the rendered session/round/game revision to match the control envelope for ordinary actions, while own session Stop/Pause/Abort use same-session safety scope and current token. Packet remains dense recipient-only display metadata; no primary/private actors are added to room snapshots. Fresh false, identity/transport/generation changes and authoritative POST guards remain in force.
+
+## Actual author run59a18ec601b8 independently inspected
+
+Author/root confirmed process36067 terminal exit0. Reviewer inspected terminal runner, raw test output, all9 structured check results, actual suite source, image receipt, before/after inventory, cleanup and PNG. Provider execution is **author's**, not reviewer's own HTTP test run. All12 durable packet index descriptors match size/SHA; all10 run artifacts match `.artifacts` bytes and are copied into own `runtime-59a18ec601b8/`. Before/after1733 inventories are identical and equal the archive. Runner is PASS/source_unchanged:true/cleanup:completed/image `sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0`; dirty/preflight/synthetic flags are explicit.
+
+SA01/02 cover real recipient/API/Origin/CSRF/query/revision behavior; SA03 includes actual private TD Chromium lock; SA04 covers quiet invitation/action/condition revision; SA05 a real SQL wait crossing heartbeat freshness. SA06 executes actual primary Finish and host Next UI clicks, with host/observer controls and observer own-reset not aborting others. Wire response Finish rev5, Next input expected_rev5, advance200/game_rev6/new round; no page errors. SA07 independently uses two isolated rooms to confirm actual Pause→paused and Stop→aborted200 after stalled Finish, aborted metadata, degraded WS and lease expiry. SA08/09 real PostgreSQL revoke/final-acceptance waits deny all metadata, including safety, after authentication loss. All9 pass.
+
+The test uses15 safe-public fixture cards with5 group cards to make fixture prepare/group choice bounded. This corrects the diagnostic fixture shortage without weakening product authorization. Earlier26be4/707de failures remain historical, and the original26be4 SA06 wire cause is still unproved; this new PASS does not retroactively identify or erase it. The independently proven ROLE005 source defect and its new tests are separate evidence.
+
+PNG visually inspected: English participant view,5 members, locked own settings, synthetic public Q12, Pause/Stop/own-reset. The immediate post-advance screenshot still shows Round2/15; it alone does not prove UI repaint to3. The actual wire/structured response proves the server advanced. No claim of native/mobile/cross-engine coverage or pixel transition timing is added. Selected-nonactor permission is checked by actualAPI and independent actual-module matrix; SA06 browser roles are primary, nonselected host and nonselected observer, rather than every role profile.
+
+Author263-unit/lint/types/build results remain author-reported; the raw263 receipt is copied and hashed, but was not independently rerun here or promoted into a separate clean-source quality proof.
+
+## Closure and remaining ROLE006
+
+- **P05-ROLE-001:** Actual32-role method/TSX matrix0mismatch and actual9caseAPI/Chromium results support primary/observer/host distinctions. Selected-nonactor actualAPI+module/UI control scope distinguished from browserprofiles.
+- **P05-ROLE-002:** Actualmodule32roles hides alternatives; actualSA03 Chromium privateprompt visible, both choices absent aftercommittedchoice; same-sidePOSTallowed/opposite-sideCHOICE_LOCKED.
+- **P05-ROLE-003:** Prior scopedclosure retained; archivedcurrent27client checks including4safety/neutral-rewindcasesPASS.
+- **P05-ROLE-004:** Ten archivedactualservermodule/double scenariosPASS and actualSA08/09 revoke/expiry waitsdeny allmetadata.
+- **P05-ROLE-005:** Four independentfutureframe/newermetadata cases deny staleviewNext+oldcallback, preserve Stop/Pause/Abort/ownreset, restoreNextonmatchingrev6andPOSTrev6. Three incomingcontextnegativesPASS; actualSA06UIFinish5→Nextinput5→200rev6/newround.
+
+**ROLE006 (P2) remains OPEN.** Reproduced unchanged on archivedround04source: valid pending invitation deadline40000, displaylease15000; online10000Declineenabled/onePOST,16001Declinedisabled/zeroPOST,offlineDeclinehidden/zeroPOST; whole-gameStop remains. SA07Stop/Pause does not close specificDecline obligation. Repeated archived-source probe confirms the same gap as round03; all three cases remain separately recorded. The existing plan requires Stop/**decline** during degraded connection. The bounded SA07 Stop/Pause PASS cannot stand in for refusal of a particular pending offer. Required boundary: Generic own-only specific refusal with exact round/offer/session/identity generation, freshfalse/removal/clear revocation, no retained peer/privatepayload, authoritative POST and honest unconfirmed UI; actual regression and independent review pending.
+
+This report's `PARTIAL_SOURCE_COMPONENT_PASS` applies only to the accepted recipient-role/self-actions slice and ROLE001–005. Full P05 remains blocked by ROLE006 and all other stage obligations; topic/content humanHOLD, private-topic/advice implementation, comprehensive browser/reconnect/safety gates and unrelated kernel/media work remain separate. Root owns source/status/manifest updates. A new ROLE006 implementation requires its own exact source, tests and independent round. No human decision or approval was manufactured by this review.

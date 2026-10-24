@@ -1,0 +1,196 @@
+{
+  "scope": "ACTUAL_ROOMS_ACCESS_AND_DISPATCH_SOURCE_WITH_SQL_RETURN_DOUBLE_NOT_HTTP_PG",
+  "scenario": "baseline",
+  "source_hashes": {
+    ".docs/implementation/reviews/p05/role-round-04.frozen-source/apps/api/src/rooms.ts": "b731fc531dafe17b3bf3fa307054fca8cfd0404c7732f4a6d2b66f08f9e2a6ad",
+    ".docs/implementation/reviews/p05/role-round-04.frozen-source/apps/api/src/security.ts": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+    ".docs/implementation/reviews/p05/role-round-04.frozen-source/apps/api/src/games.ts": "962bcedac6d8d09c1e9f8728007752464018c90fb35dac5c8e9e8acf464af0c3",
+    ".docs/implementation/reviews/p05/role-round-04.frozen-source/apps/api/src/games-model.ts": "d8345dff0a0685e2e2f3a1ff36ad378c6793762a3ccfbcc53fab588a268952fa",
+    ".docs/implementation/reviews/p05/role-round-04.frozen-source/apps/api/src/private-chat.ts": "399ee331f861f87081d5fe1d41577aa49573eea2dbfd194b40af3b656805d758",
+    ".docs/implementation/reviews/p05/role-round-04.frozen-source/apps/api/src/game-self-actions.ts": "2d5b86f14b5426ce4c7a330ea57531cf9623d83a6313ff0a86e369fd1a44988c"
+  },
+  "session_expires_at": 7000,
+  "final_time": 1000,
+  "enqueued": {
+    "schema_version": 1,
+    "room_id": "room",
+    "member_id": "a",
+    "session_id": "game",
+    "round_id": "round",
+    "game_rev": 1,
+    "room_rev": 1,
+    "server_time": "1970-01-01T00:00:01.000Z",
+    "expires_at": "1970-01-01T00:00:06.000Z",
+    "session_actions": {
+      "pause": true,
+      "stop": true,
+      "abort": false,
+      "resume": false,
+      "advance": false,
+      "neutral_reset": true,
+      "neutral_reset_aborts_game": true
+    },
+    "round_actions": {
+      "finish": true,
+      "skip": true,
+      "choose_truth": false,
+      "choose_dare": false,
+      "propose_condition": false,
+      "accept_invitation": false,
+      "accept_action": false,
+      "decline_invitation": false,
+      "withdraw_action": false
+    }
+  },
+  "error": null,
+  "trace": [
+    {
+      "sql": "SELECT member_id FROM room_sessions WHERE token_hash=$1 AND room_id=$2 AND revoked_at IS NULL AND expires_at>$3",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "room",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT * FROM rooms WHERE id=$1 FOR UPDATE",
+      "args": [
+        "room"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id\n      WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>$2 AND m.removed_at IS NULL",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT 1 FROM game_participants WHERE room_id=$1 AND session_id=$2 AND member_id=$3",
+      "args": [
+        "room",
+        "game",
+        "a"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT role FROM game_round_actors WHERE room_id=$1 AND session_id=$2 AND round_id=$3 AND member_id=$4",
+      "args": [
+        "room",
+        "game",
+        "round",
+        "a"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT m.presence,m.slot,m.removed_at,m.heartbeat_at,m.reserved_until FROM game_participants p JOIN room_members m ON m.room_id=p.room_id AND m.id=p.member_id WHERE p.room_id=$1 AND p.session_id=$2",
+      "args": [
+        "room",
+        "game"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT member_id FROM room_sessions WHERE token_hash=$1 AND room_id=$2 AND revoked_at IS NULL AND expires_at>$3",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "room",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT * FROM rooms WHERE id=$1 FOR UPDATE",
+      "args": [
+        "room"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id\n      WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>$2 AND m.removed_at IS NULL",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT offer_version,offer_digest FROM entry_acceptances WHERE room_id=$1 AND member_id=$2",
+      "args": [
+        "room",
+        "a"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT member_id FROM room_sessions WHERE token_hash=$1 AND room_id=$2 AND revoked_at IS NULL AND expires_at>$3",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "room",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT * FROM rooms WHERE id=$1 FOR UPDATE",
+      "args": [
+        "room"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id\n      WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>$2 AND m.removed_at IS NULL",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT member_id FROM room_sessions WHERE token_hash=$1 AND room_id=$2 AND revoked_at IS NULL AND expires_at>$3",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "room",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT * FROM rooms WHERE id=$1 FOR UPDATE",
+      "args": [
+        "room"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT m.* FROM room_members m JOIN room_sessions s ON s.room_id=m.room_id AND s.member_id=m.id\n      WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at>$2 AND m.removed_at IS NULL",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "1970-01-01T00:00:01.000Z"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT offer_version,offer_digest FROM entry_acceptances WHERE room_id=$1 AND member_id=$2",
+      "args": [
+        "room",
+        "a"
+      ],
+      "clock": 1000
+    },
+    {
+      "sql": "SELECT s.expires_at,e.offer_version,e.offer_digest FROM room_sessions s LEFT JOIN entry_acceptances e ON e.room_id=s.room_id AND e.member_id=s.member_id WHERE s.token_hash=$1 AND s.room_id=$2 AND s.member_id=$3 AND s.revoked_at IS NULL",
+      "args": [
+        "b3cc0475bb78a5026098858e9889acf666d31062d513d303314eca31d36e72f2",
+        "room",
+        "a"
+      ],
+      "clock": 1000
+    }
+  ]
+}

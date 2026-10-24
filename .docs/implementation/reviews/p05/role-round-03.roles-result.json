@@ -1,0 +1,2615 @@
+{
+  "scope": "ACTUAL_FRONTEND_AND_GAMES_SOURCE_ROLE_METHODS_WITH_HOOK_API_SQL_DOUBLES_NOT_HTTP_PG_BROWSER",
+  "status": "PREFLIGHT_PASS_32_ROLE_ACTUAL_SOURCE_WITH_EXPLICIT_DOUBLES",
+  "scenarios": 8,
+  "role_cases": 32,
+  "group_question_primary_hidden": true,
+  "source_hashes": {
+    "apps/web/src/games-panel.tsx": "e35e8df45fcdeef655ffdf3c15acd78fad1937b5f85deb7da17188ba914725a8",
+    "apps/web/src/api.ts": "d761808aca8273081a856cc5c1431cd91a709c375f80d1989c2b20efa4c4fcb3",
+    "apps/web/src/game-setup.ts": "7866f8ff2d7e5737c163fe4524cf80105b55126b78b3db8d8be7405629a0a98a",
+    "apps/web/src/game-copy.ts": "ab4c15e18a198ad0a8624fb247962ddcd78bfd370773b7956cfc5e13768e1dd4",
+    "apps/web/src/private-state.ts": "be22a3b41802f80dac4731588201fecd6359066094a8be26f80d5f12b298a4bc",
+    "apps/web/src/game-operations.ts": "50fc1aab56bdc9d327a228af817ee90a10409f6d5df655ed96c297b6434a20a4",
+    "apps/web/src/game-state.ts": "5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46",
+    "apps/web/src/game-controls.ts": "941968339143cb178c8ca3b1c06a0cb5a89d2027214b2e51369d300108596a50",
+    "apps/api/src/games.ts": "962bcedac6d8d09c1e9f8728007752464018c90fb35dac5c8e9e8acf464af0c3",
+    "apps/api/src/games-model.ts": "d8345dff0a0685e2e2f3a1ff36ad378c6793762a3ccfbcc53fab588a268952fa",
+    "apps/api/src/game-self-actions.ts": "2d5b86f14b5426ce4c7a330ea57531cf9623d83a6313ff0a86e369fd1a44988c"
+  },
+  "mismatches": [],
+  "results": [
+    {
+      "scenario": "group_questions",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": true,
+          "enabled": true
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": true
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "group_questions",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "group_questions",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "ROUND_NOT_FINISHED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "group_questions",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "private_questions",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": true,
+          "enabled": true
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": true
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "private_questions",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "CONDITION_NOT_ALLOWED"
+        }
+      }
+    },
+    {
+      "scenario": "private_questions",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "ROUND_NOT_FINISHED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "private_questions",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "td_public_unselected",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": [
+        "a"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": true,
+          "enabled": true
+        },
+        "dare": {
+          "shown": true,
+          "enabled": true
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_NOT_ACTIVE"
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": true
+        },
+        "dare": {
+          "allowed": true
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "td_public_unselected",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": [
+        "a"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "td_public_unselected",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": [
+        "a"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "ROUND_NOT_FINISHED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "td_public_unselected",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": [
+        "a"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "private_td_chosen",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": true,
+          "enabled": true
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": true
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": true
+        },
+        "dare": {
+          "allowed": false,
+          "code": "CHOICE_LOCKED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "private_td_chosen",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "CONDITION_NOT_ALLOWED"
+        }
+      }
+    },
+    {
+      "scenario": "private_td_chosen",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "ROUND_NOT_FINISHED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "private_td_chosen",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": null,
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "yes_but_pending",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_NOT_ACTIVE"
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "yes_but_pending",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": true,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_NOT_ACTIVE"
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": true
+        }
+      }
+    },
+    {
+      "scenario": "yes_but_pending",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "ROUND_NOT_FINISHED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "yes_but_pending",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "pair_bilateral_active",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": true,
+          "enabled": true
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": true
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "pair_bilateral_active",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": true,
+          "enabled": true
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": true
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "CONDITION_NOT_ALLOWED"
+        }
+      }
+    },
+    {
+      "scenario": "pair_bilateral_active",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "ROUND_NOT_FINISHED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "pair_bilateral_active",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": [
+        "a",
+        "b"
+      ],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "paused",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": true,
+          "enabled": true
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": true
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "paused",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "paused",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": true,
+          "enabled": true
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": true
+        },
+        "advance": {
+          "allowed": false,
+          "code": "GAME_NOT_ACTIVE"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "paused",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "terminal",
+      "member": "a",
+      "role": "current_primary_selected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_NOT_ACTIVE"
+        },
+        "skip": {
+          "allowed": true
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "WRONG_GAME_MODE"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "terminal",
+      "member": "b",
+      "role": "secondary_or_selected_nonactor",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": true,
+          "enabled": true
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": true
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "terminal",
+      "member": "c",
+      "role": "host_nonselected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": true,
+          "enabled": true
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": true,
+          "enabled": true
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": true
+        },
+        "resume": {
+          "allowed": false,
+          "code": "GAME_NOT_PAUSED"
+        },
+        "advance": {
+          "allowed": true
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    },
+    {
+      "scenario": "terminal",
+      "member": "d",
+      "role": "spectator_nonselected",
+      "public_actors": [],
+      "ui": {
+        "finish": {
+          "shown": false,
+          "enabled": false
+        },
+        "skip": {
+          "shown": false,
+          "enabled": false
+        },
+        "pause": {
+          "shown": false,
+          "enabled": false
+        },
+        "stop": {
+          "shown": false,
+          "enabled": false
+        },
+        "resume": {
+          "shown": false,
+          "enabled": false
+        },
+        "advance": {
+          "shown": false,
+          "enabled": false
+        },
+        "truth": {
+          "shown": false,
+          "enabled": false
+        },
+        "dare": {
+          "shown": false,
+          "enabled": false
+        },
+        "condition": {
+          "shown": false,
+          "enabled": false
+        }
+      },
+      "api": {
+        "finish": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "skip": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "pause": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "stop": {
+          "allowed": false,
+          "code": "GAME_PARTICIPANT_REQUIRED"
+        },
+        "resume": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "advance": {
+          "allowed": false,
+          "code": "HOST_REQUIRED"
+        },
+        "truth": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "dare": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        },
+        "condition": {
+          "allowed": false,
+          "code": "ROUND_ACTOR_REQUIRED"
+        }
+      }
+    }
+  ]
+}

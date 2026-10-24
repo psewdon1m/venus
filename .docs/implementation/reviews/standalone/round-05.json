@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T12:59:24.472447+00:00",
+  "outcome": "PREFLIGHT_PASS",
+  "scope": "standalone-local-pilot-command-evidence-preflight",
+  "stage_acceptance": false,
+  "source_sha": "c5dac890fc32ea769971bc29cb468c5b1fa35c0e",
+  "source_dirty": true,
+  "reviewed_files": [
+    {
+      "path": "tools/local-pilot-smoke.mjs",
+      "sha256": "cdf394515e8499203219f16fe40ba4a9760df3df0225334c669bdc85dca877b5"
+    },
+    {
+      "path": "tools/local-pilot-proxy.mjs",
+      "sha256": "2d7277984f548a3a627d29f041fc8069e2ad061409bab723d43ffb12596518e4"
+    },
+    {
+      "path": "infra/venus/compose.local-pilot.yml",
+      "sha256": "27eee58bc4a323b581c045d94bc57f8d0d5e2da7db5d4186cc5e81be40c65452"
+    }
+  ],
+  "findings": [],
+  "previous_findings": [
+    {
+      "id": "SG-001",
+      "status": "RESOLVED",
+      "rechecked": true
+    }
+  ],
+  "tests": {
+    "actual_source_command_helper_controls": {
+      "passed": 5,
+      "total": 5,
+      "used_real_commands": false
+    },
+    "actual_source_finalizer_controls": {
+      "passed": 4,
+      "total": 4,
+      "used_real_docker": false
+    }
+  },
+  "test_artifacts": [
+    {
+      "path": ".artifacts/review-standalone-gate/pilot-command-faults.mjs",
+      "sha256": "66340170d27101c86ca2f89296cfa4d62929c6c1c7de0b79815bd74c0aade88a"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/pilot-command-faults.json",
+      "sha256": "370437d370235916724b5b7ed3dd9adb2522dc07d5522b3ba3aeb0940c2c639f"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/cleanup-fault-retest.mjs",
+      "sha256": "65f5c07eb5d8fb633a67564029b99d5c939253f34ea380e5cdd9e60a235c7462"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/cleanup-fault-retest.json",
+      "sha256": "ee426ef6b592d5ad8eb82a1a44389eecee2b1904226704c8eb297feb814136b3"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/standalone/round-05.md",
+    "sha256": "f2c36db3666db9d1c8c098299b24e1ea8cadde48e30d5ae2d357dcbadad8e172"
+  },
+  "limits": [
+    "DIRTY_CANDIDATE",
+    "FINAL_TESTS_AND_FREEZE_AWAITED",
+    "NOT_STAGE_ACCEPTANCE"
+  ]
+}

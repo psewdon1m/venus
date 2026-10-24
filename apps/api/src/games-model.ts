@@ -1,5 +1,6 @@
 import type {GameView,PublicRound,PairCondition} from '@venus/contracts';
 import type {RoundPlan,ConsentOffer,Mode,FrozenPack} from '@venus/relationship-engine';
+import {publicPairMayBeExposed} from '@venus/relationship-engine';
 import type {Cipher} from './security.js';
 import {revision} from './rooms.js';
 export interface GameRow {id:string;room_id:string;state:GameView['state'];pause_reason:GameView['pause_reason'];rev:string;mode:Mode;round_count:number;current_round:number;draft_cipher:Cipher;snapshot_cipher:Cipher|null;pack_digest:string|null;created_at:Date;updated_at:Date}
@@ -25,9 +26,10 @@ export function privateText(pack:FrozenPack,round:RoundData,locale:Locale,names:
   if(prompt===null||round.plan.mode!=='yes_but') return prompt;
   return prompt+'\n'+substitute(pack.card(round.plan.card_id).text[locale].responder!,round,names);
 }
-export function publicRound(pack:FrozenPack,round:RoundData,locale:Locale,names:readonly NameRow[]):PublicRound {
+export function publicRound(pack:FrozenPack,round:RoundData,locale:Locale,names:readonly NameRow[],now?:number):PublicRound {
   const base={round_id:round.plan.round_id,round_index:round.plan.round_index,state:round.state};
   if(round.plan.interaction==='pair_private') return {...base,kind:'generic'};
+  if(round.plan.interaction==='pair_public'&&round.invitation&&(!Number.isSafeInteger(now)||!publicPairMayBeExposed(round.plan.actors,round.invitation,now!))) return {...base,kind:'generic'};
   const response_state:Extract<PublicRound,{kind:'public'}>['response_state']=round.state==='completed'?'completed':round.state==='skipped'||round.state==='stopped'?'skipped':round.action?.state==='active'?'accepted':round.condition?'condition_proposed':'pending';
   const actors=round.plan.actors.length?[...round.plan.actors]:round.plan.mode==='truth_or_dare'?[round.plan.primary_member_id]:[];
   const common={...base,kind:'public' as const,card_id:round.plan.card_id,card_revision:round.plan.card_revision,actors,response_state,proposal_revision:round.action?.proposal_revision??1};

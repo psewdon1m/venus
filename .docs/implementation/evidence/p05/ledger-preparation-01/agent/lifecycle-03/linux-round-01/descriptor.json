@@ -1,0 +1,21 @@
+{
+  "test_sha256": "241def51d56499ccfcedd0125dc89c95865081dff67740b4dbfe767f059e0d8e",
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "module_test_sha256": "2f768f7be82b5ffb0a85d63372102f823a5e8b574f0cc29f834be5e0db48d9e6",
+  "module_sha256": "60c8f41b2409f23b7969d11067266ffdf651dbc648c99905111ad7dfc6a9cef4",
+  "source_sha256": "cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a",
+  "binds": [
+    "C:\\.projects\\venus\\.docs\\implementation\\evidence\\p05\\ledger-preparation-01\\agent\\lifecycle-03\\private-topic-ledger.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\evidence\\p05\\ledger-preparation-01\\agent\\lifecycle-03\\private-topic-ledger.test.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\evidence\\p05\\ledger-preparation-01\\agent\\lifecycle-03\\topic-room-lifecycle.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\evidence\\p05\\ledger-preparation-01\\agent\\lifecycle-03\\topic-room-lifecycle.test.ts"
+  ],
+  "init": "venus-p05-room-lifecycle-7d2a780d0952-init",
+  "timestamp": "2026-10-19T20:08:50.7803347+03:00",
+  "kind": "SCOPED_SCRATCH_LINUX_PREFLIGHT",
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "id": "7d2a780d0952",
+  "run": "venus-p05-room-lifecycle-7d2a780d0952-test",
+  "volume": "venus-p05-room-lifecycle-7d2a780d0952",
+  "bootstrap": "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/private-topic-ledger.test.ts','apps/api/src/security.ts','apps/api/src/topic-room-lifecycle.ts','apps/api/src/topic-room-lifecycle.test.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/private-topic-ledger.test.ts','/app/apps/api/src/topic-room-lifecycle.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','--maxWorkers','1','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);"
+}

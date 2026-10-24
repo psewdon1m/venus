@@ -1,0 +1,1 @@
+A26 uniform original C2/M3 method preregistration before fresh prefix or supplemental execution. Original 1364448 cases, seeds and thresholds, all7 sections, zero historical carry. New exact current source/image. Full2609-job plan is added after seven declared cost prefixes and independent operational acceptance; this commit is not a stage result. P06 not started.

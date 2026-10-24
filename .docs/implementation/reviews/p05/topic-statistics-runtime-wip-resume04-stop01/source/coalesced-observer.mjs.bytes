@@ -1,0 +1,16 @@
+/** Streaming actual HTTP/WS parity through the source-derived poll callback.
+ * Every actual public frame is compared; no outcome-based drop or fake parity. */
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {makeWireRenderers} from '../p05-topic-measurements-method06/wire-renderers.mjs';
+export function coalescedObserver({session,h,f,transport,polls,onRaw,guard}){
+ let label='start',lastRevision=-1,commands=0,observations=0,barriers=0;const modeled=[],observerId=transport.observerId,chain=createHash('sha256');
+ assert(observerId&&f.members.some(m=>m.id===observerId));assert.equal(transport.publicFrames.length,0,'PRELUDE_DRAIN_REQUIRED');
+ const modelSocket={readyState:1,send:raw=>{assert(modeled.length<16);modeled.push(raw);}},grant={roomId:f.room,memberId:observerId},render=makeWireRenderers({now:()=>session.model.now,dispatchGame:async(_g,emit)=>emit(await session.model.gameView(),Number(session.model.room.rev))});
+ function pair(actual,modeled,channel,origin,status){session.normal.equal(JSON.parse(actual),JSON.parse(modeled));const row={kind:'actual-modeled-public-parity',label,channel,origin,status,actor:observerId,actual_raw:actual,modeled_raw:modeled};onRaw(row);chain.update(JSON.stringify(row)+'\n');observations++;}
+ async function barrier(){guard();transport.assertHealthy();await polls.barrier();await transport.drain();const room=await session.model.roomView(),changed=room.room_rev>lastRevision;if(changed){lastRevision=room.room_rev;render.send(modelSocket,grant,room);await render.sendGame(modelSocket,grant,{room,privateEvents:[]},true);}const expected=modeled.splice(0),arrived=transport.publicFrames.splice(0);assert.equal(arrived.length,expected.length,'COALESCED_ACTUAL_FRAME_COUNT');for(let i=0;i<arrived.length;i++){const a=JSON.parse(arrived[i]);assert(['room','game'].includes(a.stream));pair(arrived[i],expected[i],a.stream,'WS',null);}barriers++;return arrived.length;}
+ return{async observe(_s,next,clock){guard();transport.assertHealthy();label=next;session.setLabel(next);if(next==='clock_tick'){onRaw({kind:'fixture-clock',clock});return;}
+  for(const[channel,path,value]of [['room',h.roomPath(f),()=>session.model.roomView()],['game',h.base(f)+'/current',()=>session.model.gameView()]]){const r=await h.call(f.members.find(m=>m.id===observerId),path);assert.equal(r.status,200);pair(r.raw,JSON.stringify(await value()),channel,'HTTP',r.status);}
+  commands++;if(commands===1||commands%3===0||next==='session_complete')await barrier();
+ },async finish(){await barrier();assert(observations>0);return{status:'ACTUAL_FIXTURE_COALESCED_PARITY_COMPLETE_REQUIRES_RAW_AUDIT',public_observations:observations,barriers,raw_pair_stream_sha256:chain.digest('hex'),barriers_rule:'first, every third observation, session_complete, final; independent of outcome',natural_production_timing_proof:false};}};
+}

@@ -1,0 +1,62 @@
+from pathlib import Path
+import json,hashlib,shutil
+R=Path('C:/.projects/venus');O=Path(__file__).resolve().parent
+raw=R/'.artifacts/p05-pilot-bundle-source14/.artifacts/p05/venus-p05-oci-72346a42db06';inputs=raw/'inputs'
+read=lambda p:json.loads(p.read_text(encoding='utf-8-sig'));sha=lambda b:hashlib.sha256(b).hexdigest();pin=lambda p:{'bytes':p.stat().st_size,'sha256':sha(p.read_bytes())}
+runner=read(raw/'runner.json');terminal=read(raw/'TERMINAL.json');ack=read(raw/'authority-ack.json');f=read(R/'.artifacts/p05-pilot-bundle-source-freeze14.json')
+assert runner['status']==terminal['status']=='FAIL' and runner['source_identity']==ack['source_identity']==f['identity']
+assert ack['producer_index_sha256']=='cbfa748222c1899eeaf5952fff475826d5c11b9ba62899661c7daa7b2ca3a45e'
+assert ack['independent_review_index_sha256']=='1961e82f33702c99863180539f5ce83bfc2b6c2cf33c72a3fde039e6f730d7ea'
+assert sha(Path(ack['independent_review_index']).read_bytes())==ack['independent_review_index_sha256']
+assert sha(Path(ack['application_source_review_index']).read_bytes())==ack['application_source_review_index_sha256']=='8810dede69eaf9fcea3eddfe6d0d0c11e1deaef86d83f73de992bb142d39b3c0'
+assert runner['source_producer_unchanged'] and runner['owner']=='7cb88fcc27d4a84629d26003df7f1d40'
+snapshots=[read(raw/n) for n in ['source-A1-before.json','source-B2-before.json','source-A3-before.json','source-after-finally.json']]
+assert all(x==snapshots[0] for x in snapshots)
+source_map=snapshots[0]['files'];assert source_map==f['files'] and len(source_map)==1871
+producer=[read(raw/n) for n in ['producer-A1-before.json','producer-B2-before.json','producer-A3-before.json','producer-after-finally.json']];assert all(x==producer[0] for x in producer)
+phases={name:read(raw/'evidence'/('phase-'+name+'-terminal.json')) for name in ['A1','B2','A3']}
+assert phases['A1']['status']==phases['B2']['status']=='PHASE_COMPLETE' and phases['A3']['status']=='FAIL'
+assert all(x['pool_closed'] for x in phases.values())
+error={'name':'AssertionError','code':'ERR_ASSERTION','phase':'A3','source_module':'observations','source_line':27,'source_column':87}
+assert terminal['first_error']==phases['A3']['error']==error
+assert terminal['export_error'] is None and terminal['cleanup_error'] is None
+assert terminal['boundary']['status']=='BOUNDARY_FINISHED' and terminal['whole_elapsed_ms']<900000
+assert phases['A3']['elapsed_ms']<120000 and [x['event'] for x in phases['A3']['chronology']]==['migration_observer']
+assert phases['A3']['migration_only']['all_user_rows_equal'] and phases['A3']['migration_only']['all_sequences_equal']
+remaining=read(raw/'owned-after-cleanup.json');assert remaining==terminal['remaining_owned'] and sum(map(len,remaining.values()))==7
+assert terminal['cleanup']=='retained_manual_cleanup_required'
+dep=next(x for x in read(inputs/'dependency-pins.json') if x['source']=='.artifacts/p05-topic-restore/observations.mjs')
+obs=inputs/dep['copy'];assert pin(obs)=={k:dep[k] for k in ['bytes','sha256']}
+line=obs.read_text().splitlines()[26];assert line.index("assert.equal(stored.game.state,'active')")+1==80 and line[86:91]=='equal'
+assert phases['B2']['new_E']['live_before_switch']['live_invitation_action_topic_advice_chat']
+assert phases['B2']['new_E']['live_before_switch']['server_time_ms']==1001000 and min(phases['B2']['new_E']['live_before_switch']['remaining_ms'].values())==5000
+browser=read(raw/'evidence/browser-B2-ready.json');assert browser['status']=='B2_UI_AND_SAFE_EXITS_PASS' and browser['closed_host_gate']['context_closed']
+assert all(x['held'] and x['inflight_HTTP']==0 for x in browser['API_quiescence'])
+b4=R/'.artifacts/p05-pilot-prebundle-source01';prior=read(inputs/'previous-B-runtime-pins.json');assert prior['source_identity']=='04237568e2ed0e91d9f7f4911ac0444a1da4cf8dd2f1d8c5cdb2eab689d6c6cc'
+sourcepins={}
+for n in ['apps/api/src/room-routes.ts','apps/api/src/rooms.ts','apps/api/src/topic-games.ts','apps/api/src/room-games.ts']:
+ assert sha((b4/n).read_bytes())==prior['source_files'][n];sourcepins[str((b4/n).relative_to(R)).replace('\\','/')]=pin(b4/n)
+for n in ['api-child.mjs','factory.mjs','browser-child.mjs','host-runner.mjs','scenarios.mjs','contract.mjs']:
+ sourcepins[str((inputs/n).relative_to(R)).replace('\\','/')]=pin(inputs/n)
+sourcepins[str(obs.relative_to(R)).replace('\\','/')]=pin(obs)
+assert "const host=await page(b.A,b.A.host" in (inputs/'browser-child.mjs').read_text()
+assert "e=b.E" in (inputs/'browser-child.mjs').read_text()
+assert "await app?.close();await pool.end();" in (inputs/'factory.mjs').read_text()
+assert "await signal(phase,'STOP')" in (inputs/'host-runner.mjs').read_text()
+assert read(R/'.artifacts/p05-oci23-a17-run01.exit.json')['exit_code']==1
+# Copy only already-public safe metadata; do not traverse archive/private inputs, keys or Docker inspection logs.
+dest=O/'raw';dest.mkdir(exist_ok=True)
+safe=['runner.json','TERMINAL.json','owned-after-cleanup.json','authority-ack.json','actual-native-quotas.json','evidence/phase-A1-terminal.json','evidence/phase-B2-terminal.json','evidence/phase-A3-terminal.json','evidence/browser-B2-ready.json','evidence/browser-narrowed-ready.json']
+safe_pins={}
+for n in safe:
+ target=dest/n;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(raw/n,target);safe_pins[n]=pin(raw/n)
+for n in ['p05-oci23-a17-run01.txt','p05-oci23-a17-run01.exit.json']:shutil.copyfile(R/'.artifacts'/n,dest/n)
+(O/'INPUT-PINS.json').write_text(json.dumps({'source_and_producer_metadata':{n:pin(raw/n) for n in ['source-A1-before.json','source-B2-before.json','source-A3-before.json','source-after-finally.json','producer-A1-before.json','producer-B2-before.json','producer-A3-before.json','producer-after-finally.json']},'read_only_source_pins':sourcepins,'safe_export_pins':safe_pins},indent=2)+'\n',encoding='utf-8')
+result={'status':'DIAGNOSIS_COMPLETE_OCI23_ACTUAL_FAIL_RETAINED','source_identity':f['identity'],'included_files':1871,'images':ack['images'],'ACK':pin(raw/'authority-ack.json'),'method_review':ack['independent_review_index_sha256'],
+ 'phase_status':{k:v['status'] for k,v in phases.items()},'first_error':error,'observed_game_state':'NOT_ACTIVE_EXACT_VALUE_NOT_EXPORTED','transport_paused_reason':'STRONG_PINNED_SOURCE_INFERENCE_NOT_NATIVE_VALUE',
+ 'elapsed_ms':terminal['whole_elapsed_ms'],'A3_elapsed_ms':phases['A3']['elapsed_ms'],'phase_wall_failure':False,'migration_only_rows_sequences_equal':True,
+ 'cleanup':'RETAINED_MANUAL_CLEANUP_REQUIRED','retained_owned_objects':7,'export_error':None,'cleanup_error':None,
+ 'confirmed_fixture_conflict':'Fresh-E selected actor has real browser WS; B2 graceful app.close preClose disconnects selected sockets and safety-pauses active private game before A3 live-E preboot oracle.',
+ 'recommendation':'Separate fixed F for fresh-B browser, created by genuine activePrivate after strict B2 replay; E remains untouched HTTP-positive sentinel. Preserve original14/E oracles, snapshots including F, bounds, cleanup and production disconnect safety.',
+ 'limitations':['Actual nonactive state/pause_reason and success of individual shutdown transaction are not exported.','A1+B2 completion supports prior closed-host-gate correction only, not all14 final controls or rollback PASS.','No native/privateDB/keyring/ENV reads or mutations performed.','Separate F resource fit and full integration remain future reviewed actual work.']}
+(O/'AUDIT.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');print(json.dumps(result))

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/p04_evidence_review",
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity_sha256": null,
+  "scopes": [
+    "self_actions_dirty_code_preflight",
+    "actual_module_adversarial_with_explicit_doubles"
+  ],
+  "status": "CHANGES_REQUESTED",
+  "open_findings": [
+    "P05-ROLE-003",
+    "P05-ROLE-004"
+  ],
+  "reviewed_at_utc": "2026-10-19T15:24:47.296605+00:00",
+  "acceptance_scope": "PRELIMINARY_DIRTY_CODE_REVIEW_ONLY",
+  "stage_accepted": false,
+  "human_approved": false,
+  "whole_tree_clean_source_claim": false,
+  "actual_http_pg_browser_run_by_reviewer": false,
+  "findings": [
+    {
+      "id": "P05-ROLE-003",
+      "priority": "P2",
+      "status": "OPEN_PENDING_FROZEN_RETEST",
+      "file": "apps/web/src/game-controls.ts",
+      "start": 51,
+      "title": "Record monotonic time before safety and neutral-reset early returns",
+      "tested_source_sha256": "89a4fb8ec4a0b53a2d722a51c8e0921ca789280b641f0aa6afaabc6634b03edb",
+      "detail": "Actual OwnControls accepts a 5s lease at local1000; Finish1100=true, Stop6001=true intentionally survives TTL, then Finish2000=true after wall-clock rewind. allowed() only updates its high-water time through fresh() on the ordinary path. Safety/neutral-reset early returns do not consume observed time, so the same expired ordinary metadata can revive. POST remains authoritative; this is a display/callback freshness defect, not a reproduced server authorization bypass.",
+      "required_fix": "Consume finite now into monotonic high-water time on every time-bearing entry before early returns; regression expiry→safety/neutral-reset→rewind must deny ordinary actions while preserving confirmed safety.",
+      "interim_observation": "During ongoing author writes, a separate clock-current probe on SHA941968339143cb178c8ca3b1c06a0cb5a89d2027214b2e51369d300108596a50 returned finish_after_rewind=false. This is a narrow intermediate corrected observation, not final independent acceptance; original failing input/result preserved."
+    },
+    {
+      "id": "P05-ROLE-004",
+      "priority": "P1",
+      "status": "OPEN_PENDING_FROZEN_RETEST",
+      "file": "apps/api/src/games.ts",
+      "start": 349,
+      "title": "Fence the authenticated session deadline after the final awaited access read",
+      "tested_source_sha256": "c4beffff75be718602e56577fe437635b5018769cc3035b98f084d13a395b222",
+      "related_source": "apps/api/src/rooms.ts",
+      "related_source_sha256": "b731fc531dafe17b3bf3fa307054fca8cfd0404c7732f4a6d2b66f08f9e2a6ad",
+      "detail": "Actual Rooms.access/Rooms.auth and Games.dispatchSelfActions with explicit SQL-return doubles: sessionexpires7000, grant/member SQL parameters evaluated at1000, final awaited currentAcceptance advances clock to8000. The final presence checks still pass (<45s), then recipient metadata is enqueued with Finish=true and expiry13000 despite expired authentication. Auth returns no session expiry, so final synchronous now cannot compare or cap it. Both source methods are real; SQL/transaction/current/snapshot/present seams are explicit doubles. This does not claim a real PostgreSQL wait or browser exploit.",
+      "required_fix": "Return an authenticated grant expiry from actual session-row reads; after all awaited policy/access reads, enforce current authenticated deadline synchronously before any enqueue (including safety metadata) and bound emitted lease. Authentication failure must not become degraded-safety metadata; retain intended acceptance/catalog failure safety semantics. Add actual PG/HTTP last-read wait crossing authentication expiry, then fresh independent retest."
+    }
+  ],
+  "prior_findings": [
+    "P05-ROLE-001/002 correction direction supported by32 cases; final freeze/browser retest pending"
+  ],
+  "report_path": ".docs/implementation/reviews/p05/role-round-02.md",
+  "report_sha256": "e53b910de8c5486f88cdcb5d786f64d5b4c18fa6e329e72cc40d7e4468e41aeb",
+  "initial_inputs": {
+    "apps/api/src/game-self-actions.ts": "2d5b86f14b5426ce4c7a330ea57531cf9623d83a6313ff0a86e369fd1a44988c",
+    "apps/api/src/games.ts": "c4beffff75be718602e56577fe437635b5018769cc3035b98f084d13a395b222",
+    "apps/api/src/server.ts": "60546c4a3643d29b0b9ccdca7c9724331e49468d3434cfbab360af6c602956bc",
+    "packages/contracts/src/self-actions.ts": "9498836667c86c499958d8f5e9f1ef3f2ed8df9e44b44cac49079d3d0dc5a2bd",
+    "apps/web/src/game-controls.ts": "89a4fb8ec4a0b53a2d722a51c8e0921ca789280b641f0aa6afaabc6634b03edb",
+    "apps/web/src/games-panel.tsx": "2721a3d652cd09b68a35c617ad672b708c7f878e83ec792fc3303536644985ab",
+    "apps/web/src/game-operations.ts": "50fc1aab56bdc9d327a228af817ee90a10409f6d5df655ed96c297b6434a20a4"
+  },
+  "probe_scoped_hashes": {
+    "roles": {
+      "apps/web/src/games-panel.tsx": "2721a3d652cd09b68a35c617ad672b708c7f878e83ec792fc3303536644985ab",
+      "apps/web/src/api.ts": "d761808aca8273081a856cc5c1431cd91a709c375f80d1989c2b20efa4c4fcb3",
+      "apps/web/src/game-setup.ts": "7866f8ff2d7e5737c163fe4524cf80105b55126b78b3db8d8be7405629a0a98a",
+      "apps/web/src/game-copy.ts": "ab4c15e18a198ad0a8624fb247962ddcd78bfd370773b7956cfc5e13768e1dd4",
+      "apps/web/src/private-state.ts": "be22a3b41802f80dac4731588201fecd6359066094a8be26f80d5f12b298a4bc",
+      "apps/web/src/game-operations.ts": "50fc1aab56bdc9d327a228af817ee90a10409f6d5df655ed96c297b6434a20a4",
+      "apps/web/src/game-state.ts": "5e2a6b0c68fae6bccb441b7e246aee069d6ae3ab4dcceece82c9d069d2d17a46",
+      "apps/web/src/game-controls.ts": "89a4fb8ec4a0b53a2d722a51c8e0921ca789280b641f0aa6afaabc6634b03edb",
+      "apps/api/src/games.ts": "c4beffff75be718602e56577fe437635b5018769cc3035b98f084d13a395b222",
+      "apps/api/src/games-model.ts": "d8345dff0a0685e2e2f3a1ff36ad378c6793762a3ccfbcc53fab588a268952fa",
+      "apps/api/src/game-self-actions.ts": "2d5b86f14b5426ce4c7a330ea57531cf9623d83a6313ff0a86e369fd1a44988c"
+    },
+    "clock": "89a4fb8ec4a0b53a2d722a51c8e0921ca789280b641f0aa6afaabc6634b03edb",
+    "auth": {
+      "apps/api/src/rooms.ts": "b731fc531dafe17b3bf3fa307054fca8cfd0404c7732f4a6d2b66f08f9e2a6ad",
+      "apps/api/src/security.ts": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+      "apps/api/src/games.ts": "c4beffff75be718602e56577fe437635b5018769cc3035b98f084d13a395b222",
+      "apps/api/src/games-model.ts": "d8345dff0a0685e2e2f3a1ff36ad378c6793762a3ccfbcc53fab588a268952fa",
+      "apps/api/src/private-chat.ts": "399ee331f861f87081d5fe1d41577aa49573eea2dbfd194b40af3b656805d758",
+      "apps/api/src/game-self-actions.ts": "2d5b86f14b5426ce4c7a330ea57531cf9623d83a6313ff0a86e369fd1a44988c"
+    },
+    "interim_clock": "941968339143cb178c8ca3b1c06a0cb5a89d2027214b2e51369d300108596a50"
+  },
+  "evidence_hashes": {
+    "role-round-02.auth-expiry-positive.json": "d66dfad3d966232875922ddfa94a670120fc8570d7b25e579b8b05078f95480f",
+    "role-round-02.auth-expiry-probe.json": "f1cef3515c76f6f0b2835a0fb4348d2aaa385f27c0937c77467617341fd4ffcf",
+    "role-round-02.auth-expiry-probe.mjs": "1e9fa8aa7f348e0e3d6f213b90e67db92113de5a1beb07d91ea4bb02a75ea3fc",
+    "role-round-02.clock-current.json": "a46416a80d1e5190c1178630d7bf89b4fd730e038cff498230afb6c226ffc0e3",
+    "role-round-02.clock-current.mjs": "ef3441cf57002b61bc711ec57af6345c7076827b29714c1fffcd844a4f9d1e0a",
+    "role-round-02.clock-probe.json": "ad00f734dd12366310239b932c2b6e33557e71cbf243f3ffb283a5c315200f00",
+    "role-round-02.clock-probe.mjs": "5828ec55f8840e764e5ee8c7f560adef70c25004bec2f7f746c7e3ca8ea2a910",
+    "role-round-02.initial-inputs.json": "6e502b7a9460dad510e34c04380e961d5b237f22fb5428cb708153f4966e23da",
+    "role-round-02.roles-probe.mjs": "6bb350c540038020efe3676904db2f637f3fcb88d109d11b1195389ece82fe5e",
+    "role-round-02.roles-result.json": "995277812eeecfdac6dced56af7c5f971d68cdf3ba368803834f0d8ba9f66fd8",
+    "role-round-02.source-snapshot.json": "c068425d282172bac0c78e8d61874590e1f2f4d3e80484db8e13b91fe824612d"
+  },
+  "limits": [
+    "Live source changes, not a final frozen candidate",
+    "Hook/API/SQL doubles explicitly used; no actual HTTP/PG/browser claim",
+    "No human/full-stage approval",
+    "Pure conversation kernel excluded"
+  ]
+}

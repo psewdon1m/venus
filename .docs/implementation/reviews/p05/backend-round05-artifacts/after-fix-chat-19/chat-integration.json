@@ -1,0 +1,4100 @@
+{
+  "synthetic_fixture_only": true,
+  "production_approval": false,
+  "implementation_author_test": true,
+  "records": [
+    {
+      "id": "P05-CHAT-01",
+      "status": "PASS",
+      "detail": {
+        "actors": 2,
+        "nonpair_members_denied": 3,
+        "cross_session": true,
+        "stale_round": true,
+        "cross_room_real_foreign_cookie": true,
+        "csrf_get_without_origin": true,
+        "game_revision_unchanged": true
+      }
+    },
+    {
+      "id": "P05-CHAT-02",
+      "status": "PASS",
+      "detail": {
+        "sql_tables_inspected": 7,
+        "plaintext_absent": true,
+        "actual_api_log_complete_and_secret_absent": true,
+        "padded_cipher_bytes": 16384,
+        "cross_room_aad_rejected": true,
+        "idempotent_quota": 1,
+        "changed_text_conflict": true
+      }
+    },
+    {
+      "id": "P05-CHAT-03",
+      "status": "PASS",
+      "detail": {
+        "malformed_inputs_rejected": 5,
+        "actor_rate_limit": 12,
+        "other_actor_independent": true,
+        "volume_limit_persisted_fault_fixture": 128,
+        "no_overquota_insert": true
+      }
+    },
+    {
+      "id": "P05-CHAT-04",
+      "status": "PASS",
+      "detail": {
+        "actual_http_sends": 40,
+        "rate_window_reset_fault_fixture": true,
+        "retained_messages": 32,
+        "retained_cipher_bytes": 524288,
+        "first_retained_index": 8
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-decline",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-skip",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-stop",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-finish",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-disconnect",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-leave",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-setup-withdrawal",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-LIFECYCLE-close",
+      "status": "PASS",
+      "detail": {
+        "scope_deleted": true,
+        "ciphertext_deleted": true,
+        "receipts_deleted": true,
+        "old_get_and_send_denied": true
+      }
+    },
+    {
+      "id": "P05-CHAT-CONTEXT",
+      "status": "PASS",
+      "detail": {
+        "actual_in_person_snapshot": true,
+        "round_interaction": "solo",
+        "private_ip_gameplay_not_claimed": true,
+        "in_person_snapshot_has_no_chat_capability": true,
+        "http_unavailable": true,
+        "no_chat_rows": true
+      }
+    },
+    {
+      "id": "P05-CHAT-EXPIRY-RACE",
+      "status": "PASS",
+      "detail": {
+        "actual_pg_relation_wait": true,
+        "concurrent_stop_serialized": true,
+        "clock_advanced_after_real_await": true,
+        "expiry_margin_ms": 100,
+        "no_private_enqueue_after_expiry": true
+      }
+    },
+    {
+      "id": "P05-CHAT-RESTORE",
+      "status": "PASS",
+      "detail": {
+        "actual_api_restart": true,
+        "game_identity_preserved": true,
+        "transcript_purged": true,
+        "restored_active_game_and_bilateral_round": true,
+        "restored_sql_rows_cannot_restore_volatile_grant": true,
+        "second_boot_repurged": true
+      }
+    },
+    {
+      "id": "P05-CHAT-REVOKED-RESTORE",
+      "status": "PASS",
+      "detail": {
+        "same_api_process": true,
+        "explicit_revoke_committed": true,
+        "pre_revoke_active_game_round_and_ciphertext_restored": true,
+        "volatile_grant_not_resurrected": true
+      }
+    },
+    {
+      "id": "P05-CHAT-MIGRATION",
+      "status": "PASS",
+      "detail": {
+        "generation": 1,
+        "game_generation_unchanged": 1,
+        "repeat_schema_idempotent": true,
+        "checksum_rejected": true,
+        "future_generation_rejected": true,
+        "startup_ephemeral_data_purge": true
+      }
+    },
+    {
+      "id": "P05-QUIET-PUBLIC-ACK-REVOKE",
+      "status": "PASS",
+      "detail": {
+        "actual_members": 8,
+        "actual_observers": 6,
+        "phases": [
+          {
+            "phase": "zero-ack",
+            "committed_game_rev": 2,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "41db6170-4e9b-4322-8eca-6019a3555910",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.323Z",
+                    "event_id": "6e93f7f2-92a9-4e0d-98fa-2cb70aca6cdd",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.323Z",
+                    "event_id": "6e93f7f2-92a9-4e0d-98fa-2cb70aca6cdd",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3876
+              },
+              {
+                "observer_id": "d9b5a7d4-8310-4d7a-8a29-82ac96e76f28",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.335Z",
+                    "event_id": "07eaaa56-4c85-4b00-ad67-763cc3707a0c",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.335Z",
+                    "event_id": "07eaaa56-4c85-4b00-ad67-763cc3707a0c",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3873
+              },
+              {
+                "observer_id": "67b69e6d-5ce4-4ccf-aa3f-49d265e70c40",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.354Z",
+                    "event_id": "e25ec2fa-034b-4f2f-8b31-f9d0e5ecf242",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.354Z",
+                    "event_id": "e25ec2fa-034b-4f2f-8b31-f9d0e5ecf242",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3867
+              },
+              {
+                "observer_id": "3b4ad6cd-76b3-4d96-9709-9e2977475e0d",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.374Z",
+                    "event_id": "8b4e8dc9-fa4f-431b-83ab-a933d5b36c47",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.374Z",
+                    "event_id": "8b4e8dc9-fa4f-431b-83ab-a933d5b36c47",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3861
+              },
+              {
+                "observer_id": "e146221f-22e7-45d9-a773-415eb98e2978",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.432Z",
+                    "event_id": "d8db3bb9-cfb7-4cf6-91c8-ee15f3ee8cfd",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.432Z",
+                    "event_id": "d8db3bb9-cfb7-4cf6-91c8-ee15f3ee8cfd",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3843
+              },
+              {
+                "observer_id": "188832a4-17ea-4337-b530-2942cba89f05",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.452Z",
+                    "event_id": "d34da9d1-031f-4362-9d91-01c817991f22",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:28.452Z",
+                    "event_id": "d34da9d1-031f-4362-9d91-01c817991f22",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3837
+              }
+            ]
+          },
+          {
+            "phase": "one-ack",
+            "committed_game_rev": 3,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "41db6170-4e9b-4322-8eca-6019a3555910",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.320Z",
+                    "event_id": "f50b4f56-68b4-4d5e-8ce1-a269c6c396d6",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.320Z",
+                    "event_id": "f50b4f56-68b4-4d5e-8ce1-a269c6c396d6",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6044
+              },
+              {
+                "observer_id": "d9b5a7d4-8310-4d7a-8a29-82ac96e76f28",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.337Z",
+                    "event_id": "0b7fe155-5958-455c-93f2-a95af97831af",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.337Z",
+                    "event_id": "0b7fe155-5958-455c-93f2-a95af97831af",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6041
+              },
+              {
+                "observer_id": "67b69e6d-5ce4-4ccf-aa3f-49d265e70c40",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.355Z",
+                    "event_id": "5ba99dfb-97aa-4e01-8858-b257b9da031b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.355Z",
+                    "event_id": "5ba99dfb-97aa-4e01-8858-b257b9da031b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6035
+              },
+              {
+                "observer_id": "3b4ad6cd-76b3-4d96-9709-9e2977475e0d",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.376Z",
+                    "event_id": "de751c1a-1773-48f2-bc9a-b402018bea82",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.376Z",
+                    "event_id": "de751c1a-1773-48f2-bc9a-b402018bea82",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6029
+              },
+              {
+                "observer_id": "e146221f-22e7-45d9-a773-415eb98e2978",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.432Z",
+                    "event_id": "e3bd6beb-9b6f-46ef-9125-63da88f04f71",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.432Z",
+                    "event_id": "e3bd6beb-9b6f-46ef-9125-63da88f04f71",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6011
+              },
+              {
+                "observer_id": "188832a4-17ea-4337-b530-2942cba89f05",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.451Z",
+                    "event_id": "3e3f1874-280d-4d1c-a854-60600be9f29b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:29.451Z",
+                    "event_id": "3e3f1874-280d-4d1c-a854-60600be9f29b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6005
+              }
+            ]
+          },
+          {
+            "phase": "two-ack",
+            "committed_game_rev": 4,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "41db6170-4e9b-4322-8eca-6019a3555910",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "public",
+                    "card_id": "YB-0011",
+                    "card_revision": 1,
+                    "actors": [
+                      "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                      "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                    ],
+                    "response_state": "pending",
+                    "proposal_revision": 1,
+                    "mode": "yes_but",
+                    "text": {
+                      "proposal": "SYNTHETIC EN YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                      "responder": "SYNTHETIC EN YB-11. Choose yes, condition, or decline."
+                    },
+                    "choice": null
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.319Z",
+                    "event_id": "6cf80745-ab0e-44ed-98ca-cdd3e5d406ce",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC EN YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC EN YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.319Z",
+                    "event_id": "6cf80745-ab0e-44ed-98ca-cdd3e5d406ce",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC EN YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC EN YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8581
+              },
+              {
+                "observer_id": "d9b5a7d4-8310-4d7a-8a29-82ac96e76f28",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "public",
+                    "card_id": "YB-0011",
+                    "card_revision": 1,
+                    "actors": [
+                      "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                      "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                    ],
+                    "response_state": "pending",
+                    "proposal_revision": 1,
+                    "mode": "yes_but",
+                    "text": {
+                      "proposal": "SYNTHETIC RU YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                      "responder": "SYNTHETIC RU YB-11. Choose yes, condition, or decline."
+                    },
+                    "choice": null
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.336Z",
+                    "event_id": "966f720a-f0d7-4d35-9ec6-ae83b2929352",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC RU YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC RU YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.336Z",
+                    "event_id": "966f720a-f0d7-4d35-9ec6-ae83b2929352",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC RU YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC RU YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8578
+              },
+              {
+                "observer_id": "67b69e6d-5ce4-4ccf-aa3f-49d265e70c40",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "public",
+                    "card_id": "YB-0011",
+                    "card_revision": 1,
+                    "actors": [
+                      "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                      "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                    ],
+                    "response_state": "pending",
+                    "proposal_revision": 1,
+                    "mode": "yes_but",
+                    "text": {
+                      "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                      "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                    },
+                    "choice": null
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.356Z",
+                    "event_id": "32e741ab-50b9-4907-8d1b-a3380e9867dc",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.356Z",
+                    "event_id": "32e741ab-50b9-4907-8d1b-a3380e9867dc",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8572
+              },
+              {
+                "observer_id": "3b4ad6cd-76b3-4d96-9709-9e2977475e0d",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "public",
+                    "card_id": "YB-0011",
+                    "card_revision": 1,
+                    "actors": [
+                      "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                      "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                    ],
+                    "response_state": "pending",
+                    "proposal_revision": 1,
+                    "mode": "yes_but",
+                    "text": {
+                      "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                      "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                    },
+                    "choice": null
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.374Z",
+                    "event_id": "7a2b5ba4-38c6-41fd-a625-367d1a72de26",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.374Z",
+                    "event_id": "7a2b5ba4-38c6-41fd-a625-367d1a72de26",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8566
+              },
+              {
+                "observer_id": "e146221f-22e7-45d9-a773-415eb98e2978",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "public",
+                    "card_id": "YB-0011",
+                    "card_revision": 1,
+                    "actors": [
+                      "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                      "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                    ],
+                    "response_state": "pending",
+                    "proposal_revision": 1,
+                    "mode": "yes_but",
+                    "text": {
+                      "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                      "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                    },
+                    "choice": null
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.433Z",
+                    "event_id": "475b0fe5-ae6e-442b-b755-69d09fa046a5",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.433Z",
+                    "event_id": "475b0fe5-ae6e-442b-b755-69d09fa046a5",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8548
+              },
+              {
+                "observer_id": "188832a4-17ea-4337-b530-2942cba89f05",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "public",
+                    "card_id": "YB-0011",
+                    "card_revision": 1,
+                    "actors": [
+                      "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                      "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                    ],
+                    "response_state": "pending",
+                    "proposal_revision": 1,
+                    "mode": "yes_but",
+                    "text": {
+                      "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                      "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                    },
+                    "choice": null
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.453Z",
+                    "event_id": "516c5f72-1075-402a-bba7-b562d2c3ccba",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:30.453Z",
+                    "event_id": "516c5f72-1075-402a-bba7-b562d2c3ccba",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "public",
+                        "card_id": "YB-0011",
+                        "card_revision": 1,
+                        "actors": [
+                          "28396745-bd08-450f-8eaf-8e5cfeb62f94",
+                          "79441ebd-16fc-4673-b629-84f9bc877b5d"
+                        ],
+                        "response_state": "pending",
+                        "proposal_revision": 1,
+                        "mode": "yes_but",
+                        "text": {
+                          "proposal": "SYNTHETIC TR YB-11. Neutral SYNTHETIC CHAT 4 and SYNTHETIC CHAT 3 test.",
+                          "responder": "SYNTHETIC TR YB-11. Choose yes, condition, or decline."
+                        },
+                        "choice": null
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8542
+              }
+            ]
+          },
+          {
+            "phase": "withdrawn",
+            "committed_game_rev": 5,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "41db6170-4e9b-4322-8eca-6019a3555910",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.319Z",
+                    "event_id": "f4cac9d2-8601-40a9-b673-59f05fe22351",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.319Z",
+                    "event_id": "f4cac9d2-8601-40a9-b673-59f05fe22351",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 9,
+                "captured_bytes": 10749
+              },
+              {
+                "observer_id": "d9b5a7d4-8310-4d7a-8a29-82ac96e76f28",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.334Z",
+                    "event_id": "9da32c1c-3999-4d3f-be62-64775d544c11",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.334Z",
+                    "event_id": "9da32c1c-3999-4d3f-be62-64775d544c11",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 9,
+                "captured_bytes": 10746
+              },
+              {
+                "observer_id": "67b69e6d-5ce4-4ccf-aa3f-49d265e70c40",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.355Z",
+                    "event_id": "ec1858ea-9858-4d69-90db-d293fd5ac642",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.355Z",
+                    "event_id": "ec1858ea-9858-4d69-90db-d293fd5ac642",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 9,
+                "captured_bytes": 10740
+              },
+              {
+                "observer_id": "3b4ad6cd-76b3-4d96-9709-9e2977475e0d",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.374Z",
+                    "event_id": "14672821-653a-4dc3-8c80-210f35b0c5c0",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.374Z",
+                    "event_id": "14672821-653a-4dc3-8c80-210f35b0c5c0",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 9,
+                "captured_bytes": 10734
+              },
+              {
+                "observer_id": "e146221f-22e7-45d9-a773-415eb98e2978",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.434Z",
+                    "event_id": "a8cc8302-5f95-44bf-99dc-387387876bdc",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.434Z",
+                    "event_id": "a8cc8302-5f95-44bf-99dc-387387876bdc",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 9,
+                "captured_bytes": 10716
+              },
+              {
+                "observer_id": "188832a4-17ea-4337-b530-2942cba89f05",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.452Z",
+                    "event_id": "ad2109e3-492b-4530-9311-704d7153e0d9",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 28,
+                    "server_time": "2026-10-19T14:18:31.452Z",
+                    "event_id": "ad2109e3-492b-4530-9311-704d7153e0d9",
+                    "stream": "game",
+                    "stream_rev": 28,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 9,
+                "captured_bytes": 10710
+              }
+            ]
+          },
+          {
+            "phase": "later-room-emission-after-withdrawal",
+            "committed_game_rev": 5,
+            "minimum_room_rev": 29,
+            "observers": [
+              {
+                "observer_id": "41db6170-4e9b-4322-8eca-6019a3555910",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.321Z",
+                    "event_id": "8e36372b-7ebd-4303-9c06-c9cffd9b0839",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.321Z",
+                    "event_id": "8e36372b-7ebd-4303-9c06-c9cffd9b0839",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 11,
+                "captured_bytes": 12917
+              },
+              {
+                "observer_id": "d9b5a7d4-8310-4d7a-8a29-82ac96e76f28",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.336Z",
+                    "event_id": "4ad83f92-de76-4b5b-ade5-f2e1480a27d0",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.336Z",
+                    "event_id": "4ad83f92-de76-4b5b-ade5-f2e1480a27d0",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 11,
+                "captured_bytes": 12914
+              },
+              {
+                "observer_id": "67b69e6d-5ce4-4ccf-aa3f-49d265e70c40",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.395Z",
+                    "event_id": "4226d640-1f88-41ca-befb-73ba51156373",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.395Z",
+                    "event_id": "4226d640-1f88-41ca-befb-73ba51156373",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 11,
+                "captured_bytes": 12908
+              },
+              {
+                "observer_id": "3b4ad6cd-76b3-4d96-9709-9e2977475e0d",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.405Z",
+                    "event_id": "a3d1303e-69ac-456c-9b9d-1658af99448b",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.405Z",
+                    "event_id": "a3d1303e-69ac-456c-9b9d-1658af99448b",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 11,
+                "captured_bytes": 12902
+              },
+              {
+                "observer_id": "e146221f-22e7-45d9-a773-415eb98e2978",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.433Z",
+                    "event_id": "8e946d0c-d498-4da9-a97e-a96270a011f7",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.433Z",
+                    "event_id": "8e946d0c-d498-4da9-a97e-a96270a011f7",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 11,
+                "captured_bytes": 12884
+              },
+              {
+                "observer_id": "188832a4-17ea-4337-b530-2942cba89f05",
+                "http": {
+                  "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                  "game_rev": 5,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.456Z",
+                    "event_id": "1cb449eb-d58b-4ed4-8bb1-8fd52914a624",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "8fd29130-170a-460e-9f34-282ad642ff02",
+                    "room_rev": 29,
+                    "server_time": "2026-10-19T14:18:32.456Z",
+                    "event_id": "1cb449eb-d58b-4ed4-8bb1-8fd52914a624",
+                    "stream": "game",
+                    "stream_rev": 29,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "a0cd0d03-4b13-421b-863b-e7a9c1c068fe",
+                      "game_rev": 5,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 11,
+                "captured_bytes": 12878
+              }
+            ]
+          }
+        ],
+        "action_consents_unaccepted": [
+          {
+            "offer_id": "4031cb35-4495-45dd-a553-432aa4375826",
+            "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+            "consent_scope": "action",
+            "proposal_revision": 1,
+            "expires_at": "2026-10-19T14:18:59.549Z",
+            "own_state": "pending",
+            "state": "pending"
+          },
+          {
+            "offer_id": "4031cb35-4495-45dd-a553-432aa4375826",
+            "round_id": "281752f7-2d72-4371-82a6-19bf8ce51f98",
+            "consent_scope": "action",
+            "proposal_revision": 1,
+            "expires_at": "2026-10-19T14:18:59.549Z",
+            "own_state": "pending",
+            "state": "pending"
+          }
+        ],
+        "private_prompt_and_chat_denied_for_all8": true,
+        "prior_authorized_public_content_not_erased_claim": false,
+        "server_wire_race_not_claimed": true
+      }
+    },
+    {
+      "id": "P05-QUIET-PUBLIC-DECLINE",
+      "status": "PASS",
+      "detail": {
+        "actual_members": 8,
+        "actual_observers": 6,
+        "phases": [
+          {
+            "phase": "zero-ack",
+            "committed_game_rev": 2,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "5ce94805-c30d-4e5c-a6af-23124c2bd292",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.786Z",
+                    "event_id": "8d5c4aa0-03e4-4c1a-ac76-48b26756600f",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.786Z",
+                    "event_id": "8d5c4aa0-03e4-4c1a-ac76-48b26756600f",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3876
+              },
+              {
+                "observer_id": "dd6d1cce-8cf9-446b-be37-54e2cdceb51d",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.852Z",
+                    "event_id": "48532116-6e51-490c-a4b3-69cc2790833a",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.852Z",
+                    "event_id": "48532116-6e51-490c-a4b3-69cc2790833a",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3861
+              },
+              {
+                "observer_id": "7de2b2f6-c004-4e90-844c-db8b9e5821be",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.876Z",
+                    "event_id": "c70e7454-284b-4cad-bd4d-b30d831478d2",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.876Z",
+                    "event_id": "c70e7454-284b-4cad-bd4d-b30d831478d2",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3855
+              },
+              {
+                "observer_id": "c27224a2-af6f-4d77-ba12-03dd51e5a367",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.897Z",
+                    "event_id": "d0e99f12-849e-4487-b901-b168713cd421",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.897Z",
+                    "event_id": "d0e99f12-849e-4487-b901-b168713cd421",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3849
+              },
+              {
+                "observer_id": "8927c14e-7884-4d7d-907e-898afd00c8b6",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.917Z",
+                    "event_id": "c2291eb6-aaca-449b-9359-739c93867101",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.917Z",
+                    "event_id": "c2291eb6-aaca-449b-9359-739c93867101",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3843
+              },
+              {
+                "observer_id": "fcadc235-7340-4062-bb28-3f8b856b3293",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 2,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.939Z",
+                    "event_id": "f726ca7c-8ff4-4ffc-a38e-44768373ce1e",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 25,
+                    "server_time": "2026-10-19T14:18:33.939Z",
+                    "event_id": "f726ca7c-8ff4-4ffc-a38e-44768373ce1e",
+                    "stream": "game",
+                    "stream_rev": 25,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 2,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 3,
+                "captured_bytes": 3837
+              }
+            ]
+          },
+          {
+            "phase": "one-ack",
+            "committed_game_rev": 3,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "5ce94805-c30d-4e5c-a6af-23124c2bd292",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.787Z",
+                    "event_id": "6c8a56f4-e4de-4d7b-a62e-aa5bb525eb1d",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.787Z",
+                    "event_id": "6c8a56f4-e4de-4d7b-a62e-aa5bb525eb1d",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6044
+              },
+              {
+                "observer_id": "dd6d1cce-8cf9-446b-be37-54e2cdceb51d",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.848Z",
+                    "event_id": "6d016807-5a3c-4292-b8e8-bb843241509b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.848Z",
+                    "event_id": "6d016807-5a3c-4292-b8e8-bb843241509b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6029
+              },
+              {
+                "observer_id": "7de2b2f6-c004-4e90-844c-db8b9e5821be",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.874Z",
+                    "event_id": "ab31ae4d-e852-4b83-bddf-633ec76cca8b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.874Z",
+                    "event_id": "ab31ae4d-e852-4b83-bddf-633ec76cca8b",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6023
+              },
+              {
+                "observer_id": "c27224a2-af6f-4d77-ba12-03dd51e5a367",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.897Z",
+                    "event_id": "9e69932a-7f43-4b77-906e-515235c52df2",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.897Z",
+                    "event_id": "9e69932a-7f43-4b77-906e-515235c52df2",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6017
+              },
+              {
+                "observer_id": "8927c14e-7884-4d7d-907e-898afd00c8b6",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.917Z",
+                    "event_id": "207b437f-f1c1-4613-8a16-704531837551",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.917Z",
+                    "event_id": "207b437f-f1c1-4613-8a16-704531837551",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6011
+              },
+              {
+                "observer_id": "fcadc235-7340-4062-bb28-3f8b856b3293",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 3,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "pending",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.936Z",
+                    "event_id": "a4d3076c-1fad-466f-adf3-6596c9785d96",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 26,
+                    "server_time": "2026-10-19T14:18:34.936Z",
+                    "event_id": "a4d3076c-1fad-466f-adf3-6596c9785d96",
+                    "stream": "game",
+                    "stream_rev": 26,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 3,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "pending",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 5,
+                "captured_bytes": 6005
+              }
+            ]
+          },
+          {
+            "phase": "declined-after-one-ack",
+            "committed_game_rev": 4,
+            "minimum_room_rev": 0,
+            "observers": [
+              {
+                "observer_id": "5ce94805-c30d-4e5c-a6af-23124c2bd292",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.786Z",
+                    "event_id": "0ee7bd27-2021-4afc-954a-fdecfb8da2cf",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.786Z",
+                    "event_id": "0ee7bd27-2021-4afc-954a-fdecfb8da2cf",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8212
+              },
+              {
+                "observer_id": "dd6d1cce-8cf9-446b-be37-54e2cdceb51d",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.855Z",
+                    "event_id": "b2759883-17e1-451b-9e99-50d6e8f2f444",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.855Z",
+                    "event_id": "b2759883-17e1-451b-9e99-50d6e8f2f444",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8197
+              },
+              {
+                "observer_id": "7de2b2f6-c004-4e90-844c-db8b9e5821be",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.875Z",
+                    "event_id": "84030a9b-ed48-4c0e-b07e-b4fc582b3e99",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.875Z",
+                    "event_id": "84030a9b-ed48-4c0e-b07e-b4fc582b3e99",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8191
+              },
+              {
+                "observer_id": "c27224a2-af6f-4d77-ba12-03dd51e5a367",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.911Z",
+                    "event_id": "f0d8e2bd-12db-4436-a170-e0cf8b0626b0",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.911Z",
+                    "event_id": "f0d8e2bd-12db-4436-a170-e0cf8b0626b0",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8185
+              },
+              {
+                "observer_id": "8927c14e-7884-4d7d-907e-898afd00c8b6",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.923Z",
+                    "event_id": "f0755330-b788-4b63-8087-f2a1bdaa1845",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.923Z",
+                    "event_id": "f0755330-b788-4b63-8087-f2a1bdaa1845",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8179
+              },
+              {
+                "observer_id": "fcadc235-7340-4062-bb28-3f8b856b3293",
+                "http": {
+                  "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                  "game_rev": 4,
+                  "state": "active",
+                  "mode": "yes_but",
+                  "total_rounds": 1,
+                  "current_round": {
+                    "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                    "round_index": 1,
+                    "state": "stopped",
+                    "kind": "generic"
+                  },
+                  "pause_reason": null
+                },
+                "actual_ws_frames": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.939Z",
+                    "event_id": "a6a52e9d-8420-4219-be83-71d3784eb7a6",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "all_game_events_at_committed_room_revision": [
+                  {
+                    "schema": 1,
+                    "room_id": "71509cae-3bec-4766-afc4-cc482d1d33ec",
+                    "room_rev": 27,
+                    "server_time": "2026-10-19T14:18:35.939Z",
+                    "event_id": "a6a52e9d-8420-4219-be83-71d3784eb7a6",
+                    "stream": "game",
+                    "stream_rev": 27,
+                    "type": "game.snapshot",
+                    "audience": "room",
+                    "payload": {
+                      "session_id": "26c00e1b-ba9a-4176-8f1b-7faa75118de2",
+                      "game_rev": 4,
+                      "state": "active",
+                      "mode": "yes_but",
+                      "total_rounds": 1,
+                      "current_round": {
+                        "round_id": "344741c8-ab35-4679-b2a9-1363754ed0c2",
+                        "round_index": 1,
+                        "state": "stopped",
+                        "kind": "generic"
+                      },
+                      "pause_reason": null
+                    }
+                  }
+                ],
+                "capture_complete": true,
+                "captured_frames": 7,
+                "captured_bytes": 8173
+              }
+            ]
+          }
+        ],
+        "all_captured_public_snapshots_generic": true,
+        "declining_actor_and_reason_absent_from_game_projection": true,
+        "outsider_invitation_private_chat_denied": true
+      }
+    }
+  ],
+  "status": "PASS",
+  "expected_cases": 19
+}

@@ -1,0 +1,1925 @@
+{
+  "schema_version": 1,
+  "revision": "P06-PART12-STANDALONE-1",
+  "created_at_utc": "2026-10-24T18:20:12.717444+00:00",
+  "profile": "standalone-local-pilot-v2",
+  "source_catalogue_revision": "4449e65d732ca44b91cec5a6f3ca16c2c618578f",
+  "source_catalogue_path": ".docs/source-snapshots/central-4449e65/PART_12_KNOWN_DEPLOYMENT_AND_OPERATIONS_PROBLEMS.md",
+  "source_catalogue_sha256": "7f356b724df80444c5cd00c15bd808046f4f5667afa2cabf87cf1acd196c86a9",
+  "historical_ids_expected": 118,
+  "check_count": 118,
+  "status": "APPLICABILITY_DRAFT_NOT_TESTED_NOT_RELEASE_PASS",
+  "no_bulk_NA_for_generic_data_ACL_restore": true,
+  "checks": [
+    {
+      "id": "REL-01",
+      "source_line": 130,
+      "source_row_sha256": "1d2f2f1b297598f744d273bf8882ac85de4764ec64e0921473a5827626edfaf8",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Обычный push и релизный push запускают неразличимые сценарии. Артефакты могут публиковаться из непроверенного состояния или обычный CI получает release-права.",
+      "prevention": "Разделить CI и release workflow по триггерам и полномочиям. Обычный push только проверяет код; публикация разрешена только service-qualified тегу после успешных обязательных проверок.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-01"
+    },
+    {
+      "id": "REL-02",
+      "source_line": 131,
+      "source_row_sha256": "19af9254e3dace472b971cae4ff3ce685325305b6dc8222f126f7827f3024284",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Тег не включает идентификатор сервиса. В монорепозитории или общей инфраструктуре непонятно, кому принадлежит релиз и какой workflow должен сработать.",
+      "prevention": "Использовать единый формат `<service>-v<semver>` и валидировать его в workflow и bootstrap.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-02"
+    },
+    {
+      "id": "REL-03",
+      "source_line": 132,
+      "source_row_sha256": "72a39addee510aea691f55505891a7d554a461dcb9ffff9bfb705b84be77f448",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Тег поставлен на коммит, который не совпадает с актуальным состоянием основной ветки. Исправление есть в `main`, но отсутствует в опубликованном релизе.",
+      "prevention": "Перед публикацией проверять, что tag commit равен ожидаемому commit основной ветки; после публикации повторять проверку через удалённый API или `git ls-remote`.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-03"
+    },
+    {
+      "id": "REL-04",
+      "source_line": 133,
+      "source_row_sha256": "6c3e6889fcb3b8192c335cfcdf0c404cc76fcb12637db80754963881c2b4f121",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Версия в теге, манифесте, пакете, интерфейсе, имени архива или уже собранном образе расходится. Проверенный digest может запускать процесс, чей version endpoint по-прежнему сообщает прежнюю версию; Updater отклоняет образ как неверную identity до активации.",
+      "prevention": "Назначить один источник версии для runtime и release metadata. До подписи и публикации запускать именно собранный immutable образ и сверять его service identity и version endpoint с выбранным тегом и манифестом; не считать проверку `package.json` достаточной.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-04"
+    },
+    {
+      "id": "REL-05",
+      "source_line": 134,
+      "source_row_sha256": "8ce9ddf4868e198483ce5b9724500b162595dbf0f5e94e8693afd13dfe58fc66",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Release workflow пересобирает артефакт после CI. Проверенные байты отличаются от опубликованных.",
+      "prevention": "Продвигать один и тот же immutable artifact или воспроизводимо сверять exact digest между CI и релизом.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-05"
+    },
+    {
+      "id": "REL-06",
+      "source_line": 135,
+      "source_row_sha256": "f2913745d5d4b2f42fbaad7271073191809febdcdfad564b74f923836cca11f4",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Release asset существует, но его подпись, checksum или manifest относятся к другому архиву.",
+      "prevention": "Формировать комплект атомарно и проверять соответствие архива, manifest, checksum и подписи перед публикацией и после скачивания.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-06"
+    },
+    {
+      "id": "REL-07",
+      "source_line": 136,
+      "source_row_sha256": "e8b9b2cccd25920cd334067a117e2259bd2f398f89e6e76395a0b4634472497b",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Bootstrap скачивается из `main` или `latest`. Точка входа меняется без смены команды и может не соответствовать выбранному релизу.",
+      "prevention": "Публиковать bootstrap как asset конкретного immutable тега и использовать версионированный URL.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-07"
+    },
+    {
+      "id": "REL-08",
+      "source_line": 137,
+      "source_row_sha256": "65b8bd454c1716b68f6abca409930ec8c71c1d457f1860a4aea2dc5fd14b0774",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Зависимый сервис выпускается раньше требуемой версии installer/updater или контракта другого сервиса. Установка проходит частично и ломается позднее.",
+      "prevention": "Явно указывать минимальные совместимые версии в манифесте и закреплённом bundle, проверять матрицу зависимостей Part 13 и порядок согласованного выпуска Kernel/Updater/служб/потребителей. Установщик ждёт локального health обязательных служб.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-08"
+    },
+    {
+      "id": "REL-09",
+      "source_line": 138,
+      "source_row_sha256": "dc0e3ed00fb4f039789813a25297817adc0e2c48bbcea17d6a2dd1b26d43d404",
+      "applicability": "DEFERRED_REAL_SERVICE_OR_PRODUCTION_PART_LOCAL_SUBSET_APPLIES",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Release workflow зелёный, хотя один из обязательных assets отсутствует или недоступен анонимному установщику.",
+      "prevention": "После публикации выполнять проверку полного перечня assets, HTTP-доступности и криптографической верификации из чистого окружения.",
+      "reason": "Real published service assets and external download are pending actual signing/publication; fixture asset checks are insufficient.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-09"
+    },
+    {
+      "id": "REL-10",
+      "source_line": 139,
+      "source_row_sha256": "c071fb174ffd2d34da4226be7a04e002f92dd5563436668b763534e61c1ec8cf",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Документация проходит локально, но CI ломается из-за ссылок на соседний репозиторий или локальную структуру workspace.",
+      "prevention": "В публикуемой документации использовать самостоятельные стабильные URL либо включать целевой документ в тот же артефакт; запускать link/check gates в изолированном checkout.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-10"
+    },
+    {
+      "id": "REL-11",
+      "source_line": 140,
+      "source_row_sha256": "b74e3a3b345a8b28183043e44b8dc19ab51c7b9f939a77e2c93067615b8b7c1a",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Скачивание release asset выполняется одной попыткой, поэтому временный ответ CDN или upstream `502`/`503`/`504` выглядит как повреждённый релиз и полностью останавливает обновление. Ручной повтор может оставить неоднозначный staging.",
+      "prevention": "Для идемпотентных загрузок применять ограниченные повторы с exponential backoff, jitter и учётом `Retry-After`; ограничивать суммарное время и размер. Не переключать активную версию до полного скачивания и проверки digest/signature, а в ошибке сохранять точный HTTP-статус и источник без раскрытия credentials.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-11"
+    },
+    {
+      "id": "REL-12",
+      "source_line": 141,
+      "source_row_sha256": "db3473fdd28099ceb2ba6f260373cd013e215a1f39de7253b3b659afdc88b583",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Новый подписанный installer добавляет файл доверия или конфигурации, а self-update предыдущей поддерживаемой версии распаковывает архив по закрытому списку. Подпись и checksum корректны, но обновление завершается `FAILED` с `invalid signed installer archive member` до замены бинарника; расширение списка только в новом бинарнике старому установщику не помогает.",
+      "prevention": "Перед публикацией прогонять точный подписанный архив через проверку и обновление каждой поддерживаемой исходной версии, включая непосредственно предыдущую. Версионировать контракт состава архива и выпускать совместимый подписанный переходный релиз либо отдельную процедуру восстановления, проверяющую установленный trust anchor, подпись, digest, состав архива, версию и health с откатом бинарника и unit. Несовместимый релиз не предлагать через UI; опубликованный immutable тег не перепаковывать.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        ".github/workflows/venus-release.yml",
+        "tools/venus-operator/verify-published.mjs"
+      ],
+      "check_id": "P06-P12-REL-12"
+    },
+    {
+      "id": "BST-01",
+      "source_line": 147,
+      "source_row_sha256": "cff6f6e87a246b4245d2b044b7eb7650e583227b23a10a288213763a6672f63b",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Один bootstrap устанавливает несколько независимых сервисов и смешивает их жизненные циклы. Частичное обновление становится опасным.",
+      "prevention": "У каждого приложения и службы собственные bootstrap, trust, каталог, конфигурация, installer и rollback. Разрешено обеспечивать только формальные host-зависимости из матрицы Part 13 через отдельно проверенные закреплённые bundles: служба обеспечивает Updater, приложение — Updater и потребляемые службы. Это не даёт права незаметно ставить другое независимое приложение.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-01"
+    },
+    {
+      "id": "BST-02",
+      "source_line": 148,
+      "source_row_sha256": "fa890e9544f3bc4afbaa69edfa04656fc42f7e81bb26a248df857f0ff0db45a6",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Installer читает `.env` другого сервиса ради токена или endpoint. Порядок установки становится скрытой зависимостью, а права приходится ослаблять.",
+      "prevention": "Получать межсервисные credentials через защищённый handoff ссылки на credential и формальный scoped machine enrollment/bootstrap-протокол; чужие env-файлы не читать, секреты не передавать через argv/логи. Отсутствие полномочия оставляет конкретное подключение pending.",
+      "reason": "No other service env/enrollment files consumed; fixed own config/trust only; not a waiver of local secret permissions.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-02"
+    },
+    {
+      "id": "BST-03",
+      "source_line": 149,
+      "source_row_sha256": "9bb7e6815feff7047e40a11c02c769f2f42230e96f255fd2bd99b970dec73aca",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Bootstrap требует вручную перенести публичные release-ключи, хотя сам должен устанавливать корень доверия. Чистая установка не автономна.",
+      "prevention": "Встроить допустимый публичный trust anchor в версионированный bootstrap и сохранить его с проверенными правами до проверки manifest.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-03"
+    },
+    {
+      "id": "BST-04",
+      "source_line": 150,
+      "source_row_sha256": "8773c7af8e32932dfd4cbf3df1256dcf5418544c6cfaa738945398042173d07d",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "При обновлении теряются trust-файлы или локальные operator inputs, потому что каталог заменяется целиком.",
+      "prevention": "Разделить immutable release payload, persistent trust и operator state; обновлять их по явным правилам и атомарно.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-04"
+    },
+    {
+      "id": "BST-05",
+      "source_line": 151,
+      "source_row_sha256": "aeb824f3a1b6db4e7b31be72bb2db24414bc59a819548b393cbbf033e2511ac7",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "`--refresh` сохраняет старый `.env` побайтно и не добавляет новые служебные переменные. Новая версия падает только на сервере.",
+      "prevention": "Делать schema-aware merge: сохранять операторские значения, добавлять новые defaults/generated fields и удалять только явно устаревшие поля.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-05"
+    },
+    {
+      "id": "BST-06",
+      "source_line": 152,
+      "source_row_sha256": "cbc2bba00020640bf8a1d5f34ba7656938989df4384d9885aefa6add89ff606e",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Обновление перезаписывает операторские домены, порты, storage endpoint или access key значениями шаблона.",
+      "prevention": "Маркировать происхождение полей и никогда не заменять operator-owned значения без явного подтверждения или миграционного правила.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-06"
+    },
+    {
+      "id": "BST-07",
+      "source_line": 153,
+      "source_row_sha256": "88bb2b9378a25e790810ca757cd97cae1e5bd96c5a0eda587e4570258a3385eb",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Production `.env` содержит обязательные DEV-поля, тестовые fingerprints или фиктивную вторую копию. Оператор вынужден придумывать ненужные значения.",
+      "prevention": "Разделить профили окружений. Production validation должна требовать только параметры активных production-функций.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-07"
+    },
+    {
+      "id": "BST-08",
+      "source_line": 154,
+      "source_row_sha256": "254de32639f4a60baca572288fd18d6f58924cd627895ae373303f2896db0df8",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Bootstrap генерирует все секреты, включая ключ, который оператор обязан знать для входа. Доступ оказывается неизвестен или требует чтения secret-файла.",
+      "prevention": "Явно разделить operator-chosen и machine-generated secrets; пользовательский access key принимать в `.env`, остальные секреты создавать автоматически.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-08"
+    },
+    {
+      "id": "BST-09",
+      "source_line": 155,
+      "source_row_sha256": "861bbd4dbbd166584d3d51948fad13d35b798f48b0984418e8f9ce96aa255f4c",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Установка неидемпотентна: повторный запуск разрушает конфигурацию, меняет секреты или дублирует сущности.",
+      "prevention": "Разделить `bootstrap`, `install`, `refresh` и `repair`; повторный запуск должен сохранять корректное состояние и явно сообщать о конфликте.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-09"
+    },
+    {
+      "id": "BST-10",
+      "source_line": 156,
+      "source_row_sha256": "8e774af7186fa5134c8b3a3290c9dd4b03f62e08b337d21e684d767e5cbad6ab",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Validator проверяет путь внутри контейнера, который не смонтирован, недоступен текущему UID или не совпадает с runtime path.",
+      "prevention": "Проверять итоговую compose-конфигурацию и запускать validator в том же mount/user-контексте, что и приложение.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-10"
+    },
+    {
+      "id": "BST-11",
+      "source_line": 157,
+      "source_row_sha256": "1f6ae4b7c0140955baee6c7dd8e68b04ad0d0c4d4fa6ee0699d3f7cf90106c56",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "В шаблоне остаются placeholder-значения вида `<host>` или пример machine credentials, но установка продолжается. Два независимо устанавливаемых сервиса также могут получить один host port, и второй deployment падает только во время запуска либо отвечает чужим приложением.",
+      "prevention": "Валидировать structural placeholders, пустые обязательные значения, URL, fingerprint и домены до любых изменений runtime. Вести единый реестр host ports, а preflight обязан сопоставить rendered Compose с фактическими listeners и их владельцами до создания контейнера. Поле Access Key в шаблоне оставлять пустым: явно заданное literal-значение не проверяется по placeholder/example denylist согласно `BST-13`.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-11"
+    },
+    {
+      "id": "BST-12",
+      "source_line": 158,
+      "source_row_sha256": "6c7d531395ea08daa2859ba5a2f5743c77ab31cbf8107eb19b6b90b3ee8b8030",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "После bootstrap оператору неясно, какой файл редактировать и какая команда завершает установку. Возникают ручные, неповторяемые шаги.",
+      "prevention": "Завершать bootstrap точным путём к `.env`, перечнем operator inputs и одной локальной командой install/validate/status.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-12"
+    },
+    {
+      "id": "BST-13",
+      "source_line": 159,
+      "source_row_sha256": "2f76ff96a020e9c605cd2748f9280fa6b40b9e2dd2908e372415ff32c3c9ccc1",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Bootstrap, login или смена Access Key отклоняют выбранное оператором значение из-за длины, набора символов, URL-safe/ASCII, strength/entropy либо списка «слабых», известных или placeholder-значений; разные пути также могут обрезать или нормализовать ключ по-разному.",
+      "prevention": "Считать Access Key обязательным, но непрозрачным точным значением: проверять только факт явного задания и exact match, убрать специальные minimum/maximum, composition и denylist-политики, не применять trim/normalization/case folding и прогнать один и тот же ключ через bootstrap, login, rotation, restore и offline unlock.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-BST-13"
+    },
+    {
+      "id": "TRUST-01",
+      "source_line": 165,
+      "source_row_sha256": "783871b513bbfb889c7448df0fa0d6cfb3b790509e6132968f01384f5d504208",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Один ключ используется для подписи релизов и доступа к SFTP/SSH. Компрометация одного контура компрометирует второй.",
+      "prevention": "Создавать независимые ключевые пары для release signing, storage access, service enrollment и других назначений.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-01"
+    },
+    {
+      "id": "TRUST-02",
+      "source_line": 166,
+      "source_row_sha256": "e5a85a53f158cdf69330ff48b5e13a8cab0a227e7c317211a65d865d65076193",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Host key SFTP принимается при первом подключении без внешней проверки. Возможна незаметная подмена сервера.",
+      "prevention": "Получить fingerprint по доверенному каналу, сохранить в конфигурации и требовать exact match при каждом соединении.",
+      "reason": "No SSH/SFTP/storage client or host-key trust: only signed Venus release import/HTTPS and local PostgreSQL.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-02"
+    },
+    {
+      "id": "TRUST-03",
+      "source_line": 167,
+      "source_row_sha256": "3e4c3f3614a3733a1f336af33074437c4a37f393f20d5d5aff2a349632362e22",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Публичный ключ или manifest загружается с того же непроверенного источника, чью подпись он должен подтверждать. Проверка замыкается сама на себя.",
+      "prevention": "Доставлять корневой публичный ключ независимо: встроить в доверенный bootstrap или заранее установить через отдельный канал.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-03"
+    },
+    {
+      "id": "TRUST-04",
+      "source_line": 168,
+      "source_row_sha256": "47b810b980e96ea5fd39862a47335ea96f2e3adbd202d30554053ba64e435b74",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Секрет передаётся в аргументе процесса, URL, shell history или логе. Он доступен через process list и диагностические артефакты.",
+      "prevention": "Передавать секрет через root-owned файл, stdin или secret mount; редактировать вывод и исключать секретные значения из командной строки.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-04"
+    },
+    {
+      "id": "TRUST-05",
+      "source_line": 169,
+      "source_row_sha256": "2e4c402f93e70e19d9a341dc33f7c95f0ebdf6eb0c310620e9076fd97854fc91",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Сервисные токены копируются вручную между env-файлами и со временем расходятся после rotation.",
+      "prevention": "Использовать одноразовый enrollment, атомарную запись токена, явную ротацию и подтверждение, что consumer перечитал новый secret.",
+      "reason": "External service enrollment/token handoff absent; local operator key rotation remains applicable separately under BST-13/CTR-02.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-05"
+    },
+    {
+      "id": "TRUST-06",
+      "source_line": 170,
+      "source_row_sha256": "ae66c676eddc09adfb6939d4cb9ce7999f5489425bebd86dec82676fbb996bc1",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Публичные ключи, подписи и checksums проверяются только в CI, но не установщиком на целевой машине.",
+      "prevention": "Installer обязан локально проверить цепочку доверия до распаковки и запуска; CI дополнительно проверяет опубликованный комплект извне.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-06"
+    },
+    {
+      "id": "TRUST-07",
+      "source_line": 171,
+      "source_row_sha256": "61cbeb26872068d3a123e718e4891e0edf9e6059d87cd9cab28cf0b111636908",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Оператор путает ссылку на секрет в registry с самим секретным значением: внешний provider получает `secret://`/`volt://` locator либо registry получает plaintext. Подпись webhook не сходится, а credential оказывается сохранён не в том trust boundary.",
+      "prevention": "Генерировать значение один раз, хранить plaintext только в secret store, помещать в registry только exact typed reference, а в поле внешнего provider передавать разрешённое исходное значение. UI и runbook должны явно различать `secret value` и `secret reference`; проверка подписи выполняется без логирования обоих.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/release.mjs",
+        "tools/venus-operator/http.mjs"
+      ],
+      "check_id": "P06-P12-TRUST-07"
+    },
+    {
+      "id": "PERM-01",
+      "source_line": 177,
+      "source_row_sha256": "6c6dcd572782cd6484100d18496ea34b7ec91a51fb8eca74e0a54032b053e1b1",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Файл сначала передаётся непривилегированному владельцу, а затем процесс пытается изменить его режим без capability `FOWNER`. Миграция получает `EPERM`.",
+      "prevention": "Выполнять `chmod` до `chown` либо менять оба атрибута из процесса с необходимыми полномочиями; закрепить порядок тестом.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-01"
+    },
+    {
+      "id": "PERM-02",
+      "source_line": 178,
+      "source_row_sha256": "3e14097a55fe5a186607c82bfc741e399c48458093581c8bdb8017f929fc703b",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Команда обслуживания запускается от root, а production-контейнер работает от непривилегированного UID. Проверка даёт ложный успех или создаёт root-owned файлы.",
+      "prevention": "Запускать validate, migrate, smoke и storage bootstrap с теми же UID:GID и mount-ограничениями, что и runtime, кроме узких root-init операций.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-02"
+    },
+    {
+      "id": "PERM-03",
+      "source_line": 179,
+      "source_row_sha256": "203e0248ba682d4a3416dc8c0f98d2e5219d8d69ec841f0c32ec679e92ed03a2",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Наследованный `umask 077` делает group-readable secret фактически доступным только root. Агент получает `EACCES`.",
+      "prevention": "После создания явно выставлять ожидаемые owner, group и mode; не полагаться на requested mode при неизвестном umask.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-03"
+    },
+    {
+      "id": "PERM-04",
+      "source_line": 180,
+      "source_row_sha256": "8544c556a3cae2a04d671a579a32d4a8838c504b133e6dd65a2a53c3c9e5f499",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Каталог имеет правильную группу, но новые файлы получают другую группу. Следующий enrollment ломается.",
+      "prevention": "Для shared operational directory использовать setgid-каталог, фиксированную группу и явную нормализацию прав каждого файла.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-04"
+    },
+    {
+      "id": "PERM-05",
+      "source_line": 181,
+      "source_row_sha256": "71874133cb2aa85419470c02f9f404a6559b44946924d000f132e5a6683c76e5",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Права расширяются до world-readable/world-writable как быстрый обход ошибки. Секреты становятся доступны лишним пользователям.",
+      "prevention": "Определить минимальную service group, использовать `0640`/`0750` или более строгие режимы и проверять отсутствие доступа у постороннего UID.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-05"
+    },
+    {
+      "id": "PERM-06",
+      "source_line": 182,
+      "source_row_sha256": "a89b15255ef460962fe504ad57783409ee4e83e9376bf9a8b55355b976988745",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Проверяется только mode, но не владелец, группа, тип файла или symlink. Валидатор пропускает опасную подмену.",
+      "prevention": "Валидировать regular file, отсутствие symlink, точного владельца/группу, допустимый mode и безопасную цепочку родительских каталогов.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-06"
+    },
+    {
+      "id": "PERM-07",
+      "source_line": 183,
+      "source_row_sha256": "f82f8f102bb94925c73806a857c09ec9ac0f836445adb9a2939619480416ae5e",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Secret-файл существует, но контейнерный UID не может пройти через один из родительских каталогов. Ошибка выглядит как проблема самого файла.",
+      "prevention": "Проверять execute/search permission всей цепочки пути и воспроизводить чтение от реального runtime UID.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-07"
+    },
+    {
+      "id": "PERM-08",
+      "source_line": 184,
+      "source_row_sha256": "3eeb5f7eaf53031bb6014fc49cb62c0b509fd8aa9ea28d3473bad7954f6974d5",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Бинарник host-daemon обновлён, а установленный systemd unit остался от старой версии: новый отдельный Unix socket не включён в `RuntimeDirectory` и `ReadWritePaths` при `ProtectSystem=strict`. На хосте `/run` доступен для записи, но внутри unit удаление оставшегося socket завершается `read-only file system`; daemon немедленно выходит, `Restart=on-failure` создаёт цикл перезапусков, а локальный API и операторский интерфейс становятся недоступны.",
+      "prevention": "Устанавливать бинарник и unit из одного проверенного релиза как согласованную пару; после `daemon-reload` проверять effective unit, оба socket и health endpoint до признания обновления успешным, при сбое откатывать обе части. Автоматический regression test должен запускать unit с production sandbox, оставшимся Unix socket и новым runtime-каталогом и подтверждать, что daemon удаляет stale socket и остаётся здоровым после рестарта. При восстановлении сначала остановить цикл, сравнить unit с релизным и отличить host mount от sandbox; временный drop-in удалить после установки полного актуального unit.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-08"
+    },
+    {
+      "id": "PERM-09",
+      "source_line": 185,
+      "source_row_sha256": "c62bae98fbef528c2a08d806c5488502914e92e4fd3df0c1aafdbe4b0856e5f9",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Бинарник Updater обновлён, но установленный `updater.service` остался со старым `ReadWritePaths` при `ProtectSystem=strict`. Сам Updater и его health работают, однако обновление Neptune завершается `FAILED`: подготовка `/usr/local/lib/neptune/neptuned.new` возвращает `read-only file system`. Старый Neptune продолжает работать, а зависимый сервис по-прежнему получает 404 от отсутствующего в нём endpoint.",
+      "prevention": "Сверять установленный effective unit с unit того же подписанного релиза Updater и до обновления helper проверять доступность всех каталогов, куда updater пишет кандидат, backup и managed unit. В release/install gate проверять не только версию бинарника и health, но и sandbox policy; regression test должен запускать обновление helper внутри production unit. Для восстановления разрешить запись только в нужный каталог через временный drop-in, перезапустить Updater, повторить обновление и проверить версию Neptune и endpoint; затем заменить устаревший unit согласованным релизным и убрать временный drop-in.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-09"
+    },
+    {
+      "id": "PERM-10",
+      "source_line": 186,
+      "source_row_sha256": "250ec7e69064e9b875cf5c6e3e2bf424fd606889342a25b20f8d8367e3411313",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Updater отвечает на health, но обновление Saturn завершается ошибкой записи временного deployment-файла в `/opt/vault`: на хосте раздел смонтирован `rw`, а внутри устаревшего `updater.service` действует `ProtectSystem=strict` без `/opt/vault` и `/etc/vault` в `ReadWritePaths`. Ошибка может возникнуть и во время автоматического отката.",
+      "prevention": "Перед обновлением сверять effective unit с unit того же релиза Updater и проверять необходимые пути записи внутри его sandbox, включая временные файлы, env и recovery scratch. В installer/release gate запускать обновление и откат Saturn с production unit, а после исправления повторно проверять readiness, Compose config и версию. Временный drop-in заменять полным согласованным unit.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-10"
+    },
+    {
+      "id": "PERM-11",
+      "source_line": 187,
+      "source_row_sha256": "d1269df83fb106fed11a9f05e72c98cf7c8cf3faea7df0962ff4f0c301d60d95",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Updater показывает `ROLLBACK_FAILED` после попытки обновить Kernel, потому что создание `.updater-deployment-*` в каталоге проекта возвращает `read-only file system`. Запущенный контейнер может оставаться healthy на прежнем образе: флаг начала мутации был сохранён до фактической записи, а откат пытается писать в тот же запрещённый каталог.",
+      "prevention": "До начала обновления проверять эффективные `ReadWritePaths` production unit для каждого зарегистрированного head и выполнять запись временного deployment-файла в sandbox как отдельную preflight-проверку. Сохранять состояние фактической мутации, чтобы ошибка до записи не запускала ненужный откат. При восстановлении сначала сверять running image и env, затем исправлять unit и повторять установку только с новой проверенной копией.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-11"
+    },
+    {
+      "id": "PERM-12",
+      "source_line": 188,
+      "source_row_sha256": "72d94a189a05d72188936fbeab61aec03f016b1a65c0e9e9934ce797a8c8279b",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Root-owned systemd unit задаёт `RuntimeDirectory` для Unix-сокетов контейнера с непривилегированным UID. `ExecStartPre` меняет владельца каталогов, но к `ExecStart` systemd возвращает `root:root`; bind-mounted каталоги с mode `0750` недоступны контейнеру. Сервис циклически перезапускается, а установка или `repair` не проходит проверку версии и конфигурации.",
+      "prevention": "Выбрать один механизм владения runtime-каталогами: если Docker unit остаётся root-owned, не объявлять эти каталоги через `RuntimeDirectory`, а создавать и назначать их контейнерному UID в `prepare-runtime` перед стартом. `RuntimeDirectoryPreserve` не исправляет смену владельца. Проверять effective unit, owner/mode при `ExecStart`, создание обоих сокетов и health от фактического UID в тесте с systemd; временный drop-in заменять исправленным unit при выпуске.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-12"
+    },
+    {
+      "id": "PERM-13",
+      "source_line": 189,
+      "source_row_sha256": "892a3f0d4a1b810d46acf7fa52dde8665ac154d2090289a566575a3c8f4a3a55",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Привилегированный Updater обновляет host-службу и одновременно пишет её systemd/journald drop-in, но каталог drop-in не включён в `ReadWritePaths` при `ProtectSystem=strict`. Сам Updater healthy, а активация и автоматический откат завершаются ошибкой; штатная служба может остаться остановленной с `ROLLBACK_FAILED`.",
+      "prevention": "В подписанном unit Updater разрешить запись во все строго необходимые пути активации **и отката**, включая каталоги journald namespace, без расширения доступа ко всему `/etc`. До остановки прежней версии проверять запись из production sandbox. При сбое сохранить transaction journal, установить причину по системным журналам, исправить unit и выполнить штатный `repair`; подтвердить process, socket, конфигурацию и running version до новой попытки обновления.",
+      "reason": "No dynamic host-service/journald drop-in writer in this first standalone application release; own immutable units included.",
+      "components": [
+        "tools/venus-operator/provision.mjs",
+        "tools/venus-operator/files.mjs",
+        "infra/venus/venus-executor.service"
+      ],
+      "check_id": "P06-P12-PERM-13"
+    },
+    {
+      "id": "CTR-01",
+      "source_line": 195,
+      "source_row_sha256": "d6822faa055fd5ec76f3b428356ffd4263c76f26171e6467a9f2727984e1701e",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Контейнер пересоздан, но порт не опубликован на host loopback. Внутренний health зелёный, reverse proxy получает connection refused.",
+      "prevention": "Проверять rendered Compose config и host socket; публиковать только требуемый порт на `127.0.0.1`.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-01"
+    },
+    {
+      "id": "CTR-02",
+      "source_line": 196,
+      "source_row_sha256": "69ede1db3d0d37fdc978cabc1c7930433873977b8e06f5c2745b3781d4907615",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Bind-mounted secret заменён атомарным `rename`, а работающий контейнер продолжает видеть старый inode. Новый токен не применяется.",
+      "prevention": "После атомарной замены целево пересоздавать только потребляющие сервисы и проверять новый credential из их runtime-контекста.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-02"
+    },
+    {
+      "id": "CTR-03",
+      "source_line": 197,
+      "source_row_sha256": "84753b0de10821dad10e2eb77b7b2a0279ae04c9154766ac0bdbfb0a6e311b98",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "`docker compose run` поднимает лишние зависимости или использует другой user/capability context. Smoke изменяет production-состояние.",
+      "prevention": "Для одноразовых проверок применять `--no-deps`, явный `--user` и минимальные capabilities; отделять read-only probe от миграции.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-03"
+    },
+    {
+      "id": "CTR-04",
+      "source_line": 198,
+      "source_row_sha256": "921a0b073b9f4e07c6b5d6d51dbeb2518019d70ee0fcae23a691b216591076e1",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Образ указан плавающим тегом. Повторный deploy той же версии запускает другие байты.",
+      "prevention": "В production pin-ить images по immutable digest и хранить digest в release manifest/environment lock.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-04"
+    },
+    {
+      "id": "CTR-05",
+      "source_line": 199,
+      "source_row_sha256": "cfb774cf6f4ff61f3c62535486cd064c3e35cba3c993236dd0ccde7bd48738b9",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Пересоздание одного сервиса производится без учёта его health dependency и startup order. Некоторое время система отвечает случайными ошибками.",
+      "prevention": "Описать readiness gates и выполнять targeted recreate с ожиданием healthy перед переключением трафика.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-05"
+    },
+    {
+      "id": "CTR-06",
+      "source_line": 200,
+      "source_row_sha256": "8f6e92c74f9bfb2c3e9b0195b3431e3948414c4fc8bf14dd47163a51572a4bd4",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Healthcheck внутри контейнера проверяет только localhost-процесс, но не опубликованный порт, reverse proxy или зависимость.",
+      "prevention": "Разделять process liveness, application readiness, host-loopback и public-edge проверки.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-06"
+    },
+    {
+      "id": "CTR-07",
+      "source_line": 201,
+      "source_row_sha256": "c2e802965b7703d70a45cced45577d64a65885cdb0ed2a9f0da14c355c883762",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Compose-переменная объявлена в `.env`, но interpolation использует другой env-file либо значение не попадает в контейнер.",
+      "prevention": "Проверять `docker compose config` как фактический источник истины и тестировать обязательные variables/mounts/ports до `up`.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-07"
+    },
+    {
+      "id": "CTR-08",
+      "source_line": 202,
+      "source_row_sha256": "b15d51a1fe6c9b7f1ac906f1fc83d3e1a8708119601a4b673bed8d0431825e49",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Host daemon публикует Unix socket в runtime-каталоге, bind-mounted в долгоживущие контейнеры. После рестарта daemon каталог удаляется и создаётся с новым inode; контейнер продолжает видеть старый пустой mount, поэтому установленный агент отображается как отсутствующий или недоступный.",
+      "prevention": "Сохранять runtime-каталог между рестартами (`RuntimeDirectoryPreserve=restart`) либо монтировать стабильный parent с неизменяемой точкой. Reconciler должен сравнивать mount/inode, целево пересоздавать stale consumers и проверять сценарий «restart агента без рестарта head-контейнера».",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-08"
+    },
+    {
+      "id": "CTR-09",
+      "source_line": 203,
+      "source_row_sha256": "0eaf4fad8ecd42b9e1304e4054921e4e204ac7cb69f92159ce74d3b259f2fda4",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Обновление helper заменяет только executable или application tree, но не его supervisor/systemd unit. Версия считается обновлённой, хотя новая runtime policy, каталоги, capabilities или restart semantics не применены; rollback также восстанавливает лишь половину состояния.",
+      "prevention": "Включать unit-файл в подписанный release contract, проверять его до активации и атомарно обновлять executable/application вместе с unit. После `daemon-reload` выполнить restart и socket/health probe; при сбое откатить обе части и повторить проверку.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-09"
+    },
+    {
+      "id": "CTR-10",
+      "source_line": 204,
+      "source_row_sha256": "7b4d9ed4327f5b0b087bfddce2dd02a4ec6a9545207924cf77de08575be93637",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Новая Compose-модель приложения вводит обязательные host-переменные для machine identity, группы доступа или bind mount, а установленный `.env` их ещё не содержит. При замене контейнера `docker compose` сообщает `required variable ... is missing a value`; задание откатывается, хотя образ и подпись корректны.",
+      "prevention": "Перед мутацией выполнить schema-aware миграцию конфигурации с сохранением операторских значений (см. `BST-05`) и проверить rendered `docker compose config` для кандидата **и** плана отката с тем же env-file и рабочим каталогом, что на хосте. Проверять существование и права новых host paths, затем фиксировать snapshot и запускать замену; сообщать имена отсутствующих полей без вывода секретов.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "infra/venus/compose.standalone.yml",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-CTR-10"
+    },
+    {
+      "id": "NET-01",
+      "source_line": 210,
+      "source_row_sha256": "272ad8aeafe388772b5aa990e24e8ed02190ee19f901ba110d0e93372dbd390f",
+      "applicability": "DEFERRED_REAL_SERVICE_OR_PRODUCTION_PART_LOCAL_SUBSET_APPLIES",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Несколько доменов попадают в один случайный default virtual host. Чужой Host/SNI показывает интерфейс или сертификат другого сервиса.",
+      "prevention": "Создать ровно один fail-closed `default_server` и отдельный vhost для каждого canonical host; отключить заменённый distribution default, считать `conflicting server name` ошибкой deployment и проверять активный набор через `nginx -T`, а не только файл-кандидат. Неизвестные Host/SNI отклонять.",
+      "reason": "Public host/SNI/Cloudflare virtual host is not provisioned; local exact Host/Origin checks remain applicable.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-01"
+    },
+    {
+      "id": "NET-02",
+      "source_line": 211,
+      "source_row_sha256": "a32ba65d187b1c1b8f79abbf3ef3af0ef8ea94191bba498a59578696960575e2",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Каждое приложение пытается устанавливать и управлять Nginx. Конфиги конфликтуют, reload одного сервиса ломает остальные.",
+      "prevention": "Оставить один server-managed Nginx; installers публикуют только loopback endpoints и документируют требуемый vhost.",
+      "reason": "Venus never installs or manages global/shared Nginx; no such privileged operation or host mount.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-02"
+    },
+    {
+      "id": "NET-03",
+      "source_line": 212,
+      "source_row_sha256": "ae5f8b0a49a94846a822f13bb5fe1f7d6b7c8f58b18bf8f47ca2a79c13dd53b8",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Один огромный default-конфиг содержит все сервисы без изоляции server blocks. Ошибка в одном location влияет на весь ingress.",
+      "prevention": "Единый Nginx допустим, но конфигурацию делить на независимые vhost-файлы с общей включаемой baseline-конфигурацией.",
+      "reason": "No shared virtual-host config generated or modified by installer.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-03"
+    },
+    {
+      "id": "NET-04",
+      "source_line": 213,
+      "source_row_sha256": "24c08b3d02d282549b91a0672ecc114dfedbb5bc869eda613fa858a2c21ec0a9",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Приложение видит внутренний `http://127.0.0.1`, хотя клиент пришёл по HTTPS. CSRF/origin validation отклоняет вход или mutation.",
+      "prevention": "Передавать корректные `Host`, `X-Forwarded-Host`, `X-Forwarded-Proto`, при необходимости `X-Forwarded-Port`; настроить доверие только к своему proxy.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-04"
+    },
+    {
+      "id": "NET-05",
+      "source_line": 214,
+      "source_row_sha256": "34a3fca2d1b5fc7f79946ccf2b28dbd250ca63eee48b2ad1f4c7b35cd8c6c820",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Canonical public origin отличается от фактического URL регистром, портом, схемой или trailing slash. Возникает `Cross-origin mutation rejected`.",
+      "prevention": "Нормализовать origin, хранить один canonical HTTPS URL и проверять реальный `Origin`/forwarded headers интеграционным тестом через proxy.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-05"
+    },
+    {
+      "id": "NET-06",
+      "source_line": 215,
+      "source_row_sha256": "c4041ceae507a3cc1ab81da622ae12dd6cabf67a54bfbeb7b6ca022166bf5991",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Backend-порты слушают `0.0.0.0` при наличии публичного reverse proxy. Приложение можно обойти напрямую.",
+      "prevention": "Публиковать host ports только на `127.0.0.1`; снаружи разрешать лишь 80/443 и необходимые административные каналы.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-06"
+    },
+    {
+      "id": "NET-07",
+      "source_line": 216,
+      "source_row_sha256": "3bc82f5f1a7425b94e881a5071f7e776d0cb9eb94767d4f4d35fc4639399a6d4",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Firewall разрешает входящий HTTPS, но блокирует исходящие DNS/HTTPS/SSH/SFTP. UI открыт, а storage и registry недоступны.",
+      "prevention": "Отдельно проверить и документировать egress для DNS, release registry, межсервисного HTTPS и storage transport.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-07"
+    },
+    {
+      "id": "NET-08",
+      "source_line": 217,
+      "source_row_sha256": "378c6d0c57998fabf63598296d52227e0502b36c18ca61517110456139cde79d",
+      "applicability": "DEFERRED_REAL_SERVICE_OR_PRODUCTION_PART_LOCAL_SUBSET_APPLIES",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Сертификат выпущен, но соответствующий vhost не загружен либо использует путь или сертификат другого домена. `nginx -t` может быть зелёным, хотя проверяет только синтаксис конфигурации без требуемого host. Браузер получает mismatch или `unrecognized name`.",
+      "prevention": "Привязать каждый `server_name` к точным `fullchain.pem`/`privkey.pem`; после `nginx -t` подтвердить присутствие блока и upstream в effective output `nginx -T`, затем выполнить отдельную внешнюю SNI/HTTP-проверку каждого домена.",
+      "reason": "No production DNS/certbot/TLS host available; local artifact may not claim production certificate/vhost smoke.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-08"
+    },
+    {
+      "id": "NET-09",
+      "source_line": 218,
+      "source_row_sha256": "f0bf9ffc3789895bda3bd42cf0b47a727b33aa2a2ce9dd50ff323fd7e0f49c4d",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Глобальный `client_max_body_size` слишком мал для загрузок или чрезмерно велик для всех endpoint.",
+      "prevention": "Назначать лимиты по маршрутам: большой только для upload, малый и ограниченный для API/auth; проверять ожидаемый `413`.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-09"
+    },
+    {
+      "id": "NET-10",
+      "source_line": 219,
+      "source_row_sha256": "48ee3b8e25a28e2d1f3808321311cc9bb81e7a15438477391a13cdd552b21f32",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Proxy buffering и временные файлы Nginx исчерпывают диск/память при большой загрузке, блокируя обычные страницы.",
+      "prevention": "Для streaming upload настроить buffering, timeouts и temp quota осознанно; отделить upload path и контролировать ресурсы.",
+      "reason": "No Nginx proxy buffering/temp-file component; bounded streaming local PG backup remains applicable under DATA-01/03/04.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-10"
+    },
+    {
+      "id": "NET-11",
+      "source_line": 220,
+      "source_row_sha256": "01471bf185c7bcce6f6dc09914cd790692becda3d53dee4ac6eb0e01fd505f6c",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Таймаут proxy короче допустимой операции загрузки, экспорта или readiness dependency. Клиент видит обрыв, хотя backend продолжает работу.",
+      "prevention": "Установить route-specific connect/read/send timeouts и проектировать длительные операции как асинхронные или возобновляемые.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-11"
+    },
+    {
+      "id": "NET-12",
+      "source_line": 221,
+      "source_row_sha256": "ac3f5ab9ed0b7f30d9b9129444c57ad1f9b0b8fd6d0e1bef47fc51c2c69feb70",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Favicon, logo или SPA route запрашиваются по относительному пути, который reverse proxy либо static server не обслуживает.",
+      "prevention": "Использовать стабильные root-relative asset paths, включить assets в образ и отдельно проверить HTML logo, favicon, manifest и deep-link routes.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-12"
+    },
+    {
+      "id": "NET-13",
+      "source_line": 222,
+      "source_row_sha256": "554e27d83f556c1919ba35895254ab2e740e151bde492b8bdc68ebfe9b170021",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Операторский self-update сначала сохраняет ZIP, затем загружает его на отдельный install endpoint, а rollback использует ещё один upload endpoint. Nginx оставляет для этих маршрутов общий лимит 1 MiB, хотя другие uploads допускают больше: браузер получает HTTP `413` и сообщение о проверке принятия запроса, но нового задания Updater нет.",
+      "prevention": "В operator-managed Nginx явно включать **оба** маршрута install и rollback в ограниченное правило больших загрузок; обычные API оставлять под малым лимитом. Проверять effective `nginx -T`, затем `nginx -t` и reload; тестировать реальный ZIP ожидаемого размера через публичный маршрут и появление job. При `413` без job искать отказ на proxy/ingress до повторного создания архива.",
+      "reason": "No self-update ZIP/upload endpoints: only verified immutable release identity; size-bound import and API body checks remain applicable.",
+      "components": [
+        "tools/venus-operator/http.mjs",
+        "infra/venus/compose.standalone.yml"
+      ],
+      "check_id": "P06-P12-NET-13"
+    },
+    {
+      "id": "HLT-01",
+      "source_line": 228,
+      "source_row_sha256": "2678a1aa701ab5b74e7a7ddc31b8d06936ff86aa74dd53d677f4e1bd23c4d327",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Статус `AVAILABLE`, `DEGRADED` и `UNAVAILABLE` вычисляется разными сервисами по разным правилам. Dashboard противоречат друг другу.",
+      "prevention": "Утвердить общий status contract: какие проверки обязательны, как агрегируются состояния и когда данные считаются stale.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-01"
+    },
+    {
+      "id": "HLT-02",
+      "source_line": 229,
+      "source_row_sha256": "ddbe245a2254293e9c3a9d97eb4a3ed122017448718cc5da891d8cd8bdcf0ce7",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Локальный liveness зелёный, но public readiness красный. Считается, что сервис полностью исправен.",
+      "prevention": "Показывать отдельно process/live, dependency/readiness и edge/TLS; не заменять одно измерение другим.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-02"
+    },
+    {
+      "id": "HLT-03",
+      "source_line": 230,
+      "source_row_sha256": "e5e6ff36b52d3b734190368ed19e1536d85828170d44b46bbc2d772fbb206a31",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Удалённый монитор проверяет неверный health path или ожидает другую JSON-схему. Рабочий сервис отмечается degraded.",
+      "prevention": "Версионировать health contract и хранить endpoint/schema в registry; добавить consumer-driven contract test.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-03"
+    },
+    {
+      "id": "HLT-04",
+      "source_line": 231,
+      "source_row_sha256": "4e46937f8154a786c2f33a620b8b06f87def001f859448e631b3e0ce79883ccc",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Отсутствующее или устаревшее измерение отображается как `0%`, создавая ложную норму.",
+      "prevention": "Представлять unknown/stale отдельно от числового нуля и показывать время последнего успешного измерения.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-04"
+    },
+    {
+      "id": "HLT-05",
+      "source_line": 232,
+      "source_row_sha256": "10434c48d77a4c79187ef7f26b6a7a3b4ed0bb4c4995659fd99b71bbac38f56c",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Dashboard подставляет uptime хоста, reverse proxy, БД или Updater вместо uptime текущего экземпляра сервиса. После перезапуска приложения значение не обнуляется и скрывает реальный restart.",
+      "prevention": "Считать service uptime монотонно от запуска текущего operator-facing process/container instance и сбрасывать при его перезапуске. Иные uptime показывать только как отдельно подписанные дополнительные метрики.",
+      "reason": "No uptime dashboard/field; source/version and readiness are reported without invented host uptime.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-05"
+    },
+    {
+      "id": "HLT-06",
+      "source_line": 233,
+      "source_row_sha256": "185c841ae37b3323488ec45aa05139e6d598033bf7df98ad67798287127d2ea5",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "CPU/RAM одного процесса выдаются за загрузку всего сервера либо наоборот.",
+      "prevention": "Включать в telemetry schema источник, единицы и scope; UI обязан показывать их явно.",
+      "reason": "No CPU/RAM dashboard claims; fixture resource caps are recorded separately, never host utilization.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-06"
+    },
+    {
+      "id": "HLT-07",
+      "source_line": 234,
+      "source_row_sha256": "bace26bfc7f78f4b096c2e327ad68bb1898d0191375216c0c27ba76a81ed101f",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Storage reachability проверяет иной credential/root/операцию, чем реальная загрузка. Probe красный, файлы загружаются, или наоборот.",
+      "prevention": "Probe должен использовать тот же production credential и root, выполнять безопасную реальную операцию и различать read/write/delete capabilities.",
+      "reason": "No external object/SFTP storage probe; real local backup write/read/restore is applicable under DATA.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-07"
+    },
+    {
+      "id": "HLT-08",
+      "source_line": 235,
+      "source_row_sha256": "0869274b9ab490f1960d00a52fc9b25559b6e3a60dd8d8ccdeb072cb3663f19c",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Проверка возвращает общий `fetch failed`, скрывая DNS, TLS, timeout, 401, 404 и schema mismatch.",
+      "prevention": "Нормализовать категории ошибок, логировать безопасные технические детали и показывать оператору actionable причину без секрета.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-08"
+    },
+    {
+      "id": "HLT-09",
+      "source_line": 236,
+      "source_row_sha256": "fd67b30b9752be206836afd4641340cdbf2cb4957064a44d546057cad30825a3",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Readiness становится зелёным до завершения миграций, применения runtime secrets или запуска worker.",
+      "prevention": "Включить критические зависимости в readiness и открывать трафик только после подтверждения итогового runtime-состояния.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-09"
+    },
+    {
+      "id": "HLT-10",
+      "source_line": 237,
+      "source_row_sha256": "9620552bc2b5a199cea129c47e3c1ef936b4103497c1583f8b6e0a486843e4ca",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Disk Usage считается через `f_bfree` или по filesystem контейнерного overlay/host root, хотя authoritative data находятся на другом volume. Dashboard завышает доступное сервису место или измеряет не тот диск.",
+      "prevention": "Вызывать `statvfs` для filesystem с authoritative service data, считать `available_bytes = f_bavail * f_frsize` и заполненность из `total - available`; reserved blocks, недоступные service UID, считаются недоступными.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-10"
+    },
+    {
+      "id": "HLT-11",
+      "source_line": 238,
+      "source_row_sha256": "b4ca24f6f1971b47277c0561c73384e8941a2d9907d924c2ba73107c41a5abe7",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Установщик считает успешный `systemctl restart` при `Type=simple` подтверждением готовности daemon. Немедленный запрос к Unix-сокету получает `connection refused`; рабочий выпуск ошибочно объявляется неисправным и откатывается до того, как процесс откроет socket.",
+      "prevention": "После restart в течение ограниченного времени повторять health-запрос и сверять точную версию работающего процесса. На тайм-ауте сохранять status и journal для диагностики; откатывать бинарник и unit только после подтверждённого сбоя. В acceptance test задерживать открытие сокета и проверять, что краткий `connection refused` не запускает откат.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-11"
+    },
+    {
+      "id": "HLT-12",
+      "source_line": 239,
+      "source_row_sha256": "864bc55764295503c65f6383cb15f6237a9508780258c48309b776b635a74302",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Проверка readiness после пересоздания контейнера имеет фиксированное окно короче нормального cold start приложения, БД или worker. Updater объявляет неуспешными и установку, и откат, хотя прежний контейнер позже становится healthy; `ROLLBACK_FAILED` ошибочно выглядит как постоянная недоступность сервиса.",
+      "prevention": "Назначать ограниченный health budget по измеренному cold start и контракту конкретного сервиса, повторять readiness до истечения бюджета и отдельно проверять running version. После тайм-аута сохранять обе причины и сначала установить фактическое состояние контейнеров, данных и публичного сервиса (см. `OPS-08`); повторять обновление лишь после исправления окна или реальной причины неготовности. В тесте задерживать readiness кандидата и прежней версии.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "apps/api/src/server.ts",
+        "tools/venus-operator/driver.mjs"
+      ],
+      "check_id": "P06-P12-HLT-12"
+    },
+    {
+      "id": "INT-01",
+      "source_line": 245,
+      "source_row_sha256": "4acdb315c8019aee255639405bbc1125b6b1cc0e28eecd07fc8f0e87a77abfe6",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Наличие локального агента трактуется как завершённое подключение либо ошибка связи с его socket трактуется как отсутствие установки. UI показывает `Detected · not linked` или `Not installed`, не отражая реального состояния.",
+      "prevention": "Разделять installed, process-active, socket-reachable, registered, enrolled, authenticated, last-seen и schedule-applied; не преобразовывать transport failure в `not installed` и завершать workflow проверкой каждого состояния.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-01"
+    },
+    {
+      "id": "INT-02",
+      "source_line": 246,
+      "source_row_sha256": "22364c62e377670ec58805209b1ca7f35f845f4f8ffca3551cdeaea12ca89e3d",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Один и тот же service token вводится в producer и consumer с разным смыслом или именем. Связь частично работает.",
+      "prevention": "Описать issuer, audience, holder и направление каждого токена; использовать разные имена для разных ролей.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-02"
+    },
+    {
+      "id": "INT-03",
+      "source_line": 247,
+      "source_row_sha256": "ee273980fb56be752f141a128ca27747a0c264ea0c47622ebd5539203feae80b",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Одноразовый setup code используется повторно или для другого типа pipeline. Enrollment возвращает 401 либо конфликт.",
+      "prevention": "Типизировать codes по pipeline и identity, показывать срок жизни и single-use, после потребления выдавать новый код только через явный action.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-03"
+    },
+    {
+      "id": "INT-04",
+      "source_line": 248,
+      "source_row_sha256": "fbac1878aa8d531320fbd0d172a9ae897ee49e5cc9a4f304f164aba0b3e3e542",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Для разных pipeline используется одинаковая пара project/server или один mirror root. Уникальное ограничение блокирует второе подключение.",
+      "prevention": "Включать тип pipeline в identity или заранее поддерживать несколько capabilities под одной идентичностью без конфликтующих unique constraints.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-04"
+    },
+    {
+      "id": "INT-05",
+      "source_line": 249,
+      "source_row_sha256": "5ccbbc6bbc657d5f3a66e6204beedaefa036c41ceab48e2ccad49a95f846cd2a",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Revoke помечает запись отозванной, но UI продолжает её показывать как активную и uniqueness не освобождается. Повторное подключение невозможно.",
+      "prevention": "Определить полный lifecycle: active → revoked/archived; фильтровать UI, отключать credentials и разрешать безопасную реактивацию либо новую identity.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-05"
+    },
+    {
+      "id": "INT-06",
+      "source_line": 250,
+      "source_row_sha256": "1cb5f828e94febb3b48f210507ff9e5d43971099f0b27a8a3c022f833dfa59ec",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Токен записан на host после enrollment, но приложение продолжает использовать старый bind mount. Связь остаётся `fetch failed`.",
+      "prevention": "Писать secret атомарно, выставлять права, пересоздавать конкретного consumer и проверять authenticated request изнутри runtime.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-06"
+    },
+    {
+      "id": "INT-07",
+      "source_line": 251,
+      "source_row_sha256": "49603f2dc81431bcbc3b14164a6e97f093e21c6bb9bb471431a93b897165d3ff",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Registry хранит legacy plaintext values, тогда как публикация требует точных ссылок на секреты. Publication остаётся paused.",
+      "prevention": "Выполнить явную миграцию каждого значения на typed secret reference, проверить позиции/идентификаторы и только затем включать публикацию.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-07"
+    },
+    {
+      "id": "INT-08",
+      "source_line": 252,
+      "source_row_sha256": "417e692df1eeff09d6a6c9aab684cffa657433834c1bb99e91a57269140767ff",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Endpoint считается «не настроенным», хотя домен известен из другого источника. Разные компоненты не разделяют единый registry contract.",
+      "prevention": "Определить authoritative registry, версии и правила распространения; UI не должен угадывать endpoint из DNS или соседнего `.env`.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-08"
+    },
+    {
+      "id": "INT-09",
+      "source_line": 253,
+      "source_row_sha256": "4bbb81f0792aeb9a59b982fbeacee3ad471f4f5c7d733b6eea98e05bed91c0d2",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Общий командный gateway вводит обязательные service-префиксы или меняет синтаксис без единого каталога capabilities. Маршрутизация формально работает, но команды пересекаются, исчезают из подсказок/кнопок, а ранее интерактивные сценарии начинают требовать все аргументы одной строкой.",
+      "prevention": "Утвердить версионированный глобальный command catalog с уникальными именами, aliases и owner service. Из него генерировать router, `/help`, provider command menu и reply keyboard; многошаговые команды хранить как state machine. Contract tests должны запускать каждую команду из текста, подсказки и кнопки и проверять backward-compatible диалог.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-09"
+    },
+    {
+      "id": "INT-10",
+      "source_line": 254,
+      "source_row_sha256": "d5ff8615ddc9688e50421773b6b547b43c69226989bf743e9a3c223a765c37a7",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Webhook или callback регистрируется у внешнего provider до готовности DNS, TLS, reverse proxy, приложения и разрешения секрета. Начальный handshake фиксируется как failed, и после запуска сервиса оператор не понимает, отражает ли красный статус текущую неисправность или старую доставку.",
+      "prevention": "Активировать provider integration только после internal readiness и внешней проверки endpoint. Затем вручную повторить подписанный handshake/ping, проверить новую delivery и зафиксировать её время; UI должен отличать last attempt от current configuration readiness.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-10"
+    },
+    {
+      "id": "INT-11",
+      "source_line": 255,
+      "source_row_sha256": "cf7b021bc6ce03c8a95265cebb4bdb80d98f6374bb2acb6a0e44530a4578050a",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Успешный webhook ping принимается за доказательство полного процесса. Ping подтверждает лишь маршрут и общий секрет, но не правильный repository/tenant, branch/ref filter, полезную event schema, durable queue, worker и конечный импорт.",
+      "prevention": "После handshake отправлять реальное минимальное событие из точно зарегистрированного source/ref и проверять последовательно delivery response, постановку в очередь, завершение worker и ожидаемый бизнес-результат. Отображать эти стадии раздельно и иметь synthetic end-to-end acceptance fixture.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-11"
+    },
+    {
+      "id": "INT-12",
+      "source_line": 256,
+      "source_row_sha256": "f6d475ef19d0dfb4d4d59d9ad3119f3fa08231c361d5bf66ddb8f860f05fa2e6",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Ключ репозитория нового компонента опубликован в центральном Register, но потребитель разрешает только старый закрытый список имён. Установка сообщает `Register key repositories.<service>.url is unavailable`, хотя запись существует и доступна другим клиентам.",
+      "prevention": "Версионировать и проверять контракт поддерживаемых ключей на стороне потребителя; при добавлении компонента обновлять resolver/allowlist вместе с installer. Contract test должен публиковать ключ в Register, разрешать его установленной версией потребителя и выполнять обнаружение релиза из чистого состояния.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-12"
+    },
+    {
+      "id": "INT-13",
+      "source_line": 257,
+      "source_row_sha256": "a26d256ab2d02c8a585d10c52b335878704815bc922215d19913e8cd0b9c6605",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Enrollment нового компонента требует API публикации в хранилище секретов, но фактическая версия зависимости не проверена. Старый операторский поток мог после входа сообщить `WYVERN_PUBLICATION_FAILED`, оставив локальный процесс `unconfigured`: так могут выглядеть отсутствующий маршрут, отказ machine identity и ошибка хранилища.",
+      "prevention": "До машинного enrollment проверять минимальную запущенную версию и capability нужных API у всех зависимостей, включая хранилище, а не только доступность Register. При отказе различать upstream HTTP status и безопасный код: отсутствующий маршрут требует совместимого релиза, 401/403 — проверки scoped machine identity, 5xx — диагностики хранилища. После исправления повторять идемпотентный enrollment; acceptance test проходит «машинная авторизация → публикация → разрешение конфигурации → runtime ready» на версиях deployment profile.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-13"
+    },
+    {
+      "id": "INT-14",
+      "source_line": 258,
+      "source_row_sha256": "81231746a39b40ee151e5c10cf79cfd3dc4841beb5f9532c4c5b52345f3f3454",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Оператор вводит в форму подключения имя хоста без `https://` или не понимает назначения нескольких ключей. Старое поле операторского Access Key допускало путаницу с machine service token или session secret.",
+      "prevention": "Показывать пример полного HTTPS origin без пути и проверять URL/instance по полям до задания. Убрать поле Access Key из Wyvern Connect: Updater использует собственный защищённый scoped machine credential. Отсутствие credential или права показывать как точную причину ожидающего подключения; операторская cookie и legacy unscoped token не заменяют это право. Секрет не сохранять в job или журнале.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-14"
+    },
+    {
+      "id": "INT-15",
+      "source_line": 259,
+      "source_row_sha256": "9d278e4d50da06b0efcda8ec23476e2f3a760a1302a2a270d82444764d236d6d",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Kernel и Updater уже запущены на одном хосте, но отдельная host machine connection Updater ещё не настроена; адрес резервного источника релизов службы тоже пуст. Проверка релиза службы завершается `Release check failed`, хотя оба процесса healthy: совместное размещение само по себе не даёт Updater адреса и полномочия.",
+      "prevention": "В TUI показывать состояние host Kernel connection и отдельного fallback release repository каждой службы до запуска обновления. Настраивать scoped machine connection один раз на хосте; источник Kernel использовать первым, сохранённый оператором fallback — только при недоступности Kernel. В ошибке различать «связь не настроена», отказ авторизации и недоступность источника, не раскрывая token; проверять сценарии первичной установки без Kernel и последующего перехода на его данные.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-15"
+    },
+    {
+      "id": "INT-16",
+      "source_line": 260,
+      "source_row_sha256": "b6123b2c262472aa999a4ed5da74e38454e944da97c70314cf5ad0ef2eb16d1a",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Ключ `repositories.<component>.url` уже опубликован в Register и доступен через хранилище значений, а host machine connection работает, но ранее созданный машинный принципал сохранил старый список `allowed_keys`. Авторизованный запрос на разрешение нового ключа получает HTTP 403, поэтому проверка релиза сообщает отказ при корректном адресе источника.",
+      "prevention": "При добавлении компонента обновлять стандартный набор прав машинного принципала вместе с Register и installer. Для уже выданных принципалов применять однократную идемпотентную миграцию только неизменённого стандартного набора; сохранять ручные ограничения, отключение, удаление и последующий отзыв ключа. Contract tests должны проверять новый и прежний bootstrap, разрешение нового ключа реальным машинным credential и сохранение запрета после отзыва. Доступный Kernel с HTTP 403 считать отказом авторизации и не переключаться на fallback.",
+      "reason": "Exocortex/Kernel/Register/Updater/Neptune/Gryphon/Wyvern/Window enrollment, pipeline registry or provider callbacks are absent from accepted standalone scope. Own operator credential, job/API/state/revoke behavior is independently applicable under UPDATE-ACL/FAULTS/MONOTONIC; this N/A covers only the named external integration.",
+      "components": [
+        ".docs/adr/ADR-019-standalone-local-pilot.md"
+      ],
+      "check_id": "P06-P12-INT-16"
+    },
+    {
+      "id": "DATA-01",
+      "source_line": 266,
+      "source_row_sha256": "a50bdf8a7ebe1a43f01b1825d90cbb46a020eb0b3f126033814ee3dd32540325",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Upload полностью буферизуется в памяти процесса. Большой файл блокирует event loop, вызывает OOM или делает UI недоступным.",
+      "prevention": "Использовать потоковую передачу с bounded buffers и backpressure; тестировать параллельно большую загрузку и обычные dashboard-запросы.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-01"
+    },
+    {
+      "id": "DATA-02",
+      "source_line": 267,
+      "source_row_sha256": "a849150aa38b3f1ae05401ea3577febdd5b37a51545742f241daa93235e82236",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Большая загрузка сначала целиком пишется на локальный диск, хотя конечное хранилище удалённое. Заполняется системный раздел.",
+      "prevention": "Стримить в целевое хранилище либо выделять ограниченный staging volume с quota, мониторингом и очисткой незавершённых файлов.",
+      "reason": "No remote-storage upload/mirroring subsystem; local host-file backup is intentional destination, not transient remote staging.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-02"
+    },
+    {
+      "id": "DATA-03",
+      "source_line": 268,
+      "source_row_sha256": "276d25e79e072992376274344317470d51a22b6d7549cc455b8e18a0d7caeb33",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Прерванная загрузка оставляет временный объект и резервирует quota навсегда.",
+      "prevention": "Использовать upload session, TTL и garbage collection; коммитить объект атомарно только после проверки размера и digest.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-03"
+    },
+    {
+      "id": "DATA-04",
+      "source_line": 269,
+      "source_row_sha256": "e93d82a504770313fd964d89883693d75e32fbf6b8010fff07903367dde4c573",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Клиент считает upload успешным до durable flush/finalization на удалённом storage. После ответа файл отсутствует или повреждён.",
+      "prevention": "Возвращать успех только после подтверждённой финализации; хранить состояние и проверять размер/digest.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-04"
+    },
+    {
+      "id": "DATA-05",
+      "source_line": 270,
+      "source_row_sha256": "da624bac00ac934a9240857d26b072fed19eb0a5e43eca8418c3b6b937911e62",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Проверка storage ограничена TCP-connect или banner. Реальные права записи/чтения/удаления неизвестны.",
+      "prevention": "Выполнять малую end-to-end canary operation в выделенном probe namespace и безопасно удалять тестовый объект.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-05"
+    },
+    {
+      "id": "DATA-06",
+      "source_line": 271,
+      "source_row_sha256": "b65af39e47206f26c0025b1a37e4cf7a54cbf68183a248339eb138a58cba5b7c",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Backup pipeline создаёт архив, но не проверяет, что его можно расшифровать, распаковать и восстановить.",
+      "prevention": "Проводить автоматическую structural verification и регулярный restore drill в изолированном окружении.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-06"
+    },
+    {
+      "id": "DATA-07",
+      "source_line": 272,
+      "source_row_sha256": "a89513ab90c50cd1a4a631ddde27f908b1c7e3574466dcdd901f283ba3122618",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Несколько систем пишут в один storage root без namespace. Имена и retention policies конфликтуют.",
+      "prevention": "Назначать отдельные immutable namespace по проекту, deployment и pipeline; запрещать выход за root.",
+      "reason": "No external shared storage account/root; fixed private installation backup directory and project namespace are verified locally.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-07"
+    },
+    {
+      "id": "DATA-08",
+      "source_line": 273,
+      "source_row_sha256": "94259516aca30b08721327d984ae61570174956d7b6e1d98341e391bf657c2ea",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Backup token имеет более широкие права, чем требуется, или общий для нескольких producers.",
+      "prevention": "Выдавать отдельные scoped credentials для export, control и archive operations; поддерживать независимую ротацию и revoke.",
+      "reason": "No external backup token or cross-producer storage credential; DB/operator least privilege remains applicable.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-08"
+    },
+    {
+      "id": "DATA-09",
+      "source_line": 274,
+      "source_row_sha256": "1b9bd79b93011288d6bfdcbb741fb7458ed1a5eee5611e97b4c13fcb26569f7d",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Расписание backup сохранено из интерфейса сервиса, но агент не применил его или находится offline. UI создаёт впечатление, что копии создаются.",
+      "prevention": "Разделять desired/applied revision, last seen, last successful backup, next due и overdue; alert строить по факту подтверждённого артефакта. При переносе управления из центральной панели сохранить прежнюю политику и оставить одного авторизованного автора, отклоняя устаревшие команды.",
+      "reason": "External backup-copy scheduling explicitly outside Venus; no UI schedule or success claim for it.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-09"
+    },
+    {
+      "id": "DATA-10",
+      "source_line": 275,
+      "source_row_sha256": "65a27f1caf4623fafe63e4466a818aa481170e13ee6f23468946a4bc9301b6d0",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Второй экземпляр копии существует логически, но находится в том же аккаунте, регионе или failure domain.",
+      "prevention": "Определять независимость технически: отдельные credentials, storage/account/failure domain и проверяемый replication/restore path.",
+      "reason": "External failure-domain copies outside Venus and not counted as test success; local file is explicitly same-host only.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-10"
+    },
+    {
+      "id": "DATA-11",
+      "source_line": 276,
+      "source_row_sha256": "bdb584cb4663fa2e4fd657ff77298a35a366201ad67f9b5cf42b0b82c0976736",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Клиент зеркалирования получает локальные имена в исходной Unicode-форме, а сервер канонизирует их, например из `I` + combining dot в `İ` NFC. Побайтовое или ordinal-сравнение считает визуально одинаковые пути разными: каждый reconciliation повторно загружает неизменившийся файл, затем принимает только что созданный удалённый объект за отсутствующий локально и перемещает его в trash; локальный файл остаётся на месте, поэтому цикл повторяется по расписанию. Различие регистра создаёт тот же класс ошибки.",
+      "prevention": "До передачи канонизировать каждый удалённый path segment по контракту хранилища, но сохранять исходный локальный путь для чтения. Сравнивать local/remote snapshots и незавершённые upload checkpoints по одному NFC + full Unicode case-fold key; до первой мутации отклонять локальные canonical collisions. Delete phase обязана fail-closed и не может удалить объект, чей canonical key присутствует в успешном локальном snapshot или был загружен в текущем проходе. При обновлении старый checkpoint URI мигрировать атомарно при первом обращении, сохраняя idempotency key и upload id; connection token, `client-instance-id`, mappings и БД из внешнего profile state не заменять и не требовать повторного enrollment. Regression tests должны покрывать composed/decomposed имена, турецкую `İ`, регистр, вложенные каталоги, update старого профиля и цикл `upload → enumerate → mirror`, доказывая отсутствие повторного upload и trash.",
+      "reason": "No Unicode mirroring/SFTP names; generated UUID backup names and bounded regular archive member paths only.",
+      "components": [
+        "tools/venus-operator/driver.mjs",
+        "apps/api/src/protected-runtime.ts"
+      ],
+      "check_id": "P06-P12-DATA-11"
+    },
+    {
+      "id": "OPS-01",
+      "source_line": 282,
+      "source_row_sha256": "618ef4831e8776a7bbb38c8dc6b5aebdebe6df154103c537a3ea87e7be02d407",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Команда запускается не на том хосте или из каталога другого сервиса. Диагностика показывает «файлов нет», хотя production работает.",
+      "prevention": "Перед изменениями фиксировать hostname, `pwd`, release version и target paths; команды в runbook должны явно указывать место запуска.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-01"
+    },
+    {
+      "id": "OPS-02",
+      "source_line": 283,
+      "source_row_sha256": "7c8b338fc60963ce387df95fa699bdcfcf474fa0b68fc2b63aafaaf33a786d02",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Команды копируются из rich text с Markdown-ссылками, `\\` или HTML entities. Shell получает испорченный URL/аргументы.",
+      "prevention": "Публиковать исполняемые команды в чистых fenced code blocks и перед запуском проверять визуально значимые символы.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-02"
+    },
+    {
+      "id": "OPS-03",
+      "source_line": 284,
+      "source_row_sha256": "4d4c805d233f94ee14bc0e4621e3597416a1abf91de2e18ec2937f53bd0f4d25",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "В runbook смешаны временный workaround и постоянная процедура. Следующий deploy повторяет ручное исправление.",
+      "prevention": "Каждому workaround назначать issue/ID, условие удаления и заменять runbook после выпуска исправленной версии.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-03"
+    },
+    {
+      "id": "OPS-04",
+      "source_line": 285,
+      "source_row_sha256": "d7433a88c772082ecc22090d4d045fd00dd4139c0a49945e69962358a626208b",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "После исправления проверяется только команда, которая падала, но не весь минимальный critical path. Побочная регрессия остаётся незамеченной.",
+      "prevention": "Использовать короткий post-change checklist: config render, migration, readiness, authenticated integration, public edge и rollback metadata.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-04"
+    },
+    {
+      "id": "OPS-05",
+      "source_line": 286,
+      "source_row_sha256": "e73685e8d177c040c9516cb1a8a2987eb58cfa3f76e006eaee29c62d46624ff8",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Логи собираются без timestamps, версий image digest и correlation context. Нельзя сопоставить ошибку с обновлением.",
+      "prevention": "В incident bundle включать UTC time, host, release, image digest, container state, relevant logs и точную команду/endpoint без секретов.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-05"
+    },
+    {
+      "id": "OPS-06",
+      "source_line": 287,
+      "source_row_sha256": "4dffad220f56b2f9810274d63b9629ac8a22a22282306a144de1aeb2245115bd",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Успешный ручной ремонт не переносится в installer, тесты и документацию. Та же проблема повторяется на следующем сервере.",
+      "prevention": "Считать инцидент закрытым только после устранения root cause, добавления regression check и обновления bootstrap/runbook/этой базы.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-06"
+    },
+    {
+      "id": "OPS-07",
+      "source_line": 288,
+      "source_row_sha256": "110b665e2552f8c632f2b0fd782913f2b55591dde19845ed37691d907d81e250",
+      "applicability": "N_A_EXTERNAL_COMPONENT_ONLY",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Method-specific callback проверяется открытием URL в браузере. Браузер посылает `GET`, а endpoint принимает только подписанный `POST`, поэтому ожидаемый `404` ошибочно принимается за поломку маршрута.",
+      "prevention": "Для доступности использовать отдельный документированный `GET` health endpoint, а callback проверять настоящим методом, обязательными headers/signature и безопасным fixture либо функцией redelivery внешнего provider. В runbook явно указывать ожидаемые status codes для каждого метода.",
+      "reason": "No third-party signed webhook/provider callback; operator POST/Origin/ACL remains applicable.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-07"
+    },
+    {
+      "id": "OPS-08",
+      "source_line": 289,
+      "source_row_sha256": "42a9a8d34dcde65e6882b7e8972ae2b96ef6e90692c7cadd97c7cb600ba127d5",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Задание обновления получает `ROLLBACK_FAILED`, но его итоговое сообщение содержит только ошибку отката и скрывает исходную причину. Откат может вернуть env к прежней версии и остановить уже созданные контейнеры кандидата; один лишь итоговый статус не показывает фактическую версию приложения и состояние данных.",
+      "prevention": "Сохранять в записи задания раздельные причину сбоя обновления и причину сбоя отката с безопасными деталями этапа. После такого статуса сверять сохранённую копию, миграции, env, образы контейнеров, Compose config, локальную и публичную readiness; не повторять обновление до установления фактического состояния. Автоматическим тестом проверять, что неудачный откат не затирает первоначальную ошибку и не выдаёт остановленный сервис за восстановленный.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-08"
+    },
+    {
+      "id": "OPS-09",
+      "source_line": 290,
+      "source_row_sha256": "d5b596f32ed85999b7c208a107d5e4643ebd43dfae90a36d0bd69d612f52256a",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Первая установка прерывается после записи transaction journal. Следующий install/update отказывается работать с сообщением `An interrupted ... transaction requires repair`; слепой повтор `repair` тоже завершается ошибкой, пока не устранена причина отказа runtime. Удаление journal вручную теряет план восстановления.",
+      "prevention": "Сохранять durable phase и candidate manifest; блокировать новый install до явного `repair`. Сначала установить первопричину по service status, socket, правам и job message, затем выполнить штатный repair, который возобновляет первую установку или откатывает существующую. Проверить завершённый journal, точную версию, процесс и admin socket; состояние `unconfigured` до отдельного enrollment не считать провалом установки.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-09"
+    },
+    {
+      "id": "OPS-10",
+      "source_line": 291,
+      "source_row_sha256": "752e1ea3448f25aed4c0b990ebeae9d66e080b9500b8165921cb45493ce358fd",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Асинхронный UI показывает только `Operation failed`, а job заменяет разные HTTP-ответы зависимости одним `... rejected the operation`. Оператор не различает ошибку URL, несовместимый маршрут, отказ авторизации и отказ публикации и может повторить частично выполненный enrollment.",
+      "prevention": "Сохранять в job безопасные stage, HTTP status, контролируемый error code и correlation ID, не копируя произвольное тело ответа или секреты. В UI давать ссылку на конкретный job и диагностический источник; при расследовании сопоставлять время/ID с audit producer и dependency, проверять текущее состояние перед повтором. Contract tests должны различать 4xx, 5xx, timeout и частичный успех.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-10"
+    },
+    {
+      "id": "OPS-11",
+      "source_line": 292,
+      "source_row_sha256": "a7eea86205ad198aa097df2c64163e9188b6145b41e5cbe880ed117acf6daf9a",
+      "applicability": "APPLICABLE_STANDALONE_LOCAL_PILOT",
+      "release_check_status": "NOT_RUN",
+      "evidence": [],
+      "problem": "Во время замены контейнера браузер получает `502` или теряет операторскую сессию, а асинхронное задание продолжает выполняться. Пользователь принимает обрыв соединения за отказ обновления и запускает его повторно, создавая конфликт или лишний backup.",
+      "prevention": "Отделять transport/session status от durable job state. Сохранять request ID и job ID, после восстановления связи или повторного входа читать состояние задания через Updater CLI/API и проверять running version; повторять мутацию только после установленного terminal state. UI должен восстанавливать наблюдение за существующим заданием и объяснять ожидаемый временный обрыв при замене собственного контейнера.",
+      "reason": "Universal prevention applies to the own standalone release/operator/backup runtime; exact local evidence is mandatory, not waived by absence of Exocortex.",
+      "components": [
+        "tools/venus-operator/engine.mjs",
+        ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+      ],
+      "check_id": "P06-P12-OPS-11"
+    }
+  ]
+}

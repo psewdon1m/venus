@@ -1,0 +1,74 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/topic-offer-throttle.test.ts (4 tests | 4 failed) 26ms
+   ❯ topic offer capability agrees with the native throttle (4)
+     × keeps the new-topic action unavailable until the unchanged five-second boundary 10ms
+     × does not advertise a fourth topic attempt 1ms
+     × rejects RATE_LIMIT before replacing or invalidating the current offer 13ms
+     × rejects LIMIT before replacing or invalidating the current offer 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/topic-offer-throttle.test.ts > topic offer capability agrees with the native throttle > keeps the new-topic action unavailable until the unchanged five-second boundary
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ apps/api/src/topic-offer-throttle.test.ts:25:70
+     23| describe('topic offer capability agrees with the native throttle',()=>{
+     24|  it('keeps the new-topic action unavailable until the unchanged five-s…
+     25|   const f=fixture();expect(f.own().conversation_actions.offer_topic).t…
+       |                                                                      ^
+     26|   f.setNow(6000);expect(f.own().conversation_actions.offer_topic).toBe…
+     27|  });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  apps/api/src/topic-offer-throttle.test.ts > topic offer capability agrees with the native throttle > does not advertise a fourth topic attempt
+AssertionError: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ apps/api/src/topic-offer-throttle.test.ts:28:127
+     26|   f.setNow(6000);expect(f.own().conversation_actions.offer_topic).toBe…
+     27|  });
+     28|  it('does not advertise a fourth topic attempt',()=>{const f=fixture(6…
+       |                                                                                                                               ^
+     29|  for(const [now,attempts,code] of [[5999,1,'RATE_LIMIT'],[6000,3,'LIMI…
+     30|   const f=fixture(now,attempts),before=JSON.stringify(f.state);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  apps/api/src/topic-offer-throttle.test.ts > topic offer capability agrees with the native throttle > rejects RATE_LIMIT before replacing or invalidating the current offer
+ FAIL  apps/api/src/topic-offer-throttle.test.ts > topic offer capability agrees with the native throttle > rejects LIMIT before replacing or invalidating the current offer
+AssertionError: promise rejected "TypeError: Cannot read properties of unde…" instead of resolving
+ ❯ apps/api/src/topic-offer-throttle.test.ts:31:28
+     29|  for(const [now,attempts,code] of [[5999,1,'RATE_LIMIT'],[6000,3,'LIMI…
+     30|   const f=fixture(now,attempts),before=JSON.stringify(f.state);
+     31|   await expect(f.command()).resolves.toMatchObject({deferred_error:cod…
+       |                            ^
+     32|   expect(JSON.stringify(f.state)).toBe(before);expect(f.replace).not.t…
+     33|  });
+
+Caused by: TypeError: Cannot read properties of undefined (reading 'id')
+ ❯ TopicGames.context apps/api/src/topic-games.ts:134:116
+ ❯ apps/api/src/topic-games.ts:165:599
+ ❯ apps/api/src/topic-offer-throttle.test.ts:31:3
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed (4)
+   Start at  22:36:03
+   Duration  369ms (import 68%, transform 19%, tests 11%, worker 2%)
+

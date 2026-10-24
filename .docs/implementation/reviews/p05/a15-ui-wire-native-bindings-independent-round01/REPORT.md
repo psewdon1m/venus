@@ -1,0 +1,11 @@
+# Independent A15 browser/layout/wire bindings
+
+PASS_LAYOUT_PRODUCER_METHOD_ONLY. No finding. Frozen author70663e0895440fa6b0e40251b14a6fb88f6020ad295fdb61d544b544ecb7bd89/all26 children, working pins and A15source658b710b/1869 with exact native test/production receipts are verified. This is all-three binding acceptance, not an actual result.
+
+Browser wrapperd18a71c0cbb2d9e5cc71e3456aea1a17087a67818440e8f9e390e7b041b05cf4 equals accepted A14 after exactly four literal substitutions: test image, source identity, source count and ACK filename. All nine browser23 runtime pins are exact. Full16 cases/30minute ceiling/COMPLETE+cleanup guard remain unchanged; the fixed frontend and diagnostic helpers are not self-accepted by this binding review.
+
+Layout11 digest7e3f9d97cfde447dc0dac434cde78af55f94618abbe4e4f50bbedf79ec7e945f changes only run path/final-A15 status and included count1869 in two MJS; other25 MJS,459 cells and324 text-stress receipts remain exact. Wire05 retains all five runtime MJS and descriptor/23 checkpoints byte-for-byte from04. Source/image/receipt/maps/authority pins match the independently audited A15 packet12946590; the complete UI bundle remains exact A14 while only the five separately reviewed backend compiled modules differ.
+
+All three ACKs remain false/NOT_AUTHORIZED. Independent cold invocation of each existing runner exits1 at ROOT_RUN_ACK before allocation. Layout accepted-shape and stale source/image/count negatives pass using in-memory authority only. Exact-byte audit passes0. No Docker/browser/native APP run or source edit occurred, and unrelated method suites were not repeated. Layout/wire prerequisite browser actual remains pending. Root may bind a fresh ACK and run the unchanged browser23 full16 on this exact tuple; no native acceptance, matrix/stage or production PASS follows.
+
+Initial audit used the older packet's browser-pending-ACK filename pattern, but A14 captured it as browser-ACK.pending.json; its script/stdout/stderr failure are retained. The indexed actual filename was inspected and the audit then passed. An exploratory REPORT.md read also found no such file; frozen author HANDOFF/INDEX and contents were used. These are reviewer lookup errors, not native failures. Writes COMPLETE_STOP.

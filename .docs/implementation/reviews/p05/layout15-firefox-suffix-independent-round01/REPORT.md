@@ -1,0 +1,19 @@
+# Independent layout15 Firefox adapter review
+
+**PASS_METHOD_ONLY**, limited to the measured Firefox title suffix adapter. No finding. WebKit window identity remains an explicit method gap; no native layout, all459-cell, current-APP or stage PASS is granted.
+
+Author INDEX `d99151f0ac9720797389b6294948319a74546a38fed4b71e4428bb896a8b6997` and all34 children verify. Working producer INDEX equals frozen PRODUCER-PINS. Every inventory row verifies, with INDEX itself verified separately because the manifest cannot recursively pin itself. Runtime digest is `3d3ad6ca89ec9a20451fa5ea628d1c96cc770a73680b55fb5b6e0e5237b9a090`. Materialized source13 remains exact c921/1870; binding image remains `sha256:b3ff0e81571977b5950cb8dd97d2c9a2bfb2ec70c65da25b5fee914b67ce765f`. This is an A16 method binding, requiring a later literal A17 rebind before testing the CSS correction.
+
+Against accepted method14, only x11.mjs and the run-directory literal change. The other25 MJS are exact; DESIGN, binding, real-text fixtures and expected cells remain exact. Everything from `readyOwnedWindow` through native focus/raise/bringToFront, zoom/reset, screenshot/privacy masking is byte-exact14. Thus ambiguity/query-error failures, zero-match readiness under the same absolute budget, original459 oracles,51 roles, keyboard/native200 actions, quotas and bounds remain unchanged.
+
+The saved root-authorized combined empty-data-document calibration ran on the pinned image with network none, read-only filesystem and user1000. Its script hash, owner/project/image, stopped container exit1, cleanup removal and empty-owned terminal receipt agree. Firefox yielded its own nonce followed by exactly U+0020/U+2014/U+0020/`Nightly`, with page-title equality and native PID equal to its owned browser process. It was selected by PID; exact/prefix title queries earlier in that iteration returned zero. This establishes the observed native suffix, **not** successful future name-search/focus behavior or the reason for that timing difference.
+
+WebKit has page-title equality but no attributable native template through the20s attempt. Only the first eight query-count samples are retained; they are zero, with no observations and elapsed20016ms. This does not prove global window absence, child PID identity or a compositor/property cause. Combined calibration status remains INCOMPLETE_CALIBRATION_NO_METHOD_PASS/worker1, despite wrapper evidence-handling exit0 and browser/display/container cleanup PASS.
+
+The adapter allows only the exact synthetic nonce, optionally followed by the exact measured suffix for Firefox. Chromium policy remains exact14; WebKit and unknown engines retain strict nonce-only matching with no guessed suffix. Final native title equality remains before the original focus actions. No generic vendor title, foreign nonce, arbitrary private tail or engine alias is admitted.
+
+Independent validation: read-only packet/source/inverse/calibration audit exit0; author four changed-scope controls repeated PASS; three additional finite negatives PASS for non-string/normalized/case/private-tail titles, wrong-engine dispatch and malformed nonce input. The pending ACK is false and the saved denial is before allocation. No native process was launched and no APP/producer/active-ACK file changed.
+
+An initial independent inventory assertion failed because capture includes the newly written INDEX while its self-inventory excludes INDEX. The original control and exit1/output are retained. The corrected check separately hashes INDEX against PRODUCER-PINS, then compares all remaining rows and the unchanged runtime digest; it passes. This was a review-fixture error, not a producer defect. No broader method suite or new framework was added.
+
+Writes STOP. This packet accepts the narrow adapter code, preserves the failed/incomplete calibration and leaves Firefox integration and WebKit identity unproved.

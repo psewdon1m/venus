@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://venus.shmoza.net/contracts/venus-operator.v1",
+  "title":"Separate loopback operator API, not room-host API",
+  "$defs": {
+    "CreateJob":{"type":"object","additionalProperties":false,"required":["release_id"],"properties":{"release_id":{"type":"string","pattern":"^[a-f0-9]{64}$"}}},
+    "ConfirmApplyCancelRecover":{"type":"object","additionalProperties":false,"maxProperties":0},
+    "JobId":{"type":"string","pattern":"^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$"}
+  },
+  "oneOf":[{"$ref":"#/$defs/CreateJob"},{"$ref":"#/$defs/ConfirmApplyCancelRecover"}],
+  "$comment":"GET /api/operator/status and /api/operator/jobs/{job_id}; POST /api/operator/jobs CreateJob; POST /api/operator/jobs/{job_id}/{confirm|apply|cancel|recover} empty object. Exact separate bearer identity; raw opaque credential bytes are base64url-transported without normalization. Exact Host and Origin; no CORS and no path/URL/shell fields. Unix peer uses the same bounded fixed v1 protocol with socket0660 and separate UID. HTTP202 is an acknowledgement; durable job state determines outcome after reload/502. No initial-install API, arbitrary uploads or consumer credential fallback."
+}

@@ -1,0 +1,39 @@
+{
+  "schema_version": 2,
+  "revision": "LOCAL-PILOT-20261025-OPTIONAL-STATISTICS-AND-PREVIEW",
+  "source": {
+    "kind": "direct_owner_message",
+    "observed_client_date": "2026-10-25",
+    "timezone": "Europe/Istanbul",
+    "owner_quote": "убери из каждого ci десятки тысяч игровых сессий и миллион парных проверок G/F, четыре статистические проверки не нужны, пусть будут отдельным тестом не обязательным; опубликуй этот package как есть, мне надо сделать его публичным"
+  },
+  "prior_decisions_preserved": ".docs/implementation/user-decisions.v5.json",
+  "decisions": [
+    {
+      "id": "U-021",
+      "authority_kind": "EXPLICIT_OWNER_CI_POLICY_AND_PREVIEW_PUBLICATION",
+      "decision": "Move all four unchanged heavy P03 measurements out of automatic CI and protected-main required checks into a separate optional workflow_dispatch test; publish current unsigned preview OCI package so owner can change GHCR visibility to Public.",
+      "automatic_required_checks": [
+        "quality",
+        "container-smoke",
+        "p02-integration",
+        "p03-integration",
+        "p06-release-integration"
+      ],
+      "optional_checks": [
+        "invariants",
+        "fairness",
+        "gf",
+        "inference"
+      ],
+      "statistical_thresholds_or_samples_changed": false,
+      "historical_accepted_proofs_changed": false,
+      "preview_is_qualified_release": false,
+      "owner_changes_GHCR_visibility": true,
+      "P07_authorized": false,
+      "ADR": ".docs/adr/ADR-033-optional-statistics-and-preview-package.md"
+    }
+  ],
+  "rollback": "Restore the four required contexts and the previous automatic matrix in a new revision if owner requests. Preserve all historical results and immutable preview image digest.",
+  "full_stage_PASS_inferred": false
+}

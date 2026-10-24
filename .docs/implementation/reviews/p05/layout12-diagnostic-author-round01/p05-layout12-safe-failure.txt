@@ -1,0 +1,57 @@
+// Literal diagnostic labels only. This list never learns codes from error text.
+const failureCodes=new Set(STATIC_CODES);
+const failureModules=STATIC_MODULES;
+const failureLocations=failureModules.map(source_module=>({source_module,paths:[new URL('./'+source_module+'.mjs',import.meta.url)].flatMap(url=>[url.href,fileURLToPath(url).replace(/\\/g,'/')])}));
+const failureKinds=[[assert.AssertionError,'AssertionError'],[TypeError,'TypeError'],[RangeError,'RangeError'],[ReferenceError,'ReferenceError'],[SyntaxError,'SyntaxError'],[URIError,'URIError'],[EvalError,'EvalError'],[AggregateError,'AggregateError'],[Error,'Error']];
+const nativeStackGetter=Object.getOwnPropertyDescriptor(new Error(),'stack')?.get;
+const preparer=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');
+const nodePreparer=preparer&&'value'in preparer&&typeof preparer.value==='function'&&Function.prototype.toString.call(preparer.value).replace(/\r\n/g,'\n')==='function ErrorPrepareStackTrace(error, trace) {\n  return internalPrepareStackTrace(error, trace);\n}'?preparer.value:undefined;
+function safeErrorChain(value){
+ if(!value||typeof value!=='object')return false;
+ let current=value;
+ for(let depth=0;current&&depth<8;depth++){if(types.isProxy(current))return false;current=Object.getPrototypeOf(current);}
+ return current===null;
+}
+function errorData(value,key){
+ for(let current=value,depth=0;current&&depth<8;depth++,current=Object.getPrototypeOf(current)){
+  const d=Object.getOwnPropertyDescriptor(current,key);if(d)return 'value'in d?d.value:undefined;
+ }
+}
+function failureLocation(error,name,message){
+ try{
+  // Validate the native header before lazy formatting; comparison text may be
+  // multiline but is skipped in full before examining actual frame lines.
+  if(errorData(error,'name')!==name||typeof message!=='string'||message.length>8192||Buffer.byteLength(message)>8192||message.includes('\0'))return;
+  const descriptor=Object.getOwnPropertyDescriptor(error,'stack');let stack;
+  if(descriptor&&'value'in descriptor)stack=descriptor.value;
+  else if(descriptor?.get===nativeStackGetter&&nativeStackGetter){
+   const hook=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');
+   if(hook&&(!('value'in hook)||!nodePreparer||hook.value!==nodePreparer))return;
+   stack=nativeStackGetter.call(error);
+  }
+  if(typeof stack!=='string'||stack.length>16384||Buffer.byteLength(stack)>16384)return;
+  const header=name+(name==='AssertionError'?' [ERR_ASSERTION]':'')+(message?': '+message:'');
+  if(!stack.startsWith(header+'\n'))return;
+  for(const raw of stack.slice(header.length+1).split('\n').slice(0,16)){
+   const line=raw.replace(/\\/g,'/');if(line.length>1024||!line.startsWith('    at ')||/[\r\0]/.test(line))continue;
+   for(const module of failureLocations)for(const pathname of module.paths){
+    const at=line.lastIndexOf(pathname);if(at<0)continue;const prefix=line.slice(0,at),parenthesized=prefix.endsWith(' (');
+    if(prefix!=='    at '&&prefix!=='    at async '&&!parenthesized)continue;
+    const match=/^:([1-9]\d{0,6}):([1-9]\d{0,5})(\)?)$/.exec(line.slice(at+pathname.length));
+    if(!match||Boolean(match[3])!==parenthesized)continue;
+    const source_line=Number(match[1]),source_column=Number(match[2]);if(source_line>1000000||source_column>100000)continue;
+    return {source_module:module.source_module,source_line,source_column};
+   }
+  }
+ }catch{/* A diagnostic must not change the original failure outcome. */}
+}
+export function safeFailure(error){
+ const fallback={name:'Error',code:'ASSERTION_OR_OPERATION_FAILED'};
+ try{
+  if(!safeErrorChain(error)||!types.isNativeError(error))return fallback;
+  const name=failureKinds.find(([constructor])=>error instanceof constructor)?.[1]??'Error';
+  const message=errorData(error,'message');
+  const prefix=typeof message==='string'&&message.length<=8192&&Buffer.byteLength(message)<=8192?message.split(/[\r\n]/,1)[0].split(':',1)[0]:undefined;
+  return {name,code:failureCodes.has(prefix)?prefix:fallback.code,...failureLocation(error,name,message)};
+ }catch{return fallback;}
+}

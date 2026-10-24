@@ -1,0 +1,106 @@
+{
+  "status": "PASS",
+  "controls": 8,
+  "results": [
+    {
+      "name": "positive actual Windows chunked exact output",
+      "status": "PASS",
+      "detail": {
+        "bytes": 153000,
+        "real_Windows_allocation": 155648,
+        "initial_counter_advanced": true
+      }
+    },
+    {
+      "name": "actual prefix stops after one chunk on free",
+      "status": "PASS",
+      "detail": {
+        "prefix_bytes": 65536,
+        "further_allocations": 0,
+        "fault_latched": true,
+        "reason": "HOST_OUTPUT_STOP_NOT_ACCEPTED:ACTUAL_HOST_SPACE_LOW_OR_INVALID"
+      }
+    },
+    {
+      "name": "actual prefix stops after one chunk on owner",
+      "status": "PASS",
+      "detail": {
+        "prefix_bytes": 65536,
+        "further_allocations": 0,
+        "fault_latched": true,
+        "reason": "HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_OWNER_MISMATCH"
+      }
+    },
+    {
+      "name": "actual prefix stops after one chunk on counter",
+      "status": "PASS",
+      "detail": {
+        "prefix_bytes": 65536,
+        "further_allocations": 0,
+        "fault_latched": true,
+        "reason": "HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_COUNTER_REORDERED"
+      }
+    },
+    {
+      "name": "actual prefix stops after one chunk on stale",
+      "status": "PASS",
+      "detail": {
+        "prefix_bytes": 65536,
+        "further_allocations": 0,
+        "fault_latched": true,
+        "reason": "HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_SAMPLE_STALE"
+      }
+    },
+    {
+      "name": "actual free0 prevents first create despite cached high sample",
+      "status": "PASS",
+      "detail": {
+        "created_files": 0
+      }
+    },
+    {
+      "name": "fresh writer cannot rearm from frozen counter",
+      "status": "PASS",
+      "detail": {
+        "initial_counter_not_fresh": true
+      }
+    },
+    {
+      "name": "global partitions cannot add hidden input writer",
+      "status": "PASS",
+      "detail": {
+        "immutable_inputs_not_writable": true
+      }
+    }
+  ],
+  "owned_root": "C:\\.projects\\venus\\.artifacts\\p05-method05-review-round01\\fs-nb92sjgn",
+  "remaining_owned_paths": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "0/archive",
+    "1/archive",
+    "2/archive",
+    "3/archive",
+    "4/archive",
+    "5/archive",
+    "6/archive",
+    "7/archive",
+    "0/archive/positive.bin",
+    "1/archive/prefix.bin",
+    "2/archive/prefix.bin",
+    "3/archive/prefix.bin",
+    "4/archive/prefix.bin"
+  ],
+  "max_written_bytes": 415144,
+  "space_counter_inputs_injected": true,
+  "actual_Windows_filesystem": true,
+  "Docker_calls": 0,
+  "prepare_calls": 0,
+  "selector_calls": 0
+}

@@ -1,0 +1,66 @@
+{
+  "synthetic_fixture_only": true,
+  "production_approval": false,
+  "transport": "direct production service calls; real PostgreSQL/filesystem",
+  "records": [
+    {
+      "id": "B05-003-STOP-missing",
+      "status": "PASS",
+      "detail": {
+        "real_pg_committed_stop": true,
+        "room_emit_committed": true,
+        "catalog_new_start_fail_closed": true
+      }
+    },
+    {
+      "id": "B05-003-STOP-utf8",
+      "status": "PASS",
+      "detail": {
+        "real_pg_committed_stop": true,
+        "room_emit_committed": true,
+        "catalog_new_start_fail_closed": true
+      }
+    },
+    {
+      "id": "B05-003-STOP-partial",
+      "status": "PASS",
+      "detail": {
+        "real_pg_committed_stop": true,
+        "room_emit_committed": true,
+        "catalog_new_start_fail_closed": true
+      }
+    },
+    {
+      "id": "B05-003-NEUTRAL",
+      "status": "PASS",
+      "detail": {
+        "real_pg_aborted": true,
+        "snapshot_unchanged": true,
+        "preferences_neutral": true
+      }
+    },
+    {
+      "id": "B05-003-LEAVE",
+      "status": "PASS",
+      "detail": {
+        "real_pg_leave_committed": true,
+        "stale_socket_denied": true
+      }
+    },
+    {
+      "id": "B05-003-WITHDRAW",
+      "status": "FAIL",
+      "error": "Missing expected rejection."
+    },
+    {
+      "id": "B05-003-RECONCILE",
+      "status": "PASS",
+      "detail": {
+        "durable_intent_before_pg": true,
+        "reconciliation_committed": true,
+        "repeat_did_not_revive": true
+      }
+    }
+  ],
+  "status": "FAIL"
+}

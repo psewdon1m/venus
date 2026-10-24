@@ -1,0 +1,103 @@
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/app[39m
+
+ [32m✓[39m apps/api/src/topic-room-lifecycle.test.ts [2m([22m[2m142 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 4413[2mms[22m[39m
+ [31m❯[39m apps/api/src/private-topic-ledger.test.ts [2m([22m[2m69 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 963[2mms[22m[39m
+   [32m✓[39m topic safety ledger authenticated codec (no durability claim) [2m(24)[22m
+     [32m✓[39m uses equal encrypted frame sizes and no plaintext room, owner or topics[32m 13[2mms[22m[39m
+     [32m✓[39m keeps room/member isolation and exact revision checks; no implicit cross-scope grants[32m 4[2mms[22m[39m
+     [32m✓[39m exact replay returns current stricter union; changed body or scope reuse denies[32m 6[2mms[22m[39m
+     [32m✓[39m retains old encryption/MAC keys through rotation; missing/wrong key and pin changes deny[32m 5[2mms[22m[39m
+     [32m✓[39m rejects empty without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects short without dropping tail[32m 2[2mms[22m[39m
+     [32m✓[39m rejects trailing without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects tamper without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects reorder without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects duplicate without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects wrong-witness without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects witness-ahead without dropping tail[32m 2[2mms[22m[39m
+     [32m✓[39m rejects witness-short without dropping tail[32m 1[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed room records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed owner records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed scope records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed pins records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed shrink records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed revision records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed unknown-topic records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed duplicate-operation records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects authenticated malformed AAD records[32m 2[2mms[22m[39m
+     [32m✓[39m rejects bad vocabulary, bounds, unknown fields and non-narrowing/duplicate topics[32m 3[2mms[22m[39m
+     [32m✓[39m rejects a cryptographically valid duplicate operation in a later otherwise monotonic record[32m 4[2mms[22m[39m
+   [31m❯[39m topic safety ledger real Linux filesystem (not API/DB activation) [2m(44)[22m
+     [32m✓[39m internal aggregate counts exact unique authenticated scopes without exposing owner/topic lists[32m 20[2mms[22m[39m
+     [32m✓[39m internal aggregate preserves required/witness/process floors and does not bypass corrupt or missing files[32m 7[2mms[22m[39m
+     [32m✓[39m explicitly initializes, fsyncs append/witness, reopens and retains stricter union across old DB marker[32m 14[2mms[22m[39m
+     [32m✓[39m missing required chain never becomes empty[32m 2[2mms[22m[39m
+     [32m✓[39m missing required witness never becomes empty[32m 2[2mms[22m[39m
+     [32m✓[39m does not initialize through normal open or accept a foreign incarnation/minimum sequence[32m 3[2mms[22m[39m
+     [32m✓[39m explicit initialization refuses a preexisting dangling chain symlink without creating state[32m 1[2mms[22m[39m
+     [32m✓[39m explicit initialization refuses a preexisting dangling witness symlink without creating state[32m 1[2mms[22m[39m
+     [32m✓[39m detects chain rollback with independent newer witness and process rollback with both old files[32m 7[2mms[22m[39m
+     [32m✓[39m recovers only complete authenticated stricter tail and durably advances witness[32m 5[2mms[22m[39m
+     [32m✓[39m rejects unsafe chain-mode[32m 1[2mms[22m[39m
+     [32m✓[39m rejects unsafe witness-mode[32m 1[2mms[22m[39m
+     [32m✓[39m rejects unsafe directory-mode[32m 1[2mms[22m[39m
+     [32m✓[39m rejects unsafe chain-hardlink[32m 1[2mms[22m[39m
+     [32m✓[39m rejects unsafe witness-hardlink[32m 2[2mms[22m[39m
+     [32m✓[39m rejects unsafe chain-symlink[32m 4[2mms[22m[39m
+     [32m✓[39m rejects unsafe witness-symlink[32m 1[2mms[22m[39m
+     [32m✓[39m rejects unsafe directory-symlink[32m 2[2mms[22m[39m
+     [32m✓[39m exclusive locks fail closed for another live writer, stale-looking lock and concurrent reentry[32m 4[2mms[22m[39m
+     [32m✓[39m bounds the ledger without pruning exclusions or consuming duplicate operations[32m 6[2mms[22m[39m
+     [32m✓[39m injected crash-control at before-append never acknowledges; reopen keeps any valid stricter append[32m 3[2mms[22m[39m
+     [32m✓[39m injected crash-control at after-append never acknowledges; reopen keeps any valid stricter append[32m 4[2mms[22m[39m
+     [32m✓[39m injected crash-control at after-chain-sync never acknowledges; reopen keeps any valid stricter append[32m 3[2mms[22m[39m
+     [32m✓[39m injected crash-control at after-witness-write never acknowledges; reopen keeps any valid stricter append[32m 4[2mms[22m[39m
+     [32m✓[39m injected crash-control at after-witness-sync never acknowledges; reopen keeps any valid stricter append[32m 4[2mms[22m[39m
+     [32m✓[39m injected crash-control at after-witness-rename never acknowledges; reopen keeps any valid stricter append[32m 3[2mms[22m[39m
+     [32m✓[39m injected crash-control at after-witness-directory-sync never acknowledges; reopen keeps any valid stricter append[32m 4[2mms[22m[39m
+     [32m✓[39m injected short-write denies success and never silently repairs a corrupt tail[32m 2[2mms[22m[39m
+     [32m✓[39m injected ENOSPC denies success and never silently repairs a corrupt tail[32m 2[2mms[22m[39m
+[31m     [31m×[31m injected fsync denies success and never silently repairs a corrupt tail[39m[32m 9[2mms[22m[39m
+     [32m✓[39m injected rename denies success and never silently repairs a corrupt tail[32m 4[2mms[22m[39m
+     [32m✓[39m consistent authenticated reads perform no durability writes; append retains all four real barriers[32m 4[2mms[22m[39m
+     [32m✓[39m injected fsync failure at durable call 1 refuses acknowledgement and revalidates on reopen[32m 4[2mms[22m[39m
+     [32m✓[39m injected fsync failure at durable call 2 refuses acknowledgement and revalidates on reopen[32m 4[2mms[22m[39m
+     [32m✓[39m injected fsync failure at durable call 3 refuses acknowledgement and revalidates on reopen[32m 4[2mms[22m[39m
+     [32m✓[39m injected fsync failure at durable call 4 refuses acknowledgement and revalidates on reopen[32m 4[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at before-append retains stale lock and never silently relaxes after explicit test-operator recovery[32m 168[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at after-append retains stale lock and never silently relaxes after explicit test-operator recovery[32m 91[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at after-chain-sync retains stale lock and never silently relaxes after explicit test-operator recovery[32m 74[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at after-witness-write retains stale lock and never silently relaxes after explicit test-operator recovery[32m 76[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at after-witness-sync retains stale lock and never silently relaxes after explicit test-operator recovery[32m 73[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at after-witness-rename retains stale lock and never silently relaxes after explicit test-operator recovery[32m 65[2mms[22m[39m
+     [32m✓[39m real child SIGKILL at after-witness-directory-sync retains stale lock and never silently relaxes after explicit test-operator recovery[32m 71[2mms[22m[39m
+     [32m✓[39m real second process cannot enter while first process holds the exclusive writer lock[32m 133[2mms[22m[39m
+   [2m[90m↓[39m[22m unsupported host is explicit [2m(1)[22m
+     [2m[90m↓[39m[22m does not claim Windows file durability
+ [32m✓[39m apps/api/src/topic-ephemeral-lock.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m apps/api/src/private-topic-ledger.test.ts[2m > [22mtopic safety ledger real Linux filesystem (not API/DB activation)[2m > [22minjected fsync denies success and never silently repairs a corrupt tail
+[31m[1mAssertionError[22m: expected [ 'music' ] to deeply equal [][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "music",[39m
+[31m+ ][39m
+
+[36m [2m❯[22m apps/api/src/private-topic-ledger.test.ts:[2m262:83[22m[39m
+
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m218 passed[39m[22m[2m | [22m[33m2 skipped[39m[90m (221)[39m
+[2m   Start at [22m 22:05:40
+[2m   Duration [22m 6.25s[2m (tests 90%, import 7%, transform 3%)[22m
+

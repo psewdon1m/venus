@@ -1,0 +1,29 @@
+--- C:\.projects\venus\.artifacts\p05-pilot-corpus-ranges02\pure-closure-check.mjs
++++ C:\.projects\venus\.artifacts\p05-pilot-corpus-ranges03\pure-closure-check.mjs
+@@ -1,20 +1,20 @@
+-/** Read-only A9 receipt/source/import qualification; no module/corpus execution. */
++/** Read-only A26 receipt/source/import qualification; no module/corpus execution. */
+ import assert from 'node:assert/strict';
+ import fs from 'node:fs';
+ import path from 'node:path';
+ import {createHash} from 'node:crypto';
+ import ts from 'typescript';
+-const sha=b=>createHash('sha256').update(b).digest('hex'),receiptPath='.artifacts/p05-pilot-bundle-image-binding06/receipt.json',receiptRaw=fs.readFileSync(receiptPath),r=JSON.parse(receiptRaw);
+-assert.equal(sha(receiptRaw),'de65e8e70e516e428f121e9b3e606ada7f9837db36711f05687d7c3e69471d92');assert.equal(r.source_identity,'6562438b8bc1b413ff717bf03ecf4d47380c71ea12a358264ba02b7675ece10e');assert.equal(r.image,'sha256:58d8c700adbbca2251743eff25324102885b3ba8f67fd859c5c8d10d23f789e3');assert.equal(Object.keys(r.image_files_sha256).length,287);
+-const freeze=JSON.parse(fs.readFileSync('.artifacts/p05-pilot-bundle-source-freeze06.json'));assert.equal(freeze.identity,r.source_identity);assert.equal(freeze.included_files,1850);
++const sha=b=>createHash('sha256').update(b).digest('hex'),receiptPath='.artifacts/p05-pilot-bundle-image-binding24/receipt.json',receiptRaw=fs.readFileSync(receiptPath),r=JSON.parse(receiptRaw);
++assert.equal(sha(receiptRaw),'ea082c9483c366256ba0bc22f52c230e70daaaf7130f3c928c8a1f6845422e93');assert.equal(r.source_identity,'27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf');assert.equal(r.image,'sha256:48c5876a7f78c828883734b4039c59eb97644089cd7e8cf7ca9721d2e26c4592');assert.equal(Object.keys(r.image_files_sha256).length,299);
++const freeze=JSON.parse(fs.readFileSync('.artifacts/p05-pilot-bundle-source-freeze23.json'));assert.equal(freeze.identity,r.source_identity);assert.equal(freeze.included_files,1881);
+ for(const [name,hash]of Object.entries(r.source_files))assert.equal(sha(fs.readFileSync(path.join(freeze.materialized_root,name))),hash);
+ const entries=['packages/card-catalog/dist/index.js','packages/relationship-engine/dist/index.js','packages/relationship-engine/dist/topic-planner.js','apps/api/dist/topic-game-model.js'],seen=new Map(),external=new Set(),edges=[];
+ function visit(file){
+  assert(!['apps/api/dist/app.js','apps/api/dist/request-error-diagnostic.js'].includes(file),'FORBIDDEN_APP_DIAGNOSTIC_DEPENDENCY');if(seen.has(file))return;
+- const raw=fs.readFileSync(file);assert.equal(sha(raw),r.image_files_sha256[file],'A9_IMPORTED_FILE_CURRENT_BYTES_MUST_MATCH_IMAGE');seen.set(file,sha(raw));
++ const raw=fs.readFileSync(file);assert.equal(sha(raw),r.image_files_sha256[file],'A26_IMPORTED_FILE_CURRENT_BYTES_MUST_MATCH_IMAGE');seen.set(file,sha(raw));
+  if(!file.endsWith('.js'))return;const ast=ts.createSourceFile(file,raw.toString('utf8'),ts.ScriptTarget.Latest,true,ts.ScriptKind.JS),specifiers=[];
+  function scan(node){if((ts.isImportDeclaration(node)||ts.isExportDeclaration(node))&&node.moduleSpecifier&&ts.isStringLiteral(node.moduleSpecifier))specifiers.push(node.moduleSpecifier.text);if(ts.isCallExpression(node)&&node.expression.kind===ts.SyntaxKind.ImportKeyword){assert(node.arguments.length===1&&ts.isStringLiteral(node.arguments[0]),'NONLITERAL_DYNAMIC_IMPORT_IN_PURE_CLOSURE');specifiers.push(node.arguments[0].text);}ts.forEachChild(node,scan);}scan(ast);
+  for(const specifier of specifiers){if(specifier.startsWith('node:'))continue;let target;if(specifier.startsWith('.'))target=path.posix.normalize(path.posix.join(path.posix.dirname(file),specifier));else if(/^@venus\/(contracts|relationship-engine|card-catalog)$/.test(specifier))target='packages/'+specifier.slice(7)+'/dist/index.js';else{external.add(specifier);continue;}edges.push({from:file,to:target});visit(target);}
+ }
+ entries.forEach(visit);assert.deepEqual([...external].sort(),['ajv-formats','ajv/dist/2020.js']);const lockRaw=fs.readFileSync(path.join(freeze.materialized_root,'package-lock.json'));assert.equal(sha(lockRaw),freeze.files['package-lock.json']);const lock=JSON.parse(lockRaw),lockedExternal=Object.fromEntries(['ajv','ajv-formats'].map(name=>{const row=lock.packages['node_modules/'+name];assert(row?.integrity&&row.version);return[name,{version:row.version,integrity:row.integrity}];}));for(const [name,hash]of seen)assert.equal(sha(fs.readFileSync(name)),hash);
+-console.log(JSON.stringify({status:'PASS_READONLY_A9_PURE_CLOSURE_QUALIFICATION_NOT_CORPUS',source_identity:r.source_identity,image:r.image,image_pins:287,frozen_source_pins:Object.keys(r.source_files).length,entries,files:Object.fromEntries(seen),edges,app_and_logging_imported:false,own_module_graph_only:true,external_imports:[...external].sort(),external_package_lock_sha256:sha(lockRaw),locked_external:lockedExternal,external_package_runtime_bytes_newly_audited:false,current_whole_source_claim:false,actual470selector_calls:0},null,2));
++console.log(JSON.stringify({status:'PASS_READONLY_A26_PURE_CLOSURE_QUALIFICATION_NOT_CORPUS',source_identity:r.source_identity,image:r.image,image_pins:299,frozen_source_pins:Object.keys(r.source_files).length,entries,files:Object.fromEntries(seen),edges,app_and_logging_imported:false,own_module_graph_only:true,external_imports:[...external].sort(),external_package_lock_sha256:sha(lockRaw),locked_external:lockedExternal,external_package_runtime_bytes_newly_audited:false,current_whole_source_claim:false,actual470selector_calls:0},null,2));

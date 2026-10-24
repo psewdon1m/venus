@@ -1,0 +1,5 @@
+# OCI04 actual failure preserved
+
+The actual driver passed its former ESM startup cycle, then failed during A1. Exit1, phase terminal ERR_MODULE_NOT_FOUND; original error message was truncated. Independent inert import reproduction of the exact retained generated graph identifies missing bare pg resolution from /private/modules-A1; pg exists at the pinned /app dependency root. Actual control guard publication also recorded EPERM rename, with holder unknown. A root runner.json was never produced and is not backfilled.
+
+All host run files were copied and byte-verified with an unchanged before/after source map. Markdown is archived as bytes to preserve old relative links and encoding. No private volume, ephemeral password, keyring or database contents were exported. Failed host prefix remains unchanged. Serving containers were already stopped; readonly keeper and three ephemeral volumes were retained at freeze time. Separate exact-owner cleanup will have its own receipt. This FAIL remains FAIL regardless of corrective method acceptance. Human HOLD, current-source and fullP05 are not accepted.

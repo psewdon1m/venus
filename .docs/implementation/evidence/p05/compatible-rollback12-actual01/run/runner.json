@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "status": "FAIL",
+  "compatibility_profile": "LIVE_SAME_POLICY_COMPATIBILITY_14",
+  "resource_profile": "QRB_BOUND_ONLY_1",
+  "original_resource_guard": "REPLACED_ROOT_SELECTED_BOUND_ONLY_NOT_ADVANCING2S",
+  "actual_execution": true,
+  "full_P05_PASS": false,
+  "production_approval": false,
+  "human450": "HOLD_UNCHANGED",
+  "source_identity": "b2100207d12e90615fb0a62f4b5e410d9a4c8c20fc2db2bc1eae4bc409dca5b6",
+  "images": {
+    "A": "sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937",
+    "B": "sha256:62602920f998e1e971d3f8f9dd55c706217e4e00a50bcee2d056cbf6d94c8903"
+  },
+  "image_switches": 2,
+  "DB_restore": false,
+  "external_roots_rolled_back": false,
+  "boots": [
+    {
+      "phase": "A1",
+      "image": "sha256:9f5a417c8333b4e6340a07d2dc06c2df0a65e2cd8665e47548d5dda187f52937",
+      "container_id": "e3dbfd741fb925e764466f50213c7beeb7d0509c27838e89257d9a4212ff34bd",
+      "live_host_pid": 72711,
+      "process_nonce": "8ef875b952859981253152bbe1501273",
+      "exit_code": 0,
+      "pool_closed": true,
+      "runtime_compiled64": true
+    },
+    {
+      "phase": "B2",
+      "image": "sha256:62602920f998e1e971d3f8f9dd55c706217e4e00a50bcee2d056cbf6d94c8903",
+      "container_id": "df675ca31adf4837b0f08984d8d5e376e56db93f2eefc6786b1b0771cbda1de2",
+      "live_host_pid": 74585,
+      "process_nonce": "e54c74340a6992b876388b7627fe002d",
+      "exit_code": null,
+      "pool_closed": false,
+      "runtime_compiled64": true
+    }
+  ],
+  "chronology": [
+    {
+      "phase": "A1",
+      "event": "migration_observer",
+      "native_elapsed_ms": 982.2840890000001
+    },
+    {
+      "phase": "A1",
+      "event": "bootGate_return",
+      "native_elapsed_ms": 984.257741
+    },
+    {
+      "phase": "A1",
+      "event": "maintenance",
+      "native_elapsed_ms": 988.3722690000001
+    },
+    {
+      "phase": "A1",
+      "event": "listen",
+      "native_elapsed_ms": 1060.600236
+    }
+  ],
+  "controls": [],
+  "truncated": false,
+  "first_phase_error": {
+    "name": "AssertionError",
+    "code": "ERR_ASSERTION",
+    "phase": "B2"
+  },
+  "first_error": {
+    "name": "Error",
+    "code": null,
+    "phase": "B2",
+    "source_module": "host-runner",
+    "source_line": 38,
+    "source_column": 909
+  },
+  "remaining_owned": {
+    "containers": [
+      "d345bf1a8e86",
+      "a19ad524ff46"
+    ],
+    "networks": [
+      "5cef8c429314"
+    ],
+    "volumes": [
+      "venus-p05-oci-e20363af657f-authority",
+      "venus-p05-oci-e20363af657f-db",
+      "venus-p05-oci-e20363af657f-evidence",
+      "venus-p05-oci-e20363af657f-private"
+    ]
+  },
+  "resource": {
+    "status": "PASS_QRB_BOUND_ONLY_PROFILE",
+    "failure": null,
+    "owner": "d1d60487f603013901e36e0e97e1bd73",
+    "project": "venus-p05-oci-e20363af657f",
+    "profile": {
+      "revision": "QRB_BOUND_ONLY_1",
+      "whole_ms": 900000,
+      "work_ms": 780000,
+      "cap_mib": 512,
+      "host_cap_mib": 96,
+      "native_reserved_mib": 380,
+      "conservative_combined_mib": 476,
+      "reserve_gib": 10,
+      "host": {
+        "inputs": 16,
+        "evidence": 64,
+        "other": 16
+      },
+      "native": {
+        "db_data": 240,
+        "db_shm": 8,
+        "db_tmp_run": 4,
+        "authority": 32,
+        "private": 8,
+        "evidence": 64,
+        "simultaneous_scratch": 24
+      },
+      "RSS_mib": {
+        "api": 768,
+        "db": 512,
+        "tls": 128,
+        "browser": 1536,
+        "keeper": 64,
+        "helper": 128
+      },
+      "archive_copies": 0
+    },
+    "phase_preflights": [
+      {
+        "phase": "setup",
+        "host_free_bytes": "81237188608",
+        "native_free_bytes": "992881414144",
+        "host_allocated_bytes": 16384,
+        "elapsed_ms": 1174.9286
+      },
+      {
+        "phase": "A1",
+        "host_free_bytes": "81228374016",
+        "native_free_bytes": "992881229824",
+        "host_allocated_bytes": 4930392,
+        "elapsed_ms": 64617.101
+      },
+      {
+        "phase": "B2",
+        "host_free_bytes": "81222696960",
+        "native_free_bytes": "992881012736",
+        "host_allocated_bytes": 5597160,
+        "elapsed_ms": 103522.562
+      },
+      {
+        "phase": "cleanup",
+        "host_free_bytes": "81221652480",
+        "native_free_bytes": "992880898048",
+        "host_allocated_bytes": 5630240,
+        "elapsed_ms": 109517.5732
+      }
+    ],
+    "host_allocated_peak": 5872200,
+    "host_controller_peak_sampled_rss": 129282048,
+    "host_controller_RSS_scope": "Sampled256MiB stop threshold; not an OS cgroup hard limit. CLI requires max-old-space-size192; child scans are bounded input/time.",
+    "native_quota_accounting": "Sum of inspected hard tmpfs/SHM limits, not actual RSS",
+    "advancing_2s_guard": false,
+    "whole_elapsed_ms": 161574.2059
+  },
+  "cleanup": "retained_manual_cleanup_required",
+  "error_name": "Error",
+  "elapsed_ms": 161574.37699999998,
+  "owner": "d1d60487f603013901e36e0e97e1bd73",
+  "project": "venus-p05-oci-e20363af657f",
+  "source_producer_unchanged": false
+}

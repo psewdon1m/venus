@@ -1,0 +1,9 @@
+# OCI16 future final UI binding / retained metadata hold
+
+2026-10-20T22:33:05.972854+00:00 START rootHOLD actual15 A13 after actualbrowser23partialcommitUIdefect. Author12front-onlyfix pending; wait A14 exactsource/image receipts, then ONLYsource/UI/metadata operational16 from independentlyaccepted15. Do not run15, do not change compiled69/66/helpers/browser14/oracles/resources. Optional retained09..13 disposition from saved metadata only, no Docker/native allocation/cleanup/startDB/private roots/keyreads.
+
+2026-10-20T22:33:46.252353+00:00 Waiting A14 frozen source/image inputs. Optional09..13 saved metadata reconciliation complete in separate own journal; no live Docker or resource mutations. .artifacts/p05-oci09-13-retained-saved-inventory01.json SHA 428a692af152fe183872bda0308cbc57f79adefb928150d86098c503da577858. A13native15 staysNOT_RUN.
+
+2026-10-20T22:46:11.482692+00:00 Received A14source11/c481761f1865/testd3e515f5 actualreceipt646b8e41. Cloned accepted15 into16; ONLY5active sharedJSON binding/UI/source/metadata/pendingACK updates. ALLMJS exact inclbrowser14/imagehelpers; actualreceipt proves compiled69/SQL7/PG2 exactA13. Source inventory exact1865. Accepted dependency reviews copied excluded. NativecohortQ stillinflight, futureTD/YB globallySTOPPED. No Docker/native16/APP writes.
+
+2026-10-20T22:47:35.193377+00:00 Final thin7controls PASS, actual includedverify sourcec4811865/cold describe0. AllMJS exact15; only5activeJSONchanged,69/SQL/PG exactA13 and UI-only mapdelta/CSSsame. No Docker/native16/APP/sourcefreeze writes. Frozen authorINDEX 909d6e63fb132b558e25508def797904db21adbb239f16e633a5335177f48dbf/15 producer 80b791f3a275f6f6808b50ecf070f531d5307df708d97ff0aa14a4646b94549e/363; writes COMPLETE_STOP. OwnQ stillinflight, futureTD/YBglobalSTOP retained.

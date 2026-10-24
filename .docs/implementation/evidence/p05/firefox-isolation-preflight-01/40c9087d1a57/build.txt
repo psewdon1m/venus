@@ -1,0 +1,95 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 49.36kB 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#5 CACHED
+
+#6 [runtime 2/5] COPY apps apps
+#6 CACHED
+
+#7 [dependencies  2/12] WORKDIR /app
+#7 CACHED
+
+#8 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#8 CACHED
+
+#9 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#9 CACHED
+
+#10 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#10 CACHED
+
+#11 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#12 CACHED
+
+#13 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#13 CACHED
+
+#14 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#14 CACHED
+
+#15 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#15 CACHED
+
+#16 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#16 CACHED
+
+#17 [runtime 1/5] COPY tsconfig*.json ./
+#17 CACHED
+
+#18 [runtime 3/5] COPY packages packages
+#18 CACHED
+
+#19 [runtime 4/5] COPY tests tests
+#19 DONE 0.0s
+
+#20 [runtime 5/5] RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+#20 0.256 
+#20 0.256 > venus@0.0.0 build
+#20 0.256 > tsc -b && npm run build -w @venus/web
+#20 0.256 
+#20 3.549 
+#20 3.549 > @venus/web@0.0.0 build
+#20 3.549 > vite build
+#20 3.549 
+#20 3.778 vite v8.3.4 building client environment for production...
+#20 3.792 transforming...
+#20 4.030 ✓ 27 modules transformed.
+#20 4.124 rendering chunks...
+#20 4.312 computing gzip size...
+#20 4.332 dist/index.html                   0.39 kB │ gzip:  0.27 kB
+#20 4.332 dist/assets/index-BYYvUAH4.css    7.38 kB │ gzip:  2.29 kB
+#20 4.332 dist/assets/index-Aq2Rhxkm.js   286.63 kB │ gzip: 90.03 kB
+#20 4.332 
+#20 4.333 ✓ built in 553ms
+#20 DONE 4.4s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 0.2s done
+#21 exporting manifest sha256:f30a7028f809d10e04dfc2ef9474f31c3604da33cf5e50cf875da774e48cfcb0 done
+#21 exporting config sha256:2ee2325449eeb0234ac056e7505d39162b81b867ec911be29e67605e5bdb5325 done
+#21 exporting attestation manifest sha256:b921c83e657ede2fdc89f39f7e481fbfb9bedfcbe3c43df07b758bdc7701f11d 0.0s done
+#21 exporting manifest list sha256:558b3a578eb0df7f97e575d5efb4a1b803ae6c5283878dc61cabcdc6814f0154 done
+#21 naming to docker.io/library/venus-p05-40c9087d1a57:local done
+#21 unpacking to docker.io/library/venus-p05-40c9087d1a57:local 0.1s done
+#21 DONE 0.4s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/pkkrwkpn2ewg3sba787qh9wxu

@@ -1,0 +1,38 @@
+--- AUTHOR-ROUND01/scene-driver.mjs
++++ AUTHOR-ROUND02/scene-driver.mjs
+@@ -53,7 +53,7 @@
+ /** Necessary public advance preparation only; passive observations are not APP cache acceptance. */
+ function publicAdvanceReadiness(a,wanted,deadlineCeiling=Infinity){
+  const at=performance.now(),own=a.lastSelfActions,current=a.lastGameView,minimum=250;
+- const scope=wanted?{room:wanted.room,member:wanted.member,session:wanted.session,round:wanted.round,rev:wanted.rev}:null;
++ const scope=wanted?{room:wanted.room,member:wanted.member,session:wanted.session,round:wanted.round,rev:Number.isSafeInteger(current?.game_rev)?current.game_rev:null}:null;
+  const scopeHash=scope?createHash('sha256').update(JSON.stringify(scope)).digest('hex'):null;
+  let reason='EXPECTED_SCOPE_MISSING',remaining=null,deadline=null;
+  if(wanted){
+@@ -62,7 +62,7 @@
+    const times=[current.started_monotonic_ms,current.received_monotonic_ms,own.started_monotonic_ms,own.received_monotonic_ms];
+    const ttl=Date.parse(own.expires_at)-Date.parse(own.server_time);
+    reason='SCOPE_MISMATCH';
+-   if(a.room===wanted.room&&a.id===wanted.member&&new URLSearchParams(new URL(a.page.url()).hash.slice(1)).get('room')===wanted.room&&own.room_id===wanted.room&&own.member_id===wanted.member&&own.session_id===wanted.session&&own.round_id===wanted.round&&own.game_rev===wanted.rev&&current.session_id===wanted.session&&current.round_id===wanted.round&&current.game_rev===wanted.rev){
++   if(a.room===wanted.room&&a.id===wanted.member&&new URLSearchParams(new URL(a.page.url()).hash.slice(1)).get('room')===wanted.room&&own.room_id===wanted.room&&own.member_id===wanted.member&&own.session_id===wanted.session&&own.round_id===wanted.round&&Number.isSafeInteger(current.game_rev)&&current.game_rev>=wanted.min_rev&&own.game_rev===current.game_rev&&current.session_id===wanted.session&&current.round_id===wanted.round){
+     reason='TIMES_INVALID';
+     if(times.every(Number.isFinite)&&times.every(t=>t>=0&&t<=at)&&current.started_monotonic_ms<=current.received_monotonic_ms&&own.started_monotonic_ms<=own.received_monotonic_ms){
+      reason='OWN_PREDATES_CURRENT';
+@@ -101,7 +101,7 @@
+ async function click(a,id,prepared=null){
+  const ticket=normalPrivateControls.has(id)?prepared??await preparePrivateClick(a,id):null;
+  if(ticket)a.privateReady?.delete(id);
+- report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);if(!ticket){await expect(l).toBeVisible();await expect(l).toBeEnabled();}if(ticket)assertPrivateTicket(a,id,ticket);if(id==='game-next'){assert(prepared?.preparation==='PUBLIC_ADVANCE_OWN_PROJECTION','PUBLIC_ADVANCE_NOT_PREPARED');const ready=publicAdvanceReadiness(a,prepared.expected,prepared.deadline_monotonic_ms);Object.assign(prepared,ready);assert(ready.ready,'PUBLIC_ADVANCE_NOT_READY');}await l.click(ticket?{timeout:Math.max(1,Math.min(15000,ticket.deadline_monotonic_ms-performance.now()))}:{});
++ report.last_control={phase,locale:a.locale,member_id:a.id,control:id,started_monotonic_ms:performance.now()};save();const l=a.page.getByTestId(id);if(!ticket){await expect(l).toBeVisible();await expect(l).toBeEnabled();}if(ticket)assertPrivateTicket(a,id,ticket);if(id==='game-next'){assert(prepared?.preparation==='PUBLIC_ADVANCE_OWN_PROJECTION','PUBLIC_ADVANCE_NOT_PREPARED');const ready=publicAdvanceReadiness(a,prepared.expected,prepared.deadline_monotonic_ms);Object.assign(prepared,ready);assert(ready.ready,'PUBLIC_ADVANCE_NOT_READY');}const deadlineTicket=ticket??(id==='game-next'?prepared:null);await l.click(deadlineTicket?{timeout:Math.max(1,Math.min(15000,deadlineTicket.deadline_monotonic_ms-performance.now()))}:{});
+ }
+ 
+ async function fillPrivate(a,id,value,submit){
+@@ -126,7 +126,7 @@
+ 
+ async function coherentGame(expected={}){let result=null;await expect.poll(async()=>{const f=await service.plan(actors[0].room),g=await current(actors[0]);if(!coherentRound(f,g,expected))return false;result={fixture:f,view:g};return true;},{timeout:8000,intervals:[50,100,250]}).toBe(true);return result;}
+ 
+-async function ownUiRound(a,f,control){const wanted=control==='game-next'?{room:a.room,member:a.id,session:f.session,round:f.plan.round_id,rev:f.game_rev,deadline:performance.now()+8000}:null;if(wanted)a.publicAdvanceWanted=wanted;try{await expect.poll(()=>uiRoundMatches(a.lastGameView,f)&&(!wanted||publicAdvanceReadiness(a,wanted).ready),{timeout:8000,intervals:[50,100,250]}).toBe(true);await expect(a.page.getByTestId('game-round')).toContainText(new RegExp('\\b'+f.plan.round_index+'\\s*/'));await expect(a.page.getByTestId(control)).toBeVisible();await expect(a.page.getByTestId(control)).toBeEnabled();}catch(error){if(wanted){recordMutation({locale:a.locale,control,result:'PUBLIC_PREPARATION_NOT_READY',readiness:publicAdvanceReadiness(a,wanted)});save();}throw error;}}
++async function ownUiRound(a,f,control){const wanted=control==='game-next'?{room:a.room,member:a.id,session:f.session,round:f.plan.round_id,min_rev:f.game_rev,deadline:performance.now()+8000}:null;if(wanted)a.publicAdvanceWanted=wanted;try{await expect.poll(()=>uiRoundMatches(a.lastGameView,f)&&(!wanted||publicAdvanceReadiness(a,wanted).ready),{timeout:8000,intervals:[50,100,250]}).toBe(true);await expect(a.page.getByTestId('game-round')).toContainText(new RegExp('\\b'+f.plan.round_index+'\\s*/'));await expect(a.page.getByTestId(control)).toBeVisible();await expect(a.page.getByTestId(control)).toBeEnabled();}catch(error){if(wanted){recordMutation({locale:a.locale,control,result:'PUBLIC_PREPARATION_NOT_READY',readiness:publicAdvanceReadiness(a,wanted)});save();}throw error;}}
+ 
+ async function mutationClick(a,control,path,kind,scope,afterClick){const {receipt}=await exactUiMutation({page:a.page,path,kind,scope,control,prepare:()=>preparePrivateClick(a,control,path),click:ticket=>click(a,control,ticket),afterClick,record:event=>recordMutation({locale:a.locale,...event})});return receipt;}
+ 

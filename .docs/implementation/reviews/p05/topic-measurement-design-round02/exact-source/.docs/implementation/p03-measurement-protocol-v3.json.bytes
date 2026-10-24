@@ -1,0 +1,174 @@
+{
+  "protocol_revision": "P03-M3",
+  "algorithm_revision": "RE-1.P03-M1",
+  "status": "PREREGISTERED_BEFORE_STATISTICAL_RUN",
+  "supersedes_measurements_only": "P03-M2",
+  "preserved_preregistration": [
+    {
+      "tag": "p03-m1-preregistered-20261018",
+      "sha256": "f9dd0c023c25f2393e10e50e4eb7b920ffd171f7843bc18d3739193dd75b4406",
+      "reason": "Independent pre-freeze review Q01/Q02/Q03/Q05 before any statistical run; no result-driven changes"
+    },
+    {
+      "tag": "p03-m2-preregistered-20261018",
+      "source_sha": "14482d28b4a2d18be22f5e3939b6161f004fbfe2",
+      "reason": "Retained NOT_ACCEPTED attempt: Linux rollback fixture CI failure and interrupted partial statistical sections; independent final review also required actual progressive distributions for RE-016, per-session cap and anti-repeat diagnostics"
+    }
+  ],
+  "policy_sha256": "6c5ae5a82cb9419668342c7fdce5d72c0c85e14759bcc4acb0f44829889c726f",
+  "authority": "Technical protocol under ADR-015/ENTRY-P03; no content, legal or universal inference-safety approval",
+  "binding": "Every report records clean source SHA and inventory identity, exact raw protocol SHA256, synthetic pack canonical digest, raw counters and seed ranges. Final simulation starts only after this revision is committed and tagged.",
+  "preregistration_tag": "p03-m3-preregistered-20261018",
+  "executable_design": "tools/p03-measurements.mjs export measurementDesign and tests/p03/public-transcript.mjs at the preregistration tag define exact seed-string/byte derivation, feature names/order/normalization, lifecycle actions and metadata. The fixture generator, engine policy/source and production public renderer are likewise bound to that tagged tree before the first final run. Reports verify these raw input hashes against the preregistered bytes; changed executable design needs a new protocol revision/tag before measuring.",
+  "sampler": {
+    "order": [
+      "immutable version/snapshot and hard eligibility guards",
+      "unused cards only",
+      "private cap ceil(.25*total_rounds)",
+      "exclude previous private pair if another unused admissible private pair exists",
+      "with probability .35 after previous min_comfort>=2 restrict to softer remaining options when available",
+      "private stage branch probability [0,0,.22,.4], ordinary fallback if available",
+      "if public pair and group/solo both remain, choose public pair with stage probability [.2,.4,.6,.6]",
+      "choose option with exact mixture",
+      "uniformly select unused eligible card of chosen option",
+      "public pair role reversal probability .5 independent of G initiator; group designated primary history-downweighted"
+    ],
+    "option_probability": "P(o)=.95*r(o)/sum_pool(r)+.05*r(o)*w(o)/sum_pool(r*w); pool is the remaining options after conditional branch gates; w is RE-1 class weight for pair options, 1 otherwise",
+    "history": "r(o)=1/(1+sum actor appearances); each previous committed round counts distinct [primary_member_id,...actors], including group primary; no count multiplication for duplicate primary/actor",
+    "rng": "HMAC-SHA256 seed bytes; domain algorithmRevision+':'+canonical({index,history:card_ids})+':'+drawIndex; first48bits/2^48; implementation source frozen with report",
+    "public_common_support": "min_comfort0, scopes none/acquaintance, no physical/going-away; sensitive cards retain original private scope; private pair must have >=ceil(.25*total_rounds) common friend_or_more comfort1 nonphysical/non-goingaway cards",
+    "limitations": "X veto and J/comfort/context/capability hard exclusions remain observable; no universal zero social-inference guarantee"
+  },
+  "invariants": {
+    "sessions_per_size": 10000,
+    "sizes": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "total_sessions": 70000,
+    "seed": "venus:P03-M1:test:<size>:<index>",
+    "indices": "0..9999",
+    "total_rounds": "1+(index%100)",
+    "mode": "index%3",
+    "context": "floor(index/3)%2",
+    "profile": "Exact measurementDesign random_profile byte derivation gives comfort%5 and label%6; simulated private_text_chat capability is declared for both contexts so mixed-context fixture metadata has its required capability, not production availability",
+    "max_violations": 0,
+    "max_repeated_cards_per_session": 0,
+    "fifteen_checks": "List each normative invariant independently with actual assertion and counter. Planner guards/replay and pure consent are directly simulated; authenticated transport/host ACL/room revocation require referenced real-PG tests and must not be inferred from selector output.",
+    "safe_refusals": "Report reason/seed/completed prefix separately; refusals are not completed sessions or safety violations unless safety invariant failed"
+  },
+  "fairness": {
+    "strata": "N2..8 x questions/truth_or_dare/yes_but x in_person/online; all42 cells, no pooling-only PASS",
+    "sessions_per_stratum": 2000,
+    "total_rounds": 20,
+    "comfort": 4,
+    "relation": "friendship",
+    "capabilities": "private_text_chat in both simulated contexts; mixed-context fixture required-capability metadata applies in both. Production still unavailable until P05",
+    "seed": "venus:P03-M2:fairness:<size>:<mode>:<context>:<index>",
+    "denominators": [
+      "K=pair offers",
+      "D=2K=individual invitations"
+    ],
+    "max_individual_share": 0.5,
+    "max_aggregate_player_share_gap_per_stratum": 0.02,
+    "zero_denominator": "N/A with explicit count; cannot certify a nondegenerate expected stratum",
+    "n2_limitation": "Each actor share .5, no partner-variety promise; anti-consecutive-pair exception explicit when no alternative"
+  },
+  "gf": {
+    "matched_opportunities": 1000000,
+    "seed": "venus:P03-M1:gf:<index>",
+    "profile": "N4 all-FR vs first unordered pair CR/FR at equal comfort1, in_person, round1, questions, same eligible pool and seed; target affected unordered pair",
+    "positive": "X_i=1 target selected in G, Y_i=1 target selected in F",
+    "estimate": "pG/pF; report paired 2x2 counts, sample variances sG2,sF2 and covariance sGF with denominator n-1",
+    "variance_log_ratio": "(sG2/pG^2+sF2/pF^2-2*sGF/(pG*pF))/n",
+    "ci95": "exp(log(pG/pF)+/-1.96*sqrt(variance_log_ratio))",
+    "threshold_lower_exclusive": 1,
+    "invalid": "Zero positive/denominator counts, negative non-roundoff/nonfinite variance => FAIL/N/A; no continuity substitution"
+  },
+  "inference": {
+    "comparisons": [
+      [
+        "F",
+        "G"
+      ],
+      [
+        "F",
+        "M"
+      ],
+      [
+        "G",
+        "M"
+      ]
+    ],
+    "strata": "N2..8 selected game players x 3 modes x 2 contexts, all42 cells independently sampled",
+    "observer_membership": "With2..7 selected players, an unselected authenticated room observer can occupy an available room slot. At8 selected players the room is full: this probe uses only the public-channel projection visible to a participant outside the target pair; their own edges and targeted private frames are outside this declared classifier model. N2 remains included because an unselected third room member is possible. No ninth member is assumed.",
+    "train_per_class_per_stratum": 100,
+    "holdout_per_class_per_stratum": 400,
+    "sampling_rationale": "4200 train and16800 holdout per class/comparison pooled, plus400 balanced held-out samples/class/cell; limits CPU while checking every cell and excluding pooled cancellation",
+    "total_rounds": "1+(index%100)",
+    "comfort": 4,
+    "capabilities": "private_text_chat in both simulated contexts, satisfying mixed-context fixture metadata; not product availability",
+    "seed_train": "venus:P03-M2:train:<comparison>:<class>:<size>:<mode>:<context>:<index>",
+    "seed_holdout": "venus:P03-M2:holdout:<comparison>:<class>:<size>:<mode>:<context>:<index>",
+    "profile": "Other edges FR; target first unordered pair F=FR/FR,G=CR/FR,M=CR/CR. Same size/mode/context/round-count distribution for both classes.",
+    "observer": "Public-channel projection visible to an authenticated room member: room/game public snapshots and generic private round state, public text/roles/card ID, response state, choice/proposal revision, stream/revision/server-time/payload lengths; targeted private frames, actor-only HTTP responses, encrypted storage and raw edges are outside this probe. Membership limitations are explicit above.",
+    "transcript_adapter": "Production publicRound/gameView shape, solo primary recovered from rendered P1 name even if actors is empty. Consistent synthetic lifecycle policy supplies pending/active/terminal states, accepts/choice/finish and clock delays independent of secret class; declare generated metadata and distinguish real HTTP/WS tests. Include public text-role, card-histogram, generic counts by stage, lifecycle/revision/count/size features; never private card IDs.",
+    "classifier": "Diagonal LDA: train class1 mean minus class0 mean divided by pooled variance+1e-9, midpoint intercept, orientation fixed by train. Train pooled and per-stratum independently; no holdout orientation selection.",
+    "auc": "Mann-Whitney probability class1 score>class0 score, ties .5",
+    "ci95": "Hanley-McNeil: Q1=A/(2-A),Q2=2*A*A/(1+A); SE2=[A*(1-A)+(n1-1)*(Q1-A*A)+(n0-1)*(Q2-A*A)]/(n1*n0); clipped normal A+/-1.96SE",
+    "max_ci95_upper_pooled_and_each_stratum": 0.65,
+    "structural_blockers": "Any explicit secret transport field or unique deterministic class decoder in compatible repertoire, state/timing/size/role metadata blocks regardless of pooled AUC. Inspect all declared cells; structural production-transport tests required separately.",
+    "limitations": "Fixed linear probes and approximate CIs do not establish universal privacy against arbitrary classifiers or participant conduct. No physical action performance is simulated or guaranteed. Actual private chat comes P05."
+  },
+  "failure_policy": "Retain initial FAIL with source/protocol identity and seeds; changed algorithm/threshold/profile requires new preregistered revision and independent review before rerun; no posthoc seed selection or hidden pooling M3 diagnostic failures are retained; any subsequent changed measured input requires a new preregistration revision before rerun.",
+  "revision_boundary": "Additional diagnostics/assertions/verifier for normative RE-016 and accepted cap/anti-repeat obligations. Production engine algorithm, policy, all M1/M2 seed strings, profiles, sample counts, sampler probabilities, classifiers and original numerical thresholds are unchanged. No completed failed statistical outcome was used to select seeds or adjust thresholds; all M2 partials remain retained.",
+  "progressive_diagnostics": {
+    "sections": [
+      "invariants",
+      "fairness"
+    ],
+    "strata": "All N2..8 x3modes x2contexts xstage1..4=168rows per section, including explicit zero-round cells",
+    "stratum_fields": [
+      "size",
+      "mode",
+      "context",
+      "stage",
+      "rounds",
+      "private_eligible_before_cap",
+      "private_eligible_after_cap",
+      "private_options_before_cap_sum",
+      "private_options_after_cap_sum",
+      "private_selected",
+      "min_comfort_histogram",
+      "interactions",
+      "anti_repeat"
+    ],
+    "eligibility": "Count successfully selected rounds with >=1 hard-eligible unused private option. Before/after private cap are distinct. Compute candidate availability before anti-repeat/recovery/interaction branch gates; common friend_or_more comfort1 nonphysical/non-goingaway pool must cover ceil(.25*total_rounds). Safe refusals retain seed/prefix outside completed-round denominators.",
+    "raw_distributions": "For each selected round report interaction(group,solo,pair_public,pair_private) and selected card min_comfort0..4 by stratum. Report private_selected/rounds and private_selected/private_eligible_after_cap as descriptive ratios, never replacing eligibility denominator with total sessions.",
+    "session_fields": [
+      "seed",
+      "total_rounds",
+      "selected_rounds",
+      "private_count",
+      "private_cap",
+      "completed"
+    ],
+    "session_assertions": "private_cap==ceil(.25*total_rounds); every actual private proposal counts, private_count<=private_cap and private_count<=selected_rounds<=total_rounds. Completed/partial sessions are separate, no resampling. Stage1/2 private_selected==0.",
+    "anti_repeat_fields": [
+      "decisions_with_unused_alternative",
+      "private_choices_with_alternative",
+      "violations",
+      "same_pair_no_alternative_exceptions"
+    ],
+    "anti_repeat_definition": "Previous pair is the most recent private round, even if public rounds intervened. A repeat is forbidden when a different unordered pair has a hard-eligible unused private card and remaining private budget. Count decisions and selected private choices with such alternative; violations must be0. Repeats without any such admissible alternative are reported as justified exceptions.",
+    "acceptance": "Zero cap/early-private/anti-repeat/diagnostic consistency violations; every declared stratum retained, raw histogram totals reconcile. Inspect early/late progressive distributions conditional on eligibility, fixed caps and exhaustion. No unconditional stage4>stage3 threshold: cap/card exhaustion may reduce late availability; no new result-driven threshold.",
+    "limits": "Recovery probability .35 is source-inspected; no dedicated empirical recovery probability estimate or CI is claimed. Diagnostics observe the unchanged production planner and hard eligibility predicate, not an alternative sampler.",
+    "nondegeneracy": "In each of42 exchangeable fairness N/mode/context cells, sum of stages3+4 private_eligible_after_cap>0 AND private_selected>0; stage1/2 private_selected=0. No unconditional stage4>stage3 or target-frequency equality is imposed.",
+    "reconciliation": "Recompute exact168stage round totals from every declared session seed/profile and selected-round prefix; every fairness stage/cell has2000*5=10000rounds. Per-cell private proposal totals reconcile with raw sessions, and safe-refusal seeds/prefixes remain separate."
+  }
+}

@@ -1,0 +1,5 @@
+# Firefox context focus event diagnostic preparation
+
+2026-10-22T20:48:55.453030+00:00 Root authorized preparation only, one constant synthetic HTML/three independent contexts/currentA25 image23 and existing windowFor+headingclick+Tab. Source/runtime/APP edits forbidden; no launch until root freshguard09 and explicit one-off ACK. Max90s/2048whitelisted records, same2CPU3GiB512PID/netnone/read-only/tmpfs/owned cleanup. Earlier read command exit1 from nonexistent guessed x11-keys.mjs; next listing identified x11.mjs. No native launched.
+
+2026-10-22T20:49:39.182152+00:00 Prepared exact2scripts+INPUTS/INDEX, staticPythoncompile+Node--check exit0. No script/native/Docker execution. Pinned all27 importedproducer MJS, image23/full299/CSS, guard09/resource11. Absolute90s/work85s/max1800records, threeindependentcontexts, fixedrolesprimary/other, allpages1440x900→1024x320, existingwindowFor/headingclick/Tab; syntheticlistener vsReact scope explicit. INDEX b3ee7732499185a465a6134a1bf47a10541bd6d5ef91e8e6972be4d73ad3ee6f. STOP pending independentreview/rootACK/freshguard.

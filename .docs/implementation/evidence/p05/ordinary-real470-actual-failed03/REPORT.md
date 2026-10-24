@@ -1,0 +1,5 @@
+# Ordinary real470 production-server attempt03
+
+FAIL exit1, cleanup PASS. Exact historical A4 production image/source, normal production CMD, real470 pilot source, no synthetic game actors. Questions online N2 and N3 each completed20 rounds; N4 completed7 then GET self-actions returned500. Totals47 completed/47 finish receipts/971requests,3rooms created/3closed. Remaining profiles and two negative profiles NOT_RUN. This is not42-profile PASS or current A7 proof.
+
+Underlying exception UNKNOWN. No failing actor/phase/request UUID or server error category was preserved before teardown. Code:null follows the probe allowlist omission and does not classify the exception. No assertion that group selection, pool exhaustion, deadlock or timeout caused it. Independent diagnosis920db524 identifies missing safe observability; add minimal safe category/correlation and one declared bounded N4 forensic attempt before another full run. Native consent/leases/rates and original test failures remain unchanged. API cookie/header client does not prove browser TLS. No raw bodies, cookies or secrets retained.

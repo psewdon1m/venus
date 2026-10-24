@@ -1,0 +1,49 @@
+{
+  "status": "PASS_SOURCE_ONLY_WITH_FOCUSED_HOST_CHECKS",
+  "created_utc": "2026-10-23T03:56:43.853087+00:00",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "roles": [
+    "Engineering",
+    "QA actualfocusedchecks"
+  ],
+  "independent_reviewer_count": 1,
+  "author_index_sha256": "806596c1dadd84100cdf37d1e75102d9b0febf8e124bd8036db427ebfe5191dd",
+  "author_children_verified": 12,
+  "source_identity": "d9c779dbdade95c9a6d0867e29768fb87082de820647108e4ac97d09e01c4f40",
+  "included_files": 1895,
+  "current_source": {
+    "apps/web/src/topic-games-panel.tsx": "4774a8c57f9f610a7cd4a2f35322467bc06dab66990f1e21cd83c65adc09f417",
+    "apps/web/src/topic-round-view.test.ts": "86fdaf3e8bb0ea93c668d2d1cf5ac0ff72cfd3595cb32ab03a1959802791839e",
+    ".docs/implementation/p05-source-revision-polling-coherence-20.json": "66e722464b2afc7288022d69cb886388beeed20b204bb7747e391b5dc754cfb2",
+    ".docs/implementation/p05-source-revision-rejected-view-signal-21.json": "8bdaf94cd80876a07886f190bcceb60045aff6760ec5a31281b7177d1bf33b4d"
+  },
+  "P1_correction": {
+    "prior_SOURCE20": "ERRONEOUS_HISTORICAL_NOT_CURRENT_ACCEPTANCE",
+    "own_prior_review": ".docs/implementation/reviews/p05/polling-coherence-independent-round01/INDEX.json",
+    "own_prior_review_sha256": "c2db077db76adba9c38930d6f80273d25a86c6aa9baafc46d348192e1afac184",
+    "missed_finding": "OwnControls.revokeRound(signal) stores signal in lastRoundSignal; passing rejectedprivateview retained prompt/advice/chat despite presentationclear/TTL. Priorauthorandthisreview missed thatretainedreference; preserveimmutableoldpackets,explicitlyrevoke applicability.",
+    "exact_fix": "ONE controls.revokeRound(value)→controls.revokeRound({}) wholebyteinverseexact source20 panel. Fresh empty opaqueobject has noprivate/envelope references, unequalidentity triggers samepacket/refusals/deadlineclear+generationincrement, Stop/Pause safetyindependent unchanged. No game-controls/test/harness/validator change.",
+    "remaining_behavior": "SOURCE20 fullvalidatedsame-scopehigherrevision isconcealed andneveraccepted/granted/published; existing1500mspollonly. Separateacceptedreaderror recovery preservesfailedmutationerror/retry. No TTL/ACL/auth/transport/deadline relaxation.",
+    "safe_rollback": "Exactreverse SOURCE21→20 reinstatesP1 and isnotoperationallyacceptable. Feature rollback mustrestore exact pre20/fcbf panel/test and remove20/21, accepting documentedoldpollUXbug."
+  },
+  "actual_focused_checks": {
+    "fresh_related_PASS": 149,
+    "existing_files": 9,
+    "testsource_unchanged_86fd": true,
+    "tests_exit": 0,
+    "ESLint_exit": 0,
+    "web_TypeScript_exit": 0,
+    "rawreceipts_rehashed": true,
+    "newtests_or_harness": false,
+    "qualification": "ActualTSX deterministichook/API scheduler,notReactDOM/native/browser/privatefieldretentiontest. Retention correction establishedbydirect reference-flow inspection ofopaque{} and unchangedOwnControls; no extra test execution byreviewer."
+  },
+  "source_correspondence": "Fullcore1895 reverses FOURpaths toexactfcbf/b9b1893; other1891corebytesexact inclbackend/policy/contracts/cards/statsmanifest. Newsourcefutureimage/UI/quality/CI required,oldQ10/fcbf andsource28/image29 remainhistorical. Uniform06source27f/image48c untouchedandcontinues; no serverstatrestart. Separateprivacynonauthorreviewnotcountedhere.",
+  "findings": [],
+  "own_readonly_exit": 0,
+  "own_tests_Docker_APP_helper_producer_Git_mutations": 0,
+  "oldWebKit_cause_proven": false,
+  "current_native_images_wholequality_CI_PASS": false,
+  "full_stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

@@ -1,0 +1,722 @@
+﻿2026-10-23T06:06:09.8166804Z Current runner version: '2.338.0'
+2026-10-23T06:06:09.8188750Z ##[group]Runner Image Provisioner
+2026-10-23T06:06:09.8189694Z Hosted Compute Agent
+2026-10-23T06:06:09.8190216Z Version: 20261012.601
+2026-10-23T06:06:09.8190841Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-23T06:06:09.8191440Z Build Date: 2026-10-12T17:48:21Z
+2026-10-23T06:06:09.8191979Z Worker ID: {cfa42b00-0fa3-4677-9029-8ecb128ac563}
+2026-10-23T06:06:09.8192610Z Region: eastus
+2026-10-23T06:06:09.8193095Z Cloud: Azure
+2026-10-23T06:06:09.8193562Z ##[endgroup]
+2026-10-23T06:06:09.8194783Z ##[group]Operating System
+2026-10-23T06:06:09.8195287Z Ubuntu
+2026-10-23T06:06:09.8195800Z 24.04.5
+2026-10-23T06:06:09.8196281Z LTS
+2026-10-23T06:06:09.8196809Z ##[endgroup]
+2026-10-23T06:06:09.8197557Z ##[group]Runner Image
+2026-10-23T06:06:09.8198091Z Image: ubuntu-24.04
+2026-10-23T06:06:09.8198607Z Version: 20261012.334.1
+2026-10-23T06:06:09.8199670Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-23T06:06:09.8200908Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-23T06:06:09.8201707Z ##[endgroup]
+2026-10-23T06:06:09.8202635Z ##[group]GITHUB_TOKEN Permissions
+2026-10-23T06:06:09.8204469Z Contents: read
+2026-10-23T06:06:09.8205028Z Metadata: read
+2026-10-23T06:06:09.8205490Z ##[endgroup]
+2026-10-23T06:06:09.8207980Z Secret source: Actions
+2026-10-23T06:06:09.8208807Z Cache mode: write
+2026-10-23T06:06:09.8209585Z Prepare workflow directory
+2026-10-23T06:06:09.8469965Z Prepare all required actions
+2026-10-23T06:06:09.8509565Z Getting action download info
+2026-10-23T06:06:10.0379705Z Download action repository 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-23T06:06:10.1362537Z Download action repository 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-23T06:06:10.2489653Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-23T06:06:10.3450149Z Download action repository 'actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-10-23T06:06:10.5531268Z Complete job name: quality
+2026-10-23T06:06:10.6331498Z ##[group]Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+2026-10-23T06:06:10.6332329Z with:
+2026-10-23T06:06:10.6332686Z   persist-credentials: false
+2026-10-23T06:06:10.6333084Z   fetch-depth: 0
+2026-10-23T06:06:10.6333460Z   ref: 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:10.6333943Z   repository: psewdon1m/venus
+2026-10-23T06:06:10.6337263Z   token: ***
+2026-10-23T06:06:10.6337613Z   ssh-strict: true
+2026-10-23T06:06:10.6337965Z   ssh-user: git
+2026-10-23T06:06:10.6338301Z   clean: true
+2026-10-23T06:06:10.6338653Z   sparse-checkout-cone-mode: true
+2026-10-23T06:06:10.6339070Z   fetch-tags: false
+2026-10-23T06:06:10.6339448Z   show-progress: true
+2026-10-23T06:06:10.6339804Z   lfs: false
+2026-10-23T06:06:10.6340139Z   submodules: false
+2026-10-23T06:06:10.6340494Z   set-safe-directory: true
+2026-10-23T06:06:10.6340889Z   allow-unsafe-pr-checkout: false
+2026-10-23T06:06:10.6341463Z ##[endgroup]
+2026-10-23T06:06:10.7149049Z Syncing repository: psewdon1m/venus
+2026-10-23T06:06:10.7151011Z ##[group]Getting Git version info
+2026-10-23T06:06:10.7151848Z Working directory is '/home/runner/work/venus/venus'
+2026-10-23T06:06:10.7153099Z [command]/usr/bin/git version
+2026-10-23T06:06:10.8269393Z git version 2.55.0
+2026-10-23T06:06:10.8288215Z ##[endgroup]
+2026-10-23T06:06:10.8302084Z Temporarily overriding HOME='/home/runner/work/_temp/a82cc6cd-d3ab-4195-8aa4-5980c1c6cb67' before making global git config changes
+2026-10-23T06:06:10.8303973Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-23T06:06:10.8305575Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-23T06:06:10.8775481Z Deleting the contents of '/home/runner/work/venus/venus'
+2026-10-23T06:06:10.8779628Z ##[group]Determining repository object format
+2026-10-23T06:06:10.8781145Z ##[endgroup]
+2026-10-23T06:06:10.8781908Z ##[group]Initializing the repository
+2026-10-23T06:06:10.8785349Z [command]/usr/bin/git init /home/runner/work/venus/venus
+2026-10-23T06:06:10.9245404Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-23T06:06:10.9246787Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-23T06:06:10.9248018Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-23T06:06:10.9248711Z hint: call:
+2026-10-23T06:06:10.9249059Z hint:
+2026-10-23T06:06:10.9249523Z hint: 	git config --global init.defaultBranch <name>
+2026-10-23T06:06:10.9250275Z hint:
+2026-10-23T06:06:10.9251010Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-23T06:06:10.9251943Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-23T06:06:10.9252514Z hint:
+2026-10-23T06:06:10.9252874Z hint: 	git branch -m <name>
+2026-10-23T06:06:10.9253264Z hint:
+2026-10-23T06:06:10.9253765Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-23T06:06:10.9254552Z Initialized empty Git repository in /home/runner/work/venus/venus/.git/
+2026-10-23T06:06:10.9257222Z [command]/usr/bin/git remote add origin https://github.com/psewdon1m/venus
+2026-10-23T06:06:10.9306518Z ##[endgroup]
+2026-10-23T06:06:10.9307314Z ##[group]Disabling automatic garbage collection
+2026-10-23T06:06:10.9309859Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-23T06:06:10.9338588Z ##[endgroup]
+2026-10-23T06:06:10.9339221Z ##[group]Setting up auth
+2026-10-23T06:06:10.9339917Z Removing SSH command configuration
+2026-10-23T06:06:10.9344658Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-23T06:06:10.9374593Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-23T06:06:10.9709358Z Removing HTTP extra header
+2026-10-23T06:06:10.9715984Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-23T06:06:10.9747975Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-23T06:06:10.9940819Z Removing includeIf entries pointing to credentials config files
+2026-10-23T06:06:10.9946572Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-23T06:06:10.9979766Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-23T06:06:11.0176282Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-23T06:06:11.0216116Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:11.0245857Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:11.0278552Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:11.0308513Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:11.0335791Z ##[endgroup]
+2026-10-23T06:06:11.0336648Z ##[group]Fetching the repository
+2026-10-23T06:06:11.0342589Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-23T06:06:15.2952124Z From https://github.com/psewdon1m/venus
+2026-10-23T06:06:15.2954310Z  * [new branch]        evidence/p04-technical-20261019 -> origin/evidence/p04-technical-20261019
+2026-10-23T06:06:15.2955878Z  * [new branch]        feature/p01-foundation -> origin/feature/p01-foundation
+2026-10-23T06:06:15.2957568Z  * [new branch]        feature/p02-rooms      -> origin/feature/p02-rooms
+2026-10-23T06:06:15.2959033Z  * [new branch]        feature/p03-engine     -> origin/feature/p03-engine
+2026-10-23T06:06:15.2960452Z  * [new branch]        feature/p04-catalog    -> origin/feature/p04-catalog
+2026-10-23T06:06:15.2961872Z  * [new branch]        main                   -> origin/main
+2026-10-23T06:06:15.2963503Z  * [new tag]           p01-accepted-20261018  -> p01-accepted-20261018
+2026-10-23T06:06:15.2964967Z  * [new tag]           p02-accepted-20261018  -> p02-accepted-20261018
+2026-10-23T06:06:15.2966462Z  * [new tag]           p03-accepted-20261019  -> p03-accepted-20261019
+2026-10-23T06:06:15.2968135Z  * [new tag]           p03-m1-preregistered-20261018 -> p03-m1-preregistered-20261018
+2026-10-23T06:06:15.2969475Z  * [new tag]           p03-m2-preregistered-20261018 -> p03-m2-preregistered-20261018
+2026-10-23T06:06:15.2970808Z  * [new tag]           p03-m3-current-inputs-20261023 -> p03-m3-current-inputs-20261023
+2026-10-23T06:06:15.2972146Z  * [new tag]           p03-m3-preregistered-20261018 -> p03-m3-preregistered-20261018
+2026-10-23T06:06:15.2973709Z  * [new tag]           p03-m3-proof-timeout-20261019 -> p03-m3-proof-timeout-20261019
+2026-10-23T06:06:15.2975179Z  * [new tag]           p03-proof-20261019     -> p03-proof-20261019
+2026-10-23T06:06:15.2978229Z [command]/usr/bin/git rev-parse --verify --quiet 5d4126006c520bdc45060c4923b2d38f83e91e3f^{object}
+2026-10-23T06:06:15.2982811Z 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:15.2988326Z ##[endgroup]
+2026-10-23T06:06:15.2989735Z ##[group]Determining the checkout info
+2026-10-23T06:06:15.2991315Z ##[endgroup]
+2026-10-23T06:06:15.2992311Z [command]/usr/bin/git sparse-checkout disable
+2026-10-23T06:06:15.3093326Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-23T06:06:15.3121225Z ##[group]Checking out the ref
+2026-10-23T06:06:15.3123040Z [command]/usr/bin/git checkout --progress --force 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:16.3654441Z Updating files:  29% (8796/29871)
+2026-10-23T06:06:16.3832421Z Updating files:  30% (8962/29871)
+2026-10-23T06:06:16.4062450Z Updating files:  31% (9261/29871)
+2026-10-23T06:06:16.4329769Z Updating files:  32% (9559/29871)
+2026-10-23T06:06:16.4550237Z Updating files:  33% (9858/29871)
+2026-10-23T06:06:16.4724721Z Updating files:  34% (10157/29871)
+2026-10-23T06:06:16.5188787Z Updating files:  35% (10455/29871)
+2026-10-23T06:06:16.5732823Z Updating files:  36% (10754/29871)
+2026-10-23T06:06:16.5909856Z Updating files:  37% (11053/29871)
+2026-10-23T06:06:16.6330989Z Updating files:  38% (11351/29871)
+2026-10-23T06:06:16.6939744Z Updating files:  39% (11650/29871)
+2026-10-23T06:06:16.7255985Z Updating files:  40% (11949/29871)
+2026-10-23T06:06:16.8213987Z Updating files:  41% (12248/29871)
+2026-10-23T06:06:16.9077119Z Updating files:  42% (12546/29871)
+2026-10-23T06:06:16.9676203Z Updating files:  43% (12845/29871)
+2026-10-23T06:06:17.0418629Z Updating files:  44% (13144/29871)
+2026-10-23T06:06:17.0847311Z Updating files:  45% (13442/29871)
+2026-10-23T06:06:17.1320623Z Updating files:  46% (13741/29871)
+2026-10-23T06:06:17.1533891Z Updating files:  47% (14040/29871)
+2026-10-23T06:06:17.1746139Z Updating files:  48% (14339/29871)
+2026-10-23T06:06:17.1873615Z Updating files:  49% (14637/29871)
+2026-10-23T06:06:17.1974771Z Updating files:  50% (14936/29871)
+2026-10-23T06:06:17.2109379Z Updating files:  51% (15235/29871)
+2026-10-23T06:06:17.2212609Z Updating files:  52% (15533/29871)
+2026-10-23T06:06:17.2316733Z Updating files:  53% (15832/29871)
+2026-10-23T06:06:17.2478816Z Updating files:  54% (16131/29871)
+2026-10-23T06:06:17.2618659Z Updating files:  55% (16430/29871)
+2026-10-23T06:06:17.2745183Z Updating files:  56% (16728/29871)
+2026-10-23T06:06:17.2848935Z Updating files:  57% (17027/29871)
+2026-10-23T06:06:17.2947360Z Updating files:  58% (17326/29871)
+2026-10-23T06:06:17.3071957Z Updating files:  59% (17624/29871)
+2026-10-23T06:06:17.3173424Z Updating files:  60% (17923/29871)
+2026-10-23T06:06:17.3272933Z Updating files:  61% (18222/29871)
+2026-10-23T06:06:17.3341469Z Updating files:  62% (18521/29871)
+2026-10-23T06:06:17.3383736Z Updating files:  62% (18685/29871)
+2026-10-23T06:06:17.3654205Z Updating files:  63% (18819/29871)
+2026-10-23T06:06:17.3852645Z Updating files:  64% (19118/29871)
+2026-10-23T06:06:17.3948500Z Updating files:  65% (19417/29871)
+2026-10-23T06:06:17.4057203Z Updating files:  66% (19715/29871)
+2026-10-23T06:06:17.4236434Z Updating files:  67% (20014/29871)
+2026-10-23T06:06:17.4366593Z Updating files:  68% (20313/29871)
+2026-10-23T06:06:17.4492582Z Updating files:  69% (20611/29871)
+2026-10-23T06:06:17.4618412Z Updating files:  70% (20910/29871)
+2026-10-23T06:06:17.4716808Z Updating files:  71% (21209/29871)
+2026-10-23T06:06:17.4845872Z Updating files:  72% (21508/29871)
+2026-10-23T06:06:17.4957727Z Updating files:  73% (21806/29871)
+2026-10-23T06:06:17.5157293Z Updating files:  74% (22105/29871)
+2026-10-23T06:06:17.5280902Z Updating files:  75% (22404/29871)
+2026-10-23T06:06:17.5408203Z Updating files:  76% (22702/29871)
+2026-10-23T06:06:17.5562904Z Updating files:  77% (23001/29871)
+2026-10-23T06:06:17.5697703Z Updating files:  78% (23300/29871)
+2026-10-23T06:06:17.5848476Z Updating files:  79% (23599/29871)
+2026-10-23T06:06:17.5997667Z Updating files:  80% (23897/29871)
+2026-10-23T06:06:17.6140549Z Updating files:  81% (24196/29871)
+2026-10-23T06:06:17.6312764Z Updating files:  82% (24495/29871)
+2026-10-23T06:06:17.6446194Z Updating files:  83% (24793/29871)
+2026-10-23T06:06:17.6552956Z Updating files:  84% (25092/29871)
+2026-10-23T06:06:17.6692566Z Updating files:  85% (25391/29871)
+2026-10-23T06:06:17.6822415Z Updating files:  86% (25690/29871)
+2026-10-23T06:06:17.6950372Z Updating files:  87% (25988/29871)
+2026-10-23T06:06:17.8422217Z Updating files:  88% (26287/29871)
+2026-10-23T06:06:18.4161324Z Updating files:  89% (26586/29871)
+2026-10-23T06:06:18.4208262Z Updating files:  89% (26783/29871)
+2026-10-23T06:06:18.4620750Z Updating files:  90% (26884/29871)
+2026-10-23T06:06:18.4794560Z Updating files:  91% (27183/29871)
+2026-10-23T06:06:18.5067681Z Updating files:  92% (27482/29871)
+2026-10-23T06:06:18.5203763Z Updating files:  93% (27781/29871)
+2026-10-23T06:06:18.5328407Z Updating files:  94% (28079/29871)
+2026-10-23T06:06:18.5447589Z Updating files:  95% (28378/29871)
+2026-10-23T06:06:18.5555102Z Updating files:  96% (28677/29871)
+2026-10-23T06:06:18.5773200Z Updating files:  97% (28975/29871)
+2026-10-23T06:06:18.6001169Z Updating files:  98% (29274/29871)
+2026-10-23T06:06:18.6243702Z Updating files:  99% (29573/29871)
+2026-10-23T06:06:18.6244002Z Updating files: 100% (29871/29871)
+2026-10-23T06:06:18.6244232Z Updating files: 100% (29871/29871), done.
+2026-10-23T06:06:18.7192065Z Note: switching to '5d4126006c520bdc45060c4923b2d38f83e91e3f'.
+2026-10-23T06:06:18.7192401Z 
+2026-10-23T06:06:18.7192614Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-23T06:06:18.7193156Z changes and commit them, and you can discard any commits you make in this
+2026-10-23T06:06:18.7193713Z state without impacting any branches by switching back to a branch.
+2026-10-23T06:06:18.7194023Z 
+2026-10-23T06:06:18.7194228Z If you want to create a new branch to retain commits you create, you may
+2026-10-23T06:06:18.7194735Z do so (now or later) by using -c with the switch command. Example:
+2026-10-23T06:06:18.7195029Z 
+2026-10-23T06:06:18.7195139Z   git switch -c <new-branch-name>
+2026-10-23T06:06:18.7195671Z 
+2026-10-23T06:06:18.7195784Z Or undo this operation with:
+2026-10-23T06:06:18.7195968Z 
+2026-10-23T06:06:18.7196067Z   git switch -
+2026-10-23T06:06:18.7196204Z 
+2026-10-23T06:06:18.7196443Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-23T06:06:18.7196795Z 
+2026-10-23T06:06:18.7197274Z HEAD is now at 5d412600 Allow intentional programmatic scrolling after keyboard navigation
+2026-10-23T06:06:18.7252125Z ##[endgroup]
+2026-10-23T06:06:18.7292086Z [command]/usr/bin/git log -1 --format=%H
+2026-10-23T06:06:18.7317493Z 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:18.7326292Z ##[group]Removing auth
+2026-10-23T06:06:18.7326612Z Removing SSH command configuration
+2026-10-23T06:06:18.7334207Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-23T06:06:18.7362966Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-23T06:06:18.7589857Z Removing HTTP extra header
+2026-10-23T06:06:18.7594777Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-23T06:06:18.7625000Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-23T06:06:18.7833134Z Removing includeIf entries pointing to credentials config files
+2026-10-23T06:06:18.7836673Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-23T06:06:18.7859572Z includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-23T06:06:18.7860005Z includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-23T06:06:18.7860516Z includeif.gitdir:/github/workspace/.git.path
+2026-10-23T06:06:18.7860990Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-23T06:06:18.7869063Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-23T06:06:18.7890511Z /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.7899588Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8088557Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-23T06:06:18.8113318Z /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8122496Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8161965Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-23T06:06:18.8183928Z /github/runner_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8198805Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8306881Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-23T06:06:18.8327705Z /github/runner_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8333875Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config
+2026-10-23T06:06:18.8400392Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-23T06:06:18.8606518Z Removing credentials config '/home/runner/work/_temp/git-credentials-586129fa-8243-4b57-8688-9164d399d9a6.config'
+2026-10-23T06:06:18.8615793Z ##[endgroup]
+2026-10-23T06:06:18.9084159Z ##[group]Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+2026-10-23T06:06:18.9084479Z with:
+2026-10-23T06:06:18.9084667Z   node-version-file: .node-version
+2026-10-23T06:06:18.9084874Z   cache: npm
+2026-10-23T06:06:18.9085040Z   check-latest: false
+2026-10-23T06:06:18.9087153Z   token: ***
+2026-10-23T06:06:18.9087344Z   package-manager-cache: true
+2026-10-23T06:06:18.9087546Z ##[endgroup]
+2026-10-23T06:06:19.0112524Z Node version file is not JSON file
+2026-10-23T06:06:19.0113384Z Resolved .node-version as 24.22.0
+2026-10-23T06:06:19.0129665Z Attempting to download 24.22.0...
+2026-10-23T06:06:19.5227927Z Acquiring 24.22.0 - x64 from https://github.com/actions/node-versions/releases/download/24.22.0-38668177966/node-24.22.0-linux-x64.tar.gz
+2026-10-23T06:06:19.9003308Z Extracting ...
+2026-10-23T06:06:19.9107252Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/18829fce-36e8-40c7-94eb-9fa493b671b6 -f /home/runner/work/_temp/d81ec2d9-a97c-4ccd-8174-acde6c86e931
+2026-10-23T06:06:20.9877084Z Adding to the cache ...
+2026-10-23T06:06:26.3137613Z ##[group]Environment details
+2026-10-23T06:06:26.6516471Z node: v24.22.0
+2026-10-23T06:06:26.6516786Z npm: 11.19.1
+2026-10-23T06:06:26.6517090Z yarn: 1.22.22
+2026-10-23T06:06:26.6517546Z ##[endgroup]
+2026-10-23T06:06:26.6531402Z [command]/opt/hostedtoolcache/node/24.22.0/x64/bin/npm config get cache
+2026-10-23T06:06:26.7289491Z /home/runner/.npm
+2026-10-23T06:06:26.8000634Z Cache hit for: node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b
+2026-10-23T06:06:26.8550610Z Received 690 of 690 (100.0%), 0.0 MBs/sec
+2026-10-23T06:06:26.8551469Z Cache Size: ~0 MB (690 B)
+2026-10-23T06:06:26.8568710Z [command]/usr/bin/tar -xf /home/runner/work/_temp/2250bc37-d8e8-4803-bc8e-b1d417722ac8/cache.tzst -P -C /home/runner/work/venus/venus --use-compress-program unzstd
+2026-10-23T06:06:26.8634322Z Cache restored successfully
+2026-10-23T06:06:26.8638069Z Cache restored from key: node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b
+2026-10-23T06:06:26.8813079Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-23T06:06:26.8813406Z with:
+2026-10-23T06:06:26.8813578Z   python-version: 3.12.14
+2026-10-23T06:06:26.8813781Z   check-latest: false
+2026-10-23T06:06:26.8815746Z   token: ***
+2026-10-23T06:06:26.8815927Z   update-environment: true
+2026-10-23T06:06:26.8816134Z   allow-prereleases: false
+2026-10-23T06:06:26.8816324Z   freethreaded: false
+2026-10-23T06:06:26.8816506Z ##[endgroup]
+2026-10-23T06:06:26.9804808Z ##[group]Installed versions
+2026-10-23T06:06:26.9827126Z Version 3.12.14 was not found in the local cache
+2026-10-23T06:06:27.5390446Z Version 3.12.14 is available for downloading
+2026-10-23T06:06:27.5391148Z Download from "https://github.com/actions/python-versions/releases/download/3.12.14-31661455385/python-3.12.14-linux-24.04-x64.tar.gz"
+2026-10-23T06:06:28.0447612Z Extract downloaded archive
+2026-10-23T06:06:28.0542198Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/110ba1a6-08e6-4f0c-8bae-9e1880b29e19 -f /home/runner/work/_temp/5fe71738-2399-47bb-9c77-bcdbc50dba54
+2026-10-23T06:06:29.7574313Z Execute installation script
+2026-10-23T06:06:29.7659593Z Check if Python hostedtoolcache folder exist...
+2026-10-23T06:06:29.7660231Z Create Python 3.12.14 folder
+2026-10-23T06:06:29.7671194Z Copy Python binaries to hostedtoolcache folder
+2026-10-23T06:06:30.1985147Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-10-23T06:06:30.2019639Z Upgrading pip...
+2026-10-23T06:06:35.6089457Z Collecting pip
+2026-10-23T06:06:35.6434902Z Downloading pip-26.2.2-py3-none-any.whl.metadata (4.6 kB)
+2026-10-23T06:06:35.6548549Z Downloading pip-26.2.2-py3-none-any.whl (1.8 MB)
+2026-10-23T06:06:35.8586464Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 8.3 MB/s eta 0:00:00
+2026-10-23T06:06:35.8586829Z 
+2026-10-23T06:06:35.8819731Z Installing collected packages: pip
+2026-10-23T06:06:35.8820253Z Attempting uninstall: pip
+2026-10-23T06:06:35.8836438Z Found existing installation: pip 25.0.1
+2026-10-23T06:06:35.9098065Z Uninstalling pip-25.0.1:
+2026-10-23T06:06:35.9142248Z Successfully uninstalled pip-25.0.1
+2026-10-23T06:06:36.6333710Z Successfully installed pip-26.2.2
+2026-10-23T06:06:36.6845363Z Create complete file
+2026-10-23T06:06:36.6874369Z Successfully set up CPython (3.12.14)
+2026-10-23T06:06:36.6874961Z ##[endgroup]
+2026-10-23T06:06:36.7029720Z ##[group]Run python -m pip install --require-hashes -r tools/requirements.lock
+2026-10-23T06:06:36.7030246Z [36;1mpython -m pip install --require-hashes -r tools/requirements.lock[0m
+2026-10-23T06:06:36.7292660Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:06:36.7292911Z env:
+2026-10-23T06:06:36.7293142Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:36.7293549Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-23T06:06:36.7293965Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:36.7294273Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:36.7294582Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:36.7294901Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-23T06:06:36.7295177Z ##[endgroup]
+2026-10-23T06:06:37.2525042Z Collecting attrs==26.1.0 (from -r tools/requirements.lock (line 2))
+2026-10-23T06:06:37.3066145Z   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-23T06:06:37.4386588Z Collecting jsonschema==4.26.0 (from -r tools/requirements.lock (line 3))
+2026-10-23T06:06:37.4474969Z   Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+2026-10-23T06:06:37.5311231Z Collecting jsonschema-specifications==2025.9.1 (from -r tools/requirements.lock (line 4))
+2026-10-23T06:06:37.5397433Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-23T06:06:37.6293132Z Collecting referencing==0.37.0 (from -r tools/requirements.lock (line 5))
+2026-10-23T06:06:37.6380589Z   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-23T06:06:38.1405772Z Collecting rpds-py==2026.9.1 (from -r tools/requirements.lock (line 6))
+2026-10-23T06:06:38.1494561Z   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+2026-10-23T06:06:38.4269690Z Collecting typing-extensions==4.16.0 (from -r tools/requirements.lock (line 7))
+2026-10-23T06:06:38.4353916Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-23T06:06:38.5818769Z Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+2026-10-23T06:06:38.7473128Z 
+2026-10-23T06:06:38.7484472Z Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+2026-10-23T06:06:38.7981279Z ##[group]Run npm ci
+2026-10-23T06:06:38.7981497Z [36;1mnpm ci[0m
+2026-10-23T06:06:38.8038696Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:06:38.8038914Z env:
+2026-10-23T06:06:38.8039138Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:38.8039504Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-23T06:06:38.8039855Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:38.8040166Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:38.8040473Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:38.8040782Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-23T06:06:38.8041046Z ##[endgroup]
+2026-10-23T06:06:42.1826503Z 
+2026-10-23T06:06:42.1827320Z added 288 packages, and audited 295 packages in 3s
+2026-10-23T06:06:42.1834988Z 
+2026-10-23T06:06:42.1835164Z found 0 vulnerabilities
+2026-10-23T06:06:42.2310689Z ##[group]Run npm run quality
+2026-10-23T06:06:42.2310949Z [36;1mnpm run quality[0m
+2026-10-23T06:06:42.2368748Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:06:42.2368969Z env:
+2026-10-23T06:06:42.2369211Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:42.2369573Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-23T06:06:42.2369910Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:42.2370211Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:42.2370515Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:06:42.2370813Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-23T06:06:42.2371067Z ##[endgroup]
+2026-10-23T06:06:42.3164384Z 
+2026-10-23T06:06:42.3164947Z > venus@0.0.0 quality
+2026-10-23T06:06:42.3166657Z > npm run lint && npm run typecheck && npm test && npm run test:p05:reporter && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:catalog-r2 && npm run test:negative
+2026-10-23T06:06:42.3167943Z 
+2026-10-23T06:06:42.3924858Z 
+2026-10-23T06:06:42.3925478Z > venus@0.0.0 lint
+2026-10-23T06:06:42.3926010Z > eslint apps packages tools/*.mjs tests/**/*.mjs
+2026-10-23T06:06:42.3926390Z 
+2026-10-23T06:06:49.2578760Z 
+2026-10-23T06:06:49.2579418Z > venus@0.0.0 typecheck
+2026-10-23T06:06:49.2579934Z > tsc -b && tsc -p apps/web/tsconfig.json
+2026-10-23T06:06:49.2580222Z 
+2026-10-23T06:06:55.5459687Z 
+2026-10-23T06:06:55.5460305Z > venus@0.0.0 test
+2026-10-23T06:06:55.5460681Z > vitest run
+2026-10-23T06:06:55.5460855Z 
+2026-10-23T06:06:55.7800342Z 
+2026-10-23T06:06:55.7803268Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/home/runner/work/venus/venus[39m
+2026-10-23T06:06:55.7803829Z 
+2026-10-23T06:06:59.1160117Z  [32m✓[39m apps/api/src/private-topic-ledger.test.ts [2m([22m[2m89 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 2412[2mms[22m[39m
+2026-10-23T06:06:59.3850251Z  [32m✓[39m packages/relationship-engine/src/private-conversation.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 87[2mms[22m[39m
+2026-10-23T06:07:00.1712375Z  [32m✓[39m apps/api/src/private-topic-preferences.test.ts [2m([22m[2m81 tests[22m[2m)[22m[33m 331[2mms[22m[39m
+2026-10-23T06:07:03.5000542Z  [32m✓[39m apps/web/src/topic-panel.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 2980[2mms[22m[39m
+2026-10-23T06:07:03.5004829Z    [32m✓[39m actual TopicGamesPanel scoped V2 flow [2m(21)[22m
+2026-10-23T06:07:03.5006271Z      [33m[2m✓[22m[39m keyboard focus reveals the whole private editor without submitting or exposing content[33m 429[2mms[22m[39m
+2026-10-23T06:07:03.7495542Z  [32m✓[39m apps/web/src/topic-state.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+2026-10-23T06:07:05.9107064Z  [32m✓[39m apps/web/src/game-controls-panel.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 1854[2mms[22m[39m
+2026-10-23T06:07:06.0372971Z  [32m✓[39m apps/web/src/game-controls.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+2026-10-23T06:07:06.3605712Z  [32m✓[39m apps/api/src/topic-round-view.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-23T06:07:06.6999146Z  [32m✓[39m apps/api/src/topic-room-lifecycle.test.ts [2m([22m[2m142 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 10278[2mms[22m[39m
+2026-10-23T06:07:06.7045226Z    [32m✓[39m inactive topic room lifecycle — real Linux filesystem [2m(63)[22m
+2026-10-23T06:07:06.7078713Z      [33m[2m✓[22m[39m actual SIGKILL birth phase after-personal-initialize leaves an unconfirmed orphan without auto-init[33m 350[2mms[22m[39m
+2026-10-23T06:07:06.7100313Z    [32m✓[39m inactive authenticated recovery and member-metadata cleanup [2m(54)[22m
+2026-10-23T06:07:06.7131372Z      [33m[2m✓[22m[39m actual SIGKILL after-lifecycle-chain-unlink -> fresh status/retry without missing-ledger parsing[33m 470[2mms[22m[39m
+2026-10-23T06:07:06.7158930Z      [33m[2m✓[22m[39m actual SIGKILL after-lifecycle-chain-directory-sync -> fresh status/retry without missing-ledger parsing[33m 482[2mms[22m[39m
+2026-10-23T06:07:08.6610368Z  [32m✓[39m apps/web/src/game-races.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 1513[2mms[22m[39m
+2026-10-23T06:07:08.6611625Z    [32m✓[39m actual GamesPanel asynchronous publishing [2m(8)[22m
+2026-10-23T06:07:08.6613009Z      [33m[2m✓[22m[39m drops a conflicting revision retry and requires a new explicit prepare with fresh revision/key[33m 417[2mms[22m[39m
+2026-10-23T06:07:09.1018727Z  [32m✓[39m apps/web/src/topic-own-exclusion-refresh.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 2447[2mms[22m[39m
+2026-10-23T06:07:09.1020151Z    [32m✓[39m own permanent exclusion command refreshes only its own settings [2m(12)[22m
+2026-10-23T06:07:09.1021987Z      [33m[2m✓[22m[39m reloads authenticated own record after successful command; excluded allow is unchecked/disabled and peer stays unchanged[33m 453[2mms[22m[39m
+2026-10-23T06:07:10.3761720Z  [32m✓[39m apps/api/src/topic-game-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[33m 418[2mms[22m[39m
+2026-10-23T06:07:10.9634132Z  [32m✓[39m packages/relationship-engine/src/topic-map.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 245[2mms[22m[39m
+2026-10-23T06:07:11.9520367Z  [32m✓[39m packages/relationship-engine/src/engine.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 536[2mms[22m[39m
+2026-10-23T06:07:11.9522956Z    [32m✓[39m production relationship engine, explicit synthetic test pack [2m(8)[22m
+2026-10-23T06:07:11.9524704Z      [33m[2m✓[22m[39m enforces class, every actor comfort, context, stage, capability and common public support exhaustively[33m 327[2mms[22m[39m
+2026-10-23T06:07:12.2919104Z  [32m✓[39m apps/api/src/topic-condition-lifecycle.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+2026-10-23T06:07:12.4494761Z  [32m✓[39m apps/api/src/request-error-diagnostic.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-23T06:07:13.0678661Z  [32m✓[39m apps/api/src/p05-private-channel.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+2026-10-23T06:07:13.4354473Z  [32m✓[39m apps/api/src/topic-chat-guards.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+2026-10-23T06:07:13.6762056Z  [32m✓[39m apps/api/src/room-socket-poll.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+2026-10-23T06:07:14.4671119Z  [32m✓[39m apps/api/src/topic-history-cache-integration.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 138[2mms[22m[39m
+2026-10-23T06:07:14.6593980Z  [32m✓[39m apps/api/src/topic-room-registry.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+2026-10-23T06:07:15.4638857Z  [32m✓[39m tools/p03-measurements.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+2026-10-23T06:07:15.6487546Z  [32m✓[39m apps/api/src/private-chat.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+2026-10-23T06:07:15.9125502Z  [32m✓[39m apps/api/src/topic-algorithm-compatibility.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+2026-10-23T06:07:16.2195778Z  [32m✓[39m packages/card-catalog/src/catalog.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 7208[2mms[22m[39m
+2026-10-23T06:07:16.2209330Z    [32m✓[39m P04 catalogue authoring and independent review boundary [2m(9)[22m
+2026-10-23T06:07:16.2234330Z      [33m[2m✓[22m[39m distinguishes a missing required in-person channel from a real private content shortage[33m 971[2mms[22m[39m
+2026-10-23T06:07:16.2258267Z      [33m[2m✓[22m[39m never promotes drafts without complete signed independent review; changes invalidate it[33m 4587[2mms[22m[39m
+2026-10-23T06:07:16.2278276Z      [33m[2m✓[22m[39m rejects example-origin and wrong-role material even with a signed record[33m 1034[2mms[22m[39m
+2026-10-23T06:07:16.2280199Z      [33m[2m✓[22m[39m reserves durable unique IDs, retries idempotently and rolls failed batches back[33m 310[2mms[22m[39m
+2026-10-23T06:07:16.3113132Z  [32m✓[39m packages/card-catalog/src/topic-bundles.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 72[2mms[22m[39m
+2026-10-23T06:07:16.4620731Z  [32m✓[39m apps/api/src/room-private-protocol.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+2026-10-23T06:07:16.5549092Z  [32m✓[39m apps/api/src/topic-game-idempotency.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+2026-10-23T06:07:16.8789154Z  [32m✓[39m apps/api/src/topic-projection-reuse.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+2026-10-23T06:07:17.1264671Z  [32m✓[39m apps/api/src/room-routes-v2.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 365[2mms[22m[39m
+2026-10-23T06:07:17.3333659Z  [32m✓[39m apps/api/src/topic-room-directories.test.ts [2m([22m[2m20 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[32m 47[2mms[22m[39m
+2026-10-23T06:07:17.4465593Z  [32m✓[39m apps/api/src/pilot-topic-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+2026-10-23T06:07:17.7532187Z  [32m✓[39m apps/api/src/app.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 126[2mms[22m[39m
+2026-10-23T06:07:18.4839206Z  [32m✓[39m apps/api/src/self-actions-delivery.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+2026-10-23T06:07:18.8344332Z  [32m✓[39m packages/relationship-engine/src/consent.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+2026-10-23T06:07:19.0279323Z  [32m✓[39m apps/api/src/topic-ephemeral-lock.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-23T06:07:19.6311026Z  [32m✓[39m apps/api/src/topic-snapshot-cache-integration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+2026-10-23T06:07:19.8844668Z  [32m✓[39m apps/web/src/topic-round-view.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 2093[2mms[22m[39m
+2026-10-23T06:07:19.8845693Z    [32m✓[39m TopicGamesPanel actual single round-view transport [2m(11)[22m
+2026-10-23T06:07:19.8846813Z      [33m[2m✓[22m[39m reads one bundled response and never requests independently aged private components[33m 452[2mms[22m[39m
+2026-10-23T06:07:20.4747284Z  [32m✓[39m apps/api/src/topic-runtime.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-23T06:07:20.6384517Z  [32m✓[39m apps/api/src/room-socket-projection.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-23T06:07:20.6538822Z  [32m✓[39m packages/card-catalog/src/pilot-bundle.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 398[2mms[22m[39m
+2026-10-23T06:07:20.8064529Z  [32m✓[39m apps/api/src/room-games.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+2026-10-23T06:07:21.2908972Z  [32m✓[39m apps/api/src/private-chat-delivery.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+2026-10-23T06:07:21.6424177Z  [32m✓[39m apps/api/src/game-self-actions.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-23T06:07:22.1559033Z  [32m✓[39m apps/web/src/topic-settings.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 960[2mms[22m[39m
+2026-10-23T06:07:22.1624588Z    [32m✓[39m actual own-topic settings boundaries [2m(4)[22m
+2026-10-23T06:07:22.1658693Z      [33m[2m✓[22m[39m has no preselected permissions and saves only an explicit own allow choice[33m 449[2mms[22m[39m
+2026-10-23T06:07:22.3040575Z  [32m✓[39m apps/api/src/topic-history-cache.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 273[2mms[22m[39m
+2026-10-23T06:07:22.6969371Z  [32m✓[39m apps/api/src/private-chat-routes.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 207[2mms[22m[39m
+2026-10-23T06:07:23.0917787Z  [32m✓[39m apps/api/src/topic-game-model.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 431[2mms[22m[39m
+2026-10-23T06:07:23.0937965Z    [32m✓[39m V2 padded chunk storage [2m(11)[22m
+2026-10-23T06:07:23.0958367Z      [33m[2m✓[22m[39m reconstructs a YesBut candidate accepted by the real conversation text validator[33m 384[2mms[22m[39m
+2026-10-23T06:07:23.1799142Z  [32m✓[39m apps/api/src/games-model.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-23T06:07:23.4259108Z  [32m✓[39m apps/api/src/security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 171[2mms[22m[39m
+2026-10-23T06:07:23.4502324Z  [32m✓[39m apps/api/src/topic-games.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+2026-10-23T06:07:23.6278885Z  [32m✓[39m apps/api/src/topic-snapshot-cache.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-23T06:07:23.7538591Z  [32m✓[39m apps/api/src/topic-offer-throttle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+2026-10-23T06:07:23.7708753Z  [32m✓[39m apps/web/src/topic-controls.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-23T06:07:24.3128193Z  [32m✓[39m apps/api/src/games-delivery.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+2026-10-23T06:07:24.4583805Z  [32m✓[39m apps/api/src/p05-feature-availability.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+2026-10-23T06:07:24.7869062Z  [32m✓[39m packages/relationship-engine/src/public-pair-opt-in.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-23T06:07:25.1339050Z  [32m✓[39m apps/api/src/topic-action-consent.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-23T06:07:25.2103971Z  [32m✓[39m apps/api/src/topic-context-fixture.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-23T06:07:25.4381550Z  [32m✓[39m apps/api/src/topic-games-socket-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-23T06:07:25.5772206Z  [32m✓[39m apps/web/src/game-operations.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-23T06:07:25.7349102Z  [32m✓[39m apps/web/src/game-state.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-23T06:07:25.7898912Z  [32m✓[39m apps/api/src/p05-public-receipt.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-23T06:07:25.8878689Z  [32m✓[39m apps/api/src/topic-chat-policy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-23T06:07:25.9391465Z  [32m✓[39m apps/web/src/session-api.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+2026-10-23T06:07:25.9994736Z  [32m✓[39m apps/web/src/presentation-clock.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-23T06:07:26.0845939Z  [32m✓[39m apps/web/src/private-state.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-23T06:07:26.3089419Z  [32m✓[39m apps/api/src/topic-games-feature-off.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+2026-10-23T06:07:26.3935509Z  [32m✓[39m apps/api/src/topic-round-view-route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 127[2mms[22m[39m
+2026-10-23T06:07:26.4471856Z  [32m✓[39m apps/web/src/game-setup.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-23T06:07:26.5274194Z  [32m✓[39m apps/api/src/entry-profile.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-23T06:07:26.6230225Z  [32m✓[39m tools/ci-policy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 22[2mms[22m[39m
+2026-10-23T06:07:26.6568778Z  [32m✓[39m apps/web/src/api.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+2026-10-23T06:07:26.8046244Z  [32m✓[39m tools/github-ci.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-23T06:07:26.8572079Z Batch request: B-20261018-Q-001 errors= 0
+2026-10-23T06:07:26.9678976Z Batch request: <invalid> errors= 17
+2026-10-23T06:07:26.9679603Z ERROR BATCH-001 'batch_id' is a required property
+2026-10-23T06:07:26.9680142Z ERROR BATCH-001 'pack_id' is a required property
+2026-10-23T06:07:26.9681323Z ERROR BATCH-001 'schema_version' is a required property
+2026-10-23T06:07:26.9681923Z ERROR BATCH-001 'policy_revision' is a required property
+2026-10-23T06:07:26.9682508Z ERROR BATCH-001 'mode' is a required property
+2026-10-23T06:07:26.9682984Z ERROR BATCH-001 'count' is a required property
+2026-10-23T06:07:26.9683529Z ERROR BATCH-001 'id_range' is a required property
+2026-10-23T06:07:26.9684093Z ERROR BATCH-001 'meeting_contexts' is a required property
+2026-10-23T06:07:26.9684696Z ERROR BATCH-001 'allowed_interactions' is a required property
+2026-10-23T06:07:26.9685399Z ERROR BATCH-001 'relationship_scope_distribution' is a required property
+2026-10-23T06:07:26.9686076Z ERROR BATCH-001 'comfort_distribution' is a required property
+2026-10-23T06:07:26.9686727Z ERROR BATCH-001 'progression_distribution' is a required property
+2026-10-23T06:07:26.9687595Z ERROR BATCH-001 'languages' is a required property
+2026-10-23T06:07:26.9688192Z ERROR BATCH-001 'forbidden_categories' is a required property
+2026-10-23T06:07:26.9688825Z ERROR BATCH-001 'source_catalog_digest' is a required property
+2026-10-23T06:07:26.9689411Z ERROR BATCH-001 'requested_by' is a required property
+2026-10-23T06:07:26.9690005Z ERROR BATCH-001 'human_review_required' is a required property
+2026-10-23T06:07:26.9829394Z  [32m✓[39m tools/catalog-request-snapshot.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 230[2mms[22m[39m
+2026-10-23T06:07:27.7019135Z  [32m✓[39m packages/relationship-engine/src/topic-planner.test.ts [2m([22m[2m69 tests[22m[2m)[22m[33m 31000[2mms[22m[39m
+2026-10-23T06:07:27.7038159Z    [32m✓[39m sessionwide private exact-card uniqueness [2m(3)[22m
+2026-10-23T06:07:27.7046888Z      [33m[2m✓[22m[39m never reoffers an exact private ID to another pair in the same native session[33m 3172[2mms[22m[39m
+2026-10-23T06:07:27.7048255Z      [33m[2m✓[22m[39m consumes replacement attempts across pairs while retaining private public-schedule isolation[33m 4044[2mms[22m[39m
+2026-10-23T06:07:27.7050058Z      [33m[2m✓[22m[39m rejects an authenticated-shaped current history containing the same ID in different pairs[33m 1142[2mms[22m[39m
+2026-10-23T06:07:27.7051101Z    [32m✓[39m complete private opportunity history after empty topic setup [2m(2)[22m
+2026-10-23T06:07:27.7052307Z      [33m[2m✓[22m[39m keeps the previous actual pair across public rounds and avoids it when an effective unused alternative exists[33m 7891[2mms[22m[39m
+2026-10-23T06:07:27.7053556Z      [33m[2m✓[22m[39m allows the only pair to recur for N2 without manufacturing an alternative[33m 415[2mms[22m[39m
+2026-10-23T06:07:27.7054528Z    [32m✓[39m versioned topic planner without content activation or runtime delivery [2m(39)[22m
+2026-10-23T06:07:27.7055434Z      [33m[2m✓[22m[39m empty/default allow is safe-empty only at baseline-eligible generic private opportunities[33m 345[2mms[22m[39m
+2026-10-23T06:07:27.7056195Z      [33m[2m✓[22m[39m filters entire multi-tag card using both own allow and both room exclusions[33m 314[2mms[22m[39m
+2026-10-23T06:07:27.7057307Z      [33m[2m✓[22m[39m keeps full public projections identical across private settings, histories, IDs, intensity, safety revisions and outcomes[33m 705[2mms[22m[39m
+2026-10-23T06:07:27.7058659Z      [33m[2m✓[22m[39m binds public semantic history across mode and session, without card-ID-only dedupe[33m 839[2mms[22m[39m
+2026-10-23T06:07:27.7059760Z      [33m[2m✓[22m[39m filters same-pair private semantic history across modes/sessions and isolates other pairs[33m 324[2mms[22m[39m
+2026-10-23T06:07:27.7060708Z      [33m[2m✓[22m[39m room exclusions remain effective for caller-supplied current preferences after new session/mode/pair[33m 472[2mms[22m[39m
+2026-10-23T06:07:27.7061502Z      [33m[2m✓[22m[39m runs base guard/cap/progression profiles for2..8, all modes and both contexts[33m 2806[2mms[22m[39m
+2026-10-23T06:07:27.7062378Z      [33m[2m✓[22m[39m preserves veto and comfort/context guards and reports true shortage[33m 2846[2mms[22m[39m
+2026-10-23T06:07:27.7063183Z      [33m[2m✓[22m[39m keeps anti-consecutive private pair where baseline alternatives exist[33m 2480[2mms[22m[39m
+2026-10-23T06:07:27.7088309Z 
+2026-10-23T06:07:27.7093362Z [2m Test Files [22m [1m[32m76 passed[39m[22m[90m (76)[39m
+2026-10-23T06:07:27.7101496Z [2m      Tests [22m [1m[32m1313 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (1316)[39m
+2026-10-23T06:07:27.7102102Z [2m   Start at [22m 06:06:55
+2026-10-23T06:07:27.7106276Z [2m   Duration [22m 31.91s[2m (tests 79%, import 18%, transform 3%)[22m
+2026-10-23T06:07:27.7118848Z 
+2026-10-23T06:07:27.7119542Z [2m    Isolate [22m [33m76 workers spawned[39m[2m · ~100ms startup each (spawn + environment, per file)[22m
+2026-10-23T06:07:27.7120637Z [2m            [22m [2mat least ~2.43s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+2026-10-23T06:07:27.7121125Z 
+2026-10-23T06:07:27.8247098Z 
+2026-10-23T06:07:27.8247632Z > venus@0.0.0 test:p05:reporter
+2026-10-23T06:07:27.8248031Z > node --test tests/p05/report-contract.test.mjs
+2026-10-23T06:07:27.8248219Z 
+2026-10-23T06:07:29.1073692Z ✔ X11 genuinely empty query is distinct from transient BadWindow with partial output (1.69937ms)
+2026-10-23T06:07:29.1074911Z ✔ X11 inventory fails after bounded BadWindow retries and on non-transient failures (0.485367ms)
+2026-10-23T06:07:29.1076066Z ✔ independent normative fixture has 30 unique cases,216 layouts,27 native observations (2.435507ms)
+2026-10-23T06:07:29.1076875Z ✔ receipt rejects missing engine (1.019055ms)
+2026-10-23T06:07:29.1077644Z ✔ receipt rejects duplicate engine (0.461001ms)
+2026-10-23T06:07:29.1078203Z ✔ receipt rejects unknown case (0.518286ms)
+2026-10-23T06:07:29.1078970Z ✔ receipt rejects missing case (0.401833ms)
+2026-10-23T06:07:29.1079527Z ✔ receipt rejects duplicate case (0.369305ms)
+2026-10-23T06:07:29.1082101Z ✔ receipt rejects failed record (0.434111ms)
+2026-10-23T06:07:29.1083085Z ✔ receipt rejects missing layout (1.309955ms)
+2026-10-23T06:07:29.1085106Z ✔ receipt rejects duplicate layout (0.548821ms)
+2026-10-23T06:07:29.1086199Z ✔ receipt rejects wrong actual viewport (0.813421ms)
+2026-10-23T06:07:29.1096266Z ✔ receipt rejects missing native (1.026897ms)
+2026-10-23T06:07:29.1096865Z ✔ receipt rejects duplicate native (0.832821ms)
+2026-10-23T06:07:29.1098353Z ✔ receipt rejects unmeasured native (0.811889ms)
+2026-10-23T06:07:29.1098985Z ✔ receipt rejects native reset absent (0.543393ms)
+2026-10-23T06:07:29.1099591Z ✔ receipt rejects shared process (0.720164ms)
+2026-10-23T06:07:29.1107998Z ✔ receipt rejects main zoom leaked (0.612404ms)
+2026-10-23T06:07:29.1108707Z ✔ receipt rejects wrong toolchain (0.256409ms)
+2026-10-23T06:07:29.1109439Z ✔ receipt rejects runtime cleanup incomplete (0.302397ms)
+2026-10-23T06:07:29.1110356Z ✔ receipt rejects display cleanup incomplete (0.181007ms)
+2026-10-23T06:07:29.1111283Z ✔ receipt rejects pageerror (0.184322ms)
+2026-10-23T06:07:29.1112067Z ✔ receipt rejects error overflow (0.18908ms)
+2026-10-23T06:07:29.1115812Z ✔ receipt rejects missing overflow witness (0.169861ms)
+2026-10-23T06:07:29.1116659Z ✔ receipt rejects native reused main room (0.793642ms)
+2026-10-23T06:07:29.1117681Z ✔ receipt rejects native altered main game (0.576742ms)
+2026-10-23T06:07:29.1118508Z ✔ receipt rejects native inactive scene (0.571544ms)
+2026-10-23T06:07:29.1119340Z ✔ receipt rejects native reused main identity (0.780012ms)
+2026-10-23T06:07:29.1120204Z ✔ targeted and full receipts cannot interchange (0.27072ms)
+2026-10-23T06:07:29.1121273Z ✔ pageerrors acceptance rejects both actual errors and overflow independently (0.166886ms)
+2026-10-23T06:07:29.1123676Z ✔ caller selection overrides inherited narrowing (0.150903ms)
+2026-10-23T06:07:29.1130846Z ✔ actual wrapper refuses narrowed inner report despite Docker success and inherited selectors (39.496659ms)
+2026-10-23T06:07:29.1131916Z ✔ actual wrapper accepts correctly requested targeted report (210.383858ms)
+2026-10-23T06:07:29.1139681Z ✔ actual wrapper rejects forged full PASS missing matrix cells (42.149902ms)
+2026-10-23T06:07:29.1140846Z ✔ actual wrapper rejects pageerror even if inner status says PASS (54.519934ms)
+2026-10-23T06:07:29.1141780Z ✔ actual probe timeout cleanup: owned (39.242443ms)
+2026-10-23T06:07:29.1142598Z ✔ actual probe timeout cleanup: inspectUnconfirmed (37.440581ms)
+2026-10-23T06:07:29.1143431Z ✔ actual probe timeout cleanup: wrongOwner (36.120056ms)
+2026-10-23T06:07:29.1144226Z ✔ actual probe timeout cleanup: removeFailed (50.463677ms)
+2026-10-23T06:07:29.1145345Z ✔ self-actions component receipt requires actual nonempty unique checks and matching scope (0.837998ms)
+2026-10-23T06:07:29.1146690Z ✔ actual self-actions wrapper selects the fixed service suite without claiming browser matrix (38.233983ms)
+2026-10-23T06:07:29.1148281Z ✔ actual self-actions wrapper rejects missing or empty component receipt despite a browser PASS (75.032998ms)
+2026-10-23T06:07:29.1150427Z ✔ actual failed service test process cannot be overridden by its PASS receipt (374.114962ms)
+2026-10-23T06:07:29.1151188Z ✔ self-actions rejects conflicting modes and unused browser selectors before creating resources (192.776837ms)
+2026-10-23T06:07:29.1246156Z ℹ tests 44
+2026-10-23T06:07:29.1246624Z ℹ suites 0
+2026-10-23T06:07:29.1247175Z ℹ pass 44
+2026-10-23T06:07:29.1247705Z ℹ fail 0
+2026-10-23T06:07:29.1248276Z ℹ cancelled 0
+2026-10-23T06:07:29.1248796Z ℹ skipped 0
+2026-10-23T06:07:29.1249312Z ℹ todo 0
+2026-10-23T06:07:29.1249794Z ℹ duration_ms 1272.789687
+2026-10-23T06:07:29.2043369Z 
+2026-10-23T06:07:29.2044238Z > venus@0.0.0 check:schemas
+2026-10-23T06:07:29.2046057Z > python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check
+2026-10-23T06:07:29.2104992Z 
+2026-10-23T06:07:29.5653484Z PASS: JSON Schema 2020-12 and OpenAPI local references
+2026-10-23T06:07:29.5986202Z Checked RE-1 six labels × six = 36 directed combinations; errors=0
+2026-10-23T06:07:29.5986782Z PASS: policy config invariants only. Actual consent/access/inference requires app tests.
+2026-10-23T06:07:29.7629576Z 
+2026-10-23T06:07:29.7630137Z > venus@0.0.0 check:i18n
+2026-10-23T06:07:29.7630577Z > node tools/check-i18n.mjs
+2026-10-23T06:07:29.7630800Z 
+2026-10-23T06:07:29.7878665Z PASS: RU/EN/TR locale keys and nonempty strings
+2026-10-23T06:07:29.8704037Z 
+2026-10-23T06:07:29.8704646Z > venus@0.0.0 test:python
+2026-10-23T06:07:29.8705241Z > python -B -m unittest discover -s tools -p test_*.py
+2026-10-23T06:07:29.8705579Z 
+2026-10-23T06:07:44.8704546Z ............................................................................................................................
+2026-10-23T06:07:44.8705330Z ----------------------------------------------------------------------
+2026-10-23T06:07:44.8705806Z Ran 124 tests in 14.740s
+2026-10-23T06:07:44.8706007Z 
+2026-10-23T06:07:44.8706122Z OK
+2026-10-23T06:07:44.9972838Z 
+2026-10-23T06:07:44.9973372Z > venus@0.0.0 check:docs
+2026-10-23T06:07:44.9974216Z > python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py
+2026-10-23T06:07:44.9974624Z 
+2026-10-23T06:07:45.7830194Z Venus docs: 1827 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+2026-10-23T06:07:45.7830678Z PASS: required files, linked assets and snapshot hashes
+2026-10-23T06:07:46.1891150Z {"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
+2026-10-23T06:07:46.1891862Z PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
+2026-10-23T06:07:46.7061069Z PASS: EXIT-P01 source, CI, negative/container evidence and independent reports bound
+2026-10-23T06:07:47.2684980Z PASS: EXIT-P02 source/CI/HTTP/WS/PostgreSQL/browser/OCI and independent reviews bound
+2026-10-23T06:07:49.4321756Z PASS: EXIT-P03 source/CI/runtime/preregistered measurements/independent reviews bound
+2026-10-23T06:07:55.9675199Z Checked 29869 packaged paths; errors=0
+2026-10-23T06:07:55.9675936Z PASS: packaged bytes match manifest; provenance/signatures require release verification.
+2026-10-23T06:07:56.0565609Z 
+2026-10-23T06:07:56.0566105Z > venus@0.0.0 build
+2026-10-23T06:07:56.0566425Z > tsc -b && npm run build -w @venus/web
+2026-10-23T06:07:56.0566606Z 
+2026-10-23T06:07:56.2276573Z 
+2026-10-23T06:07:56.2277329Z > @venus/web@0.0.0 build
+2026-10-23T06:07:56.2277744Z > vite build
+2026-10-23T06:07:56.2277913Z 
+2026-10-23T06:07:56.4081424Z [36mvite v8.3.4 [32mbuilding client environment for production...[36m[39m
+2026-10-23T06:07:56.4169082Z transforming...
+2026-10-23T06:07:56.4709376Z ✓ 35 modules transformed.
+2026-10-23T06:07:56.4923577Z rendering chunks...
+2026-10-23T06:07:56.5259026Z computing gzip size...
+2026-10-23T06:07:56.5309317Z dist/index.html                   0.39 kB │ gzip:   0.27 kB
+2026-10-23T06:07:56.5310034Z dist/assets/index-BoNI8E-V.css    9.58 kB │ gzip:   2.72 kB
+2026-10-23T06:07:56.5310514Z dist/assets/index-CQ4hcLem.js   347.42 kB │ gzip: 105.35 kB
+2026-10-23T06:07:56.5310736Z 
+2026-10-23T06:07:56.5312286Z [32m✓ built in 122ms[39m
+2026-10-23T06:07:56.6327427Z 
+2026-10-23T06:07:56.6328016Z > venus@0.0.0 test:catalog-r2
+2026-10-23T06:07:56.6328535Z > node tools/check-catalog-r2.mjs
+2026-10-23T06:07:56.6328780Z 
+2026-10-23T06:07:57.1080271Z Validated 450 files, 450 parsed; errors=0
+2026-10-23T06:07:57.1080754Z PASS: structural/semantic checks only; human review still mandatory.
+2026-10-23T06:07:57.1081002Z 
+2026-10-23T06:10:11.5510683Z DRAFT CHECK COMPLETE: 450 cards; human review remains REQUIRED. Output /home/runner/work/venus/venus/.artifacts/catalog-r2-e8b787755ac3/full-check
+2026-10-23T06:10:11.5511437Z 
+2026-10-23T06:10:12.1387335Z : 0, "errors": 0, "skipped": [], "active_draft_cards": 450, "coverage_dir": ".artifacts/catalog-r2-e8b787755ac3/full-check", "approval_scope": "AUTOMATED_DRAFT_REGRESSION_ONLY", "human_approval": false}
+2026-10-23T06:10:12.1388867Z test_actual_full_C2_bound_to_final450 (__main__.FullCandidateTests.test_actual_full_C2_bound_to_final450) ... ok
+2026-10-23T06:10:12.1389587Z test_actual_public_and_private_profiles (__main__.FullCandidateTests.test_actual_public_and_private_profiles) ... ok
+2026-10-23T06:10:12.1390245Z test_balanced150_and30_categories (__main__.FullCandidateTests.test_balanced150_and30_categories) ... ok
+2026-10-23T06:10:12.1390994Z test_copied_revision_lineage_and_exact_untouched_bytes (__main__.FullCandidateTests.test_copied_revision_lineage_and_exact_untouched_bytes) ... ok
+2026-10-23T06:10:12.1391732Z test_draft_rights_and_physical_guards (__main__.FullCandidateTests.test_draft_rights_and_physical_guards) ... ok
+2026-10-23T06:10:12.1392535Z test_exact_active_selection_excludes_removed_and_quarantine (__main__.FullCandidateTests.test_exact_active_selection_excludes_removed_and_quarantine) ... ok
+2026-10-23T06:10:12.1393282Z test_known12_turkish_repairs (__main__.FullCandidateTests.test_known12_turkish_repairs) ... ok
+2026-10-23T06:10:12.1393931Z test_named_semantic_pairs_changed_outputs (__main__.FullCandidateTests.test_named_semantic_pairs_changed_outputs) ... ok
+2026-10-23T06:10:12.1394631Z test_original450_and_frozen379_unchanged (__main__.FullCandidateTests.test_original450_and_frozen379_unchanged) ... ok
+2026-10-23T06:10:12.1395373Z test_owned_ledger_history522_selects450_current (__main__.FullCandidateTests.test_owned_ledger_history522_selects450_current) ... ok
+2026-10-23T06:10:12.1396218Z test_packaged_readonly_original_ledger_snapshot (__main__.FullCandidateTests.test_packaged_readonly_original_ledger_snapshot) ... ok
+2026-10-23T06:10:12.1397135Z test_requests_reserved_before_new_draft_events (__main__.FullCandidateTests.test_requests_reserved_before_new_draft_events) ... ok
+2026-10-23T06:10:12.1397827Z test_round02_actor_number_repairs (__main__.FullCandidateTests.test_round02_actor_number_repairs) ... ok
+2026-10-23T06:10:12.1398767Z test_schema_roles_and_locale_parity (__main__.FullCandidateTests.test_schema_roles_and_locale_parity) ... ok
+2026-10-23T06:10:12.1399227Z 
+2026-10-23T06:10:12.1399425Z ----------------------------------------------------------------------
+2026-10-23T06:10:12.1399728Z Ran 14 tests in 0.478s
+2026-10-23T06:10:12.1399853Z 
+2026-10-23T06:10:12.1399932Z OK
+2026-10-23T06:10:12.1400017Z 
+2026-10-23T06:10:12.1467431Z Draft catalog receipts: .artifacts/catalog-r2-e8b787755ac3
+2026-10-23T06:10:12.2283605Z 
+2026-10-23T06:10:12.2284155Z > venus@0.0.0 test:negative
+2026-10-23T06:10:12.2284526Z > node tools/negative-gates.mjs
+2026-10-23T06:10:12.2284677Z 
+2026-10-23T06:10:39.9408220Z PASS: schema, locale, type and unit corruption rejected; source unchanged
+2026-10-23T06:10:39.9646139Z ##[group]Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+2026-10-23T06:10:39.9646465Z with:
+2026-10-23T06:10:39.9646634Z   name: negative-gates
+2026-10-23T06:10:39.9646834Z   path: .artifacts/negative-gates.json
+2026-10-23T06:10:39.9647432Z   if-no-files-found: error
+2026-10-23T06:10:39.9647706Z   compression-level: 6
+2026-10-23T06:10:39.9647882Z   overwrite: false
+2026-10-23T06:10:39.9648059Z   include-hidden-files: false
+2026-10-23T06:10:39.9648246Z env:
+2026-10-23T06:10:39.9648458Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:10:39.9648788Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-23T06:10:39.9649112Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:10:39.9649408Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:10:39.9649702Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-23T06:10:39.9650023Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-23T06:10:39.9650278Z ##[endgroup]
+2026-10-23T06:10:40.0877026Z With the provided path, there will be 1 file uploaded
+2026-10-23T06:10:40.0898774Z Artifact name is valid!
+2026-10-23T06:10:40.0900367Z Root directory input is valid!
+2026-10-23T06:10:40.2848407Z Beginning upload of artifact content to blob storage
+2026-10-23T06:10:40.3505178Z Uploaded bytes 2134
+2026-10-23T06:10:40.3663799Z Finished uploading artifact content to blob storage!
+2026-10-23T06:10:40.3664471Z SHA256 digest of uploaded artifact zip is 7368e80180393314132b5bdb3394b1947432d19fed56260b7ffaf402248ba62e
+2026-10-23T06:10:40.3665843Z Finalizing artifact upload
+2026-10-23T06:10:40.8218909Z Artifact negative-gates.zip successfully finalized. Artifact ID 12482267917
+2026-10-23T06:10:40.8220045Z Artifact negative-gates has been successfully uploaded! Final size is 2134 bytes. Artifact ID is 12482267917
+2026-10-23T06:10:40.8223683Z Artifact download URL: https://github.com/psewdon1m/venus/actions/runs/39909483768/artifacts/12482267917
+2026-10-23T06:10:40.8379074Z Post job cleanup.
+2026-10-23T06:10:40.9499995Z Post job cleanup.
+2026-10-23T06:10:41.0478120Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b, not saving cache.
+2026-10-23T06:10:41.0622813Z Post job cleanup.
+2026-10-23T06:10:41.1358419Z [command]/usr/bin/git version
+2026-10-23T06:10:41.1387917Z git version 2.55.0
+2026-10-23T06:10:41.1423463Z Temporarily overriding HOME='/home/runner/work/_temp/b9c65c36-7443-452e-8f53-0670f6b9ce3a' before making global git config changes
+2026-10-23T06:10:41.1424184Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-23T06:10:41.1424791Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-23T06:10:41.1488208Z Removing SSH command configuration
+2026-10-23T06:10:41.1489025Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-23T06:10:41.1528132Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-23T06:10:41.1764279Z Removing HTTP extra header
+2026-10-23T06:10:41.1770022Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-23T06:10:41.1804677Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-23T06:10:41.2044648Z Removing includeIf entries pointing to credentials config files
+2026-10-23T06:10:41.2053807Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-23T06:10:41.2088089Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-23T06:10:41.2463074Z Cleaning up orphan processes

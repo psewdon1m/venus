@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "status": "PASS_PRE_SIGN_STANDALONE_LOCAL_PILOT",
+  "review": "INDEPENDENT_SECURITY_PRIVACY",
+  "independent_nonauthor": true,
+  "pre_sign_pass": true,
+  "local_component_result": "PASS",
+  "full_stage_status": "HOLD_PENDING_REAL_SERVICE_SIGNING_AND_PUBLISHED_ASSETS",
+  "source_git": "92b7f9d9c5dd5caa6a0953f28ed8e984e04393ba",
+  "source_identity": "fe51759f0c5c3c605b260c14121ae60ed12e7999783b9dcc1c6aa3a2ea8f876d",
+  "source_files": 1942,
+  "source_inventory_all_hashes_match_clone_and_root": true,
+  "clone_clean": true,
+  "reviewer_executed_tests": false,
+  "open_findings": [],
+  "closed_findings": [
+    "SEC01",
+    "SEC02"
+  ],
+  "gates": [
+    {
+      "gate_id": "PLAN-P06-RELEASE",
+      "pre_sign_status": "PASS_PROTOCOL_LOCAL_SUBSET",
+      "full_stage_status": "HOLD_REAL_KEY_MAIN_TAG_SIGNED_PUBLISHED_ASSETS",
+      "proofs": [
+        "source review",
+        "fast-preflight04",
+        "docker-round09"
+      ],
+      "note": "Fixture/test key never establishes service signing readiness."
+    },
+    {
+      "gate_id": "PLAN-P06-INSTALL",
+      "pre_sign_status": "PASS_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT",
+      "proofs": [
+        "fast-preflight04",
+        "docker-round09"
+      ]
+    },
+    {
+      "gate_id": "PLAN-P06-SCOPE",
+      "pre_sign_status": "PASS_SECURITY_APPLICABILITY_LOCAL_PORTION",
+      "full_stage_status": "PENDING_ORCHESTRATOR_COMBINED_PER_ID_RELEASE_DECISION",
+      "historical_ids": 118,
+      "locally_applicable": 81,
+      "external_only_NA": 34,
+      "deferred_service_or_production_subsets": 3,
+      "generic_data_ACL_restore_not_waived": true
+    },
+    {
+      "gate_id": "PLAN-P06-BACKUP",
+      "pre_sign_status": "PASS_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT",
+      "proofs": [
+        "source review",
+        "fast-preflight04",
+        "docker-round09"
+      ]
+    },
+    {
+      "gate_id": "PLAN-P06-UPDATE-ACL",
+      "pre_sign_status": "PASS_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT",
+      "proofs": [
+        "source review",
+        "fast-preflight04",
+        "docker-round09"
+      ]
+    },
+    {
+      "gate_id": "PLAN-P06-FAULTS",
+      "pre_sign_status": "PASS_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT",
+      "proofs": [
+        "fast-preflight04",
+        "docker-round09"
+      ]
+    },
+    {
+      "gate_id": "PLAN-P06-MONOTONIC",
+      "pre_sign_status": "PASS_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT",
+      "proofs": [
+        "source review",
+        "quality-round03",
+        "docker-round09"
+      ]
+    },
+    {
+      "gate_id": "PLAN-P06-RECOVERY",
+      "pre_sign_status": "PASS_LOCAL_MEASURED_PROFILE",
+      "full_stage_status": "PASS_LOCAL_COMPONENT_NO_SLA",
+      "proofs": [
+        "p06-recovery-profile.v1.json",
+        "docker-round09",
+        "recovery-measurements01"
+      ]
+    }
+  ],
+  "proofs": [
+    {
+      "path": ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+      "sha256": "9f63c38ee28ded5ab322f38778af9027a579509603a9cd4925e0c8d4eee25d2f",
+      "files": 20,
+      "hash_and_size_mismatches": 0,
+      "status": "PASS"
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+      "sha256": "44614021cb6183da9b9b1c2bd2d4526b0742113e6b15b28006662d5d6398ff0b",
+      "files": 41,
+      "hash_and_size_mismatches": 0,
+      "status": "PASS"
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json",
+      "sha256": "0bd6dcce4ec528a9ed407fe58eb3e8cf80dddfd9504017ef9167bd8fc19bcc04",
+      "status": "MEASURED_EVENT_INTERVALS_NOT_ENGINE_STOPWATCH_OR_SLA"
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+      "sha256": "15ab9f38c71534d20b9f0b7dc9958b0e731765742f3492591dfd82eeddc6d49d",
+      "status": "COMPONENT_PASS_NOT_STAGE"
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/owned-fixture-cleanup01/INDEX.json",
+      "sha256": "421b78ddc919eb5792eadc8d7091e1a7e7918e1d8a5468960dfc7a69ec4ddbda",
+      "status": "PASS_EXACT_OWNED_FAILED_SYNTHETIC_VOLUMES_REMOVED"
+    }
+  ],
+  "quality": {
+    "source_before_after_unchanged": true,
+    "JS_pass": 1315,
+    "JS_platform_skip": 3,
+    "Python_pass": 124,
+    "catalog_history_pass": 14,
+    "actual_exit": 0,
+    "JS_files": 77
+  },
+  "actual": {
+    "count_comparisons": 11,
+    "external_post_backup_admin_writes_restored": 0,
+    "real_SIGKILL_phases": 9,
+    "required_newer_policy_deletion": 1,
+    "checks_pass": 18,
+    "zero_unexplained_backup_loss": true,
+    "native_host_commands_exit0": 37,
+    "external_post_backup_admin_writes": 1
+  },
+  "measurements": {
+    "arithmetic_mismatches": 0,
+    "recovery_intervals": 7,
+    "backup_age_max_ms": 36311,
+    "original_jobs_recomputed": 17,
+    "terminal_backup_ages": 8,
+    "basis": "UTC_DURABLE_EVENT_INTERVAL_NOT_ENGINE_STOPWATCH_OR_SLA",
+    "backup_age_min_ms": 2033,
+    "recovery_max_ms": 8792,
+    "recovery_min_ms": 2578
+  },
+  "final_release_blockers": [
+    "Owner approval and activation of real service signing key/protected environment",
+    "Exact service main qualified tag and OCI image binding",
+    "Actual service-signed immutable assets and external published-byte verification"
+  ],
+  "deferred": [
+    "production dedicated/rootless Docker daemon isolation",
+    "production DNS TLS UDP",
+    "mobile and real devices",
+    "external backup copy"
+  ],
+  "production_approval": false,
+  "real_service_signing_readiness": false,
+  "fixture_is_service_PASS": false,
+  "content450": "HOLD",
+  "content470": "TEMPORARY_OWNER_LOCAL_PILOT_PASS_UNCHANGED",
+  "P07_started": false,
+  "write_status": "COMPLETE_STOP"
+}

@@ -1,0 +1,27 @@
+from pathlib import Path
+import json,hashlib,sys,ast
+root=Path('.docs/implementation/reviews/p05/oci-rollback-author-resume-round02');work=Path('.artifacts/p05-oci-rollback-producer-resume02');out=Path('.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round02');out.mkdir(parents=True,exist_ok=True);sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+assert sha(root/'INDEX.json')=='bba1e887ef1c4313e388037e252928ec1d740f542f0499e55adc5492a95d09cf'
+rows=json.loads((root/'INDEX.json').read_bytes())['files']
+for r in rows:
+ p=root/r['path'];assert sha(p)==r['sha256'] and p.stat().st_size==r['bytes']
+assert sha(work/'INDEX.json')=='f3e37a87d3a154302e9177d15031e39b8837575c41aa507410283ebff645914d';assert sha(work/'HANDOFF.json')=='c756911c20be5d077bfb8fba69f05807817c20298ace27a430065c95ab5767db'
+source=json.loads((work/'INDEX.json').read_bytes())['source_map']
+for n,r in source.items():
+ if r['type']=='regular_file':assert sha(work/n)==r['sha256']==sha(root/'producer'/n),n
+parent=Path('.docs/implementation/reviews/p05/oci-rollback-author-resume-round01');assert sha(parent/'INDEX.json')=='6f8519c2d030a6a20add721ff6875d94ad4a70cdfca4950ecd57d033186853db'
+for r in json.loads((parent/'INDEX.json').read_bytes())['files']:assert sha(parent/r['path'])==r['sha256']
+assert sha(work/'actual-image-maps.json')=='0a195804991397c8cc58ecfd44d3fa93ac737a80d432b676db7892c9bca18c3a'
+# Independently parse the current Python constructor (do not execute producer).
+tree=ast.parse((work/'probe-images.py').read_text());constructors=[]
+for n in ast.walk(tree):
+ if isinstance(n,ast.Assign)and isinstance(n.value,ast.List):
+  values=n.value.elts
+  if len(values)>=3 and all(isinstance(v,ast.Constant)for v in values[:3])and values[0].value=='create':constructors.append([v.value for v in values[:3]])
+assert constructors==[['create','--ipc','none']]
+code=next(n.value.value for n in tree.body if isinstance(n,ast.Assign)and any(isinstance(t,ast.Name)and t.id=='code'for t in n.targets))
+(out/'python-image-inline.json').write_text(json.dumps({'actual_AST_literal_code':code,'actual_python_source_sha256':sha(work/'probe-images.py')})+'\n')
+sys.path.insert(0,'tools');from stage_inventory import inventory,identity
+files=inventory();assert len(files)==1813 and identity(files)=='1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad'
+r={'status':'PASS_EXACT_INPUTS_ONLY','author_children':len(rows),'producer_regular_files':sum(r['type']=='regular_file'for r in source.values()),'source_identity':identity(files),'included_files':len(files),'parent01_unchanged':True,'historical_image_maps_unchanged_notfreshquota':True,'python_actual_constructor_AST':constructors,'actual_Docker_calls':0}
+(out/'hash-verification.json').write_text(json.dumps(r,indent=2)+'\n');print(json.dumps(r))

@@ -1,0 +1,5 @@
+# P05 ordinary real470 six fixed cohorts05
+
+2026-10-20T20:40:56.067020+00:00 UTC — Root authorizes minimal fixedcohort split of full03matrix using accepted04 diagnostic fields/sanitizer/finally capture. Six context×mode enums; each7N2..8/140rounds, globaloriginal42IDs,2allX negatives onlyYB cohorts. No scheduler/dynamicchunks/retry/reseed/skip/rate/nativeTTL changes. Writes excludedprobe05/journal/newfrozenpacket only; app/03/04 unchanged. FinalA9orA10productiontuple/rootACK/methodreview pending. NoDocker.
+
+2026-10-20T20:45:17.204857+00:00 UTC — AUTHOR COMPLETE. New excluded05: strict6cohorts/42globalIDs/2negatives; protected client/sanitizer/finally byteexact04.47finitePASS/3syntax0; first lint ignored artifactdirectory (notcoverage) retained, corrected explicit--no-ignore lint02 exit0. Newfile newline conversion corrected before exactcarry test. Packet .docs/implementation/reviews/p05/ordinary-real470-cohorts-author-round01 INDEX 02fa6744277e92b0fdeb62511717dd5050fb4dcb21c74adabf29858dae930eae. NoDocker/appwrites/sourcefreeze claims. Finalproductiontuple+independentreview+percohortrootACK pending; own writes COMPLETE.

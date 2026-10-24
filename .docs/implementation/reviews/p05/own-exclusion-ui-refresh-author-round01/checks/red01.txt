@@ -1,0 +1,29 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts (1 test | 1 failed) 229ms
+   ❯ own permanent exclusion command refreshes only its own settings (1)
+     × reloads authenticated own record after successful command; excluded allow is unchecked/disabled and peer stays unchanged 228ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-own-exclusion-refresh.test.ts > own permanent exclusion command refreshes only its own settings > reloads authenticated own record after successful command; excluded allow is unchecked/disabled and peer stays unchanged
+TypeError: Cannot read properties of null (reading 'props')
+ ❯ evalmachine.<anonymous>:40:358
+ ❯ topicScenario apps/web/src/topic-test-harness.ts:41:9
+     39| `;
+     40| export async function topicScenario(source:string):Promise<unknown> {
+     41|  return await vm.runInNewContext(harness+'\n(async()=>{'+source+'})()'…
+       |         ^
+     42| }
+     43|
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts:12:145
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+   Start at  23:54:04
+   Duration  580ms (tests 49%, import 38%, transform 13%, worker 1%)
+

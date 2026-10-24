@@ -1,0 +1,116 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.checks
+#1 transferring dockerfile: 1.45kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a
+#3 DONE 1.6s
+
+#4 [python 1/1] FROM docker.io/library/python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a
+#4 resolve docker.io/library/python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  1/13] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#5 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 32B 0.1s
+#6 transferring context: 78.29MB 5.2s
+#6 transferring context: 158.53MB 10.2s
+#6 transferring context: 238.59MB 15.3s
+#6 transferring context: 339.01MB 20.4s
+#6 transferring context: 429.51MB 25.4s
+#6 transferring context: 507.93MB 30.5s
+#6 transferring context: 586.52MB 35.5s
+#6 transferring context: 613.88MB 37.3s done
+#6 DONE 37.3s
+
+#7 [dependencies  2/13] COPY --from=python /usr/local /usr/local
+#7 CACHED
+
+#8 [dependencies  3/13] RUN apt-get update && apt-get install --no-install-recommends -y git ca-certificates libsqlite3-0 libbz2-1.0 libffi8 liblzma5 && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [dependencies  4/13] WORKDIR /workspace
+#9 CACHED
+
+#10 [dependencies  5/13] COPY package.json package-lock.json .npmrc ./
+#10 DONE 0.2s
+
+#11 [dependencies  6/13] COPY apps/api/package.json apps/api/
+#11 DONE 0.0s
+
+#12 [dependencies  7/13] COPY apps/web/package.json apps/web/
+#12 DONE 0.0s
+
+#13 [dependencies  8/13] COPY packages/contracts/package.json packages/contracts/
+#13 DONE 0.0s
+
+#14 [dependencies  9/13] COPY packages/i18n/package.json packages/i18n/
+#14 DONE 0.0s
+
+#15 [dependencies 10/13] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#15 DONE 0.0s
+
+#16 [dependencies 11/13] COPY packages/card-catalog/package.json packages/card-catalog/
+#16 DONE 0.0s
+
+#17 [dependencies 12/13] COPY tools/requirements.lock /tmp/requirements.lock
+#17 DONE 0.0s
+
+#18 [dependencies 13/13] RUN npm ci && python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock && python -c "import ssl,sqlite3,bz2,lzma,ctypes" && node --version && python --version
+#18 6.931 
+#18 6.931 added 288 packages, and audited 295 packages in 7s
+#18 6.932 
+#18 6.932 found 0 vulnerabilities
+#18 6.934 npm notice
+#18 6.934 npm notice New major version of npm available! 11.19.1 -> 12.2.0
+#18 6.934 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#18 6.934 npm notice To update run: npm install -g npm@12.2.0
+#18 6.934 npm notice
+#18 8.985 Collecting attrs==26.1.0 (from -r /tmp/requirements.lock (line 2))
+#18 9.592   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+#18 9.702 Collecting jsonschema==4.26.0 (from -r /tmp/requirements.lock (line 3))
+#18 9.752   Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+#18 9.800 Collecting jsonschema-specifications==2025.9.1 (from -r /tmp/requirements.lock (line 4))
+#18 9.850   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+#18 9.893 Collecting referencing==0.37.0 (from -r /tmp/requirements.lock (line 5))
+#18 9.942   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+#18 10.23 Collecting rpds-py==2026.9.1 (from -r /tmp/requirements.lock (line 6))
+#18 10.28   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+#18 10.40 Collecting typing-extensions==4.16.0 (from -r /tmp/requirements.lock (line 7))
+#18 10.45   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+#18 10.50 Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+#18 10.77 Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+#18 10.77 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#18 11.02 
+#18 11.02 [notice] A new release of pip is available: 25.0.1 -> 26.2.1
+#18 11.02 [notice] To update, run: pip install --upgrade pip
+#18 11.13 v24.22.0
+#18 11.13 Python 3.12.14
+#18 DONE 11.4s
+
+#19 [stage-2 1/2] COPY . .
+#19 DONE 2.8s
+
+#20 [stage-2 2/2] RUN chown -R node:node /workspace
+#20 DONE 31.8s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 20.4s done
+#21 exporting manifest sha256:8645e6048a825366be2c610953b6caff43fe25a69fd1b8aca1f7fb1124afead6 0.0s done
+#21 exporting config sha256:7352b61ca105556ec570dbe8ab028e396abe8d713b8e0599f3be1e58ebfa46eb 0.0s done
+#21 exporting attestation manifest sha256:d7498a016edefe9a0edd323f34d0ed73d51f9c143b6fe052d533b0ed31eedf59 0.0s done
+#21 exporting manifest list sha256:17ab5bf821f60523c882d634ace69b708d999f80a57fc06322dd326a200dfdbb done
+#21 naming to moby-dangling@sha256:17ab5bf821f60523c882d634ace69b708d999f80a57fc06322dd326a200dfdbb done
+#21 unpacking to moby-dangling@sha256:17ab5bf821f60523c882d634ace69b708d999f80a57fc06322dd326a200dfdbb
+#21 unpacking to moby-dangling@sha256:17ab5bf821f60523c882d634ace69b708d999f80a57fc06322dd326a200dfdbb 17.3s done
+#21 DONE 37.8s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/mox05ww9hipoh0e61xa8zmkb3

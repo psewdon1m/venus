@@ -1,0 +1,10 @@
+--- A9/apps/api/src/server.ts
++++ candidate/apps/api/src/server.ts
+@@ -74,6 +74,7 @@
+   await catalog?.reconcile('startup');
+   await games.reconcilePublicPairPolicy();await rooms.maintain();
+   const app=await createApp({probe:async()=>{await schemaProbe(pool);await engineSchemaProbe(pool);await catalogSchemaProbe(pool);await chatSchemaProbe(pool);await privateTopicSchemaProbe(pool);},schemaGeneration,rooms,games,...(privateTopics?{privateTopics}:{}),...(topicGames?{topicGames}:{}),roomCreationProtocol:privateTopicsEnabled?2:1,version,staticRoot:fileURLToPath(new URL('../../web/dist',import.meta.url))});
++  app.addHook('onClose',async()=>{topicGames?.clearSnapshotCache();});
+   for(const signal of ['SIGINT','SIGTERM']) process.once(signal,()=>{void app.close().then(()=>pool.end()).catch(()=>{process.exitCode=1;});});
+   await app.listen({port:4300,host:'0.0.0.0'});
+ }

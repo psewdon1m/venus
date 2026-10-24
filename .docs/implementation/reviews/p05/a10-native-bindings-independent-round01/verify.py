@@ -1,0 +1,28 @@
+from pathlib import Path
+import json,hashlib,sys
+R=Path('C:/.projects/venus');P=R/'.docs/implementation/reviews/p05/a10-native-bindings-author-round01'
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def load(p):return json.loads(Path(p).read_text(encoding='utf-8-sig'))
+checks=[]
+def ck(v,n):assert v,n;checks.append(n)
+ix=load(P/'INDEX.json');ck(sha(P/'INDEX.json')=='8db49774893f3b8c7e3136fae382d39554b9b6dc2c58cff700ab5a11e10196dd','author exact INDEX')
+for f in ix['files']:ck(sha(P/f['path'])==f['sha256'] and (P/f['path']).stat().st_size==f['bytes'],'member '+f['path'])
+b=load(P/'BROWSER-ACK.template.json');n=load(P/'N4-ACK.template.json');t=load(P/'test-image-receipt.json');prod=load(P/'production-image-receipt.json');s=load(P/'source-freeze.json')
+for d in [b,n]:ck(d['status']=='NOT_AUTHORIZED','template refuses RUN')
+ck(b['source_identity']==n['source_identity']==t['source_identity']==prod['source_identity']==s['identity']=='51f833a9eae3db65e4418bc7ad28183470751982b90e4bade3f0f8cf9e73fa12','A10 exact identity')
+ck(t['included_files']==prod['included_files']==b['source_files']==1856,'A10 count')
+for name,pin in s['files'].items():ck(sha(Path(s['materialized_root'])/name)==(pin if isinstance(pin,str) else pin['sha256']),'source '+name)
+old=(R/'.artifacts/p05-browser22-a9-run01.mjs').read_text();new=(P/'p05-browser22-a10-run01.mjs').read_text()
+for a,z in [('58d8c700adbbca2251743eff25324102885b3ba8f67fd859c5c8d10d23f789e3','4e536313941300def2af5a8e0bcbe20fd315d69f4c127b606eff04a66e14150d'),('p05-browser22-a9-root-ack01.json','p05-browser22-a10-root-ack01.json'),('6562438b8bc1b413ff717bf03ecf4d47380c71ea12a358264ba02b7675ece10e',s['identity']),('1850','1856')]:ck(old.count(a)==1,'unique literal '+a);old=old.replace(a,z)
+ck(old==new,'exact four literal classes only')
+ck(sha(P/'p05-browser22-a10-run01.mjs')==b['runner_sha256'],'browser runner pin')
+for name,pin in b['runtime_pins'].items():ck(sha(R/'.artifacts/p05-private-batch-browser-producer22'/name)==pin,'method22 '+name)
+for key in ['independent_review_index','application_review_index']:ck(sha(b[key])==b[key+'_sha256'],'browser '+key)
+for key in ['method_review','logging_source_review']:ck(sha(n[key+'_path'])==n[key+'_sha256'],'N4 '+key)
+for name,pin in n['method_files'].items():ck(sha(R/'.artifacts/p05-ordinary-real470-probe04'/name)==pin,'N4 unchanged '+name)
+ck(n['runtime_files']==dict(prod['image_files_sha256'],**{'build-metadata.json':prod['build_metadata_sha256']}),'production runtime complete 122 incl metadata')
+for d in [t,prod]:ck(d['probe_exit_code']==0 and d['probe_cleanup']=='AUTO_REMOVED' and d['app_imports']==0,'readonly receipt scope')
+for k,v in prod['image_files_sha256'].items():ck(t['image_files_sha256'][k]==v,'test/production shared '+k)
+for d,key in [(b,'image_receipt'),(n,'image_receipt_path')]:ck(sha(d[key])==d['image_receipt_sha256'],'actual receipt hash')
+ck(b['image']==t['image'] and n['image_id']==prod['image'],'test/normal image distinct tuple')
+print(json.dumps({'status':'PASS_OPERATIONAL_A10_BROWSER22_N4_ONLY_NOT_RUN_ACK','checks':len(checks),'source_identity':s['identity'],'source_files':1856,'method22_runtime_count':len(b['runtime_pins']),'test_pins':len(t['image_files_sha256']),'production_pins':len(prod['image_files_sha256']),'Docker_RUN':False},indent=2))

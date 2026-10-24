@@ -1,0 +1,34 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ packages/relationship-engine/src/topic-planner.test.ts (53 tests | 22 failed) 34251ms
+   ❯ versioned topic planner without content activation or runtime delivery (39)
+     × rejects disposition drift between current private attempt and its exact record 73ms
+     × rejects safety revision rewind on a later round 60ms
+     × requires exact current runtime release record and always keeps private disclosures generic 73ms
+     × canonicalizes safety-set ordering without weakening same-revision binding 64ms
+     × keeps a monotonic safety floor even when no private candidate has yet been chosen 63ms
+     × replays exact immutable V2 history and deterministic preflight 573ms
+     × public RNG and next-round choices ignore extra private candidate replacements and disclosed/declined state 55ms
+     × replaces with exact actual candidate history, fresh epoch, stable scope and bounded attempts 66ms
+     × records fresh safe-empty after narrowed preferences, never substitutes a public card 60ms
+     × denies stale safety/history/epoch/counter, same-revision changed sets and terminal decline 81ms
+     × does not disclose by selection or manufacture action consent from topic planning 126ms
+   ❯ additive targeted private replacement RE-1.P05-TARGET-1 (14)
+     × requires all target subjects and preserves the full secondary-tag union 56ms
+     × checks each actual actor and denies secondary tags without peer-specific errors 55ms
+     × uses a deterministic own version domain and canonical target ordering without mutating the prior state 56ms
+     × strictly requires a new epoch while the old untargeted exact replay remains unchanged 54ms
+     × rejects malformed target list [] 52ms
+     × rejects malformed target list [ 'unknown' ] 53ms
+     × rejects malformed target list [ 'music', 'music' ] 70ms
+     × rejects malformed target list [ 'music', 'creative', 'romance', …(1) ] 56ms
+     × rejects unknown revision, stale history/counter/safety, wrong round, public scope and terminal decline 57ms
+     × keeps future public selection and public history independent of targets and targeted empty outcomes 61ms
+     × bounds targeted attempts, including empty outcomes, without reviving an exhausted private moment 55ms
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  22 failed | 45 passed (67)
+   Start at  22:41:55
+   Duration  34.93s (tests 98%, import 2%, transform 1%)
+

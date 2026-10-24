@@ -1,0 +1,66 @@
+/** Real PG/HTTP compatibility controls; unsupported metadata edits are explicit fixtures. */
+import {harness,migrate,migrateGames,migrateChat,migratePrivateTopics,privateTopicSchemaProbe,assert,randomUUID,join,writeFileSync} from './harness.mjs';
+import {topicAad} from '../../apps/api/dist/topic-game-model.js';
+import {TOPIC_ALGORITHM} from '../../packages/relationship-engine/dist/index.js';
+const h=harness(),checks=[],expected=Array.from({length:6},(_,i)=>'P05-COMPAT-'+String(i+1).padStart(2,'0'));
+let f,baseline,oldHeader,cleanup='failed';
+async function check(id,fn){try{const detail=await fn();checks.push({id,status:'PASS',detail:detail??{}});}catch(error){checks.push({id,status:'FAIL',error_name:error.name,error_message:error.message});throw error;}}
+async function snapshot(room,session){return (await h.pool.query('SELECT snapshot_cipher FROM game_sessions WHERE room_id=$1 AND id=$2',[room,session])).rows[0].snapshot_cipher;}
+async function history(room,session){return {objects:(await h.pool.query("SELECT * FROM topic_game_objects WHERE room_id=$1 AND session_id=$2 AND kind='history' ORDER BY object_id",[room,session])).rows,chunks:(await h.pool.query("SELECT * FROM topic_game_chunks WHERE room_id=$1 AND session_id=$2 AND kind='history' ORDER BY object_id,chunk_index",[room,session])).rows};}
+async function editHeader(f,value){await h.rooms.transaction(async c=>{await h.rooms.lockRoom(c,f.room);await c.query('UPDATE game_sessions SET snapshot_cipher=$3 WHERE room_id=$1 AND id=$2',[f.room,f.game,h.keys.encrypt(value,topicAad.snapshot(f.room,f.game))]);});}
+async function prepare(f){const view=await h.roomView(f);const receipt=await h.ok(f.host,h.base(f)+'/prepare','POST',{request_id:randomUUID(),expected_rev:view.room_rev,mode:'questions',round_count:20,players:f.members.map(m=>m.id)});await h.current(f);return receipt;}
+async function deniedStart(f,status,code){
+ const sql='SELECT state,rev,snapshot_cipher,pack_digest,current_round FROM game_sessions WHERE room_id=$1 AND id=$2',args=[f.room,f.game],before=(await h.pool.query(sql,args)).rows[0];assert.equal(before.state,'waiting');
+ const request=randomUUID(),response=await h.call(f.host,h.base(f)+'/start','POST',{request_id:request,draft_rev:Number(before.rev)});assert.equal(response.status,status);assert.equal(response.body.code,code);
+ assert.deepEqual((await h.pool.query(sql,args)).rows[0],before);assert.equal((await h.pool.query('SELECT count(*) FROM topic_game_requests WHERE room_id=$1 AND request_id=$2',[f.room,request])).rows[0].count,'0');
+ return {status:response.status,code:response.body.code,waiting_row_unchanged:true,new_receipt_count:0};
+}
+try{
+ await check('P05-COMPAT-01',async()=>{
+  assert.equal(TOPIC_ALGORITHM,'RE-1.P05-TOPIC-2');await migrate(h.pool);await migrateGames(h.pool);await migrateChat(h.pool);await migratePrivateTopics(h.pool);await privateTopicSchemaProbe(h.pool);await h.listen();
+  f=await h.privateRound({context:'online'});const view=await h.release(f);assert(view.prompt);assert.equal((await h.call(f.host,h.round(f)+'/conversation/chat','POST',{request_id:randomUUID(),conversation_id:view.conversation_id,epoch:view.epoch,text:'SYNTHETIC_COMPATIBILITY_CHAT'})).status,200);
+  baseline={snapshot:await snapshot(f.room,f.game),history:await history(f.room,f.game)};assert(baseline.history.objects.length>0);assert(baseline.history.chunks.length>0);
+  const objects=(await h.pool.query("SELECT kind FROM topic_game_objects WHERE room_id=$1 AND session_id=$2 AND kind IN ('conversation','chat','projection')",[f.room,f.game])).rows;assert(objects.some(o=>o.kind==='conversation'));assert(objects.some(o=>o.kind==='chat'));
+  baseline.projections=objects.filter(o=>o.kind==='projection').length;baseline.refs=Number((await h.pool.query('SELECT count(*) FROM topic_game_private_refs WHERE room_id=$1 AND session_id=$2',[f.room,f.game])).rows[0].count);assert(baseline.projections>0);assert(baseline.refs>0);
+  return {actual_http_admission_and_topic_chat:true,actual_pg:true,algorithm:TOPIC_ALGORITHM,history_objects:baseline.history.objects.length,history_chunks:baseline.history.chunks.length,projection_count_before:baseline.projections,private_ref_count_before:baseline.refs,production_server_cmd:false};
+ });
+ await check('P05-COMPAT-02',async()=>{
+  const value=h.keys.decrypt(baseline.snapshot,topicAad.snapshot(f.room,f.game));assert.equal(value.engine_revision,TOPIC_ALGORITHM);oldHeader={...value,engine_revision:'RE-1.P05-TOPIC-1'};await editHeader(f,oldHeader);
+  assert.equal(h.keys.decrypt(await snapshot(f.room,f.game),topicAad.snapshot(f.room,f.game)).engine_revision,'RE-1.P05-TOPIC-1');assert.deepEqual(await history(f.room,f.game),baseline.history);
+  baseline.unsupportedSnapshot=await snapshot(f.room,f.game);return {explicit_fixture_authenticated_header_revision_edit_only:true,old_actual_engine_execution_claimed:false,old_round_history_not_reinterpreted:true};
+ });
+ await check('P05-COMPAT-03',async()=>{
+  h.source.setEnabled(false);let result;try{result=await h.topics.bootGate();assert.equal(result.unsupported_sessions_aborted,1);assert.equal((await h.pool.query('SELECT state FROM game_sessions WHERE room_id=$1 AND id=$2',[f.room,f.game])).rows[0].state,'aborted');
+   assert.deepEqual(await snapshot(f.room,f.game),baseline.unsupportedSnapshot);assert.deepEqual(await history(f.room,f.game),baseline.history);
+   assert.equal((await h.pool.query("SELECT count(*) FROM topic_game_objects WHERE room_id=$1 AND session_id=$2 AND kind IN ('conversation','chat','projection')",[f.room,f.game])).rows[0].count,'0');assert.equal((await h.pool.query('SELECT count(*) FROM topic_game_private_refs WHERE room_id=$1 AND session_id=$2',[f.room,f.game])).rows[0].count,'0');
+   const current=await h.ok(f.host,h.base(f)+'/current');assert.equal(current.state,'aborted');assert.equal(current.current_round,null);
+  }finally{h.source.setEnabled(true);}
+  return {actual_boot_method_without_available_source:true,unsupported_active_aborted:result.unsupported_sessions_aborted,history_snapshot_retained:true,private_objects_refs_removed:true,projection_count_before:baseline.projections,private_ref_count_before:baseline.refs,projection_count_after:0,private_ref_count_after:0,actual_http_aborted_view:true,actual_process_restart:false,ordinary_bootstrap_prerequisite_claimed:false};
+ });
+ await check('P05-COMPAT-04',async()=>{
+  const oldSession=f.game;await prepare(f);const response=await h.call(f.host,h.base(f)+'/availability');assert.equal(response.status,503);assert.equal(response.body.code,'TOPIC_SNAPSHOT_VERSION_UNSUPPORTED');
+  // Read mapping is503; mutation catches EngineError at the savepoint and
+  // returns409 with the same exact code. Missing prior below is DomainError503.
+  const start=await deniedStart(f,409,'TOPIC_SNAPSHOT_VERSION_UNSUPPORTED');
+  assert.deepEqual(await snapshot(f.room,oldSession),baseline.unsupportedSnapshot);assert.deepEqual(await history(f.room,oldSession),baseline.history);f.oldSession=oldSession;
+  return {actual_http_unsupported_prior_denied:true,status:response.status,code:response.body.code,start,no_prior_cipher_or_history_rewrite:true};
+ });
+ await check('P05-COMPAT-05',async()=>{
+  await h.pool.query('UPDATE game_sessions SET snapshot_cipher=NULL WHERE room_id=$1 AND id=$2',[f.room,f.oldSession]);const row=(await h.pool.query('SELECT state,current_round,pack_digest,snapshot_cipher FROM game_sessions WHERE room_id=$1 AND id=$2',[f.room,f.oldSession])).rows[0];assert.equal(row.state,'aborted');assert(row.current_round>0&&row.pack_digest&&row.snapshot_cipher===null);
+  const response=await h.call(f.host,h.base(f)+'/availability');assert.equal(response.status,503);assert.equal(response.body.code,'TOPIC_HISTORY_UNAVAILABLE');const start=await deniedStart(f,503,'TOPIC_HISTORY_UNAVAILABLE');assert.deepEqual(await history(f.room,f.oldSession),baseline.history);assert.equal(await snapshot(f.room,f.oldSession),null);
+  return {explicit_fixture_partial_restore_missing_old_aborted_snapshot:true,actual_sql_constraints_enforced:true,actual_http_status:response.status,code:response.body.code,start,history_preserved:true,no_arbitrary_all_fields_tamper_claim:true};
+ });
+ await check('P05-COMPAT-06',async()=>{
+  const clean=await h.create(2,{context:'online'});await h.joinRoom(clean);await h.setup(clean);await prepare(clean);const old=clean.game;
+  const row=(await h.pool.query('SELECT state,pack_digest,snapshot_cipher,current_round FROM game_sessions WHERE id=$1',[old])).rows[0];assert.equal(row.state,'waiting');assert.equal(row.pack_digest,null);assert.equal(row.snapshot_cipher,null);assert.equal(row.current_round,0);
+  await h.ok(clean.host,h.base(clean)+'/'+old+'/abort','POST',{request_id:randomUUID()});const next=await prepare(clean);assert.notEqual(clean.game,old);
+  const available=await h.ok(clean.host,h.base(clean)+'/availability');assert.equal(available.planned_rounds,20);await h.ok(clean.host,h.base(clean)+'/start','POST',{request_id:randomUUID(),draft_rev:next.game_rev});assert.equal((await h.ok(clean.host,h.base(clean)+'/current')).state,'active');
+  return {actual_protected_prestart_abort:true,clean_unstarted_prior_does_not_block_new_game:true,planned_rounds:available.planned_rounds,actual_http_start:true};
+ });
+}catch(error){process.exitCode=1;process.stderr.write(String(error?.stack??error)+'\n');}
+finally{
+ try{await h.cleanup();cleanup='completed';}catch(error){process.exitCode=1;process.stderr.write(String(error?.stack??error)+'\n');}
+ if(cleanup!=='completed'||checks.length!==expected.length||new Set(checks.map(c=>c.id)).size!==expected.length||!expected.every(id=>checks.some(c=>c.id===id&&c.status==='PASS')))process.exitCode=1;
+ const report={schema_version:1,suite:'P05_TOPIC_COMPATIBILITY',status:process.exitCode?'FAIL':'PASS',runtime_cleanup:cleanup,checks,source_fixture_only:true,metadata_faults:'EXPLICIT_AUTHENTICATED_HEADER_AND_PARTIAL_SQL_RESTORE_FIXTURES',full_process_restart:false,production_server_cmd:false,full_restore:false,full_p05_pass:false};
+ writeFileSync(join(process.env.P05_ARTIFACT_DIRECTORY,'compatibility-report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({suite:report.suite,status:report.status,checks:checks.length,cleanup}));
+}

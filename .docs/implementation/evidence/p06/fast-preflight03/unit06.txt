@@ -1,0 +1,35 @@
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (31.378989ms)
+✔ P06-RELEASE reject signed wrong version (15.270155ms)
+✔ P06-RELEASE reject signed wrong schema (15.576189ms)
+✔ P06-RELEASE reject signed wrong environment (15.270795ms)
+✔ P06-RELEASE reject signed wrong image digest (14.553733ms)
+✔ P06-RELEASE reject signed wrong main SHA (14.736791ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (15.717905ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (64.305383ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (35.187326ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (47.228198ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (44.429385ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (51.317878ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (55.162519ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (58.694846ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (47.315182ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (55.610313ms)
+✔ P06-JOURNAL corruption fails closed without mutation (33.094068ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (416.182294ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (67.177574ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (18.60969ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (25.035857ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1779.705726ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (51.368357ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (34.622214ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (36.760265ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (20.984904ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (19.00673ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3236.910035

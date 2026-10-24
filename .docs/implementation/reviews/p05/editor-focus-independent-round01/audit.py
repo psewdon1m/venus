@@ -1,0 +1,23 @@
+from pathlib import Path
+import json,hashlib,datetime,subprocess,sys,os,difflib
+R=Path('C:/.projects/venus');O=Path(__file__).parent;A=R/'.docs/implementation/reviews/p05/editor-focus-author-round01';OLD=R/'.artifacts/p05-pilot-bundle-source15';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();load=lambda p:json.loads(p.read_text(encoding='utf8'));dump=lambda n,x:(O/n).write_text(json.dumps(x,indent=2)+'\n',encoding='utf8')
+assert sha(A/'INDEX.json')=='b8872293225fed1abd06416b78ff63c71a6d5d8dffdb68069e308ceb8274a21c';author=load(A/'INDEX.json')
+for n,row in author['files'].items():assert sha(A/n)==row['sha256'] and (A/n).stat().st_size==row['bytes']
+paths=['apps/web/src/topic-games-panel.tsx','apps/web/src/topic-panel.test.ts','.docs/implementation/p05-source-revision-keyboard-focus-01.json']
+for n in paths:assert (R/n).read_bytes()==(A/'source'/n).read_bytes()
+sys.path.insert(0,str(R/'tools'));from stage_inventory import inventory,identity
+current=inventory();old=load(R/'.artifacts/p05-pilot-bundle-source-freeze15.json')['files'];changed=sorted(n for n in set(current)|set(old) if current.get(n)!=old.get(n));assert changed==sorted(paths) and len(current)==1873 and identity(current)=='d1804e3e560e9879a19914ea1eccdc77cc69c1f9547808100d3849f4296c81b2'
+handler=b" onFocus={e=>e.currentTarget.scrollIntoView({behavior:'instant',block:'nearest',inline:'nearest'})}"
+tsx=(R/paths[0]).read_bytes();assert tsx.count(handler)==3 and tsx.replace(handler,b'')==(OLD/paths[0]).read_bytes()
+rev=load(R/paths[2]);assert rev['parent_source_identity']=='a5a4143f3c8c346215450617b1ee711cd2c027cb23fc5e59f6e791c88b8f1866' and rev['actual_failure']['diagnosis_index_sha256']=='1a35c9e3738917ade4c02ac983a9d87f61b161a2f719c837b68069158cf5b6d3'
+for n,h in rev['changed_source_files'].items():assert current[n]==h
+for n,h in rev['before_source_files'].items():assert old[n]==h
+for n in paths[:2]:(O/(Path(n).name+'.diff')).write_text(''.join(difflib.unified_diff((OLD/n).read_text(encoding='utf8').splitlines(True),(R/n).read_text(encoding='utf8').splitlines(True),fromfile='A18/'+n,tofile='A19/'+n)),encoding='utf8')
+for n in ['p05-advice-focus-red01.exit.txt','p05-advice-focus-green01.exit.txt','p05-advice-focus-typecheck01.exit.txt','p05-advice-focus-lint01.exit.txt']:assert (A/n).read_text(encoding='utf-8-sig').strip()==('1' if 'red01' in n else '0')
+node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe';args=[node,str(R/'node_modules/vitest/vitest.mjs'),'run','apps/web/src/topic-panel.test.ts','-t','keyboard focus reveals the whole private editor','--maxWorkers=1']
+x=subprocess.run(args,cwd=R,capture_output=True,timeout=30,env={**os.environ,'PYTHON':str(R/'.venv/Scripts/python.exe')});(O/'focused-test.stdout.txt').write_bytes(x.stdout);(O/'focused-test.stderr.txt').write_bytes(x.stderr);assert x.returncode==0 and b'1 passed'in x.stdout
+assert inventory()==current
+pins=[A/'INDEX.json',R/'.artifacts/p05-pilot-bundle-source-freeze15.json',R/'.docs/implementation/reviews/p05/a18-layout05-actual-failure-diagnosis-round01/INDEX.json',R/'tools/stage_inventory.py',R/'tools/source_inventory.py']+[R/n for n in paths]
+dump('PINS.json',{p.relative_to(R).as_posix():{'bytes':p.stat().st_size,'sha256':sha(p)}for p in pins});dump('SOURCE_DELTA.json',{'parent_source_identity':'a5a4143f3c8c346215450617b1ee711cd2c027cb23fc5e59f6e791c88b8f1866','source_identity':identity(current),'parent_count':len(old),'source_count':len(current),'owned_paths':paths,'paths':{n:{'before':old.get(n),'after':current[n]}for n in paths},'all_other1870_paths_raw_exact_A18':True,'backend_src_paths_unchanged':sum(n.startswith('apps/api/src/') for n in old),'CSS_and_contracts_and_pure_sources_unchanged':True,'three_handler_removal_TSX_exact_A18':True})
+dump('AUDIT.json',{'status':'PASS_APP_FIX_SOURCE_ONLY','at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'author_children_verified':len(author['files']),'candidate_source_identity':identity(current),'source_count':1873,'exact_three_path_delta':True,'source_before_after_focused_test_exact':True,'focused_existing_test_exit':x.returncode,'focused_existing_test_scope':'ONE_EXISTING_NEW_THREE_EDITOR_WIRING_CASE_NOT_BROWSER_GEOMETRY','author_RED20PASS1FAIL_retained':True,'author_GREEN21PASS_retained':True,'author_typecheck_lint_exits':[0,0],'native_Docker_models':0,'APP_source_producer_ACK_Git_edits':False})
+print(json.dumps({'status':'PASS_SOURCE_AUDIT','source_identity':identity(current),'count':len(current),'delta':changed,'focused_test_exit':x.returncode,'author_children':len(author['files'])}))

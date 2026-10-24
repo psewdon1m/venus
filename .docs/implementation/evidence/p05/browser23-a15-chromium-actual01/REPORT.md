@@ -1,0 +1,5 @@
+# A15 browser23 actual: sixteen functional cases PASS
+
+One original Chromium16 run exit0, source658b710b/1869/image021a57ec. Independent actual acceptance6399aee3: fixed16PASS including prior case15 actual ownexclusion/peerunchanged; diagnostics COMPLETE/error0/pending0/cancel0/work/correlationoverflow0. HTTP2099/WS1908 history ring evictions retained as declared evictions; they are not observer-work truncation and are not hidden by an all-overflow-zero claim.112privateREADY records complete/nooverflow/bodyerrors0,307exactreceipts/360requestmetadata within caps. Owned cleanup PASS/empty, before-after source/producernine exact, actualROOTACK+pending+stdout/rawexit0 saved.
+
+Synthetic fixture functional proof, not actual470/full42/layout459/realdevices/publicproduction or complete P05. Earlier case15 FAIL archives remain unchanged. New liveledger implementation after this terminal belongs to a later revision; these saved source/image pins are not relabelled as that later runtime. Layout may consume this result only with the accepted compatible A15 binding. Archive makes no native allocation/retry or source edit.

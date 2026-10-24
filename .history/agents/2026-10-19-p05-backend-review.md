@@ -1,0 +1,21 @@
+# P05 backend independent review · 2026-10-19
+
+Reviewer: /root/standalone_gate_review. Read-only implementation scope: private chat, migrations/routes/current-round delivery, quiet public pair gate and safety-neutral reset. Own review outputs .docs/implementation/reviews/p05/backend-round-*. No frontend self-approval or implementation edits. Full P04 content/HOLD and local/production boundaries retained.
+
+- 2026-10-19T13:36:09.6448194Z — Started early dirty-source review. Source HEAD and exact reviewed file hashes will be captured per round. Focus actual ACL/session/clock/fence races, encrypted ephemeral storage, idempotency, public/private projection and setup-clear abort. Final clean Docker gate not claimed.
+
+- 2026-10-19T13:39:15.698932+00:00 — Round01 CHANGES_REQUESTED. B05-001actualreceiptprojection2FAIL/1PASS reproduced, rootfixedand3/3samecontrolsPASS. B05-002clockreversal/future-message actualclass2FAIL reproduced; notifiedroot. ReviewedchatSQL/ACL/encryption/HMAC/finalfence/capacityfix/safetyabort; noimplementationwrites. Reports+rawtesthashessaved, fullDocker/freezeawaited.
+
+- 2026-10-19T13:40:12.780525+00:00 — Independently reran targeted author suites for chat input/storage/routes/final-delivery, Games model and public-pair gate: 44/44 PASS, exit0. These existing controls do not cover B05-002 clock-regression negatives; finding remains OPEN. SQL scope/FKs/rate/HMAC/ciphertext/capability and neutral-abort lock ordering inspected.
+
+- 2026-10-19T13:43:46.473247+00:00 — Round02 CHANGES_REQUESTED. B0013/3 andB0022/2original+3/3wholeGames actualreadfence PASS afterrootfix. NewB003featureindicatorblocksafety/reconcile: initialDomaincontrols2FAIL→fixed2PASS; actualplainledger/ENOENT/UTF8errors3FAIL remain, truePGerrorpropagationcontrolPASS. RootnotifiedactualPGwithdrawregressionneeded; allattemptsretained.
+
+- 2026-10-19T13:46:16.880611+00:00 — Round03 PREFLIGHT_PASS, B001/B002/B003resolvedincode. Exact22API/contract/engineimplhashesstablebeforeafter17/17ownadversarial+46/46author reruns.9actualCatalogboundarycontrolsPASS incl6ownedFSinvalidUTF8/missing/partialcases andtruePGerrorpropagation; noactualPGengineclaim. Durablefailed/retestharnesses/results copiedownreviewartifacts; actualHTTP/PG/cleanfrozenDockerproofstillrequired. Journal/reportwritesfinisheduntilfollowup.
+
+- 2026-10-19T13:53:38.8100840Z — Follow-up round04 reviewing root actual PostgreSQL/filesystem B05-003 runs: failedfirst venus-p05-36047ab17e5a and corrected venus-p05-a99542353ce1. Scope evidence/test/typedboundary only; currentcleanproof andHTTPstalereplaystillpending. No implementation writes.
+
+- 2026-10-19T13:57:01.690230+00:00 — Round04 PREFLIGHT_EVIDENCE_PASS. IndependentlyauditedrootactualPG/fileattempts6/7FAIL(testwrongrejection)→7/7PASS→distinct8/8PASSinternalHTTP+realPGreplay. Recomputed3before/aftermapidentities; latest9reviewedinputs/currenthashesmatch;7sourcesreadfromexactlatestimage matched. Independentlyconfirmedall3projectDockerresourcesabsent, ownnonroot/readonly/networknoneimageauditexit0/--rmabsent. Durablefeatureunits7/7rerunPASS; root127JS/lintloginspectednotrerun. Failed/correctedraws copiedownround04artifacts. Clean/fullstage/privacybrowsergatespending; writesfinished.
+
+- 2026-10-19T14:15:16.7005565Z — Started B05-004 independent round05. Rootactualold run venus-p05-3c43ad5377a5 reproduced17/19PASS+2FAIL afterSQLrestore/coldgrantloss. Reviewing new authenticatedsnapshot/grant availability guard/reconciliation/finalHTTPWS fences; implementation writes prohibited. Newactualchat/catalogruns pending. Priorfindings B001–003 must remain closed.
+
+- 2026-10-19T14:22:29.643653+00:00 — Round05 PREFLIGHT_EVIDENCE_PASS. B004originalactual17/19FAIL retained; currentactualchat19/19+catalog8/8PASS auditedsameidentityc3a7...; sixsourcesfromeachretainedimage matchedtestedmaps/currentpins. Independentnewchannel9+old17=26/26PASS, authorselected66/66PASS. Firstreviewerharness2falsefailuresexpiry-code/nullspy andPowerShellauditparseattempts preserved/correctedwithoutimplchanges. NoSQLwritesinfinalprojectioncontrols; IP/safety/no-old-register checksPASS. All3projectDockerresourcesandauditcontainersindependentlyabsent.3pinsverifiedunchanged. Fullcleanstageproofpending; writesfinished.

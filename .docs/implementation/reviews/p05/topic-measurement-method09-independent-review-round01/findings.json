@@ -1,0 +1,13 @@
+[
+  {
+    "id": "P05-METHOD09-TERMINAL-IO-001",
+    "priority": "P2",
+    "status": "OPEN_ACTIONABLE",
+    "file": ".artifacts/p05-topic-measurements-method09/r100-v3-watchdog.mjs",
+    "trigger": "First writer exception occurs in final guardedAtomic(terminalFile,report), after report.io_failure snapshot",
+    "observed": "guardedAtomic catches/latches typed ioFailure (EPERM/rename/errno-13) and failclosed status, but report.io_failure remains null in terminal IPC and returned stdout report",
+    "impact": "No false COMPLETE; required typed first-failure code/errno/syscall diagnostics lost precisely when terminal disk receipt cannot be written",
+    "minimal_fix": "After final guardedAtomic and before IPC/return, reconcile report.io_failure=ioFailure. Preserve original IO latch, status/capacity fault, retained temporary file, no further writer attempts, guards and limits. New immutable revision; do not edit frozen09.",
+    "retest": "Exact final-terminal-first rename/write error controls preserve typed IO metadata in both returned report and terminal IPC; firstwrite/no-reentry/positive controls remain unchanged."
+  }
+]

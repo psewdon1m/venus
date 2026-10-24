@@ -1,0 +1,146 @@
+{
+  "pid": 43,
+  "phase": 3,
+  "exit_code": 1,
+  "exit_signal": null,
+  "timed_out": false,
+  "streams": {
+    "stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "report": {
+    "schema_version": 1,
+    "status": "FAIL",
+    "pid": 43,
+    "phase": 3,
+    "checks": [],
+    "chronology": [
+      {
+        "stage": "migrations_completed",
+        "native_elapsed_ms": 645.490909,
+        "wall_utc": "2026-10-19T20:24:12.865Z"
+      },
+      {
+        "stage": "raw_D_live_before_boot",
+        "native_elapsed_ms": 656.488602,
+        "wall_utc": "2026-10-19T20:24:12.876Z",
+        "remaining_positive": true
+      },
+      {
+        "stage": "actual_bootGate_returned",
+        "native_elapsed_ms": 668.659416,
+        "wall_utc": "2026-10-19T20:24:12.888Z",
+        "boot": {
+          "schema_version": 2,
+          "private_scopes_revoked": true,
+          "rounds_reconciled": 2,
+          "corrupt_sessions_aborted": 0,
+          "unsupported_sessions_aborted": 0
+        }
+      },
+      {
+        "stage": "raw_D_revocation_observer_completed",
+        "native_elapsed_ms": 672.332267,
+        "wall_utc": "2026-10-19T20:24:12.892Z",
+        "rawBootD": {
+          "raw_round_stopped": true,
+          "invitation_action_acks_cleared": true,
+          "private_objects": 0,
+          "private_refs": 0,
+          "snapshot_history_unchanged": true,
+          "observed_before_legacy_maintain_listen_or_private_http": true
+        }
+      },
+      {
+        "stage": "legacy_reconcile_completed",
+        "native_elapsed_ms": 672.981776,
+        "wall_utc": "2026-10-19T20:24:12.893Z"
+      },
+      {
+        "stage": "Rooms_maintain_completed",
+        "native_elapsed_ms": 776.280204,
+        "wall_utc": "2026-10-19T20:24:12.996Z"
+      },
+      {
+        "stage": "listener_opened",
+        "native_elapsed_ms": 851.890323,
+        "wall_utc": "2026-10-19T20:24:13.069Z"
+      },
+      {
+        "stage": "app_pool_closed_authority_preserved",
+        "native_elapsed_ms": 7697.872797,
+        "wall_utc": "2026-10-19T20:24:19.915Z"
+      }
+    ],
+    "runtime_cleanup": "completed",
+    "server_time_ms": 1002000,
+    "clock_policy": "EXPLICIT_FIXED_FORWARD_FIXTURE_NOT_NATURAL_TTL",
+    "before_D": {
+      "server_time_ms": 1002000,
+      "round_clock_floor_ms": 1000000,
+      "conversation_clock_floor_ms": 1000000,
+      "expiries_ms": {
+        "invitation": 1180000,
+        "action": 1180000,
+        "parent": 1180000,
+        "topic": 1180000,
+        "advice0": 1180000,
+        "session0": 87400000,
+        "presence0": 1045000,
+        "reservation0": 1090000,
+        "session1": 87400000,
+        "presence1": 1045000,
+        "reservation1": 1090000,
+        "projection0": 1005000,
+        "projection1": 1005000
+      },
+      "remaining_ms": {
+        "invitation": 178000,
+        "action": 178000,
+        "parent": 178000,
+        "topic": 178000,
+        "advice0": 178000,
+        "session0": 86398000,
+        "presence0": 43000,
+        "reservation0": 88000,
+        "session1": 86398000,
+        "presence1": 43000,
+        "reservation1": 88000,
+        "projection0": 3000,
+        "projection1": 3000
+      },
+      "live_invitation_action_topic_advice_chat": true,
+      "live_projection_count": 2,
+      "private_ref_count": 2,
+      "snapshot_sha256": "702a161b73015027698593c7320227e454b47f4f614478b08480a5ad2f564aac",
+      "history_sha256": "e57d26aaa2251b810855d00eb1d66f92ceb5d2a6fc9a8335e9fcfd5fbe31697f",
+      "boot_id_sha256": "68ef91797e7f02f1c81ab9238d9cb2990ea8f91ed794d98e8a5614b15eef1909"
+    },
+    "raw_boot_D": {
+      "raw_round_stopped": true,
+      "invitation_action_acks_cleared": true,
+      "private_objects": 0,
+      "private_refs": 0,
+      "snapshot_history_unchanged": true,
+      "observed_before_legacy_maintain_listen_or_private_http": true
+    },
+    "production_catalog_reconcile": "NOT_COMPOSED_SYNTHETIC_SOURCE",
+    "failure": {
+      "step": "protected_http_phase3",
+      "name": "AssertionError",
+      "code": "ERR_ASSERTION",
+      "frames": [
+        "    at file:///app/tests/p05-topic-restore/phases.mjs:48:281",
+        "    at async phaseThree (file:///app/tests/p05-topic-restore/phases.mjs:48:109)",
+        "    at async file:///app/tests/p05-topic-restore/child.mjs:18:136"
+      ]
+    },
+    "native_elapsed_ms": 7697.889987
+  }
+}

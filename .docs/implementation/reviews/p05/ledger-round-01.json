@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "review": "P05_PRIVATE_TOPIC_LEDGER",
+  "round": 1,
+  "status": "COMPONENT_PREFLIGHT_PASS",
+  "timestamp": "2026-10-19T16:06:14.9439436+00:00",
+  "reviewer": "p05_topic_ledger_review",
+  "author": "p05_topic_ledger",
+  "source_sha256": "52655c6ed3f3754bc403e8f4c9d7610e1c487d2a4c8ccab175f958612622a284",
+  "author_test_sha256": "6fe653ed0478361ca4184c82bd6cef1d782ff298d52dd2e61e5c74dd7241275b",
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "independent_probe_sha256": "d743f20a06ff11ea7c974fafe9335f8fc243ab85d152b87cd4a8aa09f0f2e747",
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "independent_tests": {
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "actual_sigkill_points": [
+      "after-chain-sync",
+      "after-witness-rename"
+    ],
+    "evidence": "ledger-round-01/tests.txt"
+  },
+  "author_tests_inspected": {
+    "passed": 67,
+    "skipped": 1,
+    "failed": 0,
+    "index_files_verified": 18,
+    "evidence": "../../evidence/p05/ledger-preparation-01/agent/linux-round-03/",
+    "rerun_by_reviewer": false
+  },
+  "findings": [],
+  "included_source_writes": false,
+  "runtime_activation": false,
+  "cleanup_verified": true,
+  "clean_source_stage_proof": false,
+  "full_p05_pass": false,
+  "limitations": [
+    "Inactive component only; no authenticated API or DB adapter, lifecycle integration, final HTTP/WS fences, readiness or restore executor.",
+    "No room-deletion/retention compaction; caller must use an appropriate scoped lifecycle before activation.",
+    "The chain, keys and independent witness must be preserved outside DB/image rollback; complete host plus all witness/trusted floor rollback remains undetectable.",
+    "Kernel syscall success and actual child SIGKILL are not hardware power-loss or actual full-disk proof.",
+    "Stale lock recovery is manual; test operator removes only lock of confirmed terminated disposable child.",
+    "Controls are trusted test seams and must not become request or production-config input.",
+    "Historical rounds01/02 missing old source copies are not promoted as exact-source proof."
+  ],
+  "evidence_index": "ledger-round-01/index.json"
+}

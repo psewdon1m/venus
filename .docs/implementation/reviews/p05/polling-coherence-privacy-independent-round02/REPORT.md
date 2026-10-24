@@ -1,0 +1,17 @@
+# SOURCE21 independent privacy correction, round02
+
+**PASS_SOURCE_DELTA_ONLY. SOURCE20 retention finding resolved; no remaining actionable finding in this bounded correction.** Root found a P1 retained-reference defect before source/image freeze. My prior round01 source PASS bc64fccb missed it. That erroneous verdict and SOURCE20 remain immutable history and must not be credited as current acceptance. This round reviews corrected final bytes; it does not close P05 or explain the historical WebKit failure.
+
+At SOURCE20 panel55, `controls.revokeRound(value)` passed the entire rejected bundled view. OwnControls.ts48/65 stores it as `this.lastRoundSignal`: a strong reference that can contain prompt/advice/chat and outlive TopicCache.clear and lease expiration. Relevant bind/clear paths do not erase the signal. This source-level retained reference is proven; ordinary rendering/cache clearing does not disprove it.
+
+SOURCE21 changes exactly that argument to fresh `{}`. Final APP SHA256 is `4774a8c57f9f610a7cd4a2f35322467bc06dab66990f1e21cd83c65adc09f417`, 33074 bytes. One literal replacement in frozen SOURCE20 reproduces all final bytes exactly. The new empty object has no view/own/private references and is identity-distinct on every call. Unchanged revokeRound still clears packet, refusal facts/limits and round lease, increments generation and retains confirmed session Stop/Pause request-only safety facts. Its retained signal now contains only an opaque empty object.
+
+Strict same authenticated room/member/session/round plus newer revision/full original validator remains exact. The branch clears private/public values and drafts, then returns without Own/cache publication, current-state update or POST. Only the existing1500ms poll recovers. No TTL/epoch/identity/transport/source guard is relaxed. SOURCE20 readError/command-error separation is otherwise exact: accepted background reads clear readError only, never failed/unconfirmed command error. Controls/validator/cache/auth/harness/tests are unchanged by21.
+
+Author INDEX806596c1 and all12children, two owned source files and ten unchanged pins were rehashed. Revision21 is8bdaf94c; test86fd, source20 and prior erroneous review remain immutable. Ninety production paths were compared against A31: only panel differs; SQL7 is exact. Original full06 manifest12af2af4 and backend/statistical bindings remain unchanged; no restart follows from this frontend correction.
+
+Fresh author final21 receipts record149/149 PASS on nine existing files, ESLint0 and web types0. Reviewer read/hash verification only: no test/native/Docker/Git mutation was run. Existing focused regressions establish bounded behavior. Retention correction is verified from exact argument/storage references, not heap forensics, secure erasure or universal browser-memory claims; transient stack/GC timing is not asserted.
+
+Safe feature rollback uses pre20 panel/test bytes and accepts the original polling UX defect. SOURCE20 alone restores known private retention and is not a safe operational target. No DB/history migration; withdrawal/retirement and grant revocation remain monotonic.
+
+Fresh source/images, applicable current UI9, quality/CI, full06/reducers, final traceability and independent actual reviews remain root work. No WebKit causation, stage/final privacy PASS, public/legal/device claim or P06 work is inferred. Writes COMPLETE_STOP after packet and own journal.

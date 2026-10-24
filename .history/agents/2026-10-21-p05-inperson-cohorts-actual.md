@@ -1,0 +1,13 @@
+# In-person ordinary real470 cohorts continuation
+
+2026-10-20T22:38:23.958971+00:00 START root-authorized execution only. Reserved one of max2cohort slots; root online/questions projectvenus-pilot470-dfbfe1fcf0ea/session40614 untouchable. Sequential in_person questions,truth_or_dare,yes_but using existing coldaccepted A13ACKs/probe05 outer. No retry/resampling/method/app/deadline600s/profile changes. AnyFAIL stops future starts; cleanup finishes. No invasive diagnostics/DB/inspector, OCI15HOLD and no bulk/layout.
+
+2026-10-20T22:38:56.657613+00:00 START actual in_person/questions once, ACK74719ad6e9885748fc572ca8ba7e4fc11318c96a121092fffd432391d111c415, Node outer05 unchanged; execsession65643/projectvenus-pilot470-2162ab68ceb4, stdout/stderr fresh .artifacts/p05-inperson-questions-cohort-actual01.*. Root online project untouched, max2total respected. No app/method/source/oracle edits.
+
+2026-10-20T22:45:42.590297+00:00 Root global STOP FUTURE COHORT STARTS after root online/questions FAIL WS_FAILURE106complete withcleanupPASS. Own in_person/questions session65643 remains in flight; let original cleanup finish. TD/YB nowNOT_RUN regardless own result. No retry/reseed/kill/invasive diagnostics. Root failure cause unproven.
+
+2026-10-20T22:51:50.928381+00:00 Root explicitly authorized one root-owned bounded7s CPU profile on same in_personQ appPID1. Entireattempt now INSTRUMENTED_DIAGNOSIS, not uninstrumentedordinary/performancePASS even if functionalchecks pass. No own extra profiling/native requests. Originalprobe+cleanup unchanged; futureTD/YBremainSTOP.
+
+2026-10-20T23:05:40.658750+00:00 TERMINAL session65643 exit1; N2-N6 each20PASS, N7 7completed/FAIL, N8NOT_RUN, total107. currentGET500 INTERNAL_ERROR round8/release 5234ms, elapsed1566505ms. Sanitized same-request QUERY_TIMEOUT rooms104:13 (request UUID correlated in raw receipt). cleanupPASS/ownershipverified, no cleanuperrors. Root CPUprofile qualification preserved; oldcause not inferred. TD/YB remain NOT_RUN; no further native commands. Terminalreceipt .artifacts/p05-inperson-questions-cohort-actual01.terminal-receipt.json SHA256 68512ed525fd06d2e3e7735c7ebb4a9169814813616252e1b279f6be1fbc0f47. Root notified. Journal writes COMPLETE.
+
+2026-10-20T23:10:22.895002+00:00 DURABLE ARCHIVE copied immutable raw05/ACK/method/terminal +rootprofile qualification/aggregates/external pins into .docs/implementation/evidence/p05/ordinary-cohort05-inperson-questions-instrumented-actual01/INDEX.json SHA0422e8df886fec7cf09003f76b4252305522d1980ea5999576f7361ee56b0750 /18 children. No native rerun. Prior rootprofile wrong presumed receipt.json readENOENT had no mutation; actual receipt03 used. Writes COMPLETE_STOP.

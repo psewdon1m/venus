@@ -1,0 +1,642 @@
+﻿2026-10-24T21:48:26.0951454Z Current runner version: '2.338.0'
+2026-10-24T21:48:26.0974606Z ##[group]Runner Image Provisioner
+2026-10-24T21:48:26.0975426Z Hosted Compute Agent
+2026-10-24T21:48:26.0976089Z Version: 20261021.618
+2026-10-24T21:48:26.0976912Z Commit: 21505ad2541d5be6135ed84fc33697146cf75b8e
+2026-10-24T21:48:26.0977661Z Build Date: 2026-10-21T00:45:21Z
+2026-10-24T21:48:26.0978371Z Worker ID: {ed4ed1c2-0d30-4c05-abf1-f026ea9ca894}
+2026-10-24T21:48:26.0979040Z Region: centralus
+2026-10-24T21:48:26.0979597Z Cloud: Azure
+2026-10-24T21:48:26.0980114Z ##[endgroup]
+2026-10-24T21:48:26.0981760Z ##[group]Operating System
+2026-10-24T21:48:26.0982373Z Ubuntu
+2026-10-24T21:48:26.0982882Z 24.04.5
+2026-10-24T21:48:26.0983386Z LTS
+2026-10-24T21:48:26.0983883Z ##[endgroup]
+2026-10-24T21:48:26.0984425Z ##[group]Runner Image
+2026-10-24T21:48:26.0985069Z Image: ubuntu-24.04
+2026-10-24T21:48:26.0985612Z Version: 20261012.334.1
+2026-10-24T21:48:26.0987254Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-24T21:48:26.0988681Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-24T21:48:26.0989657Z ##[endgroup]
+2026-10-24T21:48:26.0990680Z ##[group]GITHUB_TOKEN Permissions
+2026-10-24T21:48:26.0992874Z Contents: read
+2026-10-24T21:48:26.0993453Z Metadata: read
+2026-10-24T21:48:26.0994014Z ##[endgroup]
+2026-10-24T21:48:26.0995957Z Secret source: Actions
+2026-10-24T21:48:26.0997162Z Cache mode: write
+2026-10-24T21:48:26.0997851Z Prepare workflow directory
+2026-10-24T21:48:26.1318433Z Prepare all required actions
+2026-10-24T21:48:26.1367894Z Getting action download info
+2026-10-24T21:48:26.4016599Z Download action repository 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-24T21:48:26.4883926Z Download action repository 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-24T21:48:26.6854788Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-10-24T21:48:26.8515633Z Download action repository 'actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-10-24T21:48:27.0884157Z Complete job name: quality
+2026-10-24T21:48:27.1707034Z ##[group]Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+2026-10-24T21:48:27.1708337Z with:
+2026-10-24T21:48:27.1708908Z   persist-credentials: false
+2026-10-24T21:48:27.1709523Z   fetch-depth: 0
+2026-10-24T21:48:27.1710166Z   ref: 195e2302899687e11cecde1920d64a040714745e
+2026-10-24T21:48:27.1710888Z   repository: psewdon1m/venus
+2026-10-24T21:48:27.1715377Z   token: ***
+2026-10-24T21:48:27.1715924Z   ssh-strict: true
+2026-10-24T21:48:27.1716638Z   ssh-user: git
+2026-10-24T21:48:27.1717243Z   clean: true
+2026-10-24T21:48:27.1717808Z   sparse-checkout-cone-mode: true
+2026-10-24T21:48:27.1718496Z   fetch-tags: false
+2026-10-24T21:48:27.1719112Z   show-progress: true
+2026-10-24T21:48:27.1719692Z   lfs: false
+2026-10-24T21:48:27.1720249Z   submodules: false
+2026-10-24T21:48:27.1720858Z   set-safe-directory: true
+2026-10-24T21:48:27.1721522Z   allow-unsafe-pr-checkout: false
+2026-10-24T21:48:27.1722368Z ##[endgroup]
+2026-10-24T21:48:27.2719570Z Syncing repository: psewdon1m/venus
+2026-10-24T21:48:27.2722749Z ##[group]Getting Git version info
+2026-10-24T21:48:27.2723908Z Working directory is '/home/runner/work/venus/venus'
+2026-10-24T21:48:27.2725654Z [command]/usr/bin/git version
+2026-10-24T21:48:27.2813594Z git version 2.55.0
+2026-10-24T21:48:27.2833743Z ##[endgroup]
+2026-10-24T21:48:27.2847965Z Temporarily overriding HOME='/home/runner/work/_temp/633a7872-b6f7-47f0-94c3-7f4168339f0e' before making global git config changes
+2026-10-24T21:48:27.2852281Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T21:48:27.2854173Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-24T21:48:27.2905295Z Deleting the contents of '/home/runner/work/venus/venus'
+2026-10-24T21:48:27.2909647Z ##[group]Determining repository object format
+2026-10-24T21:48:27.2911369Z ##[endgroup]
+2026-10-24T21:48:27.2912814Z ##[group]Initializing the repository
+2026-10-24T21:48:27.2914907Z [command]/usr/bin/git init /home/runner/work/venus/venus
+2026-10-24T21:48:27.3019851Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-24T21:48:27.3022737Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-24T21:48:27.3024396Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-24T21:48:27.3025973Z hint: call:
+2026-10-24T21:48:27.3027188Z hint:
+2026-10-24T21:48:27.3028312Z hint: 	git config --global init.defaultBranch <name>
+2026-10-24T21:48:27.3029438Z hint:
+2026-10-24T21:48:27.3030550Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-24T21:48:27.3032236Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-24T21:48:27.3033539Z hint:
+2026-10-24T21:48:27.3034302Z hint: 	git branch -m <name>
+2026-10-24T21:48:27.3035662Z hint:
+2026-10-24T21:48:27.3037172Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-24T21:48:27.3039066Z Initialized empty Git repository in /home/runner/work/venus/venus/.git/
+2026-10-24T21:48:27.3041876Z [command]/usr/bin/git remote add origin https://github.com/psewdon1m/venus
+2026-10-24T21:48:27.3257711Z ##[endgroup]
+2026-10-24T21:48:27.3259367Z ##[group]Disabling automatic garbage collection
+2026-10-24T21:48:27.3260839Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-24T21:48:27.3294033Z ##[endgroup]
+2026-10-24T21:48:27.3295641Z ##[group]Setting up auth
+2026-10-24T21:48:27.3296908Z Removing SSH command configuration
+2026-10-24T21:48:27.3302488Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T21:48:27.3335686Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T21:48:27.3669600Z Removing HTTP extra header
+2026-10-24T21:48:27.3677525Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T21:48:27.3708559Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T21:48:27.3884486Z Removing includeIf entries pointing to credentials config files
+2026-10-24T21:48:27.3891495Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T21:48:27.3922058Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T21:48:27.4107000Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-24T21:48:27.4141872Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:27.4173158Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:27.4206806Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:27.4242680Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:27.4268515Z ##[endgroup]
+2026-10-24T21:48:27.4269751Z ##[group]Fetching the repository
+2026-10-24T21:48:27.4276035Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-24T21:48:34.0694350Z From https://github.com/psewdon1m/venus
+2026-10-24T21:48:34.0695619Z  * [new branch]        codex/p06-standalone-release -> origin/codex/p06-standalone-release
+2026-10-24T21:48:34.0696874Z  * [new branch]        evidence/p04-technical-20261019 -> origin/evidence/p04-technical-20261019
+2026-10-24T21:48:34.0697641Z  * [new branch]        feature/p01-foundation -> origin/feature/p01-foundation
+2026-10-24T21:48:34.0698351Z  * [new branch]        feature/p02-rooms      -> origin/feature/p02-rooms
+2026-10-24T21:48:34.0698950Z  * [new branch]        feature/p03-engine     -> origin/feature/p03-engine
+2026-10-24T21:48:34.0699575Z  * [new branch]        feature/p04-catalog    -> origin/feature/p04-catalog
+2026-10-24T21:48:34.0700158Z  * [new branch]        main                   -> origin/main
+2026-10-24T21:48:34.0700728Z  * [new tag]           p01-accepted-20261018  -> p01-accepted-20261018
+2026-10-24T21:48:34.0701304Z  * [new tag]           p02-accepted-20261018  -> p02-accepted-20261018
+2026-10-24T21:48:34.0701847Z  * [new tag]           p03-accepted-20261019  -> p03-accepted-20261019
+2026-10-24T21:48:34.0702809Z  * [new tag]           p03-m1-preregistered-20261018 -> p03-m1-preregistered-20261018
+2026-10-24T21:48:34.0703555Z  * [new tag]           p03-m2-preregistered-20261018 -> p03-m2-preregistered-20261018
+2026-10-24T21:48:34.0704497Z  * [new tag]           p03-m3-current-inputs-20261023 -> p03-m3-current-inputs-20261023
+2026-10-24T21:48:34.0705207Z  * [new tag]           p03-m3-preregistered-20261018 -> p03-m3-preregistered-20261018
+2026-10-24T21:48:34.0705901Z  * [new tag]           p03-m3-proof-timeout-20261019 -> p03-m3-proof-timeout-20261019
+2026-10-24T21:48:34.0706777Z  * [new tag]           p03-proof-20261019     -> p03-proof-20261019
+2026-10-24T21:48:34.0708594Z [command]/usr/bin/git rev-parse --verify --quiet 195e2302899687e11cecde1920d64a040714745e^{object}
+2026-10-24T21:48:34.0727891Z 195e2302899687e11cecde1920d64a040714745e
+2026-10-24T21:48:34.0731638Z ##[endgroup]
+2026-10-24T21:48:34.0732286Z ##[group]Determining the checkout info
+2026-10-24T21:48:34.0733501Z ##[endgroup]
+2026-10-24T21:48:34.0737633Z [command]/usr/bin/git sparse-checkout disable
+2026-10-24T21:48:34.0790772Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-24T21:48:34.0819741Z ##[group]Checking out the ref
+2026-10-24T21:48:34.0823991Z [command]/usr/bin/git checkout --progress --force 195e2302899687e11cecde1920d64a040714745e
+2026-10-24T21:48:35.1124887Z Updating files:  19% (6229/31447)
+2026-10-24T21:48:35.1268216Z Updating files:  20% (6290/31447)
+2026-10-24T21:48:35.1361496Z Updating files:  21% (6604/31447)
+2026-10-24T21:48:35.1449163Z Updating files:  22% (6919/31447)
+2026-10-24T21:48:35.1533303Z Updating files:  23% (7233/31447)
+2026-10-24T21:48:35.1617218Z Updating files:  24% (7548/31447)
+2026-10-24T21:48:35.1730925Z Updating files:  25% (7862/31447)
+2026-10-24T21:48:35.1817604Z Updating files:  26% (8177/31447)
+2026-10-24T21:48:35.2494408Z Updating files:  27% (8491/31447)
+2026-10-24T21:48:35.4518635Z Updating files:  28% (8806/31447)
+2026-10-24T21:48:35.4932023Z Updating files:  29% (9120/31447)
+2026-10-24T21:48:35.5219973Z Updating files:  30% (9435/31447)
+2026-10-24T21:48:35.5430422Z Updating files:  31% (9749/31447)
+2026-10-24T21:48:35.5740349Z Updating files:  32% (10064/31447)
+2026-10-24T21:48:35.6049844Z Updating files:  33% (10378/31447)
+2026-10-24T21:48:35.6646952Z Updating files:  34% (10692/31447)
+2026-10-24T21:48:35.7140045Z Updating files:  35% (11007/31447)
+2026-10-24T21:48:35.7749170Z Updating files:  36% (11321/31447)
+2026-10-24T21:48:35.8168908Z Updating files:  37% (11636/31447)
+2026-10-24T21:48:35.8921314Z Updating files:  38% (11950/31447)
+2026-10-24T21:48:35.9699310Z Updating files:  39% (12265/31447)
+2026-10-24T21:48:36.0466963Z Updating files:  40% (12579/31447)
+2026-10-24T21:48:36.1145860Z Updating files:  41% (12894/31447)
+2026-10-24T21:48:36.2251957Z Updating files:  41% (12990/31447)
+2026-10-24T21:48:36.2919655Z Updating files:  42% (13208/31447)
+2026-10-24T21:48:36.4167976Z Updating files:  43% (13523/31447)
+2026-10-24T21:48:36.4942025Z Updating files:  44% (13837/31447)
+2026-10-24T21:48:36.5400510Z Updating files:  45% (14152/31447)
+2026-10-24T21:48:36.6057479Z Updating files:  46% (14466/31447)
+2026-10-24T21:48:36.6138078Z Updating files:  47% (14781/31447)
+2026-10-24T21:48:36.6709315Z Updating files:  48% (15095/31447)
+2026-10-24T21:48:36.6947372Z Updating files:  49% (15410/31447)
+2026-10-24T21:48:36.7207065Z Updating files:  50% (15724/31447)
+2026-10-24T21:48:36.7314564Z Updating files:  51% (16038/31447)
+2026-10-24T21:48:36.7429436Z Updating files:  52% (16353/31447)
+2026-10-24T21:48:36.7538155Z Updating files:  53% (16667/31447)
+2026-10-24T21:48:36.7630148Z Updating files:  54% (16982/31447)
+2026-10-24T21:48:36.7763093Z Updating files:  55% (17296/31447)
+2026-10-24T21:48:36.7910289Z Updating files:  56% (17611/31447)
+2026-10-24T21:48:36.8045481Z Updating files:  57% (17925/31447)
+2026-10-24T21:48:36.8138428Z Updating files:  58% (18240/31447)
+2026-10-24T21:48:36.8232133Z Updating files:  59% (18554/31447)
+2026-10-24T21:48:36.8310803Z Updating files:  60% (18869/31447)
+2026-10-24T21:48:36.8398987Z Updating files:  61% (19183/31447)
+2026-10-24T21:48:36.8484547Z Updating files:  62% (19498/31447)
+2026-10-24T21:48:36.8588790Z Updating files:  63% (19812/31447)
+2026-10-24T21:48:37.1450849Z Updating files:  64% (20127/31447)
+2026-10-24T21:48:37.2038470Z Updating files:  64% (20304/31447)
+2026-10-24T21:48:37.2316559Z Updating files:  65% (20441/31447)
+2026-10-24T21:48:37.2414205Z Updating files:  66% (20756/31447)
+2026-10-24T21:48:37.2534795Z Updating files:  67% (21070/31447)
+2026-10-24T21:48:37.2726368Z Updating files:  68% (21384/31447)
+2026-10-24T21:48:37.2842284Z Updating files:  69% (21699/31447)
+2026-10-24T21:48:37.2964871Z Updating files:  70% (22013/31447)
+2026-10-24T21:48:37.3097326Z Updating files:  71% (22328/31447)
+2026-10-24T21:48:37.3168438Z Updating files:  72% (22642/31447)
+2026-10-24T21:48:37.3291598Z Updating files:  73% (22957/31447)
+2026-10-24T21:48:37.3387409Z Updating files:  74% (23271/31447)
+2026-10-24T21:48:37.3594529Z Updating files:  75% (23586/31447)
+2026-10-24T21:48:37.3709761Z Updating files:  76% (23900/31447)
+2026-10-24T21:48:37.3828709Z Updating files:  77% (24215/31447)
+2026-10-24T21:48:37.3995843Z Updating files:  78% (24529/31447)
+2026-10-24T21:48:37.4158252Z Updating files:  79% (24844/31447)
+2026-10-24T21:48:37.4300428Z Updating files:  80% (25158/31447)
+2026-10-24T21:48:37.4418037Z Updating files:  81% (25473/31447)
+2026-10-24T21:48:37.4596995Z Updating files:  82% (25787/31447)
+2026-10-24T21:48:37.4764154Z Updating files:  83% (26102/31447)
+2026-10-24T21:48:37.4853127Z Updating files:  84% (26416/31447)
+2026-10-24T21:48:37.4986109Z Updating files:  85% (26730/31447)
+2026-10-24T21:48:37.5106756Z Updating files:  86% (27045/31447)
+2026-10-24T21:48:37.5230693Z Updating files:  87% (27359/31447)
+2026-10-24T21:48:37.5317077Z Updating files:  88% (27674/31447)
+2026-10-24T21:48:37.5397642Z Updating files:  89% (27988/31447)
+2026-10-24T21:48:37.5951921Z Updating files:  90% (28303/31447)
+2026-10-24T21:48:37.6145522Z Updating files:  91% (28617/31447)
+2026-10-24T21:48:37.6495906Z Updating files:  92% (28932/31447)
+2026-10-24T21:48:37.6623962Z Updating files:  93% (29246/31447)
+2026-10-24T21:48:37.6732804Z Updating files:  94% (29561/31447)
+2026-10-24T21:48:37.6848608Z Updating files:  95% (29875/31447)
+2026-10-24T21:48:37.6957652Z Updating files:  96% (30190/31447)
+2026-10-24T21:48:37.7207848Z Updating files:  97% (30504/31447)
+2026-10-24T21:48:37.7512383Z Updating files:  98% (30819/31447)
+2026-10-24T21:48:37.7801120Z Updating files:  99% (31133/31447)
+2026-10-24T21:48:37.7801610Z Updating files: 100% (31447/31447)
+2026-10-24T21:48:37.7802212Z Updating files: 100% (31447/31447), done.
+2026-10-24T21:48:37.8942095Z Note: switching to '195e2302899687e11cecde1920d64a040714745e'.
+2026-10-24T21:48:37.8942563Z 
+2026-10-24T21:48:37.8942911Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-24T21:48:37.8943654Z changes and commit them, and you can discard any commits you make in this
+2026-10-24T21:48:37.8944349Z state without impacting any branches by switching back to a branch.
+2026-10-24T21:48:37.8944698Z 
+2026-10-24T21:48:37.8944988Z If you want to create a new branch to retain commits you create, you may
+2026-10-24T21:48:37.8945710Z do so (now or later) by using -c with the switch command. Example:
+2026-10-24T21:48:37.8946067Z 
+2026-10-24T21:48:37.8946414Z   git switch -c <new-branch-name>
+2026-10-24T21:48:37.8946702Z 
+2026-10-24T21:48:37.8946910Z Or undo this operation with:
+2026-10-24T21:48:37.8947219Z 
+2026-10-24T21:48:37.8947399Z   git switch -
+2026-10-24T21:48:37.8947554Z 
+2026-10-24T21:48:37.8947801Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-24T21:48:37.8948143Z 
+2026-10-24T21:48:37.8948513Z HEAD is now at 195e2302 ci: make P03 statistics optional and publish the owner-requested preview image
+2026-10-24T21:48:37.8987284Z ##[endgroup]
+2026-10-24T21:48:37.9027812Z [command]/usr/bin/git log -1 --format=%H
+2026-10-24T21:48:37.9062844Z 195e2302899687e11cecde1920d64a040714745e
+2026-10-24T21:48:37.9150300Z ##[group]Removing auth
+2026-10-24T21:48:37.9151399Z Removing SSH command configuration
+2026-10-24T21:48:37.9154664Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T21:48:37.9198040Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T21:48:38.0489453Z Removing HTTP extra header
+2026-10-24T21:48:38.0494996Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T21:48:38.0529003Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T21:48:38.0746873Z Removing includeIf entries pointing to credentials config files
+2026-10-24T21:48:38.0762312Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T21:48:38.1045985Z includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-24T21:48:38.1047138Z includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-24T21:48:38.1047889Z includeif.gitdir:/github/workspace/.git.path
+2026-10-24T21:48:38.1048613Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T21:48:38.1058177Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-24T21:48:38.1079844Z /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.1091699Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.2064792Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-24T21:48:38.2092949Z /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.2101900Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.2754291Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-24T21:48:38.2778863Z /github/runner_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.2789445Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.3556844Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-24T21:48:38.3580828Z /github/runner_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.3587897Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config
+2026-10-24T21:48:38.3957488Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T21:48:38.4174115Z Removing credentials config '/home/runner/work/_temp/git-credentials-963b94c3-235d-417c-b47d-d9aad8a44faf.config'
+2026-10-24T21:48:38.4239155Z ##[endgroup]
+2026-10-24T21:48:38.6778711Z ##[group]Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+2026-10-24T21:48:38.6779245Z with:
+2026-10-24T21:48:38.6779601Z   node-version-file: .node-version
+2026-10-24T21:48:38.6779966Z   cache: npm
+2026-10-24T21:48:38.6780257Z   check-latest: false
+2026-10-24T21:48:38.6783026Z   token: ***
+2026-10-24T21:48:38.6783396Z   package-manager-cache: true
+2026-10-24T21:48:38.6783726Z ##[endgroup]
+2026-10-24T21:48:38.8147345Z Node version file is not JSON file
+2026-10-24T21:48:38.8148341Z Resolved .node-version as 24.22.0
+2026-10-24T21:48:38.8181546Z Attempting to download 24.22.0...
+2026-10-24T21:48:39.5273699Z Acquiring 24.22.0 - x64 from https://github.com/actions/node-versions/releases/download/24.22.0-38668177966/node-24.22.0-linux-x64.tar.gz
+2026-10-24T21:48:40.1103024Z Extracting ...
+2026-10-24T21:48:40.1206977Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/2f01f1a9-450d-4e11-8029-74a9407edfb2 -f /home/runner/work/_temp/b989178a-6ed8-4de2-b73f-e477327b92cb
+2026-10-24T21:48:41.4925945Z Adding to the cache ...
+2026-10-24T21:48:45.9816990Z ##[group]Environment details
+2026-10-24T21:48:46.2071277Z node: v24.22.0
+2026-10-24T21:48:46.2071766Z npm: 11.19.1
+2026-10-24T21:48:46.2072314Z yarn: 1.22.22
+2026-10-24T21:48:46.2073109Z ##[endgroup]
+2026-10-24T21:48:46.2089193Z [command]/opt/hostedtoolcache/node/24.22.0/x64/bin/npm config get cache
+2026-10-24T21:48:46.2997922Z /home/runner/.npm
+2026-10-24T21:48:46.4280934Z Cache hit for: node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b
+2026-10-24T21:48:46.7109191Z Received 691 of 691 (100.0%), 0.0 MBs/sec
+2026-10-24T21:48:46.7109838Z Cache Size: ~0 MB (691 B)
+2026-10-24T21:48:46.7130054Z [command]/usr/bin/tar -xf /home/runner/work/_temp/ebe381f9-ce4a-453d-94f3-2ff6fd290693/cache.tzst -P -C /home/runner/work/venus/venus --use-compress-program unzstd
+2026-10-24T21:48:46.7196061Z Cache restored successfully
+2026-10-24T21:48:46.7200726Z Cache restored from key: node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b
+2026-10-24T21:48:46.7377575Z ##[group]Run actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+2026-10-24T21:48:46.7378068Z with:
+2026-10-24T21:48:46.7378370Z   python-version: 3.12.14
+2026-10-24T21:48:46.7378734Z   check-latest: false
+2026-10-24T21:48:46.7381545Z   token: ***
+2026-10-24T21:48:46.7381871Z   update-environment: true
+2026-10-24T21:48:46.7382236Z   allow-prereleases: false
+2026-10-24T21:48:46.7382562Z   freethreaded: false
+2026-10-24T21:48:46.7382871Z ##[endgroup]
+2026-10-24T21:48:46.8640634Z ##[group]Installed versions
+2026-10-24T21:48:46.8671924Z Version 3.12.14 was not found in the local cache
+2026-10-24T21:48:47.7031858Z Version 3.12.14 is available for downloading
+2026-10-24T21:48:47.7033315Z Download from "https://github.com/actions/python-versions/releases/download/3.12.14-31661455385/python-3.12.14-linux-24.04-x64.tar.gz"
+2026-10-24T21:48:48.5418268Z Extract downloaded archive
+2026-10-24T21:48:48.5585296Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/d2c8ba34-8b21-4f5a-9142-1378f51038ee -f /home/runner/work/_temp/3bee67e5-8ca5-405d-b769-df5a1d509ae8
+2026-10-24T21:48:50.6867580Z Execute installation script
+2026-10-24T21:48:50.6950986Z Check if Python hostedtoolcache folder exist...
+2026-10-24T21:48:50.6951815Z Create Python 3.12.14 folder
+2026-10-24T21:48:50.6961755Z Copy Python binaries to hostedtoolcache folder
+2026-10-24T21:48:50.9594922Z Create additional symlinks (Required for the UsePythonVersion Azure Pipelines task and the setup-python GitHub Action)
+2026-10-24T21:48:50.9629737Z Upgrading pip...
+2026-10-24T21:48:56.6976475Z Collecting pip
+2026-10-24T21:48:56.7729038Z Downloading pip-26.2.2-py3-none-any.whl.metadata (4.6 kB)
+2026-10-24T21:48:56.7931631Z Downloading pip-26.2.2-py3-none-any.whl (1.8 MB)
+2026-10-24T21:48:56.9204768Z ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.8/1.8 MB 18.5 MB/s eta 0:00:00
+2026-10-24T21:48:56.9205284Z 
+2026-10-24T21:48:56.9386682Z Installing collected packages: pip
+2026-10-24T21:48:56.9387289Z Attempting uninstall: pip
+2026-10-24T21:48:56.9406984Z Found existing installation: pip 25.0.1
+2026-10-24T21:48:56.9647129Z Uninstalling pip-25.0.1:
+2026-10-24T21:48:56.9690598Z Successfully uninstalled pip-25.0.1
+2026-10-24T21:48:57.7407057Z Successfully installed pip-26.2.2
+2026-10-24T21:48:57.7991062Z Create complete file
+2026-10-24T21:48:57.8027623Z Successfully set up CPython (3.12.14)
+2026-10-24T21:48:57.8028531Z ##[endgroup]
+2026-10-24T21:48:57.8166139Z ##[group]Run python -m pip install --require-hashes -r tools/requirements.lock
+2026-10-24T21:48:57.8167297Z [36;1mpython -m pip install --require-hashes -r tools/requirements.lock[0m
+2026-10-24T21:48:57.8355183Z shell: /usr/bin/bash -e {0}
+2026-10-24T21:48:57.8355633Z env:
+2026-10-24T21:48:57.8356027Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:57.8356804Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-24T21:48:57.8357387Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:57.8357847Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:57.8358330Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:57.8358806Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-24T21:48:57.8359226Z ##[endgroup]
+2026-10-24T21:48:58.2336510Z Collecting attrs==26.1.0 (from -r tools/requirements.lock (line 2))
+2026-10-24T21:48:58.3005267Z   Downloading attrs-26.1.0-py3-none-any.whl (67 kB)
+2026-10-24T21:48:58.3513284Z Collecting jsonschema==4.26.0 (from -r tools/requirements.lock (line 3))
+2026-10-24T21:48:58.3619958Z   Downloading jsonschema-4.26.0-py3-none-any.whl (90 kB)
+2026-10-24T21:48:58.3912154Z Collecting jsonschema-specifications==2025.9.1 (from -r tools/requirements.lock (line 4))
+2026-10-24T21:48:58.4016928Z   Downloading jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+2026-10-24T21:48:58.4264252Z Collecting referencing==0.37.0 (from -r tools/requirements.lock (line 5))
+2026-10-24T21:48:58.4368796Z   Downloading referencing-0.37.0-py3-none-any.whl (26 kB)
+2026-10-24T21:48:58.6966505Z Collecting rpds-py==2026.9.1 (from -r tools/requirements.lock (line 6))
+2026-10-24T21:48:58.7075990Z   Downloading rpds_py-2026.9.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (371 kB)
+2026-10-24T21:48:58.7687476Z Collecting typing-extensions==4.16.0 (from -r tools/requirements.lock (line 7))
+2026-10-24T21:48:58.7792898Z   Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+2026-10-24T21:48:58.8122384Z Installing collected packages: typing-extensions, rpds-py, attrs, referencing, jsonschema-specifications, jsonschema
+2026-10-24T21:48:58.9759674Z 
+2026-10-24T21:48:58.9772003Z Successfully installed attrs-26.1.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 referencing-0.37.0 rpds-py-2026.9.1 typing-extensions-4.16.0
+2026-10-24T21:48:59.0400201Z ##[group]Run npm ci
+2026-10-24T21:48:59.0400606Z [36;1mnpm ci[0m
+2026-10-24T21:48:59.0441919Z shell: /usr/bin/bash -e {0}
+2026-10-24T21:48:59.0442272Z env:
+2026-10-24T21:48:59.0442934Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:59.0443445Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-24T21:48:59.0443964Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:59.0444417Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:59.0444921Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:48:59.0445413Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-24T21:48:59.0445813Z ##[endgroup]
+2026-10-24T21:49:03.0317701Z 
+2026-10-24T21:49:03.0318723Z added 288 packages, and audited 295 packages in 4s
+2026-10-24T21:49:03.0340801Z 
+2026-10-24T21:49:03.0341276Z 1 moderate severity vulnerability
+2026-10-24T21:49:03.0341618Z 
+2026-10-24T21:49:03.0341960Z To address all issues, run:
+2026-10-24T21:49:03.0342446Z   npm audit fix
+2026-10-24T21:49:03.0342645Z 
+2026-10-24T21:49:03.0342834Z Run `npm audit` for details.
+2026-10-24T21:49:03.0675352Z ##[group]Run npm run quality
+2026-10-24T21:49:03.0675918Z [36;1mnpm run quality[0m
+2026-10-24T21:49:03.0736712Z shell: /usr/bin/bash -e {0}
+2026-10-24T21:49:03.0737243Z env:
+2026-10-24T21:49:03.0737937Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:03.0738717Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-24T21:49:03.0740032Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:03.0740732Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:03.0741414Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:03.0742162Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-24T21:49:03.0742854Z ##[endgroup]
+2026-10-24T21:49:03.1700987Z 
+2026-10-24T21:49:03.1701692Z > venus@0.0.0 quality
+2026-10-24T21:49:03.1703846Z > npm run lint && npm run typecheck && npm test && npm run test:p05:reporter && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:catalog-r2 && npm run test:negative
+2026-10-24T21:49:03.1705074Z 
+2026-10-24T21:49:03.2646947Z 
+2026-10-24T21:49:03.2647805Z > venus@0.0.0 lint
+2026-10-24T21:49:03.2648937Z > eslint apps packages tools/*.mjs tools/venus-operator/*.mjs tools/venus-operator/ui/*.js tests/**/*.mjs
+2026-10-24T21:49:03.2649802Z 
+2026-10-24T21:49:11.7629858Z 
+2026-10-24T21:49:11.7630788Z > venus@0.0.0 typecheck
+2026-10-24T21:49:11.7631442Z > tsc -b && tsc -p apps/web/tsconfig.json
+2026-10-24T21:49:11.7631712Z 
+2026-10-24T21:49:19.0914759Z 
+2026-10-24T21:49:19.0915818Z > venus@0.0.0 test
+2026-10-24T21:49:19.0916630Z > vitest run
+2026-10-24T21:49:19.0916930Z 
+2026-10-24T21:49:19.3676662Z 
+2026-10-24T21:49:19.3680918Z [1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/home/runner/work/venus/venus[39m
+2026-10-24T21:49:19.3681778Z 
+2026-10-24T21:49:23.1346716Z  [32m✓[39m apps/api/src/private-topic-ledger.test.ts [2m([22m[2m89 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 2701[2mms[22m[39m
+2026-10-24T21:49:23.1348609Z    [32m✓[39m topic safety ledger real Linux filesystem (not API/DB activation) [2m(44)[22m
+2026-10-24T21:49:23.1350429Z      [33m[2m✓[22m[39m real second process cannot enter while first process holds the exclusive writer lock[33m 323[2mms[22m[39m
+2026-10-24T21:49:23.3983616Z  [32m✓[39m packages/relationship-engine/src/private-conversation.test.ts [2m([22m[2m68 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+2026-10-24T21:49:24.4418979Z  [32m✓[39m apps/api/src/private-topic-preferences.test.ts [2m([22m[2m81 tests[22m[2m)[22m[33m 498[2mms[22m[39m
+2026-10-24T21:49:28.0043631Z  [32m✓[39m apps/web/src/topic-panel.test.ts [2m([22m[2m21 tests[22m[2m)[22m[33m 3195[2mms[22m[39m
+2026-10-24T21:49:28.0044898Z    [32m✓[39m actual TopicGamesPanel scoped V2 flow [2m(21)[22m
+2026-10-24T21:49:28.0057344Z      [33m[2m✓[22m[39m keyboard focus reveals the whole private editor without submitting or exposing content[33m 455[2mms[22m[39m
+2026-10-24T21:49:28.3683228Z  [32m✓[39m apps/web/src/topic-state.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+2026-10-24T21:49:31.0240002Z  [32m✓[39m apps/web/src/game-controls-panel.test.ts [2m([22m[2m16 tests[22m[2m)[22m[33m 2279[2mms[22m[39m
+2026-10-24T21:49:31.0241760Z    [32m✓[39m actual GamesPanel own controls [2m(8)[22m
+2026-10-24T21:49:31.0243203Z      [33m[2m✓[22m[39m group Questions primary finishes then host advances solely through actual JSX handlers[33m 402[2mms[22m[39m
+2026-10-24T21:49:31.2216107Z  [32m✓[39m apps/web/src/game-controls.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+2026-10-24T21:49:31.6911337Z  [32m✓[39m apps/api/src/topic-round-view.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+2026-10-24T21:49:34.5429253Z  [32m✓[39m apps/web/src/topic-own-exclusion-refresh.test.ts [2m([22m[2m12 tests[22m[2m)[22m[33m 2455[2mms[22m[39m
+2026-10-24T21:49:34.5558272Z    [32m✓[39m own permanent exclusion command refreshes only its own settings [2m(12)[22m
+2026-10-24T21:49:34.5561314Z      [33m[2m✓[22m[39m reloads authenticated own record after successful command; excluded allow is unchecked/disabled and peer stays unchanged[33m 563[2mms[22m[39m
+2026-10-24T21:49:34.6938649Z  [32m✓[39m apps/api/src/topic-room-lifecycle.test.ts [2m([22m[2m142 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[33m 14530[2mms[22m[39m
+2026-10-24T21:49:34.7011455Z    [32m✓[39m inactive topic room lifecycle — real Linux filesystem [2m(63)[22m
+2026-10-24T21:49:34.7018223Z      [33m[2m✓[22m[39m actual SIGKILL birth phase after-personal-initialize leaves an unconfirmed orphan without auto-init[33m 356[2mms[22m[39m
+2026-10-24T21:49:34.7020820Z      [33m[2m✓[22m[39m actual SIGKILL birth phase after-birth-write leaves an unconfirmed orphan without auto-init[33m 425[2mms[22m[39m
+2026-10-24T21:49:34.7022665Z      [33m[2m✓[22m[39m actual SIGKILL birth phase after-birth-sync leaves an unconfirmed orphan without auto-init[33m 408[2mms[22m[39m
+2026-10-24T21:49:34.7024602Z      [33m[2m✓[22m[39m actual SIGKILL birth phase after-birth-rename leaves an unconfirmed orphan without auto-init[33m 710[2mms[22m[39m
+2026-10-24T21:49:34.7026832Z      [33m[2m✓[22m[39m actual SIGKILL birth phase after-birth-directory-sync leaves an unconfirmed orphan without auto-init[33m 712[2mms[22m[39m
+2026-10-24T21:49:34.7028625Z      [33m[2m✓[22m[39m actual SIGKILL retirement phase after-retirement-write preserves stale lock and terminal ordering[33m 899[2mms[22m[39m
+2026-10-24T21:49:34.7030493Z      [33m[2m✓[22m[39m actual SIGKILL retirement phase after-retirement-sync preserves stale lock and terminal ordering[33m 848[2mms[22m[39m
+2026-10-24T21:49:34.7032301Z      [33m[2m✓[22m[39m actual SIGKILL retirement phase after-retirement-rename preserves stale lock and terminal ordering[33m 718[2mms[22m[39m
+2026-10-24T21:49:34.7034325Z      [33m[2m✓[22m[39m actual SIGKILL retirement phase after-retirement-directory-sync preserves stale lock and terminal ordering[33m 454[2mms[22m[39m
+2026-10-24T21:49:34.7036414Z      [33m[2m✓[22m[39m actual SIGKILL retirement phase after-room-retired preserves stale lock and terminal ordering[33m 1049[2mms[22m[39m
+2026-10-24T21:49:34.7038181Z      [33m[2m✓[22m[39m actual SIGKILL cleanup phase after-personal-chain-unlink never resurrects held personal state[33m 316[2mms[22m[39m
+2026-10-24T21:49:36.5628645Z  [32m✓[39m apps/web/src/game-races.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 1506[2mms[22m[39m
+2026-10-24T21:49:36.5648148Z    [32m✓[39m actual GamesPanel asynchronous publishing [2m(8)[22m
+2026-10-24T21:49:36.5650216Z      [33m[2m✓[22m[39m drops a conflicting revision retry and requires a new explicit prepare with fresh revision/key[33m 408[2mms[22m[39m
+2026-10-24T21:49:37.6553657Z  [32m✓[39m apps/api/src/topic-game-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 155[2mms[22m[39m
+2026-10-24T21:49:38.2740578Z  [32m✓[39m packages/relationship-engine/src/topic-map.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 237[2mms[22m[39m
+2026-10-24T21:49:39.4191073Z  [32m✓[39m packages/relationship-engine/src/engine.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 614[2mms[22m[39m
+2026-10-24T21:49:39.4194230Z    [32m✓[39m production relationship engine, explicit synthetic test pack [2m(8)[22m
+2026-10-24T21:49:39.4196525Z      [33m[2m✓[22m[39m enforces class, every actor comfort, context, stage, capability and common public support exhaustively[33m 302[2mms[22m[39m
+2026-10-24T21:49:39.8378744Z  [32m✓[39m apps/api/src/topic-condition-lifecycle.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+2026-10-24T21:49:40.0434013Z  [32m✓[39m apps/api/src/request-error-diagnostic.test.ts [2m([22m[2m56 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-10-24T21:49:40.7568997Z  [32m✓[39m apps/api/src/p05-private-channel.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+2026-10-24T21:49:41.1213959Z  [32m✓[39m apps/api/src/topic-chat-guards.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+2026-10-24T21:49:41.4004180Z  [32m✓[39m apps/api/src/room-socket-poll.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+2026-10-24T21:49:42.3139398Z  [32m✓[39m apps/api/src/topic-history-cache-integration.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+2026-10-24T21:49:42.5383838Z  [32m✓[39m apps/api/src/topic-room-registry.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+2026-10-24T21:49:43.5409185Z  [32m✓[39m tools/p03-measurements.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+2026-10-24T21:49:43.7871236Z  [32m✓[39m apps/api/src/private-chat.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+2026-10-24T21:49:44.0368175Z  [32m✓[39m packages/card-catalog/src/catalog.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 8909[2mms[22m[39m
+2026-10-24T21:49:44.0374981Z    [32m✓[39m P04 catalogue authoring and independent review boundary [2m(9)[22m
+2026-10-24T21:49:44.0458819Z      [33m[2m✓[22m[39m distinguishes a missing required in-person channel from a real private content shortage[33m 1434[2mms[22m[39m
+2026-10-24T21:49:44.0460551Z      [33m[2m✓[22m[39m never promotes drafts without complete signed independent review; changes invalidate it[33m 5849[2mms[22m[39m
+2026-10-24T21:49:44.0499416Z      [33m[2m✓[22m[39m rejects example-origin and wrong-role material even with a signed record[33m 1299[2mms[22m[39m
+2026-10-24T21:49:44.2070334Z  [32m✓[39m apps/api/src/topic-algorithm-compatibility.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+2026-10-24T21:49:44.5178812Z  [32m✓[39m packages/card-catalog/src/topic-bundles.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 94[2mms[22m[39m
+2026-10-24T21:49:44.6166854Z  [32m✓[39m apps/api/src/topic-game-idempotency.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+2026-10-24T21:49:44.7172093Z  [32m✓[39m apps/api/src/room-private-protocol.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+2026-10-24T21:49:45.1183216Z  [32m✓[39m apps/api/src/topic-projection-reuse.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+2026-10-24T21:49:45.3597601Z  [32m✓[39m apps/api/src/room-routes-v2.test.ts [2m([22m[2m14 tests[22m[2m)[22m[33m 366[2mms[22m[39m
+2026-10-24T21:49:45.6229765Z  [32m✓[39m apps/api/src/topic-room-directories.test.ts [2m([22m[2m20 tests[22m[2m | [22m[33m1 skipped[39m[2m)[22m[32m 51[2mms[22m[39m
+2026-10-24T21:49:45.8283417Z  [32m✓[39m apps/api/src/pilot-topic-source.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+2026-10-24T21:49:46.1530512Z  [32m✓[39m apps/api/src/app.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 160[2mms[22m[39m
+2026-10-24T21:49:47.0517654Z  [32m✓[39m apps/api/src/self-actions-delivery.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+2026-10-24T21:49:47.4823461Z  [32m✓[39m packages/relationship-engine/src/consent.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+2026-10-24T21:49:47.7105227Z  [32m✓[39m apps/api/src/topic-ephemeral-lock.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+2026-10-24T21:49:48.5087483Z  [32m✓[39m apps/web/src/topic-round-view.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 2263[2mms[22m[39m
+2026-10-24T21:49:48.5095656Z    [32m✓[39m TopicGamesPanel actual single round-view transport [2m(11)[22m
+2026-10-24T21:49:48.5098132Z      [33m[2m✓[22m[39m reads one bundled response and never requests independently aged private components[33m 494[2mms[22m[39m
+2026-10-24T21:49:48.5133781Z  [32m✓[39m apps/api/src/topic-snapshot-cache-integration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+2026-10-24T21:49:49.2920170Z  [32m✓[39m apps/api/src/topic-runtime.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+2026-10-24T21:49:49.4828769Z  [32m✓[39m apps/api/src/room-socket-projection.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-24T21:49:49.5391437Z  [32m✓[39m packages/card-catalog/src/pilot-bundle.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 444[2mms[22m[39m
+2026-10-24T21:49:49.7318438Z  [32m✓[39m apps/api/src/room-games.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+2026-10-24T21:49:50.1541844Z  [32m✓[39m apps/api/src/private-chat-delivery.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-24T21:49:50.5568958Z  [32m✓[39m apps/api/src/game-self-actions.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+2026-10-24T21:49:51.3727745Z  [32m✓[39m apps/api/src/topic-history-cache.test.ts [2m([22m[2m15 tests[22m[2m)[22m[33m 397[2mms[22m[39m
+2026-10-24T21:49:51.4051709Z  [32m✓[39m apps/web/src/topic-settings.test.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1163[2mms[22m[39m
+2026-10-24T21:49:51.4077889Z    [32m✓[39m actual own-topic settings boundaries [2m(4)[22m
+2026-10-24T21:49:51.4088485Z      [33m[2m✓[22m[39m has no preselected permissions and saves only an explicit own allow choice[33m 504[2mms[22m[39m
+2026-10-24T21:49:51.9207152Z  [32m✓[39m apps/api/src/private-chat-routes.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 207[2mms[22m[39m
+2026-10-24T21:49:52.3452700Z  [32m✓[39m apps/api/src/topic-game-model.test.ts [2m([22m[2m11 tests[22m[2m)[22m[33m 472[2mms[22m[39m
+2026-10-24T21:49:52.3479054Z    [32m✓[39m V2 padded chunk storage [2m(11)[22m
+2026-10-24T21:49:52.3500063Z      [33m[2m✓[22m[39m reconstructs a YesBut candidate accepted by the real conversation text validator[33m 396[2mms[22m[39m
+2026-10-24T21:49:52.4620035Z  [32m✓[39m apps/api/src/games-model.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+2026-10-24T21:49:52.6649646Z  [32m✓[39m apps/api/src/security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 158[2mms[22m[39m
+2026-10-24T21:49:52.8470237Z  [32m✓[39m apps/api/src/topic-games.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-24T21:49:53.0131451Z  [32m✓[39m apps/api/src/topic-snapshot-cache.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-24T21:49:53.0779736Z  [32m✓[39m apps/api/src/topic-offer-throttle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+2026-10-24T21:49:53.1929875Z  [32m✓[39m apps/web/src/topic-controls.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+2026-10-24T21:49:53.8348032Z  [32m✓[39m apps/api/src/games-delivery.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-24T21:49:53.9028975Z  [32m✓[39m apps/api/src/p05-feature-availability.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+2026-10-24T21:49:54.2648695Z  [32m✓[39m packages/relationship-engine/src/public-pair-opt-in.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+2026-10-24T21:49:54.6868734Z  [32m✓[39m apps/api/src/topic-action-consent.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-24T21:49:54.7968808Z  [32m✓[39m apps/api/src/topic-context-fixture.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-24T21:49:55.0717763Z  [32m✓[39m apps/api/src/topic-games-socket-projection.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-24T21:49:55.2374079Z  [32m✓[39m apps/web/src/game-operations.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-24T21:49:55.4228792Z  [32m✓[39m apps/web/src/game-state.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-24T21:49:55.4348531Z  [32m✓[39m apps/api/src/p05-public-receipt.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+2026-10-24T21:49:55.5983918Z  [32m✓[39m apps/api/src/topic-chat-policy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+2026-10-24T21:49:55.6088941Z  [32m✓[39m apps/web/src/session-api.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+2026-10-24T21:49:55.7359937Z  [32m✓[39m apps/web/src/private-state.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-24T21:49:55.7737732Z  [32m✓[39m apps/web/src/presentation-clock.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+2026-10-24T21:49:56.1068866Z  [32m✓[39m apps/api/src/topic-games-feature-off.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+2026-10-24T21:49:56.1700204Z  [32m✓[39m apps/api/src/topic-round-view-route.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 147[2mms[22m[39m
+2026-10-24T21:49:56.2798780Z  [32m✓[39m apps/api/src/protected-runtime.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+2026-10-24T21:49:56.3303376Z  [32m✓[39m apps/web/src/game-setup.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+2026-10-24T21:49:56.4479175Z  [32m✓[39m apps/api/src/entry-profile.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+2026-10-24T21:49:56.5600121Z  [31m❯[39m tools/ci-policy.test.ts [2m([22m[2m1 test[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 33[2mms[22m[39m
+2026-10-24T21:49:56.5601552Z [31m   [31m×[31m uses one PR head CI event, preserves full required checks and immutable action pins[39m[32m 31[2mms[22m[39m
+2026-10-24T21:49:56.5960090Z  [32m✓[39m apps/web/src/api.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 5[2mms[22m[39m
+2026-10-24T21:49:56.7843561Z  [32m✓[39m tools/github-ci.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 27[2mms[22m[39m
+2026-10-24T21:49:56.8539752Z Batch request: B-20261018-Q-001 errors= 0
+2026-10-24T21:49:56.9729533Z Batch request: <invalid> errors= 17
+2026-10-24T21:49:56.9730524Z ERROR BATCH-001 'batch_id' is a required property
+2026-10-24T21:49:56.9731464Z ERROR BATCH-001 'pack_id' is a required property
+2026-10-24T21:49:56.9732486Z ERROR BATCH-001 'schema_version' is a required property
+2026-10-24T21:49:56.9733340Z ERROR BATCH-001 'policy_revision' is a required property
+2026-10-24T21:49:56.9734137Z ERROR BATCH-001 'mode' is a required property
+2026-10-24T21:49:56.9734896Z ERROR BATCH-001 'count' is a required property
+2026-10-24T21:49:56.9735623Z ERROR BATCH-001 'id_range' is a required property
+2026-10-24T21:49:56.9736514Z ERROR BATCH-001 'meeting_contexts' is a required property
+2026-10-24T21:49:56.9737369Z ERROR BATCH-001 'allowed_interactions' is a required property
+2026-10-24T21:49:56.9738282Z ERROR BATCH-001 'relationship_scope_distribution' is a required property
+2026-10-24T21:49:56.9739210Z ERROR BATCH-001 'comfort_distribution' is a required property
+2026-10-24T21:49:56.9740132Z ERROR BATCH-001 'progression_distribution' is a required property
+2026-10-24T21:49:56.9740913Z ERROR BATCH-001 'languages' is a required property
+2026-10-24T21:49:56.9741707Z ERROR BATCH-001 'forbidden_categories' is a required property
+2026-10-24T21:49:56.9743000Z ERROR BATCH-001 'source_catalog_digest' is a required property
+2026-10-24T21:49:56.9743770Z ERROR BATCH-001 'requested_by' is a required property
+2026-10-24T21:49:56.9744615Z ERROR BATCH-001 'human_review_required' is a required property
+2026-10-24T21:49:56.9898280Z  [32m✓[39m tools/catalog-request-snapshot.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 270[2mms[22m[39m
+2026-10-24T21:49:57.2773879Z  [32m✓[39m packages/relationship-engine/src/topic-planner.test.ts [2m([22m[2m69 tests[22m[2m)[22m[33m 36911[2mms[22m[39m
+2026-10-24T21:49:57.2775193Z    [32m✓[39m sessionwide private exact-card uniqueness [2m(3)[22m
+2026-10-24T21:49:57.2817271Z      [33m[2m✓[22m[39m never reoffers an exact private ID to another pair in the same native session[33m 3543[2mms[22m[39m
+2026-10-24T21:49:57.2818799Z      [33m[2m✓[22m[39m consumes replacement attempts across pairs while retaining private public-schedule isolation[33m 4439[2mms[22m[39m
+2026-10-24T21:49:57.2820077Z      [33m[2m✓[22m[39m rejects an authenticated-shaped current history containing the same ID in different pairs[33m 1484[2mms[22m[39m
+2026-10-24T21:49:57.2821018Z    [32m✓[39m complete private opportunity history after empty topic setup [2m(2)[22m
+2026-10-24T21:49:57.2822052Z      [33m[2m✓[22m[39m keeps the previous actual pair across public rounds and avoids it when an effective unused alternative exists[33m 9688[2mms[22m[39m
+2026-10-24T21:49:57.2823160Z      [33m[2m✓[22m[39m allows the only pair to recur for N2 without manufacturing an alternative[33m 555[2mms[22m[39m
+2026-10-24T21:49:57.2824435Z    [32m✓[39m versioned topic planner without content activation or runtime delivery [2m(39)[22m
+2026-10-24T21:49:57.2825769Z      [33m[2m✓[22m[39m empty/default allow is safe-empty only at baseline-eligible generic private opportunities[33m 453[2mms[22m[39m
+2026-10-24T21:49:57.2827147Z      [33m[2m✓[22m[39m filters entire multi-tag card using both own allow and both room exclusions[33m 405[2mms[22m[39m
+2026-10-24T21:49:57.2828532Z      [33m[2m✓[22m[39m keeps full public projections identical across private settings, histories, IDs, intensity, safety revisions and outcomes[33m 779[2mms[22m[39m
+2026-10-24T21:49:57.2829758Z      [33m[2m✓[22m[39m binds public semantic history across mode and session, without card-ID-only dedupe[33m 959[2mms[22m[39m
+2026-10-24T21:49:57.2830794Z      [33m[2m✓[22m[39m filters same-pair private semantic history across modes/sessions and isolates other pairs[32m 300[2mms[22m[39m
+2026-10-24T21:49:57.2831914Z      [33m[2m✓[22m[39m room exclusions remain effective for caller-supplied current preferences after new session/mode/pair[33m 515[2mms[22m[39m
+2026-10-24T21:49:57.2832961Z      [33m[2m✓[22m[39m runs base guard/cap/progression profiles for2..8, all modes and both contexts[33m 3174[2mms[22m[39m
+2026-10-24T21:49:57.2833903Z      [33m[2m✓[22m[39m preserves veto and comfort/context guards and reports true shortage[33m 3449[2mms[22m[39m
+2026-10-24T21:49:57.2834846Z      [33m[2m✓[22m[39m keeps anti-consecutive private pair where baseline alternatives exist[33m 3008[2mms[22m[39m
+2026-10-24T21:49:57.2835661Z    [32m✓[39m additive targeted private replacement RE-1.P05-TARGET-1 [2m(14)[22m
+2026-10-24T21:49:57.2836921Z      [33m[2m✓[22m[39m supports real target-pool selection for all modes and both contexts without relaxing baseline guards[33m 313[2mms[22m[39m
+2026-10-24T21:49:57.2860149Z 
+2026-10-24T21:49:57.2861060Z [31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+2026-10-24T21:49:57.2861465Z 
+2026-10-24T21:49:57.2864455Z [41m[1m FAIL [22m[49m tools/ci-policy.test.ts[2m > [22muses one PR head CI event, preserves full required checks and immutable action pins
+2026-10-24T21:49:57.2871189Z [31m[1mAssertionError[22m: expected [ 'container-smoke', …(4) ] to deeply equal [ 'container-smoke', …(5) ][39m
+2026-10-24T21:49:57.2871710Z 
+2026-10-24T21:49:57.2872074Z [32m- Expected[39m
+2026-10-24T21:49:57.2872890Z [31m+ Received[39m
+2026-10-24T21:49:57.2873108Z 
+2026-10-24T21:49:57.2873426Z [2m  [[22m
+2026-10-24T21:49:57.2873977Z [2m    "container-smoke",[22m
+2026-10-24T21:49:57.2874828Z [2m    "p02-integration",[22m
+2026-10-24T21:49:57.2875530Z [2m    "p03-integration",[22m
+2026-10-24T21:49:57.2876335Z [32m-   "p03-measurements",[39m
+2026-10-24T21:49:57.2877207Z [2m    "p06-release-integration",[22m
+2026-10-24T21:49:57.2877783Z [2m    "quality",[22m
+2026-10-24T21:49:57.2878272Z [2m  ][22m
+2026-10-24T21:49:57.2878588Z 
+2026-10-24T21:49:57.2879040Z [36m [2m❯[22m tools/ci-policy.test.ts:[2m8:45[22m[39m
+2026-10-24T21:49:57.2903538Z     [90m  6|[39m   expect(workflow.on.push.branches).toEqual(['main']);expect(workflow.…
+2026-10-24T21:49:57.2904603Z     [90m  7|[39m   expect(Object.keys(workflow.on).sort()).toEqual(['pull_request','pus…
+2026-10-24T21:49:57.2906120Z     [90m  8|[39m   expect(Object.keys(workflow.jobs).sort()).toEqual(['container-smoke'…
+2026-10-24T21:49:57.2907091Z     [90m   |[39m                                             [31m^[39m
+2026-10-24T21:49:57.2908728Z     [90m  9|[39m   expect(workflow.jobs['p03-measurements'].strategy.matrix.section).to…
+2026-10-24T21:49:57.2909747Z     [90m 10|[39m   expect(workflow.jobs['p03-measurements']['timeout-minutes']).toBeGre…
+2026-10-24T21:49:57.2910262Z 
+2026-10-24T21:49:57.2910636Z [31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+2026-10-24T21:49:57.2911057Z 
+2026-10-24T21:49:57.2911097Z 
+2026-10-24T21:49:57.2917130Z [2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m76 passed[39m[22m[90m (77)[39m
+2026-10-24T21:49:57.2927324Z [2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1314 passed[39m[22m[2m | [22m[33m3 skipped[39m[90m (1318)[39m
+2026-10-24T21:49:57.2928450Z [2m   Start at [22m 21:49:19
+2026-10-24T21:49:57.2932438Z [2m   Duration [22m 37.90s[2m (tests 79%, import 18%, transform 3%)[22m
+2026-10-24T21:49:57.2947240Z 
+2026-10-24T21:49:57.2947952Z [2m    Isolate [22m [33m77 workers spawned[39m[2m · ~119ms startup each (spawn + environment, per file)[22m
+2026-10-24T21:49:57.2949330Z [2m            [22m [2mat least ~2.94s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+2026-10-24T21:49:57.2949872Z 
+2026-10-24T21:49:57.2972516Z 
+2026-10-24T21:49:57.3001324Z ##[error]AssertionError: expected [ 'container-smoke', …(4) ] to deeply equal [ 'container-smoke', …(5) ]
+
+- Expected
++ Received
+
+  [
+    "container-smoke",
+    "p02-integration",
+    "p03-integration",
+-   "p03-measurements",
+    "p06-release-integration",
+    "quality",
+  ]
+
+ ❯ tools/ci-policy.test.ts:8:45
+
+
+2026-10-24T21:49:57.3322775Z ##[error]Process completed with exit code 1.
+2026-10-24T21:49:57.3407790Z ##[group]Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+2026-10-24T21:49:57.3408376Z with:
+2026-10-24T21:49:57.3408700Z   name: negative-gates
+2026-10-24T21:49:57.3409078Z   path: .artifacts/negative-gates.json
+2026-10-24T21:49:57.3409487Z   if-no-files-found: error
+2026-10-24T21:49:57.3409902Z   compression-level: 6
+2026-10-24T21:49:57.3410250Z   overwrite: false
+2026-10-24T21:49:57.3410579Z   include-hidden-files: false
+2026-10-24T21:49:57.3410934Z env:
+2026-10-24T21:49:57.3411364Z   pythonLocation: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:57.3411895Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib/pkgconfig
+2026-10-24T21:49:57.3412432Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:57.3412917Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:57.3413456Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.12.14/x64
+2026-10-24T21:49:57.3414057Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.12.14/x64/lib
+2026-10-24T21:49:57.3414507Z ##[endgroup]
+2026-10-24T21:49:57.4903693Z ##[error]No files were found with the provided path: .artifacts/negative-gates.json. No artifacts will be uploaded.
+2026-10-24T21:49:57.5168273Z Post job cleanup.
+2026-10-24T21:49:57.6031883Z [command]/usr/bin/git version
+2026-10-24T21:49:57.6068291Z git version 2.55.0
+2026-10-24T21:49:57.6101436Z Temporarily overriding HOME='/home/runner/work/_temp/f13c7e51-aa9b-440f-817f-70ff3b79ebf4' before making global git config changes
+2026-10-24T21:49:57.6103009Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-24T21:49:57.6107165Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-24T21:49:57.6138783Z Removing SSH command configuration
+2026-10-24T21:49:57.6144739Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-24T21:49:57.6177353Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-24T21:49:57.6414604Z Removing HTTP extra header
+2026-10-24T21:49:57.6418040Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-24T21:49:57.6448080Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-24T21:49:57.6691118Z Removing includeIf entries pointing to credentials config files
+2026-10-24T21:49:57.6700211Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-24T21:49:57.6735154Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-24T21:49:57.7128243Z Cleaning up orphan processes

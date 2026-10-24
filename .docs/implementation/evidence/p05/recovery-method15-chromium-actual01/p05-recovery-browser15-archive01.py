@@ -1,0 +1,13 @@
+from pathlib import Path
+import shutil,json,hashlib,datetime
+r=Path.cwd();src=r/'.artifacts/p05-recovery-source1274-01/.artifacts/p05/venus-topic-browser-3b72f7f027b9';out=r/'.docs/implementation/evidence/p05/recovery-method15-chromium-actual01';assert not out.exists();out.mkdir(parents=True);sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+mapping=[];files=[p for p in src.rglob('*') if p.is_file()];assert sum(p.stat().st_size for p in files)<128*1024**2
+for p in files:
+ n=p.relative_to(src).as_posix();dest=out/'run'/(n+'.bytes' if p.suffix=='.md' else n);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,dest);mapping.append({'original':n,'archived':dest.relative_to(out).as_posix(),'sha256':sha(p)})
+for n in ['p05-recovery-method15-chromium-run01.txt','p05-recovery-method15-chromium-run01-exit.txt','p05-recovery-method15-binding-draft01.json','p05-recovery-image-a-receipt01.json','p05-recovery-browser15-archive01.py']:shutil.copyfile(r/'.artifacts'/n,out/n)
+ack=r/'.artifacts/p05-recovery-source1274-01/.artifacts/p05-recovery-method15-root-ack01.json';shutil.copyfile(ack,out/ack.name)
+runner=json.loads((src/'runner.json').read_text(encoding='utf-8'));assert runner['status']=='FAIL' and runner['cleanup']=='PASS'
+(out/'raw-path-map.json').write_text(json.dumps(mapping,indent=2)+'\n',encoding='utf-8',newline='\n')
+(out/'REPORT.md').write_text('# METHOD15 Chromium actual: FAIL\n\n4PASS/05FAIL/11NOT_RUN, cleanupPASS, source/producer unchanged. Exact restored historical1274/A29e39 binding, not current live source acceptance. Failure OBSERVER_READY_DEADLINE in bilateral action preparation; HTTP409 was not reached. Independent diagnosisbb6d8758 preserves attribution: first RU action committed200/rev31, second TR readiness exhausted the shared8s orchestration limit; passive delivery chat completion was78.573ms late, not an application cache.accept timestamp. No product fault or exact prior409 domain code is inferred. Proposed METHOD16 requires independent review and separate actual ACK. No fullbrowser/layout/P05 PASS. Raw Markdown inputs retain exact bytes under .md.bytes names to preserve original source link context.\n',encoding='utf-8',newline='\n')
+entries=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)} for p in sorted(out.rglob('*')) if p.is_file()]
+(out/'INDEX.json').write_text(json.dumps({'status':'FAIL_4PASS_05FAIL_11NOT_RUN_CLEANUP_PASS','created_at':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':entries},indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps({'index_sha256':sha(out/'INDEX.json'),'files':len(entries)}))

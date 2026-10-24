@@ -1,0 +1,13 @@
+# Narrow resource repair preparation
+
+Author checkpoint for independent review; no self-acceptance or statistics RUN. Live `artifact-store.mjs` and its controls are paused at the exact hashes in HANDOFF.json. Other excluded consumers may continue outside this pinset. Original61 inputs remain immutable.
+
+P05-MEAS-COMP-001 P2 is addressed prospectively by checking the output root and every ancestor, rejecting junctions/symlinks/non-directories, retaining directory identities, rechecking before and after writes, creating files exclusively and comparing opened-file identity. Existing regular files count toward the 32GiB ceiling. The Windows author controls cover seven scenarios including the two independently demonstrated escapes. These are author evidence pending independent review. Node filesystem calls do not establish an atomic guarantee against a hostile concurrent filesystem actor.
+
+The separate benchmark ZIP preserves the requested fixed R100 attempt: it stopped at the 120-second cap after 26 completed rounds. The final child report never ran, so CPU is NOT_RECORDED. It must not be rerun with a different seed to obtain completion. Complete before-loaded-module pins were not recorded for that stopped attempt; this limitation is explicit.
+
+A separately designed, fixed R4 per-layer diagnostic completed once on Windows and once in a bounded Linux container. Linux wall was 5378.385ms, process CPU 5272.783ms, peak observed RSS217473024 bytes. Actual api.advance dominates the measured inclusive paths (3044.766ms); fixture reload1418.190ms and initial selector/new-round501.239ms follow. Artifact progress writes116.018ms, formatter24.187ms and crypto approximately15ms do not explain the dominant time. Inclusive timings overlap. Windows CPU calibration returned zero for a 200ms busy loop; the artifact-write CPU timer is also invalid because its baseline was sampled after the write. No ETA or full-workload feasibility conclusion follows.
+
+Linux used a single owned, network-disabled container, 1CPU/1536MiB, readonly root, user1000, no capabilities and exact readonly code inputs. Exit0, source before/after ef009/1811 unchanged and owned cleanup completed. This was a pure model with explicit SQL/auth seams, not actual PG/HTTP/WS authority or a production launch. R4 contains no private round.
+
+Exact controls and findings are in report.json; benchmark archive entries map original paths to snapshots in benchmark-file-map.json. Root must refresh compiled pins after the next included build before any future runtime parity. This packet does not accept the full producer, sample counts, statistical results, stage P05, or human450 content.

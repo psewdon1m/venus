@@ -1,0 +1,7 @@
+# Operational binding04
+
+Current source732ed8407556c3e39e4060fcb0c4985a03f7ad865a9cf642218b39dde182ad80/1826, Asha256:e076901479f7b7af94d54ada3698cf69a60d39caf57cf78f311945638f589898. B realb244/0b4 unchanged. Historical03 C454/9e1a is preserved, not rewritten. Current source differs only by the TG14 temporal read oracle correction and its source-revision record; compiled64/SQL7/UI3/PG2 all76runtimeanchors match03 exactly. No policy/schema/RNG or14runtime oracle changes.
+
+Actual root272pins e6a366ba receipt includes bothPG anchors plus observed /app/build-metadata.json absence/noappimports/autoremoved/sourcebeforeafter. All current76map hashes come directly from that actual receipt. No Docker command is performed by this04 author revision. Historical03 supplemental probe is retained only as history.
+
+All23 accepted02 method MJS files are raw-identical. Only the binding-control script's comparison parameters change to immediate03 and accept identical compiledA; source/image/map/appreview/rootACK negative fences remain. Nine current binding controls, syntax/lint/currentfullsource are repeated; historical173 method tests are not rerun/rebranded. RootACKfalse; current732 appcarry/test-oracle and independent operational reviews are still required before one functionalattempt. Existing476MiB/900s/liveD/liveE/export-fault native retention are unchanged. No actual14 RUN, humanapproval or fullstage claim.

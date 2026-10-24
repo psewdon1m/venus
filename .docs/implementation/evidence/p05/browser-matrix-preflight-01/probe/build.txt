@@ -1,0 +1,62 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.30kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load build context
+#3 transferring context: 752B done
+#3 DONE 0.0s
+
+#4 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#5 CACHED
+
+#6 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#6 CACHED
+
+#7 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#7 CACHED
+
+#8 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#8 CACHED
+
+#9 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [dependencies  2/12] WORKDIR /app
+#10 CACHED
+
+#11 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#11 CACHED
+
+#12 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#12 CACHED
+
+#13 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#13 CACHED
+
+#14 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#14 CACHED
+
+#15 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#15 CACHED
+
+#16 exporting to image
+#16 exporting layers done
+#16 exporting manifest sha256:df88836a907d3cd639e78b2672b3b2e7f988034c60db327061f310757dd80099 done
+#16 exporting config sha256:1bf7c07574a5b26dddb0cbaf25afcb98d0859666774d98067ab7d15b809e3c27 done
+#16 exporting attestation manifest sha256:1c0107b555550536aca418eb0a2945a92d6a1801a1254486601832ee7e716767 0.0s done
+#16 exporting manifest list sha256:186527d74a2896c7a18647e578d1f428dd166c0713d31bb52197942e0f1eff79
+#16 exporting manifest list sha256:186527d74a2896c7a18647e578d1f428dd166c0713d31bb52197942e0f1eff79 0.0s done
+#16 naming to docker.io/library/venus-p05-dee06684ef96:local 0.0s done
+#16 unpacking to docker.io/library/venus-p05-dee06684ef96:local 0.0s done
+#16 DONE 0.1s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/kft59vfhgjavn8olvad8aixdg

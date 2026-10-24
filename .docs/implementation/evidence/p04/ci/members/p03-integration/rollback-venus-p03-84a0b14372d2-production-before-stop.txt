@@ -1,0 +1,50 @@
+{
+  "phase": "production-before-stop",
+  "image": "sha256:a4ef23bf07c963cd24a75d67be399024a55097155caf526e5c7adac8d034a7b9",
+  "user": "1000:1000",
+  "supplementary_groups": [
+    "12346"
+  ],
+  "state": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 4008,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-19T01:07:49.680306255Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "mounts": [
+    {
+      "type": "bind",
+      "destination": "/run/secrets/db_password",
+      "rw": false
+    },
+    {
+      "type": "bind",
+      "destination": "/run/secrets/keyring",
+      "rw": false
+    },
+    {
+      "type": "volume",
+      "destination": "/var/lib/venus",
+      "rw": true
+    }
+  ]
+}
+--- captured stdout/stderr ---
+{"level":30,"time":1792372069956,"pid":1,"hostname":"bbc174bdcf04","msg":"Server listening at http://127.0.0.1:4300"}
+{"level":30,"time":1792372069956,"pid":1,"hostname":"bbc174bdcf04","msg":"Server listening at http://172.18.0.2:4300"}
+{"level":30,"time":1792372070012,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"e18da649-f608-49d5-9c1c-87268046b8c4","route":"/health/ready","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792372070100,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"1d0ec869-98fc-41a7-ac79-77a9d39e4ffb","route":"/api/v1/version","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792372070189,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"02a9e230-cffb-4f99-8689-2a7ae4c0a34c","route":"/api/v1/rooms/:roomId","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792372070278,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"e666e680-874a-4841-99d0-84216807ed51","route":"unmatched","method":"GET","status_code":404,"msg":"request_complete"}
+{"level":30,"time":1792372070430,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"c7e9976c-fa2d-4306-877b-2e001de0a380","route":"/api/v1/rooms/:roomId/leave","method":"POST","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792372070515,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"8289016c-09be-4a0d-a1d0-2b8141b75194","route":"/api/v1/rooms/:roomId","method":"GET","status_code":200,"msg":"request_complete"}
+{"level":30,"time":1792372070607,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"46bd9b6d-9c7a-4b29-bffd-4671ee5b9130","route":"/api/v1/rooms/:roomId/close","method":"POST","status_code":503,"msg":"request_complete"}
+{"level":30,"time":1792372070695,"pid":1,"hostname":"bbc174bdcf04","event":"request_complete","request_id":"407c9a52-a08e-4a46-8f0b-c7ca9bc9c063","route":"/api/v1/entry-policy","method":"GET","status_code":200,"msg":"request_complete"}
+

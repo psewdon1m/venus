@@ -1,0 +1,5 @@
+
+## 2026-10-22T19:22:21.297242+00:00
+Authorized image-restoration metadata-only rebind UIA21-01→02 andOCI32→33. APP/source4d9d1875unchanged; rootrebuildimages have changedIDs but all source/compiled/webbytes exact. NoDocker/models/APP edits, nooldcontrols/fullsuite reruns. Existingruntime/map/inactiveguardcold checks only. Root owns PGpull/offlinearchive/resource07.
+
+2026-10-22T19:24:38.160309+00:00 Full mapsA299/prod122/B278 exactold receipts; source4d9d1875 unchanged. NewUI02one runpathliteral/26MJSexact01, OCI33all40MJSexact32/mapsA81B78unchanged. Existingcoldbinding/sourceverify/runtime0, falseACKs1expected; nooldfunctionalcontrols/suites/syntaxrepeat. FrozenauthorINDEX72abe05ee0140c80aff6485cffea614ce4a69c0a79cf9b78e8f0e6474ad72746 UIruntime2cdf958974e7a8b05b761de6100d7d1774177e7996ce236c250db95ac240820d UIINDEX7ed782093365f9774d393d95c2226a1d00062f9eecef4fc69058345b19edc34f OCIINDEX1c517a23bc66b7e570047ef12efe0384dc8dc1c84b9a2f3b688d765ce6f91576. NoDocker/native/APPedit. COMPLETE_STOP.

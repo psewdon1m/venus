@@ -1,0 +1,23 @@
+--- included13b
++++ candidate01
+@@ -26,7 +26,8 @@
+  target:TopicRoundTarget|null=null;conversation:TopicConversationView|null=null;chat:TopicChatView|null=null;until=0;
+  now(value=presentationNow()){return this.clock=Math.max(this.clock,value);}
+  bind(scope:TopicScope|null){const key=JSON.stringify(scope);if(key!==this.scope){const previous=this.boundScope;this.clear();if(scope&&(!previous||previous.room!==scope.room||previous.member!==scope.member||previous.identity!==scope.identity||previous.session!==scope.session||previous.round!==scope.round)){this.deadlines.clear();this.phaseFloors.clear();this.epochFloor=-1;this.revisionFloor=-1;this.contentFloor=-1;this.conversationId='';}if(scope)this.boundScope={...scope};this.scope=key;}return this.issue();}
+- clear(){this.generation++;this.target=null;this.conversation=null;this.chat=null;this.until=0;}
++ private discard(){this.target=null;this.conversation=null;this.chat=null;this.until=0;}
++ clear(){this.generation++;this.discard();}
+  issue():TopicRead{return {generation:this.generation,scope:this.scope};}
+  current(read:TopicRead){return read.generation===this.generation&&read.scope===this.scope;}
+  deadline(key:string,expires:string,server:string,started:number,max:number){const duration=Math.min(max,Date.parse(expires)-Date.parse(server));if(!Number.isFinite(duration)||duration<=0)return 0;return Math.min(started+duration,this.deadlines.get(key)??Infinity);}
+@@ -51,7 +52,9 @@
+   for(const g of grants)this.phaseFloors.set(g.key,g.phase);
+   this.target=t;this.conversation=c;this.chat=c&&validTopicChat(chat,c)?chat:null;this.until=until;return true;
+  }
+- visible(now=presentationNow()){if(this.now(now)>=this.until){if(this.until>0)this.clear();return false;}return true;}
++ // Passive lease expiry discards values immediately. A fresh in-flight read
++ // still needs its own unexpired permission; explicit revocation fences it.
++ visible(now=presentationNow()){if(this.now(now)>=this.until){if(this.until>0)this.discard();return false;}return true;}
+ }
+ export function topicRefusals(t:TopicRoundTarget):RefusalEvidence[]{return (['invitation','action'] as const).flatMap(kind=>{const o=t[kind];return o?[{kind,offer:o.offer_id,proposal:o.proposal_revision,expiresAt:Date.parse(o.expires_at),active:o.state==='active'}]:[];});}
+ export interface OwnTopics{schema_version:1;room_id:string;owner_member_id:string;rev:number;safety_revision:number;taxonomy_digest:string;allow_topic_ids:string[];exclude_topic_ids:string[]}

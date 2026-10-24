@@ -1,0 +1,521 @@
+{
+  "status": "READONLY_OWNER_FORENSICS_COMPLETE_NOT_ACCEPTED_RUN",
+  "at_utc": "2026-10-20T16:11:08.645020+00:00",
+  "owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+  "containers": [
+    {
+      "Id": "c70cb70dda821a6ef55ece6528fb2098061ad7c08108a709074a15caf251dcb2",
+      "Name": "/venus-p05-oci-ffaaeef4fe2b-a1",
+      "Image": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "ConfigImage": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b",
+        "com.venus.oci.role": "A1"
+      },
+      "Running": false,
+      "ExitCode": 1,
+      "Mounts": [
+        {
+          "Destination": "/run/p05-oci-producer",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\inputs",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/evidence",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": true,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\evidence",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/control",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\control",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/private",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-private",
+          "Propagation": "",
+          "RW": true,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-private/_data",
+          "Type": "volume"
+        },
+        {
+          "Destination": "/authority",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-authority",
+          "Propagation": "",
+          "RW": true,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-authority/_data",
+          "Type": "volume"
+        }
+      ],
+      "NetworkMode": "venus-p05-oci-ffaaeef4fe2b-isolated",
+      "ReadonlyRootfs": true,
+      "IpcMode": "none",
+      "Entrypoint": [
+        "node"
+      ],
+      "Cmd": [
+        "/run/p05-oci-producer/api-child.mjs",
+        "--boot=/private/config-A1.json"
+      ]
+    },
+    {
+      "Id": "b9ad2dcef75380652d6edb0187e49100c564278eb4d46ff3f3bef6428ad2f51c",
+      "Name": "/venus-p05-oci-ffaaeef4fe2b-tls",
+      "Image": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "ConfigImage": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b",
+        "com.venus.oci.role": "tls"
+      },
+      "Running": false,
+      "ExitCode": 137,
+      "Mounts": [
+        {
+          "Destination": "/run/p05-oci-producer",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\inputs",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/evidence",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": true,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\evidence",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/control",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\control",
+          "Type": "bind"
+        }
+      ],
+      "NetworkMode": "venus-p05-oci-ffaaeef4fe2b-isolated",
+      "ReadonlyRootfs": true,
+      "IpcMode": "none",
+      "Entrypoint": [
+        "node"
+      ],
+      "Cmd": [
+        "/run/p05-oci-producer/gateway.mjs",
+        "--serve=/run/p05-oci-producer/gateway-config.json"
+      ]
+    },
+    {
+      "Id": "e8dc03de3a152ac71daf4cd2382a96958613bd700d14a4216276aadaa02bc1f3",
+      "Name": "/venus-p05-oci-ffaaeef4fe2b-db",
+      "Image": "sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "ConfigImage": "postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b",
+        "com.venus.oci.role": "db"
+      },
+      "Running": false,
+      "ExitCode": 137,
+      "Mounts": [
+        {
+          "Destination": "/var/lib/postgresql/data",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-db",
+          "Propagation": "",
+          "RW": true,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-db/_data",
+          "Type": "volume"
+        },
+        {
+          "Destination": "/private",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-private",
+          "Propagation": "",
+          "RW": false,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-private/_data",
+          "Type": "volume"
+        }
+      ],
+      "NetworkMode": "venus-p05-oci-ffaaeef4fe2b-isolated",
+      "ReadonlyRootfs": false,
+      "IpcMode": "private",
+      "Entrypoint": [
+        "docker-entrypoint.sh"
+      ],
+      "Cmd": [
+        "-c",
+        "max_wal_size=64MB",
+        "-c",
+        "min_wal_size=32MB",
+        "-c",
+        "shared_buffers=32MB"
+      ]
+    },
+    {
+      "Id": "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9",
+      "Name": "/venus-p05-oci-ffaaeef4fe2b-keeper",
+      "Image": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "ConfigImage": "sha256:29e39ccd2afe45804ead1c049aed82582ec4dd006d2fda7b278f385cdae7e04f",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b",
+        "com.venus.oci.role": "keeper"
+      },
+      "Running": true,
+      "ExitCode": 0,
+      "Mounts": [
+        {
+          "Destination": "/retained-db",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-db",
+          "Propagation": "",
+          "RW": false,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-db/_data",
+          "Type": "volume"
+        },
+        {
+          "Destination": "/run/p05-oci-producer",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\inputs",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/evidence",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\evidence",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/control",
+          "Mode": "",
+          "Propagation": "rprivate",
+          "RW": false,
+          "Source": "C:\\.projects\\venus\\.artifacts\\p05-recovery-source1274-01\\.artifacts\\p05\\venus-p05-oci-ffaaeef4fe2b\\control",
+          "Type": "bind"
+        },
+        {
+          "Destination": "/private",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-private",
+          "Propagation": "",
+          "RW": false,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-private/_data",
+          "Type": "volume"
+        },
+        {
+          "Destination": "/authority",
+          "Driver": "local",
+          "Mode": "z",
+          "Name": "venus-p05-oci-ffaaeef4fe2b-authority",
+          "Propagation": "",
+          "RW": false,
+          "Source": "/var/lib/docker/volumes/venus-p05-oci-ffaaeef4fe2b-authority/_data",
+          "Type": "volume"
+        }
+      ],
+      "NetworkMode": "none",
+      "ReadonlyRootfs": true,
+      "IpcMode": "none",
+      "Entrypoint": [
+        "node"
+      ],
+      "Cmd": [
+        "/run/p05-oci-producer/ipc-keeper.mjs",
+        "--keep"
+      ]
+    }
+  ],
+  "volumes": [
+    {
+      "Name": "venus-p05-oci-ffaaeef4fe2b-authority",
+      "Driver": "local",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      },
+      "Options": {
+        "device": "tmpfs",
+        "o": "size=32m,mode=0700",
+        "type": "tmpfs"
+      }
+    },
+    {
+      "Name": "venus-p05-oci-ffaaeef4fe2b-db",
+      "Driver": "local",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      },
+      "Options": {
+        "device": "tmpfs",
+        "o": "size=248m,mode=0700",
+        "type": "tmpfs"
+      }
+    },
+    {
+      "Name": "venus-p05-oci-ffaaeef4fe2b-private",
+      "Driver": "local",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      },
+      "Options": {
+        "device": "tmpfs",
+        "o": "size=8m,mode=0700,uid=0,gid=0",
+        "type": "tmpfs"
+      }
+    }
+  ],
+  "networks": [
+    {
+      "Id": "77b3383a0eb3c724c0e26cbe96e799cbd3428f7cc177c44fd7a848d95785e3dd",
+      "Name": "venus-p05-oci-ffaaeef4fe2b-isolated",
+      "Labels": {
+        "com.venus.oci.owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+        "com.venus.oci.project": "venus-p05-oci-ffaaeef4fe2b"
+      }
+    }
+  ],
+  "resource_probe_inventory_empty": true,
+  "generated_harness": {
+    "path": "/private/modules-A1/harness.mjs",
+    "sha256": "e1a7ada5e68f3954d41a8fe618304cec4f500ec22c2801f86749b91b149d874e",
+    "static_imports": [
+      "/run/p05-oci-producer/http-client.mjs",
+      "node:assert/strict",
+      "node:crypto",
+      "node:fs",
+      "node:os",
+      "node:path",
+      "pg",
+      "/app/apps/api/dist/security.js",
+      "/app/apps/api/dist/rooms.js",
+      "/app/apps/api/dist/games.js",
+      "/app/apps/api/dist/room-games.js",
+      "/app/apps/api/dist/topic-games.js",
+      "/app/apps/api/dist/topic-room-directories.js",
+      "/app/apps/api/dist/topic-room-lifecycle.js",
+      "/app/apps/api/dist/topic-room-registry.js",
+      "/app/apps/api/dist/private-topic-preferences.js",
+      "/app/apps/api/dist/app.js",
+      "/app/apps/api/dist/topic-game-model.js",
+      "/private/modules-A1/fixtures.mjs"
+    ]
+  },
+  "image_anchored_package_resolution": {
+    "pg": "/app/node_modules/pg/lib/index.js"
+  },
+  "inert_import_result": {
+    "status": "IMPORT_ONLY_REJECTED",
+    "name": "Error",
+    "code": "ERR_MODULE_NOT_FOUND",
+    "message": "Cannot find package 'pg' imported from /private/modules-A1/harness.mjs",
+    "url": null
+  },
+  "commands": [
+    {
+      "arguments": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "inspect",
+        "--format",
+        "{\"Id\":{{json .Id}},\"Name\":{{json .Name}},\"Image\":{{json .Image}},\"ConfigImage\":{{json .Config.Image}},\"Labels\":{{json .Config.Labels}},\"Running\":{{json .State.Running}},\"ExitCode\":{{json .State.ExitCode}},\"Mounts\":{{json .Mounts}},\"NetworkMode\":{{json .HostConfig.NetworkMode}},\"ReadonlyRootfs\":{{json .HostConfig.ReadonlyRootfs}},\"IpcMode\":{{json .HostConfig.IpcMode}},\"Entrypoint\":{{json .Config.Entrypoint}},\"Cmd\":{{json .Config.Cmd}}}",
+        "c70cb70dda821a6ef55ece6528fb2098061ad7c08108a709074a15caf251dcb2"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "inspect",
+        "--format",
+        "{\"Id\":{{json .Id}},\"Name\":{{json .Name}},\"Image\":{{json .Image}},\"ConfigImage\":{{json .Config.Image}},\"Labels\":{{json .Config.Labels}},\"Running\":{{json .State.Running}},\"ExitCode\":{{json .State.ExitCode}},\"Mounts\":{{json .Mounts}},\"NetworkMode\":{{json .HostConfig.NetworkMode}},\"ReadonlyRootfs\":{{json .HostConfig.ReadonlyRootfs}},\"IpcMode\":{{json .HostConfig.IpcMode}},\"Entrypoint\":{{json .Config.Entrypoint}},\"Cmd\":{{json .Config.Cmd}}}",
+        "b9ad2dcef75380652d6edb0187e49100c564278eb4d46ff3f3bef6428ad2f51c"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "inspect",
+        "--format",
+        "{\"Id\":{{json .Id}},\"Name\":{{json .Name}},\"Image\":{{json .Image}},\"ConfigImage\":{{json .Config.Image}},\"Labels\":{{json .Config.Labels}},\"Running\":{{json .State.Running}},\"ExitCode\":{{json .State.ExitCode}},\"Mounts\":{{json .Mounts}},\"NetworkMode\":{{json .HostConfig.NetworkMode}},\"ReadonlyRootfs\":{{json .HostConfig.ReadonlyRootfs}},\"IpcMode\":{{json .HostConfig.IpcMode}},\"Entrypoint\":{{json .Config.Entrypoint}},\"Cmd\":{{json .Config.Cmd}}}",
+        "e8dc03de3a152ac71daf4cd2382a96958613bd700d14a4216276aadaa02bc1f3"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "inspect",
+        "--format",
+        "{\"Id\":{{json .Id}},\"Name\":{{json .Name}},\"Image\":{{json .Image}},\"ConfigImage\":{{json .Config.Image}},\"Labels\":{{json .Config.Labels}},\"Running\":{{json .State.Running}},\"ExitCode\":{{json .State.ExitCode}},\"Mounts\":{{json .Mounts}},\"NetworkMode\":{{json .HostConfig.NetworkMode}},\"ReadonlyRootfs\":{{json .HostConfig.ReadonlyRootfs}},\"IpcMode\":{{json .HostConfig.IpcMode}},\"Entrypoint\":{{json .Config.Entrypoint}},\"Cmd\":{{json .Config.Cmd}}}",
+        "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.resource.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "volume",
+        "inspect",
+        "--format",
+        "{\"Name\":{{json .Name}},\"Driver\":{{json .Driver}},\"Labels\":{{json .Labels}},\"Options\":{{json .Options}}}",
+        "venus-p05-oci-ffaaeef4fe2b-authority"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "volume",
+        "inspect",
+        "--format",
+        "{\"Name\":{{json .Name}},\"Driver\":{{json .Driver}},\"Labels\":{{json .Labels}},\"Options\":{{json .Options}}}",
+        "venus-p05-oci-ffaaeef4fe2b-db"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "volume",
+        "inspect",
+        "--format",
+        "{\"Name\":{{json .Name}},\"Driver\":{{json .Driver}},\"Labels\":{{json .Labels}},\"Options\":{{json .Options}}}",
+        "venus-p05-oci-ffaaeef4fe2b-private"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "network",
+        "inspect",
+        "--format",
+        "{\"Id\":{{json .Id}},\"Name\":{{json .Name}},\"Labels\":{{json .Labels}}}",
+        "77b3383a0eb3"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "exec",
+        "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9",
+        "node",
+        "-e",
+        "const f=require('fs'),c=require('crypto'),p='/private/modules-A1/harness.mjs',s=f.readFileSync(p,'utf8');console.log(JSON.stringify({path:p,sha256:c.createHash('sha256').update(s).digest('hex'),static_imports:[...s.matchAll(/(?:import[^;]*?from|import)\\s*['\"]([^'\"]+)['\"]/g)].map(m=>m[1])}));"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "exec",
+        "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9",
+        "node",
+        "-e",
+        "const {createRequire}=require('module'),r=createRequire('/app/package.json');console.log(JSON.stringify({pg:r.resolve('pg')}));"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "docker",
+        "exec",
+        "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9",
+        "node",
+        "-e",
+        "import('file:///private/modules-A1/harness.mjs').then(()=>console.log(JSON.stringify({status:'IMPORT_ONLY_OK_NO_HARNESS_CALL'}))).catch(e=>console.log(JSON.stringify({status:'IMPORT_ONLY_REJECTED',name:e.name,code:e.code??null,message:String(e.message).slice(0,1024),url:e.url??null})));"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    }
+  ],
+  "cleanup_executed": false,
+  "private_DB_or_keyring_or_password_read": false,
+  "actual_starts_or_new_containers": false
+}

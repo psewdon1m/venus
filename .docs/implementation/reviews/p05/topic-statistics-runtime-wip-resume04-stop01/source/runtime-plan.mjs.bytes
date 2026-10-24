@@ -1,0 +1,8 @@
+/** Fixed actual-canary axes, independent of statistical sample counts/outcomes. */
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {runtimeCells} from './prerequisites.mjs';
+export const runtimeModes=['questions','truth_or_dare','yes_but'];
+export const literalHash=literal=>createHash('sha256').update(literal).digest('hex');
+export function runtimePlan(){return runtimeCells().map((cell,index)=>({...cell,index,key:[cell.size,cell.mode,cell.context,cell.capability].join('/'),sessions:[1,2,0].map((offset,ordinal)=>{const mode=runtimeModes[(runtimeModes.indexOf(cell.mode)+offset)%3],seed_literal=`venus:P05:ACTUAL-RUNTIME84:${cell.size}:${cell.mode}:${cell.context}:${cell.capability}:S${ordinal+1}:${mode}:R100`;return{size:cell.size,mode,context:cell.context,capability:cell.capability,rounds:100,comfort:4,class_profile:'R',regime:ordinal===1?'T6_TARGETED_CHANGES':'T0_ALL',seed_literal,seed_sha256:literalHash(seed_literal),ordinal};})}));}
+export function verifyRuntimePlan(rows){assert.deepEqual(rows,runtimePlan(),'NO_RUNTIME_CELL_SEED_OR_ORDER_SUBSTITUTION');assert.equal(rows.length,84);assert(rows.every(r=>r.sessions.length===3&&r.sessions.every(s=>s.rounds===100)));return true;}

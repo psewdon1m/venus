@@ -1,0 +1,28 @@
+{
+  "status": "PASS_DIAGNOSIS_CONTROLS_ONLY",
+  "exact_module_sha256": "2ebb60c3763f4e93f980cdfebca037b1c33f91decfe896c4854109373ee0139f",
+  "cases": [
+    {
+      "name": "exact supervisor happy cold path writes terminal",
+      "status": "PASS",
+      "injected_rename_failure": false,
+      "observed_error": null,
+      "rename_calls": 5,
+      "docker_calls": 0,
+      "docker_qualification": "INERT_STUB_ONLY",
+      "terminal": "SUPERVISOR_COMPLETE_NON_GATING"
+    },
+    {
+      "name": "exact supervisor rename fault latches and stops; no retry/reentry; fallback IPC terminal survives",
+      "status": "PASS",
+      "injected_rename_failure": true,
+      "observed_error": null,
+      "rename_calls": 1,
+      "docker_calls": 1,
+      "docker_qualification": "INERT_STUB_ONLY",
+      "terminal": "CAPACITY_FAULT_RETAINED_NOT_ACCEPTED"
+    }
+  ],
+  "actual_Docker_calls": 0,
+  "actual_prefix_writes": 0
+}

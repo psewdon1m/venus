@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/p04_evidence_review",
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity_sha256": "d6d4d0d9f119fa7d1647fb2f0d81536d085e231ebe0f1ef3e9c9a722e7fc97b6",
+  "status": "CHANGES_REQUESTED",
+  "scopes": [
+    "EXIT_P05_2_specific_refusal_ui_actualmodule_gap"
+  ],
+  "open_findings": [
+    "P05-ROLE-006"
+  ],
+  "combined_round03_open_findings": [
+    "P05-ROLE-005",
+    "P05-ROLE-006"
+  ],
+  "main_report_sha256": "87148cc21a3782a9dac7559fd5788ec2abf2cfee7196a2eb6d5f551315e2e75b",
+  "main_review_json_sha256": "a3175f072a0a81e9d2f90220bbf4b07200afb4a5d928c4e1f92e7f42becb3170",
+  "findings": [
+    {
+      "id": "P05-ROLE-006",
+      "priority": "P2",
+      "status": "OPEN",
+      "requirement": ".docs/10_IMPLEMENTATION_PLAN.md:189 EXIT-P05 criterion2 Stop/decline during degraded connection",
+      "files": [
+        "apps/web/src/game-controls.ts",
+        "apps/web/src/games-panel.tsx"
+      ],
+      "source_identity_sha256": "d6d4d0d9f119fa7d1647fb2f0d81536d085e231ebe0f1ef3e9c9a722e7fc97b6",
+      "title": "Keep a specific pending-offer refusal path under degraded metadata/transport",
+      "detail": "Frozen actualTSX/OwnControls retains session Pause/Stop/Abort positive facts, but treats skip/decline_invitation/withdraw_action as ordinary5-second connected-only grants. GamesPanel hides all visible private invitation/action data when offline. A still-live pending invitation therefore loses its specific Decline after metadata expiry or offline transition, even though whole-game Stop remains. This does not satisfy the explicit Stop/decline requirement and whole-game termination is not evidence of specific offer refusal.",
+      "required_fix": "Provide a generic specific refusal control using only previously confirmed own bounded round/offer/proposal/session/identity safety facts, without retaining partner/private prompt/condition payload. Keep final POST authority, stale identity/ABA/newround/removal/privateclear/freshfalse denial, no autoaccept, no invented role, and honest unconfirmed state. Add actual degraded Chromium+HTTP refusal regression independent of whole-gameStop.",
+      "scope": "Confirmed actualmodule UI gap; no independent actualHTTP/browser execution."
+    }
+  ],
+  "report_path": ".docs/implementation/reviews/p05/role-round-03.degraded-decline.md",
+  "report_sha256": "2cfc73421aa7d9264980757a12e75bac2e0ae45858d559cc28366cbc192a30dc",
+  "actual_http_browser_executed_by_reviewer": false,
+  "stage_accepted": false,
+  "human_approved": false,
+  "probe_sha256": "45378f36a07008340d8599e2f9832041dd28211c71c58a4db44bbafa5e53a214",
+  "result_sha256": "4c85b182b5364e472f19cdff4a4d56adcc1e2f6dd6e429f27b60fcac17670e4c"
+}

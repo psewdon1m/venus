@@ -1,0 +1,12 @@
+import {describe,expect,it} from 'vitest';
+import {acceptGame,gameFrame,privateCleared,validChat,validCondition,validGame} from './game-state.js';
+import {gameCopy,gameError} from './game-copy.js';
+import type {GameView} from '@venus/contracts';
+const game=(rev=1):GameView=>({session_id:'session',game_rev:rev,state:'active',mode:'questions',total_rounds:20,current_round:{kind:'generic',round_id:'round',round_index:1,state:'pending'},pause_reason:null});
+describe('scoped game state',()=>{
+ it('rejects out-of-order revisions and malformed/unsafe rounds',()=>{const current=game(3);expect(acceptGame(current,game(2))).toBe(current);expect(validGame({...game(),total_rounds:101})).toBe(false);expect(validGame({...game(),game_rev:-1})).toBe(false);expect(validGame({...game(),current_round:{...game().current_round,actors:['private-id']}})).toBe(false);});
+ it('only accepts room-audience game snapshots from the current room',()=>{const frame={schema:1,type:'game.snapshot',stream:'game',audience:'room',room_id:'r',room_rev:2,stream_rev:2,payload:game()};expect(gameFrame(frame,'r')).toEqual(game());for(const changed of [{audience:'member'},{room_id:'other'},{stream_rev:3},{schema:2}]) expect(gameFrame({...frame,...changed},'r')).toBeNull();});
+ it('private-cleared events require current room and authenticated recipient',()=>{const f={schema:1,type:'game.private_cleared',stream:'private',audience:'member',target_member_id:'me',room_id:'r'};expect(privateCleared(f,'r','me')).toBe(true);expect(privateCleared(f,'r','host')).toBe(false);expect(privateCleared({...f,audience:'room'},'r','me')).toBe(false);});
+ it('validates unicode scalar/byte limits and rejects control or bidi overrides',()=>{expect(validChat('🙂'.repeat(1000))).toBe(true);expect(validChat('🙂'.repeat(1001))).toBe(false);expect(validChat('x\ud800')).toBe(false);expect(validChat('x\u2028y')).toBe(false);expect(validCondition('x'.repeat(2000))).toBe(true);expect(validCondition('x'.repeat(2001))).toBe(false);for(const s of [' ','x\u202Ey','a\nb']) {expect(validChat(s)).toBe(false);expect(validCondition(s)).toBe(false);}});
+ it('all required copy is present in three locales, and errors never interpolate raw server details',()=>{for(const locale of ['ru','en','tr'] as const) {const copy=gameCopy(locale);expect(Object.values(copy).every(s=>s.length>0)).toBe(true);expect(gameError(copy,'PACK_UNAVAILABLE')).toBe(copy.unavailable);expect(gameError(copy,'PRIVATE_SECRET_SAMPLE')).toBe(copy.error);}});
+});

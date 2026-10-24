@@ -1,0 +1,5 @@
+# A15 clean Git source witness
+
+Commit7ce04192c84e1d01620b099a4a0386ab5b291fbc on isolated managed branchcodex/p05-final-source-20261021 contains all1869 source inventory files byte-for-byte identical to source658b710bdca35b678421a51c1c276028305f28362901b2c065a3867aa754f4de. Every Gitblob was checked, working tree clean. Main source/index unchanged, no remote write. Test image021a57ec and normal image d1eff08f receipts remain bound to those same bytes. This is source identity, not a new native run or complete stage acceptance; evolving excluded evidence/status/journals and final manifest/CI are unfinished.
+
+Preparation01 FAIL before source copy/Git mutation: stage_inventory includes managed-worktree root .git metadata FILE, unlike main .git DIRECTORY. Original script/failure retained. Preparation02 excludes ONLY root .git metadata from its comparison, without changing stage_inventory/application or source identity. All1869 files are still checked against Gitblobs. Commit does not claim final evidence assembly or EXIT-P05 PASS.

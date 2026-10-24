@@ -1,0 +1,27 @@
+# Layout04 method and root05 pilot operational binding: independent review
+
+**PASS_LAYOUT_PRODUCER_METHOD_ONLY**. Writes COMPLETE, no findings in reviewed delta. No Docker/browser/native text rendering, ACK or actual459/51-cell acceptance. Final METHOD21 actual16PASS prerequisite remains to be verified by root against its final frozen packet before issuing layout ACK; this method review does not satisfy it.
+
+Author04 INDEX `b873f945b1ee9b400e5f662af4257432d934a5e4647b93c100e2b5e794a0247d`/155 children and working04 included raw files verified. Root05 operational receipt `0444603edc149bd544b9f476b56b84a9a1a43443e482ab09416ca40a7deacdb9` changes exactly four files: binding and false-ACK metadata, producer directory literal in run, exact source-count literal1819→1842 in runner policy. All other04 worker semantics unchanged. Runtime digest independently reproduced: `7d4d371b0b20a14d5fcdb4da94ea30e289f67b4140a6c4168b1f4f9d890d1468`.
+
+Final binding is immutable A4 `fc1bfa0b3dd938ae4f9f0c99fd708032aedcf088b3ef54f14ed55be685a7004e`/1842, image `sha256:265e1b50432b64c9c19b6ebb46a1e857575b321d124cfa519afcfa434010e94a`, root actual read-only image receipt `ada0b13e74a578d2bd991f8256eb0eff0c6d73db3c2e2ad8ffa633ac5ee69e3b`. Source snapshot raw hash and image receipt exact. ROOT_RUN_ACK stays false; final source cwd is mandatory. Driver requires durable independent method-PASS JSON with this same source/image/runtime digest before allocation. This INDEX exposes those exact top-level fields for the existing consumer. Root must copy the exact review receipt under the immutable source's allowed review directory and bind its raw SHA; no live-tree substitution is allowed.
+
+## Preserved matrix and helper meaning
+
+459 unique IDs,9 shards×51, three engines×RU/EN/TR, ordinary and native200 geometry, role coverage, physical native keyboard, screenshot limits,180s setup and existing20/60s sweep budgets are retained. Matrix, expected cells, policy, DOM/contrast audit, measure, X11, original driver tail and aggregate are byte-exact03; prior independently accepted03 method506313ca and unchanged-oracle proofs carry only through these raw identities. No full old finite suite was needlessly repeated.
+
+All32 generated helper slices were independently checked against actual current METHOD21 source character boundaries and SHA, extracted files and generated scene-driver bodies. Their helper bodies remain exact previously accepted18/03; provenance moves to accepted21. Five shared observer/runtime/request/readiness modules equal21 raw bytes. Bundle observer still uses the actual single request timing, production validator and unchanged5s/min250 cache model; it does not impersonate application cache acceptance or reset permission clocks.
+
+## Real-card typography supplement
+
+54 logical field-locale rows/23 cards each measured at320CSS and physicalnative200 in each engine (162 logical rows,324 stress receipts overall). Every selected row raw card SHA/revision/text/companion part equals actual r4 data, including both YesBut paragraphs/TD sides; production serializer/UI/CSS source pins equal frozen A4. Names48ASCII graphemes are valid real UI48 limits; conservative192 transport selection is not injected into UI. The clone uses literal textContent and production classes on the served page, owned cleanup, normal contrast/motion/overflow oracles and physical Control+End. It runs only in existing entry phases under their original budget, before native reset; subsequent normal scene authorization is unaffected.
+
+This supplement is explicitly typography. It is not a React/card activation, permission, private disclosure, original470 runtime selection, in-person UI or complete470 visual proof. Rendering excluded content as a local presentation fixture does not admit it to gameplay. All470 raw static format/placeholder budgets come from separately reviewed pilot147, not an invented visual result. Nonselected fields remain unobserved visually. Full actualpilot/IP-marker qualifications remain separate.
+
+## Finite checks and retained limits
+
+Author22 changed-boundary controls independently repeated PASS/exit0, with imports/output paths only rebound to this review. Ten own controls PASS/exit0: false ACK rejection; machine-positive binding; wrong image/source/review/digest/source-count rejection; runtime-byte digest sensitivity; cleanup-only failure after otherwise successful text measurement fails the observation and rethrows its original cleanup error; absent physical X11 proof rejects native measurement. These are source/fake controls, not actual DOM or host-resource allocation.
+
+Existing resource caps, isolated network, readonly worker/user/cap-drop, owner-label cleanup, exact source+producer before/after, report matrix/keyboard/screenshot checks and failed-prefix behavior remain unchanged. Author initial no-unsafe-finally lint failure was corrected in separate retained bytes and final lint/syntax0; original03/18/21 FAIL histories remain untouched. Reviewer helper inspection initially used platform-default decoding on a Russian card and raised UnicodeDecodeError; corrected read_bytes/UTF8, no source change or semantic finding.
+
+Root must first validate final METHOD21 actual16PASS, issue exact ACK and run bounded shards sequentially with cleanup. This receipt is not functional/browser/layout matrix, ordinary real470 startup, rollback, production, clean-source or fullP05 PASS.

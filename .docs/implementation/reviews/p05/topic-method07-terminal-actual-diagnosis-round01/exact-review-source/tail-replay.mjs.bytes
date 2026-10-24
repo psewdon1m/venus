@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+const input='.docs/implementation/evidence/p05/resume-r100-method07-attempt01/run/inputs/next/r100-v3-launcher.mjs',raw=readFileSync(input,'utf8'),line=raw.split('\n').find(l=>l.includes("await safe('launcher-terminal.json'"));assert(line);
+const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
+const replay=new AsyncFunction('fail',`
+let status='COMPLETE_NON_GATING',error,cleanup='completed',exportVerified=true,exportVerifiedCounter=987,workerStopped=true,auditFailures=[],capacityFault=null;
+const clearInterval=()=>{},heartbeat=null,watchdog={exitCode:0},prep={owner:'owner',container:'container',volume:'volume',source_identity:'source',image:'image'},root='owned',started=0,performance={now:()=>100};
+const outputs=[],console={log:s=>outputs.push(JSON.parse(s))};
+const safe=async(name,value)=>{if(fail){capacityFault??='HOST_RECEIPT_WRITE_GUARD_FAILED';auditFailures.push({path:name,error:'HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_INITIAL_ADVANCE_MISSING'});}};
+${line}
+return{status,capacityFault,auditFailures,outputs,process_would_exit0:status==='COMPLETE_NON_GATING'};
+`);
+const failing=await replay(true),healthy=await replay(false);assert.equal(failing.status,'COMPLETE_NON_GATING');assert.equal(failing.capacityFault,'HOST_RECEIPT_WRITE_GUARD_FAILED');assert.equal(failing.auditFailures.length,1);assert.equal(failing.process_would_exit0,true);assert.equal(healthy.capacityFault,null);
+console.log(JSON.stringify({status:'EXACT_FROZEN_FINAL_LINE_REPLAYS_FALSE_COMPLETE_AFTER_FAILED_FINAL_WRITE',frozen_source_sha256:createHash('sha256').update(raw).digest('hex'),injected_failed_safe:failing,healthy_comparator:healthy,Docker_calls:0,actual_R100_reruns:0,actual_disk_writes:0},null,2));

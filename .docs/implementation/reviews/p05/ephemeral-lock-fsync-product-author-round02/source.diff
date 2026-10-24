@@ -1,0 +1,13 @@
+--- apps/api/src/private-topic-ledger.test.ts.A12
++++ apps/api/src/private-topic-ledger.test.ts
+@@ -259,7 +259,9 @@
+     const d=disk(controls),{ledger,required}=PrivateTopicLedger.initialize(d.options);armed=true;
+     expect(()=>ledger.narrow(command)).toThrow();armed=false;
+     if(fault==='short-write') {const corrupt=fs.readFileSync(d.chain);expect(()=>PrivateTopicLedger.open(d.options,required)).toThrow('TOPIC_LEDGER_SIZE');expect(fs.readFileSync(d.chain).equals(corrupt)).toBe(true);}
+-    else expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(fault==='rename'?['music']:[]);
++    // Failed fsync/rename cannot acknowledge, but recovery retains the complete authenticated append.
++    // ENOSPC occurred before any write; a partial write is rejected by the separate branch above.
++    else expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(fault==='ENOSPC'?[]:['music']);
+   });
+   it('consistent authenticated reads perform no durability writes; append retains all four real barriers',()=>{
+     const barriers:string[]=[];const d=disk({sync:fd=>{barriers.push(fs.fstatSync(fd).isDirectory()?'directory':'file');fs.fsyncSync(fd);}});

@@ -1,0 +1,58 @@
+{
+  "status": "PASS_SOURCE_ONLY_WITH_FOCUSED_HOST_CHECKS",
+  "created_utc": "2026-10-23T03:43:46.035798+00:00",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "roles": [
+    "Engineering source review",
+    "QA actualfocusedchecks review"
+  ],
+  "independent_reviewer_count": 1,
+  "author": {
+    "index_path": ".docs/implementation/reviews/p05/polling-coherence-author-round01/INDEX.json",
+    "sha256": "3bf540b5bc3cf7d0e7784e5a712a926b7f0f08cacef8e078da0152e462f80c70",
+    "verified_children": 13
+  },
+  "source_identity": "85ff205d00761c54d619a8cd74f6453c3ebf1ba431b0bed0b3d752b9f5656631",
+  "source_files": 1894,
+  "parent_source_identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
+  "parent_clean_commit": "fcbf477343d163d04f5b1d87c8f0dec8097e42e6",
+  "changed_paths": {
+    "apps/web/src/topic-games-panel.tsx": "46d5b8a2e6f428f36f970fee2e45880ce4c338a2602f421473d599806c7e7b5d",
+    "apps/web/src/topic-round-view.test.ts": "86fdaf3e8bb0ea93c668d2d1cf5ac0ff72cfd3595cb32ab03a1959802791839e",
+    ".docs/implementation/p05-source-revision-polling-coherence-20.json": "66e722464b2afc7288022d69cb886388beeed20b204bb7747e391b5dc754cfb2"
+  },
+  "all_other_1891_core_paths_exact_parent": true,
+  "before2_files_exact_parent_Git_blobs": true,
+  "engineering_assessment": {
+    "coherence_fix": "Separate authenticated current/view can legitimately straddle partner action. New branch recognizes only strictlyhigher validatedown.game_rev whose FULL originalvalidTopicRoundView succeeds with same room/member/session/round and revisedrev. Doesnotpublish newerbundle/currentstate or accept/grant itsrights. clear removes private/publicpresentation, drafts/pendingreferences; controls.revokeRound fences oldpermissions. Existing1500ms poll reconciles. No retry/window/deadline/TTL/pollchange.",
+    "negative_boundaries": "OriginalvalidSelfActions andvalidTopicRoundView unchanged; foreign/malformed/mixedtime/missingchat/longlease/oldscope stillfailclosed. Newbranch cannot turn invalidbundle into grant, and no specialAPI/legacyread fallback introduced.",
+    "safety": "OwnControls.revokeRound unchanged clears packet/roundrights and incrementsgeneration while retaining independentlyconfirmed sessionSafety Stop/Pause; newbranch doesnot touch session identity/authtransport or servervalidators.",
+    "errors": "Readerrors separatedfrom commanderror; accepted valid cache/selfactions reads clearonlyreadError. Failed/unconfirmed commanderror/retry remains onordinarysuccessfulpoll; userRefresh explicitlyclearsboth, existing newoperation/retrybehavior retained. Coherencefence intentionallydrops stale pendingoperation whose underlyingrev hasadvanced, noautomaticPOST.",
+    "causation": "Fix addresses source-proven falseSERVICE_UNAVAILABLE/persistentreaderror UX defect, not proven cause of historicalWebKitENclickfailure."
+  },
+  "QA_assessment": {
+    "actual_related_suite": "149PASS/9existingfiles,exit0/rawstdout+exits rehashed; no rerun byreviewer",
+    "actual_ESLint_exit": 0,
+    "actual_web_TypeScript_exit": 0,
+    "previous_test_bytes_preserved": true,
+    "new_regressions": 2,
+    "regression1": "ActualTSX existingrawbundledharness instance(api,false): current31/view32 concealed/noerror/noPOST/Stopretained; nextordinarymatched32pollrecovers;6reads/0posts.",
+    "regression2": "ActualTSX readoutage/error thenacceptedread clearsreaderror; independentRATE_LIMITED mutationerror/retry survivesvalidpoll withONEPOST.",
+    "harness_scope": "ExistingTypeScript transpile/VM hook/API scheduler loads actualTopicGamesPanel andactualvalidators, notcopiedfunction; deterministicasynclogic only, notReactDOM/browser/nativepermission proof.",
+    "priornegativecases": "Allpriorforeign/mixed_time/missing_chat/long_lease/aged/disconnect/safetytests unchanged; all9relatedexistingfilesPASS.",
+    "wholequality_native_CI": "Notrunforthisnewsource byauthor/reviewer. Hostfocusedresults donotreplacefreshcleanquality/UI/CIapplicablesourcechecks."
+  },
+  "component_traceability": "OnlysinglefrontendAPPfile+existingtest+revisionmetadata changed; validators/auth/operations/clock/cache/backend/policy/contracts/catalog/statsmanifest exactparent. Originalfull06A26source27f/image48c mustcontinuewithoutrestart; compiledservercorrespondence mustbeconfirmed bynewimageprobe. OldQ10fcbf/remote89cc andoldsource28/image29UI stayhistoricalqualifiedcomponents, notnew85ff wholeimage/nativePASS. Previousfinalsourcefcbf selection is superseded fornewfrontend and needsnewcleanselectedcandidate+applicableCI; noprematurestageclaim.",
+  "limitations": [
+    "SeparatePrivacyreview remainsindependent and notcountedhere.",
+    "Newcleanmaterialization/imagecoupling/native9samecurrentruntime andcurrentquality/CI/finalreviews stillrequired.",
+    "Historical03fifthFAIL anddiagnostic04NOTRUN preserved; flagsmethodd696 maybeboundtofutureproducer separately, nooldsourceextraRUN needed."
+  ],
+  "findings": [],
+  "own_readonly_verification_exit": 0,
+  "own_tests_Docker_APP_producer_helper_Git_mutations": 0,
+  "root_index_unchanged": "a4bb6d5150e4fc2e8beb8bb14bd4aa13aba7e4b419b8c4e40c85e6708ac89093",
+  "full_stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

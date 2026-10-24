@@ -1,0 +1,7 @@
+# OCI operational rebind04
+
+- 2026-10-20T18:21:51.000472+00:00 — Final rootpins source732ed840/1826 imagee0769014/runtime272 receipt e6a366ba; testoracle-only delta fromC454, all64compiled/7SQL/UI/PG exact03A. Binding-only04 additive, original03historical immutable; no Docker/functionalRUN. Existingmethod23/runtime/resource/live14oracles unchanged. RootcurrentappC454 review064ee115 andtestdelta/currentbindingreview separate. Afterfreeze independent C2consumerreview task queued.
+
+- 2026-10-20T18:23:11.344439+00:00 — Rebound04 source/image/root272/expanded76/metadataabsence/unauthorizedACK/docs. All76actualA bytes equal03, B76 unchanged;23methodMJS rawequalaccepted02. Only binding-only control parameters compare03/samecompiledA. Current9checksPASS/syntaxlint0/fullsource7321826exact. No Docker commands/functionalRUN;173notrepeated. Freeze04next.
+
+- 2026-10-20T18:23:55.048736+00:00 — Frozen04 .docs/implementation/reviews/p05/compatible-rollback-author-round04 INDEX f0f5c875b30ade311582b5a762b4c046f76c7543f6ab3a7c4805ec91acca72e9 /145; producerINDEX 10659a29e2d60f90dfe952d991a29435f20e51f059dd6b4227a18e1b989df666 /140.9bindingPASS/syntaxlint0/current7321826exact/coldunauthorizedACKexit1;23methodMJS unchanged02/all76Aexact03;Dockercommands0/functionalRUNfalse/173notrepeated. Rootcurrentbinding/appcarry/testoracle review andnewACKrequired. WritesCOMPLETE;awaitindependentC2methodinputs.

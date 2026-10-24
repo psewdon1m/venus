@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "review": "P05_RUNTIME_REGRESSIONS_ROUND01",
+  "reviewer": "p05_topic_games_review",
+  "author_independent": true,
+  "created_at": "2026-10-19T18:20:41.792242+00:00",
+  "status": "BOUNDED_FRESH_REGRESSION_EVIDENCE_PASS",
+  "scope": "FRESH_GAMES20_AND_REAL_LIFECYCLE16_ON_ORDINARY_RUNTIME_FROZEN_SOURCE",
+  "full_stage_acceptance": false,
+  "source_identity": "1d4de7ebb897bcd93f76e66f966650dfbc3b6d9c378da352dbb3a926faedf143",
+  "source_files": 1803,
+  "source_archive_sha256": "b7641a3c6d2351894089bcfb869e5d6d59911ea9a461d1b80d9a6540c15a3910",
+  "current_inventory_same_source": true,
+  "source_before_after_equal": true,
+  "runtime_rerun_by_reviewer": false,
+  "read_only_docker_inspection_only": true,
+  "facts": {
+    "games": {
+      "packet": "topic-games-preflight-06",
+      "index_files_verified": 19,
+      "source_identity": "1d4de7ebb897bcd93f76e66f966650dfbc3b6d9c378da352dbb3a926faedf143",
+      "source_entries": 1803,
+      "image": "sha256:3e253902de3a3d1bf23f1f9c494fb7e970aa83f634d6e29ceb9debf1322e277a",
+      "project": "venus-topic-games-87aaf0916327",
+      "unique_pass": 20,
+      "producer_command": [
+        "node",
+        "tests/p05-topic-games/integration.mjs"
+      ],
+      "raw_expected_error_codes": {
+        "CONVERSATION_STALE": 1,
+        "CHOICE_LOCKED": 1,
+        "STALE": 2,
+        "TOPIC_CONSENT_REQUIRED": 1,
+        "IDEMPOTENCY_CONFLICT": 7,
+        "CHOICE_NOT_AVAILABLE": 1,
+        "ROUND_NOT_ACTIVE": 1,
+        "ROUND_ACTOR_REQUIRED": 1,
+        "CONSENT_PROPOSAL_STALE": 1,
+        "REVISION_CONFLICT": 1,
+        "AUTH_REQUIRED": 1,
+        "CONVERSATION_UNAVAILABLE": 1
+      },
+      "fresh_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "secret_temp_absent": {
+        "db_password": {
+          "file_exists": false,
+          "parent_exists": false
+        }
+      },
+      "scope": "ACTUAL_GAMES_WITH_EXPLICIT_CONTENT_LIFECYCLE_SAFETY_AND_WS_ADAPTER_FIXTURES"
+    },
+    "lifecycle": {
+      "packet": "topic-lifecycle-preflight-03",
+      "index_files_verified": 19,
+      "source_identity": "1d4de7ebb897bcd93f76e66f966650dfbc3b6d9c378da352dbb3a926faedf143",
+      "source_entries": 1803,
+      "image": "sha256:c13099f5d8ba967cc7a14d0d2b3a92c2358071098f345a2a325705614bfbb9d7",
+      "project": "venus-topic-lifecycle-b951d60c37f2",
+      "unique_pass": 16,
+      "producer_command": [
+        "node",
+        "tests/p05-topic-lifecycle/integration.mjs"
+      ],
+      "raw_expected_error_codes": {},
+      "fresh_resources": {
+        "containers": [],
+        "networks": [],
+        "volumes": []
+      },
+      "secret_temp_absent": {
+        "db_password": {
+          "file_exists": false,
+          "parent_exists": false
+        }
+      },
+      "scope": "ACTUAL_PG_HTTP_LINUX_LIFECYCLE_PROVIDER_WITH_SYNTHETIC_CONTENT_SOURCE_ONLY"
+    }
+  },
+  "findings": [],
+  "limits": {
+    "games_external_content_safety_lifecycle_ws_adapter": "EXPLICIT_FIXTURES",
+    "lifecycle": "REAL_PG_HTTP_LINUX_REGISTRY_PROVIDER_WITH_SYNTHETIC_CONTENT_SOURCE",
+    "ordinary_production_cmd_proof": false,
+    "ordinary_ws_browser_proof": false,
+    "full_pg_dump_restore": false,
+    "human450_approval": false,
+    "production_release_profile_factory": false,
+    "lifecycle_policy_pin": "NAMED_FIXTURE_INPUT",
+    "clock_and_sql_faults": "EXPLICIT_TEST_CONTROLS"
+  },
+  "remaining": [
+    "Ordinary WS/browser/cookies and already-displayed-content clearing",
+    "Positive V2 approved content serving",
+    "Actual semantic-family cross-mode canary",
+    "Full restore/rollback/old-volume upgrade",
+    "Final full-quality/CI and fullP05",
+    "Human review450 HOLD"
+  ]
+}

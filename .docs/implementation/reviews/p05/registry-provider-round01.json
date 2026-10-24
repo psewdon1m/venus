@@ -1,0 +1,66 @@
+{
+  "stage": "P05",
+  "earlier_attempt": {
+    "exit": 1,
+    "failed": 2,
+    "passed": 23,
+    "path": "registry-provider-round01/attempt01"
+  },
+  "inputs": [
+    {
+      "status": "UNCHANGED",
+      "current_sha256": "438c5da0de39fc75cd815492b1feaedeb291688bb8a306d896c17d13e3800907",
+      "frozen_sha256": "438c5da0de39fc75cd815492b1feaedeb291688bb8a306d896c17d13e3800907",
+      "path": "topic-room-registry.ts"
+    },
+    {
+      "status": "UNCHANGED",
+      "current_sha256": "9c249558c61f2d23e33643977d1820d9bebf9f38fa734f6be2ab34928ad19c83",
+      "frozen_sha256": "9c249558c61f2d23e33643977d1820d9bebf9f38fa734f6be2ab34928ad19c83",
+      "path": "topic-room-registry.test.ts"
+    },
+    {
+      "status": "UNCHANGED",
+      "current_sha256": "27fbaae01d684849bb5205820d3bb6cfd52602abc4bf5b13cbad24f2ccf130ff",
+      "frozen_sha256": "27fbaae01d684849bb5205820d3bb6cfd52602abc4bf5b13cbad24f2ccf130ff",
+      "path": "private-topic-preferences.ts"
+    },
+    {
+      "status": "UNCHANGED",
+      "current_sha256": "b80e2e12b959917a2b210b1fb23123b7ee207d84e39c33e5b2ba375ccf046c77",
+      "frozen_sha256": "b80e2e12b959917a2b210b1fb23123b7ee207d84e39c33e5b2ba375ccf046c77",
+      "path": "private-topic-preferences.test.ts"
+    }
+  ],
+  "timestamp": "2026-10-19T20:08:02.7492419+03:00",
+  "full_stage_pass": false,
+  "result": "CHANGES_REQUESTED",
+  "evidence_index_sha256": "186c29e0ba3ac0e4011cbc5e8141cf0173f465595a40b182dcdfee154a3ece9e",
+  "findings": [
+    {
+      "method": "guard",
+      "fix": "Metadata-only room/member authority APIs; wire guard/recovery; keep full private health checks; independent repeat",
+      "id": "SAFETY-GUARD-01",
+      "priority": "P1",
+      "expected": "Metadata authority safety fence independent of personal content availability, with retirement/member denial retained",
+      "actual": "Real Rooms.finalAccessFence safety=true rejects via storage.assertLive -> live -> personal.read",
+      "status": "CONFIRMED",
+      "trigger": "Personal chain corrupted or missing",
+      "file": "apps/api/src/topic-room-registry.ts"
+    }
+  ],
+  "production_pass": false,
+  "round": 1,
+  "independent": {
+    "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+    "total": 33,
+    "exit": 1,
+    "probe_sha256": "d7414bbd794ca752ea301cba52e4db0cd061e43ea52cebe5cf88cd85b482cc4f",
+    "failed": 2,
+    "passed": 31,
+    "platform": "actual Linux Docker; PG/auth controlled seams"
+  },
+  "schema": 1,
+  "historical_lifecycle02": "UNCHANGED_VALID_BOUNDED_COMPONENT_PROOF",
+  "full_pg_integration": false
+}

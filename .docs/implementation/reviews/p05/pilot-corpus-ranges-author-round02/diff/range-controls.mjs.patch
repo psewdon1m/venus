@@ -1,0 +1,45 @@
+--- 01/range-controls.mjs
++++ 02/range-controls.mjs
+@@ -9,7 +9,7 @@
+ import {cells,cellAt} from './c2/consumer.mjs';
+ import {executeCase,validateAck} from './range-worker.mjs';
+ import {rangeRecords} from './replay-input.mjs';
+-import {validatePreflightRaw,compactInference} from './range-reduce.mjs';
++import {validatePreflightRaw,compactInference,assertBoundDescriptor} from './range-reduce.mjs';
+ import {durableSink} from './raw/durable-sink.mjs';
+ import {caseAt} from './m3/descriptor.mjs';
+ import {evaluateInference} from './m3/adapter.mjs';
+@@ -23,7 +23,7 @@
+ const ranges=Array.from({length:100},(_,i)=>validateRange('m3-gf',i*10000,10000));
+ test('exactfullcoveragefixedranges',()=>assert.equal(assertCoverage('m3-gf',ranges),1000000));
+ for(const fault of ['gap','overlap','partial','wrongsection'])test('coverage denies '+fault,()=>{const r=JSON.parse(JSON.stringify(ranges));if(fault==='gap')r[1].start++;if(fault==='overlap')r[1].start--;if(fault==='partial')r.pop();if(fault==='wrongsection')r[1].section='m3-inference';assert.throws(()=>assertCoverage('m3-gf',r));});
+-const range=validateRange('m3-gf',0,1),bindingRaw=Buffer.from(JSON.stringify({source_identity:'1'.repeat(64),image:'sha256:'+'2'.repeat(64)})),preregRaw=Buffer.from('{}'),reviewRaw=Buffer.from('review'),ack={status:'ROOT_RUN_ACK',purpose:'PILOT_FIXED_RANGE_01',no_actual_approval:false,owner:'a'.repeat(32),range,binding_sha256:sha(bindingRaw),prereg_sha256:sha(preregRaw),method_review_sha256:sha(reviewRaw),source_identity:'1'.repeat(64),image_id:'sha256:'+'2'.repeat(64)};
++const range=validateRange('m3-gf',0,1),bindingRaw=Buffer.from(JSON.stringify({source_identity:'1'.repeat(64),image:'sha256:'+'2'.repeat(64)})),preregRaw=Buffer.from('{}'),reviewRaw=Buffer.from('review'),ack={status:'ROOT_RUN_ACK',purpose:'PILOT_FIXED_RANGE_02',no_actual_approval:false,owner:'a'.repeat(32),range,binding_sha256:sha(bindingRaw),prereg_sha256:sha(preregRaw),method_review_sha256:sha(reviewRaw),source_identity:'1'.repeat(64),image_id:'sha256:'+'2'.repeat(64)};
+ test('exactACKtuple',()=>validateAck(ack,range,bindingRaw,preregRaw,reviewRaw));
+ for(const key of ['status','purpose','no_actual_approval','owner','range','binding_sha256','prereg_sha256','method_review_sha256','source_identity','image_id'])test('ACK denial '+key,()=>{const bad={...ack,[key]:key==='no_actual_approval'?true:key==='range'?{...range,start:1}:'bad'};assert.throws(()=>validateAck(bad,range,bindingRaw,preregRaw,reviewRaw));});
+ test('unknown domain error dispatched once no retry',()=>{let calls=0;const error=Object.assign(Error('PRIVATE_CANARY'),{domain_prefix:{selected_rounds:0,history:{rounds:[]}}});assert.throws(()=>executeCase('m3-invariants',{descriptor:caseAt('invariants',0)},{},{model(){calls++;throw error;}}),e=>e===error);assert.equal(calls,1);assert.deepEqual(error.domain_prefix.public_frames,[]);});
+@@ -41,16 +41,23 @@
+ test('pooled separately trained exact42000fake raw vectors',()=>{const names=['finite_tie'],rows=Array.from({length:42000},(_,ordinal)=>({descriptor:caseAt('inference',ordinal),status:'COMPLETE_DOMAIN_MODEL',features:{names,features:[0]}})),r=evaluateInference(rows,names,{pooled:true});assert.equal(r.pooling,'SEPARATELY_TRAINED_POOLED_RAW_ROWS_NOT_CELL_SCORES');assert.equal(r.metric.auc,.5);assert.equal(r.metric.n_negative,16800);assert.equal(r.metric.n_positive,16800);assert(r.actual_wire_parity==='PENDING');});
+ await assert.rejects(reduceGf([]));passed.push('streamGF partial refuses1Mclaim');
+ await assert.rejects(invariantsSection([]));passed.push('streaminvariants partial refuses70kclaim');
++test('descriptor binds canonical enclosingordinal beforecellreuse',()=>{const row={section:'m3-fairness',ordinal:2000,result:{descriptor:caseAt('fairness',2000)}};assertBoundDescriptor('m3-fairness',row);assert.throws(()=>assertBoundDescriptor('m3-fairness',{...row,result:{descriptor:caseAt('fairness',0)}}));});
++for(const section of ['m3-invariants','m3-fairness','m3-gf','m3-inference'])test('descriptor rejectssectionandordinalmismatch '+section,()=>{const row={section,ordinal:1,result:{descriptor:caseAt(section.slice(3),1)}};assertBoundDescriptor(section,row);assert.throws(()=>assertBoundDescriptor(section,{...row,ordinal:0}));assert.throws(()=>assertBoundDescriptor(section,{...row,section:'bad'}));});
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'venus-range-finite-'));
+ try{
+  const owner='b'.repeat(32),sink=durableSink(path.join(temp,'raw'),{guard(){},owner,payloadLimit:1024**2}),r=validateRange('m3-gf',4,3);
+  for(let ordinal=4;ordinal<7;ordinal++)sink.append('corpus-case',{section:r.section,ordinal,result:{g:false,f:false},elapsed_ms:1},{group:r.section,cell:String(ordinal)});
+- const receipt={owner,range:r,completed:3,status:'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE'},sealed=await sink.finish(receipt),input={root:temp,owner,range:r,index_sha256:sealed.index_sha256};
++ const receipt={owner,range:r,completed:3,typed_refusals:0,elapsed_ms:1,status:'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE',source_identity:'1'.repeat(64),image:'sha256:'+'2'.repeat(64),binding_sha256:'3'.repeat(64),prereg_sha256:'4'.repeat(64),method_review_sha256:'5'.repeat(64),approval_scope:'OWNER_PROVISIONAL_LOCAL_PILOT',pack_digest:'pack',map_pins:{map_sha256:'6'.repeat(64)},full_section_PASS:false,full_P05_PASS:false},sealed=await sink.finish(receipt),summary={...receipt,elapsed_ms:2,raw:sealed},summaryRaw=Buffer.from(JSON.stringify(summary));fs.writeFileSync(path.join(temp,'summary.json'),summaryRaw);const input={root:temp,owner,range:r,index_sha256:sealed.index_sha256,summary_sha256:sha(summaryRaw)};
+  test('durable3fakecase replay owner/hash/order/receipt',()=>assert.deepEqual([...rangeRecords(input)].map(r=>r.ordinal),[4,5,6]));
+  test('replay rejects owner mismatch',()=>assert.throws(()=>[...rangeRecords({...input,owner:'c'.repeat(32)})]));
+  test('replay rejects incomplete declared range',()=>assert.throws(()=>[...rangeRecords({...input,range:{...r,end:8,count:4}})]));
+  test('replay rejects index mutation',()=>assert.throws(()=>[...rangeRecords({...input,index_sha256:'0'.repeat(64)})]));
+  const part=path.join(temp,'raw/payload/000000001.gz'),bytes=fs.readFileSync(part);fs.appendFileSync(part,'CANARY');test('replay rejects payload mutation',()=>assert.throws(()=>[...rangeRecords(input)]));fs.writeFileSync(part,bytes);
++ for(const [field,value]of Object.entries({source_identity:'WRONG',image:'WRONG',binding_sha256:'WRONG',prereg_sha256:'WRONG',method_review_sha256:'WRONG',approval_scope:'SYNTHETIC_FIXTURE',pack_digest:'WRONG',map_pins:{wrong:true},full_section_PASS:true,full_P05_PASS:true,completed:4,typed_refusals:1,extra_unknown:'FORGED'})){
++  const root=path.join(temp,'bad-'+field);fs.mkdirSync(root);const badSink=durableSink(path.join(root,'raw'),{guard(){},owner,payloadLimit:1024**2});for(let ordinal=4;ordinal<7;ordinal++)badSink.append('corpus-case',{section:r.section,ordinal,result:{},elapsed_ms:1},{group:r.section,cell:String(ordinal)});const closed=await badSink.finish({...receipt,[field]:value}),body=Buffer.from(JSON.stringify({...summary,raw:closed}));fs.writeFileSync(path.join(root,'summary.json'),body);test('sealedterminal mismatched '+field,()=>assert.throws(()=>[...rangeRecords({root,owner,range:r,index_sha256:closed.index_sha256,summary_sha256:sha(body)})]));
++ }
++ const counterRoot=path.join(temp,'bad-bothcounter');fs.mkdirSync(counterRoot);const counterSink=durableSink(path.join(counterRoot,'raw'),{guard(){},owner,payloadLimit:1024**2});for(let ordinal=4;ordinal<7;ordinal++)counterSink.append('corpus-case',{section:r.section,ordinal,result:{},elapsed_ms:1},{group:r.section,cell:String(ordinal)});const counterClosed=await counterSink.finish({...receipt,typed_refusals:1}),counterBody=Buffer.from(JSON.stringify({...summary,typed_refusals:1,raw:counterClosed}));fs.writeFileSync(path.join(counterRoot,'summary.json'),counterBody);test('matching sealedsidecar cannotfake actual rawrefusalcount',()=>assert.throws(()=>[...rangeRecords({root:counterRoot,owner,range:r,index_sha256:counterClosed.index_sha256,summary_sha256:sha(counterBody)})]));
++ test('authenticatedsidecar bytescannotdrift',()=>{fs.appendFileSync(path.join(temp,'summary.json'),' ');assert.throws(()=>[...rangeRecords(input)]);fs.writeFileSync(path.join(temp,'summary.json'),summaryRaw);});
+  const capped=durableSink(path.join(temp,'cap'),{guard(){},owner,payloadLimit:1});test('payload hardcap poisons instead of truncating',()=>{assert.throws(()=>capped.append('case',{value:'data'}));assert.throws(()=>capped.append('case',{}));assert.equal(capped.abort().poisoned,true);});
+ }finally{assert(path.resolve(temp).startsWith(path.resolve(os.tmpdir())+path.sep));fs.rmSync(temp,{recursive:true});}
+ console.log(JSON.stringify({status:'FINITE_ONLY_NO_CORPUS_OR_DOCKER',controls:passed.length,passed,actual470cases:0,full_P05_PASS:false},null,2));

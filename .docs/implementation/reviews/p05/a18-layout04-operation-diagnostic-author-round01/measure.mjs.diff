@@ -1,0 +1,39 @@
+--- a18-03/measure.mjs
++++ a18-04/measure.mjs
+@@ -52,10 +52,10 @@
+ function persistFailedKeyboard(result,targets){
+  const projection=failedKeyboardProjection(result,targets);if(!projection)return;const bytes=Buffer.from(JSON.stringify(projection)+'\n');assert(bytes.length<=4096,'METADATA_BUDGET_EXCEEDED');writeFileSync(join(process.env.P05_ARTIFACT_DIRECTORY??'/artifacts','keyboard-first-failure.json'),bytes,{flag:'wx'});
+ }
+-export async function keyboard(page,targets,xserver,budget,alreadyForeground=false){
+- assert(targets.length>0,'NO_EXPECTED_KEYBOARD_CONTROLS');if(!alreadyForeground)await windowFor(page,xserver,budget);await bounded(budget,'content-heading-focus',()=>page.locator('h1').first().click());
++export async function keyboard(page,targets,xserver,budget,alreadyForeground=false,onCheckpoint=()=>{}){
++ assert(targets.length>0,'NO_EXPECTED_KEYBOARD_CONTROLS');if(!alreadyForeground)await windowFor(page,xserver,budget);onCheckpoint('KEYBOARD_HEADING');await bounded(budget,'content-heading-focus',()=>page.locator('h1').first().click());
+  const records=new Map();let attempts=0;
+- for(;attempts<120&&targets.some(id=>!records.has(id));attempts++){await bounded(budget,'physical-tab',()=>page.keyboard.press('Tab'));const value=await bounded(budget,'actual-focus',()=>page.evaluate(focusAudit));if(value&&targets.includes(value.id)&&!records.has(value.id))records.set(value.id,value);}
++ for(;attempts<120&&targets.some(id=>!records.has(id));attempts++){onCheckpoint('KEYBOARD_TAB');await bounded(budget,'physical-tab',()=>page.keyboard.press('Tab'));onCheckpoint('KEYBOARD_FOCUS');const value=await bounded(budget,'actual-focus',()=>page.evaluate(focusAudit));if(value&&targets.includes(value.id)&&!records.has(value.id))records.set(value.id,value);}
+  const result={controls:[...records.values()],tab_events:attempts,truncated:targets.some(id=>!records.has(id))};try{persistFailedKeyboard(result,targets);}catch{/* Preserve the original keyboard assertion if diagnostic persistence fails. */}assertKeyboard(result,targets);return result;
+ }
+ export async function measureRole({role,actor},scene,fixture,cell,{budget,xserver,output,screenshots,nativeMeasurement,onObservation=()=>{},onCheckpoint=()=>{}}){
+@@ -66,16 +66,16 @@
+  for(const control of required)assert(await bounded(budget,'required-own-control',()=>actor.page.getByTestId(control).isVisible()),'OWN_PERMITTED_CONTROL_MISSING:'+control);
+  await assertSceneProjection(actor.page,scene,role,budget);
+  onCheckpoint('MEASUREMENT');
+- const clockBefore=await bounded(budget,'native-clock-before',()=>actor.page.evaluate(()=>({wall:Date.now(),elapsed:performance.now()})));
+- const audit=await bounded(budget,'dom-audit',()=>actor.page.evaluate(domAudit));
++ onCheckpoint('CLOCK_BEFORE');const clockBefore=await bounded(budget,'native-clock-before',()=>actor.page.evaluate(()=>({wall:Date.now(),elapsed:performance.now()})));
++ onCheckpoint('DOM_AUDIT');const audit=await bounded(budget,'dom-audit',()=>actor.page.evaluate(domAudit));
+  assert.equal(audit.locale,actor.locale,'ACTUAL_DOCUMENT_LOCALE_MISMATCH');
+  const isPrivate=['private_offer','private_active','truth_dare_choice','yes_but_condition'].includes(scene);let cross_private_leak=false;
+- if(isPrivate&&role==='observer'){for(const id of ['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat'])if(await actor.page.getByTestId(id).count())cross_private_leak=true;assert(!cross_private_leak,'OBSERVER_PRIVATE_LEAK');}
+- const targets=await bounded(budget,'own-visible-targets',()=>actor.page.evaluate(visibleTargets)),keys=await keyboard(actor.page,targets,xserver,budget,true);
+- const file=cell.id.replaceAll('/','-')+'-'+role+'.png',path=join(output,file);
++ onCheckpoint('PRIVATE_OBSERVER_GUARD');if(isPrivate&&role==='observer'){for(const id of ['pair-invitation','topic-conversation','private-prompt','structured-advice','pair-chat'])if(await actor.page.getByTestId(id).count())cross_private_leak=true;assert(!cross_private_leak,'OBSERVER_PRIVATE_LEAK');}
++ onCheckpoint('TARGETS');const targets=await bounded(budget,'own-visible-targets',()=>actor.page.evaluate(visibleTargets)),keys=await keyboard(actor.page,targets,xserver,budget,true,onCheckpoint);
++ onCheckpoint('CAPTURE');const file=cell.id.replaceAll('/','-')+'-'+role+'.png',path=join(output,file);
+  if(nativeMeasurement)await nativeScreenshot(actor.page,xserver,nativeMeasurement,path,budget);else await bounded(budget,'masked-screenshot',()=>actor.page.screenshot({path,fullPage:false,mask:[actor.page.getByTestId('room-invite'),actor.page.getByTestId('join-invite')],timeout:Math.max(1,budget.remaining())}));
+  const capture=screenshots.accept(path);
+- const clockAfter=await bounded(budget,'native-clock-after',()=>actor.page.evaluate(()=>({wall:Date.now(),elapsed:performance.now()}))),clock_elapsed=clockAfter.elapsed-clockBefore.elapsed,normalClock=clock_elapsed>=0&&clockAfter.wall>=clockBefore.wall&&Math.abs(clockAfter.wall-clockBefore.wall-clock_elapsed)<250;
++ onCheckpoint('CLOCK_AFTER');const clockAfter=await bounded(budget,'native-clock-after',()=>actor.page.evaluate(()=>({wall:Date.now(),elapsed:performance.now()}))),clock_elapsed=clockAfter.elapsed-clockBefore.elapsed,normalClock=clock_elapsed>=0&&clockAfter.wall>=clockBefore.wall&&Math.abs(clockAfter.wall-clockBefore.wall-clock_elapsed)<250;
+  const outcome={role,visible:true,focus_visible:keys.controls.every(c=>c.focus_visible),keyboard_reached:true,focus_in_viewport:keys.controls.every(c=>c.in_viewport&&c.not_occluded),own_scope_matches:true,required_own_controls:required,cross_private_leak,control_names_nonempty:audit.named_controls,contrast_failures:audit.contrast_failures,contrast_unresolved:audit.contrast_unresolved,normal_ui_clock:normalClock,clock:{before:clockBefore,after:clockAfter},evidence_file:file,targets,keyboard:keys,audit,capture,elapsed_ms:performance.now()-started};
+  onCheckpoint('FINAL_PROJECTION');
+  // Evidence is saved before any strict assertion so legitimate failures remain inspectable.

@@ -1,0 +1,1 @@
+PASS_METHOD_ONLY resource schedule only; exact authorityf0618adb bound. Before one attempt: UI terminal+owned cleanup, no other new heavy/quality, fresh<=60s qualifying snapshot, separate activation readiness, exact five permitted ACK metadata changes/all other pending fields fixed. No actual authority yet; request quick issued-ACK confirmation later. Writes COMPLETE_STOP.

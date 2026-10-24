@@ -1,0 +1,131 @@
+{
+  "base": ".artifacts/p05-pilot-bundle-source22/.artifacts/p05-v2-layout-producer-a25-02",
+  "changed_MJS": [
+    "dom-audit.mjs",
+    "measure.mjs",
+    "run.mjs"
+  ],
+  "unchanged_MJS": 24,
+  "inverse": [
+    {
+      "file": "dom-audit.mjs",
+      "before_sha256": "c576929f0dc2667b4f458e5303653bfad1544f9574fcc90e170cc2f961b47b8a",
+      "after_sha256": "c3f4422c6a9b73479c4f2e21ef8260698e0fabc85a0f0a7b0d825947562c48ef",
+      "inverse_exact": true,
+      "operations": [
+        {
+          "old_start": 6519,
+          "old_end": 6519,
+          "new_start": 6519,
+          "new_end": 6526,
+          "old": "",
+          "new": "const o"
+        },
+        {
+          "old_start": 6520,
+          "old_end": 6520,
+          "new_start": 6527,
+          "new_end": 6534,
+          "old": "",
+          "new": "iginalR"
+        },
+        {
+          "old_start": 6521,
+          "old_end": 6521,
+          "new_start": 6535,
+          "new_end": 6538,
+          "old": "",
+          "new": "sul"
+        },
+        {
+          "old_start": 6522,
+          "old_end": 6526,
+          "new_start": 6539,
+          "new_end": 6540,
+          "old": "urn ",
+          "new": "="
+        },
+        {
+          "old_start": 7282,
+          "old_end": 7282,
+          "new_start": 7296,
+          "new_end": 7510,
+          "old": "",
+          "new": ";\r\n try{if(typeof window.__venusP05CausalFocusAudit==='function')window.__venusP05CausalFocusAudit(originalResult);}catch{/* Diagnostic recording never changes the original first sample. */}\r\n return originalResult"
+        }
+      ]
+    },
+    {
+      "file": "measure.mjs",
+      "before_sha256": "c80f07c9a6f4487361eb9bad5157f65a7b5aa5fa162a2aa5ba4d76e96a33ab92",
+      "after_sha256": "a1c38d8fa162c8af6b9a5a0e75244516a77ab8eee351b57c8b7b332d75128124",
+      "inverse_exact": true,
+      "operations": [
+        {
+          "old_start": 6753,
+          "old_end": 6753,
+          "new_start": 6753,
+          "new_end": 6777,
+          "old": "",
+          "new": ",onKeyboardResult=()=>{}"
+        },
+        {
+          "old_start": 7639,
+          "old_end": 7639,
+          "new_start": 7663,
+          "new_end": 7752,
+          "old": "",
+          "new": "try{onKeyboardResult(result);}catch{/* Preserve original assertion and first samples. */}"
+        },
+        {
+          "old_start": 7898,
+          "old_end": 7898,
+          "new_start": 8011,
+          "new_end": 13488,
+          "old": "",
+          "new": "\n const traceEnabled=!cell.native&&['public_questions','private_offer','private_active'].includes(scene)&&['w320','w375','w1024','landscape','smallheight'].includes(cell.geometry)&&['primary','other','secondary'].includes(role);let traceHandle=null,traceKeys=null,traceInstallFailed=false;\n if(traceEnabled)try{traceHandle=await bounded(budget,'diagnostic-install-causal-events',()=>actor.page.evaluateHandle(()=>{\n  const rows=[],listeners=[],allowed=new Set(['adult18','accept-offer','create-name','join-name','join-invite','comfort','submit-preferences','topics-save','topic-allow-creative','game-neutral-reset','game-stop','game-pause','game-skip','topic-other','topic-other-exclude','topic-decline','pair-accept','pair-decline','conversation-stop','action-accept','action-withdraw','game-finish','game-dare','game-truth','game-condition-input','game-condition-submit','advice-input','pair-chat-input','offer-topic-creative']);let overflow=false,mutationGeneration=0,mutationCount=0,mutationOverflow=false;\n  const number=v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=10000000?v:null,main=document.querySelector('main'),label=target=>({testID:target instanceof HTMLElement&&allowed.has(target.getAttribute('data-testid'))?target.getAttribute('data-testid'):'OTHER',tag:target instanceof HTMLElement&&['BUTTON','INPUT','SELECT','TEXTAREA','MAIN','H1','A','BODY','DIV','SECTION','SPAN','LABEL'].includes(target.tagName)?target.tagName:target===window?'WINDOW':target===document?'DOCUMENT':'OTHER',connected:Boolean(target?.isConnected),htmlRealm:target instanceof HTMLElement,ownDocument:target?.ownerDocument===document});\n  const push=row=>{if(rows.length>=128){overflow=true;return;}rows.push({sequence:rows.length,time:number(performance.now()),mutationGeneration,...row});};\n  const properties=()=>{const key=main?Object.getOwnPropertyNames(main).find(k=>k.startsWith('__reactProps$')):null,props=key?Object.getOwnPropertyDescriptor(main,key)?.value:null;return {mainReactPropsPresent:Boolean(props),mainOnFocusFunction:typeof(props?Object.getOwnPropertyDescriptor(props,'onFocus')?.value:undefined)==='function',mainOnKeyUpFunction:typeof(props?Object.getOwnPropertyDescriptor(props,'onKeyUp')?.value:undefined)==='function'};};\n  const record=(phase,event)=>{if(rows.length>=128){overflow=true;return;}try{const target=event.target,active=document.activeElement,rect=active instanceof HTMLElement?active.getBoundingClientRect():null,scrollTop=number(document.scrollingElement?.scrollTop??0);push({phase,type:event.type==='focusin'?'focusin':'keyup',key:event.key==='Tab'?'Tab':null,isTrusted:event.isTrusted,defaultPrevented:event.defaultPrevented,target:label(target),active:label(active),targetEqualsActive:target===active,documentHasFocus:document.hasFocus(),visibility:document.visibilityState==='visible'?'visible':document.visibilityState==='hidden'?'hidden':'OTHER',mainContainsTarget:Boolean(main&&target instanceof Node&&main.contains(target)),...properties(),viewport:{innerHeight:number(window.innerHeight),clientHeight:number(document.documentElement.clientHeight),visualHeight:number(window.visualViewport?.height),visualOffsetTop:number(window.visualViewport?.offsetTop),outerHeight:number(window.outerHeight),devicePixelRatio:number(window.devicePixelRatio)},scrollTop,documentTop:rect?number(rect.top+(scrollTop??0)):null,rect:rect?Object.fromEntries(['left','top','right','bottom','width','height'].map(k=>[k,number(rect[k])])):null});}catch{push({phase,type:'READONLY_RECORD_FAILED'});}};\n  const audit=result=>{try{push({phase:'ORIGINAL_FOCUS_AUDIT',type:'original-first-sample',id:allowed.has(result.id)?result.id:'OTHER',tag:['BUTTON','INPUT','SELECT','TEXTAREA','SUMMARY','A'].includes(result.tag)?result.tag:'OTHER',documentHasFocus:result.document_has_focus===true,scrollTop:number(result.scroll_top),documentTop:number(result.rect.top+result.scroll_top),rect:Object.fromEntries(['left','top','right','bottom','width','height'].map(k=>[k,number(result.rect[k])])),viewport:{width:number(result.viewport.width),height:number(result.viewport.height)},focusVisible:result.focus_visible===true,inViewport:result.in_viewport===true,notOccluded:result.not_occluded===true});}catch{push({phase:'ORIGINAL_FOCUS_AUDIT',type:'READONLY_RECORD_FAILED'});}};\n  if(Object.prototype.hasOwnProperty.call(window,'__venusP05CausalFocusAudit'))throw Error('DIAGNOSTIC_GLOBAL_ALREADY_PRESENT');Object.defineProperty(window,'__venusP05CausalFocusAudit',{value:audit,configurable:true});\n  for(const type of ['focusin','keyup'])for(const capture of [true,false]){const fn=event=>{if(type==='keyup'&&event.key!=='Tab')return;record(capture?'DOCUMENT_CAPTURE_BEFORE_ROOT':'DOCUMENT_BUBBLE_AFTER_ROOT',event);};document.addEventListener(type,fn,capture);listeners.push([document,type,fn,capture]);}\n  const observer=new MutationObserver(records=>{if(mutationGeneration>=128){mutationOverflow=true;observer.disconnect();return;}mutationGeneration++;mutationCount=Math.min(10000000,mutationCount+records.length);});if(main)observer.observe(main,{childList:true,subtree:true,attributes:true,characterData:true});\n  return {dump(){return {rows,overflow,mutationGeneration,mutationCount,mutationOverflow};},detach(){observer.disconnect();for(const[target,type,fn,capture]of listeners)target.removeEventListener(type,fn,capture);if(window.__venusP05CausalFocusAudit===audit)delete window.__venusP05CausalFocusAudit;}};\n }));}catch{traceInstallFailed=true;}\n try{\n "
+        },
+        {
+          "old_start": 9823,
+          "old_end": 9823,
+          "new_start": 15413,
+          "new_end": 15457,
+          "old": "",
+          "new": ",result=>{if(traceEnabled)traceKeys=result;}"
+        },
+        {
+          "old_start": 11566,
+          "old_end": 11566,
+          "new_start": 17200,
+          "new_end": 19468,
+          "old": "",
+          "new": "\n }finally{\n  if(traceEnabled)try{\n   const trace=traceHandle?await bounded(budget,'diagnostic-dump-causal-events',()=>traceHandle.evaluate(value=>{value.detach();return value.dump();})):{rows:[],overflow:false,mutationGeneration:0,mutationCount:0,mutationOverflow:false};\n   const ids=new Set(['adult18','accept-offer','create-name','join-name','join-invite','comfort','submit-preferences','topics-save','topic-allow-creative','game-neutral-reset','game-stop','game-pause','game-skip','topic-other','topic-other-exclude','topic-decline','pair-accept','pair-decline','conversation-stop','action-accept','action-withdraw','game-finish','game-dare','game-truth','game-condition-input','game-condition-submit','advice-input','pair-chat-input','offer-topic-creative']),number=v=>typeof v==='number'&&Number.isFinite(v)&&Math.abs(v)<=10000000?v:null;\n   const samples=traceKeys?.controls?.slice(0,128).map(sample=>({id:ids.has(sample.id)?sample.id:'OTHER',document_has_focus:sample.document_has_focus===true,focus_visible:sample.focus_visible===true,in_viewport:sample.in_viewport===true,not_occluded:sample.not_occluded===true,focus_contrast_unresolved:sample.focus_contrast_unresolved===true,focus_contrast_ratio:number(sample.focus_contrast_ratio),rect:Object.fromEntries(['left','top','right','bottom','width','height'].map(k=>[k,number(sample.rect?.[k])])),viewport:{width:number(sample.viewport?.width),height:number(sample.viewport?.height)},scroll_top:number(sample.scroll_top)}))??null;\n   const safe={scope:'ONE_REAL_APP_CAUSAL_FOCUS_TRACE_DIAGNOSTIC_ONLY_NOT_GATE',scene,geometry:cell.geometry,role,cap:128,installFailed:traceInstallFailed,geometry_reads_may_perturb_layout:true,...trace,original_first_samples:samples,original_keyboard_result:traceKeys?{tab_events:traceKeys.tab_events,truncated:traceKeys.truncated,controls_truncated:traceKeys.controls.length>128}:null};\n   const bytes=Buffer.from(JSON.stringify(safe)+'\\n');assert(bytes.length<=512*1024,'DIAGNOSTIC_METADATA_CAP');writeFileSync(join(output,'causal-'+scene+'-'+cell.geometry+'-'+role+'.json'),bytes,{flag:'wx'});\n  }catch{/* Diagnostic persistence never changes the original result/error. */}finally{try{if(traceHandle)await traceHandle.dispose();}catch{/* Original outcome preserved. */}}\n }"
+        }
+      ]
+    },
+    {
+      "file": "run.mjs",
+      "before_sha256": "8d8e1fee8c6699ebbb353f9b89bfb1961343713b03f852b365f598810a0d3db9",
+      "after_sha256": "1511cfe1f8db6be53f71710e0dda62b93080115caa9a9ed87506b68470f909d0",
+      "inverse_exact": true,
+      "operations": [
+        {
+          "old_start": 618,
+          "old_end": 618,
+          "new_start": 618,
+          "new_end": 630,
+          "old": "",
+          "new": "causal-trace"
+        },
+        {
+          "old_start": 619,
+          "old_end": 620,
+          "new_start": 631,
+          "new_end": 632,
+          "old": "2",
+          "new": "1"
+        }
+      ]
+    }
+  ]
+}

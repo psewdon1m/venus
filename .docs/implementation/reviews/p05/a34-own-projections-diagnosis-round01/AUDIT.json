@@ -1,0 +1,135 @@
+{
+  "status": "DIAGNOSIS_PRODUCER_CROSS_AWAIT_OBSERVATION_RACE_CONFIRMED",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "reviewed_utc": "2026-10-23T07:37:39.915340+00:00",
+  "author_independent": true,
+  "inputs": {
+    "failure_packet": ".docs/implementation/evidence/p05/a34-webkit-tr-own-projections-failed08/INDEX.json",
+    "failure_packet_sha256": "e732babbbc0c4f98895c89e060a30298f615a4b9b4ba92b3889819fa2ad5dd4f",
+    "all_child_pins_verified": 20,
+    "original_report_sha256": "56ba54a06fe9bed2238e6255f5dc7df511db5ec700c5d8f292c39339877886f1",
+    "qualification_sha256": "a0dced794dced0a3c9f6295e8531052a603b0001e2989d8ab503fafd14507301",
+    "original_raw_inventory_sha256": "d9a1fb3b84aebf7edaade360e49b86ae557ff4d2a664cf4c375c5ece45911d6b",
+    "relevant_original_raw_copies_exact": 8,
+    "selected_source": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "source_files": 1897,
+    "source_commit": "5d4126006c520bdc45060c4923b2d38f83e91e3f",
+    "source_commit_provenance": "Frozen source31 cleanGit mapping; hostexit has source_identity/runtime only",
+    "runtime": "90ebf995a1b5621503c782ad4eb5693449ba1444fd81a1dfdef745120a4ab623",
+    "image": "sha256:2841004bc7e7c7e46884cb1d60addefd6a15af1278328e1ae07e74a9284bbe98",
+    "source_pins": {
+      ".artifacts/p05-v2-layout-producer-a34-01/measure.mjs": "c80f07c9a6f4487361eb9bad5157f65a7b5aa5fa162a2aa5ba4d76e96a33ab92",
+      ".artifacts/p05-v2-layout-producer-a34-01/probe-policy.mjs": "58bf50e537cab08b8d52220fdc7a1a765142018496265546bb5a5cb9bd24039f",
+      ".artifacts/p05-v2-layout-producer-a34-01/scene-driver.mjs": "47cac744e6a72ab79d4f6c2c7f4844b3e4f76c1a2060ab13f853c4f9b142179d",
+      ".artifacts/p05-v2-layout-producer-a34-01/private-batch-observer.mjs": "48e2604052f3c8768fbd14efd2d4f315f6558f3ec00e8f1870aec28e3f172026",
+      ".artifacts/p05-v2-layout-producer-a34-01/browser.mjs": "1c8473f9e6eae2cc4c0da1209499b535173d7c011e5dcf3c80e3a6dcdcd30ab7",
+      "apps/web/src/main.tsx": "8665d158b07d967e3f960637918dc1cb7d68a84abf0cd5de0bdea97a3732d873",
+      "apps/web/src/topic-games-panel.tsx": "4774a8c57f9f610a7cd4a2f35322467bc06dab66990f1e21cd83c65adc09f417"
+    }
+  },
+  "actual": {
+    "status": "FAIL",
+    "cells": {
+      "PASS": 48,
+      "FAIL": 1,
+      "NOT_RUN": 2
+    },
+    "failed_cell": "webkit/tr/yes_but_condition/w320",
+    "phase": {
+      "scene": "yes_but_condition",
+      "native": false,
+      "chunk": 0,
+      "sweep_id": "yes_but_condition/false/0",
+      "stage": "measurement",
+      "cell": "webkit/tr/yes_but_condition/w320",
+      "role": "primary",
+      "checkpoint": "INITIAL_PROJECTION"
+    },
+    "failure": {
+      "name": "AssertionError",
+      "code": "OWN_UI_PROJECTIONS_DIFFERENT_REVISION",
+      "source_module": "probe-policy",
+      "source_line": 22,
+      "source_column": 31
+    },
+    "role_observation_recorded": false,
+    "keyboard_actions": 13,
+    "sweep_preparations": 14,
+    "real_text_PASS": 36,
+    "page_errors": 0,
+    "cleanup": "PASS",
+    "three_owned_resource_inventories_empty": true,
+    "source_inputs_before_after_byte_exact": true,
+    "native_host_exit_code": 1,
+    "old_FAIL_preserved_not_relabelled_PASS": true
+  },
+  "findings": [
+    {
+      "priority": "P1",
+      "component": "UI producer initial observation convergence",
+      "proven_bug": "measureRole settles passive own/current revision equality in its existing FRESH_SCOPE loop at measure.mjs63, awaits positive DOM preparation at64, then unconditionally rereads independently mutable lastSelfActions/lastGameView at65. The actual line22 equality failed only after the earlier successful check. At least one observer projection therefore changed across that awaited DOM preparation; the final assertion treats an intervening passive observation update as an immediate APP coherence failure.",
+      "source_locations": [
+        "measure.mjs63-65",
+        "probe-policy.mjs20-22",
+        "scene-driver.mjs18",
+        "private-batch-observer.mjs51-73"
+      ],
+      "observer_semantics": "lastGameView is independently published for each valid current HTTP response at observer60. lastSelfActions is published from a fully validated own/view envelope at69 or72, before finish() completes/accepts the paired model. These are passive independently-timed response projections, not the production component rendered revision or actual OwnControls.accept/TopicCache.accept observation.",
+      "proof_from_actual_control_flow": "Initial loop completed, otherwise POSITIVE_DOM_PREPARATION/INITIAL_PROJECTION would not execute. INITIAL_PROJECTION assertFreshScope passed; ownControlRequirements passed own freshness/session/round/min revision/schema/room/member validations before failing only the comparison with latest actor.lastGameView. No required-own-control check or keyboard focus measurement for this failed role occurred.",
+      "APP_incoherent_render_or_grant_proven": false
+    }
+  ],
+  "numeric_evidence_limits": {
+    "differing_current_and_own_revision_integers_persisted": false,
+    "exact_intervening_request_identity_time_and_order_retained": false,
+    "why": "safeFailure preserves fixed error enum/module/line/column only. request_metadata has route/status/phase without response payload revisions or timing; preparation scope digests do not uniquely reconstruct the later two values. No missing integers are invented.",
+    "last_pair_accept_dispatch": {
+      "start_ms": 584002.589901,
+      "finish_ms": 584133.817511,
+      "request_observed_ms": 584119.405175,
+      "status": 200,
+      "result": "EXACT_RECEIPT_VERIFIED"
+    },
+    "later_condition_preparation": {
+      "started_ms": 584708.618131,
+      "finished_ms": 584734.318967,
+      "result": "READY",
+      "scope_sha256": "c5b44913166409a014e621c4d4bcc7529c8f69f193f3596381d8be923c24455d",
+      "observer_model_only": true,
+      "actual_cache_accept_observed": false
+    },
+    "these_prior_receipts_do_not_prove_the_failed_later_numeric_pair": true
+  },
+  "production_assessment": {
+    "source_panel_sync": "Production panel42-60 reads current then /view, validates exact scope; legitimate strictly newer coherent bundle is concealed, cache cleared and controls revoked via fresh opaque{}, with normal poll reconciliation. Observer publication can occur despite production not accepting it.",
+    "minimal_APP_fix_justified_by_this_failure": false,
+    "historical_focus_main_source23_defect_proven_here": false,
+    "actual_APP_behavior_beyond_recorded_checks": "UNKNOWN, no rendered grant/cache acceptance assertion can be inferred from this failure label."
+  },
+  "minimal_producer_correction_recommendation": {
+    "scope": "Only convergence placement/reference-stability in existing measureRole loop; independent authored/reviewed successor required, this report implements nothing.",
+    "algorithm": [
+      "Keep the SAME existing FRESH_SCOPE for-loop, original absolute budget and existing capped25ms convergence delay.",
+      "Capture current and own observation references in one synchronous turn and retain every exact scope/revision/freshness/TTL/schema/room/member check; derive required controls from that coherent pair.",
+      "Await existing positive DOM preparation OUTSIDE the metadata assertion catch. Forbidden projection and other DOM operation failures must propagate immediately; never convert them into metadata convergence retries.",
+      "Before accepting INITIAL_PROJECTION, synchronously revalidate freshness, exact revision coherence and reference stability after the DOM await. If observations changed or transient coherence was lost, return to the SAME existing metadata convergence loop under its original deadline; do not accept a stale pair or waive equality.",
+      "Break only with a still-coherent, stable initial pair. Preserve subsequent required-own-control checks, scene forbidden guards, genuine first-focus sample, all measurement/authorization/action/oracle/count semantics."
+    ],
+    "forbidden_changes": [
+      "No new loop, helper framework, API, observer, click or mutation retry",
+      "No new wait interval, deadline/budget extension, fixture reseed or permission/TTL relaxation",
+      "No catch around positive DOM preparation or forbidden projection",
+      "No fake APP PASS; original A34 failed shard remains FAIL"
+    ],
+    "all9_same_new_runtime_aggregate_requirement_remains": true
+  },
+  "unaffected_scope": {
+    "APP_source_selected_Git_images": true,
+    "Q13_local_quality_and_exact_source23_eight_remote_CI": true,
+    "backend_uniform_full06_continues_unchanged": true,
+    "no_current_nine_matrix_or_stage_PASS": true,
+    "P06_started": false
+  },
+  "operations": "Read-only source/JSON/log/hash inspection only. One initial PowerShell rg brace-expansion parser error exit1 corrected to explicit paths; all final assertions exit0. No tests, new helper, diagnostics, native, Docker, API, source or Git mutations.",
+  "writes": "Only own journal and new immutable AUDIT/INDEX; COMPLETE_STOP"
+}

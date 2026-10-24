@@ -1,0 +1,132 @@
+{"state":"active","actual_error":"TOPIC_GAMES_DISABLED","ordinary_room_socket_path":"Rooms.socketState -> TopicGames.socketView -> source -> production route catch closes4401"}
+{"state":"paused","actual_error":"TOPIC_GAMES_DISABLED","ordinary_room_socket_path":"Rooms.socketState -> TopicGames.socketView -> source -> production route catch closes4401"}
+{"state":"completed","actual_error":"TOPIC_GAMES_DISABLED","ordinary_room_socket_path":"Rooms.socketState -> TopicGames.socketView -> source -> production route catch closes4401"}
+{"state":"active","actual_error":"CATALOG_LEDGER_UNAVAILABLE","source":"EXPLICIT_PROVIDER_DOMAIN_ERROR_MATCHING_PRODUCTION_LEDGER_NORMALIZATION"}
+{"state":"paused","actual_error":"CATALOG_LEDGER_UNAVAILABLE","source":"EXPLICIT_PROVIDER_DOMAIN_ERROR_MATCHING_PRODUCTION_LEDGER_NORMALIZATION"}
+{"state":"completed","actual_error":"CATALOG_LEDGER_UNAVAILABLE","source":"EXPLICIT_PROVIDER_DOMAIN_ERROR_MATCHING_PRODUCTION_LEDGER_NORMALIZATION"}
+✖ RW-002 feature-off room socket survives retained active game (2.6584ms)
+✖ RW-002 feature-off room socket survives retained paused game (0.3661ms)
+✖ RW-002 feature-off room socket survives retained completed game (0.2194ms)
+✖ RW-002 feature-off public delivery retains generic/null projection (0.4012ms)
+✔ feature-off intentional ordinary source lookup denies rather than enabling starts (0.4346ms)
+✖ RW-003 expected catalogue-ledger outage preserves ordinary room projection for active (1.4012ms)
+✖ RW-003 expected catalogue-ledger outage preserves ordinary room projection for paused (0.5295ms)
+✖ RW-003 expected catalogue-ledger outage preserves ordinary room projection for completed (0.4325ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 1
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 640.1074
+
+✖ failing tests:
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:16:52
+✖ RW-002 feature-off room socket survives retained active game (2.6584ms)
+  AssertionError [ERR_ASSERTION]: Ordinary room snapshot rejects TOPIC_GAMES_DISABLED
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:21:201)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:16:52
+✖ RW-002 feature-off room socket survives retained paused game (0.3661ms)
+  AssertionError [ERR_ASSERTION]: Ordinary room snapshot rejects TOPIC_GAMES_DISABLED
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:21:201)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:16:52
+✖ RW-002 feature-off room socket survives retained completed game (0.2194ms)
+  AssertionError [ERR_ASSERTION]: Ordinary room snapshot rejects TOPIC_GAMES_DISABLED
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:21:201)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:23:1
+✖ RW-002 feature-off public delivery retains generic/null projection (0.4012ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted rejection.
+  Actual message: "Request could not be completed"
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:25:2)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: Request could not be completed
+        at requireThat (file:///C:/.projects/venus/apps/api/dist/security.js:13:11)
+        at TopicGames.source (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/captured-topic-games.mjs:44:26)
+        at TopicGames.view (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/captured-topic-games.mjs:571:97)
+        at TopicGames.publicDelivery (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/captured-topic-games.mjs:689:47)
+        at async waitForActual (node:assert:646:5)
+        at async strict.doesNotReject (node:assert:789:33)
+        at async TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:25:2)
+        at async Test.run (node:internal/test_runner/test:1409:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:974:7),
+    expected: undefined,
+    operator: 'doesNotReject',
+    diff: 'simple'
+  }
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:31:52
+✖ RW-003 expected catalogue-ledger outage preserves ordinary room projection for active (1.4012ms)
+  AssertionError [ERR_ASSERTION]: Ordinary room snapshot rejects CATALOG_LEDGER_UNAVAILABLE
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:37:164)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:31:52
+✖ RW-003 expected catalogue-ledger outage preserves ordinary room projection for paused (0.5295ms)
+  AssertionError [ERR_ASSERTION]: Ordinary room snapshot rejects CATALOG_LEDGER_UNAVAILABLE
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:37:164)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }
+
+test at .docs\implementation\reviews\p05\runtime-wiring-round01\probe.mjs:31:52
+✖ RW-003 expected catalogue-ledger outage preserves ordinary room projection for completed (0.4325ms)
+  AssertionError [ERR_ASSERTION]: Ordinary room snapshot rejects CATALOG_LEDGER_UNAVAILABLE
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-wiring-round01/probe.mjs:37:164)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: undefined,
+    operator: 'fail',
+    diff: 'simple'
+  }

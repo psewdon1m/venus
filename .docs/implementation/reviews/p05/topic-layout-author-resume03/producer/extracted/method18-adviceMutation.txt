@@ -1,0 +1,7 @@
+async function adviceMutation(a,control,f,kind,expected={}){
+ const path=`/api/v2/rooms/${a.room}/game/${f.session}/round/${f.plan.round_id}/conversation/commands`;
+ const {body,receipt}=await exactUiMutation({page:a.page,path,kind,control,prepare:()=>preparePrivateClick(a,control,path),click:ticket=>click(a,control,ticket),record:event=>recordMutation({locale:a.locale,...event})});
+ for(const [key,value] of Object.entries(expected))assert.equal(body[key],value,'Wrong advice command tuple '+key);
+ await coherentGame({session:f.session,round:f.plan.round_id,index:f.plan.round_index,minRev:receipt.game_rev});
+ const rows=report.advice_mutation_receipts??=[];assert(rows.length<32);rows.push({locale:a.locale,kind,request_id:body.request_id,game_rev:receipt.game_rev,expected_tuple_verified:true,advice_id:body.advice_id??null,proposal_revision:body.proposal_revision??null,epoch:body.epoch??null,replaces_id:body.replaces_id??null,committed_native_ms:performance.now()});return receipt;
+}

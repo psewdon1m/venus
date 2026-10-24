@@ -1,0 +1,16 @@
+{
+  "arguments": [
+    "exec",
+    "venus-p05-oci-355a4affda3b-keeper",
+    "node",
+    "-e",
+    "const f=require('fs'),r={};for(const n of process.argv.slice(1)){const s=f.statfsSync(n,{bigint:true});r[n]=String(s.blocks*s.bsize);}console.log(JSON.stringify(r));",
+    "/retained-db",
+    "/authority",
+    "/private",
+    "/evidence"
+  ],
+  "code": 0,
+  "stdout": "{\"/retained-db\":\"251658240\",\"/authority\":\"33554432\",\"/private\":\"8388608\",\"/evidence\":\"67108864\"}\n",
+  "stderr": ""
+}

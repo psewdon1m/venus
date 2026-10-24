@@ -1,0 +1,7 @@
+import assert from 'node:assert/strict';
+import {diagnosticEvents} from 'C:/.projects/venus/.artifacts/p05-ordinary-real470-probe04/outer.mjs';
+const canary='PRIVATE_COOKIE_BODY_SQL_STACK_CANARY';const base={event:'request_failed',request_id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',error_kind:'TypeError',failure_code:'UNKNOWN',source_module:'security',source_line:16,source_column:48};
+assert.deepEqual(diagnosticEvents(JSON.stringify({...base,message:canary,stack:canary,cookie:canary})),[base]);
+for(const patch of [{request_id:canary},{error_kind:canary},{failure_code:canary}])assert.deepEqual(diagnosticEvents(JSON.stringify({...base,...patch})),[]);
+for(const patch of [{source_module:canary},{source_line:1000001},{source_column:'48'}]){const rows=diagnosticEvents(JSON.stringify({...base,...patch}));assert.equal(rows.length,1);assert(!Object.hasOwn(rows[0],'source_module'));assert(!JSON.stringify(rows).includes(canary));}
+console.log(JSON.stringify({status:'PASS_SANITIZER_FINITE_ONLY_NOT_LIFECYCLE',checks:7,Docker_RUN:false}));

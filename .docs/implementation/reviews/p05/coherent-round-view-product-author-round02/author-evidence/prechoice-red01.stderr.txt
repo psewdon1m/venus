@@ -1,0 +1,38 @@
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/topic-round-view.test.ts > coherent private round view final transaction > keeps native bilateral-invitation TD choice available before a conversation exists
+AssertionError: expected { schema_version: 2, …(4), …(1) } to match object { Object (target, conversation, ...) }
+(23 matching properties omitted from actual)
+
+- Expected
++ Received
+
+@@ -7,18 +7,12 @@
+        "offer_advice": false,
+        "respond_topic": false,
+      },
+      "round_actions": {
+        "accept_action": false,
+-       "choose_dare": true,
+-       "choose_truth": true,
++       "choose_dare": false,
++       "choose_truth": false,
+        "finish": false,
+      },
+    },
+-   "target": {
+-     "action": null,
+-     "choice": null,
+-     "invitation": {
+-       "state": "active",
+-     },
+-   },
++   "target": null,
+  }
+
+ ❯ apps/api/src/topic-round-view.test.ts:42:400
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+

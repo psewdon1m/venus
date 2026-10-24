@@ -1,24 +1,38 @@
 # Venus · Поэтапный план реализации и контроль переходов
 
-**Версия:** 1.0.0 · **дата:** 2026-10-18 · **владелец:** Engineering / Product / QA / Operations.
+**Версия:** 2.0.0 · **дата:** 2026-10-19 · **владелец:** Engineering / Product / QA / Operations.
 
-**Статус:** предлагаемый порядок реализации на основании спецификации 1.0.0. Создание этого плана не закрывает ADR и не означает прохождение какого-либо гейта. Новые процедуры и пороги этого документа имеют статус `[PROPOSED]` до принятия ответственными за соответствующий этап.
+**Статус:** действующий standalone/local-pilot scope по прямому решению владельца от 2026-10-19; реализация и гейты требуют отдельных доказательств. Численные профили измерений, явно помеченные `[PROPOSED]`, принимаются до запуска измерений. Решение scope не переводит этапы в PASS.
 
 ## 1. Исходная точка и границы плана
 
-Сейчас доступны девять предметных спецификаций, схемы, policy RE-1, 12 черновых карточек, визуальные референсы и Python-инструменты проверки. Приложение, Git-репозиторий, CI и развёртывание отсутствуют. Результаты статических проверок описаны в [отчёте](VALIDATION_REPORT.md); они не подтверждают работу будущего приложения.
+P00–P03 имеют исторические принятые ревизии. P04 прошёл технический review, но [предметная рецензия всех 450 карточек](implementation/evidence/Venus_P04_FULL_REVIEW_450_2026-10-19.md) вынесла **HOLD**: есть EDIT/RECONTEXT/MOVE_TO_RULES/REPLACE и P0. До исправлений, повторного контентного принятия и пересборки reviewed pack полный EXIT-P04 не закрыт. Точные текущие статусы — в [реестре](implementation/status.md).
 
-План организует исполнение требований и не меняет [порядок авторитетов](README.md), [продуктовую рамку](01_PRODUCT_VISION.md), [архитектуру](02_TECHNICAL_ARCHITECTURE.md) или нормативные source snapshots. При расхождении применяется процедура DIV из оркестратора. Новое продуктовое решение оформляется ADR, а не скрытой правкой критерия приёмки.
+Venus — самостоятельная платформа на одном хосте, без зависимости от Exocortex, внешнего Updater и Neptune/Gryphon/Wyvern/Window. Нужные механизмы реализуются внутри проекта. Прямое решение владельца имеет приоритет над прежними central-профилями; основание и совместимость описаны в [ADR-019](adr/ADR-019-standalone-local-pilot.md) и [профиле пилота](STANDALONE_PILOT.md). Неизменяемые исходные snapshots, P00-контракты, старые отчёты и ID сохраняются как историческое основание; применимость требований переоценивается явно, без их скрытой перезаписи.
 
-Оригинальные **G0–G5** сохраняют значение из [CI и релизов](05_CI_QUALITY_AND_RELEASES.md). Для этапов исполнения ниже используются **P00–P11**, для их выходных проверок — **EXIT-P00–EXIT-P11**. Закрытие технического этапа не равно разрешению публично включить функцию.
+**Текущий принимаемый объём — локальный Docker-пилот для приглашённых друзей:** Rooms + три Games, затем встроенный update/restore, Cinema и оба варианта Calls. Вход всегда требует отдельного явного подтверждения 18+. Юридические документы используют маркированные mock-значения; это не подтверждение юридической готовности публичного сервиса. P08 Music отложен до выбора контента владельцем; P10 mobile отложен по приоритету. Они не получают PASS за исключение из текущего объёма.
 
-**Первый публичный объём:** G1 — комнаты и Games со всеми тремя режимами. Music, Cinema, мобильная публикация и Calls добавляются отдельными поставками. Часть работ разрешено вести параллельно по графу зависимостей; каждое публичное расширение повторно проходит релизный и эксплуатационный гейты.
+Оригинальные **G0–G5** и **P00–P11** сохраняют ID. Отчёт обязан указывать профиль `standalone-local-pilot-v2`; локальный EXIT не означает production/external-network readiness. Домен `venus.shmoza.net`, Cloudflare и будущие certbot-файлы `/etc/letsencrypt/live/venus.shmoza.net/` — планируемая конфигурация, не существующие deployment-факты. Привязка DNS, публичный TLS и production-host не блокируют локальный гейт и отдельно нужны перед внешним запуском.
+
+### 1.1. Изменения v1 → v2 и сохранение истории
+
+Исходный v1.0.0 сохранён Git-историей файла; исторические отчёты проверяются по своим исходным SHA. Прежние критерии не переименовываются в успешные и не удаляются из результатов.
+
+| Решение владельца 2026-10-19 | Что заменено в v1 | Действие v2 |
+|---|---|---|
+| Самостоятельный Venus | P06/P07 central Parts/Part13 enrollment, external Updater, shared agents | внутренние update/backup/observability; отдельная матрица применимости 118 исходных problem IDs |
+| Все испытания локально в Docker | обязательный target VPS, внешний HTTPS/UDP и внешний клиент для текущего EXIT | локальный воспроизводимый deployment/network/media профиль; production claims отложены |
+| Mock legal для приглашённых друзей, 18+ обязательно | реальный оператор/оферта как вход P05 пилота | явный 18+ admission и versioned mock notices; публичная юридическая готовность не заявляется |
+| Один хост, внешний SFU не планируется | отдельно обслуживаемый LiveKit как обязательная архитектура P09 | встроенный media server на том же хосте принят отдельным сообщением владельца; реализация выбирается по аудиту/прототипу |
+| Calls общие и приватные | условность private pair Calls в P11 | оба ACL/permission/revocation набора обязательны |
+| Music ожидает решения, mobile позже | ожидание обязательного завершения P08/P10 в текущем проходе | `DEFERRED_OWNER`; запрет готовности/поддержки без собственных evidence |
+| Host-file export, внешнее резервирование вне Venus | external helper/ZIP receipt как обязательный update handoff | атомарный host-file backup/restore с проверкой целостности; копирование файла вне ответственности Venus |
 
 ## 2. Как принимается переход между этапами
 
 ### 2.1. Состояния и ответственность
 
-У этапа есть состояния `NOT_STARTED → IN_PROGRESS → IN_REVIEW → PASSED`. Незакрытая зависимость даёт `BLOCKED`, проваленная проверка — `FAILED`. Потеря актуальности доказательств после изменения даёт `REOPENED`; прежний успешный отчёт сохраняется в истории.
+У этапа есть состояния `NOT_STARTED → IN_PROGRESS → IN_REVIEW → PASSED`. Незакрытая зависимость даёт `BLOCKED`, проваленная проверка — `FAILED`. Прямое исключение этапа владельцем из текущей поставки даёт `DEFERRED_OWNER`; это состояние не равно PASS и не разрешает объявлять его G-гейт пройденным. Потеря актуальности доказательств после изменения даёт `REOPENED`; прежний успешный отчёт сохраняется в истории.
 
 У каждой отдельной проверки результат `PASS`, `FAIL`, `NOT_RUN` или доказательный `N/A`. `NOT_RUN`, отсутствующий отчёт и `FAIL` блокируют переход. `N/A` допустим только для неприменимого условия с объяснением, областью действия и проверяющим. Нельзя использовать `N/A` вместо обязательной функции выбранного объёма поставки.
 
@@ -51,7 +65,7 @@
 | `.docs/implementation/status.md` | этап, персональный owner, состояние, последний gate report, блокер/следующее действие; общая и модульная готовность раздельно |
 | `.docs/adr/ADR-NNN-*.md` | вопрос, варианты, решение, статус, принимающий, доказательства, миграция/совместимость, откат; существующие ADR-001…009 сохраняют ID |
 | CI artifact `gate-report.json` | gate ID, scope, source SHA, версии контрактов, профиль среды, checks с ID/результатом/evidence, решения reviewer, UTC, блокеры |
-| Release/deployment records | exact tag/digests, policy/pack/schema, применимые central revisions, backup/restore, running version, local/edge/module readiness |
+| Release/deployment records | exact tag/digests, policy/pack/schema, scope revision и применимость исторических central requirements, backup/restore, running version, local/edge/module readiness |
 
 Для одного требования допустимо несколько проверок. Для неприменимого требования нужна явная запись с причиной. В CI проверять полноту этой связи для затронутого объёма; строка в таблице сама по себе не доказывает поведение.
 
@@ -67,18 +81,20 @@
 | P03 | Реальный Relationship Engine и согласия | P01 + контракты P02 | EXIT-P03 |
 | P04 | Reviewed каталог и покрытие игровых профилей | P00; финальный coverage требует P03 | EXIT-P04 |
 | P05 | Полный Rooms + Games в интеграционной среде | P02 + P03 + P04 | EXIT-P05 / функциональная проверка G1 |
-| P06 | Подписанный выпуск, установка, update/restore/rollback | P01; финальная проверка на P05 | EXIT-P06 / release gate |
-| P07 | Проверенный сервер и ограниченный запуск Rooms + Games | P05 + P06 | EXIT-P07 / G1 в эксплуатации |
-| P08 | Лицензированная синхронная Music | P02 + P07 для публичного включения | EXIT-P08 / G2 |
-| P09 | Desktop Cinema с A/V через внешний SFU | P02 + P07 для публичного включения | EXIT-P09 / G3 |
-| P10 | Проверенная мобильная публикация | P09 + отдельные Android/iOS исследования | EXIT-P10 / G4 |
-| P11 | Calls и совместная работа с Cinema | P09 + отдельный контракт Calls | EXIT-P11 / G5 |
+| P06 | Самостоятельный подписанный выпуск, встроенный update и host-file restore/rollback | P01; финальная проверка на P05 | EXIT-P06 / release gate |
+| P07 | Проверенный локальный Docker-стенд и ограниченный пилот Rooms + Games | P05 + P06 | EXIT-P07 / G1 в эксплуатации |
+| P08 | Music: DEFERRED_OWNER до выбора каталога | P02 + P07 для публичного включения | EXIT-P08 / G2 |
+| P09 | Desktop Cinema с A/V, весь транспорт на одном хосте | P02 + P07 для публичного включения | EXIT-P09 / G3 |
+| P10 | Mobile: DEFERRED_OWNER по приоритету | P09 + отдельные Android/iOS исследования | EXIT-P10 / G4 |
+| P11 | Общие и приватные парные Calls, совместная работа с Cinema | P09 + отдельный контракт Calls | EXIT-P11 / G5 |
 
-Контентное планирование P04 и подготовка инфраструктуры P06 начинаются рано. Разработку P03 можно вести на типизированных контрактах без готового UI; итоговые проверки согласий/ACL выполняются с реальной БД и транспортом. Исследования лицензий, SFU и мобильного захвата можно вести с P00. Они не делают G2/G3/G4 пройденными. Публичные G2 и G3 независимы друг от друга.
+Контентное планирование P04 и подготовка инфраструктуры P06 начинаются рано. Разработку P03 можно вести на типизированных контрактах без готового UI; итоговые проверки согласий/ACL выполняются с реальной БД и транспортом. Исследования лицензий, локального media transport и мобильного захвата можно вести с P00. Они не делают G2/G3/G4 пройденными. Публичные G2 и G3 независимы друг от друга.
 
 Сроки оцениваются после назначения владельцев и исследований. Дата в календаре не заменяет выходной критерий.
 
 ## 4. P00 — Зафиксировать основание реализации
+
+**Исторический baseline:** P00–P03 ниже описывают исходные принятые этапы; central acquisition requirements уже имеют свои historical proofs. Для новых изменений external enrollment не применяется: действует ADR-019 и standalone applicability. Старые PASS не переносятся на новую реализацию без regression.
 
 **Вход:** текущая спецификация. **Ответственные:** Product, Engineering, QA, Privacy/Safety.
 
@@ -163,7 +179,7 @@
 
 **Вход:** EXIT-P02, EXIT-P03, EXIT-P04. **Ответственные:** Frontend / Backend / Product / QA / Privacy.
 
-**Работы и результат:** setup → pre-start review → immutable session → rounds → finish/replay для трёх режимов; приватные настройки, согласие, skip/stop, восстановление и safe errors. UI следует [03](03_VISUAL_DIRECTION.md) и [04](04_UI_UX_AND_INTERACTIONS.md), production artwork имеет подтверждённые права.
+**Работы и результат:** setup → pre-start review → immutable session → rounds → finish/replay для трёх режимов; приватные настройки, согласие, skip/stop, восстановление и safe errors. UI следует принятому кастомному комфортному consumer-направлению и сценариям [04](04_UI_UX_AND_INTERACTIONS.md); исторический операторский стиль central Part01 не применяется. Пилот использует собственные либо допустимые тестовые artwork; происхождение фиксируется.
 
 ADR-005 фиксирует retention в primary и конечный срок хранения backup; ADR-006 — возрастную eligibility/content policy; ADR-007 — включение приватного текстового канала. Если ADR-007 откладывает online private chat, server capability запрещает online `pair_private`, UI явно ограничивает этот сценарий; публичная пара не называется приватной. Такое ограничение фиксируется в scope и product acceptance, не скрывается результатами тестов.
 
@@ -172,51 +188,52 @@ ADR-005 фиксирует retention в primary и конечный срок х�
 1. Все 10 критических E2E сценариев из §8 документа 04 и релевантные CI-R/I/P проходят; три режима завершаются для 2…8 игроков в обоих контекстах на reviewed pack. Проверены общий card ID при разных locale, truth/dare с общей границей риска и собственное «но» второго игрока.
 2. Активная сессия переживает switch вкладок, reconnect и рестарт API; новый человек с совпавшим именем не наследует identity/settings. Stop/decline доступны во время анимации, ожидания согласия и degraded connection; UI честно показывает неподтверждённое сервером действие.
 3. Приватные приглашения, тексты и сообщения не попадают host/посторонним. Если private chat включён — проверены ACL, TTL, отзыв, disconnect и удаление; если выключен — все зависимые карточки сервером недопустимы.
-4. UI проверен на ширинах 320/375/768/1024/1440/1920, малой высоте/landscape, zoom 200%, клавиатуре, reduced motion, RU/EN/TR, desktop Chrome/Firefox/Safari, Android Chrome и iOS Safari. Нет недоступных действий из-за overflow; контраст и hidden-scroll поведения проверены.
-5. ADR-005/006/007 имеют принятые решения, реализованные ограничения и тесты; threat/privacy review закрыт в scope. Публичный каталог и его покрытие соответствуют P04.
+4. `PLAN-P05-LOCAL-UI`: UI проверен на ширинах 320/375/768/1024/1440/1920, малой высоте/landscape, zoom 200%, клавиатуре, reduced motion и RU/EN/TR на закреплённых desktop Chromium/Firefox и WebKit engine в локальном Docker-профиле. Отчёт сохраняет реальные engine/browser versions; WebKit fixture не называется Safari/device-проверкой. Нет недоступных действий из-за overflow; контраст и hidden-scroll поведения проверены. Real Android/iOS/Safari support claims отложены и не считаются пройденными.
+5. ADR-005/006/007 с дополнением ADR-019 имеют реализованные ограничения и тесты; threat/privacy review закрыт в scope. `PLAN-P05-AGE`: 18+ по умолчанию не отмечено, отсутствие/отказ/подделка поля блокируют server admission, подтверждение и версия entry-policy фиксируются минимально. Mock notice маркирован тестовым и версионирован; его принятие не выставляет 18+ автоматически и не выдаётся за реальные legal документы. Каталог и покрытие соответствуют принятой новой ревизии P04.
 
 **Доказательства:** browser matrix, E2E reports, безопасные screenshots, privacy review, принятые ADR, G1 functional report с ограничениями. **Возврат:** остановить новые игровые сессии на проблемном модуле; сохранить доступный выход из активных, при необходимости безопасно завершить их. Вернуть совместимые UI/API/engine/pack как проверенный набор. Публичное включение пока запрещено до P06/P07.
 
-## 10. P06 — Релиз и восстановление до первого публичного запуска
+## 10. P06 — Встроенное обновление и host-file восстановление
 
-**Вход:** каркас P01; финальный кандидат P05. **Ответственные:** Release Engineering / Operator / QA / Security.
+**Вход:** P01 для подготовки; EXIT-P05 для финального кандидата. **Ответственные:** Engineering / QA / Security; владелец подтверждает только реальные секреты при их необходимости. **Scope:** `standalone-local-pilot-v2`.
 
-**Работы и результат:** реализовать [05](05_CI_QUALITY_AND_RELEASES.md), [06](06_DEPLOYMENT_AND_OPERATIONS.md) и применимые central Parts. Получить недостающие обязательные Parts, закрепить exact revisions и определить host-agent/update профиль по Part 13. Материальное расхождение operator model и гостевых комнат разрешить по Part 00 через DIV, если оно применимо.
+**Работы и результат:** подписанный релиз Venus, встроенные operator UI/API и транзакционный update journal. Исполнитель установки/переключения — собственный узкий компонент Venus, с отдельной идентичностью и ограниченным протоколом. Consumer API не получает Docker socket, произвольный shell, доступ к соседним проектам, certbot keys или глобальному ingress. Конкретный способ исполнения и доверительная граница закрепляются до реализации; встроенный UI не означает выдачу привилегий веб-процессу. Exocortex enrollment и внешний Updater не требуются.
 
-Подготовить bootstrap prepare → operator input → install/local verify, доверенную подпись, scoped updater handoff и UI по Part 05 §34. Это отдельная операторская поверхность с ACL. Приложение не получает произвольный shell, Docker socket или доступ к глобальному Nginx. Сборка, проверка и поставка используют один OCI digest.
+**EXIT-P06 / локальный release gate:**
 
-**EXIT-P06 / release gate:**
+1. `PLAN-P06-RELEASE`: qualified tag `venus-vX.Y.Z` связан с exact main SHA, source identity, одним OCI digest, manifest/signature и immutable bundle. Первый service release `venus-v0.0.1`; непродукционные A/B fixtures названы тестовыми. Production private key не находится в Git/image/логах; public verifier и key_id закреплены. Тестовый ключ даёт только fixture result, не факт готовности настоящего signing environment.
+2. `PLAN-P06-INSTALL`: clean install в одноразовом Docker Linux-профиле непривилегирован; app на host loopback, PostgreSQL без host port. Неверные подпись/digest/версия/schema/env/занятый порт/диск блокируют mutation; отказ оставляет healthy A и прежние данные. Тесты независимого читателя подтверждают отсутствие доступа к app internals и БД из непредназначенной сети.
+3. `PLAN-P06-SCOPE`: все 118 исторических Part12 IDs сохранены отдельно; у каждого standalone applicability, причина, новый check ID и PASS либо доказательный N/A. Отсутствие Exocortex даёт N/A только специфичной интеграции, не универсальным требованиям к данным/ACL/восстановлению. Непроверенные public DNS/TLS/UDP — deferred production checks, не локальный PASS.
+4. `PLAN-P06-BACKUP`: согласованный полный PostgreSQL backup с room/game state и encrypted preferences/snapshots создаётся атомарно в owner-only файле в выделенном host-mounted каталоге; manifest содержит format/schema/source/digest/size/time. Запись temp→fsync→rename; неполный файл не объявляется успешным. `.env`, tokens и secret keys исключены; ключи восстанавливаются отдельным защищённым путём. Фактический restore в чистую БД расшифровывает синтетические preferences и подтверждает число/ссылочную целостность записей. Внешнее копирование/хранение этого файла выполняет отдельный механизм вне Venus; его успех не заявляется тестом Venus.
+5. `PLAN-P06-UPDATE-ACL`: только отдельная operator identity может create/confirm/apply/cancel/recover update; host комнаты, участник и чужой origin получают отказ. Запрос принимает только проверенный release identity, не shell/path/URL произвольной команды. Один устойчивый job_id, lock и фазовый журнал переживают reload/API502/перезапуск исполнителя; повторный apply не запускает вторую мутацию. Mandatory fresh backup проверен до изменения. Недостаток диска/прав, corrupt/truncated файл, tar traversal/links/oversize и replay/downgrade signatures имеют отрицательные тесты.
+6. `PLAN-P06-FAULTS`: версия A с данными обновляется в B на точном image; сбои download/pull, backup, migration, health и restart на каждой durable фазе имеют предопределённый исход. До mutation остаётся A; после mutation выполняется совместимый recovery с сохранением исходной ошибки и отдельного rollback outcome. Предыдущий image доступен offline; incompatible schema запрещает слепой image downgrade; новая попытка требует явного решения по незавершённому job.
+7. `PLAN-P06-MONOTONIC`: withdrawal/deletion ledgers живут на отдельном защищённом persistent host volume, не откатываемом вместе с DB/backup. Restore старой БД с более новым ledger повторяет удаления/отзывы до serving; revoked card и закрытые/истёкшие room relations не оживают. Missing/corrupt/regressed ledger блокирует serving и recovery; тест включает старый DB backup и новый ledger. Обычный restart не восстанавливает backup автоматически.
+8. `PLAN-P06-RECOVERY`: до испытаний зафиксирован recovery profile; результат содержит измеренные длительность, backup age и подтверждённую write boundary. Контролируемый local drill требует нулевой потери данных, зафиксированных в согласованном backup; записи после backup отражены отдельно и не скрываются. Допустимые эксплуатационные RPO/RTO пока не утверждены: локальный drill не объявляется их SLA. Реальные ключи, опубликованные assets и production deployment имеют отдельные статусы, без вымышленных успешных настроек.
 
-1. Полный pipeline qualified tag `venus-vX.Y.Z` сверяет exact commit `main`, версию, image digest, signed manifest и immutable bundle. Первый service release — `venus-v0.0.1`; обычный `v0.0.1` запускает только проверки. Signing key доступен исключительно protected job, bootstrap содержит только public verifier.
-2. На одноразовом production-like Linux стенде проверены clean install, ошибочные подпись/digest/version/env/port и отсутствующая зависимость: отказ до runtime mutation. Venus не устанавливает и не reload-ит Nginx; app bind только host loopback, БД закрыта.
-3. Все активные ID закреплённого Part 12 имеют отдельные `PASS`/доказательные `N/A`. В текущем snapshot их 118; актуальный список определяется exact upstream revision. Release evidence и ещё не выполненные public DNS/TLS/UDP probes не смешиваются.
-4. Через тот же builder проверен стандартный full backup: согласованное состояние БД/комнат, encrypted preferences/snapshots и предусмотренные данные. Нет `.env`, токенов и secret keys; восстановление ключей обеспечено отдельной зашифрованной операторской процедурой. Restore drill действительно расшифровывает и восстанавливает синтетические данные.
-5. Update UI требует операторское подтверждение и сохранение того же ZIP по Part 05 §34, затем сверяет checksum/receipt и повторно использует job ID после reload/502. Ограничение reference backend 128 MiB учтено; превышение блокирует update до решения, а не выключает backup gate.
-6. На стенде старая версия A с данными обновляется на кандидат B. Внедрены сбои pull, migration, health и рестарт updater; доказан допустимый возврат и сохранены исходная ошибка и исход recovery. Проверены offline previous image, совместимость Compose/env/schema и отсутствие слепого повторного apply. Для первого релиза A — явно обозначенная тестовая предыдущая сборка, не вымышленный публичный релиз; с последующих релизов обязательны все поддерживаемые исходные версии.
-7. Согласованы RPO/RTO и последствия restore; измеренный recovery укладывается в эти границы. Отдельно проверено восстановление после рестарта helper с исходным операторским ZIP того же digest согласно Part 05. Невозможность безопасного возврата блокирует выпуск миграции.
-8. После публикации immutable assets доступны из чистой неавторизованной среды; проверены подпись, canonical URLs и byte identity. Report привязан к опубликованному кандидату, а не к повторно собранному похожему image.
+**Доказательства:** exact manifests/digests, source-bound Docker test reports, signing negatives, backup file manifest, full restore/ACL/fault-injection/ledger reports, per-ID applicability и два независимых gate reports. **Возврат:** отклонить/отозвать кандидат для новых установок; не переписывать выпущенные tag/assets. Safe recovery возвращает совместимый image/config/schema, сохраняет новые удаления/отзывы. Если безопасный исход не доказан — serving закрыт, job остаётся recovery-failed, данные и журнал сохранены.
 
-**Доказательства:** release manifest/signature, SBOM/provenance, полный known-problems report, install/upgrade/restore/fault-injection reports, compatibility matrix и backup-scope audit. **Возврат:** до публикации — отклонить кандидата. После публикации — отозвать discovery/разрешение новых установок, опубликовать исправление новой версией; прежние tag/assets не переписывать. Уже установленные экземпляры восстанавливать процедурой §17.
+## 11. P07 — Локальная Docker-инфраструктура и пилот G1
 
-## 11. P07 — Проверенный сервер и ограниченный запуск G1
+**Вход:** EXIT-P05 и EXIT-P06. **Ответственные:** Engineering / QA / Product. **Scope:** локальный стенд, синтетические тесты и приглашённые друзья; production не заявлен.
 
-**Вход:** EXIT-P05 и EXIT-P06. **Ответственные:** Operator / QA / Product / Privacy.
+**Работы и результат:** воспроизводимый Compose одного хоста с изолированными сетями, persistent volumes, встроенными update/backup, локальными health/log/metrics и runbooks. Другие Exocortex-сервисы не требуются. Тестовый reverse proxy/TLS при необходимости принадлежит только стенду и не меняет системный ingress. Для `venus.shmoza.net` подготовить неактивный deployment profile с Cloudflare и стандартными certbot paths; существование DNS/сертификата не выдумывать.
 
-**Работы и результат:** развернуть exact signed release на выбранном host, проверить persistent volumes, secrets, updater enrollment и dependency matrix. Оператор отдельно проверяет named vhost contract, `nginx -T`, `nginx -t` и активирует его после loopback readiness. Сначала техническая приёмка с синтетическими identities, затем ограниченная аудитория согласно принятой возрастной/приватностной политике.
+**EXIT-P07 / G1 локального пилота:**
 
-**EXIT-P07 / G1 в эксплуатации:**
+1. `PLAN-P07-REPRO`: из чистого checkout/toolchain/lock воспроизводится exact image на Docker Linux; deployment record содержит версии Docker/Compose/ОС, machine resources, network/volumes, running digest/schema/policy/pack и scope. После остановки/пересоздания контейнеров состояние восстанавливается без ручной правки БД.
+2. `PLAN-P07-E2E`: восемь изолированных browser contexts проходят admission18+, RU/EN/TR, три режима, consent/decline, private chat ACL/TTL, reconnect, restart и finish/replay. Девятый участник получает отказ. Негативные клиенты не читают чужие настройки/чат; unsupported модули честно unavailable. Один Docker-хост не называется восемью физическими устройствами.
+3. `PLAN-P07-LOAD`: до запуска зафиксированы число комнат/клиентов, длительность, churn, CPU/RAM/storage/egress и thresholds; отчёт содержит фактическую машину, saturation и безопасный admission limit. Проверяются exhausted room/session limit, disk canary, DB outage, health и локальные alerts. Лимит не экстраполируется на неизвестный production-host.
+4. `PLAN-P07-RESTORE`: actual full backup file стенда восстанавливается в отдельную чистую среду, затем новый ledger и key recovery проверяются до admission. Проверены previous-image recovery и безопасная остановка первой установки; журнал сохраняет ошибки и measured recovery. Runbook воспроизводит независимый агент, не автор.
+5. `PLAN-P07-PILOT`: функциональный наблюдаемый local soak с синтетическими identities имеет заранее зафиксированный профиль длительности/числа законченных сессий и consent/privacy invariants. Предлагаемый базовый профиль `[PROPOSED]` — 60 минут, 8 concurrent clients и не менее 10 полных игровых сессий; фактический более короткий прогон его не закрывает. Участие друзей записывается только если действительно состоялось и отдельно от automation. Прежний 48-часовой production-пилот не считается исполненным и отложен до соответствующего запуска.
 
-1. Deployment record содержит host/release identity, running digest, DB schema, central revisions, module scope и operator/time. External HTTPS/SNI/цепочка сертификата, WSS, deep links/assets и отрицательный доступ к backend/DB извне проверены с независимого клиента.
-2. На этом сервере проходят реальные 8 участников, отказ девятому, RU/EN/TR, reconnect, restart, три игры, private ACL и consent. `games=available`; ещё не включённые media/music/calls показывают фактическую недоступность.
-3. На production-like стенде пройден measured load profile: комнаты, 8 участников/комнату, длительность, churn, CPU/RAM/egress/storage и пороги приняты заранее. Приложение имеет измеренный лимит одновременных комнат. На target host проверены лимит/отказ при исчерпании, дисковый canary и alerts; 8 участников не считаются доказательством неограниченной нагрузки.
-4. Проверен restore из backup target deployment на изолированной среде; готов предыдущий совместимый image/config. На чистой установке без прежней версии определено безопасное отключение доступа с сохранением данных. Оператор назначен и имеет проверенный runbook инцидента/восстановления.
-5. Предлагаемый стартовый период наблюдения — минимум 48 часов и 10 завершённых игровых сессий на ограниченной аудитории. До старта этот профиль принят и зафиксирован. За период нет открытого release-blocking дефекта и нарушения приватности/consent; метрики, подтверждённые инциденты и обращения разобраны без сбора интимного контента.
+**Доказательства:** source-bound local deployment/negative-network/browser/load/soak/restore reports; scope claims matrix. **Возврат:** выключить новые admissions/затронутый модуль, сохранить безопасный выход и данные, выполнить проверенный P06 recovery; повторить затронутые проверки. Public DNS/TLS/WSS/Cloudflare routing, реальная внешняя сеть и production capacity остаются отдельным future deployment gate.
 
-**Доказательства:** deployment-readiness record, external smoke, нагрузочный отчёт, restore evidence, pilot report и решение о расширении. **Возврат:** прекратить новые admissions/сессии затронутой функции, при необходимости отключить serving, затем вернуть проверенный совместимый набор. Утечка/consent-инцидент требует revoke и containment; возврат старого image сам по себе инцидент не закрывает. Неуспешный пилот возвращает этап в `FAILED`, массовый запуск запрещён.
 
-## 12. P08 — Music / G2
+## 12. P08 — Music / G2 · DEFERRED_OWNER
 
-**Вход:** EXIT-P02 для разработки; EXIT-P07 и повтор P06/P07 для публичного расширения. **Ответственные:** Product/Rights / Media / Frontend / QA.
+**Текущее решение:** владелец ещё выбирает музыку; этап `DEFERRED_OWNER`, не PASS. Разрешены архитектура и изолированные собственные fixtures, но не включение реальных треков и не ложный rights approval.
+
+**Вход при возобновлении:** EXIT-P02 для разработки; локальный EXIT-P07 и повтор P06/P07 для включения в пилот. **Ответственные:** Product/Rights / Media / Frontend / QA.
 
 **Работы и результат:** закрыть ADR-004; лицензированный asset registry, ограниченный stream endpoint с HTTP Range, authoritative tuple/clock sync, host transport/queue, local volume и один общий output для `in_person`. Реализовать pause policy при Cinema, autoplay recovery и серверное отключение отозванного трека.
 
@@ -229,25 +246,28 @@ ADR-005 фиксирует retention в primary и конечный срок х�
 
 **Доказательства:** license register, CI-M/drift reports с профилем среды, G1 regression, release/deployment records. **Возврат:** сервером остановить music/stream access, отозвать проблемные assets и очистить queue references; игры и комнаты сохраняют работоспособность. При code rollback использовать совместимый schema/catalog набор, права на отозванный трек не восстанавливать.
 
-## 13. P09 — Desktop Cinema / G3
+## 13. P09 — Desktop Cinema на одном хосте / G3
 
-**Вход:** EXIT-P02 для разработки, ADR-001/008/009; EXIT-P07 и повтор P06/P07 для публичного расширения. **Ответственные:** RTC / Infrastructure / QA.
+**Вход:** EXIT-P02 для подготовки; локальный EXIT-P07 и совместимый P06 для интеграции. **Ответственные:** RTC / Engineering / QA.
 
-**Работы и результат:** отдельно provisioned LiveKit, закреплённые версии/grants, publisher lease, desktop tab video+audio capture, track-ended/revoke, A/V diagnostics и viewer controls. UDP/ICE exposure подтверждает оператор; TURN вводится только через отдельное сетевое решение. Venus bootstrap не устанавливает SFU неявно.
+**Работы и результат:** весь media/signaling transport принадлежит Venus и размещается на одном хосте. Внешний SFU/провайдер не является зависимостью. Владелец отдельно принял «Встроенный медиасервер на том же хосте» (чат 2026-10-19): это отдельный hardened process/service внутри Venus Docker deployment, с version/digest pins, совместимостью и local media readiness. Конкретная реализация выбирается после source/license/security аудита и прототипа; Hermes — возможный двухсторонний reference, не доказательство готового 8-party сервера. Решение фиксирует resource bounds, codec/browser support, sessions/grants/lease/revoke и сетевой профиль. Сторонние компоненты закреплены по версии/digest и лицензии.
 
-**EXIT-P09 / G3:**
+**EXIT-P09 / локальный G3:**
 
-1. `CI-C-001…003`: реальный host и 7 viewers на независимых устройствах/браузерных экземплярах получают разрешённые video+audio; guest publish запрещён; close/revoke и одновременная попытка второго publisher корректно завершаются.
-2. Измерены нормальная, throttled и UDP-blocked сети с внешними клиентами. Для принятого обычного профиля исходные proposed targets 02/ADR-009: p95 A/V offset ≤120 ms, viewer skew ≤500 ms, glass-to-glass ≤2 s. Методика, длительность и sample count закреплены до измерений. Недостижение требует изменения scope/ADR и повторной приёмки; автоматического `PASS с DEGRADED` для обещанного supported профиля нет.
-3. Проверены no-audio, source ended, permission denied/revoked, DRM, неверный ICE/public IP и недоступный SFU. UI показывает точную причину; protected capture не обходится, `live` без A/V-подтверждения не выдаётся за полноценный показ со звуком.
-4. VPS benchmark подтверждает заданный предел комнат и 1+7 media load по CPU/egress/loss/jitter; signaling health не подменяет media readiness. Контракт LiveKit/Venus versions и сеть зафиксированы.
-5. Cinema + Games проверены; при включённой Music по умолчанию срабатывает общая pause policy. Повторены P06/P07 и регрессия всех включённых модулей.
+1. `CI-C-001…003`, `PLAN-P09-ACCESS`: один publisher и 7 viewer browser contexts на локальном стенде получают разрешённые video+audio; guest publish/второй publisher/чужая room/подделанный token запрещены. Close/revoke/leave обрывают доставку; сохранённый старый grant и reconnect не восстанавливают отозванную публикацию.
+2. `PLAN-P09-AV`: нормальный, throttled и UDP-blocked профили моделируются в Docker/browser сети. Методика захвата/часов, warmup, длительность и samples закреплены до измерений. Сохраняются исходные proposed targets ADR-009: p95 A/V offset ≤120 ms, viewer skew ≤500 ms, glass-to-glass ≤2 s для принятого обычного локального профиля. Synthetic AV source отличается от реального разрешённого browser tab capture; поддерживаемый desktop capture требует фактического source video+audio, не одного signaling.
+3. `PLAN-P09-FAILURE`: no-audio/source-ended/permission-denied/revoked/capture-blocked/transport-unavailable дают точное состояние и безопасный выход; protected content не обходится. Нет заявления полноценного live со звуком без A/V доказательства. Restart/lease expiry/client disappearance прекращают выдачу устаревшим получателям.
+4. `PLAN-P09-CAPACITY`: на том же хосте измерены 1+7 media load, CPU/RAM/egress/loss/jitter и лимит одновременных media rooms, включая конкуренцию с Games/БД. Версии и профиль зафиксированы; room admission уважает измеренные пределы. Локальный результат не доказывает внешнюю ICE/NAT/TURN-доступность.
+5. Cinema + Games, pause-policy Music при её фактическом включении и P06/P07 regression пройдены. В отсутствие Music её совместная проверка `DEFERRED_OWNER`, а не фактический PASS; общий локальный scope явно перечисляет включённые модули.
 
-**Доказательства:** device/network/latency matrix, token/lease/revoke tests, host benchmark, external ICE/UDP proof и release/deployment records. **Возврат:** прекратить publish grants и публикации Cinema, пометить модуль unavailable. SFU откатывается своим владельцем и собственным планом, независимо от Venus; не менять общий ingress или версии живых media dependencies вслепую.
+**Доказательства:** transport ADR/license audit, actual AV captures/latency samples, ACL/revocation/replay negatives, browser/network matrix, single-host resource report. **Возврат:** серверно прекратить publish grants и связанные media sessions, отключить Cinema; вернуть совместимый Venus-owned transport/client/API. Самостоятельный transport не выдаётся за внешний сервис; rollback не восстанавливает старые grants и не затрагивает соседние проекты. Public ICE/NAT/Cloudflare/UDP остаются future deployment checks.
 
-## 14. P10 — Мобильная публикация / G4
 
-**Вход:** EXIT-P09; ADR-002 и ADR-003. **Ответственные:** Android / iOS / RTC / QA / Product.
+## 14. P10 — Мобильная публикация / G4 · DEFERRED_OWNER
+
+**Текущее решение:** мобильная публикация отложена владельцем; реальных устройств пока нет. `DEFERRED_OWNER`, не PASS. Mobile layout проверки P05 не означают native capture support.
+
+**Вход при возобновлении:** EXIT-P09; ADR-002 и ADR-003. **Ответственные:** Android / iOS / RTC / QA / Product.
 
 **Работы и результат:** отдельные Android/iOS capture pipelines, permission/distribution flow и матрица OS/device/source. Проверять возможность реального audio capture до обещаний поддержки. Обнаруженное ограничение платформы остаётся ограничением продукта, даже при наличии готовых кнопок.
 
@@ -262,35 +282,38 @@ ADR-005 фиксирует retention в primary и конечный срок х�
 
 ## 15. P11 — Calls / G5, отдельная последующая фаза
 
-**Вход:** EXIT-P09; отдельный принятый scope/API/ACL/mic-camera/audio-focus контракт Calls. **Ответственные:** Product / RTC / Frontend / Privacy / QA.
+**Вход:** EXIT-P09; scope обоих вариантов принят владельцем 2026-10-19, детальный API/ACL/mic-camera/audio-focus контракт требуется до реализации. **Ответственные:** Product / RTC / Frontend / Privacy / QA.
 
-**Работы и результат:** видеосвязь, явные mic/camera permissions, mute/device switching, адаптивный Cinema split view, echo cancellation, reconnect и отзыв grants. Публичные Calls и приватные pair calls имеют разные ACL; private chat G1 не превращается автоматически в приватный видеозвонок.
+**Работы и результат:** видеосвязь, явные mic/camera permissions, mute/device switching, адаптивный Cinema split view, echo cancellation, reconnect и отзыв grants. Общие комнатные Calls до 8 участников и приватные pair calls оба обязательны. Они имеют разные ACL, join/grants и media routing; private chat G1 не превращается автоматически в видеозвонок. Используется совместимый Venus-owned single-host transport; Hermes допускается как основа только после аудита. Роль хозяина комнаты не даёт доступа к чужой приватной паре.
 
 **EXIT-P11 / G5:**
 
-1. 8 участников, Calls + Cinema и Calls + Games проходят browser/device/network матрицу в принятом нагрузочном профиле. Показатели качества, длительность, sample count и методика приняты до испытаний; без них гейт не закрывается.
-2. Mic/camera не включаются скрытно, гостевые publish grants минимальны и отзываются; тесты подтверждают отсутствие доступа постороннего к приватной парной связи, если она входит в scope.
+1. Восемь browser contexts общего звонка, отдельные разрешённые pair calls и их одновременная изоляция проходят локальную Docker/browser/network матрицу. Calls + Cinema и Calls + Games входят в принятый нагрузочный профиль одного хоста. Mobile/device и external-network support остаются отложенными claims. Показатели качества, длительность, sample count и методика приняты до испытаний; без них гейт не закрывается.
+2. Mic/camera не включаются скрытно, гостевые publish grants минимальны и отзываются; тесты подтверждают отсутствие доступа постороннего к приватной парной связи, которая обязательно входит в scope. Проверены чужой participant/host, подмена pair/room, replay/rejoin старого token, поздний media frame после revoke и переключение пары: ни signaling, ни audio/video не доступны прежним или посторонним участникам.
 3. Проверены echo/audio focus, keyboard/reflow/zoom/RU-EN-TR, отказ в permissions, возвращение устройств и reconnect; действия mute/leave доступны во всех состояниях.
 4. Пройдены регрессия G1 и всех включённых модулей, P06/P07 для новой поставки.
 
 **Доказательства:** RTC/UX/a11y/security suite, quality/permission reports, release/deployment records. **Возврат:** закрыть call grants и media sessions, отключить Calls; вернуть совместимый клиент/API. Cinema не отключается автоматически, если собственные проверки остаются успешными.
 
-## 16. Реестр решений, которые нельзя закрыть по умолчанию
+## 16. Реестр решений и действующие границы
 
-| Решение | Что должно быть доказано/принято | Последний допустимый рубеж |
+| Решение | Текущий статус / следующее доказательство | Рубеж |
 |---|---|---|
-| ADR-001 | реальный VPS, ICE/UDP/fallback, SFU capacity и независимое обслуживание | до EXIT-P09 |
-| ADR-002 / ADR-003 | Android / iOS A/V capture и честная support matrix | до соответствующего mobile support claim; весь G4 — P10 |
-| ADR-004 | права на каждый способ использования музыкального каталога | до допуска реальных треков/EXIT-P08 |
-| ADR-005 | room-scoped retention, удаление primary/backup, решение о профилях | до реальных персональных данных/EXIT-P05 |
-| ADR-006 | возрастная и контентная eligibility policy, safety review | до public-sensitive card approval; EXIT-P04/P05 |
-| ADR-007 | online private text channel или явное выключение зависимой capability | до EXIT-P05 |
-| ADR-008 | central Part 13: обязательные host agents, версии и readiness | до EXIT-P06; повтор при RTC scope P09 |
-| ADR-009 | media quality/network profile и room sound policy | до EXIT-P09; Music thresholds — отдельная связанная запись до P08 |
-| Central Parts / возможный DIV-VENUS-001 | применимые authoritative revisions, operator/guest совместимость и решение material divergence | до EXIT-P06; при влиянии на контракт — до затронутой реализации |
-| Новые ADR из плана | стек/миграции, fairness/inference критерии, capacity, RPO/RTO и pilot profile | до начала зависимого измерения/мутации |
+| ADR-019 standalone/local-pilot | принято прямым сообщением владельца; тесты реализации ещё требуются | все новые P05–P11 reports |
+| P04 review450 | предоставлен HOLD с покарточными решениями; правки → revision/hash → repeat review → новый reviewed pack/C2 | EXIT-P04; P05 пока зависимо заблокирован |
+| ADR-001/008 прежний external SFU/central agents | superseded только в standalone scope; исторические документы не изменены; новый single-host transport ADR нужен | P06/P09 |
+| ADR-005 retention | room-only, idle24h, primary≤24h и backup≤7d сохранены; внешняя копия host-file вне Venus, граница ответственности явная | P05/P06 |
+| ADR-006 age / mock documents | обязательный отдельный 18+; mock legal разрешён только для приглашённого тестового пилота | P05; public legal gate отдельно |
+| ADR-007 private text | принято; настоящие ACL/lifecycle/TTL tests обязательны | EXIT-P05 |
+| Update authority / signing | встроенный ограниченный исполнитель; реальные ключи при необходимости готовятся защищённо; secret access не выдумывается | P06 |
+| RPO/RTO | эксплуатационные величины ещё не приняты; локальные controlled restore результаты измеряются отдельно | до соответствующего SLA/real restore loss claim |
+| Music / ADR-004 | `DEFERRED_OWNER`, источник ещё не выбран | до реальных audio assets/P08 |
+| Mobile / ADR-002/003 | `DEFERRED_OWNER`, позже | до P10/support claim |
+| Calls | общие + pair приняты; подробные ACL/quality contracts и negatives обязательны | P11 |
+| Production domain/host | `venus.shmoza.net`, Cloudflare, certbot default paths планируются; сервер/DNS ещё не предоставлены | перед внешним deployment, не local EXIT |
 
-По каждому пункту нужен конкретный owner и статус. Отсутствующий нормативный документ, reviewer или право на контент не является доказательством неприменимости.
+По каждому отсутствующему факту сохраняется NOT_RUN/DEFERRED либо конкретный блокер. Новый scope не конвертирует старые FAIL/HOLD и реальные непроведённые испытания в PASS. Отсутствие внешнего Updater/SFU больше не используется как блокер самостоятельного локального Venus.
+
 
 ## 17. Единая процедура остановки и отката
 
@@ -303,15 +326,15 @@ ADR-005 фиксирует retention в primary и конечный срок х�
 | Каталог | прежний допустимый pack digest для новых сессий | pin активных сохранён; опасные/отозванные карточки запрещены независимо от rollback |
 | Engine/policy | совместимая версия для закреплённых snapshots | миграция snapshot не выполняется молча; неподдерживаемые сессии безопасно завершаются |
 | Конфигурация | versioned non-secret config + отдельно защищённый secret recovery | возврат не воскрешает отозванные credentials, scopes или доступ |
-| LiveKit / mobile | независимый dependency rollback / server capability restriction | собственная compatibility matrix, grants отозваны; учтены установленные старые клиенты |
+| Venus-owned media transport / mobile | совместимый component rollback / server capability restriction | собственная compatibility matrix, grants отозваны; учтены установленные старые клиенты |
 
 Feature switch — серверная capability с ACL, audit и versioned config. Он запрещает новые действия на API, а не только прячет кнопку. Отзыв согласия и безопасный выход не блокируются отключением модуля.
 
 ### 17.2. До изменения
 
-1. Записать change ID, target host, текущие/целевые version/digest/schema/policy/pack и ссылку на gate reports.
+1. Записать change ID, local Docker deployment identity (или будущий target host), текущие/целевые version/digest/schema/policy/pack и ссылку на gate reports.
 2. Классифицировать совместимость, требуемые locks/drain и затрагиваемые данные. Назначить оператора восстановления и измеримые health/abort criteria.
-3. Проверить backup/receipt/restore и независимое восстановление secret keys по Part 05/06; наличие файла не считать proof restore. Убедиться в доступности предыдущего image для offline rollback.
+3. Проверить host-file backup/manifest/restore и отдельное защищённое восстановление secret keys по standalone P06; наличие файла не считать proof restore. Текущие deletion/withdrawal ledgers сохраняются вне rollback-единицы; утрата ledgers блокирует serving. Убедиться в доступности предыдущего image для offline rollback.
 4. Для DB использовать expand → совместимый deploy/backfill → проверка → отдельный contract cleanup. Удаление старых колонок допускается отдельным изменением после закрытия support/rollback окна с проверенным restore plan. Само наличие down migration недостаточно.
 
 ### 17.3. При провале
@@ -320,25 +343,27 @@ Feature switch — серверная capability с ACL, audit и versioned conf
 2. При privacy/consent риске немедленно прекратить новые действия и revoke затронутые sessions/grants; при угрозе данным остановить запись. Если отключение не доказанно локально, закрыть затронутое serving.
 3. Определить, произошла ли mutation. Если нет — оставить прежний healthy runtime. Если произошла — выполнить trusted recovery job с проверенным набором image/config/schema/data, сохранив отдельный outcome rollback.
 4. При restore БД остановить записи, зафиксировать границу backup и судьбу записей после неё. Приёмка требует принятого RPO/процедуры reconciliation; потери не скрывать статусом «откат успешен». Обычный restart не является поводом восстанавливать старый ZIP.
-5. Проверить exact running digest/version/schema, local/edge health и затронутые критические сценарии, ACL, revoke и целостность данных. Только после этого открывать admission/запись.
+5. Проверить exact running digest/version/schema, local health и затронутые критические сценарии, ACL, revoke и целостность данных. Только после этого открывать admission/запись.
 6. Если rollback неуспешен — безопасная остановка, явный статус recovery failure, работа по операторскому runbook. Не удалять transaction journal и не маскировать проблему новым apply.
 
 После инцидента: запись причины, regression test, затронутые требования/релизы, обновлённый runbook и решение о повторном гейте. Ни откат, ни исправление не стирают прежние evidence и не заменяют уведомления/действия по принятой incident policy.
 
-## 18. Ближайшие задачи и исходный статус
+## 18. Ближайшие задачи после изменения scope
 
-На момент создания плана исходное состояние было **P00–P11 = NOT_STARTED**. После поручения на P00 подготовлен [рабочий комплект](implementation/README.md); актуальные статусы и блокеры — в [status](implementation/status.md). **G0–G5 не объявляются пройденными этим документом**. Успешные локальные проверки учитываются как отдельные evidence, но не закрывают весь G0.
+1. Сохранить owner decision, ADR-019 и v2 applicability; обновить рабочие статусы/контракты дополнениями без изменения исходных snapshots и P00-архива.
+2. Обработать P04 HOLD: приоритетно P0 YB-1111/YB-1148, затем все покарточные EDIT/RECONTEXT/MOVE_TO_RULES/REPLACE и глобальные замечания. Повторные проверки сохраняют исходный review450 и новый hash-bound результат; количества KEEP недостаточно для ≥100 reviewed/mode.
+3. После EXIT-P04 последовательно P05 → финальный P06 → P07 local Docker. Независимая подготовка P06 и исследование media допустимы раньше, без заявления закрытых входов.
+4. P08 и P10 остаются `DEFERRED_OWNER`; выполнить P09 и P11 с обоими видами Calls в заявленном локальном scope. Для каждого этапа отдельный регулярно обновляемый журнал, фактические тесты, независимый agent review и цикл исправлений до PASS.
+5. Подготовить future production profile для домена, не обращаться к DNS/Certbot/внешним аккаунтам как к уже настроенным. Перед реальным запуском отдельный production gate: оператор/реальные notices, host sizing, public TLS/WSS/ICE и external-network tests.
 
-Первый пакет задач для P00:
+Изменения scope/threshold всегда сохраняют причину, ревизию, затронутые check IDs, совместимость и допустимый rollback. Полностью отложенный этап не закрывается успешным тестом отсутствующей функции.
 
-1. Назначить владельцев и принимающих гейты; принять scope G1 и ограничения отложенных модулей.
-2. Создать traceability/status/ADR реестры с существующими ID и immutable baseline документации.
-3. Разобрать ADR-005/006/007 и недостающие central Parts; явно определить, что блокирует реализацию, контентное ревью и публичный запуск.
-4. Зафиксировать API/WS/DB/private projection contracts, UI flows и исполняемые проверки правил, закрыть EXIT-P00.
-5. Начать P01; параллельно готовить контентные распределения P04 и исследования лицензий/SFU/mobile без заявлений об их готовности.
+## Единый media transport · уточнение владельца 2026-10-19
 
-Каждое дальнейшее изменение плана указывает причину, затронутые этапы/гейты, новые зависимости и влияние на откат. Уменьшение scope либо изменение численного порога не закрывает старый провал автоматически: требуется принятое решение, новая ревизия критериев и повторная проверка.
+Для Cinema, общих Calls до восьми участников и приватных pair Calls применяется один Venus-owned встроенный SFU/media server на том же хосте. Отдельная P2P-ветка и P2P fallback не реализуются. Это прямое уточнение владельца и согласованное техническое решение текущего scope; конкретная SFU-реализация ещё проходит аудит/выбор.
+
+Приватный звонок имеет отдельный media-room namespace, ACL и точный состав из двух участников; хозяин основной комнаты не получает доступ автоматически. Общие Calls разрешают каждому вступившему участнику публиковать только свои mic/camera после явного согласия и минимального grant. Cinema использует отдельный host-only publisher lease. Общий transport не объединяет эти namespaces, permissions или recipients. Negatives должны доказать отсутствие cross-room/cross-pair подписки и публикации, а также запрет stale token/rejoin после revoke во всех трёх сценариях.
 
 ## 19. Связанные документы
 
-[Оркестратор](README.md) · [Продукт](01_PRODUCT_VISION.md) · [Архитектура](02_TECHNICAL_ARCHITECTURE.md) · [Визуальное направление](03_VISUAL_DIRECTION.md) · [UX](04_UI_UX_AND_INTERACTIONS.md) · [CI/релизы](05_CI_QUALITY_AND_RELEASES.md) · [Эксплуатация](06_DEPLOYMENT_AND_OPERATIONS.md) · [Риски](07_KNOWN_AND_EXPECTED_PROBLEMS.md) · [Relationship Engine](08_RELATIONSHIP_ENGINE.md) · [Контентный pipeline](09_CARD_AUTHORING_AND_AUTOMATION.md).
+[Standalone profile](STANDALONE_PILOT.md) · [ADR-019](adr/ADR-019-standalone-local-pilot.md) · [Оркестратор](README.md) · [Продукт](01_PRODUCT_VISION.md) · [Архитектура](02_TECHNICAL_ARCHITECTURE.md) · [Визуальное направление](03_VISUAL_DIRECTION.md) · [UX](04_UI_UX_AND_INTERACTIONS.md) · [CI/релизы](05_CI_QUALITY_AND_RELEASES.md) · [Эксплуатация](06_DEPLOYMENT_AND_OPERATIONS.md) · [Риски](07_KNOWN_AND_EXPECTED_PROBLEMS.md) · [Relationship Engine](08_RELATIONSHIP_ENGINE.md) · [Контентный pipeline](09_CARD_AUTHORING_AND_AUTOMATION.md).

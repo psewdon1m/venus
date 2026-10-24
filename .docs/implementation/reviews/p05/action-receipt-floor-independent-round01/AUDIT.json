@@ -1,0 +1,65 @@
+{
+  "status": "PASS_STAGED_METHOD_ONLY",
+  "created_utc": "2026-10-23T03:56:43.853087+00:00",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "author_index": {
+    "path": ".docs/implementation/reviews/p05/action-receipt-floor-author-round01/INDEX.json",
+    "sha256": "fb9c4c1c8bc8c39685a02c268af478eb9294e58c3142583309713af81dc746ec",
+    "verified_children": 3
+  },
+  "proof_pins": {
+    "proof_sha256": "a0853eed87bec20227218e161db78a73201de9457f45002364d39c794c1b4536",
+    "diff_sha256": "43764268b4312808baaa807c668745f2dc8a1c6958dce0681e2a33e6a5294f5d",
+    "parent_diag04_driver_sha256": "58ffaa688a9b40a54e91ea17d8540d7836232ca6c832df9ce9e9fdf831e0a72f",
+    "candidate_reconstructed_sha256": "47cac744e6a72ab79d4f6c2c7f4844b3e4f76c1a2060ab13f853c4f9b142179d",
+    "all5_substitutions_and_reverse_exact": true,
+    "parentflags_method_review": "d69699c02d405c582345740c572e439f4f4cc06aaaafbdd2888befad3bf9d460"
+  },
+  "actual_finding": {
+    "raw_report_sha256": "fddd32a236e3229fe82898ddff1e7e9c417fd4a837238859c32496f453baa84e",
+    "raw_failure_INDEX": "c6731c5cb586a6164ac27ce7b1c8e31d4bd3f73ee304f476219c4cebc03a0e9a",
+    "pointers": [
+      "/action_preparation_phases/0",
+      "/mutation_dispatches/125",
+      "/private_preparation/16",
+      "/private_preparation/17"
+    ],
+    "receipt_revisions": [
+      31,
+      32
+    ],
+    "action_phase_finished_monotonic_ms": 327555.544866,
+    "following_input_and_offer_preparation_ms": [
+      327624.359358,
+      327729.932057
+    ],
+    "following_scope_hash": "82c68adf4c0ef8568e387f052d544d1902f376ed31938ef3471494a48e0dcdb3",
+    "following_scope_rev_independently_recomputed": 31,
+    "known32_scope_hash_independently_recomputed": "3f425df99514435adb94bcb6552004e8caf0531b3f0d09fd026fffa8302c2037",
+    "statement": "OriginalacceptActionsUi updatesminRev fromactualexactreceipts andreturns32 aftercoherentGame; private_activesetup discardedreturn andnextprivatepreparation used31. This isproven missingnecessaryprerequisite floor, notproof ofunderlying locator.click failurecause."
+  },
+  "delta_assessment": {
+    "sites": 3,
+    "literal_substitutions": 5,
+    "1": "private_activesetup retains actionReady fromexistingacceptActionsUi onlywhenrequires_action_consent,passes same session/round/minRev to advice-input existingfillPrivate;else{}preservesoldpath.",
+    "2": "fillPrivate adds optionalexpected={} andpasses directlytoexistingnormalPrivateReady,notnewread/scopegrant.",
+    "3": "samePrior preparePrivateClick retains minRev=Math.max(currentwantedfloor,prior.expected.rev),SAMEprior.phase_deadline_monotonic_ms; preventsdisappearanceofknownfloorbetweenfillandsubmit.",
+    "constraints": "Onlystrengthens necessaryrevisionprecondition. Same8spreparation,12sactionphase,5slease/250min, originalobserver/privateDom,preparedceilings, oneoriginalclick, 51cells/459aggregate/firstsamples/oracles/flagsunchanged. No newloop/phase/helper/API/DOMread/wait/retry/deadline extension/domainchange. Candidateotherwiseexactparentbytes.",
+    "no_causal_overclaim": "Strongerfloor mayproperly failpreparationwhenactualUI stale; cannotpromiseUIpasses orclaimgenericWebKitclickcausefixed."
+  },
+  "admission_boundary": {
+    "staged_only": true,
+    "future_A32_runtime_created": false,
+    "new_binding_image_ACK_created": false,
+    "diag04_NOT_RUN": true,
+    "new_producer_source_image_and_resource_review_required": true,
+    "old03results_no_newruntimecarry": true,
+    "backend_full06_untouched": true
+  },
+  "findings": [],
+  "own_readonly_exit": 0,
+  "own_tests_Docker_APP_helper_runtime_producer_Git_mutations": 0,
+  "stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

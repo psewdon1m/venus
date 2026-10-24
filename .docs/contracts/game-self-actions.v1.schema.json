@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.invalid/contracts/game-self-actions.v1.schema.json",
+  "title": "Recipient-only own game action display metadata v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "room_id",
+    "member_id",
+    "session_id",
+    "round_id",
+    "game_rev",
+    "room_rev",
+    "server_time",
+    "expires_at",
+    "session_actions",
+    "round_actions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "room_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "member_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "session_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "round_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "game_rev": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "room_rev": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "server_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "session_actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pause",
+        "stop",
+        "abort",
+        "resume",
+        "advance",
+        "neutral_reset",
+        "neutral_reset_aborts_game"
+      ],
+      "properties": {
+        "pause": {
+          "type": "boolean"
+        },
+        "stop": {
+          "type": "boolean"
+        },
+        "abort": {
+          "type": "boolean"
+        },
+        "resume": {
+          "type": "boolean"
+        },
+        "advance": {
+          "type": "boolean"
+        },
+        "neutral_reset": {
+          "type": "boolean"
+        },
+        "neutral_reset_aborts_game": {
+          "type": "boolean"
+        }
+      }
+    },
+    "round_actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finish",
+        "skip",
+        "choose_truth",
+        "choose_dare",
+        "propose_condition",
+        "accept_invitation",
+        "accept_action",
+        "decline_invitation",
+        "withdraw_action"
+      ],
+      "properties": {
+        "finish": {
+          "type": "boolean"
+        },
+        "skip": {
+          "type": "boolean"
+        },
+        "choose_truth": {
+          "type": "boolean"
+        },
+        "choose_dare": {
+          "type": "boolean"
+        },
+        "propose_condition": {
+          "type": "boolean"
+        },
+        "accept_invitation": {
+          "type": "boolean"
+        },
+        "accept_action": {
+          "type": "boolean"
+        },
+        "decline_invitation": {
+          "type": "boolean"
+        },
+        "withdraw_action": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "$comment": "GET /api/v1/rooms/{roomId}/game/self-actions. Cookie plus CSRF; optional Origin validated and Sec-Fetch-Site absent or same-origin; no query. Dense own booleans only; no public WS/outbox. Display metadata never authorizes mutations. Server relative lease <=5000ms and own consent deadline; clients also cap local lease from request start, ignoring absolute clock skew. Previously confirmed own session Stop/Pause/Abort may remain requestable as unconfirmed after TTL or connection loss; explicit false/revocation/new identity/session overrides them. Existing authoritative POST ACL remains unchanged."
+}

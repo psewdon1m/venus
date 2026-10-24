@@ -1,0 +1,3 @@
+PASS_METHOD_ONLY, no findings. Selected nonhost E participant performs the same single strict200 stop; following original A.host GET200 remains. Exact13 ordered replay aggregation retains all required cases and rejects incomplete/sparse/padded arrays. All other producer bytes/oracles/bounds unchanged24.
+
+Inputs: authorb8d53e66/30, producer499b43b0/371, diagnosis83b25627, A17source93221/1871, A17f9e/B4 6260. Four focused controls plus eight array negatives and conditional fourteen-fact consistency PASS/audit0. Future inputs explicitly simulated in static consistency are not native evidence. No native allocation or APP writes; original FAIL preserved. Writes COMPLETE_STOP.

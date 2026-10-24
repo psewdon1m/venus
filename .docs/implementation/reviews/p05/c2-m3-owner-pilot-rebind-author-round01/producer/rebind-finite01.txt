@@ -1,0 +1,122 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'export function runPreflight(cell,env,prior={public_history:[],private_history:[]},sessionId){\n' +
++   ' const snapshot=env.snapshot(cell,sessionId),state=safetyState(snapshot,env.map.topics.map(t=>t.topic_id),cell.regime);\n' +
++   ' try{\n' +
++   '  const result=env.preflightTopics(snapshot,env.pack,env.map,state,prior);\n' +
++   "  assert.notEqual(cell.profile,'all_X','yes_but all-X must refuse');\n" +
++   "  assert.equal(result.simulation_only,true);assert.equal(result.history.provenance,'SIMULATION_ONLY');\n" +
++   '  assert.equal(result.planned_rounds,cell.rounds);assert.equal(result.history.rounds.length,cell.rounds);\n' +
++   "  for(const name of ['private_opportunities','private_playable','private_safe_empty'])assert(Number.isSafeInteger(result[name])&&result[name]>=0,'nonnegative safe integer '+name);\n" +
++   "  const privateRounds=result.history.rounds.filter(r=>r.interaction==='pair_private');\n" +
++   "  assert(privateRounds.every(r=>r.card===null||r.card&&typeof r.card==='object'&&!Array.isArray(r.card)&&typeof r.card.card_id==='string'),'explicit null or card reference');\n" +
++   '  assert.equal(privateRounds.length,result.private_opportunities);assert(privateRounds.length<=Math.ceil(.25*cell.rounds));\n' +
++   '  assert(privateRounds.every(r=>r.stage>=3));\n' +
++   "  assert.equal(result.private_playable,privateRounds.filter(r=>r.card!==null).length,'playable count equals actual non-null private cards');\n" +
++   "  assert.equal(result.private_safe_empty,privateRounds.filter(r=>r.card===null).length,'safe-empty count equals actual null private cards');\n" +
++   '  assert.equal(result.private_playable+result.private_safe_empty,privateRounds.length);\n' +
++   "  if(cell.cap==='OFF')assert.equal(privateRounds.length,0);\n" +
++   '  const publicFamilies=new Set(result.history.public_history.flatMap(r=>env.map.entry(r.card_id).semantic_family_ids));\n' +
++   "  for(const round of privateRounds)if(round.card){assert(fullUnionAllowed(env.pack.card(round.card.card_id),env.map,state,round.actors));assert(env.map.entry(round.card.card_id).semantic_family_ids.every(f=>!publicFamilies.has(f)),'public semantic history constrains private');}\n" +
++   "  const check=(rows,privateOnly)=>{const seen=new Map();for(const row of rows){const key=privateOnly?[...row.actors].sort().join(':'):'public',families=env.map.entry(row.card_id).semantic_family_ids,used=seen.get(key)??new Set();assert(families.every(f=>!used.has(f)),'semantic repeat');families.forEach(f=>used.add(f));seen.set(key,used);}};\n" +
++   '  check(result.history.public_history,false);check(result.history.private_history,true);\n' +
++   "  return {status:result.private_safe_empty?'PLANNED_WITH_PRIVATE_SAFE_EMPTY':'PLANNED_SIMULATION_ONLY',cell,requested_rounds:cell.rounds,planned_rounds:result.planned_rounds,private_opportunities:result.private_opportunities,private_playable:result.private_playable,private_safe_empty:result.private_safe_empty,prefix_available:true,history:result.history,simulation_only:true,actual_transport:false};\n" +
++   ' }catch(error){\n' +
++   "  if(error?.code!=='TOPIC_SAFE_POOL_EXHAUSTED')throw error;\n" +
++   "  return {status:'SAFE_REFUSAL',cell,error_code:error.code,requested_rounds:cell.rounds,planned_rounds:null,prefix_available:false,history:null,private_opportunities:null,private_playable:null,private_safe_empty:null,reason:'Existing preflightTopics throws without exposed prefix. No alternate-R/seed reconstruction.',simulation_only:true,actual_transport:false};\n" +
++   ' }\n' +
++   '}\n'
+- 'export function runPreflight(cell,env,prior={public_history:[],private_history:[]},sessionId){\r\n' +
+-   ' const snapshot=env.snapshot(cell,sessionId),state=safetyState(snapshot,env.map.topics.map(t=>t.topic_id),cell.regime);\r\n' +
+-   ' try{\r\n' +
+-   '  const result=env.preflightTopics(snapshot,env.pack,env.map,state,prior);\r\n' +
+-   "  assert.notEqual(cell.profile,'all_X','yes_but all-X must refuse');\r\n" +
+-   "  assert.equal(result.simulation_only,true);assert.equal(result.history.provenance,'SIMULATION_ONLY');\r\n" +
+-   '  assert.equal(result.planned_rounds,cell.rounds);assert.equal(result.history.rounds.length,cell.rounds);\r\n' +
+-   "  for(const name of ['private_opportunities','private_playable','private_safe_empty'])assert(Number.isSafeInteger(result[name])&&result[name]>=0,'nonnegative safe integer '+name);\r\n" +
+-   "  const privateRounds=result.history.rounds.filter(r=>r.interaction==='pair_private');\r\n" +
+-   "  assert(privateRounds.every(r=>r.card===null||r.card&&typeof r.card==='object'&&!Array.isArray(r.card)&&typeof r.card.card_id==='string'),'explicit null or card reference');\r\n" +
+-   '  assert.equal(privateRounds.length,result.private_opportunities);assert(privateRounds.length<=Math.ceil(.25*cell.rounds));\r\n' +
+-   '  assert(privateRounds.every(r=>r.stage>=3));\r\n' +
+-   "  assert.equal(result.private_playable,privateRounds.filter(r=>r.card!==null).length,'playable count equals actual non-null private cards');\r\n" +
+-   "  assert.equal(result.private_safe_empty,privateRounds.filter(r=>r.card===null).length,'safe-empty count equals actual null private cards');\r\n" +
+-   '  assert.equal(result.private_playable+result.private_safe_empty,privateRounds.length);\r\n' +
+-   "  if(cell.cap==='OFF')assert.equal(privateRounds.length,0);\r\n" +
+-   '  const publicFamilies=new Set(result.history.public_history.flatMap(r=>env.map.entry(r.card_id).semantic_family_ids));\r\n' +
+-   "  for(const round of privateRounds)if(round.card){assert(fullUnionAllowed(env.pack.card(round.card.card_id),env.map,state,round.actors));assert(env.map.entry(round.card.card_id).semantic_family_ids.every(f=>!publicFamilies.has(f)),'public semantic history constrains private');}\r\n" +
+-   "  const check=(rows,privateOnly)=>{const seen=new Map();for(const row of rows){const key=privateOnly?[...row.actors].sort().join(':'):'public',families=env.map.entry(row.card_id).semantic_family_ids,used=seen.get(key)??new Set();assert(families.every(f=>!used.has(f)),'semantic repeat');families.forEach(f=>used.add(f));seen.set(key,used);}};\r\n" +
+-   '  check(result.history.public_history,false);check(result.history.private_history,true);\r\n' +
+-   "  return {status:result.private_safe_empty?'PLANNED_WITH_PRIVATE_SAFE_EMPTY':'PLANNED_SIMULATION_ONLY',cell,requested_rounds:cell.rounds,planned_rounds:result.planned_rounds,private_opportunities:result.private_opportunities,private_playable:result.private_playable,private_safe_empty:result.private_safe_empty,prefix_available:true,history:result.history,simulation_only:true,actual_transport:false};\r\n" +
+-   ' }catch(error){\r\n' +
+-   "  if(error?.code!=='TOPIC_SAFE_POOL_EXHAUSTED')throw error;\r\n" +
+-   "  return {status:'SAFE_REFUSAL',cell,error_code:error.code,requested_rounds:cell.rounds,planned_rounds:null,prefix_available:false,history:null,private_opportunities:null,private_playable:null,private_safe_empty:null,reason:'Existing preflightTopics throws without exposed prefix. No alternate-R/seed reconstruction.',simulation_only:true,actual_transport:false};\r\n" +
+-   ' }\r\n' +
+-   '}\r\n'
+
+    at file:///C:/.projects/venus/.artifacts/p05-c2-m3-pilot-rebind01/rebind-controls.mjs:13:311
+    at test (file:///C:/.projects/venus/.artifacts/p05-c2-m3-pilot-rebind01/rebind-controls.mjs:9:81)
+    at file:///C:/.projects/venus/.artifacts/p05-c2-m3-pilot-rebind01/rebind-controls.mjs:13:1 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'export function runPreflight(cell,env,prior={public_history:[],private_history:[]},sessionId){\n' +
+    ' const snapshot=env.snapshot(cell,sessionId),state=safetyState(snapshot,env.map.topics.map(t=>t.topic_id),cell.regime);\n' +
+    ' try{\n' +
+    '  const result=env.preflightTopics(snapshot,env.pack,env.map,state,prior);\n' +
+    "  assert.notEqual(cell.profile,'all_X','yes_but all-X must refuse');\n" +
+    "  assert.equal(result.simulation_only,true);assert.equal(result.history.provenance,'SIMULATION_ONLY');\n" +
+    '  assert.equal(result.planned_rounds,cell.rounds);assert.equal(result.history.rounds.length,cell.rounds);\n' +
+    "  for(const name of ['private_opportunities','private_playable','private_safe_empty'])assert(Number.isSafeInteger(result[name])&&result[name]>=0,'nonnegative safe integer '+name);\n" +
+    "  const privateRounds=result.history.rounds.filter(r=>r.interaction==='pair_private');\n" +
+    "  assert(privateRounds.every(r=>r.card===null||r.card&&typeof r.card==='object'&&!Array.isArray(r.card)&&typeof r.card.card_id==='string'),'explicit null or card reference');\n" +
+    '  assert.equal(privateRounds.length,result.private_opportunities);assert(privateRounds.length<=Math.ceil(.25*cell.rounds));\n' +
+    '  assert(privateRounds.every(r=>r.stage>=3));\n' +
+    "  assert.equal(result.private_playable,privateRounds.filter(r=>r.card!==null).length,'playable count equals actual non-null private cards');\n" +
+    "  assert.equal(result.private_safe_empty,privateRounds.filter(r=>r.card===null).length,'safe-empty count equals actual null private cards');\n" +
+    '  assert.equal(result.private_playable+result.private_safe_empty,privateRounds.length);\n' +
+    "  if(cell.cap==='OFF')assert.equal(privateRounds.length,0);\n" +
+    '  const publicFamilies=new Set(result.history.public_history.flatMap(r=>env.map.entry(r.card_id).semantic_family_ids));\n' +
+    "  for(const round of privateRounds)if(round.card){assert(fullUnionAllowed(env.pack.card(round.card.card_id),env.map,state,round.actors));assert(env.map.entry(round.card.card_id).semantic_family_ids.every(f=>!publicFamilies.has(f)),'public semantic history constrains private');}\n" +
+    "  const check=(rows,privateOnly)=>{const seen=new Map();for(const row of rows){const key=privateOnly?[...row.actors].sort().join(':'):'public',families=env.map.entry(row.card_id).semantic_family_ids,used=seen.get(key)??new Set();assert(families.every(f=>!used.has(f)),'semantic repeat');families.forEach(f=>used.add(f));seen.set(key,used);}};\n" +
+    '  check(result.history.public_history,false);check(result.history.private_history,true);\n' +
+    "  return {status:result.private_safe_empty?'PLANNED_WITH_PRIVATE_SAFE_EMPTY':'PLANNED_SIMULATION_ONLY',cell,requested_rounds:cell.rounds,planned_rounds:result.planned_rounds,private_opportunities:result.private_opportunities,private_playable:result.private_playable,private_safe_empty:result.private_safe_empty,prefix_available:true,history:result.history,simulation_only:true,actual_transport:false};\n" +
+    ' }catch(error){\n' +
+    "  if(error?.code!=='TOPIC_SAFE_POOL_EXHAUSTED')throw error;\n" +
+    "  return {status:'SAFE_REFUSAL',cell,error_code:error.code,requested_rounds:cell.rounds,planned_rounds:null,prefix_available:false,history:null,private_opportunities:null,private_playable:null,private_safe_empty:null,reason:'Existing preflightTopics throws without exposed prefix. No alternate-R/seed reconstruction.',simulation_only:true,actual_transport:false};\n" +
+    ' }\n' +
+    '}\n',
+  expected: 'export function runPreflight(cell,env,prior={public_history:[],private_history:[]},sessionId){\r\n' +
+    ' const snapshot=env.snapshot(cell,sessionId),state=safetyState(snapshot,env.map.topics.map(t=>t.topic_id),cell.regime);\r\n' +
+    ' try{\r\n' +
+    '  const result=env.preflightTopics(snapshot,env.pack,env.map,state,prior);\r\n' +
+    "  assert.notEqual(cell.profile,'all_X','yes_but all-X must refuse');\r\n" +
+    "  assert.equal(result.simulation_only,true);assert.equal(result.history.provenance,'SIMULATION_ONLY');\r\n" +
+    '  assert.equal(result.planned_rounds,cell.rounds);assert.equal(result.history.rounds.length,cell.rounds);\r\n' +
+    "  for(const name of ['private_opportunities','private_playable','private_safe_empty'])assert(Number.isSafeInteger(result[name])&&result[name]>=0,'nonnegative safe integer '+name);\r\n" +
+    "  const privateRounds=result.history.rounds.filter(r=>r.interaction==='pair_private');\r\n" +
+    "  assert(privateRounds.every(r=>r.card===null||r.card&&typeof r.card==='object'&&!Array.isArray(r.card)&&typeof r.card.card_id==='string'),'explicit null or card reference');\r\n" +
+    '  assert.equal(privateRounds.length,result.private_opportunities);assert(privateRounds.length<=Math.ceil(.25*cell.rounds));\r\n' +
+    '  assert(privateRounds.every(r=>r.stage>=3));\r\n' +
+    "  assert.equal(result.private_playable,privateRounds.filter(r=>r.card!==null).length,'playable count equals actual non-null private cards');\r\n" +
+    "  assert.equal(result.private_safe_empty,privateRounds.filter(r=>r.card===null).length,'safe-empty count equals actual null private cards');\r\n" +
+    '  assert.equal(result.private_playable+result.private_safe_empty,privateRounds.length);\r\n' +
+    "  if(cell.cap==='OFF')assert.equal(privateRounds.length,0);\r\n" +
+    '  const publicFamilies=new Set(result.history.public_history.flatMap(r=>env.map.entry(r.card_id).semantic_family_ids));\r\n' +
+    "  for(const round of privateRounds)if(round.card){assert(fullUnionAllowed(env.pack.card(round.card.card_id),env.map,state,round.actors));assert(env.map.entry(round.card.card_id).semantic_family_ids.every(f=>!publicFamilies.has(f)),'public semantic history constrains private');}\r\n" +
+    "  const check=(rows,privateOnly)=>{const seen=new Map();for(const row of rows){const key=privateOnly?[...row.actors].sort().join(':'):'public',families=env.map.entry(row.card_id).semantic_family_ids,used=seen.get(key)??new Set();assert(families.every(f=>!used.has(f)),'semantic repeat');families.forEach(f=>used.add(f));seen.set(key,used);}};\r\n" +
+    '  check(result.history.public_history,false);check(result.history.private_history,true);\r\n' +
+    "  return {status:result.private_safe_empty?'PLANNED_WITH_PRIVATE_SAFE_EMPTY':'PLANNED_SIMULATION_ONLY',cell,requested_rounds:cell.rounds,planned_rounds:result.planned_rounds,private_opportunities:result.private_opportunities,private_playable:result.private_playable,private_safe_empty:result.private_safe_empty,prefix_available:true,history:result.history,simulation_only:true,actual_transport:false};\r\n" +
+    ' }catch(error){\r\n' +
+    "  if(error?.code!=='TOPIC_SAFE_POOL_EXHAUSTED')throw error;\r\n" +
+    "  return {status:'SAFE_REFUSAL',cell,error_code:error.code,requested_rounds:cell.rounds,planned_rounds:null,prefix_available:false,history:null,private_opportunities:null,private_playable:null,private_safe_empty:null,reason:'Existing preflightTopics throws without exposed prefix. No alternate-R/seed reconstruction.',simulation_only:true,actual_transport:false};\r\n" +
+    ' }\r\n' +
+    '}\r\n',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.22.0

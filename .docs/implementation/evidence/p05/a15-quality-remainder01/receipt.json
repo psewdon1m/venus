@@ -1,0 +1,114 @@
+{
+  "created_at": "2026-10-20T23:42:10.794252+00:00",
+  "source_identity": "658b710bdca35b678421a51c1c276028305f28362901b2c065a3867aa754f4de",
+  "source_commit_byte_qualification": "7ce04192c84e1d01620b099a4a0386ab5b291fbc",
+  "before_after_exact": true,
+  "results": [
+    {
+      "name": "reporter",
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "--test",
+        "tests/p05/report-contract.test.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "check_schemas",
+      "command": [
+        "C:\\.projects\\venus\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/check_schemas.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "check_relationship_policy",
+      "command": [
+        "C:\\.projects\\venus\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/check_relationship_policy.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "generate_contract_types",
+      "command": [
+        "C:\\.projects\\venus\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/generate_contract_types.py",
+        "--check"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "generate_engine_policy",
+      "command": [
+        "C:\\.projects\\venus\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/generate_engine_policy.py",
+        "--check"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "generate_p03_contracts",
+      "command": [
+        "C:\\.projects\\venus\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/generate_p03_contracts.py",
+        "--check"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "i18n",
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "tools/check-i18n.mjs"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "python",
+      "command": [
+        "C:\\.projects\\venus\\.venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_*.py"
+      ],
+      "exit": 0
+    },
+    {
+      "name": "catalog-r2",
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "tools/check-catalog-r2.mjs"
+      ],
+      "exit": 0
+    }
+  ],
+  "not_run_here": [
+    "already-passed host1083/type/lint",
+    "docs/manifest until writers STOP",
+    "negative scratch until final evidence assembly"
+  ],
+  "full_quality_or_stage_PASS": false
+}

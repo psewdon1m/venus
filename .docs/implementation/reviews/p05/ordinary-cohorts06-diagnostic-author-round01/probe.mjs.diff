@@ -1,0 +1,50 @@
+--- 05/probe.mjs
++++ 06/probe.mjs
+@@ -7,6 +7,13 @@
+ import {performance} from 'node:perf_hooks';
+ import {setInterval,clearInterval} from 'node:timers';
+ import {setTimeout as delay} from 'node:timers/promises';
++/** Fixed diagnostic projection only; never retain raw frame/error/reason/identity. */
++export const wsFaultBranches=Object.freeze(['MESSAGE_BYTES','MESSAGE_JSON','SOCKET_ERROR','UNEXPECTED_CLOSE','HEARTBEAT_NOT_OPEN','PONG_STALE','PING_SEND_THROW','AUTH_SEND_THROW']);
++export function firstWsFault(first,branch,actorOrdinal,elapsed,readyState,pongAge,closeCode=null){
++ if(first!==null)return first;assert(wsFaultBranches.includes(branch),'WS_FAULT_BRANCH');
++ const milliseconds=value=>typeof value==='number'&&Number.isFinite(value)&&value>=0&&value<=6000000?Math.round(value):null;
++ return Object.freeze({branch,actor_ordinal:Number.isSafeInteger(actorOrdinal)&&actorOrdinal>=0&&actorOrdinal<8?actorOrdinal:null,elapsed_ms:milliseconds(elapsed),ready_state:[0,1,2,3].includes(readyState)?readyState:null,pong_age_ms:milliseconds(pongAge),close_code:Number.isSafeInteger(closeCode)&&closeCode>=1000&&closeCode<=4999?closeCode:null});
++}
+ export const cohortIds=Object.freeze(['online/questions','online/truth_or_dare','online/yes_but','in_person/questions','in_person/truth_or_dare','in_person/yes_but']);
+ export function profiles(cohort){assert(cohortIds.includes(cohort),'DECLARED_COHORT_REQUIRED');return ['online','in_person'].flatMap(context=>['questions','truth_or_dare','yes_but'].flatMap(mode=>Array.from({length:7},(_,i)=>({context,mode,N:i+2})))).map((p,i)=>({id:'PILOT470-'+String(i+1).padStart(2,'0'),...p})).filter(p=>p.context+'/'+p.mode===cohort);}
+ export function negativeProfiles(cohort){const [profile]=profiles(cohort);return profile.mode==='yes_but'?[{context:profile.context,N:2,mode:'yes_but',relation:'not_a_friend'}]:[];}
+@@ -28,7 +35,7 @@
+ export async function main(){
+  assert.equal(process.platform,'linux');assert.equal(process.cwd(),'/app');assert(!process.env.NODE_OPTIONS);
+  const ack=JSON.parse(readFileSync('/run/pilot470-root-ack.json','utf8'));
+- assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_FIXED_COHORT_05');
++ assert.equal(ack.status,'ROOT_RUN_ACK');assert.equal(ack.purpose,'ORDINARY470_FIXED_COHORT_06');
+  const cohort=ack.cohort,selectedProfiles=profiles(cohort),selectedNegatives=negativeProfiles(cohort);
+  const descriptor=JSON.parse(readFileSync('/run/probe/DESCRIPTOR.json','utf8'));
+  for(const[path,hash]of Object.entries(ack.runtime_files))assert.equal(sha(readFileSync('/app/'+path)),hash,'Exact compiled image file mismatch');
+@@ -43,7 +50,7 @@
+  const report={schema_version:1,scope:descriptor.scope,status:'FAIL',entrypoint:'apps/api/dist/server.js',API_only:true,actual_browser:false,actual_TLS:false,
+   cohort,matrix_complete:false,source_identity:ack.source_identity,image_id:ack.image_id,pack_digest:pack.digest,map_pins:map.pins,owner_authority:pack.owner_provisional,
+   source_override:false,syntheticFixtureOnly:false,profiles:selectedProfiles.map(p=>({...p,status:'NOT_RUN'})),
+-  negative_profiles:selectedNegatives.map(p=>({...p,status:'NOT_RUN'})),diagnostic_trace:{phase:'startup',round_index:0},
++  negative_profiles:selectedNegatives.map(p=>({...p,status:'NOT_RUN'})),ws_first_fault:null,diagnostic_trace:{phase:'startup',round_index:0},
+   requests:0,WS_connections:0,rooms_created:0,rooms_closed:0,completed_rounds:0,consent_acceptances:0,choices:0,conditions:0,finishes:0,skips:0,locales_checked_sessions:0,client_cleanup:'NOT_RUN',room_cleanup_failures:0};
+  const save=()=>writeFileSync('/tmp/pilot470-report.json',JSON.stringify(report,null,2)+'\n');
+  let publicNext=0,wsNext=0,currentActors=[],wsFault=false,cleanupDeadline=null;
+@@ -76,10 +83,11 @@
+   return {cookie:cookie.split(';')[0],csrf:response.body.csrf_token,acceptance:{offer_version:offer.version,offer_digest:offer.digest,adult18:true,accept_offer:true}};
+  }
+  async function connect(a){const ticket=await mutationTicket(a);if(wsNext>performance.now())await delay(wsNext-performance.now());wsNext=performance.now()+550;const ws=new WebSocket('ws://127.0.0.1:4300'+roomBase(a)+'/ws',{origin,headers:{cookie:a.cookie}});a.ws=ws;let authenticated=false,pong=performance.now();
+-  ws.on('message',raw=>{if(raw.length>32768){wsFault=true;ws.terminate();return;}try{const value=JSON.parse(raw.toString());if(value.type==='room.snapshot')authenticated=true;if(value.type==='pong')pong=performance.now();}catch{wsFault=true;}});
+-  ws.on('error',()=>{wsFault=true;});ws.on('close',()=>{if(!a.closing)wsFault=true;});
+-  await until(()=>ws.readyState===1,10000,'WS_OPEN_TIMEOUT');ws.send(JSON.stringify({type:'auth',ticket:ticket.ticket}));await until(()=>authenticated,10000,'WS_AUTH_TIMEOUT');report.WS_connections++;
+-  a.ping=setInterval(()=>{if(ws.readyState!==1||performance.now()-pong>25000){wsFault=true;return;}try{ws.send(JSON.stringify({type:'ping'}));}catch{wsFault=true;}},10000);
++  const fault=(branch,code=null,mark=true)=>{if(mark)wsFault=true;report.ws_first_fault=firstWsFault(report.ws_first_fault,branch,currentActors.indexOf(a),performance.now()-start,ws.readyState,performance.now()-pong,code);};
++  ws.on('message',raw=>{if(raw.length>32768){fault('MESSAGE_BYTES');ws.terminate();return;}try{const value=JSON.parse(raw.toString());if(value.type==='room.snapshot')authenticated=true;if(value.type==='pong')pong=performance.now();}catch{fault('MESSAGE_JSON');}});
++  ws.on('error',()=>{fault('SOCKET_ERROR');});ws.on('close',code=>{if(!a.closing)fault('UNEXPECTED_CLOSE',code);});
++  await until(()=>ws.readyState===1,10000,'WS_OPEN_TIMEOUT');try{ws.send(JSON.stringify({type:'auth',ticket:ticket.ticket}));}catch(error){fault('AUTH_SEND_THROW',null,false);throw error;}await until(()=>authenticated,10000,'WS_AUTH_TIMEOUT');report.WS_connections++;
++  a.ping=setInterval(()=>{if(ws.readyState!==1){fault('HEARTBEAT_NOT_OPEN');return;}if(performance.now()-pong>25000){fault('PONG_STALE');return;}try{ws.send(JSON.stringify({type:'ping'}));}catch{fault('PING_SEND_THROW');}},10000);
+  }
+  async function mutationTicket(a){return (await request(a,roomBase(a)+'/ws-ticket','POST',{request_id:randomUUID()})).body;}
+  async function createProfile(p,negative=false){

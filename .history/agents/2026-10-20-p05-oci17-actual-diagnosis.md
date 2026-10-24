@@ -1,0 +1,5 @@
+# Independent OCI17 saved native browser diagnosis
+
+2026-10-20T23:24:15.8143595Z UTC — Root actual96511 stillrunning owner3a037bed5237ac9f8d6ad2ce9076db08, source12rawvenus-p05-oci-88cdc68ec346. Read-only existing terminal/markers/14browser source; no actions/native/mutation/unknowncausalclaim. Parent finishes cleanup; preserve nativeFAIL. Prealloc01ENOENT parentfolder separate excludedcorrection, not APPbug.
+
+2026-10-20T23:27:25.2057670Z UTC — SavednativeFAILterminal finished262686ms. MarkerlastbrowserNARROWED held0inflight6GET200/B2serverready(strictreplay+freshEpreconditions)/B2hostcommandwrite0/noB2browsermarker/noA3. BrowserErroronlynoenum/staticlocation; exactsubsiteunknown/noprovenAPPdefect. Boundprofile68:388 preciselyQRB_PHASE_WALL_LIMIT B2(earliergenericwaitFile shorthand corrected), API19:393SCRIPTED_PHASE_DEADLINE waitingSTOP/poolclosed. Sourceproducer3snapshotsidentical despiteunadvancedfalseflag. Prealloc01folderENOENTseparate0native/read-onlycorrectionreceipt/newACK950b verified. Guardresourcesretainedmanual notcleanupPASS, untouched. Pureaudit0; no nativeactions/privateDB/key/APPwrites. Ownpacket COMPLETE_STOP; rootnotified.

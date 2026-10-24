@@ -1,0 +1,12 @@
+Финальная сборка готова по компонентным доказательствам; приёмка этапа пока предложена, все stage acceptance=false. P06 не начинать.
+
+1. Оркестратор после согласованного STOP фиксирует точную финальную сборку44requirements/19UX/72retired/5EXIT/10E2E/9CI-RIP/P04technical на принятыхproofpins.
+2. Два независимых финальных аудита — engineering/QA и privacy/security — проверяют эту сборку. При фактических замечаниях исправления ограничиваются finding; принятые компонентные прогоны не дублируются без причины. Затем оркестратор публикует одно финальное закрытие/реестры/manifest.
+
+УЖЕ ПРИНЯТО, НЕ ЗАДАНИЯ НА ПЕРЕЗАПУСК:
+- Full06 original bulk2609normal0bad плюс7freshprefixes1600:2616owners/1364448selectedcases, все7originalreducers exit0/cleanupCOMPLETE. Actual `.docs/implementation/evidence/p05/uniform06-all7-actual01/INDEX.json` SHA b613838efaebf3f703c8f08ff1b9ac05d66b60b60f73e77730d48472b2a0021c; independent `.docs/implementation/reviews/p05/uniform06-all7-actual-independent-round01/INDEX.json` SHA9a107654832943ba808ed4be96f142ca711c4a1c72b566703a57b76eb431e9e1.
+- UI9sameA34-02/runtime4fdd:459cells/324representativetypography/135genuineactions/135preps/0pageerrors/9cleanup. Actual82a36a705429198d62c4ab93895fda7f76f6f8bc40164b7f1aab0755e218d335, independent4bd1600ae14de5fd8491772e4f90e5d0e2caaab3ffce0fbf48f7a38770c8f55b.
+- Q13 exactSOURCE23: actualf5b2922ab801c2ebf24f6f1f5aba946216a09a88fb1574dcc7979acae8a2ffdb, independent4bfd70703d9b289026cd4af4c649b78fae3210887e4dcc9e780f582b977d3f39.
+- ExactHEAD5d4126006c520bdc45060c4923b2d38f83e91e3f/CI39909483768 ALL8SUCCESS: actualf0d0969bedf7e25b9204f07b13375d7de6b48fc7fca4ceea9dff72c3d572092d, independentdd87287d6ba6ab7febe7a7b40dc22c57ee70011d1ec17515eef39edc2fe4a557.9CI-RIPcaseIDs не равны8CIjobs; legacyremoteM3 не заменяетfull06.
+
+P04 technical localpilot EXIT — evidence-ready proposal: прежние currentM3+quality gaps закрыты принятымиfull06/Q13.470ownertemporaryPASS/450originalHOLD не меняются; нет новой профессиональной языковой/правовой/productionприёмки.19UX отдельно72retired. Полные границы safe refusals/canarynoncoverage/I14zero/modelwirePENDING/backend-only carry/UIdevice limits сохранены в JSON. Все прежние pendinglabels/counters — исторические locators, не текущие заказы на запуск. API/wire/browser/OCI39server/B4/copy6043 остаются отдельными ограниченными доказательствами; новые OCI40/перезапуски/механизмы не нужны.

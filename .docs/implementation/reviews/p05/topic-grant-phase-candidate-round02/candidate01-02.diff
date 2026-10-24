@@ -1,0 +1,15 @@
+--- candidate01
++++ candidate02
+@@ -22,10 +22,10 @@
+ export class TopicCache{
+  private lastSignal:unknown=null;
+  revoke(signal:unknown){if(signal!==this.lastSignal){this.lastSignal=signal;this.clear();return true;}return false;}
+- private scope='';private generation=0;private clock=0;private deadlines=new Map<string,number>();private phaseFloors=new Map<string,number>();private epochFloor=-1;private revisionFloor=-1;private contentFloor=-1;private conversationId='';
++ private scope='';private boundScope:TopicScope|null=null;private generation=0;private clock=0;private deadlines=new Map<string,number>();private phaseFloors=new Map<string,number>();private epochFloor=-1;private revisionFloor=-1;private contentFloor=-1;private conversationId='';
+  target:TopicRoundTarget|null=null;conversation:TopicConversationView|null=null;chat:TopicChatView|null=null;until=0;
+  now(value=presentationNow()){return this.clock=Math.max(this.clock,value);}
+- bind(scope:TopicScope|null){const key=JSON.stringify(scope);if(key!==this.scope){const previous=this.scope?JSON.parse(this.scope) as TopicScope|null:null;this.clear();if(!previous||!scope||previous.room!==scope.room||previous.member!==scope.member||previous.identity!==scope.identity||previous.session!==scope.session||previous.round!==scope.round){this.deadlines.clear();this.phaseFloors.clear();this.epochFloor=-1;this.revisionFloor=-1;this.contentFloor=-1;this.conversationId='';}this.scope=key;}return this.issue();}
++ bind(scope:TopicScope|null){const key=JSON.stringify(scope);if(key!==this.scope){const previous=this.boundScope;this.clear();if(scope&&(!previous||previous.room!==scope.room||previous.member!==scope.member||previous.identity!==scope.identity||previous.session!==scope.session||previous.round!==scope.round)){this.deadlines.clear();this.phaseFloors.clear();this.epochFloor=-1;this.revisionFloor=-1;this.contentFloor=-1;this.conversationId='';}if(scope)this.boundScope={...scope};this.scope=key;}return this.issue();}
+  clear(){this.generation++;this.target=null;this.conversation=null;this.chat=null;this.until=0;}
+  issue():TopicRead{return {generation:this.generation,scope:this.scope};}
+  current(read:TopicRead){return read.generation===this.generation&&read.scope===this.scope;}

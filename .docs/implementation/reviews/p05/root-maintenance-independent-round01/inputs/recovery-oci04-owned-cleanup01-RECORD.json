@@ -1,0 +1,84 @@
+{
+  "status": "FAIL_RETAINED_MANUAL_CLEANUP_REQUIRED",
+  "created_at": "2026-10-20T16:16:07.582027+00:00",
+  "owner": "2bae434a9f866273ef7e1bfeaee54dc1",
+  "project": "venus-p05-oci-ffaaeef4fe2b",
+  "archive_index_sha256": "37e937593908062706da60b8ca312765699f4433c28672c612cb8b2dec1413fe",
+  "diagnosis_index_sha256": "f112e7787d6356c0857ad735cc956ddf85f532504c506f06972ec60fdfd0e8a2",
+  "host_failed_prefix_unchanged": true,
+  "private_volume_export": false,
+  "commands": [
+    {
+      "arguments": [
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 260,
+      "stderr_bytes": 0
+    },
+    {
+      "arguments": [
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 102,
+      "stderr_bytes": 0
+    },
+    {
+      "arguments": [
+        "network",
+        "ls",
+        "-q",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 65,
+      "stderr_bytes": 0
+    },
+    {
+      "arguments": [
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "label=com.venus.oci.resource.owner=2bae434a9f866273ef7e1bfeaee54dc1"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0
+    },
+    {
+      "arguments": [
+        "inspect",
+        "b9ad2dcef75380652d6edb0187e49100c564278eb4d46ff3f3bef6428ad2f51c"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 9791,
+      "stderr_bytes": 0
+    },
+    {
+      "arguments": [
+        "inspect",
+        "b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9"
+      ],
+      "exit_code": 0,
+      "stdout_bytes": 11828,
+      "stderr_bytes": 0
+    }
+  ],
+  "error": {
+    "class": "AssertionError",
+    "args": "('CONTAINER_DRIFT', 'b932c3aa6dba859a61986fb11052819d226f294ec0109f8af80952a426c6eee9', 'Mounts')"
+  },
+  "elapsed_s": 0.8900000000139698
+}

@@ -12,6 +12,7 @@ import sys
 import zipfile
 from jsonschema import Draft202012Validator
 from p00_evidence import verified_row_errors, read_evidence, validate_gate
+from source_revisions import authorized_plan_revision, validate_source_revisions
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -40,7 +41,7 @@ def inventory(root):
 
 
 def check_rows(root, rows):
-    errors = []
+    errors = validate_source_revisions(root)
     expected = inventory(root)
     ids = [row['requirement_id'] for row in rows]
     if len(ids) != len(set(ids)):
@@ -55,7 +56,8 @@ def check_rows(root, rows):
         path = (root/row['source']).resolve()
         if not path.is_relative_to(root.resolve()) or not path.is_file():
             errors.append(rid+': missing/unsafe source'); continue
-        if hashlib.sha256(path.read_bytes()).hexdigest() != row['source_sha256']:
+        if (hashlib.sha256(path.read_bytes()).hexdigest() != row['source_sha256'] and
+                not authorized_plan_revision(root, row['source'], row['source_sha256'], rid)):
             errors.append(rid+': stale source hash')
         if not row['task_id'] or not row['check_id'] or not row['owner_role'] or not re.fullmatch(r'P(?:0\d|1[01])', row['stage']):
             errors.append(rid+': missing task/check/owner/stage')

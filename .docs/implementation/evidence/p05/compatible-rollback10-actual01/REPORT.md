@@ -1,0 +1,7 @@
+# OCI10 one actual attempt
+
+FAIL: A1 completed; B2 AssertionError; A3 and completed fourteen-control aggregate NOT_RUN. Exit1,163753.5441ms. Exact A7/B4 synthetic compatibility run under independentlyaccepted methode0af and rootACK03d81d. No retry. Source and producer before/after maps independently compared here and exactly equal; runner completion flag false reflects incomplete success path, not demonstrated source drift.
+
+B2 verified migration row/sequence preservation, live preboot scope, boot revocation/cleared acks/privateobjects, unchanged authority, bound version/TLS/UI, preserved A exclusions/B closed/C retired. Its replay assignment never completed; native retained error only AssertionError/ERR_ASSERTION, so exact failing call is not directly retained. Root source hypothesis identifies custom404/view shape and admission-effect oracle mismatch; separate corrected producer must be reviewed before any next run. No failed assertion is waived.
+
+Export succeeded; FAIL disposition deliberately retains keeper/DB/network/four native volumes. Owner c93792b130ea7d720cbdea7305ec791b, project venus-p05-oci-c79df9542ade. No manual cleanup or native private-volume read was performed by this agent; old09 state untouched. Public host prefix copied byteexact with source/archive map; historical Markdown source captured as .md.bytes. No private native keyring/session serialization exported by this agent. Native evidence is synthetic fixture only. Subsequent independent actual audit required; not full P05/normal470/production acceptance. WRITES COMPLETE.

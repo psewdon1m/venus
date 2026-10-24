@@ -1,0 +1,8 @@
+{
+  "before": " let required=[];if(fixture)for(;;){budget.check();try{assertFreshScope(actor.lastGameView,fixture,performance.now());required=ownControlRequirements(actor.lastSelfActions,fixture,actor,performance.now());break;}catch{await delay(Math.min(25,budget.remaining()));}}\n onCheckpoint('POSITIVE_DOM_PREPARATION');await prepareSceneProjection(actor.page,scene,role,required,budget);\n onCheckpoint('INITIAL_PROJECTION');if(fixture){assertFreshScope(actor.lastGameView,fixture,performance.now());required=ownControlRequirements(actor.lastSelfActions,fixture,actor,performance.now());}\n",
+  "after": " let required=[];\n if(fixture)for(;;){\n  budget.check();const game=actor.lastGameView,own=actor.lastSelfActions;let coherent=false;\n  try{assertFreshScope(game,fixture,performance.now());required=ownControlRequirements(own,fixture,actor,performance.now());coherent=true;}catch{}\n  if(coherent){\n   onCheckpoint('POSITIVE_DOM_PREPARATION');await prepareSceneProjection(actor.page,scene,role,required,budget);\n   onCheckpoint('INITIAL_PROJECTION');\n   try{assert(actor.lastGameView===game&&actor.lastSelfActions===own);assertFreshScope(game,fixture,performance.now());required=ownControlRequirements(own,fixture,actor,performance.now());break;}catch{}\n  }\n  await delay(Math.min(25,budget.remaining()));\n }else{\n  onCheckpoint('POSITIVE_DOM_PREPARATION');await prepareSceneProjection(actor.page,scene,role,required,budget);\n  onCheckpoint('INITIAL_PROJECTION');\n }\n",
+  "whole_inverse": true,
+  "same_loop": true,
+  "same_single_25ms_delay": true,
+  "positive_DOM_outside_metadata_catches": true
+}

@@ -1,0 +1,9 @@
+# R100 METHOD08 retained forensic export and owned cleanup
+
+- 2026-10-20 UTC — Root explicitly authorizes narrow forensic export/cleanup of owner a2a6f0422ae6d811953ed137afa7b496, volume venus-r100-v3-7da46d477970-output, A29e39. Preserve old failed host prefix/proof; no rerun or acceptance. New own output <=64MiB, tar <=20MiB, readonly helper/root/source volume, IPCnone/networknone/noports,10GiB host/native reserve. Verify all104 original inventory and fresh scan before immediate owner-inspected deletion. Any unverifiable state retains source volume. No other owner touched; failures/control records retained.
+
+- 2026-10-20 UTC — Initial combined shell journal/read attempt exited1 without output and journal was not created; readonly follow-up confirmed run directory/native inventory and frozen recovery-method08-actual01 evidence exist. Creating this own journal before any Docker operation.
+
+- 2026-10-20T15:45:26.3341763Z UTC — Forensic attempt01 exit1/4.031s: exact104 export verified/persisted, but volume rm refused because fresh readonly scan/tar helpers still mounted source. finally removed those own helpers; source volume retained, no oldowner containers existed/deleted. Preserve attempt-8a6e7b346049 and before-fix script. Author harness fix: remove exact own stopped helpers before oldvolume rm; no guard/owner/path/cap weakening. Repeat full fresh104 verification in newroot before cleanup; root informed.
+
+- 2026-10-20T15:46:13.6801844Z UTC — Corrected attempt02 exit0/4.141s. Repeated fresh104scan/tar/extraction exact original; persisted export before removing own stopped helpers, then immediate ownerinspect removed only old retainedvolume. Final oldowner/helper inventories empty. Original failed143frozenchildren reverified unchanged, oldprefix neverwritten. Ownattempt01 failure preserved alongside before-fix script. Durable forensic packet frozen; Docker CPU free; originalMETHOD08remains NOT_ACCEPTED. Next non-author METHOD09 review.

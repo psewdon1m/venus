@@ -1,0 +1,80 @@
+[
+  {
+    "name": "before-start",
+    "argv": [
+      "docker",
+      "container",
+      "inspect",
+      "--format",
+      "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"image\":{{json .Image}},\"labels\":{{json .Config.Labels}},\"state\":{{json .State.Status}},\"running\":{{json .State.Running}},\"network\":{{json .HostConfig.NetworkMode}},\"readonly\":{{json .HostConfig.ReadonlyRootfs}},\"memory\":{{json .HostConfig.Memory}},\"pids\":{{json .HostConfig.PidsLimit}}}",
+      "685389d316407778589c3d269793df59ade4591cc25908a1d1fd75f8a0eb9b52"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "worker",
+    "argv": [
+      "docker",
+      "start",
+      "-a",
+      "685389d316407778589c3d269793df59ade4591cc25908a1d1fd75f8a0eb9b52"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "before-cleanup",
+    "argv": [
+      "docker",
+      "container",
+      "inspect",
+      "--format",
+      "{\"id\":{{json .Id}},\"name\":{{json .Name}},\"image\":{{json .Image}},\"labels\":{{json .Config.Labels}},\"state\":{{json .State.Status}},\"running\":{{json .State.Running}},\"network\":{{json .HostConfig.NetworkMode}},\"readonly\":{{json .HostConfig.ReadonlyRootfs}},\"memory\":{{json .HostConfig.Memory}},\"pids\":{{json .HostConfig.PidsLimit}}}",
+      "685389d316407778589c3d269793df59ade4591cc25908a1d1fd75f8a0eb9b52"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "remove-owned",
+    "argv": [
+      "docker",
+      "rm",
+      "685389d316407778589c3d269793df59ade4591cc25908a1d1fd75f8a0eb9b52"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "remaining-containers",
+    "argv": [
+      "docker",
+      "ps",
+      "-aq",
+      "--filter",
+      "label=com.venus.owner=98a19e90543d4502b54e01f2ca2f5206"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "remaining-networks",
+    "argv": [
+      "docker",
+      "network",
+      "ls",
+      "-q",
+      "--filter",
+      "label=com.venus.owner=98a19e90543d4502b54e01f2ca2f5206"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "remaining-volumes",
+    "argv": [
+      "docker",
+      "volume",
+      "ls",
+      "-q",
+      "--filter",
+      "label=com.venus.owner=98a19e90543d4502b54e01f2ca2f5206"
+    ],
+    "exit": 0
+  }
+]

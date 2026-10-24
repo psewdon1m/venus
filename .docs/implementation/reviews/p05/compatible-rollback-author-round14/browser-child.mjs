@@ -1,0 +1,52 @@
+/** Actual image UI in a single pinned Chromium; no replacement React/DOM bundle. */
+/* global document */
+import assert from 'node:assert/strict';
+import {verifyOwnIPC} from './ipc-policy.mjs';
+import {readFileSync,existsSync} from 'node:fs';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {X509Certificate,createHash} from 'node:crypto';
+import {performance} from 'node:perf_hooks';
+import {imageRequire} from './image-modules.mjs';
+import {ResourceLease} from './resource-lease.mjs';
+/** Browser-native transport hold only; no clock/DOM/cache/database mutation. */
+export async function installApiQuiescence(context,room,lease){
+ const origin='https://localhost:8443',current=origin+'/api/v2/rooms/'+room+'/game/current';
+ const own=(url,ws=false)=>{try{const u=new URL(String(url));return u.origin===(ws?'wss://localhost:8443':origin)&&u.pathname.startsWith('/api/');}catch{return false;}};
+ let held=false,disposing=false,failure=null,blockedHTTP=0,blockedWS=0,completedCurrent=0;
+ const active=new Set(),forwarded=new WeakSet(),successful=new WeakSet();
+ const latch=()=>{failure??=Error('BROWSER_API_QUIESCENCE_FAILED');};
+ const health=()=>{lease.assert();if(failure)throw failure;assert(active.size<=256,'BROWSER_API_INFLIGHT_BOUND');};
+ context.on('request',request=>{if(own(request.url())){if(active.size>=256)latch();else active.add(request);}});
+ context.on('response',response=>{const request=response.request();if(!held&&forwarded.has(request)&&request.method()==='GET'&&request.url()===current&&response.status()===200)successful.add(request);});
+ context.on('requestfinished',request=>{active.delete(request);if(!held&&forwarded.has(request)&&successful.has(request))completedCurrent++;});
+ context.on('requestfailed',request=>{active.delete(request);});
+ await context.route(url=>own(url),async route=>{
+  try{if(held||failure){blockedHTTP++;await route.abort('blockedbyclient');}else{forwarded.add(route.request());await route.continue();}}
+  catch{if(!disposing)latch();}
+ });
+ await context.routeWebSocket(url=>own(url,true),async route=>{
+  try{if(held||failure){blockedWS++;await route.close({code:1001,reason:'Fixture API hold'});}else route.connectToServer();}
+  catch{if(!disposing)latch();}
+ });
+ const until=async predicate=>{const deadline=performance.now()+120000;while(!predicate()){health();assert(performance.now()<deadline,'BROWSER_API_QUIESCENCE_DEADLINE');await new Promise(r=>setTimeout(r,25));}health();};
+ return {
+  async hold(){held=true;await until(()=>active.size===0);return this.snapshot();},
+  release(){health();assert(held,'BROWSER_API_RELEASE_WITHOUT_HOLD');held=false;return completedCurrent;},
+  async resumedCurrent(cursor){assert(!held,'BROWSER_API_STILL_HELD');assert(Number.isSafeInteger(cursor)&&cursor>=0);await until(()=>completedCurrent>cursor);return this.snapshot();},
+  snapshot(){health();return{held,inflight_HTTP:active.size,blocked_HTTP:blockedHTTP,blocked_WS:blockedWS,completed_current_GET200:completedCurrent};},
+  dispose(){held=true;disposing=true;}
+ };
+}
+export async function browser(config){verifyOwnIPC('browser');const require=imageRequire(),{chromium}=require('playwright'),lease=new ResourceLease({...config,privateRoot:'/tmp'});await lease.initial();const spki=createHash('sha256').update(new X509Certificate(readFileSync(config.caFile)).publicKey.export({type:'spki',format:'der'})).digest('base64');let runtime;const contexts=[],gates=[],report={status:'FAIL',engine:'chromium',page_errors:0,clock_scope:'EXPLICIT_FIXED_DATE_FIXTURE_NOT_NATURAL_TTL',TLS_scope:'CHROMIUM_EXACT_PUBLIC_FIXTURE_SPKI_PIN_PLUS_INDEPENDENT_NODE_CA_VERIFICATION',prior_known_bug:'b244 timing P2 and unbounded WS poll queue / heartbeat-starvation P2; fixed fixtureclock compatibility does not close either natural-time behavior',raw_private_evidence_exported:false};
+ const write=(name,data)=>lease.write('/evidence',name,JSON.stringify(data,null,2)+'\n'),wait=async name=>{const limit=performance.now()+120000,path='/private/browser-command-'+name+'.json';while(performance.now()<limit){lease.assert();if(existsSync(path)){const v=JSON.parse(readFileSync(path));assert.equal(v.owner,config.owner);assert.equal(v.command,name);return;}await new Promise(r=>setTimeout(r,50));}throw Error('BROWSER_PHASE_DEADLINE');};
+ const read=name=>JSON.parse(readFileSync('/private/'+name+'.json'));
+ async function page(f,a,clock){const context=await runtime.newContext({viewport:{width:1280,height:800},ignoreHTTPSErrors:false,serviceWorkers:'block'});contexts.push(context);const gate=await installApiQuiescence(context,f.room,lease);gates.push(gate);await context.addCookies([{name:'venus_room_session',value:a.credential,url:'https://localhost:8443',httpOnly:true,secure:true,sameSite:'Strict'}]);const page=await context.newPage();page.setDefaultTimeout(12000);await page.clock.setFixedTime(new Date(clock));page.on('pageerror',()=>{report.page_errors++;});await page.goto('https://localhost:8443/#room='+f.room);await page.getByTestId('room-shell').waitFor();return page;}
+ async function hidden(page){await page.waitForFunction(()=>document.querySelectorAll('[data-testid="private-prompt"],[data-testid="pair-chat"],[data-testid="advice-text"]').length===0,undefined,{timeout:12000});lease.assert();}
+ try{runtime=await chromium.launch({headless:true,args:['--ignore-certificate-errors-spki-list='+spki,'--disable-dev-shm-usage']});report.version=runtime.version();const aState=read('state-A1-seed'),a=aState.A,who=a.members.find(x=>x.id===a.excludedActor);assert(who);const retainedA=await page(a,who,1000000);await retainedA.getByTestId('private-prompt').waitFor();assert((await retainedA.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));write('browser-A1-ready.json',{status:'RETAINED_A_PRIVATE_POSITIVE',real_image_UI:true});
+  await wait('NARROWED');await hidden(retainedA);const beforeB2=await Promise.all(gates.map(g=>g.hold()));write('browser-narrowed-ready.json',{status:'NARROWED_PRIVATE_CLEARED',API_quiescence:beforeB2});await wait('B2');await retainedA.clock.setFixedTime(new Date(1001000));const retainedCursor=gates[0].release();await gates[0].resumedCurrent(retainedCursor);await hidden(retainedA);const b=read('state-B2-final'),e=b.E,eActor=e.members.find(x=>x.id===e.excludedActor),freshB=await page(e,eActor,1001000);await freshB.getByTestId('private-prompt').waitFor();assert((await freshB.getByTestId('private-prompt').innerText()).includes('SYNTHETIC'));
+  const host=await page(b.A,b.A.host,1001000);const stop=host.getByTestId('game-stop');await stop.waitFor();assert(await stop.isEnabled());await stop.click();await host.getByTestId('game-state').waitFor();const observer=await page(b.A,b.A.members[3],1001000);await observer.getByTestId('leave-room').click();await observer.getByTestId('room-shell').waitFor({state:'detached'});report.actual_B_UI=true;report.retained_A_cleared=true;report.fresh_B_page=true;report.browser_safe_exit=true;const beforeA3=await Promise.all(gates.map(g=>g.hold()));write('browser-B2-ready.json',{status:'B2_UI_AND_SAFE_EXITS_PASS',E_untouched:true,API_quiescence:beforeA3});
+  await wait('A3');await freshB.clock.setFixedTime(new Date(1002000));const freshBCursor=gates[1].release();await gates[1].resumedCurrent(freshBCursor);await hidden(freshB);report.old_B_private_cleared_on_A3=true;assert.equal(report.page_errors,0);report.status='BROWSER_CONTROLS_COMPLETE';
+ }catch(error){report.error_name=error.name;report.status='FAIL';}
+ finally{for(const gate of gates)gate.dispose();let clean=true;for(const c of contexts)try{await c.close();}catch{clean=false;}try{await runtime?.close();}catch{clean=false;}report.cleanup=clean?'completed':'failed';if(!clean)report.status='FAIL';try{write('browser-terminal.json',report);}catch{report.status='FAIL';}console.log(JSON.stringify({status:report.status,cleanup:report.cleanup,page_errors:report.page_errors}));}return report;}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const p=process.argv.find(x=>x.startsWith('--browser='));if(p){const r=await browser(JSON.parse(readFileSync(p.slice(10))));process.exitCode=r.status==='BROWSER_CONTROLS_COMPLETE'?0:1;}else console.log(JSON.stringify({status:'NOT_RUN',browser_launches:0}));}

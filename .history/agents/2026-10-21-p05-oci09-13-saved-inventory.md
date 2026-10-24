@@ -1,0 +1,3 @@
+# OCI09-13 retained saved metadata inventory
+
+2026-10-20T22:33:46.252353+00:00 Read-only saved public run/ACK/owned-after-cleanup metadata reconciliation for09..13. Five failed retained runs, saved10containers/5networks/20volumes, every saved inventory equals its terminal remaining_owned. No current Docker state claim, no Docker commands, resource/private/key/DB reads or mutation. Separate older08setup run deliberately outside requested09..13. JSON .artifacts\p05-oci09-13-retained-saved-inventory01.json SHA 428a692af152fe183872bda0308cbc57f79adefb928150d86098c503da577858. All roots HOLD pending current16PASS plus separately authorized immediate live owner/export checks before cleanup.

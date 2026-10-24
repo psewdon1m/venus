@@ -1,0 +1,11 @@
+--- parent02/runner-policy.mjs
++++ candidate03/runner-policy.mjs
+@@ -34,7 +34,7 @@
+  return {preparations:15,keyboard_actions:15,original_scene_native_coverage:14,private_setups:9,private_session_record_cap:27};
+ }
+ export function assertShard(report,engine,locale){
+- assertTextRows(report.real_text_observations??[],locale);
++ assertTextRows(report.real_text_observations??[],locale,engine);
+  assert.equal(report.status,'PASS');assert.equal(report.cleanup,'PASS');assert.equal(report.engine,engine);assert.equal(report.locale,locale);assert.equal(report.scope,'ACTUAL_V2_LAYOUT_SHARD_NOT_FULL_STAGE');assert.equal(report.full_matrix,false);assert.equal(report.page_errors.length,0);assert.equal(report.page_errors_overflow,false);assert(!report.observer_error&&!report.request_metadata_overflow);
+  const result=assertMatrix(report.records,{engine,locale});assert.equal(result.cells,51);assert.equal(result.full_matrix,false);
+  assertSweepEvidence(report);

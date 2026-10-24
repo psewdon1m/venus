@@ -1,0 +1,7 @@
+# Ordinary WS preparation revision02 — before any runtime execution
+
+Root static review found that harness-local actorInvitation is not exported. Fixed only excluded producer: local acceptInvitations loops real HTTP target/response invitation consent for actual selected actors. Included harness remains unchanged under global freeze. Every top-level h.* property now checked against actual harness return; no missing names (harness-export-check.json). This producer bug was caught before any Docker test; do not call an unexecuted producer a runtime FAIL or PASS.
+
+OWS10 attribution narrowed: exact parent final credential query is selected after the actual privateDelivery reference read on the same client, restricted to current room/member/session hash; actual pg_stat_activity lock wait and source flip establish the target await boundary. Ordinary private frame absence and ping/pong are tested after release. Source fault counters are explicitly **global and unattributed** because other room tickers share the provider. No assertion or report claims that a global assertCurrent count proves this specific child's final fence. specific_child_assertion_attribution=false. Root's separate shared-fence unit proof remains separate; this run does not inherit it.
+
+No included/runtime8 files changed. Docker still NOT_RUN. New exact producer inputs in HANDOFF supersede previous checkpoint; an independent reviewer must inspect and accept actual results later.

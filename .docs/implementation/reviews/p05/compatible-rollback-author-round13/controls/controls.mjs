@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {pathToFileURL} from 'node:url';
+import {resolve} from 'node:path';
+import {randomUUID} from 'node:crypto';
+const root=resolve(process.argv[2]),{safeError}=await import(pathToFileURL(resolve(root,'bound-profile.mjs')).href),{assertRevokedRoundView}=await import(pathToFileURL(resolve(root,'scenarios.mjs')).href);
+const canary='SYNTHETIC_PRIVATE_ERROR_CANARY_',rows=[];
+function check(name,fn){fn();rows.push(name);}
+function longAssertion(){let error;try{assertRevokedRoundView({status:404,raw:'safe',body:{code:'NOT_FOUND',message:'Route not found',request_id:randomUUID(),[canary.repeat(250)]:true}},false,{},'');}catch(e){error=e;}assert(error instanceof assert.AssertionError);assert(error.message.length>2048);return error;}
+check('large native assertion retains original scenarios callsite and exact own descriptor',()=>{const e=longAssertion(),before=Object.getOwnPropertyDescriptor(e,'message'),out=safeError(e,'B2');assert.equal(out.source_module,'scenarios');assert(Number.isSafeInteger(out.source_line));assert.deepEqual(Object.getOwnPropertyDescriptor(e,'message'),before);assert(!JSON.stringify(out).includes(canary));});
+check('repeated projection remains stable without formatting original private message',()=>{const e=longAssertion(),a=safeError(e,'B2');assert.deepEqual(safeError(e,'B2'),a);assert.equal(a.source_module,'scenarios');assert(e.message.includes(canary));});
+check('nonconfigurable writable native message restores exact descriptor',()=>{const e=longAssertion();Object.defineProperty(e,'message',{configurable:false,writable:true});const d=Object.getOwnPropertyDescriptor(e,'message');assert.equal(safeError(e,'B2').source_module,'scenarios');assert.deepEqual(Object.getOwnPropertyDescriptor(e,'message'),d);});
+check('immutable large native message stays omitted without mutation',()=>{const e=longAssertion();Object.defineProperty(e,'message',{configurable:false,writable:false});const d=Object.getOwnPropertyDescriptor(e,'message');assert.equal(safeError(e,'B2').source_module,undefined);assert.deepEqual(Object.getOwnPropertyDescriptor(e,'message'),d);});
+check('custom formatter never invoked for large native message',()=>{const e=longAssertion(),d=Object.getOwnPropertyDescriptor(Error,'prepareStackTrace');let calls=0;try{Object.defineProperty(Error,'prepareStackTrace',{configurable:true,value:()=>{calls++;throw Error(canary);}});assert.equal(safeError(e,'B2').source_module,undefined);assert.equal(calls,0);}finally{if(d)Object.defineProperty(Error,'prepareStackTrace',d);else delete Error.prepareStackTrace;}});
+check('custom native message getter not invoked',()=>{const e=longAssertion();let calls=0;Object.defineProperty(e,'message',{get(){calls++;return canary.repeat(250);},configurable:true});assert.equal(safeError(e,'B2').source_module,undefined);assert.equal(calls,0);});
+check('oversized already materialized raw stack remains omitted',()=>{const e=longAssertion();Object.defineProperty(e,'stack',{value:canary.repeat(2000),configurable:true});assert.equal(safeError(e,'B2').source_module,undefined);});
+console.log(JSON.stringify({status:'PASS_LONG_NATIVE_ERROR_STATIC_LOCATION_ONLY',checks:rows.length,rows,native_APP_cases:0}));

@@ -1,0 +1,3384 @@
+{
+  "schema_version": 1,
+  "isolated_control_only": true,
+  "no_docker_executed": true,
+  "scope": "Actual host-wrapper control flow with external commands/files isolated; not service, clean-source, browser or full-stage evidence",
+  "source_sha256": "d3e68167b5fff310288b2e32860b1bf06393c7bf0d35d304a3641e0572856f50",
+  "contract_sha256": "b603a4cc579339b86c257dfc1c6181e1d2947dadfb6434778d7e0d81e6daa7f9",
+  "controls": [
+    {
+      "label": "Valid isolated component accepts fixed service suite and resets inherited selectors",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 0,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Wrong schema",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions report schema mismatch\n\n2 !== 1\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Wrong suite",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions report suite mismatch\n+ actual - expected\n\n+ 'P05_BROWSER'\n- 'P05_SELF_ACTIONS'\n       ^\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Wrong fixture scope",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions fixture scope missing\n\nfalse !== true\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Top failure status",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions suite did not pass\n\n'FAIL' !== 'PASS'\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Runtime cleanup missing",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions runtime cleanup incomplete\n+ actual - expected\n\n+ undefined\n- 'completed'\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Runtime cleanup failed",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions runtime cleanup incomplete\n+ actual - expected\n\n+ 'failed'\n- 'completed'\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Error despite PASS",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions report contains an error\n+ actual - expected\n\n+ 'INDEPENDENT ERROR'\n- null\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Empty checks",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions executed checks missing"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Missing checks",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions executed checks missing"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Duplicate IDs",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions check IDs duplicate\n\n1 !== 2\n"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Invalid ID namespace",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions check ID invalid"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Null check",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions check ID invalid"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Failed check",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions checks did not all pass"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Skipped check",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions checks did not all pass"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Missing check status",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Self-actions checks did not all pass"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Missing report despite unrelated browser PASS",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "ENOENT C:\\.projects\\venus\\.artifacts\\p05\\venus-p05-030303030303\\self-actions-report.json"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Malformed JSON",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Expected property name or '}' in JSON at position 1 (line 1 column 2)"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Null JSON",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Cannot read properties of null (reading 'schema_version')"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "node-fail",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Docker command failed, exit 1; self-actions-tests.txt"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "node-timeout",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Docker command failed, exit null; self-actions-tests.txt; ETIMEDOUT"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "source-change",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+        "source_unchanged": false,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": null
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "cleanup-fail",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "failed",
+        "status": "FAIL",
+        "error": "Docker command failed, exit 1; cleanup.txt"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "inspect-timeout",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "failed",
+        "status": "FAIL",
+        "error": "Owned browser cleanup state unconfirmed"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "wrong-owner",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "failed",
+        "status": "FAIL",
+        "error": "Owned browser container identity unconfirmed"
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        }
+      ],
+      "exit_code": 1,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    },
+    {
+      "label": "Conflict --chat",
+      "receipt": null,
+      "calls": [],
+      "thrown": "Choose one test mode"
+    },
+    {
+      "label": "Conflict --catalog",
+      "receipt": null,
+      "calls": [],
+      "thrown": "Choose one test mode"
+    },
+    {
+      "label": "Conflict --probe",
+      "receipt": null,
+      "calls": [],
+      "thrown": "Choose one test mode"
+    },
+    {
+      "label": "Conflict --engine=firefox",
+      "receipt": null,
+      "calls": [],
+      "thrown": "Self-actions suite does not accept browser selectors"
+    },
+    {
+      "label": "Conflict --case=P05-18-EXPLICIT",
+      "receipt": null,
+      "calls": [],
+      "thrown": "Self-actions suite does not accept browser selectors"
+    },
+    {
+      "label": "Explicit browser selector engine=all remains accepted",
+      "receipt": {
+        "source_sha": "dddddddddddddddddddddddddddddddddddddddd",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_identity_after": "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-030303030303",
+        "image": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": true,
+        "selected_engine": "all",
+        "selected_case": null,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "calls": [
+        {
+          "binary": "docker",
+          "args": [
+            "build",
+            "--platform",
+            "linux/amd64",
+            "--target",
+            "runtime",
+            "-f",
+            "infra/venus/Dockerfile.p05-tests",
+            "-t",
+            "venus-p05-030303030303:local",
+            "."
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "image",
+            "inspect",
+            "venus-p05-030303030303:local",
+            "--format",
+            "{{.Id}}"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "up",
+            "--detach",
+            "--wait",
+            "--wait-timeout",
+            "120",
+            "db"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "run",
+            "--rm",
+            "--name",
+            "venus-p05-030303030303-browser",
+            "--label",
+            "venus.p05.project=venus-p05-030303030303",
+            "--label",
+            "venus.p05.role=browser",
+            "browser",
+            "node",
+            "--test",
+            "tests/p05-self-actions/integration.mjs"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 1200000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "container",
+            "inspect",
+            "venus-p05-030303030303-browser"
+          ],
+          "timeout": 30000
+        },
+        {
+          "binary": "docker",
+          "args": [
+            "compose",
+            "--project-name",
+            "venus-p05-030303030303",
+            "--file",
+            "infra/venus/compose.p05-tests.yml",
+            "down",
+            "--volumes",
+            "--remove-orphans",
+            "--timeout",
+            "10"
+          ],
+          "engine": "all",
+          "selected_case": "",
+          "timeout": 120000
+        }
+      ],
+      "exit_code": 0,
+      "raw_log": "INDEPENDENT SYNTHETIC PARTIAL RAW"
+    }
+  ]
+}

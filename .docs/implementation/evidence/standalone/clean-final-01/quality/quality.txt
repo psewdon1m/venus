@@ -1,0 +1,151 @@
+
+> venus@0.0.0 quality
+> npm run lint && npm run typecheck && npm test && npm run check:schemas && npm run check:i18n && npm run test:python && npm run check:docs && npm run build && npm run test:catalog-r2 && npm run test:negative
+
+
+> venus@0.0.0 lint
+> eslint apps packages tools/*.mjs tests/**/*.mjs
+
+
+> venus@0.0.0 typecheck
+> tsc -b && tsc -p apps/web/tsconfig.json
+
+
+> venus@0.0.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.5 [39m[90m/workspace[39m
+
+ [32m✓[39m packages/card-catalog/src/catalog.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 4457[2mms[22m[39m
+   [32m✓[39m P04 catalogue authoring and independent review boundary [2m(8)[22m
+     [33m[2m✓[22m[39m never promotes drafts without complete signed independent review; changes invalidate it[33m 3472[2mms[22m[39m
+     [33m[2m✓[22m[39m rejects example-origin and wrong-role material even with a signed record[33m 757[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/engine.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 441[2mms[22m[39m
+ [32m✓[39m tools/p03-measurements.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m packages/relationship-engine/src/consent.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/security.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 151[2mms[22m[39m
+ [32m✓[39m apps/api/src/games-delivery.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m apps/api/src/app.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32m✓[39m apps/api/src/games-model.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m apps/api/src/entry-profile.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m tools/ci-policy.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m apps/web/src/api.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+Batch request: B-20261018-Q-001 errors= 0
+Batch request: <invalid> errors= 17
+ERROR BATCH-001 'batch_id' is a required property
+ERROR BATCH-001 'pack_id' is a required property
+ERROR BATCH-001 'schema_version' is a required property
+ERROR BATCH-001 'policy_revision' is a required property
+ERROR BATCH-001 'mode' is a required property
+ERROR BATCH-001 'count' is a required property
+ERROR BATCH-001 'id_range' is a required property
+ERROR BATCH-001 'meeting_contexts' is a required property
+ERROR BATCH-001 'allowed_interactions' is a required property
+ERROR BATCH-001 'relationship_scope_distribution' is a required property
+ERROR BATCH-001 'comfort_distribution' is a required property
+ERROR BATCH-001 'progression_distribution' is a required property
+ERROR BATCH-001 'languages' is a required property
+ERROR BATCH-001 'forbidden_categories' is a required property
+ERROR BATCH-001 'source_catalog_digest' is a required property
+ERROR BATCH-001 'requested_by' is a required property
+ERROR BATCH-001 'human_review_required' is a required property
+ [32m✓[39m tools/catalog-request-snapshot.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 202[2mms[22m[39m
+ [32m✓[39m tools/github-ci.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 18[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m      Tests [22m [1m[32m57 passed[39m[22m[90m (57)[39m
+[2m   Start at [22m 13:08:37
+[2m   Duration [22m 8.35s[2m (tests 75%, import 18%, transform 6%, worker 1%)[22m
+
+[2m    Isolate [22m [33m13 workers spawned[39m[2m · ~80ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~964ms faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+> venus@0.0.0 check:schemas
+> python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check
+
+PASS: JSON Schema 2020-12 and OpenAPI local references
+Checked RE-1 six labels × six = 36 directed combinations; errors=0
+PASS: policy config invariants only. Actual consent/access/inference requires app tests.
+
+> venus@0.0.0 check:i18n
+> node tools/check-i18n.mjs
+
+PASS: RU/EN/TR locale keys and nonempty strings
+
+> venus@0.0.0 test:python
+> python -B -m unittest discover -s tools -p test_*.py
+
+
+> venus@0.0.0 check:docs
+> python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py
+
+Venus docs: 167 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+PASS: required files, linked assets and snapshot hashes
+{"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
+PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
+PASS: EXIT-P01 source, CI, negative/container evidence and independent reports bound
+PASS: EXIT-P02 source/CI/HTTP/WS/PostgreSQL/browser/OCI and independent reviews bound
+PASS: EXIT-P03 source/CI/runtime/preregistered measurements/independent reviews bound
+Checked 2228 packaged paths; errors=0
+PASS: packaged bytes match manifest; provenance/signatures require release verification.
+
+> venus@0.0.0 build
+> tsc -b && npm run build -w @venus/web
+
+
+> @venus/web@0.0.0 build
+> vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 21 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.39 kB │ gzip:  0.27 kB
+dist/assets/index-McaKYTmT.css    4.60 kB │ gzip:  1.62 kB
+dist/assets/index-eVW1xvQ1.js   245.75 kB │ gzip: 77.77 kB
+
+✓ built in 111ms
+
+> venus@0.0.0 test:catalog-r2
+> node tools/check-catalog-r2.mjs
+
+Validated 450 files, 450 parsed; errors=0
+PASS: structural/semantic checks only; human review still mandatory.
+
+DRAFT CHECK COMPLETE: 450 cards; human review remains REQUIRED. Output /workspace/.artifacts/catalog-r2-check/full-check
+
+ilures": 0, "errors": 0, "skipped": [], "active_draft_cards": 450, "coverage_dir": ".artifacts/catalog-r2-check/full-check", "approval_scope": "AUTOMATED_DRAFT_REGRESSION_ONLY", "human_approval": false}
+test_actual_full_C2_bound_to_final450 (__main__.FullCandidateTests.test_actual_full_C2_bound_to_final450) ... ok
+test_actual_public_and_private_profiles (__main__.FullCandidateTests.test_actual_public_and_private_profiles) ... ok
+test_balanced150_and30_categories (__main__.FullCandidateTests.test_balanced150_and30_categories) ... ok
+test_copied_revision_lineage_and_exact_untouched_bytes (__main__.FullCandidateTests.test_copied_revision_lineage_and_exact_untouched_bytes) ... ok
+test_draft_rights_and_physical_guards (__main__.FullCandidateTests.test_draft_rights_and_physical_guards) ... ok
+test_exact_active_selection_excludes_removed_and_quarantine (__main__.FullCandidateTests.test_exact_active_selection_excludes_removed_and_quarantine) ... ok
+test_known12_turkish_repairs (__main__.FullCandidateTests.test_known12_turkish_repairs) ... ok
+test_named_semantic_pairs_changed_outputs (__main__.FullCandidateTests.test_named_semantic_pairs_changed_outputs) ... ok
+test_original450_and_frozen379_unchanged (__main__.FullCandidateTests.test_original450_and_frozen379_unchanged) ... ok
+test_owned_ledger_history522_selects450_current (__main__.FullCandidateTests.test_owned_ledger_history522_selects450_current) ... ok
+test_packaged_readonly_original_ledger_snapshot (__main__.FullCandidateTests.test_packaged_readonly_original_ledger_snapshot) ... ok
+test_requests_reserved_before_new_draft_events (__main__.FullCandidateTests.test_requests_reserved_before_new_draft_events) ... ok
+test_round02_actor_number_repairs (__main__.FullCandidateTests.test_round02_actor_number_repairs) ... ok
+test_schema_roles_and_locale_parity (__main__.FullCandidateTests.test_schema_roles_and_locale_parity) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.524s
+
+OK
+
+Draft catalog receipts: .artifacts/catalog-r2-check
+
+> venus@0.0.0 test:negative
+> node tools/negative-gates.mjs
+
+PASS: schema, locale, type and unit corruption rejected; source unchanged
+.....................................................................................................................
+----------------------------------------------------------------------
+Ran 117 tests in 14.072s
+
+OK

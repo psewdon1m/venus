@@ -1,0 +1,35 @@
+Traceback (most recent call last):
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\method05-output-controls.py", line 11, in denied
+    try:fn()
+        ^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\method05-output-controls.py", line 73, in <lambda>
+    _,state,guard,_=fixture();state['counter']=1;state['advance']=False;denied(lambda:guard.before(),'SUPERVISOR_INITIAL_ADVANCE_MISSING')
+                                                                                      ^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\host-output-guard.py", line 45, in before
+    if not self.armed:self.arm()
+                      ^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\host-output-guard.py", line 42, in arm
+    self.wait(.025);self.sample()
+                    ^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\host-output-guard.py", line 32, in sample
+    if now-self.advanced>2:self.stop('SUPERVISOR_SAMPLE_STALE')
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\host-output-guard.py", line 18, in stop
+    raise OutputStopped('HOST_OUTPUT_STOP_NOT_ACCEPTED:'+self.fault)
+guard05.OutputStopped: HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_SAMPLE_STALE
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\method05-output-controls.py", line 74, in <module>
+    check('new Python writer requires actual initial counter advance',initial)
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\method05-output-controls.py", line 9, in check
+    def check(name,fn):fn();checks.append({'name':name,'status':'PASS'})
+                       ^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\method05-output-controls.py", line 73, in initial
+    _,state,guard,_=fixture();state['counter']=1;state['advance']=False;denied(lambda:guard.before(),'SUPERVISOR_INITIAL_ADVANCE_MISSING')
+                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\.projects\venus\.artifacts\p05-topic-measurements-method05\method05-output-controls.py", line 13, in denied
+    if expected:assert expected in str(e),(expected,str(e))
+                       ^^^^^^^^^^^^^^^^^^
+AssertionError: ('SUPERVISOR_INITIAL_ADVANCE_MISSING', 'HOST_OUTPUT_STOP_NOT_ACCEPTED:SUPERVISOR_SAMPLE_STALE')

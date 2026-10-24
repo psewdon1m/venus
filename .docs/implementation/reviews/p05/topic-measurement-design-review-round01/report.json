@@ -1,0 +1,176 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED_BEFORE_FINAL_DESIGN_FREEZE",
+  "scope": "INDEPENDENT_DESIGN_REVIEW_ONLY_NOT_PRODUCER_OR_STATISTICAL_ACCEPTANCE",
+  "reviewer": "/root/p05_topics_ui_review",
+  "design_author": "/root/p05_topic_games_review",
+  "created_at": "2026-10-19T19:12:48.667527+00:00",
+  "exact_inputs": [
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round01/REPORT.md",
+      "sha256": "7621fa3b2662a4a411ed2c55193d4d196230e25015ef1392ad88ebe75e7356ce",
+      "bytes": 17929
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round01/PROPOSED_PREREG.json",
+      "sha256": "b25c054fa25db50b9197b1768546d5ec726339b0f6317fd196581241bca6ab02",
+      "bytes": 23370
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-measurement-design-round01/source-pins.json",
+      "sha256": "d39f00be4cddf35f2f162d415fdcd72db9d9b4603d3f8d92a9c26009ea9a040a",
+      "bytes": 6801
+    },
+    {
+      "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+      "sha256": "8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9",
+      "bytes": 78597
+    },
+    {
+      "path": ".docs/P05_TOPIC_ADVICE_DESIGN.md",
+      "sha256": "94c704e17d6a2e949f741c592e9147f53205412c87865452c96499e2bf93c430",
+      "bytes": 30220
+    },
+    {
+      "path": ".docs/P05_PRIVATE_CHAT.md",
+      "sha256": "e719cf3b63c6ab34329c1ba1ab02dc42c9c28cd0ac8b6083578ce5a57f277081",
+      "bytes": 14165
+    },
+    {
+      "path": ".docs/adr/ADR-023-p05-room-topic-safety-lifecycle.md",
+      "sha256": "f119f5420f8962879b2a33797c980c162db47fa6de3a883a8f6ecfbe71801b2d",
+      "bytes": 16895
+    },
+    {
+      "path": ".docs/implementation/p03-measurement-protocol-v3.json",
+      "sha256": "1525bbb8fef882626ee5839e45433a0e9120d26c751f959124df19201ad58678",
+      "bytes": 14330
+    },
+    {
+      "path": ".docs/implementation/p03-measurement-inputs-v3.json",
+      "sha256": "18670e85af076284615957549f1f7d78fbe5c4be39b9a4dcc84c16cc9388ed2d",
+      "bytes": 8021
+    },
+    {
+      "path": ".docs/implementation/p04-coverage-protocol-v2.json",
+      "sha256": "2b0ff6bc73b853d030249e5ff5d00f76060edc31b721aafd7501a2a4e5e96b2a",
+      "bytes": 2329
+    },
+    {
+      "path": "tools/p03-measurements.mjs",
+      "sha256": "37ed8430ffebb5122e9718e87633db6d74b9b611fd3f12b729e16655882ffb5d",
+      "bytes": 29025
+    },
+    {
+      "path": "tests/p03/public-transcript.mjs",
+      "sha256": "3243e41d56412b851b1b56452ade3e25f137914e10c8399f23eee45c0efdaefc",
+      "bytes": 5621
+    },
+    {
+      "path": "packages/relationship-engine/src/topic-planner.ts",
+      "sha256": "cb68ba07f83492e7cebbdad7f0a7aa5f1a115773608d5d2f65315c942d1f6d17",
+      "bytes": 41728
+    },
+    {
+      "path": "packages/relationship-engine/src/engine.ts",
+      "sha256": "be84b979418c56e17066b0c1788ec985f869a99ab38c2c77ad3daa84657c3d8a",
+      "bytes": 12530
+    },
+    {
+      "path": "apps/api/src/topic-game-model.ts",
+      "sha256": "fe371afa866f3899250d222d0135a0770304afc90513316971f2c923f00cc9b7",
+      "bytes": 9921
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "a5a6c6cb3da9b4beb75ce36be708c49bbdfecfcab9ce34523ad5a76fdfa6a36e",
+      "bytes": 85014
+    },
+    {
+      "path": "apps/api/src/topic-chat-policy.ts",
+      "sha256": "a3e60602ae1591f91ea2054954f8ec81ed4ed55a91df9c4fbfbb6aee50ba861f",
+      "bytes": 2188
+    }
+  ],
+  "current_source_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "current_source_files": 1808,
+  "author_historical_snapshots_verified": 26,
+  "arithmetic_checks_passed": 19,
+  "findings": [
+    {
+      "id": "TM-DESIGN-R01",
+      "severity": "P2",
+      "location": "c2.statuses; fairness.denominators/nondegeneracy; runtime_canary.matrix/cases",
+      "summary": "Expected statuses and denominator applicability are not yet executable",
+      "evidence": "The proposal lists statuses and says expected-supported, but does not map the 14 profiles and scenario guards to them. Historical fairness code counts BOTH pair_public and pair_private rounds in K. Online DEFAULT_OFF removes private opportunities, not necessarily public-pair invitations. T1_EMPTY can select generic private opportunities with zero candidates/prompts. N2 has exactly one unordered pair, so a different-pair runtime canary cannot execute in all84 cells.",
+      "required_correction": "Freeze a machine-readable table keyed by section/profile/context/stage/class/comfort (and R reachability where relevant), with expected baseline/effective opportunity/selected/prompt counts, NA reason and unexpected-zero failure. Define K_all_pair_rounds=K_public+K_private and D_all=2*K_all explicitly; retain private opportunity, candidate attempts, accepted prompts and advice as separate counters. Online-off private counts must be exact0, its private nondegeneracy NA, while all-pair fairness remains evaluated. T1_EMPTY effective candidate/prompt0 must coexist with positive supported late opportunity nondegeneracy. Map runtime cases to applicable N/transport profiles; N2 different-pair NA and online-off negative controls require no extra actor or grant."
+    },
+    {
+      "id": "TM-DESIGN-R02",
+      "severity": "P2",
+      "location": "synthetic_fixture.requirements; c2.private_baseline; exclusion_inference.compatible_support_precheck",
+      "summary": "Raw family counts do not certify every promised supported repertoire",
+      "evidence": "A baseline of75 distinct common private families can consist of creative1/music37/romance37. It passes the raw minimum yet creative-only support exhausts after one distinct candidate. Even100 raw public families can fall below100 usable families after mixed-family removal, prior public history, context or class filters. In-person private cards requiring private_text_chat would be ineligible under both effective operator profiles, whose in_person capabilities are empty.",
+      "required_correction": "Specify frozen fixture construction and an independently verified residual-support certificate for each mode/context/class/comfort/stage/R/profile/target-pair and targeted topic union, after whole-family quarantine and prior history. Count distinct full-union admissible semantic families, not ID clones or pair permutations. Distinguish production baseline>=ceil(.25R) raw cards from the stronger fixture-family requirement. Give explicit context card metadata: online-only chat-dependent private cards and capability-free in_person verbal variants, never a global simulated chatcap. Provide deterministic conditional capacity bounds for replacements/prior consumption; mark intended exhaustions separately before statistics. No content/seed changes after outcomes to repair a failed supported stratum."
+    },
+    {
+      "id": "TM-DESIGN-R03",
+      "severity": "P2",
+      "location": "social_inference.source_adapter/lifecycle/feature_dictionary; topic_regimes; private_inference; resources",
+      "summary": "Lifecycle and public feature contract remain unspecified enough to change the measured claim",
+      "evidence": "The proposal requires real V2 serializer/envelope metadata but still leaves actual clocks, mutation order, advice scripts, chat/no-bump behavior, choice/condition contents and exact append-only feature dictionary to future author discretion. None of the seven regime descriptions schedules an advice lifecycle, despite the later requirement to measure it where the regime calls for it. Empty-topic/replacement/refusal branches also require deterministic next actions and denominator rules.",
+      "required_correction": "Before authoring/final freeze, define ordered per-mode/per-regime transition scripts with exact actor selection, synthetic truth/dare/YesBut condition, topic zero/one/two-ack observations, replacement/exclusion, action accept/finish, pending/accepted/edited/revoked advice, zero-revision chat controls, delays and TTL guards. Specify no-op/unavailable branches. Add a precise public observation schema for room/game snapshots and generic frames (room/game/stream revisions, UUID/epoch presence where public, sequence, timestamps, status, frame counts and serialized UTF8 sizes); retain old feature prefix and freeze appended names/order/normalization and redaction rules before final run. Validate every included mutation class against actual runtime, including advice controls and no-bump chat; do not synthesize one revision per conceptual action. Keep actor-only preaccept tests separate, with exact raw serialization checks, without pretending deterministic checks are an unregistered statistical sample."
+    },
+    {
+      "id": "TM-DESIGN-R04",
+      "severity": "P2",
+      "location": "social_inference.seed; exclusion_inference; c2 seed inheritance",
+      "summary": "Seed pairing wording conflicts with retained historical literal strings; some index rules remain implicit",
+      "evidence": "Historical inference literal venus:P03-M2:<split>:<comparison>:<class>:<N>:<mode>:<context>:<index> hashes to different engine seeds for F and G. The proposed same seeds for matched counterfactuals statement cannot mean literal/RNG equality across those classes while preserving the original design. C2 does not spell out the retained P04 seed formula, and exclusion inference omits an explicit rounds/index rule.",
+      "required_correction": "Retain exact historical strings/derivation/counts, and state that same indices and seed formula are reused across new cap/topic profiles, while historical F/G/M classes retain class-bearing independent seeds; only G/F paired opportunity statistic uses its original identical seed across both conditions. If a new paired common-random-seed inference probe is wanted, add it separately with new prereg rather than replacing old samples. Freeze C2 P04 seed formula and all new exclusion train/holdout index ranges, R rule, comparison/class ordering, target actor IDs, prior refs and cap-profile input. Do not pool duplicated cap/topic seed profiles as additional independent samples for a common CI."
+    },
+    {
+      "id": "TM-DESIGN-R05",
+      "severity": "P2",
+      "location": "fairness.anti_repeat; REPORT Exact original M3 rules retained; current selectNextTopicRound",
+      "summary": "Effective anti-repeat gate must be normative before results, including empty private opportunities",
+      "evidence": "Current source avoids the pair in history.private_history.at(-1) using baseline options. A private opportunity with no candidate creates no private_history record, so most recent actual private proposal can differ from most recent history-bearing candidate. Effective unused topic/semantic alternatives can differ from baseline options. The design exposes this correctly but only says escalate a contract mismatch, leaving final acceptance unresolved.",
+      "required_correction": "Freeze formal previous-pair and admissible-alternative predicates and zero-violation acceptance before the run. Preserve original effective unused-admissible promise as a separately evaluated strict gate, including empty opportunities and replaced/declined attempts; baseline-only counters are diagnostics. If production cannot satisfy this gate, retain FAIL and fix/version/review the algorithm or obtain an explicit prospective scope decision before any final statistics; do not silently accept baseline-only behavior after observing results. Add deterministic empty-opportunity and baseline-vs-effective disagreement microfixtures before statistical producer acceptance."
+    }
+  ],
+  "resource_assessment": {
+    "streaming_memory": "Plausible in principle at1CPU/1536MiB with one section, bounded moments/score arrays and disk streaming; not benchmarked or proven.",
+    "artifact_budget": "32GiB can only be a hard measured ceiling, not a completion promise; define encoded bytes/chunk/feature limits and retain NOT_ACCEPTED partial output on cap.",
+    "conditional_workload_rounds": 220207400.0,
+    "exclusion_R_rule_conditional": true,
+    "CPU_wallclock": "Wallclock unset is already acknowledged as root preRUN prerequisite. Fix per-section and total limits, CPU/memory/pids/file bounds, timeouts, resume identity and disk accounting before RUN. A declared non-gating fixed-index bounded benchmark may estimate throughput after exact scripts/fixture are fixed; it must not choose seeds/thresholds and cannot be promoted.",
+    "full_transcripts": "Do not retain all full network transcripts in RAM. Keep enough canonical sparse features, raw counters, scores, input manifests and deterministic transcript digests for independent reproduction/reconciliation.",
+    "not_unfeasible_claim": true
+  },
+  "confirmed_retained": {
+    "profiles": 14,
+    "eligibility_rows": 8232000,
+    "C2_neutral": 58800,
+    "C2_negative": 196,
+    "C2_private": 588000,
+    "invariants": 980000,
+    "fairness": 1176000,
+    "fairness_stage_rows": 2352,
+    "social_transcripts": 1764000,
+    "exclusion_transcripts": 504000,
+    "GF_matched_opportunities": 1000000,
+    "fairness_max_individual": 0.5,
+    "fairness_gap": 0.02,
+    "GF_CI_lower_exclusive": 1,
+    "inference_CI_upper": 0.65
+  },
+  "context_update": "Old audit1d4 metadata and open chat/quota prerequisites are historical, not current negative proof. Current895 has explicit online+flag guard and recorded quota contract12/calendar-minute/actor,128/round,last32; actual chat audit remains separately bound. New design revision must reference current fix/proofs without rewriting old report.",
+  "authority_limits": [
+    "No stats, Docker, new measurement producer or product modifications.",
+    "Human450 HOLD and empty approved runtime registry remain unchanged.",
+    "Current dirty-source checks are not committed/tagged final preregistration.",
+    "No threshold/sample reduction or outcome-driven fixture/seed/classifier tuning accepted.",
+    "New design revision and separate author-disjoint review required before root final ACK."
+  ],
+  "full_stage_pass": false
+}

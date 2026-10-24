@@ -1,0 +1,11 @@
+--- OCI24/api-child.mjs
++++ OCI25/api-child.mjs
+@@ -31,7 +31,7 @@
+   }else{
+    report.preserved=await preserved(h,obs,previous);report.replay=await replay(h,obs,effects,phase==='B2'?previous.D:previous.E,baseline);
+    if(phase==='B2'){const E=await activePrivate(h);assert.equal(obs.sha(h.source.map.pins),obs.sha(previous.sourcePins));const next={...previous,E:serialize(E),baseline:{...previous.baseline,E:await obs.liveUntouched(h.pool,h.keys,E,h.time())}};const F=await activePrivate(h);assert.notEqual(F.room,E.room,'FRESH_B_FIXTURE_MUST_BE_SEPARATE');next.F=serialize(F);privateWrite('state-B2-final.json',next);report.fresh_B_operational_fixture={label:'F',separate_from_untouched_E:true,created_by:'UNCHANGED_ACTIVE_PRIVATE_ONE_SESSION20',untouched_oracle:false};report.new_E={fresh_bilateral_private_positive:true,same_synthetic_pins:true,live_before_switch:next.baseline.E};publicWrite('phase-B2-ready.json',{status:'READY_FOR_BROWSER_AND_STOP',phase});}
+-   else{const E=restore(previous.E);const stop=await h.call(E.host,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}
++   else{const E=restore(previous.E),exitActor=E.members.slice(1,3).find(a=>a.id===E.excludedActor);assert(exitActor&&exitActor.id!==E.host.id,'A3_SELECTED_PARTICIPANT_EXIT_REQUIRED');const stop=await h.call(exitActor,h.base(E)+`/${E.game}/stop`,'POST',{request_id:cryptoRandomUUID()});assert.equal(stop.status,200);const current=await h.call(previous.A.host,h.roomPath(previous.A));assert.equal(current.status,200);report.final_current={safe_exit:true,narrowed_policy_preserved:true,ordinary_room200:true};publicWrite('phase-A3-ready.json',{status:'READY_FOR_STOP',phase});}
+   }
+   await command('STOP');await service.close();closed=true;report.pool_closed=true;report.status='PHASE_COMPLETE';
+  }catch(error){report.error=safeError(error,phase);report.status='FAIL';}

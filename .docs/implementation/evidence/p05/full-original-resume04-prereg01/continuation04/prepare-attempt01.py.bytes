@@ -1,0 +1,102 @@
+from pathlib import Path
+from datetime import datetime, timezone
+import hashlib, json, uuid
+
+r = Path('C:/.projects/venus')
+d = r / '.artifacts/p05-full-original-resume04'
+sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+write = lambda name, value: (d / name).write_text(json.dumps(value, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
+original_path = r / '.artifacts/p05-full-original-ranges02/MANIFEST.json'
+original_raw = original_path.read_bytes()
+original = json.loads(original_raw)
+terminal_path = r / '.artifacts/p05-full-original-execution03/BATCH_TERMINAL.json'
+terminal = json.loads(terminal_path.read_text())
+cleanup_path = r / '.artifacts/p05-fixedrange-interruption-recovery01/CLEANUP_RECEIPT.json'
+assert sha(cleanup_path) == '32f5751d3a606c0b15207f11aa6355c4f0311faa1b7d5dfddc6cf977f81bd953'
+cleanup = json.loads(cleanup_path.read_text())
+assert cleanup['status'] == 'PASS_OWNED_EIGHT_CLEANUP_ONLY' and cleanup['mutations'] == 16 and cleanup['error'] is None
+assert all(x['exit'] == 0 for x in cleanup['calls'])
+failed = [x for x in terminal['records'] if not x['ok']]
+selected = [x for x in terminal['records'] if x['ok']]
+assert len(failed) == 8 and len(selected) == 683
+assert sum(bool(x.get('carried_from_parent')) for x in selected) == 62
+expected_mutations = [args for x in failed for args in [['container', 'rm', 'venus-fixedrange-' + x['owner']], ['volume', 'rm', 'venus-fixedrange-raw-' + x['owner']]]]
+actual_mutations = [x['args'] for x in cleanup['calls'] if x['args'][:2] in [['container', 'rm'], ['volume', 'rm']]]
+assert sorted(actual_mutations) == sorted(expected_mutations)
+used = {x['owner'] for x in original['jobs']} | {x['owner'] for x in original['prefixes']}
+new_raw = original_raw
+replacements = []
+for rec in failed:
+    job = original['jobs'][rec['ordinal']]
+    owner = uuid.uuid4().hex
+    assert owner not in used and not (Path(original['output_parent']) / owner).exists()
+    used.add(owner)
+    ack = dict(original['ack_base'], status='ROOT_RUN_ACK', no_actual_approval=False, owner=owner, range=job['range'])
+    digest = hashlib.sha256((json.dumps(ack, indent=2, ensure_ascii=False) + '\n').encode()).hexdigest()
+    assert new_raw.count(job['owner'].encode()) == 1 and new_raw.count(job['ack_sha256'].encode()) == 1
+    new_raw = new_raw.replace(job['owner'].encode(), owner.encode()).replace(job['ack_sha256'].encode(), digest.encode())
+    replacements.append({'ordinal': job['ordinal'], 'lane': job['lane'], 'range': job['range'], 'old_owner': job['owner'], 'new_owner': owner, 'old_ACK_sha256': job['ack_sha256'], 'new_ACK_sha256': digest})
+(d / 'MANIFEST.json').write_bytes(new_raw)
+write('TRANSPORT-REPLACEMENTS.json', {'scope': 'EIGHT_INTERRUPTED_TRANSPORT_IDENTITIES_ONLY_SAME_ORIGINAL_CASES', 'original_manifest_sha256': sha(original_path), 'replacements': replacements, 'recovered_three_supplemental_uncounted': True})
+write('SELECTED-NORMAL-RECORDS.json', {'status': 'SELECTED_683_NORMAL_VALID_RECORDS_NOT_PARENT_TERMINAL_REWRITE', 'parent_terminal_sha256': sha(terminal_path), 'records': selected, 'recovered_exports_credited': 0})
+locations = []
+for rec in selected:
+    if rec.get('carried_from_parent'):
+        continue
+    root = Path(original['output_parent']) / rec['owner']
+    locations.append({'ordinal': rec['ordinal'], 'owner': rec['owner'], 'range': rec['range'], 'raw_root': str(root / 'export'), 'host_report_sha256': sha(root / 'host-report.json'), 'export_pins_sha256': sha(root / 'export-pins.json')})
+assert len(locations) == 621
+write('RAW-LOCATIONS.json', locations)
+files = []
+for name in ['SELECTED-NORMAL-RECORDS.json', 'RAW-LOCATIONS.json', 'TRANSPORT-REPLACEMENTS.json']:
+    p = d / name
+    files.append({'path': name, 'sha256': sha(p), 'bytes': p.stat().st_size})
+write('SELECTED-CARRY-INDEX.json', {'status': 'SELECTED_NORMAL_CARRY_METADATA_NOT_FULL_BATCH_PASS', 'files': files, 'selected': 683, 'new_normal': 621, 'prior_accepted': 62, 'supplemental_recovery_credited': 0})
+carry = {'schema': 1, 'status': 'PENDING_FRESH_INDEPENDENT_REVIEW_ROOT_PREREG_AND_ACK_NO_RUN', 'original_manifest_path': str(original_path), 'original_manifest_sha256': sha(original_path), 'transport_manifest_sha256': sha(d / 'MANIFEST.json'), 'parent_runner': str(r / '.artifacts/p05-full-original-lanes03.mjs'), 'parent_runner_sha256': sha(r / '.artifacts/p05-full-original-lanes03.mjs'), 'parent_terminal_path': str(terminal_path), 'parent_terminal_sha256': sha(terminal_path), 'parent_activation_path': str(r / '.artifacts/p05-full-original-resume03-root-activation02.json'), 'parent_activation_sha256': terminal['activation_sha256'], 'parent_stop_path': str(r / '.artifacts/p05-full-original-execution03/STOP.json'), 'parent_stop_sha256': sha(r / '.artifacts/p05-full-original-execution03/STOP.json'), 'prior_carry_path': str(r / '.artifacts/p05-full-original-resume03/CARRY.json'), 'prior_carry_sha256': sha(r / '.artifacts/p05-full-original-resume03/CARRY.json'), 'prior_verified_path': str(r / '.artifacts/p05-full-original-execution03/verified-carry.json'), 'prior_verified_sha256': sha(r / '.artifacts/p05-full-original-execution03/verified-carry.json'), 'cleanup_receipt_path': str(cleanup_path), 'cleanup_receipt_sha256': sha(cleanup_path), 'selected_carry_index': str(d / 'SELECTED-CARRY-INDEX.json'), 'selected_carry_index_sha256': sha(d / 'SELECTED-CARRY-INDEX.json'), 'selected_records_path': str(d / 'SELECTED-NORMAL-RECORDS.json'), 'transport_replacements_path': str(d / 'TRANSPORT-REPLACEMENTS.json'), 'carried_ordinals': [x['ordinal'] for x in selected], 'completed_jobs': 683, 'remaining_jobs': 1926, 'accepted_prefix_cases_not_rerun': 1600, 'supplemental_recovery_ranges_credited': 0, 'parent_run_root': str(r / '.artifacts/p05-full-original-execution03'), 'new_run_root': str(r / '.artifacts/p05-full-original-execution04')}
+carry['remaining_lane_jobs'] = [[i for i in lane if i not in set(carry['carried_ordinals'])] for lane in original['lane_jobs']]
+write('CARRY.json', carry)
+
+helpers = r'''export function validateTransportPlan(plan,carry){
+ const raw=fs.readFileSync(carry.original_manifest_path);assert.equal(sha(raw),carry.original_manifest_sha256);assert.equal(carry.original_manifest_sha256,'9b107dccf958551968e6e1fe758595754c219a66ac6bd66fcacdb26ff62e59c2');const old=JSON.parse(raw);validatePlan(old);
+ const t=JSON.parse(fs.readFileSync(carry.parent_terminal_path));assert.equal(sha(fs.readFileSync(carry.parent_terminal_path)),carry.parent_terminal_sha256);const replacements=JSON.parse(fs.readFileSync(carry.transport_replacements_path)).replacements,failed=t.records.filter(r=>!r.ok);assert.equal(replacements.length,8);assert.deepEqual(replacements.map(x=>x.ordinal),failed.map(x=>x.ordinal));const expected=JSON.parse(raw);
+ for(const x of replacements){const a=old.jobs[x.ordinal],b=expected.jobs[x.ordinal];assert.equal(x.old_owner,a.owner);assert.equal(x.old_ACK_sha256,a.ack_sha256);assert.deepEqual(x.range,a.range);assert.equal(x.lane,a.lane);assert.match(x.new_owner,/^[a-f0-9]{32}$/);assert.notEqual(x.new_owner,x.old_owner);b.owner=x.new_owner;b.ack_sha256=x.new_ACK_sha256;}
+ assert.deepEqual(plan,expected,'ONLY_EIGHT_OWNER_AND_ACK_TRANSPORT_VALUES_MAY_CHANGE');validatePlan(plan);return old;
+}
+export function carryShape(plan,terminal,selected,locations){
+ assert.equal(terminal.status,'STOPPED_AFTER_FAILURE_NO_RETRY');assert.equal(terminal.manifest_sha256,'9b107dccf958551968e6e1fe758595754c219a66ac6bd66fcacdb26ff62e59c2');assert.equal(terminal.stop_marker_write_error,null);assert.equal(terminal.planned_jobs,2609);assert.equal(terminal.completed_jobs,691);assert.equal(terminal.executed_this_run,629);assert.equal(terminal.carried_jobs,62);assert.equal(terminal.records.length,691);assert.equal(terminal.records.filter(r=>!r.ok).length,8);
+ assert.equal(selected.status,'SELECTED_683_NORMAL_VALID_RECORDS_NOT_PARENT_TERMINAL_REWRITE');assert.equal(selected.recovered_exports_credited,0);assert.deepEqual(selected.records,terminal.records.filter(r=>r.ok));assert.equal(selected.records.length,683);assert.equal(locations.length,621);
+ const seen=new Set(),owners=new Set();for(const r of selected.records){const j=plan.jobs[r.ordinal];assert(j);assert(!seen.has(r.ordinal)&&!owners.has(r.owner));seen.add(r.ordinal);owners.add(r.owner);assert.equal(r.owner,j.owner);assert.equal(r.lane,j.lane);assert.deepEqual(r.range,j.range);assert.equal(r.ok,true);assert.equal(r.native_range_execution_ok,true);assert.equal(r.strict_section_refusal_blocks_acceptance,false);assert.equal(r.exit_code,0);assert.equal(r.signal,null);assert.equal(r.overflow,false);assert(!r.spawn_error&&!r.code);if(!r.carried_from_parent){const l=locations.filter(x=>x.ordinal===r.ordinal);assert.equal(l.length,1);assert.equal(l[0].owner,r.owner);assert.deepEqual(l[0].range,r.range);assert.equal(path.resolve(l[0].raw_root),path.resolve(plan.output_parent,r.owner,'export'));}}
+ for(const lane of plan.lane_jobs){const ids=lane.filter(i=>seen.has(i));assert.deepEqual(ids,lane.slice(0,ids.length));}return [...seen].sort((a,b)=>a-b);
+}
+export function remainingPlan(plan,carried,runRoot){const done=new Set(carried);assert.equal(done.size,683);return {...plan,run_root:runRoot,lane_jobs:plan.lane_jobs.map(ids=>ids.filter(id=>!done.has(id)))};}
+export function verifyCarry(plan,carry){
+ assert.equal(carry.schema,1);assert.equal(sha(bytes(plan)),sha(bytes(JSON.parse(fs.readFileSync(path.join(path.dirname(carry.selected_carry_index),'MANIFEST.json'))))));const old=validateTransportPlan(plan,carry);assert.equal(sha(fs.readFileSync(carry.parent_runner)),carry.parent_runner_sha256);assert.equal(carry.parent_runner_sha256,'a6654ff6f677c984222406bd3cee18cb2bd0083826c3a2468680fa0f4f40cc3d');assert.equal(sha(fs.readFileSync(carry.parent_activation_path)),carry.parent_activation_sha256);assert.equal(sha(fs.readFileSync(carry.parent_stop_path)),carry.parent_stop_sha256);
+ const selectedIndex=JSON.parse(fs.readFileSync(carry.selected_carry_index));assert.equal(sha(fs.readFileSync(carry.selected_carry_index)),carry.selected_carry_index_sha256);const base=path.dirname(carry.selected_carry_index);for(const f of selectedIndex.files){const p=path.resolve(base,f.path);assert(!path.relative(base,p).startsWith('..'));const raw=fs.readFileSync(p);assert.equal(raw.length,f.bytes);assert.equal(sha(raw),f.sha256);}
+ const terminal=JSON.parse(fs.readFileSync(carry.parent_terminal_path)),selected=JSON.parse(fs.readFileSync(carry.selected_records_path)),locations=JSON.parse(fs.readFileSync(path.join(base,'RAW-LOCATIONS.json'))),carried=carryShape(plan,terminal,selected,locations);assert.equal(selected.parent_terminal_sha256,carry.parent_terminal_sha256);assert.equal(terminal.activation_sha256,carry.parent_activation_sha256);assert.deepEqual(carried,carry.carried_ordinals);assert.equal(carry.completed_jobs,683);assert.equal(carry.remaining_jobs,1926);assert.equal(carry.accepted_prefix_cases_not_rerun,1600);assert.equal(carry.supplemental_recovery_ranges_credited,0);assert.equal(path.resolve(carry.new_run_root),path.resolve('C:/.projects/venus/.artifacts/p05-full-original-execution04'));assert.deepEqual(carry.remaining_lane_jobs,remainingPlan(plan,carried,carry.new_run_root).lane_jobs);
+ assert.equal(sha(fs.readFileSync(carry.cleanup_receipt_path)),carry.cleanup_receipt_sha256);assert.equal(carry.cleanup_receipt_sha256,'32f5751d3a606c0b15207f11aa6355c4f0311faa1b7d5dfddc6cf977f81bd953');const cleanup=JSON.parse(fs.readFileSync(carry.cleanup_receipt_path));assert.equal(cleanup.status,'PASS_OWNED_EIGHT_CLEANUP_ONLY');assert.equal(cleanup.error,null);assert.equal(cleanup.mutations,16);assert(cleanup.calls.every(c=>c.exit===0));const wanted=terminal.records.filter(r=>!r.ok).flatMap(r=>[['container','rm','venus-fixedrange-'+r.owner],['volume','rm','venus-fixedrange-raw-'+r.owner]]).map(x=>JSON.stringify(x)).sort(),actual=cleanup.calls.filter(c=>['container','volume'].includes(c.args[0])&&c.args[1]==='rm').map(c=>JSON.stringify(c.args)).sort();assert.deepEqual(actual,wanted);
+ assert.equal(sha(fs.readFileSync(carry.prior_carry_path)),carry.prior_carry_sha256);assert.equal(sha(fs.readFileSync(carry.prior_verified_path)),carry.prior_verified_sha256);const prior=verifyParentCarry(old,JSON.parse(fs.readFileSync(carry.prior_carry_path)));assert.deepEqual(prior,JSON.parse(fs.readFileSync(carry.prior_verified_path)));assert.deepEqual(selected.records.filter(r=>r.carried_from_parent).map(r=>r.ordinal),prior.carried_ordinals);
+ let exportedBytes=prior.exported_bytes,rawRows=prior.authenticated_raw_rows;const receipts=[...prior.receipts];for(const r of selected.records.filter(r=>!r.carried_from_parent)){const job=plan.jobs[r.ordinal],root=path.join(plan.output_parent,r.owner),loc=locations.find(l=>l.ordinal===r.ordinal),ack=plannedAck(plan.ack_base,job),ackPath=path.join(carry.parent_run_root,'acks',r.owner+'.json');assert.equal(sha(fs.readFileSync(ackPath)),job.ack_sha256);assert.equal(sha(bytes(ack)),job.ack_sha256);assert.deepEqual(JSON.parse(fs.readFileSync(path.join(carry.parent_run_root,'logs',r.owner+'.json'))),r);
+  const raw=fs.readFileSync(path.join(root,'host-report.json'));assert.equal(sha(raw),r.host_report_sha256);assert.equal(sha(raw),loc.host_report_sha256);const h=JSON.parse(raw);for(const k of ['writer_stopped','export_verified','producer_unchanged'])assert.equal(h[k],true);assert.equal(h.timeout,false);assert.equal(h.worker_exit,0);assert.equal(h.cleanup,'COMPLETE');assert.deepEqual(h.cleanup_errors,[]);assert.equal(h.status,'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE');assert.equal(h.owner,job.owner);assert.deepEqual(h.range,job.range);assert.equal(h.source_identity,ack.source_identity);assert.equal(h.image,ack.image_id);
+  const savedRaw=fs.readFileSync(path.join(root,'export-pins.json'));assert.equal(sha(savedRaw),loc.export_pins_sha256);const fresh=verifyRangeExport(loc.raw_root,ack,job.range),saved=JSON.parse(savedRaw),normalize=v=>({...v,files:[...v.files].sort((a,b)=>a.path.localeCompare(b.path))});assert.deepEqual(normalize(fresh),normalize(saved));const s=fresh.summary;assert.equal(s.status,'RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE');assert.equal(s.completed,job.range.count);for(const k of ['owner','source_identity','binding_sha256','prereg_sha256','method_review_sha256'])assert.equal(s[k],ack[k]);assert.equal(s.image,ack.image_id);assert.deepEqual(s.range,job.range);assert.equal(strictSectionRefusal(job.range.section,s),false);assert.equal(s.typed_refusals,r.typed_refusals);assert.equal(s.full_section_PASS,false);assert.equal(s.full_P05_PASS,false);exportedBytes+=fresh.bytes;rawRows+=fresh.records;receipts.push({ordinal:job.ordinal,owner:job.owner,host_report_sha256:sha(raw),export_pins_sha256:sha(savedRaw),records:fresh.records,head:fresh.head,bytes:fresh.bytes});
+ }
+ const remaining=plan.jobs.filter(j=>!carried.includes(j.ordinal));assert.equal(remaining.length,1926);for(const j of remaining)assert(!fs.existsSync(path.join(plan.output_parent,j.owner)),'REMAINING_TRANSPORT_OWNER_ALREADY_HAS_OUTPUT');return {status:'VERIFIED_NORMAL683_CARRY_ONLY_NOT_STATISTICAL_ACCEPTANCE',carried_ordinals:carried,remaining_lane_jobs:carry.remaining_lane_jobs,exported_bytes:exportedBytes,authenticated_raw_rows:rawRows,receipts,supplemental_recovery_credited:0};
+}
+export function validateResumeActivation(original,carry,manifestRaw,carryRaw,activation,runnerHash){
+ assert.equal(activation.status,'ROOT_BATCH_RESUME_ACK');assert.equal(activation.no_actual_approval,false);assert.equal(activation.maximum_workers,8);assert.equal(activation.manifest_sha256,sha(manifestRaw));assert.equal(sha(manifestRaw),carry.transport_manifest_sha256);assert.equal(activation.original_manifest_sha256,carry.original_manifest_sha256);assert.equal(activation.oneoff_sha256,runnerHash);assert.equal(activation.parent_oneoff_sha256,carry.parent_runner_sha256);assert.equal(activation.carry_sha256,sha(carryRaw));assert.equal(activation.selected_carry_index_sha256,carry.selected_carry_index_sha256);assert.equal(activation.run_root,carry.new_run_root);
+ const reviewRaw=fs.readFileSync(activation.operational_review_path);assert.equal(sha(reviewRaw),activation.operational_review_sha256);assert.match(JSON.parse(reviewRaw).status,/^PASS(?:_|$)/);const witnessRaw=fs.readFileSync(activation.prereg_witness_path);assert.equal(sha(witnessRaw),activation.prereg_witness_sha256);const w=JSON.parse(witnessRaw);assert.equal(w.clean_status,true);assert.match(w.commit,/^[a-f0-9]{40}$/);assert.equal(w.commit,activation.prereg_commit);assert.match(w.status,/^CLEAN_/);assert.equal(w.manifest_sha256,sha(manifestRaw));const hashes=Object.values(w.files);for(const h of [runnerHash,sha(carryRaw),activation.operational_review_sha256])assert(hashes.includes(h),'ADDITIVE_CLEAN_PREREG_MUST_PIN_RUNNER_CARRY_AND_REVIEW');assert(Number.isFinite(Date.parse(activation.issued_at))&&Number.isFinite(Date.parse(w.created_at))&&Date.parse(activation.issued_at)>=Date.parse(w.created_at));return true;
+}
+'''
+old_path = r / '.artifacts/p05-full-original-lanes03.mjs'
+text = old_path.read_bytes().decode()
+nl = '\r\n' if '\r\n' in text else '\n'
+text = text.replace("const sha=b=>", "import {verifyCarry as verifyParentCarry} from './p05-full-original-lanes03.mjs';" + nl + "const sha=b=>", 1)
+begin = text.index('export function carryShape(')
+end = text.index('export async function main(', begin)
+text = text[:begin] + helpers.replace('\n', nl) + text[end:]
+text = text.replace('assert.equal(sha(manifestRaw),carry.parent_manifest_sha256);', 'assert.equal(sha(manifestRaw),carry.transport_manifest_sha256);')
+text = text.replace("JSON.parse(fs.readFileSync(path.join(path.dirname(carry.drain_index),'BATCH_TERMINAL.json'))).records", "JSON.parse(fs.readFileSync(carry.selected_records_path)).records")
+text = text.replace('parent_manifest_unchanged:true,planned_jobs', 'parent_manifest_unchanged:true,original_manifest_sha256:carry.original_manifest_sha256,transport_replacements:8,supplemental_recovery_credited:0,planned_jobs')
+runner = r / '.artifacts/p05-full-original-lanes04.mjs'
+runner.write_bytes(text.encode())
+write('ROOT-ACTIVATION.template.json', {'status': 'PENDING_ROOT_BATCH_RESUME_ACK', 'no_actual_approval': True, 'manifest_sha256': sha(d / 'MANIFEST.json'), 'original_manifest_sha256': sha(original_path), 'oneoff_sha256': sha(runner), 'parent_oneoff_sha256': sha(old_path), 'carry_sha256': sha(d / 'CARRY.json'), 'selected_carry_index_sha256': sha(d / 'SELECTED-CARRY-INDEX.json'), 'maximum_workers': 8, 'run_root': carry['new_run_root'], 'operational_review_path': 'ROOT_FILL_AFTER_INDEPENDENT_REVIEW', 'operational_review_sha256': 'ROOT_FILL_AFTER_INDEPENDENT_REVIEW', 'prereg_witness_path': 'ROOT_FILL_AFTER_CLEAN_ADDITIVE_COMMIT', 'prereg_witness_sha256': 'ROOT_FILL_AFTER_CLEAN_ADDITIVE_COMMIT', 'prereg_commit': 'ROOT_FILL_AFTER_CLEAN_ADDITIVE_COMMIT', 'issued_at': 'ROOT_FILL_AFTER_REVIEW_AND_PREREG', 'scope': 'ORIGINAL_1926_FIXED_SLOTS_683_NORMAL_CARRY_8_TRANSPORT_REPLACEMENTS_NO_RESEED_NO_SUPPLEMENTAL_CREDIT'})
+print(json.dumps({'status': 'AUTHOR_DRAFT_NO_RUN', 'runner_sha256': sha(runner), 'manifest_sha256': sha(d / 'MANIFEST.json'), 'carry_sha256': sha(d / 'CARRY.json'), 'selected': 683, 'remaining': 1926, 'transport_replacements': 8}))

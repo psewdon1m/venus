@@ -1,0 +1,3 @@
+# METHOD16 Chromium actual: FAIL
+
+5PASS/06FAIL/10NOT_RUN, cleanupPASS, exact historical1274/A29e39/source+producer unchanged. Case05 bilateral consent completes after method16 preparation correction. Case06 advice-accept TR stops before any POST: METHOD12_PRIVATE_BATCH_CHANGED_BEFORE_CLICK. Prepared cycle28/lease1789.976ms; observer model changed before the final ticket check. This is not an inferred product defect or prior409 cause. Independent timing/source diagnosis is pending; no stale/cycle/auth/TTL check may be dropped or UI mutation blindly retried. No fullbrowser/layout/P05 PASS. Raw Markdown inputs retain exact bytes under .md.bytes names.

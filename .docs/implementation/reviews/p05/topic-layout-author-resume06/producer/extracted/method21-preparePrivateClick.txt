@@ -1,0 +1,7 @@
+async function preparePrivateClick(a,control,path=null){
+ if(!normalPrivateControls.has(control))return null;
+ const match=path?.match(/\/game\/([^/]+)\/round\/([^/]+)\//),expected=match?{session:match[1],round:match[2]}:{},wanted=expectedPrivateScope(a,expected),prior=a.privateReady?.get(control),intent=a.privateIntents?.get(control);
+ a.privateReady?.delete(control);
+ const samePrior=prior&&prior.expected.session===wanted.session&&prior.expected.round===wanted.round;
+ return normalPrivateReady(a,control,{deadline:samePrior?prior.phase_deadline_monotonic_ms:performance.now()+8000,expected:wanted,intendedValue:intent?.scope.session===wanted.session&&intent?.scope.round===wanted.round?intent.field:null});
+}

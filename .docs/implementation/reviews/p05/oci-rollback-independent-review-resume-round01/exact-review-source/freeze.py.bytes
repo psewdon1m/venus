@@ -1,0 +1,8 @@
+from pathlib import Path
+import json,hashlib,shutil
+from datetime import datetime,timezone
+out=Path('.docs/implementation/reviews/p05/oci-rollback-independent-review-resume-round01');work=Path('.artifacts/p05-oci-independent-review-resume01');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for p in work.iterdir():
+ if p.is_file():d=out/'exact-review-source'/(p.name+'.bytes');d.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,d)
+report={'created_at':datetime.now(timezone.utc).isoformat(),'status':'CHANGES_REQUESTED','findings':[{'id':'OCI-RESOURCE-RESUME01-001','priority':'P2','summary':'Default writable /dev/shm mounts omitted from320MiB native hard-quota reservation; generic/PG/probe containers omit explicit IPC/shm-size fences','next':'new frozen role-specific IPC/shm policy within unchanged512MiB, finite and separately authorized actual inspection/quota controls, independent repeat before RUN'}],'inputs':json.loads((out/'hash-verification.json').read_bytes()),'independent_controls':10,'final_exit_codes':0,'Docker_calls':0,'OCI_switches':0,'statistics_RUN':False,'human470':'HOLD_UNCHANGED','full_P05_PASS':False}
+(out/'report.json').write_text(json.dumps(report,indent=2)+'\n');files=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)}for p in sorted(out.rglob('*'))if p.is_file()and p.name!='INDEX.json'];(out/'INDEX.json').write_text(json.dumps({'schema_version':1,'scope':'OCI_RESUME01_INDEPENDENT_METHOD_REVIEW_NOT_RUN','files':files},indent=2)+'\n');print(json.dumps({'status':'CHANGES_REQUESTED','INDEX_sha256':sha(out/'INDEX.json'),'children':len(files),'REPORT_sha256':sha(out/'REPORT.md')}))

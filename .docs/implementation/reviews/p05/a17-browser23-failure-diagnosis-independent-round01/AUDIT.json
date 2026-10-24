@@ -1,0 +1,53 @@
+{
+  "status": "RETAINED_NATIVE_FAIL_WITH_CONFIRMED_METHOD_PREPARATION_GAP_APPLICATION_CAUSE_NOT_PROVED",
+  "source_identity": "93221ba482331e3916e56f2e1866b5c7743fa72ad29320f2819a7a6fd1a2951d",
+  "image": "sha256:f9e93cf5aa8cadbe5ee69d72e2af760c0f3c5a81772c45d41d47427740ce75c2",
+  "root_ACK": {
+    "bytes": 4239,
+    "sha256": "279f635965e2977c5b0a3c81a9a32bd94ccc738502c254d8f7f7b1687f18512c"
+  },
+  "counts": {
+    "PASS": 8,
+    "FAIL": 1,
+    "NOT_RUN": 7
+  },
+  "cleanup": "PASS_EMPTY_OWNED",
+  "failure_control": "game-condition-submit",
+  "response_status": 409,
+  "observed_error_code": null,
+  "observed_error_code_unlisted": true,
+  "observed_request_expected_rev": null,
+  "action_final_receipt_rev": 41,
+  "secondary_passive_current_and_actions_rev": 40,
+  "fixture_rev": 41,
+  "fixture_round_state": "active",
+  "action_phase_finished_ms": 159792.339174,
+  "condition_dispatch_ms": 159923.237734,
+  "dispatch_after_final_phase_ms": 130.89856000000145,
+  "last_secondary_current_before_dispatch": {
+    "rev": 40,
+    "started_ms": 158635.170226,
+    "response_ms": 158696.297317
+  },
+  "first_retained_secondary_current41_response_ms": 160322.237195,
+  "first_retained_secondary_WS41_ms": 160210.132825,
+  "code_inference": "REVISION_CONFLICT and expected_rev40 strongly fit source/order; exact request/response body and direct React revision are not retained.",
+  "confirmed_setup_gap": "acceptActionsUi returns final minRev41 after host/backend coherence; case09 discards it, prepares from secondary observed40, without post-consent secondary minRev barrier.",
+  "recommendation": "Retain committed minRev and require existing bounded normalPrivateReady for exact secondary/session/round/minRev before editing and submitting; preserve intended value/deadline/exact200/no retry checks.",
+  "source_pins": {
+    "apps/api/src/topic-games.ts": "45d2484238b9096de91df3d7ccfb5e97754e46ceabcfee3d35b4bc2c46295b8e",
+    "apps/api/src/topic-game-routes.ts": "6c48612d460228d2b2fdb8ca08da612759fc8b607544ef0658d7e5a0b1ebc693",
+    "apps/web/src/topic-games-panel.tsx": "b4c0d5108484ca85b37780972d8d444c64f92e04e14a1c99aac180a91055f671",
+    "apps/web/src/game-copy.ts": "372062cc19539b69ed685b7ba0122666943f7ca4ba0fd1d5162a49ccbba27a69"
+  },
+  "producer_files_verified": 9,
+  "diagnostic_tail_overflows": {
+    "http": 5,
+    "ws": 398,
+    "observer_work": 0,
+    "conversation": 0
+  },
+  "safe_projection_only": true,
+  "native_actions": 0,
+  "APP_edits": false
+}

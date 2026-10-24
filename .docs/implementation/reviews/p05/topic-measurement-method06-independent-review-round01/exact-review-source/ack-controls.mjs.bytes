@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+import {resolve,join} from 'node:path';
+import {createHash} from 'node:crypto';
+import {run,CANDIDATE} from '../p05-topic-measurements-method06/r100-v3-launcher.mjs';
+const parent=resolve('.artifacts/p05-method06-independent-review-round01/ack-fixtures');
+const sha=p=>createHash('sha256').update(readFileSync(p)).digest('hex');
+const launcher='.artifacts/p05-topic-measurements-method06/r100-v3-launcher.mjs';
+const rows=[];
+for(const kind of ['old-preparation','old-ack','wrong-guard-revision','wrong-launcher']){
+ const root=join(parent,kind),inputs=join(root,'inputs');mkdirSync(inputs,{recursive:true});
+ const prep={candidate_revision:kind==='old-preparation'?'METHOD05':CANDIDATE,method_revision:'METHOD05-HOST-OUTPUT-FENCES'};
+ const ack={candidate_revision:kind==='old-ack'?'METHOD05':CANDIDATE,method_revision:kind==='wrong-guard-revision'?'METHOD04':'METHOD05-HOST-OUTPUT-FENCES'};
+ const pins={producer:{[launcher]:kind==='wrong-launcher'?'0'.repeat(64):sha(launcher)}};
+ writeFileSync(join(root,'preparation.json'),JSON.stringify(prep));writeFileSync(join(root,'ack.json'),JSON.stringify(ack));writeFileSync(join(inputs,'input-pins.json'),JSON.stringify(pins));
+ try{await run(root,join(root,'ack.json'));throw Error('UNEXPECTED_RUN');}catch(e){assert.equal(e.code,'ERR_ASSERTION');rows.push({name:kind,status:'PASS',failure_code:e.code});}
+}
+console.log(JSON.stringify({status:'PASS_INDEPENDENT_COLD_ACK_DENIAL_ONLY',candidate:CANDIDATE,controls:rows,count:rows.length,launcher_sha256:sha(launcher),Docker_calls:0,prepare_calls:0,selector_invocations:0,statistics_RUN:false},null,2));

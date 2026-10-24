@@ -1,0 +1,45 @@
+--- OCI03/driver.mjs
++++ OCI04/driver.mjs
+@@ -1,14 +1,12 @@
+ /** Cold host entrypoint. No Docker/imported worker until exact authority+guard readiness. */
+ import assert from 'node:assert/strict';
+-import {readFileSync,lstatSync,readdirSync} from 'node:fs';
++import {readFileSync} from 'node:fs';
+ import {resolve,dirname,join} from 'node:path';
+ import {fileURLToPath,pathToFileURL} from 'node:url';
+ import {createHash} from 'node:crypto';
+-import {spawn} from 'node:child_process';
+-import {clearTimeout} from 'node:timers';
+ import {validateRunAuthority} from './contract.mjs';
++import {producerMap,verifyIncluded} from './source-proof.mjs';
+ const directory=dirname(fileURLToPath(import.meta.url)),sha=b=>createHash('sha256').update(b).digest('hex');
+-export function producerMap(root=directory){const result={};function walk(p,rel=''){const s=lstatSync(p);assert(!s.isSymbolicLink());assert(s.isDirectory()||s.isFile());if(s.isDirectory()){if(rel)result[rel]={type:'directory'};for(const n of readdirSync(p).sort())walk(join(p,n),rel?rel+'/'+n:n);}else if(rel!=='INDEX.json')result[rel]={type:'regular_file',bytes:s.size,sha256:sha(readFileSync(p))};}walk(root);return result;}
+-export async function verifyIncluded(){const root=resolve(directory,'../..'),wanted=JSON.parse(readFileSync(join(directory,'included-inputs.json')));const actual=await new Promise((done,reject)=>{const child=spawn(join(root,'.venv/Scripts/python.exe'),['-B','-c','import sys,json;sys.path.insert(0,"tools");from stage_inventory import inventory,identity;f=inventory();print(json.dumps({"identity":identity(f),"files":f}))'],{cwd:root,windowsHide:true}),chunks=[];let count=0;const timer=setTimeout(()=>{child.kill('SIGKILL');reject(Error('READONLY_SOURCE_INVENTORY_TIMEOUT'));},30000);child.stdout.on('data',b=>{count+=b.length;if(count>2*1024**2){child.kill('SIGKILL');reject(Error('SOURCE_INVENTORY_CAPTURE_CAP'));}else chunks.push(b);});child.stderr.resume();child.on('error',e=>{clearTimeout(timer);reject(e);});child.on('close',code=>{clearTimeout(timer);try{assert.equal(code,0);done(JSON.parse(Buffer.concat(chunks)));}catch(e){reject(e);}});});assert.deepEqual(actual,wanted,'INCLUDED_SOURCE_MAP_CHANGED');return actual;}
++export {producerMap,verifyIncluded} from './source-proof.mjs';
+ export async function run(ackFile){const binding=JSON.parse(readFileSync(join(directory,'BINDING.json'))),ack=JSON.parse(readFileSync(ackFile)),rawIndex=readFileSync(join(directory,'INDEX.json'));validateRunAuthority(binding,ack,sha(rawIndex));const expected=JSON.parse(rawIndex);assert.deepEqual(producerMap(),expected.source_map,'PRODUCER_CHANGED_OR_EXTRA_INPUT');await verifyIncluded();assert.equal(binding.resource_guard.status,'INDEPENDENTLY_REVIEWED_READY');assert(/^[A-Za-z0-9._-]+\.mjs$/.test(binding.resource_guard.module));const guardPath=join(directory,binding.resource_guard.module);assert.equal(sha(readFileSync(guardPath)),binding.resource_guard.sha256);const external=await import(pathToFileURL(guardPath).href);assert.equal(external.api_version,'P05_OCI_EXTERNAL_RESOURCE_GUARD_1');assert.equal(typeof external.startOCIResourceGuard,'function');const{executePlan}=await import('./host-runner.mjs');return executePlan(binding,ack,external,expected.source_map);}
+ if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){const ack=process.argv.find(a=>a.startsWith('--run-with-ack='));if(!ack)console.log(JSON.stringify({status:'NOT_RUN',root_ack_required:true,resource_guard:'NOT_READY_UNLESS_FROZEN_IN_BINDING',Docker_calls:0,producer_only:true}));else try{await run(ack.slice(15));}catch(e){console.log(JSON.stringify({status:'NOT_ACCEPTED_BEFORE_OR_DURING_AUTHORIZED_PLAN',error_name:e.name,source_mutations:false}));process.exitCode=1;}}
+--- OCI03/host-runner.mjs
++++ OCI04/host-runner.mjs
+@@ -7,7 +7,7 @@
+ import {resolve,dirname,join} from 'node:path';
+ import {fileURLToPath} from 'node:url';
+ import {performance} from 'node:perf_hooks';
+-import {producerMap,verifyIncluded} from './driver.mjs';
++import {producerMap,verifyIncluded} from './source-proof.mjs';
+ import {validateReport,validateEvidence,validateFinalGuardReceipt,rawEvidenceMap,controlIds,expected} from './contract.mjs';
+ import {clearTimeout} from 'node:timers';
+ const producer=dirname(fileURLToPath(import.meta.url)),workspace=resolve(producer,'../..'),sha=b=>createHash('sha256').update(b).digest('hex'),delay=ms=>new Promise(r=>setTimeout(r,ms));
+--- OCI03/source-proof.mjs
++++ OCI04/source-proof.mjs
+@@ -0,0 +1,11 @@
++/** Inert shared proof functions; never imports the CLI entrypoint. */
++import assert from 'node:assert/strict';
++import {readFileSync,lstatSync,readdirSync} from 'node:fs';
++import {resolve,dirname,join} from 'node:path';
++import {fileURLToPath} from 'node:url';
++import {createHash} from 'node:crypto';
++import {spawn} from 'node:child_process';
++import {setTimeout,clearTimeout} from 'node:timers';
++const directory=dirname(fileURLToPath(import.meta.url)),sha=b=>createHash('sha256').update(b).digest('hex');
++export function producerMap(root=directory){const result={};function walk(p,rel=''){const s=lstatSync(p);assert(!s.isSymbolicLink());assert(s.isDirectory()||s.isFile());if(s.isDirectory()){if(rel)result[rel]={type:'directory'};for(const n of readdirSync(p).sort())walk(join(p,n),rel?rel+'/'+n:n);}else if(rel!=='INDEX.json')result[rel]={type:'regular_file',bytes:s.size,sha256:sha(readFileSync(p))};}walk(root);return result;}
++export async function verifyIncluded(){const root=resolve(directory,'../..'),wanted=JSON.parse(readFileSync(join(directory,'included-inputs.json')));const actual=await new Promise((done,reject)=>{const child=spawn(join(root,'.venv/Scripts/python.exe'),['-B','-c','import sys,json;sys.path.insert(0,"tools");from stage_inventory import inventory,identity;f=inventory();print(json.dumps({"identity":identity(f),"files":f}))'],{cwd:root,windowsHide:true}),chunks=[];let count=0;const timer=setTimeout(()=>{child.kill('SIGKILL');reject(Error('READONLY_SOURCE_INVENTORY_TIMEOUT'));},30000);child.stdout.on('data',b=>{count+=b.length;if(count>2*1024**2){child.kill('SIGKILL');reject(Error('SOURCE_INVENTORY_CAPTURE_CAP'));}else chunks.push(b);});child.stderr.resume();child.on('error',e=>{clearTimeout(timer);reject(e);});child.on('close',code=>{clearTimeout(timer);try{assert.equal(code,0);done(JSON.parse(Buffer.concat(chunks)));}catch(e){reject(e);}});});assert.deepEqual(actual,wanted,'INCLUDED_SOURCE_MAP_CHANGED');return actual;}

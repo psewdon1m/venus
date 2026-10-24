@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "revision": "P05-KEYBOARD-VISIBLE-FOCUS-GUARD-06",
+  "kind": "COMPATIBLE_FRONTEND_KEYBOARD_ACCESSIBILITY_FIX",
+  "parent_source_identity": "6acdb060080ff49951f4edd20bd5d7a5aa2b8e587cc81c88ce6992597323c507",
+  "parent_source_count": 1877,
+  "behavior": "Restrict the existing main-shell input/select/button instant center scroll to focus-visible. One condition only; native Tab centering retained and ordinary pointer-focused buttons no longer forced to move before click. Three textarea center handlers unchanged. focus-visible can still match pointer-focused text inputs; no universal pointer-detector claim. No new events/modality state/timers/selection/network/Tab changes.",
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "0019b4afc7af0699d9b45b5db7ff2bf7cbe88e2007cf1ef27a1f657459ecb082"
+  },
+  "before_source_files": {
+    "apps/web/src/main.tsx": "ac7708903dc47a4d1db821a8188f3621c9465da98aace419eda5676c16753c82"
+  },
+  "actual_failure": {
+    "project": "venus-v2-layout-56f67dfdbca6",
+    "engine": "firefox157",
+    "cell": "public_questions/w1024",
+    "control": "topics-save",
+    "rect": {
+      "left": 98,
+      "top": 832.433349609375,
+      "right": 258.5,
+      "bottom": 876.433349609375,
+      "width": 160.5,
+      "height": 44
+    },
+    "viewport": {
+      "width": 1024,
+      "height": 768
+    },
+    "scroll": {
+      "top": 635,
+      "left": 0
+    },
+    "focus_visible": true,
+    "not_occluded": false,
+    "cleanup": "PASS",
+    "raw_first_focus_sha256": "601901167568a93b939db650a37deefc8173ea632017860bf14527a7d28a7ef9",
+    "raw_report_sha256": "71ce6210d51f9a65a72a491efbb70a6fb1d5c2f1a118c0f01dbd2a082c6d1b97",
+    "qualification": "Actual original first-focus clipping. Native ordering/caret/reflow cause not established."
+  },
+  "validation": {
+    "web_typecheck_exit": 0,
+    "focused_lint_exit": 0,
+    "host_JS_exit": 0,
+    "host_JS_PASS": 1104,
+    "host_JS_platform_SKIP": 207,
+    "host_JS_max_workers": 2,
+    "host_preflight_exact_changed_APP_bytes": true,
+    "source_revision_metadata_added_after_host_preflight": true,
+    "native_UI_and_clean_quality_PENDING": true
+  },
+  "preventive_risk": {
+    "A23_native_runs": 0,
+    "finding": "Code-level independently confirmed risk, not observed A23 native failure: unconditional center on pointer button focus can move the button before mouseup/click.",
+    "resolution": "Existing condition adds focus-visible; no new listeners or modality state."
+  },
+  "unchanged": [
+    "API/ACL/consent/TTL/storage/catalog/selectors/statistical sources and original counts/seeds/thresholds",
+    "CSS, three textarea handlers and original strict native first-sample UI oracle/deadlines"
+  ],
+  "compatibility": "Backend and durable contracts unchanged. Fresh A24 images and nine UI shards plus original14 OCI required. Historical geometry is not current A24 acceptance.",
+  "rollback": "Restore coherent A23 web bundle; backend/data unchanged, unconditional pointer button centering risk returns. A23 has no actual native result; historical A22 clipping remains separately documented."
+}

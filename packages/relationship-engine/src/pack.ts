@@ -64,9 +64,33 @@ function semantics(c:Card) {
     else assertRenderBudget(c.mode==='yes_but'?[text.proposal!,text.responder!]:[text.question!]);
   }
 }
+export type ApprovalScope='REVIEWED_RELEASE'|'SYNTHETIC_FIXTURE'|'OWNER_PROVISIONAL_LOCAL_PILOT';
+export type OwnerProvisionalPins=Readonly<{decision_id:'U-019';decision_sha256:string;grant_sha256:string;pack_digest:string;map_sha256:string;taxonomy_sha256:string;semantic_sha256:string}>;
+export type OwnerProvisionalCapability=Readonly<{scope:'OWNER_PROVISIONAL_LOCAL_PILOT';pins:OwnerProvisionalPins}>;
+const provisionalCapabilities=new WeakSet<object>();
+/** Trusted application code authenticates the compiled owner grant first. This
+ * brand is separate from reviewed release/test fixtures and grants no HTTP ACL. */
+export function ownerProvisionalCapability(profile:'local-pilot',pins:OwnerProvisionalPins):OwnerProvisionalCapability {
+  assertEngine(profile==='local-pilot'&&pins&&Object.keys(pins).sort().join(',')==='decision_id,decision_sha256,grant_sha256,map_sha256,pack_digest,semantic_sha256,taxonomy_sha256'
+    &&pins.decision_id==='U-019'&&/^sha256:[a-f0-9]{64}$/.test(pins.pack_digest)
+    &&[pins.decision_sha256,pins.grant_sha256,pins.map_sha256,pins.taxonomy_sha256,pins.semantic_sha256].every(v=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v)),'OWNER_PROVISIONAL_GRANT_INVALID');
+  const value=freeze({scope:'OWNER_PROVISIONAL_LOCAL_PILOT' as const,pins:JSON.parse(canonical(pins)) as OwnerProvisionalPins});
+  provisionalCapabilities.add(value);return value;
+}
+export function assertOwnerProvisionalCapability(value:OwnerProvisionalCapability):OwnerProvisionalPins {
+  assertEngine(value&&provisionalCapabilities.has(value),'OWNER_PROVISIONAL_CAPABILITY_REQUIRED');return value.pins;
+}
 /** Constructor validates bytes and review status; synthetic drafts remain explicitly synthetic. */
 export class FrozenPack {
-  private constructor(readonly manifest:PackManifest,readonly cards:readonly Card[],readonly synthetic:boolean) {}
+  private constructor(readonly manifest:PackManifest,readonly cards:readonly Card[],readonly synthetic:boolean,
+    readonly approval_scope:ApprovalScope=synthetic?'SYNTHETIC_FIXTURE':'REVIEWED_RELEASE',readonly owner_provisional:OwnerProvisionalPins|null=null) {}
+  /** Exact draft bytes with an authenticated owner-only local-pilot overlay.
+   * Normal load still rejects these cards/manifest; no rights/review are invented. */
+  static ownerProvisional(input:unknown[],manifest:PackManifest,capability:OwnerProvisionalCapability):FrozenPack {
+    const pins=assertOwnerProvisionalCapability(capability),draft=FrozenPack.load(input,manifest,true);
+    assertEngine(draft.digest===pins.pack_digest,'OWNER_PROVISIONAL_PACK_MISMATCH');
+    return Object.freeze(new FrozenPack(draft.manifest,draft.cards,false,'OWNER_PROVISIONAL_LOCAL_PILOT',pins));
+  }
   static load(input:unknown[],manifest:PackManifest,synthetic=false) {
     const {canonical_payload_sha256,...payload}=manifest;
     assertEngine(manifest.schema_version===1&&manifest.policy_revision==='RE-1'&&manifest.policy_sha256===policyDigest.slice(7)&&manifest.content_contract_revision==='CARD-1'&&manifest.locale_codes.join(',')==='ru,en,tr','PACK_POLICY_UNSUPPORTED');

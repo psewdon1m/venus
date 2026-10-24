@@ -1,0 +1,1 @@
+Continuation05 preregisters only original1622 remaining slots and987 normal carry after second Docker transport interruption. Eight new owners keep exact original ranges/seeds. Prior failures and partial exports remain uncounted. No statistical or stage PASS.

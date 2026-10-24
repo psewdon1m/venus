@@ -1,0 +1,73 @@
+{
+  "status": "EIGHT_POSITIVE_CONTROLS_PASS_ONE_CONFIRMED_P2_COUNTEREXAMPLE",
+  "count": 8,
+  "rows": [
+    {
+      "name": "allowlisted_non200_code_status_copied_without_other_payload",
+      "status": "PASS"
+    },
+    {
+      "name": "unknown_code_private_canary_never_persisted",
+      "status": "PASS"
+    },
+    {
+      "name": "malformed_json_preserves_original409_and_no_retry",
+      "status": "PASS"
+    },
+    {
+      "name": "one_second_metadata_timeout_preserves_original409_and_no_retry",
+      "status": "PASS"
+    },
+    {
+      "name": "advice_command_never_projects_outbound_text_or_topic_fields",
+      "status": "PASS"
+    },
+    {
+      "name": "error_payload_null_array_object_type_are_never_raw_output",
+      "status": "PASS"
+    },
+    {
+      "name": "oversize_unknown_malformed_topic_array_not_copied",
+      "status": "PASS"
+    },
+    {
+      "name": "copied_fixture_topic_array_is_detached_from_input",
+      "status": "PASS"
+    }
+  ],
+  "findings": [
+    {
+      "id": "METHOD14-R01-001",
+      "priority": "P2",
+      "actual": "Exact helper records allowlisted domain code from a same-path/kind response whose response.request.request_id differs from the one observed request UUID. All HTTP409 assertions still fail, but diagnostic cause can be attributed to another request.",
+      "expected": "Validate UUID correlation before projecting any response domain diagnostic; mismatch must not record domain code as the observed request cause.",
+      "fake_events_only": true,
+      "actual_functional_run": false,
+      "event": {
+        "control": "topic-new",
+        "path": "/api/v2/rooms/r/game/s/round/q/conversation/commands",
+        "kind": "offer_topic",
+        "scope": null,
+        "readiness": {
+          "deadline_monotonic_ms": 5000
+        },
+        "dispatch_budget_ms": 5000,
+        "click_started_monotonic_ms": 0,
+        "click_finished_monotonic_ms": 0,
+        "request_observed_monotonic_ms": 0,
+        "result": "DISPATCHED_AWAITING_RECEIPT",
+        "response_status": 409,
+        "offer_expected_epoch": 1,
+        "offer_topic_count": 1,
+        "offer_fixture_topic_ids": [
+          "creative"
+        ],
+        "offer_fixture_topics_valid": true,
+        "domain_error_code": "NOT_AVAILABLE",
+        "domain_error_code_unlisted": false,
+        "failure": "DISPATCHED_RESPONSE_OR_RECEIPT_FAILURE"
+      }
+    }
+  ],
+  "helper_sha256": "b0610623f146ed5640e006afe5f5b6cdfc69bf788de49552dc5843244b16a49b"
+}

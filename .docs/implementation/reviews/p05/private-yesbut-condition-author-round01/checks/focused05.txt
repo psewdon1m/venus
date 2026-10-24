@@ -1,0 +1,33 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts (11 tests | 1 failed) 30ms
+   ❯ private YesBut condition is required content, not a premature replacement (11)
+     × throws a late native expiry into the existing savepoint rollback path instead of returning Deferred partial content 8ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/topic-condition-lifecycle.test.ts > private YesBut condition is required content, not a premature replacement > throws a late native expiry into the existing savepoint rollback path instead of returning Deferred partial content
+AssertionError: expected Error: Request could not be completed { …(2) } to match object { code: 'EXPIRED' }
+(1 matching property omitted from actual)
+
+- Expected
++ Received
+
+- {
+-   "code": "EXPIRED",
++ DomainError {
++   "code": "CLOSED",
+  }
+
+ ❯ apps/api/src/topic-condition-lifecycle.test.ts:48:287
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 4 passed (5)
+      Tests  1 failed | 110 passed (111)
+   Start at  22:59:10
+   Duration  379ms (import 72%, transform 15%, tests 12%, worker 2%)
+

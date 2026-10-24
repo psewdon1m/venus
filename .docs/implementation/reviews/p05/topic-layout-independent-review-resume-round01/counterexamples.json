@@ -1,0 +1,86 @@
+{
+  "status": "CONFIRMED_METHOD_COUNTEREXAMPLES_NOT_FUNCTIONAL_RUN",
+  "run_mjs_sha256": "2f6c1e1777ec2fe0b50a85630bb79ab6a5c229c7f186aa19ac8489c730baf2cd",
+  "exact_author_replay_harness_sha256": "5c9564a6e8defb4ee15d92c8f132925d255997bf4e99edc48e67fcb428e3e541",
+  "inert_fixture_adaptation": {
+    "before": "source_identity:change.reviewSource?'f'.repeat(64):binding.source_identity}",
+    "after": "source_identity:change.reviewSource?'f'.repeat(64):binding.source_identity,producer_runtime_digest:change.wrongReviewedRuntime?'f'.repeat(64):runtimeDigest(producerBefore),image:change.wrongReviewedImage?'sha256:'+'f'.repeat(64):binding.image}"
+  },
+  "dom_audit_source_sha256": "97a6e5b17189bb243e7b46abcaea74c28f7165cc597a55e71affc2f1f494f41f",
+  "findings": [
+    {
+      "finding_id": "LAYOUT-R01-001",
+      "counterexample": "contrary digest in real review JSON",
+      "actual_result": "HOST_VM_ACCEPTED_AND_ENTERED_MOCK_DOCKER_WITH_CONTRARY_REVIEW_BINDING",
+      "expected_result": "REJECT_BEFORE_ANY_ALLOCATION_OR_DOCKER",
+      "mock_Docker_commands": 8,
+      "actual_Docker_commands": 0
+    },
+    {
+      "finding_id": "LAYOUT-R01-001",
+      "counterexample": "contrary image in real review JSON",
+      "actual_result": "HOST_VM_ACCEPTED_AND_ENTERED_MOCK_DOCKER_WITH_CONTRARY_REVIEW_BINDING",
+      "expected_result": "REJECT_BEFORE_ANY_ALLOCATION_OR_DOCKER",
+      "mock_Docker_commands": 8,
+      "actual_Docker_commands": 0
+    },
+    {
+      "finding_id": "LAYOUT-R01-002",
+      "counterexample": "actual exact DOM oracle with computed filter brightness(0)",
+      "actual_result": "ASSERT_OBSERVATION_ACCEPTED_UNSUPPORTED_COMPOSITING",
+      "expected_result": "FAIL_OR_UNRESOLVED_COMPOSITING",
+      "DOM_mock_only": true,
+      "actual_browser": false,
+      "audit": {
+        "locale": "en",
+        "viewport": {
+          "width": 320,
+          "height": 568,
+          "dpr": 1,
+          "css_zoom": "1"
+        },
+        "reduced_motion": true,
+        "motion_violations": 0,
+        "horizontal_overflow": false,
+        "audit_overflow": false,
+        "contrast_failures": 0,
+        "contrast_unresolved": 0,
+        "contrast_samples": 1,
+        "failures": [],
+        "unresolved": [],
+        "named_controls": true,
+        "labels_associated": true
+      }
+    },
+    {
+      "finding_id": "LAYOUT-R01-002",
+      "counterexample": "actual exact DOM oracle with computed filter opacity(0)",
+      "actual_result": "ASSERT_OBSERVATION_ACCEPTED_UNSUPPORTED_COMPOSITING",
+      "expected_result": "FAIL_OR_UNRESOLVED_COMPOSITING",
+      "DOM_mock_only": true,
+      "actual_browser": false,
+      "audit": {
+        "locale": "en",
+        "viewport": {
+          "width": 320,
+          "height": 568,
+          "dpr": 1,
+          "css_zoom": "1"
+        },
+        "reduced_motion": true,
+        "motion_violations": 0,
+        "horizontal_overflow": false,
+        "audit_overflow": false,
+        "contrast_failures": 0,
+        "contrast_unresolved": 0,
+        "contrast_samples": 1,
+        "failures": [],
+        "unresolved": [],
+        "named_controls": true,
+        "labels_associated": true
+      }
+    }
+  ],
+  "actual_Docker_commands": 0,
+  "actual_browser_launches": 0
+}

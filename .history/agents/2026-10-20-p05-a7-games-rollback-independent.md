@@ -1,0 +1,7 @@
+# Independent A7 Games20 actual and rollback operational qualification
+
+2026-10-20T20:22:59.642870+00:00 Task: audit frozen A7 Games20 actual archive then OCI08 and thin normalcontinuity02 source/image tuple rebind. No Docker/native functional rerun, app/source edits or acceptance of own original OCI protocol. Prior independent method proofs carried only by unchanged bytes. Inputs INDEX8740b73b/21, OCI08 0fa98d9d/301, normal02 f03fcfca/24.
+
+2026-10-20T20:24:57.265218+00:00 First audit script failed on reviewer-only wrong legacy packet layout (normal01 files are at root, not producer/); no source writes or functional test executed. Corrected path. All3 supplied INDEX hashes and346 members exact; actual20PASS/exit0/cleanupempty;1846 rawfiles recomputed;284imagepins sourcechecks exact. OCI23core same06 and normal3 same01; workingpackets exact. Preparing cold sensitivity only.
+
+2026-10-20T20:26:05.155760+00:00 OCI64/76 maps independently exact A284/B278 actual receipts. Own14binding sensitivity0 and isolatednormal19controls0 PASS; no Docker. Reviewer console display of Unicode testcheckmarks failed cp1252, then textual summary parser initially expected TAP # but Node default uses Unicode markers; raw UTF8 testlog intact, corrected tests/pass/fail substring parser confirms19/19/0. No runtime failure. Frozen REPORT/HANDOFF/INDEX, writes COMPLETE. INDEX 3191e39e7410b7859c126407684b220ae290d363cab677fce58c9602fcdf0c81

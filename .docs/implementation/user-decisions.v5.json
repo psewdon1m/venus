@@ -1,0 +1,29 @@
+{
+  "schema_version": 2,
+  "revision": "LOCAL-PILOT-20261025-SERVICE-SIGNING-APPROVAL",
+  "source": {
+    "kind": "direct_owner_async_question_reply",
+    "owner_quote": "Подтверждаю ключ и GitHub secret (рекомендую)",
+    "observed_client_date": "2026-10-25",
+    "timezone": "Europe/Istanbul"
+  },
+  "prior_decisions_preserved": ".docs/implementation/user-decisions.v4.json",
+  "decisions": [{
+    "id": "U-020",
+    "authority_kind": "EXPLICIT_OWNER_REAL_SECRET_AUTHORIZATION",
+    "decision": "Use the exact prepared Ed25519 service key and store its private part as VENUS_RELEASE_PRIVATE_KEY in GitHub Environment venus-release, repository psewdon1m/venus, to complete P06 signed release venus-v0.0.1.",
+    "key_id": "59a72237edc78adf5874cd609471324108e55b2ac6e81f7ac63ed31f1038e1fb",
+    "public_trust": "infra/venus/release-trust.json",
+    "github_repository": "psewdon1m/venus",
+    "github_environment": "venus-release",
+    "github_secret_name": "VENUS_RELEASE_PRIVATE_KEY",
+    "private_material_in_document": false,
+    "actual_upload_signing_publication_claimed": false,
+    "technical_gates_waived": false,
+    "production_deployment_approved": false,
+    "P07_authorized": false,
+    "ADR": ".docs/adr/ADR-032-p06-owner-approved-service-signing-key.md"
+  }],
+  "rollback": "On owner revocation disable new signing, remove the environment secret, and publish a new trust revision; preserve issued immutable assets and historical receipts. Compatible recovery preserves current protected ledgers.",
+  "full_stage_PASS_inferred": false
+}

@@ -1,0 +1,22 @@
+--- parent02/matrix.mjs
++++ candidate03/matrix.mjs
+@@ -1,5 +1,6 @@
+ /** Fixed V2 layout contract. A P1 result or a subset cannot satisfy this matrix. */
+ import assert from 'node:assert/strict';
++import {assertNativeScale} from './probe-policy.mjs';
+ export const engines=['chromium','firefox','webkit'];
+ export const locales=['ru','en','tr'];
+ export const scenes=['entry','setup','public_questions','private_offer','private_active'];
+@@ -20,10 +21,10 @@
+  assert.equal(row.reduced_motion,true);assert.equal(row.horizontal_overflow,false);assert.equal(row.hidden_scroll_trap,false);
+  assert.equal(row.roles.length,expectedRoles(row.scene).length);assert.deepEqual([...new Set(row.roles.map(r=>r.role))].sort(),expectedRoles(row.scene).sort());
+  for(const role of row.roles){for(const key of ['visible','focus_visible','keyboard_reached','focus_in_viewport','own_scope_matches','control_names_nonempty','normal_ui_clock'])assert.equal(role[key],true);assert.equal(role.cross_private_leak,false);assert.equal(role.contrast_failures,0);assert.equal(role.contrast_unresolved,0);assert(typeof role.evidence_file==='string'&&role.evidence_file.length>0);}
+- if(row.native){const m=row.native_measurement;assert(m);assert.equal(m.css_zoom,'1');assert(m.before_dpr>0);assert(Math.abs(m.after_dpr/m.before_dpr-2)<=0.02);assert(m.after_width<=m.before_width/1.9);assert(m.x11_keyboard);assert(m.isolated_browser);assert(m.reset_verified);}
++ if(row.native){const m=row.native_measurement;assert(m);assert.equal(m.css_zoom,'1');assert(m.before_dpr>0);assert.equal(m.engine,row.engine);assertNativeScale(m,row.engine);assert(m.after_width<=m.before_width/1.9);assert(m.x11_keyboard);assert(m.isolated_browser);assert(m.reset_verified);}
+  else{const g=geometries.find(g=>g.id===row.geometry);assert(g);assert.equal(row.viewport.width,g.width);assert.equal(row.viewport.height,g.height);assert.equal(row.viewport.dpr,1);assert.equal(row.viewport.css_zoom,'1');}
+  assert(row.elapsed_ms>=0);assert(row.sweep_elapsed_ms>=0);assert(row.sweep_elapsed_ms<=row.sweep_budget_ms);assert.equal(row.clock_or_expiry_override,false);
+- if(row.native){assert.equal(row.native_role_measurements.length,row.roles.length);assert.deepEqual(row.native_role_measurements.map(r=>r.role).sort(),expectedRoles(row.scene).sort());for(const m of row.native_role_measurements){assert.equal(m.css_zoom,'1');assert.equal(m.x11_keyboard,true);assert.equal(m.isolated_browser,true);assert.equal(m.reset_verified,true);assert(Math.abs(m.after_dpr/m.before_dpr-2)<=.02);assert(m.after_width<=m.before_width/1.9);}}
++ if(row.native){assert.equal(row.native_role_measurements.length,row.roles.length);assert.deepEqual(row.native_role_measurements.map(r=>r.role).sort(),expectedRoles(row.scene).sort());for(const m of row.native_role_measurements){assert.equal(m.css_zoom,'1');assert.equal(m.x11_keyboard,true);assert.equal(m.isolated_browser,true);assert.equal(m.reset_verified,true);assert.equal(m.engine,row.engine);assertNativeScale(m, row.engine);assert(m.after_width<=m.before_width/1.9);}}
+ }
+ export function assertMatrix(rows,{engine=null,locale=null}={}){
+  const expected=expectedCells().filter(c=>(!engine||c.engine===engine)&&(!locale||c.locale===locale));

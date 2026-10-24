@@ -1,0 +1,63 @@
+/** Owned Docker backend integration. External lifecycle/source/safety are explicit fixture seams. */
+import assert from 'node:assert/strict';
+import {randomBytes,randomUUID,createHash} from 'node:crypto';
+import {mkdtempSync,readFileSync,writeFileSync,rmSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join,resolve,sep} from 'node:path';
+import Fastify from 'fastify';
+import pg from 'pg';
+import {Keyring,DeletionLedger,DomainError,requireThat} from '../../apps/api/dist/security.js';
+import {Rooms} from '../../apps/api/dist/rooms.js';
+import {TopicGames} from '../../apps/api/dist/topic-games.js';
+import {registerTopicGameRoutes} from '../../apps/api/dist/topic-game-routes.js';
+import {loadTopicObject,topicAad} from '../../apps/api/dist/topic-game-model.js';
+import {migrate} from '../../apps/api/dist/migrations.js';
+import {migrateGames} from '../../apps/api/dist/game-migrations.js';
+import {migratePrivateTopics,privateTopicSchemaProbe} from '../../apps/api/dist/private-topic-migrations.js';
+import {sourceFixture,safetyFixture,seedRoom} from './fixtures.mjs';
+import {extendedCases} from './cases.mjs';
+import {temporalCases} from './temporal-cases.mjs';
+import {startBootWorker} from './boot.mjs';
+assert.equal(process.env.VENUS_P05_ISOLATED_FIXTURE,'1');assert.equal(process.platform,'linux');
+const keyMaterial=randomBytes(32).toString('base64');
+const directory=mkdtempSync(join(tmpdir(),'venus-topic-games-')),pool=new pg.Pool({host:process.env.DB_HOST,user:'venus',database:'venus',password:readFileSync(process.env.DB_PASSWORD_FILE,'utf8').trim()}),keys=new Keyring('test',{test:keyMaterial}),source=sourceFixture(),safety=safetyFixture(),checks=[];
+const expectedIds=Array.from({length:5},(_,i)=>'REVIEW-'+String(i+1));
+let now=1000000,app,origin,cleanup='failed',finalHook=null;
+// Only query text is decorated for the explicit actual PostgreSQL wait fixture.
+// Every returned credential/result remains a real PostgreSQL result.
+const accessPool={query:(...args)=>pool.query(...args),connect:async()=>{const c=await pool.connect();return {query:(...args)=>{if(finalHook&&typeof args[0]==='string')args[0]=finalHook(args[0],args[1]);return c.query(...args);},release:()=>c.release()};}};
+const offer={version:'mock-topic-game',digest:'c'.repeat(64),synthetic:true,text:{ru:'mock',en:'mock',tr:'mock'}},live=new Map();
+const rooms=new Rooms({pool:accessPool,keys,ledger:new DeletionLedger(join(directory,'deletions')),origin:'http://fixture.invalid',offer:()=>offer,now:()=>now,privateProtocol:{birth:async()=>{throw new Error('Admission fixture only');},admit:async()=>{throw new Error('Admission fixture only');},guard:async(_c,room,member)=>()=>{requireThat(live.has(room)&&(!member||live.get(room).has(member)),'FIXTURE_LIFECYCLE_DENIED',403);},retireMember:async()=>{throw new Error('Retirement not claimed');},retireRoom:async()=>{throw new Error('Retirement not claimed');},recovery:async()=>({retirement:null,retiredMembers:[]}),cleanup:async()=>{}}});
+let games=new TopicGames(rooms,{enabled:true,source:source.provider,safety:safety.provider,syntheticFixtureOnly:true});safety.onRevoke((c,r,m)=>games.topicsChanged(c,r,m));rooms.attachGames(games);
+const cookie=r=>String(r.headers.cookie??'').match(/(?:^|;\s*)venus_room_session=([^;]+)/)?.[1];
+const guards={roomId:r=>r.params.roomId,credential:cookie,origin:r=>requireThat(r.headers.origin===rooms.options.origin,'ORIGIN_REQUIRED',403),body:r=>r.body,memberGuard:async r=>{requireThat(r.headers.origin===rooms.options.origin&&r.headers['sec-fetch-site']==='same-origin','ORIGIN_REQUIRED',403);const c=cookie(r);requireThat(c&&r.headers['x-csrf-token']===rooms.csrf(c),'CSRF_REQUIRED',403);return c;},privateReadGuard:async r=>{requireThat(r.headers.origin===undefined||r.headers.origin===rooms.options.origin,'ORIGIN_REQUIRED',403);requireThat(r.headers['sec-fetch-site']==='same-origin','ORIGIN_REQUIRED',403);const c=cookie(r);requireThat(c&&r.headers['x-csrf-token']===rooms.csrf(c),'CSRF_REQUIRED',403);return c;}};
+async function check(id,fn){try{const detail=await fn();checks.push({id,status:'PASS',detail:detail??{}});}catch(error){checks.push({id,status:'FAIL',error:error.message});console.log(JSON.stringify({id,status:'FAIL',error:error.message}));}}
+const base=f=>`/api/v2/rooms/${f.room}/game`;
+const roundPath=f=>base(f)+`/${f.game}/round/${f.plan.round_id}`;
+async function call(f,member,path,method='GET',body,extra={}){const c=f.credential(member),response=await fetch(origin+path,{method,headers:{cookie:'venus_room_session='+c,'x-csrf-token':rooms.csrf(c),'sec-fetch-site':'same-origin',origin:rooms.options.origin,...(body?{'content-type':'application/json'}:{}),...extra},...(body?{body:JSON.stringify(body)}:{})});const text=await response.text();let data;try{data=JSON.parse(text);}catch{data={text};}return {status:response.status,body:data,raw:text};}
+async function ok(f,member,path,method='GET',body){const r=await call(f,member,path,method,body);assert.equal(r.status,200,r.raw);return r.body;}
+async function current(f){const r=await pool.query('SELECT * FROM game_sessions WHERE room_id=$1 ORDER BY seq DESC LIMIT 1',[f.room]);const g=r.rows[0];f.game=g.id;if(g.current_round){const rr=(await pool.query('SELECT * FROM game_rounds WHERE session_id=$1 AND round_index=$2',[g.id,g.current_round])).rows[0];f.data=keys.decrypt(rr.cipher,topicAad.round(f.room,g.id,rr.id));f.plan=f.data.plan;}return g;}
+async function roomFixture(options={}){const f=await seedRoom(pool,keys,now,offer,options);live.set(f.room,new Set(f.members));safety.seed(f.room,f.members);return f;}
+async function fixture(mode='questions',count=20,options={}){const f=await roomFixture(options);const prepared=await ok(f,f.host,base(f)+'/prepare','POST',{request_id:randomUUID(),expected_rev:1,mode,round_count:count,players:f.members});await ok(f,f.host,base(f)+'/start','POST',{request_id:randomUUID(),draft_rev:prepared.game_rev});await current(f);return f;}
+async function acceptInvitation(f){for(const member of f.plan.actors){const target=await ok(f,member,roundPath(f)+'/target');if(target.invitation?.state==='pending')await ok(f,member,roundPath(f)+'/response','POST',{request_id:randomUUID(),kind:'accept',scope:'invitation',offer_id:target.invitation.offer_id,proposal_revision:target.invitation.proposal_revision});}}
+async function finishRound(f,{skipPrivate=false}={}){await current(f);const primary=f.plan.primary_member_id;if(f.plan.interaction==='pair_private'&&skipPrivate){await ok(f,primary,roundPath(f)+'/response','POST',{request_id:randomUUID(),kind:'skip'});return;}if(f.plan.actors.length===2)await acceptInvitation(f);if(f.plan.mode==='truth_or_dare')await ok(f,primary,roundPath(f)+'/choice','POST',{request_id:randomUUID(),side:'truth'});if(f.plan.interaction==='pair_private'){for(const member of f.plan.actors){const v=await ok(f,member,roundPath(f)+'/conversation');await ok(f,member,roundPath(f)+'/conversation/commands','POST',{request_id:randomUUID(),kind:'respond_topic',offer_id:v.offer.offer_id,epoch:v.epoch,proposal_revision:v.offer.proposal_revision,token:v.offer.token,decision:'accept'});}}
+ await current(f);if(f.data.action)for(const member of f.plan.actors){const target=await ok(f,member,roundPath(f)+'/target');await ok(f,member,roundPath(f)+'/response','POST',{request_id:randomUUID(),kind:'accept',scope:'action',offer_id:target.action.offer_id,proposal_revision:target.action.proposal_revision});}await ok(f,primary,roundPath(f)+'/finish','POST',{request_id:randomUUID(),expected_rev:Number((await current(f)).rev)});assert.equal((await ok(f,f.host,base(f)+'/self-actions')).session_actions.advance,true,'Terminal round must expose host Next');}
+async function advance(f){const g=await current(f);await ok(f,f.host,base(f)+`/${f.game}/round/advance`,'POST',{request_id:randomUUID(),expected_rev:Number(g.rev)});await current(f);}
+async function privateRound(mode='questions'){for(let attempt=0;attempt<4;attempt++){const f=await fixture(mode,20);for(let i=0;i<20;i++){if(f.plan.interaction==='pair_private'){await acceptInvitation(f);if(mode==='truth_or_dare')await ok(f,f.plan.primary_member_id,roundPath(f)+'/choice','POST',{request_id:randomUUID(),side:'truth'});return f;}await finishRound(f);await advance(f);}}throw new Error('No private opportunity in bounded fixture session');}
+try{
+ await check('REVIEW-1',async()=>{await migrate(pool);await migrateGames(pool);await migratePrivateTopics(pool);await privateTopicSchemaProbe(pool);return {actual_pg:true,generation:3};});
+ await games.bootGate();
+ app=Fastify({logger:false});app.setErrorHandler((e,r,p)=>p.code(e instanceof DomainError?e.statusCode:500).send({code:e instanceof DomainError?e.code:'INTERNAL_ERROR'}));registerTopicGameRoutes(app,games,guards);origin=await app.listen({host:'127.0.0.1',port:0});rooms.options.origin=origin;
+ const f=await fixture('questions',3),actor=f.plan.primary_member_id,body={request_id:randomUUID(),kind:'skip'};
+ const original=await call(f,actor,roundPath(f)+'/response','POST',body);assert.equal(original.status,200,original.raw);
+ async function persisted(){const out=[];for(const table of ['game_sessions','game_rounds','topic_game_sessions','topic_game_objects','topic_game_chunks','topic_game_private_refs','topic_game_requests']){const result=await pool.query('SELECT to_jsonb(t) AS value FROM '+table+' t WHERE room_id=$1 ORDER BY to_jsonb(t)::text',[f.room]);out.push([table,result.rows]);}return createHash('sha256').update(JSON.stringify(out)).digest('hex');}
+ const beforeDenied=await persisted();
+ await check('REVIEW-2',async()=>{const replay=await call(f,actor,roundPath(f)+'/response','POST',body);assert.equal(replay.status,200);assert.deepEqual(replay.body,original.body);return {same_scope_replay:true};});
+ await check('REVIEW-3',async()=>{const path=base(f)+`/${f.game}/round/${randomUUID()}/response`,wrong=await call(f,actor,path,'POST',body);console.log(JSON.stringify({case:'wrong-round',actual_status:wrong.status,old_receipt_equal:JSON.stringify(wrong.body)===JSON.stringify(original.body)}));assert.equal(wrong.status,409,wrong.raw);assert.equal(wrong.body.code,'IDEMPOTENCY_CONFLICT');assert.equal(await persisted(),beforeDenied,'Wrong round modified persisted state');return {wrong_round_denied:true};});
+ await check('REVIEW-4',async()=>{const path=base(f)+`/${randomUUID()}/round/${f.plan.round_id}/response`,wrong=await call(f,actor,path,'POST',body);console.log(JSON.stringify({case:'wrong-session',actual_status:wrong.status,old_receipt_equal:JSON.stringify(wrong.body)===JSON.stringify(original.body)}));assert.equal(wrong.status,409,wrong.raw);assert.equal(wrong.body.code,'IDEMPOTENCY_CONFLICT');assert.equal(await persisted(),beforeDenied,'Wrong session modified persisted state');return {wrong_session_denied:true};});
+ await check('REVIEW-5',async()=>{const changed=await call(f,actor,roundPath(f)+'/response','POST',{...body,kind:'stop'});assert.equal(changed.status,409);assert.equal(changed.body.code,'IDEMPOTENCY_CONFLICT');assert.equal(await persisted(),beforeDenied,'Changed body modified persisted state');return {body_change_denied:true};});
+}catch(error){process.exitCode=1;process.stderr.write(String(error?.stack??error)+'\n');}
+finally{try{await app?.close();await pool.end();const path=resolve(directory);assert.ok(path.startsWith(resolve(tmpdir())+sep)&&path.includes('venus-topic-games-'));rmSync(path,{recursive:true,force:true});cleanup='completed';
+}catch(error){process.exitCode=1;process.stderr.write(String(error)+'\n');}try{assert.equal(checks.length,expectedIds.length,'Exactly five independent cases must execute');assert.equal(new Set(checks.map(c=>c.id)).size,checks.length,'Duplicate component check IDs');assert.ok(expectedIds.every(id=>checks.some(c=>c.id===id&&c.status==='PASS')),'Every fixed ID must have one actual PASS');}catch(error){process.exitCode=1;process.stderr.write(String(error)+'\n');}const report={schema_version:1,suite:'P05_TOPIC_GAMES',synthetic_fixture_only:true,status:process.exitCode?'FAIL':'PASS',runtime_cleanup:cleanup,external_lifecycle_source_safety:'EXPLICIT_FIXTURE_SEAMS_NOT_INTEGRATION_ACCEPTANCE',full_p05_pass:false,checks};writeFileSync(join(process.env.P05_ARTIFACT_DIRECTORY,'topic-games-report.json'),JSON.stringify(report,null,2)+'\n');console.log(JSON.stringify({status:report.status,checks:checks.length,cleanup}));}
+// Pool.query supports the same query interface; no extra connection to leak.
+async function pooled(){return pool;}

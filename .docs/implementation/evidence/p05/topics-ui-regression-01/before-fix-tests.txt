@@ -1,0 +1,67 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-panel.test.ts (16 tests | 4 failed | 12 skipped) 571ms
+   ❯ actual TopicGamesPanel scoped V2 flow (16)
+     × UI-R01 clears public prompt on poll_error without hiding own safety attempts 240ms
+     × UI-R01 clears public prompt on lease_expiry without hiding own safety attempts 137ms
+     × UI-R01 clears public prompt on disconnect without hiding own safety attempts 110ms
+     × UI-R02 expires private/public/advice content after six real elapsed seconds despite a wall clock rollback 82ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R01 clears public prompt on poll_error without hiding own safety attempts
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R01 clears public prompt on lease_expiry without hiding own safety attempts
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R01 clears public prompt on disconnect without hiding own safety attempts
+AssertionError: expected Object{ before: true, …(5) } to deeply equal { before: true, …(5) }
+
+- Expected
++ Received
+
+  {
+    "before": true,
+    "other": true,
+    "pause": true,
+    "privateHidden": true,
+-   "publicHidden": true,
++   "publicHidden": false,
+    "stop": true,
+  }
+
+ ❯ apps/web/src/topic-panel.test.ts:49:219
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  apps/web/src/topic-panel.test.ts > actual TopicGamesPanel scoped V2 flow > UI-R02 expires private/public/advice content after six real elapsed seconds despite a wall clock rollback
+AssertionError: expected Object{ before: true, …(6) } to deeply equal { before: true, …(6) }
+
+- Expected
++ Received
+
+  {
+-   "adviceHidden": true,
++   "adviceHidden": false,
+    "before": true,
+-   "chatHidden": true,
+-   "other": true,
+-   "privateHidden": true,
+-   "publicHidden": true,
++   "chatHidden": false,
++   "other": false,
++   "privateHidden": false,
++   "publicHidden": false,
+    "stop": true,
+  }
+
+ ❯ apps/web/src/topic-panel.test.ts:52:6
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 12 skipped (16)
+   Start at  21:00:37
+   Duration  931ms (tests 69%, import 22%, transform 8%)
+

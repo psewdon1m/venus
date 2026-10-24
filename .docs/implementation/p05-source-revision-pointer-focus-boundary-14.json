@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "revision": "P05-POINTER-FOCUS-BOUNDARY-14",
+  "kind": "ONE_GUARD_FRONTEND_FIX",
+  "supersedes_source_identity": "6497511399213eb7f8f606d8b5fb95ef66bcb26dd4b7bb61d8917dda4c9014b1",
+  "finding": "PointerDownCapture clears keyboardintent, but mainfocus immediatecentering previously ignoredintent and couldmove focusvisiblebutton between pointerdown/mouseup. Actual EN noPOSTcause remains UNKNOWN.",
+  "fix": "Gate entire existing mainfocus centering block by state.keyboard; cancellation stays beforeguard. NativeTab/ShiftTab/keyup and onecancelableRAF unchanged. No mutation/TTL/ACL/producer/oracle change.",
+  "before_source_files": {
+    "apps/web/src/main.tsx": "b46836b65d9d4e226115dd176a3155781297d9ec10fa717dd4dc4863a1ee6acc"
+  },
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "cf19987a458928a48cfeaf3d9c44d76aa8680862878f648a1ae43bed7bdb1f46"
+  },
+  "backend_and_cards": "ExactA26; originaluniform06 uninterrupted; cards470r4 unchanged",
+  "rollback": "Restore coherent preceding frontend; no backend/data migration. Pointerfocuscenteringcanreturn.",
+  "validation": "Independent exacthunk review and original UI required; no actualPASS yet",
+  "full_stage_PASS": false,
+  "P06_started": false
+}

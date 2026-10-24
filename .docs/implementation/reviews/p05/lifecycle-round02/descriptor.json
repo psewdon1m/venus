@@ -1,0 +1,19 @@
+{
+  "volume": "venus-p05-life-review-e3099b5a3618",
+  "run": "venus-p05-life-review-e3099b5a3618-test",
+  "timestamp": "2026-10-19T19:59:55.2794043+03:00",
+  "init": "venus-p05-life-review-e3099b5a3618-init",
+  "binds": [
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\lifecycle-round02\\private-topic-ledger.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\lifecycle-round02\\independent.test.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\lifecycle-round02\\security.ts",
+    "C:\\.projects\\venus\\.docs\\implementation\\reviews\\p05\\lifecycle-round02\\topic-room-lifecycle.ts"
+  ],
+  "kind": "INDEPENDENT_FROZEN_LINUX_REVIEW",
+  "id": "e3099b5a3618",
+  "test_sha256": "03d3ead6488949caaec12b5a02728fa9d86ee6422bfc72078b92118b5042991a",
+  "security_sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25",
+  "source_sha256": "cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a",
+  "image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+  "bootstrap": "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/independent.test.ts','apps/api/src/security.ts','apps/api/src/topic-room-lifecycle.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=>[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/independent.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/independent.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);"
+}

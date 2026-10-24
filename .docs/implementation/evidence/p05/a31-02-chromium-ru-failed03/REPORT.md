@@ -1,0 +1,5 @@
+# A31-02 Chromium/RU — final preparation failure
+
+The original third native shard completed50 cells PASS,0cellFAIL,1NOT_RUN; native73234 exit1, cleanupPASS. The final yes_but/native200 scene stopped before game-next click because the observer model returned PUBLIC_PREPARATION_NOT_READY / OWN_PREDATES_CURRENT. No page errors. Fourteen preparations completed. Independent diagnosis8302a450 identifies the cross-request order comparison as unsupported by production same-scope/revision grant semantics; later checks were short-circuited and future readiness/PASS is not inferred.
+
+All original raw files remain at the recorded source directory, with exact inventory. The packet copies JSON/TXT and failure screenshot; other PNGs remain at their original pinned paths. Source28/image29/runtime7b397 provenance is unchanged. Earlier Firefox/RU and Firefox/EN51PASS each remain historical current02 results; no full nine-shard matrix PASS. Q10 and uniform06 remain separate; no application/code changes or P06 work implied.

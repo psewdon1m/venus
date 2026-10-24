@@ -1,0 +1,343 @@
+[
+    {
+        "Id": "57632a3c18409b42f33b61765bd07f7ce807edd138f0d9943638ddb2d7846053",
+        "Created": "2026-10-19T17:13:56.821614985Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "node",
+            "-e",
+            "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/independent.test.ts','apps/api/src/security.ts','apps/api/src/topic-room-lifecycle.ts','apps/api/src/topic-room-registry.ts','apps/api/src/private-topic-preferences.ts','apps/api/src/rooms.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=\u003e[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/independent.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/independent.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);"
+        ],
+        "State": {
+            "Status": "exited",
+            "Running": false,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 0,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-10-19T17:13:57.231256702Z",
+            "FinishedAt": "2026-10-19T17:14:01.840209504Z"
+        },
+        "Image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+        "ResolvConfPath": "/var/lib/docker/containers/57632a3c18409b42f33b61765bd07f7ce807edd138f0d9943638ddb2d7846053/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/57632a3c18409b42f33b61765bd07f7ce807edd138f0d9943638ddb2d7846053/hostname",
+        "HostsPath": "/var/lib/docker/containers/57632a3c18409b42f33b61765bd07f7ce807edd138f0d9943638ddb2d7846053/hosts",
+        "LogPath": "/var/lib/docker/containers/57632a3c18409b42f33b61765bd07f7ce807edd138f0d9943638ddb2d7846053/57632a3c18409b42f33b61765bd07f7ce807edd138f0d9943638ddb2d7846053-json.log",
+        "Name": "/venus-p05-life-review-6b704906be9e-test",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": null,
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "none",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=128m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 805306368,
+            "NanoCpus": 1000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": [],
+            "BlkioDeviceWriteBps": [],
+            "BlkioDeviceReadIOps": [],
+            "BlkioDeviceWriteIOps": [],
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1610612736,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 96,
+            "Ulimits": [],
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "Mounts": [
+                {
+                    "Type": "volume",
+                    "Source": "venus-p05-life-review-6b704906be9e",
+                    "Target": "/state"
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/private-topic-ledger.ts",
+                    "Target": "/app/apps/api/src/private-topic-ledger.ts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/independent.test.ts",
+                    "Target": "/app/apps/api/src/independent.test.ts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/security.ts",
+                    "Target": "/app/apps/api/src/security.ts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/topic-room-lifecycle.ts",
+                    "Target": "/app/apps/api/src/topic-room-lifecycle.ts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/topic-room-registry.ts",
+                    "Target": "/app/apps/api/src/topic-room-registry.ts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/private-topic-preferences.ts",
+                    "Target": "/app/apps/api/src/private-topic-preferences.ts",
+                    "ReadOnly": true
+                },
+                {
+                    "Type": "bind",
+                    "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/rooms.ts",
+                    "Target": "/app/apps/api/src/rooms.ts",
+                    "ReadOnly": true
+                }
+            ],
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": null,
+            "Name": ""
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/topic-room-lifecycle.ts",
+                "Destination": "/app/apps/api/src/topic-room-lifecycle.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/topic-room-registry.ts",
+                "Destination": "/app/apps/api/src/topic-room-registry.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/private-topic-preferences.ts",
+                "Destination": "/app/apps/api/src/private-topic-preferences.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/rooms.ts",
+                "Destination": "/app/apps/api/src/rooms.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "venus-p05-life-review-6b704906be9e",
+                "Source": "/var/lib/docker/volumes/venus-p05-life-review-6b704906be9e/_data",
+                "Destination": "/state",
+                "Driver": "local",
+                "Mode": "z",
+                "RW": true,
+                "Propagation": ""
+            },
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/private-topic-ledger.ts",
+                "Destination": "/app/apps/api/src/private-topic-ledger.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/independent.test.ts",
+                "Destination": "/app/apps/api/src/independent.test.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/run/desktop/mnt/host/c/.projects/venus/.docs/implementation/reviews/p05/registry-provider-round02/security.ts",
+                "Destination": "/app/apps/api/src/security.ts",
+                "Mode": "",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "57632a3c1840",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "TOPIC_LEDGER_TEST_ROOT=/state",
+                "HOME=/tmp",
+                "XDG_DATA_HOME=/tmp/xdg-data",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=24.22.0",
+                "YARN_VERSION=1.22.22",
+                "PLAYWRIGHT_BROWSERS_PATH=/ms-playwright"
+            ],
+            "Cmd": [
+                "node",
+                "-e",
+                "const fs=require('node:fs'),crypto=require('node:crypto'),cp=require('node:child_process');\nconst paths=['apps/api/src/private-topic-ledger.ts','apps/api/src/independent.test.ts','apps/api/src/security.ts','apps/api/src/topic-room-lifecycle.ts','apps/api/src/topic-room-registry.ts','apps/api/src/private-topic-preferences.ts','apps/api/src/rooms.ts'];\nconsole.log(JSON.stringify({kind:'exact-image-inputs',node:process.version,uid:process.getuid(),hashes:Object.fromEntries(paths.map(p=\u003e[p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex')]))}));\nfs.writeFileSync('/tmp/vitest-ledger.config.mjs',\"export default {cacheDir:'/tmp/vite-cache',test:{include:['/app/apps/api/src/independent.test.ts'],cache:false,fsModuleCache:false,testTimeout:120000}};\");\nconst result=cp.spawnSync(process.execPath,['node_modules/vitest/vitest.mjs','run','apps/api/src/independent.test.ts','--config','/tmp/vitest-ledger.config.mjs','--reporter','verbose'],{stdio:'inherit'});process.exit(result.status??1);"
+            ],
+            "Image": "sha256:556d347fef81d48334642ff1318aa5f7fe4999b605e8bd6d8f3d25e71bcc19b0",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "venus.p05.registry-provider-review": "6b704906be9e",
+                "venus.p05.role": "registry-provider-review-test"
+            },
+            "StopTimeout": 1
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "",
+            "SandboxKey": "",
+            "Ports": {},
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "",
+            "Gateway": "",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "",
+            "IPPrefixLen": 0,
+            "IPv6Gateway": "",
+            "MacAddress": "",
+            "Networks": {
+                "none": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "MacAddress": "",
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "170ec45c51de5750cb3f5805f694f75a2bd62dce59a083a01cbfd51c4e310a51",
+                    "EndpointID": "",
+                    "Gateway": "",
+                    "IPAddress": "",
+                    "IPPrefixLen": 0,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": null
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:73666185d692a57c8f5a9952feca72fedfd8282605abf0b7d25654f9f9a0ff16",
+            "size": 4274,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

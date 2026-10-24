@@ -1,0 +1,473 @@
+{
+  "format": 1,
+  "status": "MEASURED_EVENT_INTERVALS_NOT_ENGINE_STOPWATCH_OR_SLA",
+  "source_git": "92b7f9d9c5dd5caa6a0953f28ed8e984e04393ba",
+  "source_identity": "fe51759f0c5c3c605b260c14121ae60ed12e7999783b9dcc1c6aa3a2ea8f876d",
+  "input": ".docs/implementation/evidence/p06/docker-round09/DRILL.json",
+  "input_sha256": "f93fe8f2a8f4b7f0831d4ce8ba0afa2362af6a3c1587e81695ba9d803face94a",
+  "basis": "Original durable UTC event timestamps, integer millisecond precision; FAILED-to-RECOVERED_A includes journal transition overhead. Job creation-to-terminal includes confirmation/waits. Not the unexported engine recovery_ms/duration_ms fields; no monotonic-clock or production SLA claim.",
+  "clock_limit": "Single local host wall clock; no clock step observed or independent clock accuracy established.",
+  "profile": ".docs/implementation/p06-recovery-profile.v1.json",
+  "concurrent_work": "One recovery drill plus separate quality container limited to2CPU/4GiB; other three pre-existing endurance containers untouched.",
+  "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+  "backup_committed_records_lost": 0,
+  "post_backup_external_admin_writes": 1,
+  "post_backup_external_admin_writes_restored": 0,
+  "required_policy_deletion": "One closed room encrypted preference removed per newer protected deletion ledger; completed snapshot retained.",
+  "jobs": [
+    {
+      "job_id": "e629ea11-ae38-4620-bb47-d165eca6d314",
+      "phase": "REJECTED",
+      "original_error": "PORT_IN_USE",
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:19:49.298Z",
+        "hash": "fcf415a6707e1a61e5a82a3d75ac19cd1b9ff6f840cd233bdfaa857530e83502",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:19:50.042Z",
+        "hash": "fb970f58bc9f9a3422f04498e901319e61bf19715df1bb6178e7e9baced4685e",
+        "phase": "REJECTED",
+        "previous": "dec08d98d32ea1efaa3416c55a795697bbedd64f12dfd9bae0bcc4f5bc3a1064",
+        "sequence": 5
+      },
+      "job_event_elapsed_ms": 744
+    },
+    {
+      "job_id": "d323f35f-e324-466c-ad8c-02d7fe29ebe8",
+      "phase": "REJECTED",
+      "original_error": "DISK_SPACE",
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:19:51.212Z",
+        "hash": "f1b8f16b050f64158555bb57793e9b0a3267b0a9e142f7a4b4b142323abd6ee6",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:19:51.906Z",
+        "hash": "583cb7e6a3b7e6f271363466a336606bd337f64b27ad7323e0f098cf45158ad6",
+        "phase": "REJECTED",
+        "previous": "a04be446a12fa3729f0ccf8ad99220477c8fc801c83cdc36ec813e89115137b6",
+        "sequence": 5
+      },
+      "job_event_elapsed_ms": 694
+    },
+    {
+      "job_id": "2bb50c55-ed27-4245-9403-9c7b672667ec",
+      "phase": "REJECTED",
+      "original_error": "COMMAND_FAILED",
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:19:52.815Z",
+        "hash": "2c5397ad8c80f2417290eec64b6c57238051675565f2f849ac996df4e07693bc",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:19:55.748Z",
+        "hash": "07ea8dcb4f2d032038e2149bcda1a3f07ef5d28f1299ff23bcb96691cdcee9d8",
+        "phase": "REJECTED",
+        "previous": "a842401555c55741a8a1d6aeca424461e658b1bb7ce54c81ccac6c4aa861937a",
+        "sequence": 6
+      },
+      "job_event_elapsed_ms": 2933
+    },
+    {
+      "job_id": "7dc418c5-6802-4c66-ad0d-89c22e7a3f89",
+      "phase": "REJECTED",
+      "original_error": "EACCES",
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:19:56.811Z",
+        "hash": "e4a9b6f48106d324e6078449676958d6abdf90802542c98d221010758e5fde09",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:20:00.024Z",
+        "hash": "04643354d1a367239d4048f214ca9366794bef02d59639af3091116e1b948d74",
+        "phase": "REJECTED",
+        "previous": "b9bf2d03fc9095fb8711670e2be278df84187560c24f5f09f851e4e7bf14e6a9",
+        "sequence": 9
+      },
+      "job_event_elapsed_ms": 3213
+    },
+    {
+      "job_id": "d067e3c3-5a66-44f9-894f-5b1d15c7bd4f",
+      "phase": "RECOVERED_A",
+      "original_error": "HEALTH_FAILED",
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:20:00.911Z",
+        "hash": "b2afa7c5aff37150da09a48a8ca295b60b6bc6b74a538fa275e57e28bea18208",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:20:38.332Z",
+        "hash": "d095cdeec6c99bac3da613c7b1292b1cbf74b445fa467687944c4d1cf75c5e51",
+        "phase": "RECOVERED_A",
+        "previous": "91b7f56934ff9793b99f0a16af07a913ba7ed59bc2bbb5cf6d16c0cc4032975a",
+        "sequence": 12
+      },
+      "job_event_elapsed_ms": 37421,
+      "backup_created_at": "2026-10-24T20:20:02.526Z",
+      "backup_age_at_terminal_ms": 35806,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195127,
+      "backup_sha256": "7f84e8fad8bba0ccedd6881329db0c1a8f41e60d10f49602883bed336f479261",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:20:35.408Z",
+        "hash": "91b7f56934ff9793b99f0a16af07a913ba7ed59bc2bbb5cf6d16c0cc4032975a",
+        "phase": "FAILED",
+        "previous": "64734c47a79bff099f956d3500b1af5d78ff470dd4b4c9361758fc725af05d86",
+        "sequence": 11
+      },
+      "failed_to_recovered_event_elapsed_ms": 2924
+    },
+    {
+      "job_id": "6fd4d595-56f0-4ef1-b717-e3a2698ac232",
+      "phase": "RECOVERED_A",
+      "original_error": "HEALTH_FAILED",
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:20:38.703Z",
+        "hash": "cb3154b9af2b8c004eb7534e094f4f5d9492c7f314f0d1946727643683623926",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:16.668Z",
+        "hash": "11d1007043238a35c25a4244591f84243a178f9fdb44472ac02dc7582e137f8e",
+        "phase": "RECOVERED_A",
+        "previous": "7920465cf702cddbed6fd152278ec9c859853610d762121fdae382aff8d69dbc",
+        "sequence": 12
+      },
+      "job_event_elapsed_ms": 37965,
+      "backup_created_at": "2026-10-24T20:20:40.357Z",
+      "backup_age_at_terminal_ms": 36311,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195140,
+      "backup_sha256": "c6b98524cc833b9c75f13ab6d69664b1243517404eec3a335942d378bc411182",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:21:12.976Z",
+        "hash": "7920465cf702cddbed6fd152278ec9c859853610d762121fdae382aff8d69dbc",
+        "phase": "FAILED",
+        "previous": "e8c486b5f85c28bc6c044161479cf3bf9aab9a3876460e3544aa1f0a5c618a35",
+        "sequence": 11
+      },
+      "failed_to_recovered_event_elapsed_ms": 3692
+    },
+    {
+      "job_id": "f8c3c9e2-e51e-40f7-9dbb-00c43e928a46",
+      "phase": "REJECTED",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "PREFLIGHT",
+      "first_event": {
+        "at": "2026-10-24T20:21:17.916Z",
+        "hash": "00679421bcbeb287356f464dee5332d0f3b86eb5d3b864b935aa2658102cb4c8",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:20.162Z",
+        "hash": "450a0641d80a6ba2c590be83a7ffe30296cc14f85fc225fb3e5166c1c60de06b",
+        "phase": "REJECTED",
+        "previous": "b0721d57ef8c59134180383e7c68cdfca9933c3e86274639d5db154e6f72b0bf",
+        "sequence": 4
+      },
+      "job_event_elapsed_ms": 2246
+    },
+    {
+      "job_id": "6b4e272f-55b0-4239-92f1-727386d57d9f",
+      "phase": "REJECTED",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "PULLING",
+      "first_event": {
+        "at": "2026-10-24T20:21:21.625Z",
+        "hash": "dbd3c965971f61c38f6330f693f54acc8621194d2a2b8ccb4e2816321804deb2",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:24.659Z",
+        "hash": "b961f5fa5f1fe482d91b32627174276b44725339adff422ab23837069cf52e34",
+        "phase": "REJECTED",
+        "previous": "57c5dd8e6e570a215b283cf84f3ce6c5857277cedb339235a2c195f7dfafb48a",
+        "sequence": 5
+      },
+      "job_event_elapsed_ms": 3034
+    },
+    {
+      "job_id": "f6afc132-749f-44e5-90a9-3a2f1b4cefb5",
+      "phase": "REJECTED",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "IMAGE_VERIFIED",
+      "first_event": {
+        "at": "2026-10-24T20:21:26.215Z",
+        "hash": "2d5260289ff74a89052fb95cd20259c4b555ac0c324bf366058e3f6ba41b9e3e",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:29.060Z",
+        "hash": "7221504c838fc6c62ed8b735c33b285eedf97139742477e47f335799f49d7958",
+        "phase": "REJECTED",
+        "previous": "3f710d6a8fec6cd613b8ed1c0b2d9f5fb8489d07fb049de635927ab2e07784c6",
+        "sequence": 6
+      },
+      "job_event_elapsed_ms": 2845
+    },
+    {
+      "job_id": "3ad320c2-b875-405e-bf48-47f18ded4e29",
+      "phase": "REJECTED",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "QUIESCING",
+      "first_event": {
+        "at": "2026-10-24T20:21:30.499Z",
+        "hash": "c823bc937a3ae72b6675a57c2b80b39ca97bb6702bf2d3e029c1a71d55631290",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:33.411Z",
+        "hash": "dbe840c030ea2c619a51c3e9159be2fd61a22e1a2297c405760966976df43194",
+        "phase": "REJECTED",
+        "previous": "63a682d470de8efb6de39be9263168e8d1044df014dee1a33049c7ca9a94e8d0",
+        "sequence": 7
+      },
+      "job_event_elapsed_ms": 2912
+    },
+    {
+      "job_id": "1f51e5bc-9657-438d-b38f-9066a2e0d671",
+      "phase": "REJECTED",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "QUIESCED",
+      "first_event": {
+        "at": "2026-10-24T20:21:34.905Z",
+        "hash": "e7b3c4fbd2257f162175543291c627a25700cfcf2c775374fa16acdf977c7fc3",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:39.714Z",
+        "hash": "b75de30c5bc2e1dc36bce580e58be2e2499d3e3b17f82ddc8809dbb1925ec6c9",
+        "phase": "REJECTED",
+        "previous": "848fb661dada2c329c034664f7f125658665abf334f1910c1f2c6061e044c73e",
+        "sequence": 8
+      },
+      "job_event_elapsed_ms": 4809
+    },
+    {
+      "job_id": "ad2aca7c-d7b9-482d-aa22-1ecb00062f4d",
+      "phase": "RECOVERED_A",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "BACKUP_DURABLE",
+      "first_event": {
+        "at": "2026-10-24T20:21:41.422Z",
+        "hash": "b2cafac9161d7fc18cc505517bd2b59cdbb5d77e278b4cbcfc351e16b85e5bae",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:46.719Z",
+        "hash": "42a210a2f672fd611ee052389699d25517f7cf12bba576f91a62746b5387c35d",
+        "phase": "RECOVERED_A",
+        "previous": "9cff2b92f6d3eaf58884d00f0a334abb3463786efca7628b30bc32e95c11729e",
+        "sequence": 10
+      },
+      "job_event_elapsed_ms": 5297,
+      "backup_created_at": "2026-10-24T20:21:43.221Z",
+      "backup_age_at_terminal_ms": 3498,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195435,
+      "backup_sha256": "dae38232f6859f352c937207d95b492cd4bd71abe5ea27bfbe4479bf9cc00094",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:21:44.115Z",
+        "hash": "9cff2b92f6d3eaf58884d00f0a334abb3463786efca7628b30bc32e95c11729e",
+        "phase": "FAILED",
+        "previous": "65977aa05c830cb9e1a854ed3d3070f9c5f3a147ae13a28e586eb27adaab36fc",
+        "sequence": 9
+      },
+      "failed_to_recovered_event_elapsed_ms": 2604
+    },
+    {
+      "job_id": "88055cae-8e4f-4fff-87cf-d474ca9ec27a",
+      "phase": "RECOVERED_A",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "MUTATION_STARTED",
+      "first_event": {
+        "at": "2026-10-24T20:21:48.007Z",
+        "hash": "65807a95493cced3a113fab7af60bb5a2b0e7cd7a2e14a9f6be1d30a1c494646",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:21:53.465Z",
+        "hash": "494fb17c4f1075cc927a41d7e38db6f98300dbab77ffca0c42cb6c4ebf3b28e4",
+        "phase": "RECOVERED_A",
+        "previous": "2acbbf070b9aa49c579ad63ebd586ea03056f62a032f97e23720adab9fcb2fa2",
+        "sequence": 11
+      },
+      "job_event_elapsed_ms": 5458,
+      "backup_created_at": "2026-10-24T20:21:49.828Z",
+      "backup_age_at_terminal_ms": 3637,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195444,
+      "backup_sha256": "d4abfae4ab54f198269bf5cb718517fa5482766dc05670ec9e0e49db5bb99a63",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:21:50.710Z",
+        "hash": "2acbbf070b9aa49c579ad63ebd586ea03056f62a032f97e23720adab9fcb2fa2",
+        "phase": "FAILED",
+        "previous": "132db228fbcd0a6413f2f45c80ac7aa23dafd7fd0450d332fc60dcb3b72ccc2b",
+        "sequence": 10
+      },
+      "failed_to_recovered_event_elapsed_ms": 2755
+    },
+    {
+      "job_id": "a78e260e-fb46-4139-8608-6d9434408683",
+      "phase": "RECOVERED_A",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "CANDIDATE_STARTED",
+      "first_event": {
+        "at": "2026-10-24T20:21:54.707Z",
+        "hash": "d577db8d9f4f0e09e2fc91bcce48de4b6ca02b22c5df77f58bb743ef225c4c50",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:22:07.800Z",
+        "hash": "224ac3b199012e74b7ea95dbe383940956e0767fae5e2572dddf6ce53a4c5a27",
+        "phase": "RECOVERED_A",
+        "previous": "b9bd89cba486a8aa9f4b0a3dc4a3e90c30665bc5d63028f44848d030cd79fe6e",
+        "sequence": 12
+      },
+      "job_event_elapsed_ms": 13093,
+      "backup_created_at": "2026-10-24T20:21:56.268Z",
+      "backup_age_at_terminal_ms": 11532,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195456,
+      "backup_sha256": "2bc947520478419b89cb144b2dae810e487ea2e1198bca2f8baec8e37875a56f",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:21:59.008Z",
+        "hash": "b9bd89cba486a8aa9f4b0a3dc4a3e90c30665bc5d63028f44848d030cd79fe6e",
+        "phase": "FAILED",
+        "previous": "8bbe7a6956afe1b3fd19431f75efb4eb47f68f8aee7af1cfae49a32216f404a4",
+        "sequence": 11
+      },
+      "failed_to_recovered_event_elapsed_ms": 8792
+    },
+    {
+      "job_id": "8972f340-d001-424f-a730-90d05fe29ce1",
+      "phase": "RECOVERED_A",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "HEALTH_VERIFIED",
+      "first_event": {
+        "at": "2026-10-24T20:22:09.186Z",
+        "hash": "33cbd8935895a473361a588b91ad765b11c550fdd70abdcb0431b21f78f69dc8",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:22:17.021Z",
+        "hash": "ed1fa5d1e0690112c0c74462651b40c95c5749ec850d8a4ed49db1cd46934755",
+        "phase": "RECOVERED_A",
+        "previous": "31f26c855eac8e199797f1afc1c63f841eb5f6d78ba94c52b5ea829bbec45ac4",
+        "sequence": 13
+      },
+      "job_event_elapsed_ms": 7835,
+      "backup_created_at": "2026-10-24T20:22:10.818Z",
+      "backup_age_at_terminal_ms": 6203,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195294,
+      "backup_sha256": "1a778a72fa5af72c0cd50507bd0b2edc28764a91c66ad29683043bb42c5dbbf2",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:22:13.709Z",
+        "hash": "31f26c855eac8e199797f1afc1c63f841eb5f6d78ba94c52b5ea829bbec45ac4",
+        "phase": "FAILED",
+        "previous": "9c14571f3967c4d8347cfffa6a9f04576be04f7f59ac099a705a65a6201f121a",
+        "sequence": 12
+      },
+      "failed_to_recovered_event_elapsed_ms": 3312
+    },
+    {
+      "job_id": "65454e4c-21c9-4a5f-9626-d944e7ef194a",
+      "phase": "RECOVERED_A",
+      "original_error": "EXECUTOR_INTERRUPTED",
+      "interrupted_phase": "BACKUP_DURABLE",
+      "first_event": {
+        "at": "2026-10-24T20:22:18.207Z",
+        "hash": "9fe54585988cf9a798b8049744827fc16680d640d5ba10f990ddbcdfb9eacc60",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:22:24.684Z",
+        "hash": "afb6139e60ebdd8ef05692f416661e5d6edde37ada592fcca50f8cbf7c51f980",
+        "phase": "RECOVERED_A",
+        "previous": "d488d4f1c2c421f0fdff0e2343b5bd509885e52f65178bc8800416f121fefc0f",
+        "sequence": 10
+      },
+      "job_event_elapsed_ms": 6477,
+      "backup_created_at": "2026-10-24T20:22:19.954Z",
+      "backup_age_at_terminal_ms": 4730,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 195308,
+      "backup_sha256": "13c8ee5dd955f4f01f1a3cccb807b9bbe39aa40bcc02f150a4c47ca5f20e12e2",
+      "recovery_begin_event": {
+        "at": "2026-10-24T20:22:22.106Z",
+        "hash": "d488d4f1c2c421f0fdff0e2343b5bd509885e52f65178bc8800416f121fefc0f",
+        "phase": "FAILED",
+        "previous": "d3c7b9f62d7cc7895767b356786863cf778d0d98251de8e7339f0fb61e496023",
+        "sequence": 9
+      },
+      "failed_to_recovered_event_elapsed_ms": 2578
+    },
+    {
+      "job_id": "b39c4b93-1b40-4be2-b448-777542db10a3",
+      "phase": "COMMITTED",
+      "original_error": null,
+      "interrupted_phase": null,
+      "first_event": {
+        "at": "2026-10-24T20:22:35.107Z",
+        "hash": "199178debb50de5b02cea8acc902450cbb72680d94c0e65ec58cb425cf66e957",
+        "phase": "CREATED",
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sequence": 1
+      },
+      "terminal_event": {
+        "at": "2026-10-24T20:22:38.861Z",
+        "hash": "c22a9c963823c4b3f983d03c78db73ee99e18533806f8d22a365b9a309f42569",
+        "phase": "COMMITTED",
+        "previous": "78d922dda3f72c063b6d1657eed93c6e42a05b4752a50ee3e7623bba32392032",
+        "sequence": 12
+      },
+      "job_event_elapsed_ms": 3754,
+      "backup_created_at": "2026-10-24T20:22:36.828Z",
+      "backup_age_at_terminal_ms": 2033,
+      "write_boundary": "APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED",
+      "backup_dump_size": 161887,
+      "backup_sha256": "718e3478b20390396fafd49aa5669bd43ffc1f5757d610673f3fd88a5b34019a"
+    }
+  ],
+  "production_RPO_RTO": "NOT_APPROVED_NO_SLA_CLAIM"
+}

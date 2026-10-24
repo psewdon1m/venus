@@ -1,0 +1,34 @@
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {cohortIds,profiles,negativeProfiles,safeFailure} from './probe.mjs';
+import {diagnosticEvents,validateAck} from './outer.mjs';
+let count=0;function check(fn){fn();count++;}
+const expected=['online','in_person'].flatMap(context=>['questions','truth_or_dare','yes_but'].flatMap(mode=>Array.from({length:7},(_,i)=>({context,mode,N:i+2})))).map((p,i)=>({id:'PILOT470-'+String(i+1).padStart(2,'0'),...p}));
+check(()=>assert.deepEqual(cohortIds,['online/questions','online/truth_or_dare','online/yes_but','in_person/questions','in_person/truth_or_dare','in_person/yes_but']));
+for(const cohort of cohortIds){
+ check(()=>{const rows=profiles(cohort);assert.equal(rows.length,7);assert.deepEqual(rows.map(p=>p.N),[2,3,4,5,6,7,8]);assert(rows.every(p=>p.context+'/'+p.mode===cohort));assert.deepEqual(rows,expected.filter(p=>p.context+'/'+p.mode===cohort));});
+ check(()=>{const rows=negativeProfiles(cohort);assert.equal(rows.length,cohort.endsWith('/yes_but')?1:0);if(rows.length)assert.deepEqual(rows,[{context:cohort.split('/')[0],N:2,mode:'yes_but',relation:'not_a_friend'}]);});
+}
+check(()=>{const all=cohortIds.flatMap(profiles);assert.deepEqual(all,expected);assert.equal(new Set(all.map(p=>p.id)).size,42);assert.equal(all.length*20,840);assert.equal(cohortIds.flatMap(negativeProfiles).length,2);});
+for(const invalid of [undefined,null,'','all','online','online/questions/N4','online/QUESTIONS',[],{},['online/questions']]){
+ check(()=>assert.throws(()=>profiles(invalid),/DECLARED_COHORT_REQUIRED/));
+ check(()=>{let reads=0;assert.throws(()=>validateAck({schema_version:1,status:'ROOT_RUN_ACK',purpose:'ORDINARY470_FIXED_COHORT_06',cohort:invalid},()=>{reads++;throw Error('UNEXPECTED_READ');}),/DECLARED_COHORT_REQUIRED/);assert.equal(reads,0);});
+}
+check(()=>{const err=new assert.AssertionError({message:'UNEXPECTED_API_STATUS',actual:500,expected:200,operator:'strictEqual'});assert.equal(safeFailure(err).assertion_code,'UNEXPECTED_API_STATUS');});
+check(()=>assert.equal(safeFailure(new Error('PRIVATE_CANARY\nUNEXPECTED_API_STATUS')).assertion_code,'PROBE_ASSERTION_FAILED'));
+const event={event:'request_failed',request_id:'d0000000-0000-4000-8000-000000000001',error_kind:'Error',failure_code:'40P01',source_module:'topic-games',source_line:100,source_column:4};
+check(()=>assert.deepEqual(diagnosticEvents(JSON.stringify({...event,err:{message:'PRIVATE_CANARY'},cookie:'SECRET',body:'SECRET',stack:'SECRET'})),[event]));
+check(()=>assert.deepEqual(diagnosticEvents('BAD_JSON\n'+JSON.stringify({...event,request_id:'SECRET'})+'\n'+JSON.stringify({...event,failure_code:'PRIVATE_CANARY'})),[]));
+check(()=>{const rows=diagnosticEvents(JSON.stringify({...event,source_module:'/private/path',source_line:Infinity}));assert.deepEqual(rows,[{event:event.event,request_id:event.request_id,error_kind:event.error_kind,failure_code:event.failure_code}]);});
+check(()=>assert.throws(()=>diagnosticEvents(Array(65).fill(JSON.stringify(event)).join('\n')),/DIAGNOSTIC_EVENT_CAP/));
+check(()=>{const s=readFileSync(new URL('./outer.mjs',import.meta.url),'utf8');const capture=s.indexOf('if(appId){try{');assert(capture>s.indexOf('}finally{'));assert(capture<s.indexOf("docker(['down'"));assert(s.includes("run(['logs','--tail','1000',appId])"));});
+const current=name=>{let text=readFileSync(new URL('./'+name,import.meta.url),'utf8');if(name==='probe.mjs'){const parent=readFileSync(new URL('../p05-ordinary-real470-probe05/probe.mjs',import.meta.url),'utf8'),from=text.indexOf(' async function connect(a)'),to=text.indexOf(' async function mutationTicket',from),pfrom=parent.indexOf(' async function connect(a)'),pto=parent.indexOf(' async function mutationTicket',pfrom);text=text.slice(0,from)+parent.slice(pfrom,pto)+text.slice(to);}if(name==='outer.mjs'){const parent=readFileSync(new URL('../p05-ordinary-real470-probe05/outer.mjs',import.meta.url),'utf8'),from=text.indexOf('export function diagnosticEvents('),to=text.indexOf('async function main(){',from),pfrom=parent.indexOf('export function diagnosticEvents('),pto=parent.indexOf('async function main(){',pfrom);text=text.slice(0,from)+parent.slice(pfrom,pto)+text.slice(to);}return text;};
+const prior=name=>readFileSync(new URL('../p05-ordinary-real470-probe04/'+name,import.meta.url),'utf8');
+function span(source,start,end){const at=source.indexOf(start);assert(at>=0);const finish=source.indexOf(end,at);assert(finish>at);return source.slice(at,finish);}
+check(()=>assert.equal(span(current('probe.mjs'),'export const sha=','export async function main()'),span(prior('probe.mjs'),'export const sha=','export async function main()')));
+check(()=>assert.equal(span(current('probe.mjs'),' async function request(',' save();try{'),span(prior('probe.mjs'),' async function request(',' save();try{')));
+check(()=>assert.equal(span(current('outer.mjs'),'export function ownedContainer','async function main(){'),span(prior('outer.mjs'),'export function ownedContainer','async function main(){')));
+check(()=>assert.equal(span(current('outer.mjs'),' }finally{',' if(failure||'),span(prior('outer.mjs'),' }finally{',' if(failure||')));
+check(()=>{const d=JSON.parse(current('DESCRIPTOR.json')),old=JSON.parse(prior('DESCRIPTOR.json'));assert.deepEqual(d.cohorts,cohortIds);assert.equal(d.sessions,7);assert.equal(d.expected_completed_rounds,140);assert.equal(d.matrix_sessions,42);assert.equal(d.matrix_expected_completed_rounds,840);assert.equal(d.matrix_negative_profiles,2);assert.equal(d.rate_schedule.total_probe_deadline_ms,4600000);assert.equal(d.rate_schedule.docker_exec_ceiling_ms,4800000);for(const k of ['per_member_http_min_gap_ms','all_public_http_min_gap_ms','ws_upgrade_min_gap_ms','heartbeat_ms','http_timeout_ms','positive_profile_deadline_ms','negative_profile_deadline_ms','retries'])assert.equal(d.rate_schedule[k],old.rate_schedule[k]);assert.equal(d.calibration05.full_matrix_pass,false);assert.equal(d.rate_schedule.retries,0);});
+check(()=>{const p=current('probe.mjs'),o=current('outer.mjs');assert(p.includes('cohort,matrix_complete:false'));assert(o.includes('cohort:ack.cohort,matrix_complete:false'));assert(p.includes('performance.now()+600000'));assert(p.includes('performance.now()+90000'));assert(p.includes('cleanupDeadline=performance.now()+15000'));assert.equal(p.split('start+4600000').length-1,2);assert(o.includes('timeout:4800000'));assert(p.includes('report.finishes,140'));assert(p.includes('report.skips,0'));assert(p.includes('report.locales_checked_sessions,7'));assert(p.includes('7+selectedNegatives.length'));});
+console.log(JSON.stringify({status:'PASS_FIXED_COHORT_METHOD_CONTROLS_ONLY_NOT_RUN',checks:count}));

@@ -1,0 +1,3 @@
+PASS_COMPONENT_ONLY. OCI27 exact A17/B4 actual: all14/three phases0/poolsclosed/browsercomplete/cleanupempty/noerrors;203173.113ms. B2+A3 each13 strict replay rows, E unchanged-live/preboot/revoke, F genuine isolated positive, final selectedStop200/originalAhostGET200. Actual browserPID256/newprofile fits original unchanged other budgets; no old128 cause/remedy rewrite.
+
+Source1871/producer372 five snapshots exact; method8b66/producer4c4d/ACK57db pinned. Full479 raw envelope validates,21 safe raw files exported +resource-only inspect projection; no private archive. Initial own syntax and PG-reference assumptions failed and are retained; corrected audit0. No native action. Historical cleanup is separate. Synthetic component only, not P05/stage/production. COMPLETE_STOP.

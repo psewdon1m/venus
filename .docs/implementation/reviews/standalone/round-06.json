@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/standalone_gate_review",
+  "time_utc": "2026-10-19T13:02:45.776527+00:00",
+  "outcome": "PREFLIGHT_PASS",
+  "scope": "standalone-catalog-r2-docker-check-integration-preflight",
+  "stage_acceptance": false,
+  "source_sha": "c5dac890fc32ea769971bc29cb468c5b1fa35c0e",
+  "source_dirty": true,
+  "reviewed_files": [
+    {
+      "path": "tools/check-catalog-r2.mjs",
+      "sha256": "24282cc1061fba0355858b424009a9a1861ef524119180ab3e2335b2118e07ca"
+    },
+    {
+      "path": "tools/docker-quality.mjs",
+      "sha256": "23e989e9863f59d2a94effaa76f48fd02c6f294998caa063e180d9b5128d6a30"
+    },
+    {
+      "path": "tools/docker-quality-exec.mjs",
+      "sha256": "3b81f042f2f33dc78bc60fa19ba6560b6e094e76cd4812c19cd1d12935591d7c"
+    },
+    {
+      "path": "package.json",
+      "sha256": "88c753f3592d430193c2b5eb5493b675be62541e656a7bda23f83f5e27b322c4"
+    }
+  ],
+  "findings": [],
+  "tests": {
+    "catalog_producer_controls": {
+      "passed": 6,
+      "total": 6,
+      "actual_catalog_run": false
+    },
+    "mandatory_receipt_controls": {
+      "passed": 4,
+      "total": 4,
+      "receipt_count": 15,
+      "used_real_docker": false
+    },
+    "existing_wrapper_fault_controls": {
+      "passed": 4,
+      "total": 4
+    },
+    "existing_source_guard_controls": {
+      "passed": 8,
+      "total": 8
+    }
+  },
+  "test_artifacts": [
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-producer-faults.mjs",
+      "sha256": "13659eaf183043c04fcfee38f8f4900c54b9592722cf66cd99c5b1610d08a686"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-producer-faults.json",
+      "sha256": "dd52f84cb115e269120147de4a3913ab8d0d4e3315fd17fd36d62d37fa70317d"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-receipt-controls.mjs",
+      "sha256": "e68b667f94b9088a95a0a380aa700db4d0d817d19a4db425f0258c156996cddd"
+    },
+    {
+      "path": ".artifacts/review-standalone-gate/catalog-r2-receipt-controls.json",
+      "sha256": "6aaf3d38e712083f200b81e2514251538cf01a2edfca2f0e24bf69f9c6f757e3"
+    }
+  ],
+  "report": {
+    "path": ".docs/implementation/reviews/standalone/round-06.md",
+    "sha256": "31797b8ab6b4b46eb39c7042429ef3bf74eda877b7df003ff13cb9716e704383"
+  },
+  "limits": [
+    "DIRTY_CANDIDATE",
+    "CONTENT_AUTHOR_ACTIVE",
+    "ACTUAL_CATALOG_AND_DOCKER_FULL_RUN_NOT_STARTED",
+    "NOT_HUMAN_APPROVAL",
+    "NOT_STAGE_ACCEPTANCE"
+  ]
+}

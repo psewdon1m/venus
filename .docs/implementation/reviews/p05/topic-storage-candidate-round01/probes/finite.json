@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "storage_wrappers": [
+    "this.lifecycle.open(room,birth)",
+    "ledger.read({roomId:room,ownerId:owner})",
+    "this.lifecycle.assertLive(roomId,loaded.birth)",
+    "loaded.ledger.read({roomId,ownerId:id},loaded.safety.revision)",
+    "loaded.ledger.read({roomId:a.room.id,ownerId:a.member.id},loaded.safety.revision)",
+    "this.lifecycle.assertLive(a.room.id,loaded.birth)",
+    "loaded.ledger.narrow({roomId,ownerId:a.member.id,operationId,expectedRevision:safety.revision,exclude:narrower})"
+  ],
+  "entire_class_identical_after_unwrapping": true
+}

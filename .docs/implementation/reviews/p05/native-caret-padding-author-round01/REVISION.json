@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "revision": "P05-NATIVE-CARET-SCROLLPORT-PADDING-09",
+  "kind": "FRONTEND_SCROLL_TARGETING_ONLY",
+  "parent_source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
+  "parent_source_count": 1881,
+  "changed_source_files": {
+    "apps/web/src/style.css": "df3050200663293b64aa39a1e6e239a89c1b799f903a0d73317e956003985494"
+  },
+  "before_source_files": {
+    "apps/web/src/style.css": "fea314792c7cd6b064f4e876ded77272f15a149038795114d42d7191bcf6fec7"
+  },
+  "APP_change": "Document scroll-padding-block:min(30vh,120px). Reserve native caret-scroll space around focused controls; symmetric padding keeps center alignment. No added box padding/layout dimensions, timers, handlers, focus overrides or retries.",
+  "reason": "A26 original Firefox/RU failed secondary pair-chat-input at320x568: top504.4 bottom604.4; focused native caret visibility alone did not keep whole100pxcontrol visible. Prior observational trace proved late scroll rollback after correct application handlers; newest actual has no causal trace, so identical writer is inference, not a claim.",
+  "actual_failure": {
+    "project": "venus-v2-layout-deb143059dc4",
+    "counts": {
+      "PASS": 36,
+      "FAIL": 1,
+      "NOT_RUN": 14
+    },
+    "cleanup": "PASS",
+    "report_sha256": "014c3da82bd2a150aa32e9229a71fd2527968ce998eb30f0cecabf290dbfd1f6",
+    "original_first_sample_sha256": "27c4a5c5873dc6dde0ef31e0da3b8c5d615ceadd82e186ef48e505df64c115e8",
+    "runner_sha256": "36038ab2fb116149061f4c021408afd0c77b629842f2ab584e7c42fd974090ef"
+  },
+  "technical_basis": {
+    "selection_source": "https://raw.githubusercontent.com/mozilla-firefox/firefox/main/dom/base/Selection.cpp",
+    "pres_shell_source": "https://raw.githubusercontent.com/mozilla-firefox/firefox/main/layout/base/PresShell.cpp",
+    "qualification": "Current upstream source, not a byte audit of the pinned browser. Selection posts a refresh-driver caret-scroll event and passes an arbitrary rect. PresShell excludes element scroll-margin for arbitrary rects, but includes scrollcontainer padding. Native gate remains required.",
+    "bounds": "Smallest required320pxheight gives96px each side/128px target area for100pxtextarea;568px gives120px each/328px target area. No new minimumviewport restriction."
+  },
+  "backend_statistics_scope": {
+    "A26_source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
+    "A26_image": "sha256:48c5876a7f78c828883734b4039c59eb97644089cd7e8cf7ca9721d2e26c4592",
+    "selection_revision": "RE-1.P05-TOPIC-3.PUBLIC-EMPTY-PRIVATE-1",
+    "unchanged_all_backend_sources": true,
+    "rule": "Current uniform A26 full C2/M3 stays one source/image/binding. A27 can inherit only after strict whole backend compiled/source/SQL/PG equivalence; no frontend CSS/native UI claim from that component. No resampling or restart from frontend-only fix."
+  },
+  "validation": "Existing69targeted and1107hostPASS apply exact unchangedTScode; CSS build/native matrix pending. No low-impact CSS unit test added.",
+  "rollback": "Restore prior coherent frontend bundle/style bytes; latecaret clipping can return. Backend/history/schema remain unchanged.",
+  "full_stage_PASS": false,
+  "P06_started": false
+}

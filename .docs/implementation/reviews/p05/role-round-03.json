@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/p04_evidence_review",
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "source_identity_sha256": "d6d4d0d9f119fa7d1647fb2f0d81536d085e231ebe0f1ef3e9c9a722e7fc97b6",
+  "scopes": [
+    "self_actions_scoped_frozen_dirty_code",
+    "actual_module_adversarial_with_explicit_doubles",
+    "author_terminal_component_evidence_inspection"
+  ],
+  "status": "CHANGES_REQUESTED",
+  "open_findings": [
+    "P05-ROLE-005"
+  ],
+  "reviewed_at_utc": "2026-10-19T15:37:32.652318+00:00",
+  "source_dirty": true,
+  "acceptance_scope": "ROLE003004_SCOPED_CLOSURE_ONLY_SELF_ACTIONS_COMPONENT_NOT_ACCEPTED",
+  "stage_accepted": false,
+  "human_approved": false,
+  "clean_source_proof": false,
+  "reviewer_executed_http_pg_browser": false,
+  "closed_findings": [
+    {
+      "id": "P05-ROLE-003",
+      "status": "CLOSED_SCOPED_SOURCE_AND_INDEPENDENT_MODULE_RETEST",
+      "detail": "OwnControls941968... consumes now before all early returns. Independent4 expiry→pause/stop/abort/neutral-reset→rewind cases deny Finish;27 client/actualTSX controls pass. Historical failing89a4... input/result retained. No clean/fullstage claim."
+    },
+    {
+      "id": "P05-ROLE-004",
+      "status": "CLOSED_SCOPED_SOURCE_AND_COMPONENT_EVIDENCE",
+      "detail": "Games962bced... final actual session/entry join after awaits enforces synchronous session and room expiry and caps lease. Independent10 actualmodule+explicitSQL-double cases pass; author actualPG/HTTPS SA09 blocks second real currentAcceptance via ownedfixtureSQLfunction then expires session and gets401/no metadata. Both evidence types distinguished; original failure preserved."
+    }
+  ],
+  "findings": [
+    {
+      "id": "P05-ROLE-005",
+      "priority": "P2",
+      "status": "OPEN_PENDING_FRESH_FREEZE_AND_RETEST",
+      "file": "apps/web/src/games-panel.tsx",
+      "start": 106,
+      "related_line": 146,
+      "tested_source_sha256": "e35e8df45fcdeef655ffdf3c15acd78fad1937b5f85deb7da17188ba914725a8",
+      "title": "Do not authorize an older rendered mutation payload with newer self-actions metadata",
+      "detail": "Incoming shared frame can synchronously bind OwnControls to game revision6 while gameRecord still renders HTTP revision5. A poll receiving self-actions revision6 is accepted, then the actual Next JSX appears and its handler POSTs expected_rev5 from old game. Actual API revision checks reject such a request; this is a completion/control availability defect, not a server ACL bypass. Independently reproduced on frozen e35e8d... TSX with actual controls941968... and explicit React/API doubles.",
+      "required_fix": "Require exact rendered session/round/game revision agreement with the accepted control envelope before offering or dispatching revision-bound actions, or atomically accept the view and permissions. Keep stale/ABA/TTL denial and degraded safety regressions. Independently rerun after new freeze and actual nine-case suite success.",
+      "runtime_evidence_relation": "Original26be4 actualSA06 Finish→Next failed to change round. Its raw report does not establish this specific wire cause; later diagnosticSA06 wirePASS reported by root does not erase either originalFAIL or independent source defect.",
+      "interim_source_change": "Author has begun a render/control-envelope fix after this frozen snapshot; not accepted by round03."
+    }
+  ],
+  "actual_component_run": {
+    "run_id": "26be4ab8f56b",
+    "status": "FAIL",
+    "pass": 8,
+    "fail": [
+      "P05-SA-06"
+    ],
+    "cleanup": "completed",
+    "same_source_identity_before_after": true,
+    "source_files": 1733
+  },
+  "independent_checks": {
+    "role_cases": 32,
+    "role_mismatches": 0,
+    "client_controls": 27,
+    "server_projection_double_scenarios": 10,
+    "new_source_defect_reproduced": true
+  },
+  "source_archive_sha256": "66574fb540c13f469c04acfa51a220c76afd1032c72523d0a3f80590e89c4b13",
+  "report_path": ".docs/implementation/reviews/p05/role-round-03.md",
+  "report_sha256": "87148cc21a3782a9dac7559fd5788ec2abf2cfee7196a2eb6d5f551315e2e75b",
+  "evidence_hashes": {
+    "role-round-03.auth-acceptance-mismatch.json": "e4cd25d8d3c16fbf4e34339674c3e6d62340cc974265263194adfea9ea837594",
+    "role-round-03.auth-baseline.json": "1f80c4d821f0e7fbc396fc63ba9772f44357f9a5f4c21655a6f36a255957cac3",
+    "role-round-03.auth-catalog-failure.json": "5b008e30b893d64762b1f632fc1485ca7aa785ba0aec2c18793b92c074941e49",
+    "role-round-03.auth-cross.json": "77d1f54a61bf306faef331ca03bc807a7cba09dfe2ea9fd31b1db8a23b36b7d4",
+    "role-round-03.auth-exact-deadline.json": "daa39eb81ccc61a5b410437ee96fe62ac2d283334d867118ffe9eeec54f141c3",
+    "role-round-03.auth-final-query-cross.json": "dfd8d443be587518ed3098bc83707e5c6e26bd5db49abd1fea6f194bc8a862f5",
+    "role-round-03.auth-final-revoked.json": "234415deef58ae2ac3b8443321729df6ddeb4abe718d2ac2f555f75a417cf11d",
+    "role-round-03.auth-lease-cap.json": "08f3d97006d3dc4b6aeb2137e560fa46cba07aec303a77129958632cab15d258",
+    "role-round-03.auth-probe.mjs": "a56748cf2fe5e9fe9ef8f46c5a1fd0498a2e83b08c6d0168c74746f9fda9e34a",
+    "role-round-03.auth-rewind.json": "b866488622a9405dc13fcc47a6df444750340fcc695c88b41ef9d5d354b2c213",
+    "role-round-03.auth-room-expiry.json": "e140f54fdbcf0cd6ba1169288ca55c0bfa0efe3bb13bdc31a4b3505c42805b71",
+    "role-round-03.client-probe.mjs": "4f569825efd43ffd64a433c63a17a01b6c27589a3dc19a90a40e40d26d5c956c",
+    "role-round-03.client-result.json": "7e20d580614bf4dc1118e010fdda96c786804ef3d456d75614c4783d9fff410a",
+    "role-round-03.frozen-source-index.json": "dca744789bb60c136bf2dc9a2a8b61693873271b74fff583ebb77333d05ec86c",
+    "role-round-03.inputs-before.json": "6c5a071beaff7595f49f4bfbc712fdedf00ecd58e77c00c41713c80f1d32644d",
+    "role-round-03.replay-frozen.mjs": "e7c012edb48532c2fada67105d63286851d160641d744cfefacbf831dbdaee6f",
+    "role-round-03.revision-mismatch-frozen.json": "f4e3465fc5b91950f7d0f87484adf87b6cfc5d6f1f8a55ca878510e54e6c00f6",
+    "role-round-03.revision-mismatch.json": "e70bdd6bd867927c9061c6c6935fee9ce2b4ae6de4e69392c369949f6eee79bc",
+    "role-round-03.revision-mismatch.mjs": "aa8ab0a8c4fb3963088b93e936cb8784d6c17fbe025f52615a7dd0b7221bdfcf",
+    "role-round-03.roles-probe.mjs": "02deafd848f70bb3cb3c3a59116fb65d24b50a2e83515605f0d9e7336a603897",
+    "role-round-03.roles-result.json": "ef3e3e71abeb569cccf4dcd1e34b02f679b4299154a623d0a4c6342f7a47c17e",
+    "role-round-03.runtime-index.json": "46ce7a5908cb57db5484d28143b06c98db8863d8aed539f9a388a599dc06e4ac"
+  },
+  "limits": [
+    "Dirty included-source archive; no fullcheckout/clean proof",
+    "Actual9case provider is author; reviewer inspected terminal artifacts",
+    "SA06 actualwirecause unproved, ROLE005 independently source-reproduced",
+    "New41unit run uses changed test; not frozenarchive proof",
+    "Later changing-source diagnostics not accepted",
+    "No fullP05/human/media/production acceptance"
+  ]
+}

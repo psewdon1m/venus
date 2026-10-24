@@ -1,0 +1,161 @@
+{
+  "format": 1,
+  "scope": "P06_DISPOSABLE_LOCAL_LINUX_DOCKER_NOT_PRODUCTION",
+  "project": "venus-p06-b493e9a1b7",
+  "status": "FAIL",
+  "source_dirty": false,
+  "commands": [
+    {
+      "sequence": 1,
+      "command": [
+        "pull",
+        "docker:29.1.3-cli"
+      ],
+      "exit": 0,
+      "ms": 3490,
+      "output": "001.txt"
+    },
+    {
+      "sequence": 2,
+      "command": [
+        "image",
+        "inspect",
+        "docker:29.1.3-cli"
+      ],
+      "exit": 0,
+      "ms": 264,
+      "output": "002.txt"
+    },
+    {
+      "sequence": 3,
+      "command": [
+        "build",
+        "--platform",
+        "linux/amd64"
+      ],
+      "exit": 0,
+      "ms": 7308,
+      "output": "003.txt"
+    },
+    {
+      "sequence": 4,
+      "command": [
+        "image",
+        "inspect",
+        "venus-p06-b493e9a1b7-helper:fixture"
+      ],
+      "exit": 0,
+      "ms": 186,
+      "output": "004.txt"
+    },
+    {
+      "sequence": 5,
+      "command": [
+        "pull",
+        "ghcr.io/psewdon1m/venus@sha256:0653678d4cbc920daf684355ddde5c7006d04aa89f950e2697e7fe4a5b7f4b3e"
+      ],
+      "exit": 0,
+      "ms": 1218,
+      "output": "005.txt"
+    },
+    {
+      "sequence": 6,
+      "command": [
+        "volume",
+        "create",
+        "--label"
+      ],
+      "exit": 0,
+      "ms": 179,
+      "output": "006.txt"
+    },
+    {
+      "sequence": 7,
+      "command": [
+        "volume",
+        "inspect",
+        "venus-p06-b493e9a1b7-host"
+      ],
+      "exit": 0,
+      "ms": 161,
+      "output": "007.txt"
+    },
+    {
+      "sequence": 8,
+      "command": [
+        "run",
+        "--name",
+        "venus-p06-b493e9a1b7-driver"
+      ],
+      "exit": 1,
+      "ms": 793,
+      "output": "008.txt"
+    },
+    {
+      "sequence": 9,
+      "command": [
+        "ps",
+        "-aq",
+        "--filter"
+      ],
+      "exit": 0,
+      "ms": 154,
+      "output": "009.txt"
+    },
+    {
+      "sequence": 10,
+      "command": [
+        "inspect",
+        "db683fbbbdf4"
+      ],
+      "exit": 0,
+      "ms": 154,
+      "output": "010.txt"
+    },
+    {
+      "sequence": 11,
+      "command": [
+        "rm",
+        "-f",
+        "db683fbbbdf4"
+      ],
+      "exit": 0,
+      "ms": 177,
+      "output": "011.txt"
+    },
+    {
+      "sequence": 12,
+      "command": [
+        "ps",
+        "-aq",
+        "--filter"
+      ],
+      "exit": 0,
+      "ms": 155,
+      "output": "012.txt"
+    },
+    {
+      "sequence": 13,
+      "command": [
+        "network",
+        "ls",
+        "-q"
+      ],
+      "exit": 0,
+      "ms": 162,
+      "output": "013.txt"
+    }
+  ],
+  "cleanup": "COMPLETE_OWNED_CONTAINERS_NETWORKS_STOPPED",
+  "test_keys_only": true,
+  "production_signing_environment": false,
+  "git_sha": "195e2302899687e11cecde1920d64a040714745e",
+  "source_identity": "3a4eae5c3aef4ff8acf9a6cdb3ba6c0321614d8eabd0b61a632db850c2f9b3f6",
+  "docker_cli_image": "docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04",
+  "helper_image": "sha256:48d71b500f05e9c91b68f16017edc00292112639730f670e0be5ed7a07d1ddf8",
+  "mode": "EXACT_SERVICE_IMAGE_INSTALL_WITH_FIXTURE_KEY_ONLY",
+  "error": "DOCKER_RUN_FAILED_8",
+  "retained_failed_fixture_volume": "venus-p06-b493e9a1b7-host",
+  "cleanup_errors": [],
+  "finished_at_utc": "2026-10-24T22:03:29.393Z"
+}

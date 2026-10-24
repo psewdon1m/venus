@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "scope": "INDEPENDENT_ACTUAL_TSX_INERT_SCHEDULER_NOT_BROWSER_OR_DOCKER",
+  "checks": 3,
+  "rows": [
+    {
+      "name": "auth_object_identity_stable_without_transport_change",
+      "status": "PASS",
+      "result": {
+        "same": true
+      }
+    },
+    {
+      "name": "stable_clear_frame_is_not_recleared_on_every_tick",
+      "status": "PASS",
+      "result": {
+        "before": true,
+        "recovered": true,
+        "stillVisible": true
+      }
+    },
+    {
+      "name": "complete_batch_beyond_lease_is_fail_closed_even_valid_payload",
+      "status": "PASS",
+      "result": {
+        "accepted": false,
+        "targetAbsent": true,
+        "conversationAbsent": true
+      }
+    }
+  ],
+  "actual05_cause_confirmed": false
+}

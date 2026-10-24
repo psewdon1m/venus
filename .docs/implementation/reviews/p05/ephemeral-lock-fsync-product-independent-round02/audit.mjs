@@ -1,0 +1,61 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+const root='C:/.projects/venus', base='.docs/implementation/reviews/p05/ephemeral-lock-fsync-product-author-round02';
+const read=p=>fs.readFileSync(path.resolve(root,p)), sha=b=>createHash('sha256').update(b).digest('hex'), pins={};
+function pin(p,h){const b=read(p);if(h)assert.equal(sha(b),h,p);pins[p]={bytes:b.length,sha256:sha(b)};return p.endsWith('.json')?JSON.parse(b):b;}
+const index=pin(base+'/INDEX.json');
+for(const f of index.files){pin(base+'/'+f.path,f.sha256);assert.equal(pins[base+'/'+f.path].bytes,f.bytes);}
+const hand=pin(base+'/HANDOFF.json'), map=pin(base+'/AUTHOR-SOURCE-MAP.json');
+assert.equal(hand.status,'AUTHOR_WRITES_COMPLETE_TEST_ONLY_PENDING_NONAUTHOR_NATIVE');
+const a12=pin('.artifacts/p05-pilot-bundle-source-freeze09.json');
+assert.equal(a12.identity,'cd96a063769687b6e79ad6df0ecdbb60034af3d671fb2f1cbe773139b63024a3');
+assert.equal(map.identity,'5be635651557399fb9ef865ebd17c813fdf0c0eda8fc96f76a3840894cef039a');
+assert.equal(Object.keys(map.files).length,1863);
+assert.equal(sha(JSON.stringify(Object.fromEntries(Object.keys(map.files).sort().map(p=>[p,map.files[p]])))),map.identity);
+for(const[p,h]of Object.entries(map.files))assert.equal(sha(read(p)),h,p);
+const delta=Object.keys(map.files).filter(p=>a12.files[p]!==map.files[p]).sort();
+assert.deepEqual(delta,Object.keys(hand.owned_files).sort());
+assert.deepEqual(Object.keys(a12.files).filter(p=>!Object.hasOwn(map.files,p)),[]);
+for(const[p,h]of Object.entries(hand.production_unchanged))assert.equal(h,a12.files[p]);
+for(const[p,h]of Object.entries(a12.files))assert.equal(sha(read(path.join(a12.materialized_root,p))),h,p);
+const test='apps/api/src/private-topic-ledger.test.ts';
+const before=pin(base+'/private-topic-ledger.test.before.ts.bytes',a12.files[test]).toString();
+const after=pin(base+'/private-topic-ledger.test.ts',hand.owned_files[test]).toString();
+assert.equal(sha(read(test)),hand.owned_files[test]);
+const old="    else expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(fault==='rename'?['music']:[]);";
+const replacement="    // Failed fsync/rename cannot acknowledge, but recovery retains the complete authenticated append.\r\n    // ENOSPC occurred before any write; a partial write is rejected by the separate branch above.\r\n    else expect(PrivateTopicLedger.open(d.options,required).read(scope).excluded).toEqual(fault==='ENOSPC'?[]:['music']);";
+assert.equal(before.split(old).length,2);assert.equal(after,before.replace(old,replacement));
+const actual=pin('.artifacts/p05-a12-linux-storage03/receipt.json','1608c3a8b8e997131e54ef996db1e58b397eefd3e59990ef5f62a6f8a617c95a');
+const log=pin('.artifacts/p05-a12-linux-storage03/tests.txt','1c55346dc0a3a9308ba96782baf3bca75d6527b9d86dfa6ec1964528af24ecb0').toString().replace(/\x1b\[[0-9;]*m/g,'');
+assert.equal(actual.status,'FAIL');assert.equal(actual.attach_exit,1);assert.equal(actual.container_exit,1);assert.equal(actual.cleanup,'ABSENT');assert.equal(actual.source_test_bytes_unchanged,true);
+assert(log.includes('1 failed | 218 passed | 2 skipped (221)'));assert(log.includes('private-topic-ledger.test.ts:262:83'));assert(log.includes('topic-room-lifecycle.test.ts (142 tests | 1 skipped)'));
+for(let n=1;n<=4;n++)assert(log.includes('✓ injected fsync failure at durable call '+n+' refuses acknowledgement and revalidates on reopen'));
+for(const n of ['01','02']){pin('.artifacts/p05-a12-linux-storage'+n+'/receipt.json');pin('.artifacts/p05-a12-linux-storage'+n+'/tests.txt');}
+const image=pin('.artifacts/p05-pilot-bundle-image-binding09/receipt.json',actual.image_receipt_sha256), prod=pin('.artifacts/p05-pilot-bundle-production-image-binding09/receipt.json');
+const previous=pin('.artifacts/p05-pilot-bundle-image-binding08/receipt.json'), previousProd=pin('.artifacts/p05-pilot-bundle-production-image-binding08/receipt.json');
+assert.equal(image.image,actual.test_image);assert.equal(image.source_identity,a12.identity);assert.equal(prod.source_identity,a12.identity);assert.equal(prod.base_test_image,image.image);
+assert.equal(Object.keys(image.image_files_sha256).length,297);assert.equal(Object.keys(prod.image_files_sha256).length,122);
+for(const[p,h]of Object.entries(image.source_files))assert.equal(h,a12.files[p],p);
+const expectedChanges=['apps/api/dist/private-topic-ledger.js','apps/api/dist/topic-room-lifecycle.js'];
+const diff=(a,b)=>Object.keys(a).filter(p=>a[p]!==b[p]).sort();
+assert.deepEqual(diff(image.compiled_files,previous.compiled_files),expectedChanges);
+assert.deepEqual(diff(prod.image_files_sha256,previousProd.image_files_sha256),expectedChanges);
+assert.deepEqual(Object.keys(previousProd.image_files_sha256).sort(),Object.keys(prod.image_files_sha256).sort());
+const expectedProd={...Object.fromEntries(Object.entries(image.compiled_files).filter(([p])=>!p.endsWith('.test.js'))),...image.migration_files,...image.web_dist_files,...image.pg_dependency_files,...Object.fromEntries(Object.entries(image.source_files).filter(([p])=>p.startsWith('packages/')&&!p.endsWith('.test.ts')))};
+assert.deepEqual(prod.image_files_sha256,expectedProd);
+for(const section of ['source_files','compiled_files','migration_files','web_dist_files','pg_dependency_files'])for(const[p,h]of Object.entries(image[section]))assert.equal(image.image_files_sha256[p],h,p);
+for(const section of ['migration_files','web_dist_files','pg_dependency_files'])assert.deepEqual(image[section],previous[section]);
+assert.equal(image.build_metadata_absent,true);assert.deepEqual(prod.build_metadata,{version:'0.0.0',source_revision:a12.identity});
+const compact=JSON.stringify(prod.build_metadata), pretty=JSON.stringify(prod.build_metadata,null,2);
+assert([compact,compact+'\n',pretty,pretty+'\n'].some(s=>sha(s)===prod.build_metadata_sha256));
+for(const[label,rec]of [['',image],['production-',prod]]){
+ const build='.artifacts/p05-pilot-bundle-'+label+'build09';
+ const buildLog=pin(build+'.txt',rec.build_log_sha256).toString();assert(buildLog.includes(rec.image));assert.equal(pin(build+'-exit.txt').toString().trim(),'0');assert.equal(rec.probe_exit_code,0);assert.equal(rec.probe_cleanup,'AUTO_REMOVED');assert.equal(rec.app_imports,0);
+ const imagePath='.artifacts/p05-pilot-bundle-'+label+'image09.txt';assert.equal(pin(imagePath).toString().replace(/^\uFEFF/,'').trim(),rec.image);
+}
+pin('.artifacts/p05-pilot-a12-image-probe01.py');pin('.artifacts/p05-pilot-a12-production-probe01.py');pin('.artifacts/p05-a12-linux-storage03.py');
+assert(/36 passed\s*\|\s*185 skipped/.test(pin(base+'/host01.txt').toString()));assert.equal(pin(base+'/lint01.txt').length,0);
+for(const[p,d]of Object.entries(pins))assert.equal(sha(read(p)),d.sha256,p);
+console.log(JSON.stringify({status:'PASS_TEST_ORACLE_CORRECTION_AND_A12_RECEIPT_AUDIT_NATIVE_REPEAT_REQUIRED',at_utc:new Date().toISOString(),source_identity:map.identity,included_files:1863,changed_paths:delta,author_index_sha256:pins[base+'/INDEX.json'].sha256,author_files:index.files.length,production_pair_exact_A12:true,materialized_A12_files_verified:1862,actual_A12:{passed:218,failed:1,platform_skips:2,lifecycle_passed:141,cleanup:'ABSENT',failure_retained:true},receipt_audit:{test_paths:297,production_paths:122,compiled_changes_from_A11:expectedChanges,production_pass_through_except_two_modules:true,no_fresh_image_probe:true},changed_Linux_test_not_executed:true,native_A13_PASS:false,N4_PASS:false,full_P05_PASS:false,pins},null,2));

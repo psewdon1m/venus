@@ -1,0 +1,7 @@
+{
+  "old": "const f=require('fs'),p='/evidence/'+process.argv[1];if(f.existsSync(p)){const s=f.lstatSync(p);if(!s.isFile()||s.isSymbolicLink()||s.size>2097152)process.exit(8);process.stdout.write(f.readFileSync(p));}",
+  "candidate": "p=/evidence/$1\n[ -e \"$p\" ] || exit 0\nmeta=$(/usr/bin/stat -c '%f:%s' -- \"$p\") || exit 1\nmode=${meta%%:*}\nsize=${meta#*:}\n[ \"$((0x$mode & 0xf000))\" -eq \"$((0x8000))\" ] && [ \"$size\" -le 2097152 ] || exit 8\nexec /usr/bin/cat -- \"$p\"\n",
+  "old_script_sha256": "e13b93460027bc298b28a1c2cc4e9f4f080ee061e487109e258ae8ed45bafb2f",
+  "candidate_script_sha256": "3fcf03f30be528834831021121f0a01604ea31cc1c59140dd52a9246a95c964c",
+  "source_sha256": "0f11afbf7c04a3c8057c966be44f79dd5052bb42d0f2f2215af375a73b855e1d"
+}

@@ -1,0 +1,19 @@
+# P05 OCI rollback — author resume01
+
+Статус: **AUTHOR_READY_FOR_INDEPENDENT_CODE_AND_RESOURCE_REVIEW / NOT_RUN**. Владелец возобновил P05, карточки остаются на human review/HOLD, P06 не начат. Оригинальный checkpoint01 и proposal/metadata amendment не переписаны.
+
+Included source `1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad` /1813 файлов сохранён. План: A1 `ff371` → B2 `5e304` → A3 `ff371`, одна БД и внешние authority/keyring,14 фиксированных OCI-контролей. B — прежний непринятый candidate13b с известной проблемой UI availability; это не known-good release.
+
+Два собственных read-only128MiB/no-network/no-mount probe завершены с exit0 и cleanup: в каждом реальном образе74 хеша,64 compiled byte pins совпадают, metadata действительно отсутствует. Docker-off FAIL первого чтения сохранён; он произошёл до создания контейнера. В maps хранятся реальные image inspection/labels, а fixtureVersionDTO явно отделён от production provenance.
+
+Реализован отдельный512MiB/900s IPC adapter/external supervisor. Native writable ledger320MiB — консервативная верхняя граница hard quotas, host160MiB — фактический NTFS AllocationSize,32MiB — safety/burst. PG256/authority32/private8 используют quota tmpfs. Read-only/no-network keeper держит три mount непрерывно; при успешной очистке private удаляется до остановки DB/keeper и volume removal, при FAIL serving останавливается, keeper и ограниченное состояние остаются для явного ручного cleanup. Состояние при FAIL не выдаётся за cleanup PASS. В production/P06 tmpfs policy не переносится.
+
+Scanner — точная копия METHOD07 native FindFirstStreamW, SHA `7adcdaf51b40191ee5abf76def60292aa4a49364a62721968c68cd0ef7ebb4de`. Его independent review на момент копирования ещё ожидался; upstream approval данным author checkpoint не создаётся. Старые METHOD06 scanner bytes сохранены. Отдельные реальные tiny NTFS empty/10files/ADS negative проверки прошли,62–64ms, temporary directory удалена.
+
+Авторские33 команды exit0: syntax,7 cold entrypoints, lint,40 core model/tiny-file,4 factory,21 policy и16 exact AST supervisor/final-receipt controls. Последняя запись: `author-validation-attempt12.json`, SHA `1ac89c56baabc0a3b048c344d6cbde225ad9aa1d85659ef8a28e007dfdff70eb`. Отрицательные попытки lint/fixture-case сохранены. Это не actual quota/exhaustion/kill/PG/browser/OCI PASS. Полный actual RUN отсутствует, ни build, ни pull не выполнялись.
+
+Основной RAW_INDEX исключает mutable control. Обязателен отдельный финальный `control/guard-stop.json` с PASS_OWNED_RESOURCE_GUARD_FINAL и пустым inventory resource-probe после adapter stop. Новый валидатор и host runner отвергают active/pending snapshot, wrong owner, failure, missing persistence, незавершённую очистку и >900s. Root архивирует итоговый control вместе с main evidence, после завершения записей supervisor.
+
+Замороженный producer INDEX SHA `da5726afeeda9df9d5ae994cf42f7dde31fb3ef284714eabbae06ca8fb799b40`; HANDOFF SHA `eb440edb1c33c583130814e14f925e39fe7caaee2dffd6018f01db59325e03d5`; actual image map SHA `0a195804991397c8cc58ecfd44d3fa93ac737a80d432b676db7892c9bca18c3a`. Полная копия находится в `producer/`; рабочая source-bound копия — `.artifacts/p05-oci-rollback-producer-resume01/`. Frozen snapshot предназначен для review: его host root нельзя угадывать из глубины каталога docs для RUN. Перед запуском root создаёт новую operational revision в .artifacts с точными pins/independent review/root ACK. Эту фиксацию не изменять.
+
+Следующий гейт: независимый review полного кода, ownership/quota/guard lifecycle и concurrency; устранение замечаний новой редакцией; bounded actual failure/cleanup/feasibility controls по команде root; затем отдельный ACK и14 реальных controls. Никакой авторский PASS не заменяет эти проверки, human approval или полный EXIT-P05.

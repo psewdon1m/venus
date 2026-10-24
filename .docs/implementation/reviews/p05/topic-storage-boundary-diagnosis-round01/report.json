@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "status": "CONFIRMED_PRODUCT_STORAGE_HTTP_BOUNDARY_FINDING",
+  "created_at": "2026-10-19T20:46:29.889435+00:00",
+  "scope": "ACTUAL_RESTORE06_HTTP500_DIAGNOSIS_AND_READONLY_REPAIR_RECOMMENDATION",
+  "reviewer": "/root/p05_topics_ui_review",
+  "actual_root_handle": 38590,
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/child-phase3.json",
+      "sha256": "e0f9f51c31f0163ff2801f6c370eab0131a0c91a36d09dae972565f8522c8596"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/restore-runtime.json",
+      "sha256": "ceb4f26695b1110c78caa99f9825e56f96f068f04d54b3fe2c4d45633af648f4"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/runner.json",
+      "sha256": "44f0423daaf0e845cd35dab5043046f3f1d620ee2f68258b504635bf003d4f6b"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/inputs-before.json",
+      "sha256": "93806b9a0d877253b44474213806b8a3bac516e9daa6576881e44796e929e1ac"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/inputs-after-runtime.json",
+      "sha256": "93806b9a0d877253b44474213806b8a3bac516e9daa6576881e44796e929e1ac"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/inputs-after-finally.json",
+      "sha256": "93806b9a0d877253b44474213806b8a3bac516e9daa6576881e44796e929e1ac"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/producer-pins-before.json",
+      "sha256": "8a775717ccb22fee76f7d65158b44e9fce93c3ba0f5bf08ac154d363a322ded5"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/producer-pins-after-runtime.json",
+      "sha256": "8a775717ccb22fee76f7d65158b44e9fce93c3ba0f5bf08ac154d363a322ded5"
+    },
+    {
+      "path": ".artifacts/p05/venus-topic-restore-eae7d977e534/producer-pins-after-finally.json",
+      "sha256": "8a775717ccb22fee76f7d65158b44e9fce93c3ba0f5bf08ac154d363a322ded5"
+    },
+    {
+      "path": "apps/api/src/private-topic-preferences.ts",
+      "sha256": "f5caae8aa2035a2e7bf6efa513bd6a2b6bdb6559fe2f74465a85809b3d9e4cdb"
+    },
+    {
+      "path": "apps/api/src/private-topic-ledger.ts",
+      "sha256": "cae3c755f17ba41522f72c5d65d798b7973e76639478e5eed0b6f04a5195f29a"
+    },
+    {
+      "path": "apps/api/src/topic-room-lifecycle.ts",
+      "sha256": "ed7694aa3f5dbab2238d0518d153c12c24332206ce90de338814e4b561ec688c"
+    },
+    {
+      "path": "apps/api/src/topic-room-registry.ts",
+      "sha256": "23de303a222dc9e30c6b50f86219662c9735076468ac7db4303cb8ac1b1a659e"
+    },
+    {
+      "path": "apps/api/src/room-routes.ts",
+      "sha256": "91d566bea3426b5851cef8b3c09d718469b26a6ef4555e27d055bc599c7f1ce1"
+    },
+    {
+      "path": "apps/api/src/app.ts",
+      "sha256": "f058b86e9699a8157a5e18fea31b80ef746cb1c59488db8639407ec83d59a610"
+    },
+    {
+      "path": "apps/api/src/security.ts",
+      "sha256": "5782e8f6a8d906e75eef35765bef0513f47064ca090f84f2f1d222f506b07d25"
+    }
+  ],
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "actual_result": {
+    "status": "FAIL",
+    "HTTP_expected": 503,
+    "HTTP_actual": 500,
+    "code": "INTERNAL_ERROR",
+    "owned_fault_path_absent_before_after": true,
+    "cleanup": "PASS",
+    "source_and_producer_unchanged": true
+  },
+  "finding": {
+    "id": "TG-STORAGE-HTTP-001",
+    "severity": "P2",
+    "problem": "PrivateTopicPreferences invokes external private authority open/read/narrow/assertLive without translating known storage integrity/availability failures. TopicLedgerError, TopicRoomLifecycleError and native filesystem errno are not DomainError, so app generic handler emits500 INTERNAL_ERROR instead of503 for unavailable private storage.",
+    "qualification": "Exact actual internal thrown error class was not retained; actual500 is confirmed and deterministic source-bound error classification gap is reproduced. No leaked private view or grant revival is asserted."
+  },
+  "own_checks": {
+    "exact_handler_and_adapter_method_inert_controls": 11,
+    "private_enqueue_on_open_read_latefence_fault": 0,
+    "preserved_DomainError_statuses": [
+      401,
+      409,
+      503
+    ],
+    "unknown_programmer_error_remains500": true
+  },
+  "recommended_minimal_repair": {
+    "location": "PrivateTopicPreferences owned synchronous storage-call boundary",
+    "operations": [
+      "lifecycle.open",
+      "ledger.read at initial/final/planner fences",
+      "lifecycle.assertLive",
+      "ledger.narrow for irreversible exclusion"
+    ],
+    "classification": [
+      "Preserve/rethrow existing DomainError unchanged.",
+      "Translate explicit TopicLedgerError/TopicRoomLifecycleError and recognized native filesystem errors only from these storage calls into sanitized DomainError503 (e.g.PRIVATE_TOPICS_UNAVAILABLE).",
+      "Rethrow unknown/programmer errors unchanged; no global app filesystem classification.",
+      "Do not wrap DB/auth/enqueue/general mutation functions or swallow errors; no cache/empty fallback, storage initialization, grant renewal or rollback of durable exclusions."
+    ],
+    "corrupt_parser_limit": "Ledger unpack/lifecycle decode contain raw JSON.parse which can throw SyntaxError. Do not indiscriminately map all SyntaxError in the adapter; if all malformed-storage503 coverage is claimed, normalize at the actual parser boundary separately and test it. Missing-chain fix alone does not prove every corruption class.",
+    "required_validation": [
+      "Initial open/read and late read/assertLive/narrow storage errors produce503 and no private delivery, including taxonomy/planner consumers.",
+      "401/403/409 DomainError identities/statuses remain intact; unknown programming errors stay500.",
+      "Mutation failures roll back SQL effects while keeping any already published durable exclusion strict.",
+      "Fresh source freeze/build, focused tests and independent candidate review; rerun unchanged restore503 gate on new source and archive bothFAILs."
+    ]
+  },
+  "no_product_producer_or_Docker_functional_writes": true,
+  "full_stage_pass": false
+}

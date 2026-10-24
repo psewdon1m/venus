@@ -1,0 +1,11 @@
+function normalCurrentRequest(a,request){
+ try{const url=new URL(request.url()),frame=request.frame();return typeof a.room==='string'&&request.method()==='GET'&&url.origin===service.origin&&url.pathname===`/api/v2/rooms/${a.room}/game/current`&&!url.search&&!url.hash&&frame===a.page.mainFrame()&&frame.page()===a.page&&a.page.context()===a.context;}catch{return false;}
+}
+function beginNormalCurrent(a,response){
+ const request=response.request(),started=normalCurrentStarts.get(request);if(!started||started.actor!==a||started.room!==a.room||started.member!==a.id||started.context!==a.context||!normalCurrentRequest(a,request)||response.url()!==request.url())return null;
+ const prior=normalCurrentViews.get(a);if(prior&&started.at<=prior.started_at)return null;
+ const slot={room:started.room,member:started.member,context:started.context,started_at:started.at,status:response.status(),view:null};normalCurrentViews.set(a,slot);return slot;
+}
+function rememberNormalCurrent(a,slot,view){
+ if(slot&&normalCurrentViews.get(a)===slot&&slot.room===a.room&&slot.member===a.id&&slot.context===a.context&&a.page.context()===a.context&&slot.status===200&&view!==null&&typeof view==='object')slot.view=view;
+}

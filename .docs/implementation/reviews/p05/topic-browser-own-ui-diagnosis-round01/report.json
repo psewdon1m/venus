@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "CONFIRMED_PRODUCER_OWN_UI_READINESS_GAP_PRODUCT_CAUSE_UNPROVEN",
+  "scope": "INDEPENDENT_ARCHIVED_BROWSER08_ACTUAL02_DIAGNOSIS_AND_PROPOSED_DESIGN_ONLY",
+  "created_at": "2026-10-19T20:41:20.785317+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "producer_author": "/root/p05_topics_ui",
+  "exact_inputs": [
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/index.json",
+      "sha256": "0b6e9190fdf824018ba5908c6453741a01de78b9e948f101119d9bf37945acc0"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/run/failure-details.json",
+      "sha256": "b13b631c7a05ff89b56190221968b59b129cbfb7b88c563decfc25ef4002ecca"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/run/delivery-metadata.json",
+      "sha256": "a5f332caa11a202fd687a7c17585360644756e956e11d082cbba2fe9170c29f5"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/run/topic-browser-report.json",
+      "sha256": "6e54ebc5e32887a4bcbf7923c5abf2cf69d89cb1c0bb7f91e34392d0f50fd1b9"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/run/runner.json",
+      "sha256": "b3fec1b228128a22821c9ebb360ca413a578c103d57a22cc1bded977c61a8274"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/run/producer/browser.mjs",
+      "sha256": "22604ce71910ea732e30f4c50353f816ee57c39e4cb3b626f6c7a677d318dafc"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/engine2-topic-browser-preflight-02/run/producer/observations.mjs",
+      "sha256": "df50eca39925ffb05da14f7408580b1aad037c781903f42abd943bc44621ab13"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "a04cc196ae20773acd179b33ecb413918f9628bb6b0a723c4714f2255becaf1a"
+    }
+  ],
+  "actual_packet_files_verified": 37,
+  "source_identity": "ef009b7c3cf262028bc9dc20c6f06798d125d864ac19bb530e9b038a3701c571",
+  "included_files": 1811,
+  "actual_result": {
+    "PASS": 4,
+    "FAIL": 1,
+    "NOT_RUN": 11,
+    "cleanup": "PASS",
+    "HTTP": 461,
+    "WS": 245,
+    "diagnostics": "COMPLETE"
+  },
+  "finding": {
+    "id": "BROWSER-PRODUCER-OWN-UI-READINESS",
+    "severity": "P2",
+    "problem": "Server receipt/coherentGame succeeds before peer UI polling/cache settles; acceptTopics starts generic5s control visibility assertion immediately without a bounded own-scope/control readiness precondition.",
+    "actual_evidence": {
+      "second_TR_click_start_ms": 94935.580125,
+      "TR_current_rev35_body_ms": 95389.787,
+      "TR_self_body_ms": 98491.187,
+      "TR_target_body_ms": 99037.336,
+      "TR_pending_valid_conversation_body_ms": 100004.939082,
+      "TR_pending_body_lateness_vs5s_ms": 69.35895700000401,
+      "only_first_EN_topic_POST200": true,
+      "TR_control_visible_enabled_in_later_failure_capture": true
+    },
+    "qualification": "Exact UI visibility time and cache acceptance unobserved. Delayed valid DTO plus later enabledDOM supports fixture readiness timing; does not establish a product bug or acceptable production latency."
+  },
+  "own_inert_design_controls": 8,
+  "proposed_correction": {
+    "root_FIX_ACK_required": true,
+    "scope": "NARROW_EXCLUDED_TOPIC_READINESS_HELPER_ONLY",
+    "requirements": [
+      "Before each topic ack, one bounded8000ms aggregate poll must combine exact session/round/index and observed game_rev at least the coherent latest receipt revision, plus real DOM control visible/enabled. A stale/wrong scope, missing/disabled control must fail.",
+      "After first committed ack retain original all-actor no-prompt check; repeat it immediately after second-actor readiness and before the second actual click to catch early prompt during the waiting window.",
+      "After second exact HTTP receipt and coherent snapshot, bounded8000ms own-scope/private-prompt readiness may precede unchanged5000ms localized content assertion for both actors; prefer one shared stage deadline rather than serial unbounded waits.",
+      "Preserve all16 scenarios, union labels/observer denial, exact receipts, seeds/planner bound/TTL/5s permission leases; no forced cache/state/DOM, reseeding, round skipping or wait-until-success loop."
+    ],
+    "timing_disclosure": "The new8s readiness is an explicit functional-test precondition; it changes action-to-assert readiness budget and does not prove original5s end-to-end UI availability. The5000 localized content assertion and security leases remain distinct unchanged conditions.",
+    "verification": "New frozen producer checkpoint, independent old/new readiness negatives and root ACK before actual rerun; preserve both failed archives."
+  },
+  "no_Docker_browser_product_or_producer_writes": true,
+  "full_stage_pass": false
+}

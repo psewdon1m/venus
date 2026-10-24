@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "purpose": "NORMAL470_PERSISTENT_A6_B4_01",
+  "status": "FAIL",
+  "project": "venus-normalcompat-75ec90d5e504",
+  "root_ack_sha256": "2b0dd8774b62026c8b1784f7a6780e59973e07fcce1c743ec934eed9a26728f0",
+  "phases": [
+    {
+      "phase": "a-on",
+      "exit_code": 1,
+      "status": "FAIL",
+      "db_id": "67903e065dc5b76877396822a542ece20ace38578db7d4897c5c3841b98890a0",
+      "app_id": "4b103abf49469b0d50d2e66c2441f11763c0b7277de7430d82c7ad0fd2df3740",
+      "image_id": "sha256:3d051bb900ce56b7872912d974a233f22b2c7230d4a1712772a74922564bcf26",
+      "volumes": [
+        {
+          "service": "db",
+          "name": "venus-normalcompat-75ec90d5e504_postgres-data",
+          "destination": "/var/lib/postgresql/data"
+        },
+        {
+          "service": "app",
+          "name": "venus-normalcompat-75ec90d5e504_venus-state",
+          "destination": "/var/lib/venus"
+        }
+      ]
+    }
+  ],
+  "cleanup": "PASS",
+  "private_grant_claim": false,
+  "error": {
+    "name": "AssertionError",
+    "code": "NORMAL_CONTINUITY_FAILED"
+  },
+  "cleanup_errors": [],
+  "elapsed_ms": 21638
+}

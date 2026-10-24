@@ -1,0 +1,96 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts (10 tests | 3 failed) 1008ms
+   ❯ own permanent exclusion command refreshes only its own settings (10)
+     × failed unchanged exclusion refreshes without losing a draft; ordinary Other question never refreshes or auto-saves 115ms
+     × reloads durable exclusions after a 409 or uncertain network error without accepting the failed command 108ms
+     × merges a new durable exclusion but preserves unrelated unsaved allow and exclusion drafts after failure 83ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/topic-own-exclusion-refresh.test.ts > own permanent exclusion command refreshes only its own settings > failed unchanged exclusion refreshes without losing a draft; ordinary Other question never refreshes or auto-saves
+AssertionError: expected [ Array(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+@@ -1,11 +1,11 @@
+  [
+    {
+      "draft": true,
+      "mode": "failed",
+      "posts": 1,
+-     "reads": 2,
++     "reads": 1,
+    },
+    {
+      "draft": true,
+      "mode": "ordinary",
+      "posts": 1,
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts:19:6
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  apps/web/src/topic-own-exclusion-refresh.test.ts > own permanent exclusion command refreshes only its own settings > reloads durable exclusions after a 409 or uncertain network error without accepting the failed command
+AssertionError: expected [ Array(2) ] to deeply equal [ …(2) ]
+
+- Expected
++ Received
+
+  [
+    {
+-     "checked": false,
++     "checked": true,
+      "disabled": true,
+      "failure": "409",
+      "posts": 1,
+-     "reads": 2,
++     "reads": 1,
+    },
+    {
+-     "checked": false,
++     "checked": true,
+      "disabled": true,
+      "failure": "network",
+      "posts": 1,
+-     "reads": 2,
++     "reads": 1,
+    },
+  ]
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts:22:6
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  apps/web/src/topic-own-exclusion-refresh.test.ts > own permanent exclusion command refreshes only its own settings > merges a new durable exclusion but preserves unrelated unsaved allow and exclusion drafts after failure
+AssertionError: expected { Object (a, disabledA, ...) } to deeply equal { a: false, disabledA: true, …(4) }
+
+- Expected
++ Received
+
+  {
+-   "a": false,
++   "a": true,
+    "b": true,
+    "disabledA": true,
+    "excludeC": true,
+    "posts": 1,
+-   "reads": 2,
++   "reads": 1,
+  }
+
+ ❯ apps/web/src/topic-own-exclusion-refresh.test.ts:25:6
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 7 passed (10)
+   Start at  01:34:29
+   Duration  1.37s (tests 80%, import 14%, transform 5%)
+

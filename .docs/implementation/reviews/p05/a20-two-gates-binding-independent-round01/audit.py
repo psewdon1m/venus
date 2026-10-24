@@ -1,0 +1,44 @@
+from pathlib import Path
+import json,hashlib,subprocess
+R=Path('C:/.projects/venus');O=Path(__file__).parent;A=R/'.docs/implementation/reviews/p05/a20-two-gates-rebind-author-round01';S=R/'.artifacts/p05-pilot-bundle-source17';L=S/'.artifacts/p05-v2-layout-producer-a20-01';C=S/'.artifacts/p05-compatible-rollback-producer31';oldS=R/'.artifacts/p05-pilot-bundle-source16';oldL=oldS/'.artifacts/p05-v2-layout-producer-a19-02';oldC=oldS/'.artifacts/p05-compatible-rollback-producer30'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();load=lambda p:json.loads(p.read_text(encoding='utf-8-sig'));dump=lambda n,x:(O/n).write_text(json.dumps(x,indent=2)+'\n',encoding='utf8');pins={}
+def pin(p,h=None):
+ v=sha(p)
+ if h:assert v==h,(str(p),v,h)
+ pins[p.relative_to(R).as_posix()]={'bytes':p.stat().st_size,'sha256':v};return v
+pin(A/'INDEX.json','0132762211e211d4d24106b37ff1525e72050b08f85d955c99b230ddc3b311b4')
+for n,v in load(A/'INDEX.json')['files'].items():assert sha(A/n)==v['sha256']and(A/n).stat().st_size==v['bytes']
+for n,v in load(A/'INPUT-PINS.json').items():pin(R/n,v['sha256'])
+h=load(A/'HANDOFF.json');f=load(R/'.artifacts/p05-pilot-bundle-source-freeze17.json');assert f['identity']==h['source_identity']=='4d6022e5997515e00e94a48f5e6ba68b5cd5b0be1cbeebbaf093ca83d4e928fa'and f['included_files']==1874 and f['git_source_commit']==h['clean_core_Git_anchor']=='81b1a85aee7205ef7642dcc0086ce6a35c088244'and f['all_git_blobs_exact']and f['worktree_clean']
+t=load(R/'.artifacts/p05-pilot-bundle-image-binding17/receipt.json');p=load(R/'.artifacts/p05-pilot-bundle-production-image-binding17/receipt.json');ot=load(R/'.artifacts/p05-pilot-bundle-image-binding16/receipt.json');op=load(R/'.artifacts/p05-pilot-bundle-production-image-binding16/receipt.json')
+assert t['source_identity']==p['source_identity']==f['identity']and t['included_files']==p['included_files']==1874 and t['image']==h['image']and p['image']==h['production_image']
+for d,old,count in [(t,ot,69),(p,op,67)]:
+ assert d['compiled_files']==old['compiled_files']and len(d['compiled_files'])==count and d['migration_files']==old['migration_files']and len(d['migration_files'])==7 and d['pg_dependency_files']==old['pg_dependency_files']and len(d['pg_dependency_files'])==2
+ assert d['build_observed_exit']==d['probe_exit_code']==d['app_imports']==0 and d['probe_cleanup']=='AUTO_REMOVED'
+ assert all(d['image_files_sha256'][n]==v for key in ['compiled_files','migration_files','web_dist_files','pg_dependency_files']for n,v in d[key].items())
+ assert next(v for n,v in d['web_dist_files'].items()if n.endswith('.css'))==next(v for n,v in old['web_dist_files'].items()if n.endswith('.css'))
+ assert d['web_dist_files']!=old['web_dist_files']
+assert len(t['image_files_sha256'])==299 and len(p['image_files_sha256'])==122 and t['source_files_exact_frozen']and all(f['files'][n]==v for n,v in t['source_files'].items())
+assert t['build_metadata_absent']and p['base_test_image']==t['image']and p['build_metadata']['source_revision']==f['git_source_commit']and not p['metadata_source_revision_is_dirty_source_SHA256_not_git_commit']and not p['ordinary_server_executed']
+purep=R/'.artifacts/p05-privacy-matched-operational01/PURE-CLOSURE-A9-A11.json';pure=load(purep);pin(purep);assert len(pure['runtime_modules'])==28 and[n for n,v in pure['runtime_modules'].items()if t['compiled_files'][n]!=v]==['apps/api/dist/rooms.js']and all(t['compiled_files'][n]==ot['compiled_files'][n]for n in pure['runtime_modules'])and f['files']['package-lock.json']==pure['package_lock_sha256']
+for P,expected in [(L,h['layout']['producer_INDEX_sha256']),(C,h['OCI31']['producer_INDEX_sha256'])]:
+ pin(P/'INDEX.json',expected)
+ for n,v in load(P/'INDEX.json')['files'].items():assert sha(P/n)==v['sha256']and(P/n).stat().st_size==v['bytes']
+ln=[p.name for p in L.glob('*.mjs')];assert len(ln)==27 and sorted(n for n in ln if(L/n).read_bytes()!=(oldL/n).read_bytes())==['run.mjs','runner-policy.mjs']
+assert(L/'run.mjs').read_bytes().replace(b'p05-v2-layout-producer-a20-01',b'p05-v2-layout-producer-a19-02')==(oldL/'run.mjs').read_bytes();assert(L/'runner-policy.mjs').read_bytes().replace(b'binding.included_files,1874',b'binding.included_files,1873')==(oldL/'runner-policy.mjs').read_bytes()
+lb=load(L/'binding.json');la=load(L/'ROOT_RUN_ACK.json');assert lb['source_identity']==f['identity']and lb['included_files']==1874 and lb['image']==t['image']and lb['root_build_receipt_sha256']==h['test_receipt_sha256']and not la['root_run_ack']and la['issued_at']is None and la['all9_current_A20_UI_fresh_required']and not la['A19_Chrome_geometry_carry']
+cm={p.relative_to(C).as_posix():sha(p)for p in C.rglob('*.mjs')};pm={p.relative_to(oldC).as_posix():sha(p)for p in oldC.rglob('*.mjs')};assert cm==pm and len(cm)==40
+cb=load(C/'BINDING.json');maps=load(C/'actual-image-maps.json');oldmaps=load(oldC/'actual-image-maps.json');assert cb['source_identity']==f['identity']and cb['included_files']==1874 and cb['images']==maps['images']==h['OCI31'].get('images',h.get('images',{'A':t['image'],'B':load(oldC/'BINDING.json')['images']['B']}))
+assert len(maps['maps']['A']['files'])==81 and len(maps['maps']['B']['files'])==78 and maps['maps']['B']==oldmaps['maps']['B']
+selected={**cb['per_image_compiled']['A'],**cb['per_image_additional']['A'],**t['migration_files'],**t['web_dist_files'],**t['pg_dependency_files']};assert len(cb['per_image_compiled']['A'])==64 and len(cb['per_image_additional']['A'])==5 and{**cb['per_image_compiled']['A'],**cb['per_image_additional']['A']}==t['compiled_files']and selected==maps['maps']['A']['files']
+assert load(C/'FULL299-PROBE17.json')['files']==t['image_files_sha256'];pin(C/'actual-image-maps.json','05d56974b6ebf17eddb1a57e81f54ee62e3e646ca0c7e5d3df0c098a852493f5');ca=load(C/'ROOT_RUN_ACK_TEMPLATE.json');assert not ca['root_run_ack']and ca['whole_ms']==900000 and ca['total_cap_bytes']==536870912 and ca['reserve_bytes']==10737418240
+resourceReview=R/'.docs/implementation/reviews/p05/a20-resource-window-addendum02/INDEX.json';pin(resourceReview,'1b424425f8de4cd527e3111c33ba8fe64c70d57866bc566abab0c8fd24a6f362');rr=load(resourceReview)
+for n,v in rr['files'].items():assert sha(resourceReview.parent/n)==v['sha256']
+ra=R/'.artifacts/p05-a20-existing-gates-resource-authority04.json';pin(ra,'baacf408d30259bd9d4c66028bd76dcf227bb4d4198d794fae073929f8593671');assert rr['source_identity']==f['identity']and rr['test_image']==t['image']and rr['production_image']==p['image']and rr['resource_authority_sha256']==sha(ra)and not rr['execution_authority'];policy=load(ra);assert len(policy['shards'])==9 and all(x['maximum_attempts']==1 for x in policy['shards'])and policy['maximum_additional_concurrent_heavy']==1
+node='C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe';commands=[]
+for name,cmd,cwd,expected in [('binding-read',[node,str(A/'existing-binding-read.mjs')],R,0),('layout-falseACK',[node,str(L/'run.mjs')],S,1),('OCI-falseACK',[node,'--max-old-space-size=192',str(C/'driver.mjs'),'--run','--ack='+str(A/'OCI31-INACTIVE-ACK.json')],S,1)]:
+ result=subprocess.run(cmd,cwd=cwd,capture_output=True,timeout=30);(O/(name+'.stdout.txt')).write_bytes(result.stdout);(O/(name+'.stderr.txt')).write_bytes(result.stderr);assert result.returncode==expected,(name,result.stderr.decode());commands.append({'name':name,'exit':result.returncode,'expected':expected})
+ if name=='binding-read':
+  j=json.loads(result.stdout);assert j['layout']['producer_runtime_digest']=='445a6c48e4f6d5eaac514d835cf3f5a394b12f448f0273b056961f4c10a1c17b'and j['OCI_map']==load(C/'INDEX.json')['files']and j['source_identity']==f['identity']and j['source_files']==1874
+ if name=='layout-falseACK':assert b'ROOT_RUN_ACK_REQUIRED'in result.stderr
+dump('PINS.json',pins);dump('AUDIT.json',{'status':'PASS_METHOD_ONLY_SOURCE_IMAGE_TWO_BINDINGS_QUALIFIED_CARRY','author_children':22,'source_identity':f['identity'],'source_files':1874,'materialized_verifyIncluded_exit':0,'clean_Git_anchor':f['git_source_commit'],'Git_basis':'FROZEN_ROOT_BLOB_CLEAN_WITNESS_NO_NEW_GIT_EXECUTION','test299_production122_pins':True,'test69_production67_SQL7_PG2_CSS_exact_A19':True,'pure27whole_A9_plus_accepted_rooms_revision_slice_only':True,'layout25rawexact_two_complete_literal_inverses':True,'OCI40rawexact30':True,'OCI_A81_B78_full299_separate':True,'resource04_separate_accepted_review_referenced_not_execution_authority':True,'checks':commands,'all9fresh_A20_layout459_324_and_freshOCI31_original14_required':True,'old_A19_geometry_carry':False,'covered_browser26_logic_carry_only_sourcequalified_not_currentUI':True,'new_reviewer_native_Docker_model_APP_source_producer_ACK_Git_actions':0});print(json.dumps({'status':'PASS_METHOD_ONLY','checks':commands,'source1874':True,'layout_runtime':'445a6c48e4f6d5eaac514d835cf3f5a394b12f448f0273b056961f4c10a1c17b','OCI31map':[81,78]}))

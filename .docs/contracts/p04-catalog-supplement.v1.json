@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "revision": "P04-CATALOG-1",
+  "baseline": "CARD-1 / RE-1 / immutable P00-2",
+  "http_additions": [{
+    "method":"GET","path":"/api/v1/rooms/{roomId}/game/availability","acl":"current room host, current accepted entry policy, authenticated current room session",
+    "precondition":"waiting draft; selected members online and setup ready",
+    "response":{"available":"boolean","requested_rounds":"integer1..100","reason":"null or INSUFFICIENT_SAFE_CARDS","draft_rev":"safe integer","recheck_required_at_start":true},
+    "privacy":"No identities, edges, resolved classes, eligible counts, card IDs or actor permutations; no-store. Preview is advisory, Start repeats actual complete preflight inside its transaction.",
+    "unavailable":"503 PACK_UNAVAILABLE for unavailable catalogue; standard existing safe error envelope for authentication/setup/revision failures"
+  }],
+  "operator_surface":"Offline/trusted in-process API only; no consumer catalogue mutation or arbitrary JSON/URL upload",
+  "catalog_fence":{"postgres_advisory_key":746826405,"order":"global shared/exclusive catalogue fence first, then sorted room locks, then audit/outbox global locks","dispatch":"public/private synchronous enqueue under final shared fence"},
+  "storage":"Additive separate catalogue schema generation1; immutable P02 core and P03 game migrations unchanged",
+  "withdrawal":"fsynced external metadata-only intent before DB commit; failed commits require failclosed reconciliation; affected pinned games aborted and private clears keep monotonic stream revisions",
+  "mutation_receipts":"stop/abort retain original MutationResult. advance/pause/resume retain the stored original GameView session/revision and body; final delivery revalidates that specific pinned pack. If text is withdrawn or current read ACL/dependencies fail, current_round is null while all original receipt metadata remains. This explicit safety redaction affects transport only, never overwrites the stored idempotency result or substitutes another session. A committed successful safety mutation remains acknowledged.",
+  "rollback":"CAS pointer only to verified compatible application-bundled digest, never a revoked revision; process-stopped older-image rollback requires quiesce and retained external ledger; old P03 cannot serve new catalogue activations safely",
+  "human_boundary":"Trusted named competent independent humans must review exact draft hashes. Ed25519 authenticates their registered keys; operator evidence establishes identity/competence externally. AI cannot establish personhood or self-approve.",
+  "public_production_catalogue":"NONE;450cards150permode (100neutral public+25private in_person+25private online) remain draft/needs_review; no production bundle admitted"
+}

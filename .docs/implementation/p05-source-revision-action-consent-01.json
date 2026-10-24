@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "revision": "P05-FIX-ACTION-CONSENT-01",
+  "status_at_capture": "AUTHOR_IMPLEMENTED_HOST_PASS_INDEPENDENT_AND_DOCKER_PENDING",
+  "previous_source_identity": "b244e61aa326b7b3717a6b37040be59a78a549241f745d9275be1738dcbe30b4",
+  "previous_image": "sha256:0b4c3a743cdb6c0a15aa25ac5c74bd4bea3d7c5fcf21f62f1cffc951d66a37e5",
+  "problem": "Private action pending consent was created before topic acceptance disclosed its prompt; users could lose the action acceptance window while agreeing on the topic.",
+  "change": "Create a fresh private action offer only after bilateral topic acceptance has made its exact prompt active. Public action timing is unchanged.",
+  "preserved_contract": {
+    "pending_action_ms": 30000,
+    "original_private_invitation_parent_ms": 180000,
+    "parent_deadline_extended": false,
+    "existing_action_offer_extended_or_replaced_by_reads": false,
+    "topic_accept_substitutes_action_accept": false,
+    "new_content_requires_fresh_topic_and_action_consents": true,
+    "snapshot_or_history_recomputed": false,
+    "planner_rng_weights_or_policy_revision_changed": false
+  },
+  "compatibility": "No wire/schema/snapshot change. Previously stored action offers retain their deadlines; startup still revokes private scopes. Both versions use ROOM-TOPIC-2.",
+  "rollback": "The previous image is compatible with unchanged schema/policy, but retains the known early-action-timer usability defect. Quiesce private scopes before operational fallback, preserve history/exclusions/receipts and keep new private starts disabled until a corrected version is active.",
+  "evidence_scope": "Focused host timing regression is not PostgreSQL/browser proof and does not establish the sole cause of METHOD18 pause/stop.",
+  "actual_regression": "P05-TG-06 adds 29 seconds of pending topic acceptance, a fresh 30 second action window, separate bilateral action accepts after the old deadline, and an unchanged invitation parent.",
+  "human_content_HOLD": true,
+  "full_stage_acceptance": false,
+  "final_source_identity": "BOUND_BY_EXTERNAL_FREEZE_RECEIPT_NO_RECURSIVE_HASH"
+}

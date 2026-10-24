@@ -1,0 +1,5 @@
+# METHOD14 — diagnostic-only non200 metadata
+
+AUTHOR_READY / independent review required / NOT_RUN. Does not claim to fix METHOD13offer409. Source8978a7e7 confirms exactdomaincode was notrecorded; RATE_LIMIT/NOT_AVAILABLE/STALE etc remainunproven. Browser.mjs andall16casebodies/actionhelper are exactMETHOD13. Onlyrequest-emission adds boundednon200 JSON inspection (1smaximum) andcode copiedfromanexplicitstaticallowlist, status andunlisted/unavailableflags. No rawerrorbody/message/requesttoken/privatepayload iswritten. Offer-topic outboundmetadata is typednonnegativeepoch andcopyof<=64publicsynthetic topicIDs fromcreative/music/romance only; unknown/malformed/oversizelists nevercopied.
+
+Assertionstatus200, oneclick, exactrequestUUID/schema/revision/response andprivateemissiondeadlines remainmandatory; no resend/retry/seed/TTL/productchange.25finitefakeevent/canary/malformedcontrolsPASS,syntax/lint0. Actualsingleboundeddiagnosticrepetition must be separatelybound toavailableexactimage; currentDockerdaemon/images failure isexternal andnot PASS. A successful rerun alone does not explain an intermittentprior409. OriginalFAILs andownerHOLD preserved.

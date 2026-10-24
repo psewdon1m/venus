@@ -1,0 +1,5 @@
+# Round03 E03 clarification
+
+PLAN-P06-UPDATE-ACL and historical OPS-11 do not explicitly mandate injecting502 on apply specifically. The earlier SOURCE_COVERAGE.md proposed apply as one way to cover a lost acknowledgement. The author's narrower extension is acceptable: route.fetch forwards the real CONFIRM to the actual server; only its browser response is replaced by502; UI displays the action as unconfirmed/error; reload/re-auth reads CONFIRMED for the same durable UUID; cancellation then completes. Separate actual apply/phase-interruption/idempotence evidence remains required under the existing drill. The common request/status implementation makes this an adequate bounded lost-ACK transition check without switching to B before A-preservation negatives.
+
+This is an interpretation/coverage clarification, not executed proof or a pre-sign PASS. Accept E03 only after exact current source and actual browser receipt substantiate those steps. Earlier source note remains unchanged. No new test framework or unrelated rerun is requested.

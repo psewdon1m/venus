@@ -1,0 +1,131 @@
+g actual viewport (1.488012ms)
+✔ receipt rejects missing native (1.833368ms)
+✔ receipt rejects duplicate native (1.423814ms)
+✔ receipt rejects unmeasured native (0.897923ms)
+✔ receipt rejects native reset absent (0.668082ms)
+✔ receipt rejects shared process (0.903017ms)
+✔ receipt rejects main zoom leaked (0.794428ms)
+✔ receipt rejects wrong toolchain (0.250122ms)
+✔ receipt rejects runtime cleanup incomplete (0.369198ms)
+✔ receipt rejects display cleanup incomplete (0.194649ms)
+✔ receipt rejects pageerror (0.196369ms)
+✔ receipt rejects error overflow (0.167278ms)
+✔ receipt rejects missing overflow witness (0.170758ms)
+✔ receipt rejects native reused main room (0.979407ms)
+✔ receipt rejects native altered main game (0.646541ms)
+✔ receipt rejects native inactive scene (0.661461ms)
+✔ receipt rejects native reused main identity (0.867272ms)
+✔ targeted and full receipts cannot interchange (0.270482ms)
+✔ pageerrors acceptance rejects both actual errors and overflow independently (0.187169ms)
+✔ caller selection overrides inherited narrowing (0.19735ms)
+✔ actual wrapper refuses narrowed inner report despite Docker success and inherited selectors (52.304764ms)
+✔ actual wrapper accepts correctly requested targeted report (47.622294ms)
+✔ actual wrapper rejects forged full PASS missing matrix cells (65.45245ms)
+✔ actual wrapper rejects pageerror even if inner status says PASS (59.908147ms)
+✔ actual probe timeout cleanup: owned (50.558313ms)
+✔ actual probe timeout cleanup: inspectUnconfirmed (49.693971ms)
+✔ actual probe timeout cleanup: wrongOwner (58.770263ms)
+✔ actual probe timeout cleanup: removeFailed (51.706556ms)
+✔ self-actions component receipt requires actual nonempty unique checks and matching scope (0.991867ms)
+✔ actual self-actions wrapper selects the fixed service suite without claiming browser matrix (64.825949ms)
+✔ actual self-actions wrapper rejects missing or empty component receipt despite a browser PASS (113.122487ms)
+✔ actual failed service test process cannot be overridden by its PASS receipt (46.50715ms)
+✔ self-actions rejects conflicting modes and unused browser selectors before creating resources (253.274602ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1025.111375
+
+> venus@0.0.0 check:schemas
+> python -B tools/check_schemas.py && python -B tools/check_relationship_policy.py && python -B tools/generate_contract_types.py --check && python -B tools/generate_engine_policy.py --check && python -B tools/generate_p03_contracts.py --check
+
+PASS: JSON Schema 2020-12 and OpenAPI local references
+Checked RE-1 six labels × six = 36 directed combinations; errors=0
+PASS: policy config invariants only. Actual consent/access/inference requires app tests.
+
+> venus@0.0.0 check:i18n
+> node tools/check-i18n.mjs
+
+PASS: RU/EN/TR locale keys and nonempty strings
+
+> venus@0.0.0 test:python
+> python -B -m unittest discover -s tools -p test_*.py
+
+
+> venus@0.0.0 check:docs
+> python -B tools/check_docs.py && python -B tools/check_p00.py && python -B tools/check_stage_history.py && python -B tools/verify_manifest.py
+
+Venus docs: 1827 markdown files, 10 moodboard images, 12 draft cards, 0 errors.
+PASS: required files, linked assets and snapshot hashes
+{"trace_rows": 253, "source_requirements": 232, "adrs": 12, "api_operations": 33, "runtime_acceptance": "NOT_RUN"}
+PASS: P00 integrity checked; gate acceptance requires bound independent reports; runtime remains separate
+PASS: EXIT-P01 source, CI, negative/container evidence and independent reports bound
+PASS: EXIT-P02 source/CI/HTTP/WS/PostgreSQL/browser/OCI and independent reviews bound
+PASS: EXIT-P03 source/CI/runtime/preregistered measurements/independent reviews bound
+Checked 29869 packaged paths; errors=0
+PASS: packaged bytes match manifest; provenance/signatures require release verification.
+
+> venus@0.0.0 build
+> tsc -b && npm run build -w @venus/web
+
+
+> @venus/web@0.0.0 build
+> vite build
+
+vite v8.3.4 building client environment for production...
+transforming...
+✓ 35 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.39 kB │ gzip:   0.27 kB
+dist/assets/index-BoNI8E-V.css    9.58 kB │ gzip:   2.72 kB
+dist/assets/index-CQ4hcLem.js   347.42 kB │ gzip: 105.35 kB
+
+✓ built in 285ms
+
+> venus@0.0.0 test:catalog-r2
+> node tools/check-catalog-r2.mjs
+
+Validated 450 files, 450 parsed; errors=0
+PASS: structural/semantic checks only; human review still mandatory.
+
+DRAFT CHECK COMPLETE: 450 cards; human review remains REQUIRED. Output /workspace/.artifacts/catalog-r2-check/full-check
+
+ilures": 0, "errors": 0, "skipped": [], "active_draft_cards": 450, "coverage_dir": ".artifacts/catalog-r2-check/full-check", "approval_scope": "AUTOMATED_DRAFT_REGRESSION_ONLY", "human_approval": false}
+test_actual_full_C2_bound_to_final450 (__main__.FullCandidateTests.test_actual_full_C2_bound_to_final450) ... ok
+test_actual_public_and_private_profiles (__main__.FullCandidateTests.test_actual_public_and_private_profiles) ... ok
+test_balanced150_and30_categories (__main__.FullCandidateTests.test_balanced150_and30_categories) ... ok
+test_copied_revision_lineage_and_exact_untouched_bytes (__main__.FullCandidateTests.test_copied_revision_lineage_and_exact_untouched_bytes) ... ok
+test_draft_rights_and_physical_guards (__main__.FullCandidateTests.test_draft_rights_and_physical_guards) ... ok
+test_exact_active_selection_excludes_removed_and_quarantine (__main__.FullCandidateTests.test_exact_active_selection_excludes_removed_and_quarantine) ... ok
+test_known12_turkish_repairs (__main__.FullCandidateTests.test_known12_turkish_repairs) ... ok
+test_named_semantic_pairs_changed_outputs (__main__.FullCandidateTests.test_named_semantic_pairs_changed_outputs) ... ok
+test_original450_and_frozen379_unchanged (__main__.FullCandidateTests.test_original450_and_frozen379_unchanged) ... ok
+test_owned_ledger_history522_selects450_current (__main__.FullCandidateTests.test_owned_ledger_history522_selects450_current) ... ok
+test_packaged_readonly_original_ledger_snapshot (__main__.FullCandidateTests.test_packaged_readonly_original_ledger_snapshot) ... ok
+test_requests_reserved_before_new_draft_events (__main__.FullCandidateTests.test_requests_reserved_before_new_draft_events) ... ok
+test_round02_actor_number_repairs (__main__.FullCandidateTests.test_round02_actor_number_repairs) ... ok
+test_schema_roles_and_locale_parity (__main__.FullCandidateTests.test_schema_roles_and_locale_parity) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.724s
+
+OK
+
+Draft catalog receipts: .artifacts/catalog-r2-check
+
+> venus@0.0.0 test:negative
+> node tools/negative-gates.mjs
+
+PASS: schema, locale, type and unit corruption rejected; source unchanged
+............................................................................................................................
+----------------------------------------------------------------------
+Ran 124 tests in 19.187s
+
+OK
+
+Evidence: C:\.projects\venus\.artifacts\p05-final-quality-clone01\.artifacts\docker-quality\venus-quality-82c734f78108

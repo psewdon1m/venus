@@ -1,0 +1,66 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ packages/relationship-engine/src/topic-planner.test.ts (64 tests | 1 failed | 63 skipped) 1576ms
+   ❯ sessionwide private exact-card uniqueness (1)
+     × never reoffers an exact private ID to another pair in the same native session 1575ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/relationship-engine/src/topic-planner.test.ts > sessionwide private exact-card uniqueness > never reoffers an exact private ID to another pair in the same native session
+AssertionError: {"seed":"P05-EXACT-ID-REGRESSION-1","id":"Q-0108","prior":55,"current":78,"priorActors":["00000004-0000-4000-8000-000000000000","00000005-0000-4000-8000-000000000000"],"actors":["00000003-0000-4000-8000-000000000000","00000006-0000-4000-8000-000000000000"]}: expected { actors: [ …(2) ], …(15) } to be undefined
+
+- Expected:
+undefined
+
++ Received:
+{
+  "actors": [
+    "00000004-0000-4000-8000-000000000000",
+    "00000005-0000-4000-8000-000000000000",
+  ],
+  "attempts": [
+    {
+      "candidate_counter": 0,
+      "card": {
+        "card_id": "Q-0108",
+        "card_revision": 1,
+        "card_sha256": "2a9b76a0be815c6c0c980b14af6b47b3fb3d499d7b273c6d9c4c4a94590cc2b9",
+      },
+      "offer_epoch": 1,
+      "safety_digest": "4846ec66f0642139d1d86d5f94bc1af3b25a067396cf1df64200105191fe71d4",
+      "safety_revision": 1,
+      "state": "offered",
+    },
+  ],
+  "baseline_private_max_intensity": 1,
+  "card": {
+    "card_id": "Q-0108",
+    "card_revision": 1,
+    "card_sha256": "2a9b76a0be815c6c0c980b14af6b47b3fb3d499d7b273c6d9c4c4a94590cc2b9",
+  },
+  "disclosure": "selected",
+  "interaction": "pair_private",
+  "mode": "questions",
+  "pins_digest": "d7c35c10a5d11e4eb47d0be11c74e303827d0e4e1622c9422961e2a2307238ef",
+  "primary_member_id": "00000004-0000-4000-8000-000000000000",
+  "requires_action_consent": true,
+  "room_id": "11111111-1111-4111-8111-111111111111",
+  "round_id": "ca886351-d94a-4d6c-8cb5-741fbec9bb44",
+  "round_index": 55,
+  "schema": 2,
+  "session_id": "22222222-2222-4222-8222-222222222222",
+  "stage": 3,
+}
+
+ ❯ packages/relationship-engine/src/topic-planner.test.ts:71:189
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 63 skipped (64)
+   Start at  21:38:18
+   Duration  2.12s (tests 79%, import 17%, transform 4%)
+

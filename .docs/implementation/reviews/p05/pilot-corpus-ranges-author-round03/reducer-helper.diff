@@ -1,0 +1,17 @@
+--- C:\.projects\venus\.artifacts\p05-reduce-original-section05.py
++++ C:\.projects\venus\.artifacts\p05-reduce-original-section06.py
+@@ -1,10 +1,11 @@
+ from pathlib import Path
+ import json,hashlib,subprocess,secrets,datetime,sys,shutil
+ r=Path('C:/.projects/venus');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();section=sys.argv[1]
+-assert section in ['c2-trajectory','c2-canary','m3-invariants','m3-fairness','m3-gf','m3-inference'],'Reuse accepted full c2-static; no duplicate static reduction'
+-manifest=r/'.artifacts/p05-full-original-resume05/MANIFEST.json';assert sha(manifest)=='beacb3659d04aa39299afd2e06f1811f0191974e44f621a85a35c205be4ccd5a';plan=json.loads(manifest.read_text());terminal_path=r/'.artifacts/p05-full-original-execution05/BATCH_TERMINAL.json';terminal=json.loads(terminal_path.read_text());assert terminal['status']=='ALL_FIXED_RANGES_EXECUTED_NOT_STATISTICAL_ACCEPTANCE'and terminal['completed_jobs']==terminal['planned_jobs']==2609 and all(x['ok']for x in terminal['records'])
++assert section in ['c2-static','c2-trajectory','c2-canary','m3-invariants','m3-fairness','m3-gf','m3-inference'],'Fresh uniform A26 original section; no historical source credit'
++assert len(sys.argv)==3 and len(sys.argv[2])==64 and all(c in '0123456789abcdef'for c in sys.argv[2]),'Exact root-supplied manifest SHA metadata required'
++manifest=r/'.artifacts/p05-full-original-ranges06/MANIFEST.json';assert sha(manifest)==sys.argv[2];plan=json.loads(manifest.read_text());terminal_path=r/'.artifacts/p05-full-original-execution06/BATCH_TERMINAL.json';terminal=json.loads(terminal_path.read_text());assert terminal['status']=='ALL_FIXED_RANGES_EXECUTED_NOT_STATISTICAL_ACCEPTANCE'and terminal['completed_jobs']==terminal['planned_jobs']==2609 and all(x['ok']for x in terminal['records'])
+ assert shutil.disk_usage(r).free>=32*1024**3
+-out=r/('.artifacts/p05-reduce-original05-'+section);assert not out.exists();out.mkdir();inputs=[]
++out=r/('.artifacts/p05-reduce-original06-'+section);assert not out.exists();out.mkdir();inputs=[]
+ jobs=[dict(p,range=p['range'])for p in plan['prefixes']if p['section']==section]+[j for j in plan['jobs']if j['range']['section']==section]
+ for job in jobs:
+  owner=job['owner'];raw=r/'.artifacts/p05-fixedranges'/owner;host=json.loads((raw/'host-report.json').read_text());summary=raw/'export/summary.json';s=json.loads(summary.read_text());assert host['status']=='RANGE_EXECUTION_COMPLETE_NOT_STATISTICAL_ACCEPTANCE'and host['cleanup']=='COMPLETE'and host['worker_exit']==0 and host['timeout']is False and host['cleanup_errors']==[]

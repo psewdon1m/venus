@@ -1,0 +1,17 @@
+/** Diagnostic Node option validation only. Guaranteed absent executable: no child is created. */
+import assert from 'node:assert/strict';
+import {execFileSync} from 'node:child_process';
+import {existsSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+const absent=fileURLToPath(new URL('./NEVER_CREATED_NATIVE_EXECUTABLE_04.exe',import.meta.url));assert.equal(existsSync(absent),false);
+const source=process.binding('natives').child_process,start=source.indexOf('function validateTimeout('),end=source.indexOf('\n}',start)+2;assert(start>=0&&end>start);const validator=source.slice(start,end);assert(validator.includes('NumberIsInteger(timeout)'));assert(validator.includes('ERR_OUT_OF_RANGE'));assert(validator.includes("'timeout'"));
+const raw=remaining=>Math.max(1,Math.min(15000,remaining)),integerCandidate=remaining=>Math.max(1,Math.floor(Math.min(15000,remaining))),rows=[];
+for(const remaining of [14000.25,1.25,15000,17000.25,0.25]){
+ for(const [kind,timeout] of [['original',raw(remaining)],['integer_candidate',integerCandidate(remaining)]]){
+  let error;try{execFileSync(absent,[],{timeout});}catch(e){error=e;}
+  assert(error);const fractional=!Number.isInteger(timeout);assert.equal(error.code,fractional?'ERR_OUT_OF_RANGE':'ENOENT');assert.equal(error instanceof RangeError,fractional);
+  if(fractional)assert(error.message.includes('"timeout"'));
+  rows.push({kind,remaining_ms:remaining,timeout_ms:timeout,integer:Number.isInteger(timeout),error_name:error.name,error_code:error.code,synthetic_fractional_error_message:fractional?error.message:null,child_created:false});
+ }
+}
+console.log(JSON.stringify({scope:'NODE_OPTION_VALIDATION_ONLY_NO_CHILD_NATIVE_MODEL_DOCKER',node:process.version,validator_source:validator,rows,actual_failure_fraction_value:'NOT_EXPORTED',actual_failure_stock_message:'NOT_EXPORTED'}));

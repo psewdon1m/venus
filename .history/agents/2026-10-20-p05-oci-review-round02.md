@@ -1,0 +1,7 @@
+# OCI02 independent repeat
+
+- 2026-10-20T14:58:22.9909757Z UTC — Assigned byroot after08methodreview. Inputs .docs/implementation/reviews/p05/oci-rollback-author-resume-round02/INDEX.json bba1e887ef1c4313e388037e252928ec1d740f542f0499e55adc5492a95d09cf /75children. PriorfindingOCI-RESOURCE-RESUME01-001 in77aba618 frozenunchanged. ReviewPG248+8budget, allotherrolesIPCnone, actualHostConfig/mountinfo/statfsfences, keepermountfix; boundedfiniteonly, noDocker/functionalRUN. Ownjournal/newexcludedwork+newdurablereviewonly. Readyforpriorityactual08auditinterrupt.
+
+- 2026-10-20T15:00:19.7776818Z UTC — All75authorchildren/73regularworkspacepairs andparent01 verify; current1274/1813. OwncontrolsallPASSexit0:12IPCrolearg/HostConfigchecks, exact9generic+PG+nativeprobeASTconstructors, mountinfo/capacitynegatives,6readonlykeeperfailurevalidation. PythonconstructorAST independentlyparsed. NoDocker/quota/PG/OCIactual. Wrongguessedoci-ipc-policyfilename firstreadexit1 correctedtoactualipc-policyfrominventory. InspectingPythoninlineguardbeforefinalfreeze.
+
+- 2026-10-20T15:01:07.3469229Z UTC — FinalPASS_METHOD_ONLY OCI-RESOURCE-RESUME01-001closesprospectively,newP1/P2none.57ownfinitecontrolsallPASSexit0; exact75children/73files andsource1813verify. PG248+SHM8/native320/host160/safety32; explicitIPCnone/allconstructor+inspection+inline/runtimeobservationsources;6readonlykeeperfenceconfirmed. NoactualDocker/resourcequota/PG/OCI; nextseparateboundedactualACKandfeasibilityrequired. Durable report/indexfrozen;rootnotified.

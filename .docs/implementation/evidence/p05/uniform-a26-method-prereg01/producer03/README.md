@@ -1,0 +1,5 @@
+# A26 uniform original corpus — bound, not authorized
+
+Current source27f5172a/1881 and image48c5876a are pinned by receipt24. Independent current method review and root authorization are still required. No corpus run or root ACK has been issued by this author. ROOT-ACK templates are incomplete authority skeletons, not executable grants; host03 additionally requires actual producer-map, host/review pins and a fresh owned identity.
+
+Original producer02 remains immutable. Descriptors, seeds, model, eligibility policy, raw/replay/reducer algorithms, resources and thresholds remain exact. Historical logs/review metadata were not copied as current proofs. TOPIC3 remains the serialized family; selection patch identity is explicit in binding and prereg. Exact23999 supplemental regression is never matrix credit. All seven fresh cost prefixes and all2609 jobs use this one current binding. Existing host03 and no-carry lanes02 are reused. Runtime execution success is not full C2/M3/P05 acceptance.

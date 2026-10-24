@@ -1,0 +1,19 @@
+async function topicUiReady(a,f,minRev,control,stage,step,afterMonotonic=null){
+ assert(['topic-accept','private-prompt','advice-accept','advice-text','advice-edit','advice-revoke','pair-chat-messages'].includes(control));assert(Number.isSafeInteger(minRev));
+ const observations=report.topic_readiness??=[];if(observations.length>=128){report.topic_readiness_overflow=true;throw Error('Bounded topic readiness diagnostics overflow');}
+ const project=observed=>observed?{session_id:observed.session_id,round_id:observed.round_id,round_index:observed.round_index,game_rev:observed.game_rev,state:observed.state,round_state:observed.round_state}:null,matches=observed=>Boolean(uiRoundMatches(observed,f)&&observed.game_rev>=minRev&&observed.state==='active'&&['pending','active'].includes(observed.round_state));
+ const row={step,phase_id:stage.phase_id,phase_kind:stage.kind,method:'FUNCTIONAL_PREPARATION_PHASES_10',locale:a.locale,member_id:a.id,expected:{room_id:a.room,session_id:f.session,round_id:f.plan.round_id,round_index:f.plan.round_index,min_game_rev:minRev},preparation_budget_ms:8000,result:'FAILED',observed:project(a.lastGameView),own_scope_matches:matches(a.lastGameView),dom:null,dom_sample:'NOT_OBSERVED'};observations.push(row);
+ try{
+  if(control!=='advice-revoke')await normalPrivateReady(a,control,{deadline:stage.deadline,expected:{session:f.session,round:f.plan.round_id,minRev,afterMonotonic}});
+  const remaining=stage.deadline-performance.now();assert(remaining>0,'Topic preparation phase deadline exhausted');
+  await expect.poll(async()=>{
+   const observed=a.lastGameView;row.observed=project(observed);
+   row.own_scope_matches=matches(observed);
+   if(performance.now()>=stage.deadline||!row.own_scope_matches)return false;
+   const dom=await a.page.evaluate(({id,index,room})=>{const round=document.querySelector('[data-testid="game-round"]'),el=document.querySelector('[data-testid="'+id+'"]'),visible=node=>Boolean(node&&node.getClientRects().length>0&&window.getComputedStyle(node).visibility!=='hidden');return {own_room_matches:new URLSearchParams(window.location.hash.slice(1)).get('room')===room,round_visible:visible(round),round_index_matches:new RegExp('\\b'+index+'\\s*/').test(round?.textContent??''),control_visible:visible(el),control_enabled:Boolean(el&&!el.matches(':disabled'))};},{id:control,index:f.plan.round_index,room:a.room});
+   row.dom=dom;row.dom_sample='OBSERVED';row.same_observation=observed===a.lastGameView;
+   return performance.now()<stage.deadline&&row.same_observation&&row.own_scope_matches&&Object.values(dom).every(value=>value===true);
+  },{timeout:remaining,intervals:[50,100,250]}).toBe(true);
+  assert(performance.now()<stage.deadline,'Topic preparation phase deadline exhausted');row.result='READY';
+ }finally{const finished=performance.now();row.preparation_elapsed_ms=finished-stage.started;row.total_preparation_elapsed_ms=finished-stage.flow_started;row.remaining_ms=Math.max(0,stage.deadline-finished);stage.record.completed_actors.push(a.id);if(row.result!=='READY')stage.record.failed_actors.push(a.id);stage.record.elapsed_ms=finished-stage.started;stage.record.total_preparation_elapsed_ms=finished-stage.flow_started;stage.record.status=stage.record.failed_actors.length?'FAIL':stage.record.completed_actors.length===stage.record.expected_actors.length?'READY':'RUNNING';save();}
+}

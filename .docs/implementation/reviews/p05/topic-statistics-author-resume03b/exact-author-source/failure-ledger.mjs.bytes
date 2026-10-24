@@ -1,0 +1,7 @@
+/** Terminal evidence independent of disk writers; preserves first + secondary faults. */
+import assert from 'node:assert/strict';
+import {safeError,safeWorkerStop} from './safe-metadata.mjs';
+export function failureLedger(owner,{send=value=>process.stdout.write(value)}={}){
+ assert(/^[a-f0-9]{32}$/.test(owner));let first=null,dropped=0;const secondary=[];
+ return{record(error,stage){assert(/^[a-z][a-z0-9-]{0,63}$/.test(stage));if(!first)first={error,stage};else if(first.error!==error){if(secondary.length<16)secondary.push({stage,...safeError(error)});else dropped++;}return first.error;},get firstError(){return first?.error??null;},snapshot(){return{first_failure:first?{stage:first.stage,...safeError(first.error)}:null,secondary_failures:secondary.slice(),dropped_secondary_failures:dropped};},emit(status,workerStop){assert(['STOP_FAILED','NOT_ACCEPTED_PREFIX_RETAINED','BOUNDED_PURE_EXECUTION_COMPLETE_REQUIRES_INDEPENDENT_RAW_AUDIT'].includes(status));send(JSON.stringify({kind:'STATS32_SUPERVISOR_TERMINAL',owner,status,worker_stop:safeWorkerStop(workerStop,owner),...this.snapshot(),full_P05_PASS:false})+'\n');}};
+}

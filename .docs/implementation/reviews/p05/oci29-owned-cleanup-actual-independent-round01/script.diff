@@ -1,0 +1,29 @@
+--- cleanup01.py
++++ cleanup02.py
+@@ -4,7 +4,7 @@
+ 
+ if sys.argv[1:] != ['--execute']:
+     raise SystemExit('Requires explicit root approval, then --execute. No Docker action performed.')
+-base = Path(__file__).resolve().parent
++base = Path('C:/.projects/venus/.docs/implementation/reviews/p05/oci29-a19-failure-diagnosis-independent-round01')
+ root = Path('C:/.projects/venus')
+ sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+ assert sha(base / 'CLEANUP-PLAN.json') == '585ab51cf29d2d5102d5db3dc69440e0deb720d6c4452575c37e2e78b227fca5'
+@@ -15,7 +15,7 @@
+ formats = json.loads((base / 'QUERY-FORMATS.json').read_text())
+ objects = plan['objects']
+ assert [len(objects[k]) for k in ['container', 'volume', 'network']] == [2, 4, 1]
+-output = root / '.artifacts/p05-oci29-owned-cleanup01'
++output = root / '.artifacts/p05-oci29-owned-cleanup02'
+ assert not output.exists(), 'Preserve prior attempt; no automatic cleanup retry'
+ output.mkdir()
+ deadline = time.monotonic() + 180
+@@ -53,7 +53,7 @@
+         current['mounts'] = [{'type': m.get('Type'), 'name': m.get('Name'), 'destination': m.get('Destination'), 'rw': m.get('RW')} for m in current['mounts']]
+     assert current['labels'].get('com.venus.oci.owner') == owner and current['labels'].get('com.venus.oci.project') == project
+     keys = {'container': ['id', 'name', 'image', 'labels', 'mounts'], 'volume': ['name', 'driver', 'labels'], 'network': ['id', 'name', 'driver', 'labels']}[kind]
+-    assert all(current[k] == expected[k] for k in keys), 'Owned identity projection changed'
++    assert all((sorted(current[k], key=lambda m: m['destination']) == sorted(expected[k], key=lambda m: m['destination'])) if k == 'mounts' else current[k] == expected[k] for k in keys), 'Owned identity projection changed'
+     if kind == 'container' and current['name'].endswith('-db'):
+         assert current['running'] is False, 'Unexpected running DB; no automatic stop'
+     return current

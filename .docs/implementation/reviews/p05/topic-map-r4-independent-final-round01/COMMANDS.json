@@ -1,0 +1,39 @@
+{
+  "at_utc": "2026-10-20T18:00:00.549661+00:00",
+  "scope": "Existing read-only package and branded loaders only; no selector/C2/Docker/statistics",
+  "commands": [
+    {
+      "label": "existing-package-check",
+      "argv": [
+        ".venv/Scripts/python.exe",
+        "-B",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-02\\package_semantics.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "stdout": "existing-package-check.stdout.txt",
+      "stderr": "existing-package-check.stderr.txt"
+    },
+    {
+      "label": "existing-loader-projection",
+      "argv": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-02\\check_projection.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "existing-loader-projection.stdout.txt",
+      "stderr": "existing-loader-projection.stderr.txt"
+    },
+    {
+      "label": "existing-node-syntax",
+      "argv": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "--check",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-02\\check_projection.mjs"
+      ],
+      "exit_code": 0,
+      "stdout": "existing-node-syntax.stdout.txt",
+      "stderr": "existing-node-syntax.stderr.txt"
+    }
+  ]
+}

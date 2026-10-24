@@ -1,0 +1,12 @@
+# ADR-024 candidate revision02 — startup applicability
+
+This prospective clarification supersedes only the startup/close-route claims of ADR-024-candidate.md SHA256 ab17dc01344720159fa8afbf514218fabf928b17b76a2f30078ac78dcd0efa61. Algorithm2, strict current-session opportunity history, effective alternatives, semantic preservation and rollback restrictions remain unchanged. Not integrated or accepted yet.
+
+The TopicGames startup method itself can revoke/quiesce without calling its content source. **Ordinary server wiring still requires a compatible released profile, catalog ledger and runtime prerequisites before constructing TopicGames.** These are two distinct outcomes:
+
+1. When compatible ordinary prerequisites succeed, bootGate must finish before listen. It revokes transient private scopes and aborts active/paused sessions with an unsupported/corrupt authenticated snapshot header. Stored snapshot/history and external roots remain unchanged; no selector reinterprets the old revision.
+2. When those prerequisites fail, the server must not listen. In particular, an empty approved registry with existing protocol2 data remains an early startup failure. No claim is made that bootGate ran, private ciphertext was erased, the DB state converged, or housekeeping completed. Do not introduce a synthetic runtime profile, catalog bypass or data deletion to get past that guard.
+
+The experimental close/newroom option applies only through an available compatible authorized API/runtime. An operator cannot assume it is reachable during early startup refusal. Otherwise the service remains unavailable until compatible approved inputs or a separately reviewed compatible recovery path exist. This P05 change does not create or claim an offline retirement command. Never skip unsupported prior history, erase safety floors or transfer old private permission to resume play.
+
+Tests must distinguish direct method/fixture positive quiesce, compatible composition ordering, and ordinary early no-listen rejection. A successful synthetic method test is not a successful approved production boot or offline recovery proof. The same limitation applies to rollback: only explicitly compatible readers may serve stored revisions; unavailable prerequisites keep serving closed.

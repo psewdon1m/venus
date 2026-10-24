@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.shmoza.net/contracts/venus-standalone-release.v1",
+  "title": "VENUS-RELEASE-1 standalone manifest; not external Updater format",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "service",
+    "version",
+    "tag",
+    "main_sha",
+    "source_identity",
+    "image",
+    "schema",
+    "environment",
+    "bundle",
+    "key_id",
+    "created_at",
+    "trust_environment"
+  ],
+  "properties": {
+    "format": {
+      "const": "VENUS-RELEASE-1"
+    },
+    "service": {
+      "const": "venus"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^venus-(fixture-)?v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "main_sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "source_identity": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "key_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "environment": {
+      "const": "standalone-local-pilot-v2"
+    },
+    "trust_environment": {
+      "enum": [
+        "service",
+        "fixture"
+      ]
+    },
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generation",
+        "read_min",
+        "read_max"
+      ],
+      "properties": {
+        "generation": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "read_min": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "read_max": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "oci_digest",
+        "config_digest"
+      ],
+      "properties": {
+        "reference": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "oci_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "config_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "size"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        }
+      }
+    }
+  },
+  "$comment": "Runtime additionally verifies Ed25519 over exact canonical bytes, trusted key identity/owner approval, service versus fixture tag, exact Git main context, one OCI/config mapping, allowed repository, schema range, archive member semantics and installed template equality. A schema-only PASS is not release acceptance."
+}

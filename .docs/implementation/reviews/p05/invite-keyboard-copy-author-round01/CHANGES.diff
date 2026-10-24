@@ -1,0 +1,615 @@
+--- A28/apps/web/src/room-shell.tsx
++++ A29/apps/web/src/room-shell.tsx
+@@ -1,72 +1,78 @@
+-import {useEffect,useRef,useState} from 'react';
+-import type {Locale,RoomView,SelfPreferences,WsTicket} from '@venus/contracts';
+-import type {dictionary} from '@venus/i18n';
+-import {SessionApi,ApiError} from './api.js';
+-import {GamesPanel} from './games-panel.js';
+-import {TopicGamesPanel} from './topic-games-panel.js';
+-import {topicCopy} from '@venus/i18n';
+-import {gameCopy} from './game-copy.js';
+-type Text=ReturnType<typeof dictionary>;
+-export function RoomShell({api,room,prefs,t,locale,busy,connectionEpoch,perform,refresh,onSnapshot,onError,leave,onClosed}:{api:SessionApi;room:RoomView;prefs:SelfPreferences;t:Text;locale:Locale;busy:boolean;connectionEpoch:number;perform:(action:()=>Promise<void>)=>Promise<void>;refresh:()=>Promise<void>;onSnapshot:(frame:unknown)=>void;onError:(e:unknown)=>void;leave:()=>void;onClosed:()=>void}) {
+-  const [invite,setInvite]=useState(''),[connection,setConnection]=useState<'checking'|'ready'|'offline'>('checking');
+-  const [gameFrame,setGameFrame]=useState<unknown>(null);
+-  const dialog=useRef<HTMLDialogElement>(null);const me=room.members.find(m=>m.id===prefs.owner_member_id);
+-  const onSnapshotRef=useRef(onSnapshot),onErrorRef=useRef(onError);
+-  useEffect(()=>{onSnapshotRef.current=onSnapshot;onErrorRef.current=onError;},[onSnapshot,onError]);
+-  useEffect(()=>{
+-    let stopped=false,socket:WebSocket|undefined,heartbeat:ReturnType<typeof setInterval>|undefined,retry:ReturnType<typeof setTimeout>|undefined,attempts=0;
+-    const connect=async()=>{
+-      setConnection('checking');
+-      try {
+-        const ticket=await api.request<WsTicket>(`/api/v1/rooms/${room.room_id}/ws-ticket`,{request_id:crypto.randomUUID()});if(stopped) return;
+-        socket=new WebSocket(location.origin.replace('https:','wss:')+`/api/v1/rooms/${room.room_id}/ws`);
+-        socket.onopen=()=>{socket?.send(JSON.stringify({type:'auth',ticket:ticket.ticket}));};
+-        socket.onmessage=event=>{try {const frame:unknown=JSON.parse(String(event.data));if(frame&&typeof frame==='object'&&'type' in frame) {if(frame.type==='room.snapshot') {onSnapshotRef.current(frame);setConnection('ready');attempts=0;}else if(typeof frame.type==='string'&&frame.type.startsWith('game.')) setGameFrame(frame);}} catch {onErrorRef.current(new ApiError('SERVICE_UNAVAILABLE'));}};
+-        heartbeat=setInterval(()=>{if(socket?.readyState===WebSocket.OPEN) socket.send(JSON.stringify({type:'ping'}));},20000);
+-        socket.onerror=()=>setConnection('offline');
+-        socket.onclose=()=>{if(heartbeat) clearInterval(heartbeat);setConnection('offline');if(!stopped&&attempts++<3) retry=setTimeout(()=>{void connect();},Math.min(500*2**attempts,4000));};
+-      } catch(error) {if(!stopped) {setConnection('offline');onErrorRef.current(error);}}
+-    };
+-    void connect();return()=>{stopped=true;if(retry) clearTimeout(retry);if(heartbeat) clearInterval(heartbeat);socket?.close();};
+-  },[api,room.room_id,connectionEpoch]);
+-  useEffect(()=>{
+-    if(me?.role!=='host') return;let live=true;void api.request<{invite_url:string}>(`/api/v1/rooms/${room.room_id}/invite`).then(v=>{if(live) setInvite(v.invite_url);}).catch(e=>{if(live) onErrorRef.current(e);});return()=>{live=false;};
+-  },[api,room.room_id,me?.role]);
+-  return <section className="room-shell" data-testid="room-shell">
+-    <header className="room-heading"><div><p className="eyebrow">{t.yourRoom}</p><h1 data-testid="room-title">{room.meeting_context==='online'?t.online:t.inPerson}</h1></div><p role="status" data-testid="connection-status">{t[connection]}</p></header>
+-    <div className="room-grid"><section className="panel"><h2>{t.members} · {room.members.length}/8</h2><ul data-testid="member-list" className="member-list">{room.members.map(m=><li key={m.id}><span>{m.display_name}{m.id===prefs.owner_member_id?<small> · {t.you}</small>:null}</span><small>{m.role==='host'?t.host:t.member} · {m.presence==='online'?t.present:m.presence==='reconnecting'?t.reconnecting:t.absent} · {m.setup_ready?t.setupReady:t.setupPending}</small></li>)}</ul>
+-      {me?.role==='host'?<><label>{t.inviteLink}<input data-testid="room-invite" value={invite} readOnly onClick={e=>e.currentTarget.select()}/></label>
+-        <label>{t.meetingContext}<select data-testid="room-context" disabled={busy||prefs.locked} value={room.meeting_context} onChange={e=>{const input={meeting_context:e.target.value,expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};void perform(async()=>{await api.request(`/api/v1/rooms/${room.room_id}/context`,input,'PATCH');await refresh();});}}><option value="online">{t.online}</option><option value="in_person">{t.inPerson}</option></select></label></>:null}
+-    </section>
+-    <PreferencesForm key={prefs.owner_member_id+':'+prefs.rev} {...{api,room,prefs,t,busy,perform,refresh,locale}}/></div>
+-    <RoomGames key={`${room.room_id}:${prefs.owner_member_id}:${connectionEpoch}`} {...{api,room,prefs,locale,connection}} frame={gameFrame} refreshRoom={refresh} onError={onError}/>
+-    <section className="feature-grid" aria-label={t.modules}>{(['music','cinema','calls'] as const).map(feature=><div className="feature" key={feature}><h3>{t[feature]}</h3><p>{t.featureUnavailable}</p></div>)}</section>
+-    <div className="actions room-exit"><button data-testid="leave-room" onClick={leave}>{t.leaveRoom}</button>{me?.role==='host'?<button className="danger" data-testid="close-room" onClick={()=>dialog.current?.showModal()}>{t.closeRoom}</button>:null}</div>
+-    <dialog ref={dialog} aria-labelledby="close-title"><h2 id="close-title">{t.closeRoom}</h2><p>{t.closeWarning}</p><div className="actions"><button onClick={()=>dialog.current?.close()}>{t.cancel}</button><button className="danger" data-testid="confirm-close" onClick={()=>{const input={expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};void perform(async()=>{await api.request(`/api/v1/rooms/${room.room_id}/close`,input);dialog.current?.close();onClosed();});}}>{t.confirmClose}</button></div></dialog>
+-    <span className="sr-only" lang={locale}>{t.privateHint}</span>
+-  </section>;
+-}
+-
+-/** A refreshed authoritative revision discards the stale draft; the room/WS stays mounted. */
+-function PreferencesForm({api,room,prefs,t,busy,perform,refresh,locale}:{api:SessionApi;room:RoomView;prefs:SelfPreferences;t:Text;busy:boolean;perform:(action:()=>Promise<void>)=>Promise<void>;refresh:()=>Promise<void>;locale:Locale}) {
+-  const c=gameCopy(locale);
+-  const [comfort,setComfort]=useState(prefs.comfort),[edges,setEdges]=useState<Record<string,string>>(()=>Object.fromEntries(Object.entries(prefs.edges).map(([id,edge])=>[id,edge.relation])));
+-  const savedRev=prefs.rev;
+-  const relations=[['just_met',t.justMet],['friendship',t.friendship],['crush',t.crush],['situationship',t.situationship],['in_relationships',t.inRelationships],['not_a_friend',t.notAFriend]];
+-  return <form className="panel" onSubmit={e=>{e.preventDefault();const input={comfort,edges:Object.fromEntries(room.members.filter(m=>m.id!==prefs.owner_member_id).map(m=>[m.id,edges[m.id]??'friendship'])),expected_rev:savedRev,idempotency_key:crypto.randomUUID()};void perform(async()=>{const result=await api.request<SelfPreferences>(`/api/v1/rooms/${room.room_id}/me/preferences`,input,'PUT');void result;await refresh();});}}>
+-      <h2>{t.privateSetup}</h2>{prefs.locked?<p role="status">{t.gameSettingsLocked}</p>:null}<p className="hint">{t.privateHint}</p><label>{t.comfort} · {c[`comfort${comfort}` as 'comfort0']}<input data-testid="comfort" aria-valuetext={c[`comfort${comfort}` as 'comfort0']} disabled={prefs.locked} type="range" min="0" max="4" value={comfort} onChange={e=>setComfort(Number(e.target.value))}/></label>
+-      {room.members.filter(m=>m.id!==prefs.owner_member_id).map(m=><label key={m.id}>{m.display_name}<select data-testid={'relation-'+m.id} disabled={prefs.locked} value={edges[m.id]??'friendship'} onChange={e=>setEdges(old=>({...old,[m.id]:e.target.value}))}>{relations.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label>)}
+-      <div className="actions"><button className="primary" data-testid="submit-preferences" disabled={busy||prefs.locked}>{busy?t.saving:t.saveSetup}</button>
+-      <button type="button" data-testid="skip-setup" disabled={busy||prefs.locked} onClick={()=>{const input={expected_rev:savedRev,idempotency_key:crypto.randomUUID()};void perform(async()=>{const value=await api.request<SelfPreferences>(`/api/v1/rooms/${room.room_id}/me/setup/skip`,input);setComfort(0);setEdges({});void value;await refresh();});}}>{t.neutralSetup}</button></div>
+-    </form>;
+-}
+-
+-/** Protocol is authenticated and immutable. A fetch failure is never evidence
+- * for selecting the legacy reader. Mounting is identity-bound. */
+-function RoomGames(props:Parameters<typeof GamesPanel>[0]){
+- const {api,room,prefs,locale,onError}=props,t=topicCopy(locale),errorCallback=useRef(onError);
+- useEffect(()=>{errorCallback.current=onError;},[onError]);
+- const [protocol,setProtocol]=useState<1|2|null>(null),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
+- useEffect(()=>{let live=true;void api.request<unknown>(`/api/v1/rooms/${room.room_id}/me/private-protocol`).then(v=>{if(!live)return;if(!v||typeof v!=='object'||Object.keys(v).sort().join(',')!=='private_protocol,room_id,schema_version'||!('schema_version'in v)||v.schema_version!==1||!('room_id'in v)||v.room_id!==room.room_id||!('private_protocol'in v)||(v.private_protocol!==1&&v.private_protocol!==2))throw new ApiError('SERVICE_UNAVAILABLE');setProtocol(v.private_protocol);setFailed(false);}).catch(e=>{if(live){setProtocol(null);setFailed(true);if(e instanceof ApiError&&['AUTH_REQUIRED','ENTRY_REACCEPT_REQUIRED'].includes(e.code))errorCallback.current(e);}});return()=>{live=false;};},[api,room.room_id,prefs.owner_member_id,attempt]);
+- return protocol===1?<GamesPanel {...props}/>:protocol===2?<TopicGamesPanel {...props}/>:<section className="panel" role="status"><p>{failed?t.error:t.loading}</p>{failed?<button onClick={()=>setAttempt(n=>n+1)}>{t.refresh}</button>:null}</section>;
+-}
++import {useEffect,useRef,useState} from 'react';
++import type {Locale,RoomView,SelfPreferences,WsTicket} from '@venus/contracts';
++import type {dictionary} from '@venus/i18n';
++import {SessionApi,ApiError} from './api.js';
++import {GamesPanel} from './games-panel.js';
++import {TopicGamesPanel} from './topic-games-panel.js';
++import {topicCopy} from '@venus/i18n';
++import {gameCopy} from './game-copy.js';
++type Text=ReturnType<typeof dictionary>;
++export function RoomShell({api,room,prefs,t,locale,busy,connectionEpoch,perform,refresh,onSnapshot,onError,leave,onClosed}:{api:SessionApi;room:RoomView;prefs:SelfPreferences;t:Text;locale:Locale;busy:boolean;connectionEpoch:number;perform:(action:()=>Promise<void>)=>Promise<void>;refresh:()=>Promise<void>;onSnapshot:(frame:unknown)=>void;onError:(e:unknown)=>void;leave:()=>void;onClosed:()=>void}) {
++  const [invite,setInvite]=useState(''),[connection,setConnection]=useState<'checking'|'ready'|'offline'>('checking');
++  const [gameFrame,setGameFrame]=useState<unknown>(null);
++  const inviteInput=useRef<HTMLInputElement>(null),[inviteCopyStatus,setInviteCopyStatus]=useState<'copied'|'manual'|null>(null);
++  const copyInvite=async()=>{
++    if(!invite) return;
++    try {if(!navigator.clipboard) throw new Error('CLIPBOARD_UNAVAILABLE');await navigator.clipboard.writeText(invite);setInviteCopyStatus('copied');}
++    catch {setInviteCopyStatus('manual');inviteInput.current?.focus({preventScroll:true});inviteInput.current?.select();}
++  };
++  const dialog=useRef<HTMLDialogElement>(null);const me=room.members.find(m=>m.id===prefs.owner_member_id);
++  const onSnapshotRef=useRef(onSnapshot),onErrorRef=useRef(onError);
++  useEffect(()=>{onSnapshotRef.current=onSnapshot;onErrorRef.current=onError;},[onSnapshot,onError]);
++  useEffect(()=>{
++    let stopped=false,socket:WebSocket|undefined,heartbeat:ReturnType<typeof setInterval>|undefined,retry:ReturnType<typeof setTimeout>|undefined,attempts=0;
++    const connect=async()=>{
++      setConnection('checking');
++      try {
++        const ticket=await api.request<WsTicket>(`/api/v1/rooms/${room.room_id}/ws-ticket`,{request_id:crypto.randomUUID()});if(stopped) return;
++        socket=new WebSocket(location.origin.replace('https:','wss:')+`/api/v1/rooms/${room.room_id}/ws`);
++        socket.onopen=()=>{socket?.send(JSON.stringify({type:'auth',ticket:ticket.ticket}));};
++        socket.onmessage=event=>{try {const frame:unknown=JSON.parse(String(event.data));if(frame&&typeof frame==='object'&&'type' in frame) {if(frame.type==='room.snapshot') {onSnapshotRef.current(frame);setConnection('ready');attempts=0;}else if(typeof frame.type==='string'&&frame.type.startsWith('game.')) setGameFrame(frame);}} catch {onErrorRef.current(new ApiError('SERVICE_UNAVAILABLE'));}};
++        heartbeat=setInterval(()=>{if(socket?.readyState===WebSocket.OPEN) socket.send(JSON.stringify({type:'ping'}));},20000);
++        socket.onerror=()=>setConnection('offline');
++        socket.onclose=()=>{if(heartbeat) clearInterval(heartbeat);setConnection('offline');if(!stopped&&attempts++<3) retry=setTimeout(()=>{void connect();},Math.min(500*2**attempts,4000));};
++      } catch(error) {if(!stopped) {setConnection('offline');onErrorRef.current(error);}}
++    };
++    void connect();return()=>{stopped=true;if(retry) clearTimeout(retry);if(heartbeat) clearInterval(heartbeat);socket?.close();};
++  },[api,room.room_id,connectionEpoch]);
++  useEffect(()=>{
++    if(me?.role!=='host') return;let live=true;void api.request<{invite_url:string}>(`/api/v1/rooms/${room.room_id}/invite`).then(v=>{if(live) setInvite(v.invite_url);}).catch(e=>{if(live) onErrorRef.current(e);});return()=>{live=false;};
++  },[api,room.room_id,me?.role]);
++  return <section className="room-shell" data-testid="room-shell">
++    <header className="room-heading"><div><p className="eyebrow">{t.yourRoom}</p><h1 data-testid="room-title">{room.meeting_context==='online'?t.online:t.inPerson}</h1></div><p role="status" data-testid="connection-status">{t[connection]}</p></header>
++    <div className="room-grid"><section className="panel"><h2>{t.members} · {room.members.length}/8</h2><ul data-testid="member-list" className="member-list">{room.members.map(m=><li key={m.id}><span>{m.display_name}{m.id===prefs.owner_member_id?<small> · {t.you}</small>:null}</span><small>{m.role==='host'?t.host:t.member} · {m.presence==='online'?t.present:m.presence==='reconnecting'?t.reconnecting:t.absent} · {m.setup_ready?t.setupReady:t.setupPending}</small></li>)}</ul>
++      {me?.role==='host'?<><label>{t.inviteLink}<input ref={inviteInput} data-testid="room-invite" value={invite} readOnly tabIndex={-1} onClick={e=>e.currentTarget.select()}/></label><button type="button" data-testid="copy-room-invite" disabled={!invite} onClick={()=>{void copyInvite();}}>{t.copyInvite}</button>{inviteCopyStatus?<p id="invite-copy-status" role="status">{inviteCopyStatus==='copied'?t.inviteCopied:t.inviteCopyManual}</p>:null}
++        <label>{t.meetingContext}<select data-testid="room-context" disabled={busy||prefs.locked} value={room.meeting_context} onChange={e=>{const input={meeting_context:e.target.value,expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};void perform(async()=>{await api.request(`/api/v1/rooms/${room.room_id}/context`,input,'PATCH');await refresh();});}}><option value="online">{t.online}</option><option value="in_person">{t.inPerson}</option></select></label></>:null}
++    </section>
++    <PreferencesForm key={prefs.owner_member_id+':'+prefs.rev} {...{api,room,prefs,t,busy,perform,refresh,locale}}/></div>
++    <RoomGames key={`${room.room_id}:${prefs.owner_member_id}:${connectionEpoch}`} {...{api,room,prefs,locale,connection}} frame={gameFrame} refreshRoom={refresh} onError={onError}/>
++    <section className="feature-grid" aria-label={t.modules}>{(['music','cinema','calls'] as const).map(feature=><div className="feature" key={feature}><h3>{t[feature]}</h3><p>{t.featureUnavailable}</p></div>)}</section>
++    <div className="actions room-exit"><button data-testid="leave-room" onClick={leave}>{t.leaveRoom}</button>{me?.role==='host'?<button className="danger" data-testid="close-room" onClick={()=>dialog.current?.showModal()}>{t.closeRoom}</button>:null}</div>
++    <dialog ref={dialog} aria-labelledby="close-title"><h2 id="close-title">{t.closeRoom}</h2><p>{t.closeWarning}</p><div className="actions"><button onClick={()=>dialog.current?.close()}>{t.cancel}</button><button className="danger" data-testid="confirm-close" onClick={()=>{const input={expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};void perform(async()=>{await api.request(`/api/v1/rooms/${room.room_id}/close`,input);dialog.current?.close();onClosed();});}}>{t.confirmClose}</button></div></dialog>
++    <span className="sr-only" lang={locale}>{t.privateHint}</span>
++  </section>;
++}
++
++/** A refreshed authoritative revision discards the stale draft; the room/WS stays mounted. */
++function PreferencesForm({api,room,prefs,t,busy,perform,refresh,locale}:{api:SessionApi;room:RoomView;prefs:SelfPreferences;t:Text;busy:boolean;perform:(action:()=>Promise<void>)=>Promise<void>;refresh:()=>Promise<void>;locale:Locale}) {
++  const c=gameCopy(locale);
++  const [comfort,setComfort]=useState(prefs.comfort),[edges,setEdges]=useState<Record<string,string>>(()=>Object.fromEntries(Object.entries(prefs.edges).map(([id,edge])=>[id,edge.relation])));
++  const savedRev=prefs.rev;
++  const relations=[['just_met',t.justMet],['friendship',t.friendship],['crush',t.crush],['situationship',t.situationship],['in_relationships',t.inRelationships],['not_a_friend',t.notAFriend]];
++  return <form className="panel" onSubmit={e=>{e.preventDefault();const input={comfort,edges:Object.fromEntries(room.members.filter(m=>m.id!==prefs.owner_member_id).map(m=>[m.id,edges[m.id]??'friendship'])),expected_rev:savedRev,idempotency_key:crypto.randomUUID()};void perform(async()=>{const result=await api.request<SelfPreferences>(`/api/v1/rooms/${room.room_id}/me/preferences`,input,'PUT');void result;await refresh();});}}>
++      <h2>{t.privateSetup}</h2>{prefs.locked?<p role="status">{t.gameSettingsLocked}</p>:null}<p className="hint">{t.privateHint}</p><label>{t.comfort} · {c[`comfort${comfort}` as 'comfort0']}<input data-testid="comfort" aria-valuetext={c[`comfort${comfort}` as 'comfort0']} disabled={prefs.locked} type="range" min="0" max="4" value={comfort} onChange={e=>setComfort(Number(e.target.value))}/></label>
++      {room.members.filter(m=>m.id!==prefs.owner_member_id).map(m=><label key={m.id}>{m.display_name}<select data-testid={'relation-'+m.id} disabled={prefs.locked} value={edges[m.id]??'friendship'} onChange={e=>setEdges(old=>({...old,[m.id]:e.target.value}))}>{relations.map(([value,label])=><option key={value} value={value}>{label}</option>)}</select></label>)}
++      <div className="actions"><button className="primary" data-testid="submit-preferences" disabled={busy||prefs.locked}>{busy?t.saving:t.saveSetup}</button>
++      <button type="button" data-testid="skip-setup" disabled={busy||prefs.locked} onClick={()=>{const input={expected_rev:savedRev,idempotency_key:crypto.randomUUID()};void perform(async()=>{const value=await api.request<SelfPreferences>(`/api/v1/rooms/${room.room_id}/me/setup/skip`,input);setComfort(0);setEdges({});void value;await refresh();});}}>{t.neutralSetup}</button></div>
++    </form>;
++}
++
++/** Protocol is authenticated and immutable. A fetch failure is never evidence
++ * for selecting the legacy reader. Mounting is identity-bound. */
++function RoomGames(props:Parameters<typeof GamesPanel>[0]){
++ const {api,room,prefs,locale,onError}=props,t=topicCopy(locale),errorCallback=useRef(onError);
++ useEffect(()=>{errorCallback.current=onError;},[onError]);
++ const [protocol,setProtocol]=useState<1|2|null>(null),[failed,setFailed]=useState(false),[attempt,setAttempt]=useState(0);
++ useEffect(()=>{let live=true;void api.request<unknown>(`/api/v1/rooms/${room.room_id}/me/private-protocol`).then(v=>{if(!live)return;if(!v||typeof v!=='object'||Object.keys(v).sort().join(',')!=='private_protocol,room_id,schema_version'||!('schema_version'in v)||v.schema_version!==1||!('room_id'in v)||v.room_id!==room.room_id||!('private_protocol'in v)||(v.private_protocol!==1&&v.private_protocol!==2))throw new ApiError('SERVICE_UNAVAILABLE');setProtocol(v.private_protocol);setFailed(false);}).catch(e=>{if(live){setProtocol(null);setFailed(true);if(e instanceof ApiError&&['AUTH_REQUIRED','ENTRY_REACCEPT_REQUIRED'].includes(e.code))errorCallback.current(e);}});return()=>{live=false;};},[api,room.room_id,prefs.owner_member_id,attempt]);
++ return protocol===1?<GamesPanel {...props}/>:protocol===2?<TopicGamesPanel {...props}/>:<section className="panel" role="status"><p>{failed?t.error:t.loading}</p>{failed?<button onClick={()=>setAttempt(n=>n+1)}>{t.refresh}</button>:null}</section>;
++}
+--- A28/packages/i18n/src/ru.json
++++ A29/packages/i18n/src/ru.json
+@@ -1,74 +1,77 @@
+-{
+-  "tagline": "Время быть ближе",
+-  "title": "Ваше пространство для встреч",
+-  "description": "Venus готовится соединять людей через общие впечатления, игры и разговоры.",
+-  "stage": "Комнаты · Сервис в разработке",
+-  "unavailable": "Комнаты и игры пока недоступны",
+-  "ready": "Соединение с сервисом установлено",
+-  "offline": "Сервис пока недоступен",
+-  "checking": "Проверяем соединение…",
+-  "retry": "Проверить снова",
+-  "language": "Язык",
+-  "foundation": "Технический каркас",
+-  "version": "Версия",
+-  "entryPolicy": "Перед входом",
+-  "offerTitle": "Оферта",
+-  "acceptOffer": "Я прочитал(а) и принимаю эту версию оферты",
+-  "adultDeclaration": "Мне исполнилось 18 лет",
+-  "syntheticNotice": "Изолированный тест: синтетический документ, не публичная оферта.",
+-  "policyUnavailable": "Вход пока закрыт: утверждённая оферта ещё не опубликована.",
+-  "acceptanceRequired": "Примите действующую оферту и подтвердите 18+.",
+-  "reacceptRequired": "Условия обновились. Подтвердите новую версию перед продолжением.",
+-  "createRoom": "Создать комнату",
+-  "joinRoom": "Присоединиться",
+-  "yourName": "Ваше имя",
+-  "meetingContext": "Формат встречи",
+-  "online": "Онлайн-встреча",
+-  "inPerson": "Встреча рядом",
+-  "inviteLink": "Ссылка или код приглашения",
+-  "yourRoom": "Ваша комната",
+-  "members": "Участники",
+-  "you": "вы",
+-  "host": "создатель",
+-  "member": "участник",
+-  "present": "на связи",
+-  "reconnecting": "восстанавливает связь",
+-  "absent": "не на связи",
+-  "setupReady": "настройки готовы",
+-  "setupPending": "настраивается",
+-  "privateSetup": "Ваши личные настройки",
+-  "privateHint": "Эти значения видите только вы. Создатель видит лишь готовность.",
+-  "comfort": "Уровень комфорта",
+-  "saveSetup": "Сохранить настройки",
+-  "neutralSetup": "Пропустить: нейтральные настройки",
+-  "justMet": "Только познакомились",
+-  "friendship": "Дружба",
+-  "crush": "Симпатия",
+-  "situationship": "Неопределённые отношения",
+-  "inRelationships": "В отношениях",
+-  "notAFriend": "Не друзья",
+-  "modules": "Совместное время",
+-  "games": "Игры",
+-  "music": "Музыка",
+-  "cinema": "Кино",
+-  "calls": "Звонки",
+-  "featureUnavailable": "Пока недоступно",
+-  "leaveRoom": "Выйти из комнаты",
+-  "closeRoom": "Закрыть комнату",
+-  "closeWarning": "Все участники потеряют доступ. Вернуться в закрытую комнату нельзя.",
+-  "confirmClose": "Закрыть для всех",
+-  "cancel": "Отмена",
+-  "saving": "Сохраняем…",
+-  "developmentNotice": "Разработка · публичный запуск ещё не открыт",
+-  "roomFull": "В комнате уже восемь участников. Попробуйте позже.",
+-  "roomClosed": "Эта комната уже закрыта или срок приглашения истёк.",
+-  "sessionEnded": "Доступ к этой комнате завершён.",
+-  "inviteInvalid": "Проверьте ссылку или код приглашения.",
+-  "revisionConflict": "Состояние изменилось. Обновите его: несохранённые настройки будут заменены текущими. Затем повторите изменение.",
+-  "serviceUnavailable": "Сервис недоступен. Проверьте соединение и повторите.",
+-  "rateLimited": "Слишком много попыток. Подождите немного.",
+-  "invalidName": "Имя должно содержать от 1 до 48 видимых символов без управляющих знаков.",
+-  "hostRequired": "Это действие доступно только создателю комнаты.",
+-  "invalidInput": "Проверьте введённые данные.",
+-  "gameSettingsLocked": "Настройки зафиксированы на время игры. Изменить их можно после её завершения."
+-}
++{
++  "tagline": "Время быть ближе",
++  "title": "Ваше пространство для встреч",
++  "description": "Venus готовится соединять людей через общие впечатления, игры и разговоры.",
++  "stage": "Комнаты · Сервис в разработке",
++  "unavailable": "Комнаты и игры пока недоступны",
++  "ready": "Соединение с сервисом установлено",
++  "offline": "Сервис пока недоступен",
++  "checking": "Проверяем соединение…",
++  "retry": "Проверить снова",
++  "language": "Язык",
++  "foundation": "Технический каркас",
++  "version": "Версия",
++  "entryPolicy": "Перед входом",
++  "offerTitle": "Оферта",
++  "acceptOffer": "Я прочитал(а) и принимаю эту версию оферты",
++  "adultDeclaration": "Мне исполнилось 18 лет",
++  "syntheticNotice": "Изолированный тест: синтетический документ, не публичная оферта.",
++  "policyUnavailable": "Вход пока закрыт: утверждённая оферта ещё не опубликована.",
++  "acceptanceRequired": "Примите действующую оферту и подтвердите 18+.",
++  "reacceptRequired": "Условия обновились. Подтвердите новую версию перед продолжением.",
++  "createRoom": "Создать комнату",
++  "joinRoom": "Присоединиться",
++  "yourName": "Ваше имя",
++  "meetingContext": "Формат встречи",
++  "online": "Онлайн-встреча",
++  "inPerson": "Встреча рядом",
++  "inviteLink": "Ссылка или код приглашения",
++  "copyInvite": "Скопировать приглашение",
++  "inviteCopied": "Приглашение скопировано.",
++  "inviteCopyManual": "Скопируйте выделенную ссылку: Ctrl+C или Cmd+C.",
++  "yourRoom": "Ваша комната",
++  "members": "Участники",
++  "you": "вы",
++  "host": "создатель",
++  "member": "участник",
++  "present": "на связи",
++  "reconnecting": "восстанавливает связь",
++  "absent": "не на связи",
++  "setupReady": "настройки готовы",
++  "setupPending": "настраивается",
++  "privateSetup": "Ваши личные настройки",
++  "privateHint": "Эти значения видите только вы. Создатель видит лишь готовность.",
++  "comfort": "Уровень комфорта",
++  "saveSetup": "Сохранить настройки",
++  "neutralSetup": "Пропустить: нейтральные настройки",
++  "justMet": "Только познакомились",
++  "friendship": "Дружба",
++  "crush": "Симпатия",
++  "situationship": "Неопределённые отношения",
++  "inRelationships": "В отношениях",
++  "notAFriend": "Не друзья",
++  "modules": "Совместное время",
++  "games": "Игры",
++  "music": "Музыка",
++  "cinema": "Кино",
++  "calls": "Звонки",
++  "featureUnavailable": "Пока недоступно",
++  "leaveRoom": "Выйти из комнаты",
++  "closeRoom": "Закрыть комнату",
++  "closeWarning": "Все участники потеряют доступ. Вернуться в закрытую комнату нельзя.",
++  "confirmClose": "Закрыть для всех",
++  "cancel": "Отмена",
++  "saving": "Сохраняем…",
++  "developmentNotice": "Разработка · публичный запуск ещё не открыт",
++  "roomFull": "В комнате уже восемь участников. Попробуйте позже.",
++  "roomClosed": "Эта комната уже закрыта или срок приглашения истёк.",
++  "sessionEnded": "Доступ к этой комнате завершён.",
++  "inviteInvalid": "Проверьте ссылку или код приглашения.",
++  "revisionConflict": "Состояние изменилось. Обновите его: несохранённые настройки будут заменены текущими. Затем повторите изменение.",
++  "serviceUnavailable": "Сервис недоступен. Проверьте соединение и повторите.",
++  "rateLimited": "Слишком много попыток. Подождите немного.",
++  "invalidName": "Имя должно содержать от 1 до 48 видимых символов без управляющих знаков.",
++  "hostRequired": "Это действие доступно только создателю комнаты.",
++  "invalidInput": "Проверьте введённые данные.",
++  "gameSettingsLocked": "Настройки зафиксированы на время игры. Изменить их можно после её завершения."
++}
+--- A28/packages/i18n/src/en.json
++++ A29/packages/i18n/src/en.json
+@@ -1,74 +1,77 @@
+-{
+-  "tagline": "Time to get closer",
+-  "title": "Your space to meet",
+-  "description": "Venus is getting ready to bring people together through shared experiences, games and conversation.",
+-  "stage": "Rooms · Service in development",
+-  "unavailable": "Rooms and games are not available yet",
+-  "ready": "Connected to the service",
+-  "offline": "Service is currently unavailable",
+-  "checking": "Checking connection…",
+-  "retry": "Check again",
+-  "language": "Language",
+-  "foundation": "Technical foundation",
+-  "version": "Version",
+-  "entryPolicy": "Before you enter",
+-  "offerTitle": "Terms",
+-  "acceptOffer": "I have read and accept this version of the terms",
+-  "adultDeclaration": "I am at least 18 years old",
+-  "syntheticNotice": "Isolated test: synthetic document, not public terms.",
+-  "policyUnavailable": "Entry is closed until approved terms are published.",
+-  "acceptanceRequired": "Accept the current terms and confirm you are 18+.",
+-  "reacceptRequired": "The terms have changed. Accept the new version to continue.",
+-  "createRoom": "Create a room",
+-  "joinRoom": "Join a room",
+-  "yourName": "Your name",
+-  "meetingContext": "Meeting format",
+-  "online": "Online meeting",
+-  "inPerson": "Meeting in person",
+-  "inviteLink": "Invitation link or code",
+-  "yourRoom": "Your room",
+-  "members": "Participants",
+-  "you": "you",
+-  "host": "host",
+-  "member": "participant",
+-  "present": "connected",
+-  "reconnecting": "reconnecting",
+-  "absent": "offline",
+-  "setupReady": "setup ready",
+-  "setupPending": "setting up",
+-  "privateSetup": "Your private settings",
+-  "privateHint": "Only you can see these values. The host only sees whether you are ready.",
+-  "comfort": "Comfort level",
+-  "saveSetup": "Save settings",
+-  "neutralSetup": "Skip: use neutral settings",
+-  "justMet": "Just met",
+-  "friendship": "Friendship",
+-  "crush": "Attraction",
+-  "situationship": "Undefined relationship",
+-  "inRelationships": "In a relationship",
+-  "notAFriend": "Not friends",
+-  "modules": "Time together",
+-  "games": "Games",
+-  "music": "Music",
+-  "cinema": "Cinema",
+-  "calls": "Calls",
+-  "featureUnavailable": "Not available yet",
+-  "leaveRoom": "Leave room",
+-  "closeRoom": "Close room",
+-  "closeWarning": "Everyone will lose access. A closed room cannot be reopened.",
+-  "confirmClose": "Close for everyone",
+-  "cancel": "Cancel",
+-  "saving": "Saving…",
+-  "developmentNotice": "In development · public launch is not open",
+-  "roomFull": "There are already eight participants. Please try later.",
+-  "roomClosed": "This room is closed or its invitation has expired.",
+-  "sessionEnded": "Your access to this room has ended.",
+-  "inviteInvalid": "Check your invitation link or code.",
+-  "revisionConflict": "The state has changed. Refresh to replace your unsaved settings with the current values, then make your change again.",
+-  "serviceUnavailable": "The service is unavailable. Check your connection and try again.",
+-  "rateLimited": "Too many attempts. Please wait a moment.",
+-  "invalidName": "Use 1–48 visible characters without control characters.",
+-  "hostRequired": "Only the room host can do this.",
+-  "invalidInput": "Check the information you entered.",
+-  "gameSettingsLocked": "Settings are fixed for this game. You can change them after it ends."
+-}
++{
++  "tagline": "Time to get closer",
++  "title": "Your space to meet",
++  "description": "Venus is getting ready to bring people together through shared experiences, games and conversation.",
++  "stage": "Rooms · Service in development",
++  "unavailable": "Rooms and games are not available yet",
++  "ready": "Connected to the service",
++  "offline": "Service is currently unavailable",
++  "checking": "Checking connection…",
++  "retry": "Check again",
++  "language": "Language",
++  "foundation": "Technical foundation",
++  "version": "Version",
++  "entryPolicy": "Before you enter",
++  "offerTitle": "Terms",
++  "acceptOffer": "I have read and accept this version of the terms",
++  "adultDeclaration": "I am at least 18 years old",
++  "syntheticNotice": "Isolated test: synthetic document, not public terms.",
++  "policyUnavailable": "Entry is closed until approved terms are published.",
++  "acceptanceRequired": "Accept the current terms and confirm you are 18+.",
++  "reacceptRequired": "The terms have changed. Accept the new version to continue.",
++  "createRoom": "Create a room",
++  "joinRoom": "Join a room",
++  "yourName": "Your name",
++  "meetingContext": "Meeting format",
++  "online": "Online meeting",
++  "inPerson": "Meeting in person",
++  "inviteLink": "Invitation link or code",
++  "copyInvite": "Copy invitation",
++  "inviteCopied": "Invitation copied.",
++  "inviteCopyManual": "Copy the selected link: Ctrl+C or Cmd+C.",
++  "yourRoom": "Your room",
++  "members": "Participants",
++  "you": "you",
++  "host": "host",
++  "member": "participant",
++  "present": "connected",
++  "reconnecting": "reconnecting",
++  "absent": "offline",
++  "setupReady": "setup ready",
++  "setupPending": "setting up",
++  "privateSetup": "Your private settings",
++  "privateHint": "Only you can see these values. The host only sees whether you are ready.",
++  "comfort": "Comfort level",
++  "saveSetup": "Save settings",
++  "neutralSetup": "Skip: use neutral settings",
++  "justMet": "Just met",
++  "friendship": "Friendship",
++  "crush": "Attraction",
++  "situationship": "Undefined relationship",
++  "inRelationships": "In a relationship",
++  "notAFriend": "Not friends",
++  "modules": "Time together",
++  "games": "Games",
++  "music": "Music",
++  "cinema": "Cinema",
++  "calls": "Calls",
++  "featureUnavailable": "Not available yet",
++  "leaveRoom": "Leave room",
++  "closeRoom": "Close room",
++  "closeWarning": "Everyone will lose access. A closed room cannot be reopened.",
++  "confirmClose": "Close for everyone",
++  "cancel": "Cancel",
++  "saving": "Saving…",
++  "developmentNotice": "In development · public launch is not open",
++  "roomFull": "There are already eight participants. Please try later.",
++  "roomClosed": "This room is closed or its invitation has expired.",
++  "sessionEnded": "Your access to this room has ended.",
++  "inviteInvalid": "Check your invitation link or code.",
++  "revisionConflict": "The state has changed. Refresh to replace your unsaved settings with the current values, then make your change again.",
++  "serviceUnavailable": "The service is unavailable. Check your connection and try again.",
++  "rateLimited": "Too many attempts. Please wait a moment.",
++  "invalidName": "Use 1–48 visible characters without control characters.",
++  "hostRequired": "Only the room host can do this.",
++  "invalidInput": "Check the information you entered.",
++  "gameSettingsLocked": "Settings are fixed for this game. You can change them after it ends."
++}
+--- A28/packages/i18n/src/tr.json
++++ A29/packages/i18n/src/tr.json
+@@ -1,74 +1,77 @@
+-{
+-  "tagline": "Yakınlaşma zamanı",
+-  "title": "Buluşmak için sizin alanınız",
+-  "description": "Venus; ortak deneyimler, oyunlar ve sohbetlerle insanları bir araya getirmeye hazırlanıyor.",
+-  "stage": "Odalar · Hizmet geliştirme aşamasında",
+-  "unavailable": "Odalar ve oyunlar henüz kullanılamıyor",
+-  "ready": "Hizmete bağlanıldı",
+-  "offline": "Hizmet şu anda kullanılamıyor",
+-  "checking": "Bağlantı kontrol ediliyor…",
+-  "retry": "Yeniden kontrol et",
+-  "language": "Dil",
+-  "foundation": "Teknik temel",
+-  "version": "Sürüm",
+-  "entryPolicy": "Girmeden önce",
+-  "offerTitle": "Kullanım koşulları",
+-  "acceptOffer": "Koşulların bu sürümünü okudum ve kabul ediyorum",
+-  "adultDeclaration": "18 yaşını doldurdum",
+-  "syntheticNotice": "Yalıtılmış test: örnek belge, halka açık kullanım koşulları değildir.",
+-  "policyUnavailable": "Onaylı kullanım koşulları yayımlanana kadar giriş kapalıdır.",
+-  "acceptanceRequired": "Güncel koşulları kabul edin ve 18 yaşını doldurduğunuzu onaylayın.",
+-  "reacceptRequired": "Koşullar değişti. Devam etmek için yeni sürümü kabul edin.",
+-  "createRoom": "Oda oluştur",
+-  "joinRoom": "Odaya katıl",
+-  "yourName": "Adınız",
+-  "meetingContext": "Buluşma biçimi",
+-  "online": "Çevrim içi buluşma",
+-  "inPerson": "Yüz yüze buluşma",
+-  "inviteLink": "Davet bağlantısı veya kodu",
+-  "yourRoom": "Odanız",
+-  "members": "Katılımcılar",
+-  "you": "siz",
+-  "host": "oda sahibi",
+-  "member": "katılımcı",
+-  "present": "bağlı",
+-  "reconnecting": "yeniden bağlanıyor",
+-  "absent": "çevrim dışı",
+-  "setupReady": "ayarlar hazır",
+-  "setupPending": "ayarları yapıyor",
+-  "privateSetup": "Kişisel ayarlarınız",
+-  "privateHint": "Bu değerleri yalnızca siz görürsünüz. Oda sahibi yalnızca hazır olup olmadığınızı görür.",
+-  "comfort": "Rahatlık düzeyi",
+-  "saveSetup": "Ayarları kaydet",
+-  "neutralSetup": "Atla: tarafsız ayarlar kullan",
+-  "justMet": "Yeni tanıştık",
+-  "friendship": "Arkadaşlık",
+-  "crush": "Hoşlanma",
+-  "situationship": "Belirsiz ilişki",
+-  "inRelationships": "İlişki içindeyiz",
+-  "notAFriend": "Arkadaş değiliz",
+-  "modules": "Birlikte zaman",
+-  "games": "Oyunlar",
+-  "music": "Müzik",
+-  "cinema": "Sinema",
+-  "calls": "Aramalar",
+-  "featureUnavailable": "Henüz kullanılamıyor",
+-  "leaveRoom": "Odadan ayrıl",
+-  "closeRoom": "Odayı kapat",
+-  "closeWarning": "Herkesin erişimi sona erer. Kapatılan oda yeniden açılamaz.",
+-  "confirmClose": "Herkes için kapat",
+-  "cancel": "İptal",
+-  "saving": "Kaydediliyor…",
+-  "developmentNotice": "Geliştirme aşamasında · halka açık değil",
+-  "roomFull": "Odada zaten sekiz katılımcı var. Daha sonra tekrar deneyin.",
+-  "roomClosed": "Bu oda kapalı veya davetin süresi dolmuş.",
+-  "sessionEnded": "Bu odaya erişiminiz sona erdi.",
+-  "inviteInvalid": "Davet bağlantısını veya kodunu kontrol edin.",
+-  "revisionConflict": "Durum değişti. Kaydedilmemiş ayarları güncel değerlerle değiştirmek için yenileyin, ardından değişikliği tekrar yapın.",
+-  "serviceUnavailable": "Hizmet kullanılamıyor. Bağlantınızı kontrol edip tekrar deneyin.",
+-  "rateLimited": "Çok fazla deneme. Biraz bekleyin.",
+-  "invalidName": "Kontrol karakteri içermeyen 1–48 görünür karakter kullanın.",
+-  "hostRequired": "Bunu yalnızca oda sahibi yapabilir.",
+-  "invalidInput": "Girdiğiniz bilgileri kontrol edin.",
+-  "gameSettingsLocked": "Ayarlar oyun boyunca sabittir. Oyun bittikten sonra değiştirebilirsiniz."
+-}
++{
++  "tagline": "Yakınlaşma zamanı",
++  "title": "Buluşmak için sizin alanınız",
++  "description": "Venus; ortak deneyimler, oyunlar ve sohbetlerle insanları bir araya getirmeye hazırlanıyor.",
++  "stage": "Odalar · Hizmet geliştirme aşamasında",
++  "unavailable": "Odalar ve oyunlar henüz kullanılamıyor",
++  "ready": "Hizmete bağlanıldı",
++  "offline": "Hizmet şu anda kullanılamıyor",
++  "checking": "Bağlantı kontrol ediliyor…",
++  "retry": "Yeniden kontrol et",
++  "language": "Dil",
++  "foundation": "Teknik temel",
++  "version": "Sürüm",
++  "entryPolicy": "Girmeden önce",
++  "offerTitle": "Kullanım koşulları",
++  "acceptOffer": "Koşulların bu sürümünü okudum ve kabul ediyorum",
++  "adultDeclaration": "18 yaşını doldurdum",
++  "syntheticNotice": "Yalıtılmış test: örnek belge, halka açık kullanım koşulları değildir.",
++  "policyUnavailable": "Onaylı kullanım koşulları yayımlanana kadar giriş kapalıdır.",
++  "acceptanceRequired": "Güncel koşulları kabul edin ve 18 yaşını doldurduğunuzu onaylayın.",
++  "reacceptRequired": "Koşullar değişti. Devam etmek için yeni sürümü kabul edin.",
++  "createRoom": "Oda oluştur",
++  "joinRoom": "Odaya katıl",
++  "yourName": "Adınız",
++  "meetingContext": "Buluşma biçimi",
++  "online": "Çevrim içi buluşma",
++  "inPerson": "Yüz yüze buluşma",
++  "inviteLink": "Davet bağlantısı veya kodu",
++  "copyInvite": "Daveti kopyala",
++  "inviteCopied": "Davet kopyalandı.",
++  "inviteCopyManual": "Seçili bağlantıyı kopyalayın: Ctrl+C veya Cmd+C.",
++  "yourRoom": "Odanız",
++  "members": "Katılımcılar",
++  "you": "siz",
++  "host": "oda sahibi",
++  "member": "katılımcı",
++  "present": "bağlı",
++  "reconnecting": "yeniden bağlanıyor",
++  "absent": "çevrim dışı",
++  "setupReady": "ayarlar hazır",
++  "setupPending": "ayarları yapıyor",
++  "privateSetup": "Kişisel ayarlarınız",
++  "privateHint": "Bu değerleri yalnızca siz görürsünüz. Oda sahibi yalnızca hazır olup olmadığınızı görür.",
++  "comfort": "Rahatlık düzeyi",
++  "saveSetup": "Ayarları kaydet",
++  "neutralSetup": "Atla: tarafsız ayarlar kullan",
++  "justMet": "Yeni tanıştık",
++  "friendship": "Arkadaşlık",
++  "crush": "Hoşlanma",
++  "situationship": "Belirsiz ilişki",
++  "inRelationships": "İlişki içindeyiz",
++  "notAFriend": "Arkadaş değiliz",
++  "modules": "Birlikte zaman",
++  "games": "Oyunlar",
++  "music": "Müzik",
++  "cinema": "Sinema",
++  "calls": "Aramalar",
++  "featureUnavailable": "Henüz kullanılamıyor",
++  "leaveRoom": "Odadan ayrıl",
++  "closeRoom": "Odayı kapat",
++  "closeWarning": "Herkesin erişimi sona erer. Kapatılan oda yeniden açılamaz.",
++  "confirmClose": "Herkes için kapat",
++  "cancel": "İptal",
++  "saving": "Kaydediliyor…",
++  "developmentNotice": "Geliştirme aşamasında · halka açık değil",
++  "roomFull": "Odada zaten sekiz katılımcı var. Daha sonra tekrar deneyin.",
++  "roomClosed": "Bu oda kapalı veya davetin süresi dolmuş.",
++  "sessionEnded": "Bu odaya erişiminiz sona erdi.",
++  "inviteInvalid": "Davet bağlantısını veya kodunu kontrol edin.",
++  "revisionConflict": "Durum değişti. Kaydedilmemiş ayarları güncel değerlerle değiştirmek için yenileyin, ardından değişikliği tekrar yapın.",
++  "serviceUnavailable": "Hizmet kullanılamıyor. Bağlantınızı kontrol edip tekrar deneyin.",
++  "rateLimited": "Çok fazla deneme. Biraz bekleyin.",
++  "invalidName": "Kontrol karakteri içermeyen 1–48 görünür karakter kullanın.",
++  "hostRequired": "Bunu yalnızca oda sahibi yapabilir.",
++  "invalidInput": "Girdiğiniz bilgileri kontrol edin.",
++  "gameSettingsLocked": "Ayarlar oyun boyunca sabittir. Oyun bittikten sonra değiştirebilirsiniz."
++}

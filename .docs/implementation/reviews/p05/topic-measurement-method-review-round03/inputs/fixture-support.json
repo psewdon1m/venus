@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_NO_FIXTURE_GENERATED_OR_RUN",
+  "pack_id": "venus-p05-measurement-synthetic",
+  "pack_revision": 1,
+  "approval": {
+    "classification_status": "SYNTHETIC_MACHINE_FIXTURE",
+    "approved": false,
+    "runtime_eligible": false,
+    "owner_review_status": "SYNTHETIC_ONLY"
+  },
+  "vocabulary": [
+    "creative",
+    "music",
+    "romance"
+  ],
+  "full_topic_unions_in_canonical_order": [
+    [
+      "creative"
+    ],
+    [
+      "music"
+    ],
+    [
+      "romance"
+    ],
+    [
+      "creative",
+      "music"
+    ],
+    [
+      "creative",
+      "romance"
+    ],
+    [
+      "music",
+      "romance"
+    ],
+    [
+      "creative",
+      "music",
+      "romance"
+    ]
+  ],
+  "private_families": {
+    "per_exact_full_union": 96,
+    "distinct_families_total": 672,
+    "family_id": "M-PRIVATE-U<union_index0..6>-F<index0..95>",
+    "members_per_family": 6,
+    "member_axes": "3modes x online/in_person; all are variants of the SAME family, never6 independent support units",
+    "card_id": "modeprefix-(2000+2*(96*union_index+family_index)+context_index), padded4; context_index0online/1in_person",
+    "common_metadata": {
+      "interaction": "pair_private",
+      "relationship_scope": "friend_or_more",
+      "min_comfort": 1,
+      "min_progression_stage": 3,
+      "consent": "bilateral",
+      "requires_physical_contact": false,
+      "requires_going_away": false,
+      "category": "icebreaker",
+      "safety_tags": [
+        "neutral",
+        "private"
+      ]
+    },
+    "online_metadata": {
+      "meeting_contexts": [
+        "online"
+      ],
+      "required_capabilities": [
+        "private_text_chat"
+      ]
+    },
+    "in_person_metadata": {
+      "meeting_contexts": [
+        "in_person"
+      ],
+      "required_capabilities": []
+    },
+    "content": "Synthetic mechanism-only tokens with required P2 placeholder in every Q/TD/YB proposal; per-family equal full union for both TD sides and YB fields. Literal text/locale hashes frozen before RUN, no human classification inferred."
+  },
+  "public_families": {
+    "per_interaction": 128,
+    "interactions": [
+      "group",
+      "solo",
+      "pair_public"
+    ],
+    "YB": "pair_public only",
+    "family_id": "M-PUBLIC-<interaction>-F<index0..127>; same family across all applicable modes",
+    "card_id": "Q/TD:group index0..127,solo128..255,pair_public256..383; YB:pair_public0..127; padded4",
+    "metadata": "C0,stage1,bothcontexts,capabilities[],no physical/away; group/solo scope none, pairpublic scope acquaintance; public baseline unaffected by private exclusions/history",
+    "cards": 896,
+    "distinct_families": 384
+  },
+  "mixed_visibility_negative": {
+    "family": "M-MIXED-QUARANTINE",
+    "cards": [
+      "Q-9000 public",
+      "Q-9001 in_person private"
+    ],
+    "whole_family_repertoire": "exclude",
+    "counts_as_supported_family": false
+  },
+  "total_cards": 4930,
+  "total_distinct_families": 1057,
+  "prior_placement": {
+    "target_pair": "players0/1 sorted UUID",
+    "session_ids": [
+      "33333333-3333-4333-8333-333333333331",
+      "33333333-3333-4333-8333-333333333332",
+      "33333333-3333-4333-8333-333333333333"
+    ],
+    "modes": [
+      "questions",
+      "truth_or_dare",
+      "yes_but"
+    ],
+    "private_family_indexes": [
+      0,
+      1,
+      2
+    ],
+    "private_union": [
+      "creative"
+    ],
+    "public_T5": "pair_public family indexes0/1/2, one prior disclosure per mode; public and private families disjoint",
+    "sequence": "valid contiguous sequence1..3 per public/private history; exact room/pins/context/actors/disclosure and distinct round/session IDs",
+    "unit_vs_runtime": "Construct valid authenticated-format pure prior for mechanical fixture tests; runtime canary must create/accept/persist actual same-room prior sessions through actual lifecycle, not seed fake grants. For online DEFAULT_OFF current sessions with T4/T5 prior, those completed prior sessions were explicitly created under CHAT_ON; then disable flag before preparing the new capless current session. No prior grant survives; never claim onlineoff generated a private prior."
+  },
+  "support_certificate": {
+    "key": [
+      "section",
+      "capability",
+      "topic_regime",
+      "N",
+      "mode",
+      "context",
+      "class_profile",
+      "comfort",
+      "R",
+      "stage",
+      "target_pair",
+      "transition_index",
+      "requested_full_topic_union",
+      "prior_revision",
+      "safety_revision"
+    ],
+    "required_fields": [
+      "pack_digest",
+      "map_digest",
+      "semantic_digest",
+      "source_identity",
+      "baseline_raw_card_ids",
+      "after_whole_family_quarantine",
+      "after_context_class_comfort_capability",
+      "after_full_union_allow_exclude",
+      "after_room_public_semantic_history",
+      "after_same_pair_private_semantic_history",
+      "after_targeted_topics",
+      "distinct_residual_family_ids",
+      "remaining_private_opportunities",
+      "remaining_candidate_attempt_budget",
+      "expected_status"
+    ],
+    "independent_oracle": "Recompute eligibility and union/subset/semantic sets from frozen card/map bytes independently of selector helper names; hash exact sorted family lists, never multiply by actors or context/mode variants",
+    "private_demand": "For each supported pair and every surviving exact union, residual families >= remaining candidate-attempt demand; conservative initial demand3*ceil(.25R)<=75. Initial worst single-union prior3 leaves93>=75; every consumed family subtracts at most1 from this support and its matching demand. Any support certificate failure before RUN is SETUP_GAP, never seed repair.",
+    "public_demand": "Each required public interaction residual distinct families >= remaining public rounds;128-prior3=125>=R100, after each selected/disclosed family subtract1. All-X YB intentionally excluded.",
+    "intentional_empty": "T1 empty allow and T6 union exclusion removing all surviving topics: expected candidate0, opportunity remains possible; certificate status TOPIC_SAFE_EMPTY, no private prompt nondegeneracy claim.",
+    "microfixture_exhaustion": "Separate deterministic one-family fixture, never counted as supported statistical corpus",
+    "no_result_tuning": "Freeze placement/IDs/topic labels/family grouping/corpus text and certificate hashes before first final statistics; changes require new revision/preregistration"
+  }
+}

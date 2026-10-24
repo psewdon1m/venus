@@ -1,0 +1,8 @@
+from pathlib import Path
+import hashlib,json,shutil
+from datetime import datetime,timezone
+out=Path('.docs/implementation/reviews/p05/oci-resource-feasibility-actual-round01');work=Path('.artifacts/p05-oci-resource-feasibility-probe01');sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for p in work.iterdir():
+ if p.is_file():q=out/'exact-probe-source'/(p.name+'.bytes');q.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,q)
+r={'created_at':datetime.now(timezone.utc).isoformat(),'status':'NOT_RUN_EXTERNAL_DOCKER_BLOCKER','actual_resource_checks_executed':0,'created_containers':0,'created_volumes':0,'created_networks':0,'ports':[],'Docker_pull':False,'Docker_build':False,'actual_OCI_switches':0,'probe_sha256':sha(work/'probe.py'),'host_report_cap_bytes':2*1024**2,'whole_probe_deadline_seconds':180,'native_reserved_mib':298,'accepted_policy_native_ceiling_mib':320,'cold_description_exit_code':0,'finite_owner_controls':6,'execution_authorization':'ROOT_STOPPED_NO_NEW_ACK_AFTER_DOCKER_STATE_CHANGE','external_preflight':json.loads((out/'external-preflight.json').read_bytes()),'statistics_RUN':False,'human470':'HOLD_UNCHANGED','full_P05_PASS':False}
+(out/'report.json').write_text(json.dumps(r,indent=2)+'\n');files=[{'path':p.relative_to(out).as_posix(),'bytes':p.stat().st_size,'sha256':sha(p)}for p in sorted(out.rglob('*'))if p.is_file()and p.name!='INDEX.json'];(out/'INDEX.json').write_text(json.dumps({'schema_version':1,'scope':'OCI_RESOURCE_ACTUAL_PREFLIGHT_BLOCKED_NO_RESOURCES_CREATED','files':files},indent=2)+'\n');print(json.dumps({'status':r['status'],'INDEX_sha256':sha(out/'INDEX.json'),'children':len(files),'probe_sha256':r['probe_sha256']}))

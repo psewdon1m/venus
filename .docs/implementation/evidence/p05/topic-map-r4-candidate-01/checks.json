@@ -1,0 +1,57 @@
+{
+  "at_utc": "2026-10-20T17:25:57.671485+00:00",
+  "scope": "AUTHOR_HOST_ONLY_NOT_INDEPENDENT_NOT_RUNTIME",
+  "commands": [
+    {
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-B",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\package_candidate.py",
+        "--check"
+      ],
+      "exit_code": 0,
+      "output": "check-01.txt"
+    },
+    {
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-B",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\validate_candidate.py"
+      ],
+      "exit_code": 0,
+      "output": "check-02.txt"
+    },
+    {
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\check-r4-with-existing-pack.mjs"
+      ],
+      "exit_code": 0,
+      "output": "check-03.txt"
+    },
+    {
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "--check",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\check-r4-with-existing-pack.mjs"
+      ],
+      "exit_code": 0,
+      "output": "check-04.txt"
+    },
+    {
+      "command": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "--no-ignore",
+        "--no-warn-ignored",
+        ".docs\\implementation\\evidence\\p05\\topic-map-r4-candidate-01\\check-r4-with-existing-pack.mjs"
+      ],
+      "exit_code": 0,
+      "output": "check-05.txt"
+    },
+    {
+      "command": "Python compile builtin, two owned scripts; no pyc",
+      "exit_code": 0
+    }
+  ]
+}

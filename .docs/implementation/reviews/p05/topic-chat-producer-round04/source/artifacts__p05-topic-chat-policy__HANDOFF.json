@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-19T22:04:43.07325+03:00",
+  "author": "/root/p05_topics_ui_review",
+  "role": "AUTHOR_NOT_ACCEPTOR",
+  "status": "AUTHOR_CHECKPOINT04_ACTION_CLOCK_PRECONDITION_READY_WRITES_PAUSED_RUNTIME_NOT_RUN",
+  "included_writes": false,
+  "docker_run": false,
+  "design_ack_root": true,
+  "root_source_freeze_identity": "895fb30bb371397e7fbffa539ad1ae1c44c25630905bedb175867c3500a36a04",
+  "included_files": 1808,
+  "pins": {
+    "DESIGN.md": "516651c7855b8936c816bf4538f048b3f318a61b677b62a2ec483be31f656f75",
+    "integration.mjs": "3716f7da3c17bfae46f4ba1b011ec287edeb5b2d0037a1c1452c7ec25bd373fb",
+    "runner.mjs": "c77b72308b42dc3262c55015afa1793c31cdfc8d5396a03ec515627a4c6da8e4",
+    "eslint.config.mjs": "aaa0003ad2961415bfa799cbcff5f32b32beeaaaeba2a1382c61aa7e5d090a14",
+    "check-harness.mjs": "cb61c317b12dec9a9321aca83fe457faa5634cbd190e1056755e0a72f1612d6c"
+  },
+  "static_checks": {
+    "integration_syntax": 0,
+    "runner_syntax": 0,
+    "scoped_eslint": 0,
+    "actual_harness_export_ast_check": 0
+  },
+  "fixed_controls": [
+    "P05-TCP-01",
+    "P05-TCP-02",
+    "P05-TCP-03",
+    "P05-TCP-04",
+    "P05-TCP-05",
+    "P05-TCP-06",
+    "P05-TCP-07",
+    "P05-TCP-08",
+    "P05-TCP-09",
+    "P05-TCP-10",
+    "P05-TCP-11",
+    "P05-TCP-12"
+  ],
+  "run_command": "node .artifacts/p05-topic-chat-policy/runner.mjs",
+  "scope": "Real TLC harness migrations/PG/HTTP/18+/protected lifecycle, synthetic card/map; manual cookies, direct actual room grants for presence (not ordinary WS/browser/CMD).",
+  "quota_boundary_fixture": {
+    "explicit": true,
+    "seed_total": 126,
+    "natural_http_messages": 2,
+    "expected_real_http_totals": [
+      127,
+      128
+    ],
+    "real_http129_denied": true,
+    "only_mutation": "game_rounds.cipher authenticated chat_quota under real same-room advisory/row transaction lock",
+    "auth_consent_lifecycle_unchanged": true,
+    "not128_natural_sends": true
+  },
+  "clock_policy": "fixed calendar minute floor(now/60000); cases09/10 require both real HTTP action accepts before clock; steps<=20s real liveGrant heartbeat; no consent expiry extension; safe actual action/time/parent metadata",
+  "unicode_subcontrols": "Case08 actual HTTP high/low/embedded lone surrogate400 INVALID_TEXT, unchangedquota/receiptcount",
+  "final_sql_wait": "Case12 second chat delivery phase actual chat object read and following same-client final credential SELECT restricted room/session/member credential hash; realpg_stat_activity advisory wait beforeflagoff; finally clears timeout/hook/releaseslock/client/drains pendingpromise",
+  "denials": "Expected4xx policy/client errors only; no500 accepted as denial; no syntheticprivate text in errorbody",
+  "independent_reviewer": "/root/p05_topics_ui",
+  "independent_acceptance": "CHECKPOINT04_NEW_SCOPE_PENDING",
+  "forbidden_claims": [
+    "actualruntimePASS before run",
+    "acceptance by producer author",
+    "production server CMD",
+    "browser cookie jar/TLS",
+    "128 natural HTTP sends",
+    "full P05/human450 acceptance"
+  ],
+  "independent_round01": {
+    "path": ".docs/implementation/reviews/p05/topic-chat-producer-round01",
+    "index_sha256": "fa18ea5ced79cc41f4d43f58ccaa4cc921e67fa85e27b92dab0199f68e792bc8",
+    "status": "CHANGES_REQUESTED",
+    "findings": [
+      "TCP-PRODUCER-R01",
+      "TCP-PRODUCER-R02",
+      "TCP-PRODUCER-R03"
+    ],
+    "original_unchanged": true
+  },
+  "author_corrections": {
+    "R01": "Exact final inventory/producer pins compared after cleanup; drift forcesFAILexit1",
+    "R02": "runtime_cleanup completed mandatory fixedreportgate",
+    "R03": "Exact20distinctroundIDs/indexes1..20 plus actualDBcount/minmax/finalcurrent20/terminalround"
+  },
+  "corrective_regressions": {
+    "runner": 13,
+    "capless": 9,
+    "status": "AUTHOR_INERT_PROBES_PASS",
+    "actual_pg_runtime": false,
+    "independent_acceptance": false
+  },
+  "independent_round02": {
+    "status": "STATIC_PRODUCER_PREFLIGHT_PASS_OLD_SCOPE",
+    "index_sha256": "2e6561bbcc3ed25bad1214e76446bb5dfe8fbd55aaec7295da5777784679d852",
+    "closed_findings": [
+      "TCP-PRODUCER-R01",
+      "TCP-PRODUCER-R02",
+      "TCP-PRODUCER-R03"
+    ],
+    "new_POST_subcontrol_not_covered": true,
+    "original_unchanged": true
+  },
+  "new_case12_scope": "scope_GET_AND_POST_FINAL_FENCE",
+  "post_atomic_rollback_obligation": {
+    "fresh_room": true,
+    "marker": "Same PoolClient exact receipt INSERT room/member/request_id/operation=chat then finalAuth credential/room/member",
+    "actual_wait": "pg_stat_activity advisory Lock",
+    "then": "flagfalse/unlock/actualHTTP404or409/noSYNTHETIC",
+    "asserts": [
+      "encrypted quota equalsbefore",
+      "messages equalsbefore(empty)",
+      "exact newrequestreceipt count0",
+      "no sentcanary"
+    ],
+    "cleanup": "timeout cleared/hook null/advisory unlock/client release/pending promise drained; flag restored"
+  },
+  "post_selector_author_checks": {
+    "checks": 11,
+    "status": "PASS",
+    "actual_sql": false,
+    "actual_runtime": false
+  },
+  "independent_round03": {
+    "status": "STATIC_PRODUCER_PREFLIGHT_PASS_CHECKPOINT03",
+    "index_sha256": "8f1c2c21118a886bc52c47f96512f9bdfef259e393ff77cabc827c51281eb6c6",
+    "original_unchanged": true
+  },
+  "failed_actual_checkpoint03": {
+    "status": "FAIL",
+    "exit_code": 1,
+    "checks_passed": 9,
+    "case10": "CONVERSATION_UNAVAILABLE_AFTER_NEXT_MINUTE",
+    "cases11_12": "NOT_RUN",
+    "runtime_cleanup": "completed",
+    "archive": ".docs/implementation/evidence/p05/topic-chat-policy-preflight-01",
+    "index_sha256": "858cf94b2d112a1f04cdf3cb3d076b81f1c168ba9b11370699cdbd6ecb5744e5",
+    "cause": "source-supported inference; prior pending action state not retained after cleanup"
+  },
+  "action_clock_correction": {
+    "scope": [
+      "P05-TCP-09",
+      "P05-TCP-10"
+    ],
+    "actual_http_each_actor_current_target_then_action_accept": true,
+    "actor_accepts": 2,
+    "case01_pending_positive_unchanged": true,
+    "case10_revision_baseline_after_accepts": true,
+    "no_ttl_extension_or_auth_sql_seed": true,
+    "clock_metadata": [
+      "server_time_ms",
+      "action_state",
+      "action_pending_deadline_ms",
+      "action_active_until_ms",
+      "invitation_active_until_ms",
+      "conversation_parent_expires_at_ms"
+    ],
+    "active_deadlines_unchanged_across_advance": true,
+    "author_inert_probes": 15,
+    "runtime_NOT_RUN": true
+  }
+}

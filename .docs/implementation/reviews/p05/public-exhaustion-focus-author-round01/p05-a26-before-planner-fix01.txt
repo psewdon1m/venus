@@ -1,0 +1,42 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ packages/relationship-engine/src/topic-planner.test.ts (69 tests | 2 failed) 21031ms
+   ❯ public repertoire exhaustion with remaining private opportunities (3)
+     × uses remaining private opportunities without exceeding the existing session cap 65ms
+     × keeps the public opportunity independent of hidden topic allowance, including safe-empty 52ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  packages/relationship-engine/src/topic-planner.test.ts > public repertoire exhaustion with remaining private opportunities > uses remaining private opportunities without exceeding the existing session cap
+Error: TOPIC_SAFE_POOL_EXHAUSTED
+ ❯ assertEngine packages/relationship-engine/src/types.ts:29:101
+     27| }
+     28| export class EngineError extends Error {constructor(readonly code:stri…
+     29| export function assertEngine(condition:unknown,code:string):asserts co…
+       |                                                                                                     ^
+     30|
+ ❯ selectNextTopicRound packages/relationship-engine/src/topic-planner.ts:319:5
+ ❯ packages/relationship-engine/src/topic-planner.test.ts:80:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  packages/relationship-engine/src/topic-planner.test.ts > public repertoire exhaustion with remaining private opportunities > keeps the public opportunity independent of hidden topic allowance, including safe-empty
+Error: TOPIC_SAFE_POOL_EXHAUSTED
+ ❯ assertEngine packages/relationship-engine/src/types.ts:29:101
+     27| }
+     28| export class EngineError extends Error {constructor(readonly code:stri…
+     29| export function assertEngine(condition:unknown,code:string):asserts co…
+       |                                                                                                     ^
+     30|
+ ❯ selectNextTopicRound packages/relationship-engine/src/topic-planner.ts:319:5
+ ❯ packages/relationship-engine/src/topic-planner.test.ts:88:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 67 passed (69)
+   Start at  00:39:54
+   Duration  21.57s (tests 98%, import 2%)
+

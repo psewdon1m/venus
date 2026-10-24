@@ -1,0 +1,5 @@
+# P05 C2 normative outcome correction · additive02
+
+2026-10-20T19:42:23.706524+00:00 UTC — Root clarified required100acceptedoriginals/mode +neutral20/private25, preStart shortagecheckR1..100 allows legitimateR100SAFE_REFUSAL. Author01 wrong operationalsummary treated necessaryR100upperbound<100/refusal as automaticNOT_ACCEPTED;01frozen1ee5a779 remainsimmutable/supersededprospective, actual0. Newexcluded02 adds42exactR20 baseline alongside42R100, checksoriginalmodecounts>=100, keepsrunPreflight/nativeplanner/oraclesseeds unchanged. No actual/no includedsource writes. Explicit rootcorrection applies, notnewthreshold reduction.
+
+2026-10-20T19:45:28.492468+00:00 UTC — Additive02ready:168fixedcases(84static+42R20+42R100), requiredoriginals100/mode +neutral20/private25; legitimateR100refusal retainedEXPECTED/noautomaticstagefailure.66fake+17corrective controlsPASS,17syntax/lint0.43M3unit carry01exactunchanged.18methodpins verified; no actual470selector/noDocker/noincludedwrites. Old01wronginterpretation preserved and superseded, not retroactively rewritten. WRITES COMPLETE; independent/rootACKpending.

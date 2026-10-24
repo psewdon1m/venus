@@ -1,0 +1,1 @@
+async function advance(snapshot){const host=actors[0],f=snapshot.fixture;await ownUiRound(host,f,'game-next');const receipt=await mutationClick(host,'game-next',`/api/v2/rooms/${host.room}/game/${f.session}/round/advance`);return coherentGame({session:f.session,index:f.plan.round_index+1,minRev:receipt.game_rev});}

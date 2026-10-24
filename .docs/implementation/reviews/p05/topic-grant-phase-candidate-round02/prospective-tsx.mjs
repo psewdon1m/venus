@@ -1,0 +1,13 @@
+import * as fs from 'node:fs';import {createRequire} from 'node:module';import {resolve} from 'node:path';import {createHash} from 'node:crypto';import vm from 'node:vm';import assert from 'node:assert/strict';import ts from '../../node_modules/typescript/lib/typescript.js';
+const require=createRequire(import.meta.url),source=resolve('.artifacts/p05-grant-phase-candidate02/topic-state.ts'),target=resolve('apps/web/src/topic-state.ts'),bytes=fs.readFileSync(source),hash=createHash('sha256').update(bytes).digest('hex');assert.equal(hash,'3a687304a86f7743c1fbae35f2f7c9ad2c4cf64948d54f134cc68739bcf736b4');const loaded=[];
+const exactRead=(file,...args)=>{if(resolve(String(file))===target){loaded.push({original:target,candidate:source,sha256:hash});return args[0]===undefined?bytes:bytes.toString('utf8');}return fs.readFileSync(file,...args);};
+const code=ts.transpileModule(fs.readFileSync('apps/web/src/topic-test-harness.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,module={exports:{}};
+vm.runInNewContext(code,{module,exports:module.exports,require:name=>name==='node:fs'?{...fs,readFileSync:exactRead}:require(name),process,console,TextEncoder,AbortSignal,fetch});
+const result=await module.exports.topicScenario(String.raw`
+ let g=game('s','questions',22),active=false;const initial=clock;
+ const api={async request(path){if(path.endsWith('/current'))return g;if(path.endsWith('/self-actions'))return actions(g);if(path.endsWith('/target')){const t=target(g);t.invitation.state=active?'active':'pending';t.invitation.own_state=active?'accepted':'pending';t.invitation.expires_at=iso(active?clock+180000:initial+30000);return t;}if(path.endsWith('/conversation/chat'))return privateChat(conversation(g,true));if(path.endsWith('/conversation')){if(!active)throw new ApiError('CONVERSATION_UNAVAILABLE');return conversation(g,true);}throw new ApiError('NOT_FOUND');}};
+ const i=instance(api);render(i);await settle();render(i);const pendingSeen=!!find(i,'pair-invitation');
+ active=true;g={...g,game_rev:26};clock+=31000;monotonic+=29500;await tick();render(i);
+ return {pendingSeen,reusedPrompt:!!find(i,'private-prompt')};
+`);
+assert(result.pendingSeen&&result.reusedPrompt);assert(loaded.length>0);fs.writeFileSync('.artifacts/p05-grant-phase-candidate-review-round02/prospective-tsx.json',JSON.stringify({status:'PASS',scope:'EXACT_INCLUDED_HARNESS_AND_PANEL_WITH_ONLY_PINNED_CANDIDATE_TOPIC_STATE_READ_SUBSTITUTION_NO_BROWSER_RUN',result,loaded},null,2)+'\n');console.log(JSON.stringify({status:'PASS',loaded:loaded.length,result}));

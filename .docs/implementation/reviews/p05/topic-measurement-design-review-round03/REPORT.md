@@ -1,0 +1,7 @@
+# Measurement design round03 — independent correction review
+
+**DESIGN_CORRECTIONS_ACCEPTED_NOT_RUN.** The remaining TM-DESIGN-R03-ORDER defect is closed prospectively. All author packet hashes and unchanged contracts were independently verified. No statistics, Docker or product/measurement-producer writes occurred.
+
+Seven deterministic source-bound checks pass: actual isolated FrozenPack orders Q9000 before TD/YB, the old dictionary fails canonical equality, and the new dictionary exactly matches the retained historical feature-name initializer. Q9000 is histogram index384/full feature index500. All1075 names are unique and hash to2eba539a5104c8102606b8880f5d0113448a8d8fba11f1838cca16d50ad88bdd; appended features are unchanged. The new proposal retains every prior sample, seed and threshold and changes only its revision. Six remaining contracts are byte-identical to round02;3920 guard rows were independently reclassified.
+
+This accepts design corrections only. Historical exact source/compiled pack demonstrate ordering; they do not bind the newly edited current source or image. Concrete fixture bytes, residual-support certificates, adapter/verifier parity, final clean statistical freeze, resource/retention/wallclock rules and root authorization remain prerequisites. No full4930-card fixture was generated. Human450 HOLD, runtime browser/restore/product gates and full P05 remain unaccepted.

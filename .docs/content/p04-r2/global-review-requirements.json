@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "source": ".docs/implementation/evidence/Venus_P04_FULL_REVIEW_450_2026-10-19.md",
+  "scope": "Requirements extracted from sections 3, 4, 6, 7 and 8; content corrections do not implement application behavior.",
+  "requirements": [
+    {
+      "id": "P04-GLOBAL-COMFORT",
+      "requirement": "Check the independent global comfort level of both players. It is not a per-pair value and is not copied from P1 to P2.",
+      "scenarios": ["V01", "V10"],
+      "implementation_status": "REQUIRES_RUNTIME_VERIFICATION"
+    },
+    {
+      "id": "P04-GLOBAL-DIRECTED-RELATIONS",
+      "requirement": "P1→P2 and P2→P1 are independent private directed relations. Selection or refusal must not reveal a relation or its asymmetry to participants or the room.",
+      "scenarios": ["V02"],
+      "implementation_status": "REQUIRES_RUNTIME_VERIFICATION"
+    },
+    {
+      "id": "P04-GLOBAL-QUIET-PUBLIC-OPT-IN",
+      "requirement": "Before publicly addressing a pair, offer P2 a quiet way to decline. Publish neither the private refusal nor its motive; public wording alone is insufficient.",
+      "scenarios": ["V03"],
+      "implementation_status": "NOT_IMPLEMENTED_BY_THIS_CONTENT_CHANGE"
+    },
+    {
+      "id": "P04-GLOBAL-YB-CONFIRMATION",
+      "requirement": "A changed yes_but condition requires a fresh free decision by P1 and explicit confirmation by both for the identical final terms. Either can withdraw; one player's rejection is sufficient to stop.",
+      "scenarios": ["V04", "V05", "V10", "V11"],
+      "implementation_status": "REVISED_DRAFT_RESPONDER_TEXT_ONLY; RUNTIME_VERIFICATION_REQUIRED"
+    },
+    {
+      "id": "P04-GLOBAL-PRIVATE-CHANNEL",
+      "requirement": "Private in-person cards remain S3/C1 with bilateral eligible relations. Online private cards require a functioning private text chat for both devices. Offline chat-only cards are unavailable without that chat. Never silently send their answers to the room.",
+      "scenarios": ["V01", "V08", "V11"],
+      "implementation_status": "EXISTING_PRIVATE_THRESHOLDS_RETAINED; RUNTIME_VERIFICATION_REQUIRED"
+    },
+    {
+      "id": "P04-GLOBAL-TEXT-ACCESSIBILITY",
+      "requirement": "TD-1001, TD-1009, TD-1011 and YB-1009 offer an equivalent written alternative. Text-only players are never forced to use camera, gesture or voice.",
+      "scenarios": ["V07"],
+      "implementation_status": "DRAFT_TEXT_ALTERNATIVES_ADDED; UI_VERIFICATION_REQUIRED"
+    },
+    {
+      "id": "P04-GLOBAL-STAGE-INHERITANCE",
+      "requirement": "min_progression_stage is a minimum threshold: stage 2 can use otherwise eligible stage-1 cards. Private eligibility is still excluded before stage 3. No content-only change may lower private thresholds.",
+      "scenarios": ["V09"],
+      "implementation_status": "METADATA_FOLLOWS_EXISTING_ENGINE_MINIMUM_STAGE_CONTRACT; INTEGRATION_TEST_REQUIRED"
+    },
+    {
+      "id": "P04-GLOBAL-SEMANTIC-EXCLUSION",
+      "requirement": "Bind the 21 explicit semantic clusters to scheduling and test cross-mode/same-pair/same-session repetition. A zero token-Jaccard queue is not semantic completeness or scheduling enforcement.",
+      "scenarios": ["V12", "V13"],
+      "implementation_status": "CLUSTER_MAP_ONLY; RUNTIME_NOT_IMPLEMENTED_BY_THIS_CHANGE"
+    },
+    {
+      "id": "P04-GLOBAL-PRIVACY-PROMISE",
+      "requirement": "YB-1148 may describe a voluntary agreement not to quote messages. It must not promise to prevent screenshots, copying or retelling. Corrected text remains quarantined under the authoritative HOLD until verified.",
+      "scenarios": ["V06", "V14"],
+      "implementation_status": "DRAFT_CORRECTION_QUARANTINED"
+    },
+    {
+      "id": "P04-GLOBAL-TEMPLATE-AND-LANGUAGE",
+      "requirement": "Shorten fixed addressing/private prefixes only alongside an actual UX contract preserving context and consent. Verify the edited RU/EN/TR meanings, Turkish individual veto and Unicode with competent reviewers. No human approval is inferred for new hashes.",
+      "scenarios": ["V14", "V15"],
+      "implementation_status": "LOCAL_DRAFT_CORRECTIONS_ONLY; GLOBAL_UI_EXTRACTION_AND_LANGUAGE_VERIFICATION_PENDING"
+    }
+  ]
+}

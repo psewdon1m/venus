@@ -1,0 +1,178 @@
+[
+  {
+    "at_utc": "2026-10-20T20:11:43.765415+00:00",
+    "name": "OCI-binding09",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-compatible-rollback-producer08\\author-rebind-controls.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:43.817849+00:00",
+    "name": "OCI-describe",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-compatible-rollback-producer08\\driver.mjs",
+      "--describe"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:43.873064+00:00",
+    "name": "OCI-unissued-ACK",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--max-old-space-size=192",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-compatible-rollback-producer08\\driver.mjs",
+      "--run",
+      "--ack=C:\\.projects\\venus\\.artifacts\\p05-a7-rebind-author01\\unissued-OCI-ACK.json"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "at_utc": "2026-10-20T20:11:44.327918+00:00",
+    "name": "OCI-source1846",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--input-type=module",
+      "-e",
+      "const m=await import(\"file:///C:/.projects/venus/.artifacts/p05-pilot-bundle-source04/.artifacts/p05-compatible-rollback-producer08/source-proof.mjs\");const r=await m.verifyIncluded();console.log(JSON.stringify({identity:r.identity,files:Object.keys(r.files).length}));"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:44.370533+00:00",
+    "name": "OCI-binding-syntax",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-compatible-rollback-producer08\\author-rebind-controls.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:44.632161+00:00",
+    "name": "OCI-binding-lint",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\node_modules\\eslint\\bin\\eslint.js",
+      "--config",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-compatible-rollback-producer08\\author-eslint.config.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-compatible-rollback-producer08\\author-rebind-controls.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:44.973609+00:00",
+    "name": "normal-author19",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--test",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-normal-rollback-probe02\\controls.test.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:45.024762+00:00",
+    "name": "normal-unissued-ACK",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-normal-rollback-probe02\\outer.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-normal-rollback-probe02\\ROOT-ACK.template.json"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "at_utc": "2026-10-20T20:11:45.089766+00:00",
+    "name": "layout-binding05",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-a7-rebind-author01\\layout-binding-controls.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:45.142945+00:00",
+    "name": "layout-unissued-ACK",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-v2-layout-producer-resume06\\run.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "at_utc": "2026-10-20T20:11:45.186221+00:00",
+    "name": "layout-run-syntax",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-v2-layout-producer-resume06\\run.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:45.227280+00:00",
+    "name": "layout-policy-syntax",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "--check",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-v2-layout-producer-resume06\\runner-policy.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:46.162370+00:00",
+    "name": "normal-lint",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\node_modules\\eslint\\bin\\eslint.js",
+      "--no-ignore",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-normal-rollback-probe02\\probe.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-normal-rollback-probe02\\outer.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-normal-rollback-probe02\\controls.test.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "at_utc": "2026-10-20T20:11:47.063529+00:00",
+    "name": "layout-lint",
+    "argv": [
+      "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+      "C:\\.projects\\venus\\node_modules\\eslint\\bin\\eslint.js",
+      "--config",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-v2-layout-producer-resume06\\eslint.config.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-v2-layout-producer-resume06\\run.mjs",
+      "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04\\.artifacts\\p05-v2-layout-producer-resume06\\runner-policy.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source04",
+    "exit_code": 0,
+    "expected": 0
+  }
+]

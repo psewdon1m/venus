@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "status": "PASS_PRE_SIGN_STANDALONE_LOCAL_PILOT",
+  "review": "INDEPENDENT_SECURITY_SIGNING_E07_CURRENT_LOCAL_ACTUAL_AND_COMPATIBILITY",
+  "independent_nonauthor": true,
+  "pre_sign_pass": true,
+  "local_component_result": "PASS",
+  "source_git": "911ac0771541a5f2c3c01f766f6222f383c21565",
+  "source_identity": "5a917292b99797afaaf58c7f41e21a1a24cf3358d923da071cad782a96f5f087",
+  "source_files": 1944,
+  "clone_clean": true,
+  "all_frozen_hashes_match_root_and_clone": true,
+  "source_delta_files": 2,
+  "product_runtime_operator_driver_security_unchanged": true,
+  "open_source_findings": [],
+  "E07": {
+    "measured_local_socket_GID": 0,
+    "full_portability_closed": false,
+    "consumer_operator_privileges_changed": false,
+    "local_actual10": "PASS",
+    "group_grant": "TRUSTED_EXECUTOR_ONLY",
+    "socket_permissions_weakened": false,
+    "GID_source": "stat_same_mounted_Docker_socket",
+    "source_fix": "ACCEPTED",
+    "GitHub_nonzero_GID_confirmation": "PENDING_NEW_HEAD_REQUIRED_CI"
+  },
+  "gates": [
+    {
+      "gate_id": "PLAN-P06-RELEASE",
+      "pre_sign_status": "PASS_SOURCE_PROTOCOL_OWNER_APPROVED_ENVIRONMENT",
+      "full_stage_status": "HOLD_NEW_HEAD_ALL9CI_AND_REAL_SERVICE_ARTIFACTS"
+    },
+    {
+      "gate_id": "PLAN-P06-INSTALL",
+      "pre_sign_status": "PASS_CURRENT_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT_GITHUB_NONZERO_AND_SERVICE_IMAGE_PENDING"
+    },
+    {
+      "gate_id": "PLAN-P06-SCOPE",
+      "pre_sign_status": "PASS_SECURITY_APPLICABILITY_LOCAL_PORTION",
+      "full_stage_status": "PENDING_COMBINED_PER_ID_RELEASE_DECISION",
+      "historical_ids": 118
+    },
+    {
+      "gate_id": "PLAN-P06-BACKUP",
+      "pre_sign_status": "PASS_CURRENT_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT"
+    },
+    {
+      "gate_id": "PLAN-P06-UPDATE-ACL",
+      "pre_sign_status": "PASS_CURRENT_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT"
+    },
+    {
+      "gate_id": "PLAN-P06-FAULTS",
+      "pre_sign_status": "PASS_CURRENT_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT"
+    },
+    {
+      "gate_id": "PLAN-P06-MONOTONIC",
+      "pre_sign_status": "PASS_CURRENT_LOCAL",
+      "full_stage_status": "PASS_LOCAL_COMPONENT"
+    },
+    {
+      "gate_id": "PLAN-P06-RECOVERY",
+      "pre_sign_status": "PASS_CURRENT_LOCAL_MEASURED_PROFILE",
+      "full_stage_status": "PASS_LOCAL_COMPONENT_NO_PRODUCTION_SLA"
+    }
+  ],
+  "actual10": {
+    "host_commands": 37,
+    "all_host_command_exit0": true,
+    "native_host_exit": 0,
+    "uids": {
+      "executor": 1001,
+      "consumer": 1000,
+      "operator": 1002
+    },
+    "full_count_comparisons": 11,
+    "fixture_keys_only": true,
+    "count_mismatches": 0,
+    "cleanup": "COMPLETE_NO_ERRORS",
+    "SIGKILL_phases": 9,
+    "checks_pass": 18,
+    "durable_jobs": 17,
+    "native_report_sha256": "e743c6e074fc1ffd689716668444264c89e3647ae6b4931fe8f981155f65ff16",
+    "DRILL_sha256": "988d1ba4cba5157021a0fb2d2c17fdfe0e75392517ee6292d24449462371f5fd"
+  },
+  "recovery_measurements": {
+    "min_ms": 2545,
+    "basis": "UTC_EVENT_INTERVALS_NOT_ENGINE_STOPWATCH_OR_SLA",
+    "recovery_intervals": 7,
+    "zero_unexplained_backup_loss": true,
+    "arithmetic_mismatches": 0,
+    "local_quality_concurrency": false,
+    "original_job_intervals_and_backup_ages_recomputed": 17,
+    "external_post_backup_admin_writes": 1,
+    "max_ms": 9198,
+    "required_newer_policy_deletion": 1,
+    "external_post_backup_admin_writes_restored": 0
+  },
+  "lint14": "EXIT0",
+  "proof_refs": [
+    {
+      "path": ".docs/implementation/evidence/p06/service-source-freeze02/INDEX.json",
+      "sha256": "05fc8f20ecd6a51dfec23e1a14406201bfac4b5895f70c77faf716e4a18eb5d5"
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/docker-round10/INDEX.json",
+      "sha256": "67b430fd8d9903cd56cf7c070f4fbf82e3a5aef301d9fb96f99b6d01d548e282",
+      "files": 39,
+      "hash_size_mismatches": 0
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/service-preflight02/INDEX.json",
+      "sha256": "39ca16297059d618e7861823b058ea2a189acf5642632f465ffae32c684a65ad",
+      "files": 5,
+      "hash_size_mismatches": 0
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/recovery-measurements02/INDEX.json",
+      "sha256": "87edb7d22f874e1817ec01b3c8203cdbb6b88a6ac565088f2807de7ff0f72619",
+      "files": 1,
+      "hash_size_mismatches": 0
+    },
+    {
+      "path": ".docs/implementation/evidence/p06/github-pr-fail01/INDEX.json",
+      "sha256": "6cda902676883a34dc21c9ce684b7a6d7462fba928ee0a3a505cdd3a5de1fec8",
+      "status": "HISTORICAL_FAIL_PRESERVED"
+    },
+    {
+      "path": ".docs/implementation/reviews/p06/security-signing-round01/INDEX.json",
+      "sha256": "c4ff20b0701ae9ba5978b35876739144b0c65af426d72c98994a505b5dcf6730",
+      "reuse": "UNCHANGED_OWNER_APPROVAL_SIGNING_PROTOCOL_AND_PRODUCT_REBIND_NOT_NEW_RUN"
+    }
+  ],
+  "prior_proof_rebind": {
+    "stale_PR358a": "P06_FAILED_FOUR_LONG_STATS_CANCELED_OTHER_SUCCESSES_HISTORICAL_NOT_NEW_HEAD_PASS",
+    "unit10": "HISTORICAL_c9ecc8_COREa1c994_28PASS_UNCHANGED_UNIT_INPUTS_NOT_NEW_RUN",
+    "docs03": "HISTORICAL_c9ecc8_1914MARKDOWN_PASS_NOT_NEW_RUN",
+    "quality03": "HISTORICAL_92b7f9_COREfe517_UNCHANGED_PRODUCT_NOT_NEW_RUN"
+  },
+  "owner_approval": "U020_SAME_KEY_UNCHANGED",
+  "key_id": "59a72237edc78adf5874cd609471324108e55b2ac6e81f7ac63ed31f1038e1fb",
+  "full_stage_status": "HOLD_NEW_HEAD_REQUIRED_CI_AND_ACTUAL_SIGNED_PUBLISHED_SERVICE",
+  "pending_real_checks": [
+    "New head all9 CI including E07 measured nonzero GitHub socket GID",
+    "Exact main qualified tag and immutable service OCI/config image identity",
+    "Actual service candidate install and approved real key signature",
+    "Immutable published signed assets and anonymous GitHub verification",
+    "Owner sets GHCR Public then anonymous exact OCI pull for fresh install"
+  ],
+  "actual_service_image_exists": false,
+  "production_approval": false,
+  "fixture_is_service_PASS": false,
+  "reviewer_executed_tests": false,
+  "reviewer_runtime_Git_admin_actions": false,
+  "reviewer_private_or_credential_reads": false,
+  "deferred": [
+    "production dedicated/rootless daemon isolation",
+    "production DNS TLS UDP",
+    "mobile/realdevices",
+    "external backup copy"
+  ],
+  "content450": "HOLD_UNCHANGED",
+  "content470": "TEMPORARY_OWNER_LOCAL_PILOT_UNCHANGED",
+  "P07_started": false,
+  "write_status": "COMPLETE_STOP"
+}

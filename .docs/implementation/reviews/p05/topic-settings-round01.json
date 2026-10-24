@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "review_id": "P05-TOPIC-SETTINGS-ROUND01",
+  "reviewer": "/root/p05_topic_planner_review",
+  "created_at": "2026-10-19T16:29:36.875713+00:00",
+  "status": "CHANGES_REQUESTED",
+  "source_identity": "283afb9e842aaa5d561d55c05ad1bf2ba0c2135d6e8b17ecc424338403c0a806",
+  "own_adapter_execution": {
+    "passed": 15,
+    "failed": 1,
+    "exit_code": 1,
+    "source": "frozen original"
+  },
+  "original_docker_evidence": {
+    "inspected": true,
+    "reexecuted": false,
+    "checks_passed": 8
+  },
+  "own_real_sql": {
+    "negative_rejections": 10,
+    "cascade_pass": true,
+    "deferred_delete_insert": "accepted; external descriptor must deny mismatch",
+    "cleanup": "completed"
+  },
+  "findings": [
+    {
+      "id": "TOPICSET001",
+      "priority": "P1",
+      "status": "OPEN_ORIGINAL_ROUND",
+      "path": "apps/api/src/private-topic-preferences.ts",
+      "line": 132,
+      "description": "Expired credential can irreversibly narrow ledger before authorization final fence; SQL rollback does not undo ledger"
+    }
+  ],
+  "evidence": [
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.auth-expiry-fail.txt",
+      "bytes": 1569,
+      "sha256": "08b8db6d6ac49cfe46df0b703d29350ec3dcb8d84810ee3e6e08ca56c3ae2b09"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.config.mjs",
+      "bytes": 185,
+      "sha256": "39c9e73f208bb069ad4e7077676496b91a8e56459115889b87d6d53ad5458688"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.image-check.txt",
+      "bytes": 1225,
+      "sha256": "f6d6b93f9f192b64e8c8058431f29ecfabeda7a896cbe90d2e110005ce38a1af"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.md",
+      "bytes": 5032,
+      "sha256": "e053824369bca31c0d2e8a0c6aab6e8cf0b408fc66bf21a45840b22c963fc40f"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.probes.test.ts",
+      "bytes": 9807,
+      "sha256": "a6908afece9bb0b36433750114a5920bb32b8325af97e2c2aa3a6aa3a8c26dca"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.probes.txt",
+      "bytes": 1275,
+      "sha256": "6502162f2947b0bb1a1b2fd10b8bcdc92b08d779efc323990a3642eecf99e223"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.sql-probes.py",
+      "bytes": 4990,
+      "sha256": "3b057010e15f410fa3ce71ce9436890ec44beb0ce8180ba02e8b338117585f08"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.inputs.json",
+      "bytes": 2260,
+      "sha256": "5abfa4404e1bbc89dc02cbd48f6616edefa6e265e5b368b9559dae0a54d54464"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.package-inspection.json",
+      "bytes": 279,
+      "sha256": "8d602d3eaa30de5e256e5c5cd06bce715a38eca99c9586711030efbd6acf6455"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.sql-raw.json",
+      "bytes": 8649,
+      "sha256": "438d84d5dbbc2ac9062da8291975055d8b383781017ba9803465900be5014e30"
+    },
+    {
+      "path": ".docs/implementation/reviews/p05/topic-settings-round01.sql-results.json",
+      "bytes": 1715,
+      "sha256": "9266be6d74458a92a8af875348a074197c5fef08188391137afb69a90e66505a"
+    }
+  ],
+  "limits": [
+    "No full P05/production/full restore/human approval",
+    "Lifecycle LIFE001-004 remain OPEN",
+    "Root subsequent fix not accepted in original round"
+  ]
+}

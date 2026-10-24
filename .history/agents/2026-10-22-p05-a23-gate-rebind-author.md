@@ -1,0 +1,7 @@
+
+## 2026-10-22T20:06:51.740084+00:00
+Authorized narrowA23 source20/images21 metadata rebindUIa22-01→a23-01/OCI34→35. Oneownrunpath+strict1876→1877 literals;25UI/40OCIexact. Existingcoldpins/falseACKonly, noDocker/functionalcontrols/framework/APP/source/WIP edits. Rootauthorsresource09.
+
+2026-10-22T20:08:09.571500+00:00 Adaptedexistingmetadata copier exactroot21receipts/source20; UI2literal inverses/25rawexactA22 andOCI40rawexact34/A81current3web/B78add96 unchanged. Existingcoldsource1877/binding/runtime0+falseACKs1expected only. Resource09/guard07hashespinnedinactive/noexecute; noA23backupclaim. FrozenauthorINDEXec5ebb14454277601e0a8b2e6e474e232573d333470939dbd8695d036f6ea650 UIruntime3ed43338d349fc145095611a734152c5c72d0e7e36f2468c1c4e6ef4ffe9fbdc UIINDEX4989cc596978cf3a4982032db26f13b33e073802396ca1becc945af58fc69168 OCIINDEX6f1e68ad3446100d960fcddec4fa1c2c8e22045f8f700361c8f8396df540468e. NoDocker/APP/testframework edits; WIPunchanged. COMPLETE_STOP.
+
+2026-10-22T20:10:07.020564+00:00 AfterA23packetfreeze rootraisedrealpointerbuttonflowrisk: centeronfocus canmovebuttonbetweenmousedown/mouseup. Noexecutiondiagnosis claimed. Sentreviewer22HOLD perroot, advisedminimalmain :focus-visible guard preservingTabcentering andordinarypointerbutton; explicitlylimitedtextinputs/textarea focus-visible maymatchpointer, notallpointerflowdetector. A23packet/05/source unchanged; anyfix mustnew06/A24. NoAPP/Docker/tests.

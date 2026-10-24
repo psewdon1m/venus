@@ -1,0 +1,22 @@
+[
+  {
+    "command": ".venv/Scripts/python.exe .artifacts/p05-normal-continuity-readonly-audit01.py",
+    "exit_code": 0,
+    "scope": "READ_ONLY_HASH_AND_NATIVE_EVIDENCE_ASSERTIONS_NOT_APP_RUN"
+  },
+  {
+    "command": "rg archived method/{outer,probe}.mjs",
+    "exit_code": 1,
+    "scope": "POWERSHELL_PARSE_ERROR_NO_EXECUTION"
+  },
+  {
+    "command": "rg explicit archived outer.mjs probe.mjs",
+    "exit_code": 0,
+    "scope": "SOURCE_LINE_REFERENCE_READ"
+  },
+  {
+    "command": ".venv/Scripts/python.exe .artifacts/p05-normal-continuity-finish-audit01.py",
+    "exit_code": 0,
+    "scope": "READ_ONLY_CURRENT1860_QUALIFICATION_PLUS_OWN_REPORT_FREEZE"
+  }
+]

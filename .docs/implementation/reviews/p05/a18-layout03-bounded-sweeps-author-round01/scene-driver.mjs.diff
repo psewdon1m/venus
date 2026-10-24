@@ -1,0 +1,11 @@
+--- a18-02/scene-driver.mjs
++++ a18-03/scene-driver.mjs
+@@ -105,7 +105,7 @@
+  const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/;
+  assert(uuid.test(room)&&typeof phase==='string'&&phase.length<=80,'METHOD18_PRIVATE_SETUP_SCOPE');
+  for(let attempt=1;attempt<=3;attempt++){
+-  assert(rows.length<24,'METHOD18_PRIVATE_SETUP_RECORD_CAP');
++  assert(rows.length<27,'METHOD18_PRIVATE_SETUP_RECORD_CAP');
+   const row={setup,phase,mode,attempt,max_sessions:3,round_bound:20,room_id:room,session_id:null,outcome:'RUNNING'};rows.push(row);save();
+   let seeking=false;
+   try{

@@ -1,0 +1,109 @@
+{
+  "scope": "OWN_EXCLUDED_PROPOSED_READINESS_DESIGN_WITH_EXACT_ARCHIVED_CLICK_MUTATION_ACK_FLOW_AND_EXPLICIT_TIME_UI_DOUBLES_NOT_PRODUCT_OR_BROWSER",
+  "rows": [
+    {
+      "id": "archived_second_click_5s_ends_before_pending_ui_5070ms",
+      "status": "REPRODUCED_PRODUCER_TIMING_GAP",
+      "result": {
+        "result": "FAIL",
+        "time": 5000,
+        "commits": 1,
+        "clicks": 1,
+        "contentAssertions": 0,
+        "negatives": 6,
+        "error": "BOUNDED_WAIT_EXPIRED"
+      }
+    },
+    {
+      "id": "proposal_single8s_scope_control_readiness_then_same5s_content",
+      "status": "PASS",
+      "result": {
+        "result": "PASS",
+        "time": 9100,
+        "commits": 2,
+        "clicks": 2,
+        "contentAssertions": 2,
+        "negatives": 10
+      }
+    },
+    {
+      "id": "proposal_rejects_wrong_scope",
+      "status": "PASS",
+      "result": {
+        "result": "FAIL",
+        "time": 8000,
+        "commits": 1,
+        "clicks": 1,
+        "contentAssertions": 0,
+        "negatives": 6,
+        "error": "BOUNDED_WAIT_EXPIRED"
+      }
+    },
+    {
+      "id": "proposal_rejects_never_control",
+      "status": "PASS",
+      "result": {
+        "result": "FAIL",
+        "time": 8000,
+        "commits": 0,
+        "clicks": 0,
+        "contentAssertions": 0,
+        "negatives": 3,
+        "error": "BOUNDED_WAIT_EXPIRED"
+      }
+    },
+    {
+      "id": "proposal_rejects_disabled",
+      "status": "PASS",
+      "result": {
+        "result": "FAIL",
+        "time": 8000,
+        "commits": 1,
+        "clicks": 1,
+        "contentAssertions": 0,
+        "negatives": 6,
+        "error": "BOUNDED_WAIT_EXPIRED"
+      }
+    },
+    {
+      "id": "proposal_rejects_early_prompt",
+      "status": "PASS",
+      "result": {
+        "result": "FAIL",
+        "time": 0,
+        "commits": 1,
+        "clicks": 1,
+        "contentAssertions": 0,
+        "negatives": 5,
+        "error": "Expected values to be strictly equal:\n\n1 !== 0\n"
+      }
+    },
+    {
+      "id": "proposal_rejects_late_prompt",
+      "status": "PASS",
+      "result": {
+        "result": "FAIL",
+        "time": 13100,
+        "commits": 2,
+        "clicks": 2,
+        "contentAssertions": 0,
+        "negatives": 9,
+        "error": "BOUNDED_WAIT_EXPIRED"
+      }
+    },
+    {
+      "id": "proposal_rejects_wrong_content",
+      "status": "PASS",
+      "result": {
+        "result": "FAIL",
+        "time": 9100,
+        "commits": 2,
+        "clicks": 2,
+        "contentAssertions": 1,
+        "negatives": 9,
+        "error": "Expected \"actual\" to be strictly unequal to:\n\n'wrong_content'"
+      }
+    }
+  ],
+  "actual_product_cause_confirmed": false
+}

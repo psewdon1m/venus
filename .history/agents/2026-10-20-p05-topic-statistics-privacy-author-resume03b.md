@@ -1,0 +1,7 @@
+# P05 statistics03b privacy correction author
+
+- 2026-10-20T16:23:00.161414+00:00 — Root assigned narrow correction STATS-R03-R01-001 from independent INDEX f4f989d11ce6faaf1805a93b10a3fb7a21a29cc86a66e39ee9f7da4cc821c81b. Preserve frozen03/FAIL and separate04 WIP. New03b only: shared bounded error/stop metadata projection, canary controls, corrected feasibility fact binding. No Docker/PG/full statistics; counts/seeds/thresholds/resource limits unchanged.
+
+- 2026-10-20T16:24:30.102681+00:00 — Added shared safe-metadata allowlists/projection, used by ledger/sink and supervisor control receipt. Actual original Error retained internally. First privacy control exit1: author attempted poisoned append after abort had correctly closed sink; preserved failed control bytes, moved cause check before abort. No producer closed-state semantics changed.
+
+- 2026-10-20T16:25:34.043531+00:00 — Final03b frozen INDEX600dd131e7d49c28f41a9aa50a8a5496c26820d9ca942fdcce6125d4c680b125 /107 children verified. Shared bounded projection21privacy controls PASS;73 inherited controls PASS;2 own synthetic Windows tree stops PASS,10commands0/27syntax0/lint0. Actual stop/controller/dispatch/counts/seeds/thresholds/resources exact03. FEASIBILITY now points acceptedMETHOD10 actual1df4c9fa/indep ecc2ada6, removes old conditional scaling from active fact model while preserving bytes. No Docker/fullstats/runtime84. Independent repeat required,04 WIP separate and preserved.

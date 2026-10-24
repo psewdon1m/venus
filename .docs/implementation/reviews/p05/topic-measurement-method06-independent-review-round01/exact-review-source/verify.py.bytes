@@ -1,0 +1,39 @@
+import hashlib,json,sys
+from pathlib import Path
+sys.path.insert(0,'tools')
+from stage_inventory import inventory,identity
+base=Path('.docs/implementation/reviews/p05')
+p=base/'topic-measurement-method-preparation-round06'
+out=Path('.docs/implementation/reviews/p05/topic-measurement-method06-independent-review-round01')
+out.mkdir(parents=True,exist_ok=True)
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+expected={'topic-measurement-method-preparation-round06':'f89a09a96bc86ca5a9d8249f00e51a1a657e0f37dcb7d953083bd487eb29792f','topic-measurement-method05-independent-review-round01':'4977fad4adaeaf5298ef6aaaef127fd9e34c4eaef20a53c74ddd602c20e36b86','topic-measurement-method-preparation-round05':'f9124f6669057acf18e52ae283f8631fb957200174fa9069a61ef42c27984034'}
+packets={}
+for name,h in expected.items():
+ q=base/name; assert sha(q/'INDEX.json')==h
+ rows=json.loads((q/'INDEX.json').read_text('utf-8-sig'))['files']
+ for r in rows:
+  f=q/r['path']; assert sha(f)==r['sha256'],str(f); assert f.stat().st_size==r['bytes'],str(f)
+ packets[name]={'index_sha256':h,'verified_children':len(rows)}
+handoff=json.loads((p/'HANDOFF.json').read_text()); assert sha(p/'HANDOFF.json')=='ed8dc121686884d0e3b00fa9624212b8d55405074704ea722b26a267f3c16b5a'
+for r in handoff['code']:
+ assert sha(r['original_path'])==r['sha256']; assert sha(p/r['snapshot_path'])==r['sha256']; assert Path(r['original_path']).stat().st_size==r['bytes']
+reuse=json.loads((p/'raw/windows-output-hash-qualified-reuse.json').read_text())
+old=base/'topic-measurement-method-preparation-round05'
+assert sha(old/reuse['raw'])==reuse['raw_sha256']==sha(p/'raw/windows27-original05.stdout.txt')
+raw=json.loads((old/reuse['raw']).read_text()); assert raw['count']==27
+for n,h in reuse['source'].items():
+ assert sha(Path('.artifacts/p05-topic-measurements-method06')/n)==h
+ assert sha(old/'exact-source'/(n+'.bytes'))==h
+ assert raw['source'][n]==h
+diff=json.loads((p/'raw/exact-diff.json').read_text())
+for r in diff:
+ assert sha(Path('.artifacts/p05-topic-measurements-method06')/r['name'])==r['after_sha256']
+ assert sha(old/'exact-source'/(r['old_name']+'.bytes'))==r['before_sha256']
+receipt=Path('.artifacts/p05-renewal-image-build-receipt01.json'); assert sha(receipt)=='2dae88a270c9a9a3fbc33386b09ae98585bebb49d6d26e1a3f6d95c8ddf443e5'
+rec=json.loads(receipt.read_text()); assert len(rec['host_compiled_files_sha256'])==64
+for n,h in rec['host_compiled_files_sha256'].items(): assert sha(n)==h,n
+files=inventory(); ident=identity(files); assert ident==handoff['source_context']['identity']; assert len(files)==1813
+result={'status':'PASS_INDEPENDENT_HASH_VERIFICATION','packets':packets,'workspace_snapshot_pairs':len(handoff['code']),'compiled_host_pins':64,'included_source_identity':ident,'included_files':len(files),'windows27':'HASH_QUALIFIED_REUSE_NOT_REEXECUTED','reuse_4_exact_inputs':reuse['source'],'raw_windows_sha256':reuse['raw_sha256'],'source_diff_rows':len(diff),'docker_calls':0,'prepare_calls':0,'selector_invocations':0}
+(out/'hash-verification.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps(result,indent=2))

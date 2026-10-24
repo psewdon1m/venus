@@ -1,0 +1,27 @@
+✖ RP001 negative phase must reject stale monitor that stopped before app started (3.2342ms)
+✔ positive control: observer recorded an actual listener and must reject (1.1469ms)
+✔ positive control: sample count below minimum must reject (11.6041ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 2
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 93.0287
+
+✖ failing tests:
+
+test at .docs\implementation\reviews\p05\runtime-producer-round01\probe.mjs:10:1
+✖ RP001 negative phase must reject stale monitor that stopped before app started (3.2342ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async TestContext.<anonymous> (file:///C:/.projects/venus/.docs/implementation/reviews/p05/runtime-producer-round01/probe.mjs:10:257)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /monitor|observation|fresh|progress/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }

@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "evaluated_at_utc": "2026-10-19T02:12:59.163066+00:00",
+  "source_sha": "4a7d5877b7e860d152c8c49ae768b646f3cb163f",
+  "source_identity_sha256": "9e75a7d70a591b38dafcf40c8dbea6a7383fc97d561bd5b739d9513c70062f77",
+  "technical_packet": {
+    "path": ".docs/implementation/evidence/p04/ci/technical-gate.json",
+    "sha256": "a6d529ff4b34ab6a95c546f2fe9db4f1ae9b382d341dc538d449eb55bd7039f0"
+  },
+  "technical_scope": "P04-TECHNICAL-1",
+  "technical_status": "PASSED",
+  "full_gate": "EXIT-P04",
+  "full_gate_status": "BLOCKED_EXTERNAL",
+  "blockers": [
+    "P04-HUMAN-REVIEW: real competent editorial/safety/rights/RU/EN/TR decisions and reconstructed reviewed pack missing"
+  ],
+  "checks": [
+    {
+      "command": [
+        "tools/p04_gate.py",
+        "verify-technical",
+        "--packet",
+        ".docs/implementation/evidence/p04/ci/technical-gate.json"
+      ],
+      "actual_exit_code": 0,
+      "output": {
+        "path": ".docs/implementation/evidence/p04/ci/technical-verification.txt",
+        "sha256": "39a72460e46c39bc41af1cc7ae1c5b894efae00e9da696b08b339f48c3156f03"
+      }
+    },
+    {
+      "command": [
+        "tools/p04_gate.py",
+        "verify",
+        "--packet",
+        ".docs/implementation/evidence/p04/ci/technical-gate.json"
+      ],
+      "actual_exit_code": 1,
+      "output": {
+        "path": ".docs/implementation/evidence/p04/ci/full-exit-verification.txt",
+        "sha256": "03eb70635017216d9acdac8fc950221398271afa119fdcafed97c6644ff76823"
+      }
+    }
+  ],
+  "public_release_authorized": false
+}

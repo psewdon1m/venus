@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8
+    environment:
+      POSTGRES_DB: venus
+      POSTGRES_USER: venus
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes: [postgres-data:/var/lib/postgresql/data]
+    networks: [isolated]
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U venus -d venus"]
+      interval: 2s
+      timeout: 2s
+      retries: 45
+  browser:
+    image: ${VENUS_P05_IMAGE:?Set exact local test image ID}
+    init: true
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    shm_size: 1gb
+    mem_limit: 3g
+    cpus: 2
+    tmpfs: ["/tmp:size=1g,mode=1777,exec", "/home/node:size=64m,uid=1000,gid=1000"]
+    environment:
+      DB_HOST: db
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      VENUS_P05_ISOLATED_FIXTURE: "1"
+      P05_ARTIFACT_DIRECTORY: /artifacts
+      P05_ENGINE: ${P05_ENGINE:-all}
+      P05_CASE: ${P05_CASE:-}
+    secrets: [db_password]
+    volumes: ["${VENUS_P05_ARTIFACT_DIRECTORY:?Set owned output directory}:/artifacts"]
+    networks: [isolated]
+    depends_on:
+      db: {condition: service_healthy}
+secrets:
+  db_password:
+    file: ${VENUS_P05_DB_PASSWORD_FILE:?Set generated temporary secret}
+volumes:
+  postgres-data:
+networks:
+  isolated: {internal: true}

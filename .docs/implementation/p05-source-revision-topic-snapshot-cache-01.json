@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "revision": "P05-TOPIC-SNAPSHOT-CACHE-01",
+  "kind": "COMPATIBLE_APPLICATION_OPTIMIZATION",
+  "source_baseline": {
+    "source_identity": "6562438b8bc1b413ff717bf03ecf4d47380c71ea12a358264ba02b7675ece10e",
+    "included_files": 1850,
+    "actual_forensic_project": "venus-pilot470-150f8707e0f4",
+    "actual_status": "FAIL_PROFILE_OR_TOTAL_DEADLINE_601981MS_13ROUNDS_NO500"
+  },
+  "behavior": [
+    "Per-TopicGames validated immutable snapshot memoization keyed exact authenticated ciphertext+room/session+pack/map object identities, preserving the exact snapshot object for existing engine eligibility WeakMap reuse.",
+    "Actual AES-GCM decrypt, AAD and keyring validation execute before every cache lookup; only repeated immutableTopicSnapshot construction/validation is skipped on a match.",
+    "32entry LRU, absolute nonrenewing30s native monotonic TTL; unref timer evicts idle entries, boot/purge/serviceclose clear data; no global cache/dump/logger."
+  ],
+  "unchanged": [
+    "Current membership query on every read",
+    "source/catalog/revocation ledger/safety/presence/finalAuth/current history/clock floor/delivery checks",
+    "engine/planner/eligibility/RNG/policy/schema/data/wire contracts",
+    "18+ consent30s/invitation180s/private grant5s and all rate limits",
+    "ordinary profile600s and original test scenarios/counts"
+  ],
+  "source_files": {
+    "apps/api/src/topic-snapshot-cache.ts": "ccbf613df799bcc22dba8882a4981fff805f9e0365c3dc985512860fac23e2df",
+    "apps/api/src/topic-snapshot-cache.test.ts": "5146909693c282e1c3b1c8aa59f67714e902df3696d39587f2d7b1b96136c375",
+    "apps/api/src/topic-snapshot-cache-integration.test.ts": "ca12dc152e57dc37f0f9e6f27a1af8722763ce1ae9e5ba453a9414502bda9fb6",
+    "apps/api/src/topic-games.ts": "d07e9f2fcf11f69037ca8e5eb131f79ee97ec60b7c2c3c9b88c4e9f52547db95",
+    "apps/api/src/server.ts": "dee03eb3faedbd7a138fcbe349ea8dfc065394f061eb5197443be9b412c5a5d4"
+  },
+  "validation": "19new controls and targeted11suites178PASS; API tsc-b/lint0. These are source/host proofs, not actual latency measurements.",
+  "qualification": "A9 N4 demonstrates a real601981ms execution deadline with last200 self-actions3579ms, not reproduction of historical500. Snapshot churn is source-proven repeated work; speedup or sole cause is NOT_PROVEN. Same bounded ordinaryN4 must run after independent acceptance and new exact image/source binding.",
+  "compatibility": "No persisted or public contract migration; in-process derived values only. Fresh membership/source/auth and actual authenticated ciphertext remain authoritative.",
+  "rollback": "Restore coherent prior API image/source tuple, preserving DB/ledger/snapshots/history. Cache is process-local and emptied on shutdown/restart; no snapshot rewriting. PriorA9 latency limitation remains when reverted."
+}

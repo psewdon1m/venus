@@ -1,0 +1,70 @@
+
+ RUN  v5.0.5 C:/.projects/venus
+
+ ❯ apps/api/src/topic-ephemeral-lock.test.ts (10 tests | 4 failed) 14ms
+   ❯ ephemeral exclusive locks never supply data durability barriers (10)
+     × ledger consistent read retains exclusive/no-follow/fstat/unlink without directory fsync 6ms
+     × ledger failing operation releases only the verified owned lock 1ms
+     × room consistent read retains exclusive/no-follow/fstat/unlink without directory fsync 1ms
+     × room failing operation releases only the verified owned lock 1ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/api/src/topic-ephemeral-lock.test.ts > ephemeral exclusive locks never supply data durability barriers > ledger consistent read retains exclusive/no-follow/fstat/unlink without directory fsync
+ FAIL  apps/api/src/topic-ephemeral-lock.test.ts > ephemeral exclusive locks never supply data durability barriers > room consistent read retains exclusive/no-follow/fstat/unlink without directory fsync
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "/proc/self/fd/101",
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "/proc/self/fd/101",
+    ]
+
+
+Number of calls: 2
+
+ ❯ apps/api/src/topic-ephemeral-lock.test.ts:33:246
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  apps/api/src/topic-ephemeral-lock.test.ts > ephemeral exclusive locks never supply data durability barriers > ledger failing operation releases only the verified owned lock
+ FAIL  apps/api/src/topic-ephemeral-lock.test.ts > ephemeral exclusive locks never supply data durability barriers > room failing operation releases only the verified owned lock
+AssertionError: expected "vi.fn()" to not be called at all, but actually been called 2 times
+
+Received:
+
+  1st vi.fn() call:
+
+    Array [
+      "/proc/self/fd/101",
+    ]
+
+  2nd vi.fn() call:
+
+    Array [
+      "/proc/self/fd/101",
+    ]
+
+
+Number of calls: 2
+
+ ❯ apps/api/src/topic-ephemeral-lock.test.ts:36:278
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 6 passed (10)
+   Start at  00:54:56
+   Duration  208ms (transform 45%, import 32%, tests 18%, worker 5%)
+

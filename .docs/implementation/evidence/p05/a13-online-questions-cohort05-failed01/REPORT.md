@@ -1,0 +1,7 @@
+# A13 online Questions cohort05 actual failure
+
+ACTUAL_FAIL_WS_CAUSE_UNRESOLVED. Original accepted method05, exact A13 source5be63565/1863 and ordinary production image5dd2c30d, root ACKff0132a2. PILOT470-01..05 (N2..6) each completed20 distinct rounds/finishes PASS. PILOT470-06 (N7) completed6 then FAIL; PILOT470-07 (N8) NOT_RUN. Total106 completed/finishes,2701 requests,27 WS connections,six rooms created/closed,locale checks6,client cleanup COMPLETE/outer cleanup PASS, diagnostics0. No whole140/42/840 PASS.
+
+Saved error WS_FAILURE at finish_controls round7 after1604860ms global elapsed; last current GET200 duration3356ms. This aggregate WS fault may arise from close/error/oversized frame/JSON failure/not-open or overdue pong. Actual event/actor/native close code and pong age were not retained. Zero allowlisted HTTP request_failed events does not prove WebSocket handler success. No particular storage/queue/load cause is established. Root observed exec40614 terminal exit1; outer itself retains probe_exit1.
+
+At observation root prohibited any new TD/YB cohort; existing in_person/questions may finish and clean up. A14 changes only frontend; this A13 failure remains relevant to identical backend implementation, without being relabeled an A14 actual. Old N4 bounded20 PASS remains separate scoped evidence. No retry/reseed/deadline/oracle relaxation or test-selected passing subset is claimed. Independent diagnosis and a concrete correction/verification are required.

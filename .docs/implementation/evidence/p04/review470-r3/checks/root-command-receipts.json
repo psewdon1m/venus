@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-10-20T15:22:35.125Z",
+  "role": "ROOT_ACTUAL_COMMAND_RECEIPTS_NOT_INDEPENDENT_GATE",
+  "commands": [
+    {
+      "command": "Get-Content supplied Downloads files",
+      "exit_code": 1,
+      "result": "Both absent; existing same-named repository copies used and pinned."
+    },
+    {
+      "command": "bundled Python tools/validate_cards.py",
+      "exit_code": 1,
+      "result": "ModuleNotFoundError jsonschema; no schema PASS claimed."
+    },
+    {
+      "command": ".venv Python validate_cards.py final candidate --report checks/schema470-round03.json",
+      "exit_code": 0,
+      "result": "470files/470parsed/0errors"
+    },
+    {
+      "command": "node tools/card-catalog.mjs draft-check candidate checks/draft-check-round01",
+      "exit_code": 0,
+      "result": "Earlier candidate only; preserved c0cb7771 digest."
+    },
+    {
+      "command": "node tools/card-catalog.mjs draft-check candidate checks/draft-check-round02",
+      "exit_code": 0,
+      "result": "Final97bf4bb8digest; inputunchanged; duplicates0; tokenqueue0; neutral20PASS/privateCONTENT_GAP bothprofiles."
+    },
+    {
+      "command": "node .docs/content/p04-r3/record-authoring.mjs with PYTHON=.venv",
+      "exit_code": 0,
+      "result": "31recordtransactions,3validatedCASrequestrevisions,+139cardrevisions; originalsourceledgerunchanged."
+    },
+    {
+      "command": "node --check seven owned source modules",
+      "exit_code": 0,
+      "result": "All7syntaxchecks passed."
+    },
+    {
+      "command": "node .docs/content/p04-r3/check-handoff.mjs",
+      "exit_code": 0,
+      "result": "470cards/139sections/331unchanged/15markdown/20locallinks/11clusters."
+    },
+    {
+      "command": ".venv Python tools/check_docs.py",
+      "exit_code": 1,
+      "result": "623markdown/2UTF8errors outside owned scope.",
+      "errors": [
+        {
+          "path": ".docs/implementation/reviews/p05/oci-rollback-author-resume-round01/producer/README.md",
+          "error": "utf8 decode byte0x96 position1238"
+        },
+        {
+          "path": ".docs/implementation/reviews/p05/oci-rollback-author-resume-round02/producer/README-resume01.md",
+          "error": "utf8 decode byte0x96 position1238"
+        }
+      ]
+    }
+  ],
+  "runtime_source_modified": false,
+  "P05_proof_replaced": false,
+  "clean_source": false,
+  "human_approval": false
+}

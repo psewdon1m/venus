@@ -1,0 +1,28 @@
+--- METHOD16/real-text-probe.mjs
++++ METHOD17/real-text-probe.mjs
+@@ -29,6 +29,17 @@
+  assert.equal(value.css_zoom,'1');assert.equal(value.text_matches,true);assert.equal(value.clipped,false);assert.equal(value.bottom_reachable,true);assert(value.document_scroll_width<=value.document_client_width+2);assert(value.paragraphs>0&&value.text_lengths.every(n=>Number.isSafeInteger(n)&&n>0));
+  if(profile==='w320'){assert.equal(value.width,320);assert.equal(value.dpr,1);}else{assert.equal(profile,'native200');assert(nativeMeasurement?.x11_keyboard&&nativeMeasurement.isolated_browser);assert(Math.abs(value.dpr/nativeMeasurement.before_dpr-2)<=.02);assert(value.width<=nativeMeasurement.before_width/1.9);}
+ }
++/** Observe keyboard-scroll settlement without scrolling or extending the cell budget. */
++export async function awaitTextBottom(page,budget){
++ await bounded(budget,'text-bottom-reachable',async()=>{
++  const handle=await page.waitForFunction(()=>{
++   const hosts=document.querySelectorAll('[data-venus-owner-text-probe]');if(hosts.length!==1)return false;
++   const last=[...hosts[0].querySelectorAll('p')].at(-1);if(!last)return false;
++   const rect=last.getBoundingClientRect();return rect.bottom>0&&rect.bottom<=window.innerHeight+2;
++  },null,{polling:'raf',timeout:budget.remaining()});
++  await handle.dispose();
++ });
++}
+ export async function measureOwnerText({page,locale,profile,budget,report,save=()=>{},nativeMeasurement=null}){
+  assert(['w320','native200'].includes(profile));const selected=textRows(locale);assert(selected.length>0);report.real_text_observations??=[];
+  for(const row of selected){
+@@ -37,6 +48,7 @@
+   let primary=null;try{
+    const installed=await bounded(budget,'text-clone',()=>page.evaluate(installText,row));assert.equal(installed.paragraphs,row.rendered_parts.length);
+    await bounded(budget,'text-physical-scroll-focus',()=>page.locator('h1').first().click());await bounded(budget,'text-physical-scroll-end',()=>page.keyboard.press('Control+End'));
++   await awaitTextBottom(page,budget);
+    const geometry=await bounded(budget,'text-geometry',()=>page.evaluate(textGeometry,row.rendered_parts)),audit=await bounded(budget,'text-existing-dom-audit',()=>page.evaluate(domAudit));record.geometry=geometry;record.audit=audit;save();assertTextMeasurement(geometry,profile,nativeMeasurement);assert.equal(audit.locale,locale);assertObservation(audit);record.status='PASS';save();
+   }catch(error){primary=error;record.status='FAIL';save();}
+   finally{try{await bounded(budget,'owned-text-cleanup',()=>page.evaluate(({x,y})=>{const nodes=[...document.querySelectorAll('[data-venus-owner-text-probe]')];if(nodes.length>1)throw Error('EXACT_TEXT_OWNER_REQUIRED');nodes[0]?.remove();window.scrollTo(x,y);if(document.querySelector('[data-venus-owner-text-probe]'))throw Error('TEXT_PROBE_CLEANUP_FAILED');},before));record.cleanup='PASS';save();}catch(cleanupError){record.cleanup='FAIL';record.status='FAIL';save();primary??=cleanupError;}}

@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "status": "CHANGES_REQUESTED",
+  "scope": "INDEPENDENT_METADATA_ONLY_BROWSER_CHECKPOINT05_STATIC_REVIEW",
+  "created_at": "2026-10-19T19:47:03.987633+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "producer_author": "/root/p05_topics_ui",
+  "exact_inputs": [
+    {
+      "path": ".artifacts/p05-topic-browser/browser.mjs",
+      "sha256": "f355c084ff1c2b3050785ba8a55d43e248373ea0b9ed009274686e41326eb24f"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/runtime.mjs",
+      "sha256": "3baf673f606e230d3fcb12d3bef6b7118c3c5daee57ed95564148671f57c2688"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/run.mjs",
+      "sha256": "5f3fd2bf7a3f28cb940352658d5e0b317df9702370517b0c9a2942f1d84263e0"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/observations.mjs",
+      "sha256": "df50eca39925ffb05da14f7408580b1aad037c781903f42abd943bc44621ab13"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/frontend-validators.mjs",
+      "sha256": "d3ee1550fb63247e35f969ebb20646d5e9045ccd5ebf68e9783a290018a51d38"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/delivery-diagnostics.mjs",
+      "sha256": "27f6dfe2bc7953052cf6f5c3431314be0012b072deacf74607e9018741096e84"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/DESIGN.md",
+      "sha256": "616b41e2f33ebeac5704f72b3c93949e4076ed9e66d84c571e93dedacce568f9"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/README.md",
+      "sha256": "70576e9a9fa04033f0e6165132bee221a29f7ab7841a06a23071329b35d1b946"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/diagnostic05-static-result.json",
+      "sha256": "2a646168d8b1b4a872407a4c521c0f3bcc3abbed179c71cdb60aca2fd97eeb1c"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/lint-diagnostic05.json",
+      "sha256": "b10d34597129ead64bb42216c07321b2dd86bcadff10bdc0f822d5ca85adf4e8"
+    },
+    {
+      "path": ".artifacts/p05-topic-browser/HANDOFF.json",
+      "sha256": "667c5512c7a164dc6c392c83419b58dc417bde68c3e92d2c4203cda4461fa9ac"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "a04cc196ae20773acd179b33ecb413918f9628bb6b0a723c4714f2255becaf1a"
+    },
+    {
+      "path": "apps/web/src/presentation-clock.ts",
+      "sha256": "f9a1120a1fbff31454eafdfac269ea8163d9e7ef99d916f6ceeecb2f4cceccb0"
+    },
+    {
+      "path": "tests/p05-topic-lifecycle/harness.mjs",
+      "sha256": "06fb5638c7af93e6fbf62ca1d842e80ecc3fddb629455f14f4d524f9b57ea4fd"
+    }
+  ],
+  "snapshot_index_sha256": "60468ff64c8cb3232cb7a3b912a319a625a3fe0330636b5246408612046c2a82",
+  "snapshot_files_verified": 30,
+  "before_after_module_pins_unchanged": true,
+  "whole_source_status": "ROOT_UNDER_EDIT_NOT_FROZEN;895 descriptor/image/runner guard is historical and not authorized for nextRUN",
+  "findings": [
+    {
+      "id": "METADATA-R01-UI_SCOPE_OVERRIDE",
+      "severity": "P2",
+      "location": "delivery-diagnostics.mjs makeScope",
+      "evidence": "An observed UI tuple from another session/round at same game_rev gives original validTopicTarget=false, but recorded validators.request_ui=true because route IDs replace observed session/round. Separate tuple comparison is false, creating contradictory/mislabeled validation evidence.",
+      "required_fix": "Use exact observed UI session/round/rev for request_ui/response_ui validator calls. Add separately labelled route/body self-consistency result if desired; never repair observed scope. Explicit identity/transport placeholders remain unobserved."
+    },
+    {
+      "id": "METADATA-R02-UNBOUNDED_PENDING",
+      "severity": "P2",
+      "location": "createDeliveryDiagnostics response work/pending/conversations",
+      "evidence": "Configured HTTP limit2 with five response.json promises that never settle retains pending5. Rings bound completed metadata only; pending body observers/conversation promises have no cap and can survive flush timeout.",
+      "required_fix": "Bound in-flight diagnostic observers and corresponding conversation state independently of completed rings. Overflow must drop/skip only diagnostic work with explicit counters; do not cancel or modify app responses. Resolve/forget observation promises on completion, cycle eviction and page close; late callbacks must not revive cleared diagnostic state. Test never-ending bodies, close and delayed completions. Keep flush bounded and pending/overflow visible."
+    },
+    {
+      "id": "METADATA-R03-MISSING_V2_TYPE",
+      "severity": "P2",
+      "location": "WS framereceived type filter",
+      "evidence": "Actual protocol2 privateDelivery type private_conversation_v2 does not contain a dot and is logged null by the regex. This drops the exact event type needed to distinguish last V2 private frames.",
+      "required_fix": "Explicit bounded known event-type enum including private_conversation_v2 and applicable room/game/clear types; unknown types get an unknown marker/counter, not arbitrary raw type text. Test real V2 event type and unknowns without logging private payload."
+    }
+  ],
+  "checks": {
+    "copied_author_controls_pass": 15,
+    "independent_counterexamples_confirmed": 3,
+    "original_case_AST_unchanged": 16,
+    "original_flow_helpers_AST_unchanged": 21,
+    "readonly_loader": "Exact frontend pins + isolated original TS transpile/dependency allowlist inspected; no copied validator implementation",
+    "raw_private_fields": "safeDto whitelist examined and author canary controls pass; no product/private-payload log claim from new findings",
+    "runner": "unchanged old895 binding requires refresh and independent input check before RUN"
+  },
+  "product_bug_claimed": false,
+  "docker_browser_or_product_writes": false,
+  "no_functional_run_acceptance": true,
+  "full_stage_pass": false
+}

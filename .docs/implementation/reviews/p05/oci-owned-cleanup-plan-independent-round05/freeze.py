@@ -1,0 +1,6 @@
+from pathlib import Path
+import hashlib,json,datetime
+o=Path(__file__).resolve().parent;assert not(o/'INDEX.json').exists();a=json.loads((o/'AUDIT.json').read_text());e=json.loads((o/'EXECUTOR-STATIC.json').read_text())
+pin=lambda p:{'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()}
+d={'status':'PASS_PLAN_HISTORICAL_EXPORTS_ONLY','writes':'COMPLETE_STOP','plan_path':'.artifacts/p05-oci-owned-cleanup-plan05.json','plan_sha256':a['plan_sha256'],'executor_path':'.artifacts/p05-oci-owned-cleanup-execute05.py','executor_sha256':e['executor_sha256'],'executor_static_status':'PASS_NOT_EXECUTED_NOT_AUTHORIZED','projects':13,'metadata_objects':91,'saved_readonly_commands_checked':130,'current_Docker_queries':0,'native_operations':0,'cleanup_authority':'NOT_AUTHORIZED_HOLD','full_forensic_or_private_backup':False,'all_future_prerequisites_still_required':True,'findings':[],'created_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':{p.relative_to(o).as_posix():pin(p)for p in sorted(o.rglob('*'))if p.is_file()and p.name!='INDEX.json'}}
+(o/'INDEX.json').write_text(json.dumps(d,indent=2)+'\n',encoding='utf-8');print(json.dumps({'path':str(o/'INDEX.json'),**pin(o/'INDEX.json'),'children':len(d['files']),'status':d['status']}))

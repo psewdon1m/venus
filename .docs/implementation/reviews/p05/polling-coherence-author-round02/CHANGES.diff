@@ -1,0 +1,11 @@
+--- a/apps/web/src/topic-games-panel.tsx
++++ b/apps/web/src/topic-games-panel.tsx
+@@ -52,7 +52,7 @@
+   if(!validTopicRoundView(value,s)){
+    // The two authenticated reads may straddle a partner action. Never grant
+    // this newer bundle against old public state; the normal poll will reconcile.
+-   if(value&&typeof value==='object'&&'own'in value&&validSelfActions(value.own,2)&&value.own.schema_version===2&&value.own.game_rev!==null&&value.own.game_rev>s.rev&&validTopicRoundView(value,{...s,rev:value.own.game_rev})){clear();controls.revokeRound(value);return;}
++   if(value&&typeof value==='object'&&'own'in value&&validSelfActions(value.own,2)&&value.own.schema_version===2&&value.own.game_rev!==null&&value.own.game_rev>s.rev&&validTopicRoundView(value,{...s,rev:value.own.game_rev})){clear();controls.revokeRound({});return;}
+    throw new ApiError('SERVICE_UNAVAILABLE');
+   }
+   const received=presentationNow();if(!publishOwn(value.own,received)){cache.clear();return;}

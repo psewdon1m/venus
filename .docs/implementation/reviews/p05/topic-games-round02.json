@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "review": "P05_TOPIC_GAMES_V2_ROUND02",
+  "reviewer": "p05_topic_games_review",
+  "author_independent": true,
+  "created_at": "2026-10-19T17:47:22.187408+00:00",
+  "status": "COMPONENT_PREFLIGHT_PASS",
+  "full_stage_acceptance": false,
+  "source_identity": "38a117dbd52dc3e6a5e3db8f42bf524a0bd097b0d595be302631c1ede94b8aaa",
+  "image": "sha256:3192b2d46772ea434977ef918bdd81775f5fb459fea1a8080c596d082907bc94",
+  "archive_sha256": "643cd731566b293abd2192fce4cf87be08f4d33d8bc7b88e8a11b7f09671276e",
+  "pins": {
+    "apps/api/src/topic-games.ts": "8154111ff8a85923c315c183fd4f3a1c9b547da4c8a025baaa3c407ae2832b83",
+    "apps/api/src/topic-game-model.ts": "cb3bbbea56fd9d298a5ce8993d9d79a4ca606f358a5ed1a16021babc8df6071c",
+    "apps/api/src/topic-game-routes.ts": "2235986168c6d10fc1427fc72d744ee9688b2e689d3179163449e63c8d9746a0",
+    "apps/api/src/rooms.ts": "82d7ea293656e614cb483ac6d0b1cadb424687ec1021a96aa72aa0a54abbe0d9",
+    "apps/api/src/http-delivery.ts": "961e95a02c1df9663c260b39c29af434ed23b85b21d369a4c89c5cf68986d220",
+    "apps/api/src/private-topic-migrations.ts": "5a33a2049fe659c7ac0918bcb5f574c960cb311a4e2fb044a8903ede497a07ee",
+    "apps/api/private-topic-migrations/001_private_topics.sql": "14e5ed99556460653bcce4dc2c7661ebf6144d9739cecaf11f61372ecc4de011",
+    "apps/api/private-topic-migrations/002_topic_games.sql": "b6c799ccb4ec98f8eb442ceb32a600a73b6949f48697185e55841448cef16411",
+    "apps/api/private-topic-migrations/003_private_streams.sql": "02aca5734831bae2d139f888c9cbb637c578703f28daa086fd1e954d6042c414",
+    "packages/contracts/src/topic-games.ts": "831db6366a80d0b8843044b1ae956bb79124d9bd603045427d042453e992298a",
+    "packages/contracts/src/index.ts": "932e8a01405e03e97beb4f418b1e9f0f617576646a745b50bf776b361832ffc9",
+    "packages/relationship-engine/src/index.ts": "403740b17bf301143720abba2a014b28b4bcda9c834a954ffceb9b79ed5dfc86"
+  },
+  "findings": [
+    {
+      "id": "TG-REV-001",
+      "severity": "P2",
+      "status": "CLOSED_IN_COMPONENT_SCOPE",
+      "file": "apps/api/src/topic-games.ts",
+      "line": 73,
+      "fix": "HMAC binds canonical input, operation, structured URL target",
+      "actual_pg_http_wrong_round_status": 409,
+      "actual_pg_http_wrong_session_status": 409,
+      "same_scope_status": 200,
+      "persisted_rows_unchanged": true,
+      "old_unbound_hash_fails_closed": true,
+      "new_consent_grant_previously_proven": false
+    }
+  ],
+  "new_findings": [],
+  "tests": {
+    "boundary_probes": {
+      "pass": 51,
+      "fail": 0,
+      "skip": 0,
+      "exit_code": 0,
+      "scope": "ACTUAL_METHODS_WITH_EXPLICIT_BOUNDARY_DOUBLES",
+      "public_scope_variants": 13
+    },
+    "actual_sql_http_unchanged": {
+      "pass": 5,
+      "fail": 0,
+      "exit_code": 0,
+      "project": "venus-topic-games-review-7aaa24c336c3",
+      "cleanup": "completed"
+    },
+    "actual_sql_http_strict": {
+      "pass": 5,
+      "fail": 0,
+      "exit_code": 0,
+      "project": "venus-topic-games-review-5823d26db416",
+      "persisted_rows_unchanged": true,
+      "cleanup": "completed"
+    },
+    "root_proof_verified": {
+      "indexed_files": 19,
+      "zip_entries": 1785,
+      "unique_pass_cases": 20,
+      "rerun_by_reviewer": false
+    }
+  },
+  "remaining": [
+    "Actual lifecycle/provider/restore composition gate",
+    "Production websocket and browser V2 UX",
+    "Actual cross-mode semantic-family canary",
+    "Feature-off/unapproved-source app negatives",
+    "Clean-source full quality/CI",
+    "Human review450 HOLD"
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "scope": "RANGE02_FINAL_COMMANDS_SUPERSEDES_COPIED01METADATA_NOT_HISTORY",
+  "range_finite": {
+    "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe .artifacts\\p05-pilot-corpus-ranges02\\range-controls.mjs",
+    "exit": 0,
+    "controls": 87
+  },
+  "existingC2fake": {
+    "exit": 0,
+    "controls": 66,
+    "actual470calls": 0
+  },
+  "M3finite": {
+    "exit": 0,
+    "controls": 43,
+    "native600card_sessions": 6,
+    "actual470calls": 0
+  },
+  "independent_counterexamples_repeated": [
+    {
+      "script": "repeat-independent-fairness.mjs",
+      "exit": 0,
+      "finding": "P05-RANGE-REPLAY-001",
+      "original_FAKE_count": 84000,
+      "result": "expected canonical mismatch rejection"
+    },
+    {
+      "script": "repeat-independent-footer.mjs",
+      "exit": 0,
+      "finding": "P05-RANGE-REPLAY-002",
+      "FAKE_count": 336,
+      "result": "expected sealed authority rejection"
+    }
+  ],
+  "pure_ownmodule_graph": {
+    "command": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe .artifacts\\p05-pilot-corpus-ranges02\\pure-closure-check.mjs",
+    "exit": 0,
+    "A9_image_pins": 287,
+    "A9_frozen_source_pins": 215,
+    "app_or_helper_imports": false,
+    "external": "Only declaredAJV imports with A9frozenpackage-lock; no fresh external code audit"
+  },
+  "syntax": {
+    "files": 24,
+    "exit": 0
+  },
+  "lint": {
+    "command": "node node_modules/eslint/bin/eslint.js --no-ignore .artifacts\\p05-pilot-corpus-ranges02/*.mjs .artifacts\\p05-pilot-corpus-ranges02/m3/*.mjs .artifacts\\p05-pilot-corpus-ranges02/c2/*.mjs .artifacts\\p05-pilot-corpus-ranges02/raw/*.mjs",
+    "exit": 0
+  },
+  "method_pins": 29,
+  "source_identity": "6562438b8bc1b413ff717bf03ecf4d47380c71ea12a358264ba02b7675ece10e",
+  "image": "sha256:58d8c700adbbca2251743eff25324102885b3ba8f67fd859c5c8d10d23f789e3",
+  "actual470corpus_runs": 0,
+  "Docker_commands": 0,
+  "retainedFAILs": [
+    "pure-closure01/02: overstrict external-zero assertion; AJV refs now explicit/lockbound, no external audit claim",
+    "range02-lint-final: unused reviewer counterexample imports; removed, lint02/03PASS"
+  ]
+}

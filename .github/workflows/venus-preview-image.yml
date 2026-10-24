@@ -1,0 +1,37 @@
+name: Venus preview image
+on:
+  workflow_dispatch:
+  push:
+    branches: [codex/p06-standalone-release]
+    paths: [.github/workflows/venus-preview-image.yml]
+permissions:
+  contents: read
+concurrency:
+  group: venus-preview-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  publish-preview:
+    if: github.repository == 'psewdon1m/venus'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {persist-credentials: false}
+      - name: Authenticate registry
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_REPOSITORY_OWNER" --password-stdin
+      - name: Publish current unsigned preview without release assets
+        run: |
+          mkdir -p .artifacts/preview
+          docker buildx build --push --provenance=false --metadata-file .artifacts/preview/image.json --build-arg SOURCE_REVISION="$GITHUB_SHA" --build-arg RELEASE_VERSION=0.0.0 -f infra/venus/Dockerfile -t "ghcr.io/psewdon1m/venus:p06-preview-$GITHUB_SHA" .
+          printf 'Unsigned preview only; not a qualified P06 release.\nImage: ghcr.io/psewdon1m/venus:p06-preview-%s\n' "$GITHUB_SHA" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+        if: always()
+        with:
+          name: venus-preview-image-identity
+          path: .artifacts/preview/image.json
+          if-no-files-found: warn
+          retention-days: 7

@@ -1,0 +1,27 @@
+--- METHOD13/request-emission.mjs
++++ METHOD14/request-emission.mjs
+@@ -1,6 +1,11 @@
+ /** Method12 finite dispatch/receipt observer; no app authorization or click retries. */
+ import assert from 'node:assert/strict';
+ import {performance} from 'node:perf_hooks';
++import {setTimeout,clearTimeout} from 'node:timers';
++const allowedErrorCodes=new Set(['CLOSED','STALE','REPLAY','NOT_AVAILABLE','LIMIT','RATE_LIMIT','ROLE_DENIED','ROUND_NOT_ACTIVE','ROUND_STALE','ROUND_ACTOR_REQUIRED','CONVERSATION_UNAVAILABLE','PRIVATE_CONVERSATION_REQUIRED','CONSENT_NOT_ACTIVE','CONSENT_EXPIRED','INVALID_REQUEST','TOPIC_OFFER_UNAVAILABLE','TOPIC_TARGET_INVARIANT','TOPIC_ATTEMPT_LIMIT','TOPIC_SAFE_POOL_EXHAUSTED','TOPIC_SOURCE_UNAVAILABLE','SERVICE_UNAVAILABLE']);
++export function safeOfferMetadata(body){const ids=body?.topic_ids,valid=Array.isArray(ids)&&ids.length<=64&&ids.every(v=>['creative','music','romance'].includes(v));return{offer_expected_epoch:Number.isSafeInteger(body?.expected_epoch)&&body.expected_epoch>=0?body.expected_epoch:null,offer_topic_count:Array.isArray(ids)&&ids.length<=64?ids.length:null,offer_fixture_topic_ids:valid?[...ids]:null,offer_fixture_topics_valid:valid};}
++export function safeErrorMetadata(payload,status){const code=payload?.code;return{response_status:status,domain_error_code:allowedErrorCodes.has(code)?code:null,domain_error_code_unlisted:typeof code==='string'&&!allowedErrorCodes.has(code)};}
++
+ 
+ export async function exactUiMutation({page,path,kind,scope,control,prepare,click,afterClick,record,now=()=>performance.now()}){
+  const readiness=prepare?await prepare():null;
+@@ -23,6 +28,12 @@
+   assert(!readiness||emittedAt<readiness.deadline_monotonic_ms,'P05_REQUEST_EMISSION_OUTSIDE_OBSERVED_PRIVATE_DEADLINE');
+   if(afterClick)await afterClick();
+   const response=await responsePromise;
++  event.response_status=response.status();
++  if(kind==='offer_topic')Object.assign(event,safeOfferMetadata(request.postDataJSON()));
++  if(event.response_status!==200){
++   let timer;try{const payload=await Promise.race([response.json(),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('ERROR_METADATA_TIMEOUT')),1000);})]);Object.assign(event,safeErrorMetadata(payload,event.response_status));}
++   catch{event.error_metadata_unavailable=true;}finally{clearTimeout(timer);}
++  }
+   assert.equal(response.status(),200,'Exact UI mutation must commit');
+   const body=request.postDataJSON(),responseBody=response.request().postDataJSON(),receipt=await response.json();
+   assert.equal(typeof body.request_id,'string');assert(/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(body.request_id));

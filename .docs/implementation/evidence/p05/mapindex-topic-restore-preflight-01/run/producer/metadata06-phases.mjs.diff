@@ -1,0 +1,27 @@
+--- actual01/phases.mjs
++++ metadata06/phases.mjs
+@@ -2,7 +2,7 @@
+ import assert from 'node:assert/strict';
+ import {randomUUID} from 'node:crypto';
+ import {readFileSync,existsSync} from 'node:fs';
+-import {join} from 'node:path';
++import {ownedPersonalChainPath,faultHttpObservation} from './status-diagnostics.mjs';
+ import {effectSnapshot,verifyEffects,originalReceipt} from './replay-observations.mjs';
+ import {authorityMap,roomAuthority,liveUntouched,storedGame,sha} from './observations.mjs';
+ const actorCopy=a=>({id:a.id,credential:a.credential});
+@@ -32,7 +32,7 @@
+ }
+ async function deny(response){assert(response.status>=400&&response.status<500,'Old protected operation must fail with a client policy error');assert(!response.raw.includes('SYNTHETIC'));}
+ async function denyPrivate(response){await deny(response);assert([404,409].includes(response.status));assert(['ROUND_STALE','ROUND_NOT_ACTIVE','CONVERSATION_STALE','CONVERSATION_UNAVAILABLE','PRIVATE_CHAT_UNAVAILABLE','PRIVATE_CONVERSATION_REQUIRED','CONSENT_NOT_ACTIVE','CONSENT_EXPIRED'].includes(response.body.code),'Denial must come from the current private scope, not rate/auth/schema failure');}
+-export async function phaseThree(h,state,boot){
++export async function phaseThree(h,state,boot,observeStatus=()=>{}){
+  const A=fixtureFrom(state.A),B=fixtureFrom(state.B),C=fixtureFrom(state.C),D=fixtureFrom(state.D),checks=[];
+  for(const actor of D.members){const ordinary=await h.call(actor,h.roomPath(D));assert.equal(ordinary.status,200);assert.equal(ordinary.body.room_id,D.room);assert(ordinary.body.members.some(m=>m.id===actor.id));}const actual=await storedGame(h.pool,h.keys,A);assert.equal(actual.game.id,A.game);assert.equal(sha(actual.game.snapshot_cipher),state.baseline.A.snapshot_sha256);assert.equal(sha(actual.history),state.baseline.A.history_sha256);const own=await h.getTopics(A,A.host);assert(own.exclude_topic_ids.includes('romance')&&!own.allow_topic_ids.includes('romance'));
+  checks.push({id:'P05-RESTORE-08',status:'PASS',detail:{actual_third_boot_before_listener:boot,old_private_refs_objects_acks_revoked:true}},{id:'P05-RESTORE-09',status:'PASS',detail:{session_snapshot_history_retained:true,newer_durable_exclusion_survived_old_database:true}});
+@@ -45,5 +45,5 @@
+  assert.deepEqual(roomAuthority(authorityMap(h.directory),D.room),state.authorityDAtDump);
+  checks.push({id:'P05-RESTORE-13',status:'PASS',detail:{ordinary_untouched_D_room_credential200:true,valid_untouched_D_credentials:2,old_nonchat_retries_exact_original_receipt_or_explicit_denial:true,old_chat_exact_retry_denied:true,old_tuples_new_request_ids_denied_no_new_receipts:true,replay_evidence:replayEvidence,no_D_narrowing:true,raw_boot_proof:boot}});
+  const admission=await h.admission(),joined=await h.call(admission,h.roomPath(C)+'/join','POST',{invite_token:C.invite,display_name:'Synthetic host',locale:'en',idempotency_key:randomUUID(),entry_acceptance:h.acceptance});assert.equal(joined.status,200);const cookie=joined.headers.getSetCookie().map(v=>v.match(/^venus_room_session=([^;]+)/)).find(Boolean);assert(cookie);const fresh={id:joined.body.me.id,credential:decodeURIComponent(cookie[1])};assert.notEqual(fresh.id,retired.id);assert.notEqual(fresh.id,C.host.id);assert.equal(joined.body.me.role,'member');const freshTopics=await h.getTopics(C,fresh);assert.equal(freshTopics.owner_member_id,fresh.id);assert.deepEqual(freshTopics.allow_topic_ids,[]);assert.deepEqual(freshTopics.exclude_topic_ids,[]);checks.push({id:'P05-RESTORE-11',status:'PASS',detail:{separate_actual_current18_admission:true,same_host_display_name_new_identity:true,no_identity_host_role_or_private_settings_inherited:true}});
+- const path=join(h.parents.personalChainDirectory,A.room,'chain'),before=readFileSync(path);let faultStatus;await h.withFault('missing',A,async()=>{assert(!existsSync(path));const response=await h.call(A.host,h.roomPath(A)+'/me/private-topics');faultStatus=response.status;assert.equal(response.status,503);assert(!existsSync(path),'Failed guarded read must not repair authority');});assert.deepEqual(readFileSync(path),before);assert((await h.getTopics(A,A.host)).exclude_topic_ids.includes('romance'));checks.push({id:'P05-RESTORE-12',status:'PASS',detail:{fault:'MISSING_OWNED_ROOM_PERSONAL_CHAIN',scope:'PER_ROOM_HTTP',http_status:faultStatus,not_rebuilt:true,exact_bytes_restored:true,recovery200:true}});return {checks};
++ const path=ownedPersonalChainPath(h,A),before=readFileSync(path);let faultStatus;await h.withFault('missing',A,async()=>{const absentBefore=!existsSync(path);assert(!existsSync(path));const response=await h.call(A.host,h.roomPath(A)+'/me/private-topics');faultStatus=response.status;const observation=faultHttpObservation(response,{absentBefore,absentAfter:!existsSync(path)});observeStatus(observation);assert.equal(response.status,503);observation.assertion_completed=true;assert(!existsSync(path),'Failed guarded read must not repair authority');});assert.deepEqual(readFileSync(path),before);assert((await h.getTopics(A,A.host)).exclude_topic_ids.includes('romance'));checks.push({id:'P05-RESTORE-12',status:'PASS',detail:{fault:'MISSING_OWNED_ROOM_PERSONAL_CHAIN',scope:'PER_ROOM_HTTP',http_status:faultStatus,not_rebuilt:true,exact_bytes_restored:true,recovery200:true}});return {checks};
+ }

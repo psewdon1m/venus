@@ -1,0 +1,11 @@
+# Independent saved A13 profile audit
+
+PASS_SAVED_A13_DIAGNOSTIC_INTERVAL_AUDIT_ONLY. Packet ea7e268e4bb405cb7a8f7ef02b7c0d0aadb54f4c176441ec690120f206e8ef19 and all 19 children verified. No finding. This review performed saved-file reads and pure arithmetic only, with no new capture, native workload, SQL or APP edit.
+
+Before/after inspect records are identical: owned project venus-pilot470-2162ab68ceb4, app service, A13 ordinary production image 5dd2c30d03700df12b3dd46df1c0a4c8eaaa8d7913f4f2bd95be003ce9f8926b and PID1 command node apps/api/dist/server.js. The sole published port is API4300 on host loopback. Capture bytes equal the prior accepted A11 capture helper. Its bounded request uses only Profiler CDP methods, no Runtime/heap/arguments; it requires container-loopback inspector URL, disables profiling and closes its control WebSocket.
+
+Independent sums of native samples reproduce elapsed7074.703ms and sampled7073.512ms, idle6644.708ms/93.938%, nativefsync47.119ms/0.666%. These are sampled wall percentages, not CPU utilization; inclusive stacks overlap. The seven-second interval does not show CPU/fsync domination, prove absence of other spikes, characterize the failed online cohort, establish whole-attempt latency or identify the WS_FAILURE cause. Historical A11 fsync74% is a different source/interval.
+
+Saved read-only PG aggregate snapshots show active advisory Lock waiters7,2,5 and one idle-in-transaction ClientRead connection at each of three instants. Queries disclose only state/wait classes and counts; no query text/private row payload was collected. Their native receipt exit0 and empty stderr are verified. They do not identify the blocking application operation or prove a causal failure chain.
+
+Capture and aggregation exit0. The two postcapture listener checks exited1 because their predicates included connection rows or failed to filter LISTEN; their erroneous records/scripts are retained. The corrected final03 predicate filters state0A and records only IPv4 container loopback0100007F:240D with no IPv6 listener. No recapture occurred. The inspector listener remains until parent compose teardown: final teardown is pending and is not accepted here. The in-person/questions cohort is instrumented and cannot serve as an uninstrumented performance comparison. No functional/cohort/stage PASS follows.

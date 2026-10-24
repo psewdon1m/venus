@@ -1,0 +1,61 @@
+[
+  {
+    "name": "owner-inspect01",
+    "command": [
+      "docker",
+      "inspect",
+      "d7907f26336f",
+      "50323c17d4fa",
+      "--format",
+      "{{json .Config.Labels}}"
+    ],
+    "exit_code": 0,
+    "utc": "2026-10-20T19:55:44.411658+00:00"
+  },
+  {
+    "name": "stats01",
+    "command": [
+      "docker",
+      "stats",
+      "--no-stream",
+      "--format",
+      "{{.Name}} {{.CPUPerc}} {{.MemUsage}} {{.BlockIO}}",
+      "d7907f26336f",
+      "50323c17d4fa"
+    ],
+    "exit_code": 0,
+    "utc": "2026-10-20T19:55:46.598375+00:00"
+  },
+  {
+    "name": "processes01",
+    "command": [
+      "docker",
+      "top",
+      "d7907f26336f",
+      "-eo",
+      "pid,ppid,etimes,pcpu,comm"
+    ],
+    "exit_code": 0,
+    "utc": "2026-10-20T19:55:46.767825+00:00"
+  },
+  {
+    "name": "pg-progress01",
+    "command": [
+      "docker",
+      "exec",
+      "50323c17d4fa",
+      "psql",
+      "-X",
+      "-U",
+      "venus",
+      "-d",
+      "venus",
+      "-v",
+      "ON_ERROR_STOP=1",
+      "-c",
+      "BEGIN READ ONLY; SELECT clock_timestamp() AS observed_utc; SELECT seq,mode,state,current_round,rev,created_at,updated_at,clock_timestamp()-updated_at AS since_update FROM game_sessions ORDER BY seq; SELECT round_index,state,created_at FROM game_rounds ORDER BY created_at DESC LIMIT 4; SELECT backend_type,state,wait_event_type,wait_event,clock_timestamp()-query_start AS query_age,clock_timestamp()-xact_start AS xact_age,pg_blocking_pids(pid) AS blocking FROM pg_stat_activity WHERE datname='venus'; SELECT presence,count(*),max(clock_timestamp()-heartbeat_at) AS max_heartbeat_age FROM room_members WHERE removed_at IS NULL GROUP BY presence; COMMIT;"
+    ],
+    "exit_code": 0,
+    "utc": "2026-10-20T19:55:47.023297+00:00"
+  }
+]

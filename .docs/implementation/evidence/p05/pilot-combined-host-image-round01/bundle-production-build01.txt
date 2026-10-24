@@ -1,0 +1,158 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.45kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#4 DONE 0.0s
+
+#5 [build  2/15] WORKDIR /app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 6.79kB 0.0s done
+#6 DONE 0.0s
+
+#7 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#7 CACHED
+
+#8 [build 10/15] RUN npm ci
+#8 6.871 
+#8 6.871 added 288 packages, and audited 295 packages in 7s
+#8 6.872 
+#8 6.872 found 0 vulnerabilities
+#8 6.874 npm notice
+#8 6.874 npm notice New major version of npm available! 11.19.1 -> 12.2.0
+#8 6.874 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+#8 6.874 npm notice To update run: npm install -g npm@12.2.0
+#8 6.874 npm notice
+#8 DONE 7.2s
+
+#9 [build 11/15] COPY tsconfig*.json ./
+#9 DONE 0.1s
+
+#10 [build  3/15] COPY package.json package-lock.json .npmrc ./
+#10 CACHED
+
+#11 [build  5/15] COPY apps/web/package.json apps/web/
+#11 CACHED
+
+#12 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+#12 CACHED
+
+#13 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#13 CACHED
+
+#14 [build 11/15] COPY tsconfig*.json ./
+#14 CACHED
+
+#15 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#15 CACHED
+
+#16 [build 10/15] RUN npm ci
+#16 CACHED
+
+#17 [build  4/15] COPY apps/api/package.json apps/api/
+#17 CACHED
+
+#18 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+#18 CACHED
+
+#19 [build 12/15] COPY apps apps
+#19 DONE 0.1s
+
+#20 [build 13/15] COPY packages packages
+#20 DONE 0.1s
+
+#21 [build 14/15] RUN test -n "fc1bfa0b3dd938ae4f9f0c99fd708032aedcf088b3ef54f14ed55be685a7004e" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+#21 0.350 
+#21 0.350 > venus@0.0.0 build
+#21 0.350 > tsc -b && npm run build -w @venus/web
+#21 0.350 
+#21 4.614 
+#21 4.614 > @venus/web@0.0.0 build
+#21 4.614 > vite build
+#21 4.614 
+#21 4.789 vite v8.3.4 building client environment for production...
+#21 4.804 transforming...
+#21 4.874 ✓ 35 modules transformed.
+#21 4.920 rendering chunks...
+#21 4.959 computing gzip size...
+#21 4.963 dist/index.html                   0.39 kB │ gzip:   0.27 kB
+#21 4.963 dist/assets/index-BYYvUAH4.css    7.38 kB │ gzip:   2.29 kB
+#21 4.963 dist/assets/index-Off85NLk.js   342.93 kB │ gzip: 103.83 kB
+#21 4.963 
+#21 4.963 ✓ built in 172ms
+#21 DONE 5.0s
+
+#22 [build 15/15] RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
+#22 14.98 
+#22 14.98 removed 173 packages, and audited 122 packages in 14s
+#22 14.98 
+#22 14.98 found 0 vulnerabilities
+#22 DONE 15.0s
+
+#23 [stage-1  3/15] COPY --from=build /app/node_modules ./node_modules
+#23 DONE 0.8s
+
+#24 [stage-1  3/15] COPY --from=build /app/node_modules ./node_modules
+#24 CACHED
+
+#25 [stage-1  4/15] COPY --from=build /app/packages ./packages
+#25 DONE 0.2s
+
+#26 [stage-1  5/15] COPY --from=build /app/apps/api/dist ./apps/api/dist
+#26 DONE 0.1s
+
+#27 [stage-1  6/15] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+#27 DONE 0.0s
+
+#28 [stage-1  7/15] COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+#28 DONE 0.1s
+
+#29 [stage-1  8/15] COPY --from=build /app/apps/api/migrations ./apps/api/migrations
+#29 DONE 0.0s
+
+#30 [stage-1  9/15] COPY --from=build /app/apps/api/game-migrations ./apps/api/game-migrations
+#30 DONE 0.0s
+
+#31 [stage-1 10/15] COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
+#31 DONE 0.0s
+
+#32 [stage-1 11/15] COPY --from=build /app/apps/api/chat-migrations ./apps/api/chat-migrations
+#32 DONE 0.0s
+
+#33 [stage-1 12/15] COPY --from=build /app/apps/api/private-topic-migrations ./apps/api/private-topic-migrations
+#33 DONE 0.0s
+
+#34 [stage-1 13/15] COPY --from=build /app/apps/web/dist ./apps/web/dist
+#34 DONE 0.0s
+
+#35 [stage-1 14/15] COPY --from=build /app/package.json /app/build-metadata.json ./
+#35 DONE 0.0s
+
+#36 [stage-1 15/15] RUN mkdir -p /var/lib/venus/topic-births /var/lib/venus/topic-personal /var/lib/venus/topic-personal-witness /var/lib/venus/topic-lifecycle /var/lib/venus/topic-lifecycle-witness && chmod 0700 /var/lib/venus/topic-* && chown -R node:node /var/lib/venus
+#36 DONE 0.2s
+
+#37 exporting to image
+#37 exporting layers
+#37 exporting layers 1.1s done
+#37 exporting manifest sha256:23a69be4c6b3debfe3ff6ca84b3dcb91c9fcbdc0ccb946dde5a061967d9bb726 0.0s done
+#37 exporting config sha256:dc275d52277dcc6d0ad8548fab3ce421bda1bc924494ca96ef369ed50a0a5679 0.0s done
+#37 exporting attestation manifest sha256:cf51d97fc37e697d340f06ed130747cf7e32e16482f141c08b423aff1c8d6af2 0.0s done
+#37 exporting manifest list sha256:1c023d3e8c6c3b8e04fbcdbd98a23c456acfd4967ca26670d37bb84084ee342c 0.0s done
+#37 naming to docker.io/library/venus-p05-pilot-app:local done
+#37 unpacking to docker.io/library/venus-p05-pilot-app:local
+#37 unpacking to docker.io/library/venus-p05-pilot-app:local 1.4s done
+#37 DONE 2.6s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/1umjkf60ersp56fo44wrh40mo

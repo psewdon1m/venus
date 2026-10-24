@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "revision": "P05-COHERENT-ROUND-VIEW-01",
+  "status": "AUTHOR_HOST_TESTED_INDEPENDENT_REVIEW_AND_ACTUAL_PENDING",
+  "baseline": {"source_identity": "ed18d3cb16cac4e244d2f2d58602c41cd8485b0bddf9beef7fe9ae1fa64a0026", "included_files": 1830, "scope": "genuine materialized engine3 prebundle snapshot"},
+  "problem": "Four independent own/target/conversation/chat requests consume most of the unchanged5s presentation permission. Actual source732 TRcycle68 collected4664.498ms, leaving335.502ms before local expiry; no403 or parent-consent failure established.",
+  "contract": {
+    "method": "GET",
+    "path": "/api/v2/rooms/:roomId/game/:sessionId/round/:roundId/view",
+    "response": "{schema_version:2,own:TopicGameSelfActions,target:TopicRoundTarget|null,conversation:TopicConversationView|null,chat:TopicChatView|null}",
+    "phases": "Commit existing actor/reconcile/projection materialization, then gather all parts in one final readonly roomlocked context; no nested endpoint dispatch.",
+    "client_clock": "All parts use the one HTTP request START; own5s cap, epochs, phase floors and original absolute consent expiries unchanged.",
+    "privacy": "Actor-only target/conversation/chat; outsiders and unavailable ordinary source receive only authenticated own safety controls and null private parts. Strict entry acceptance, current auth/source/safety/presence/consent/clock fences follow the final awaited operation.",
+    "cache": "No fake cache acceptance, response timing normalization, TTL/deadline increase or mutation retry. Client validates the whole envelope and exact scope before existing OwnControls/TopicCache acceptance."
+  },
+  "compatibility": {
+    "legacy_routes": "Retained with existing external contracts; self-actions shares its exact permission builder/read context.",
+    "new_UI_with_old_API": "Not an authorized private-serving pair; missing endpoint fails closed. No four-request product fallback. Independently confirmed Stop/Pause and room safety exit remain available.",
+    "rollback": "Quiesce/revoke private scopes and switch matched API/UI bundle. Legacy UI can use retained endpoints; this transport change adds no DB schema, persisted snapshot or private policy revision.",
+    "engine": "Root independently owns engine3 exact-ID correction; this change does not alter engine/RNG/policy."
+  },
+  "test_scope": "Existing Vitest/Fastify inject and actual TSX hook evaluator. Old component DTO scenarios use an explicitly fixture-only envelope adapter; new transport scenarios disable it and assert exactly one view request. Real PG/browser and measured improvement remain separate mandatory evidence.",
+  "full_stage_acceptance": false,
+  "performance_improvement_proven": false
+}

@@ -1,0 +1,17 @@
+# Independent P06 Security/Privacy repeat — round03 source portion
+
+Status: SOURCE_ONLY_HOLD_ACTUAL_GATE_EVIDENCE_PENDING. Independent nonauthor reviewer. No new blocking source findings; prior rounds immutable. No pre-sign or full stage PASS.
+
+Frozen input: C:/.projects/venus/.artifacts/p06-clean-source01, clean HEADc1823103ef53ab4b926b7cf853a0c9bbd0644af4/corebda1f4a825edcda4d5f5c9b35226583be6f7afb8b0167ab19d005d41225ce05c,1942 files; freeze07. Review delta from round02 only plus remaining proof coverage, no scope expansion. Reviewer performed only source/evidence reads and file hashes, no tests/Docker/remote or source/Git mutations.
+
+Product delta accepted for source: driver.initialize resolves a bounded postgres:version@sha256 pin from the trusted installed compose template, inspects or pulls that exact reference, verifies matching cryptographic RepoDigest, and only then runs DB compose creation. The fixed template remains authoritative; no HTTP path/URL/image/compose input was added. A failed image acquisition cannot reach create_db in the new relevant regression. Existing service/fixture signing, narrow UDS and separate UID boundaries remain unchanged. Consumer1000 still receives no Docker or operator credential. Executor1001 with Docker socket remains trusted daemon-power TCB; production dedicated/rootless isolation remains unproved locally.
+
+Install catch now retains safe operation/exit/upstream status from bounded command diagnostics, without copying raw stderr, keys, tokens or command arguments. Source code produces these fields from the trusted driver. Existing SEC01/SEC02 and E01/E02 fixes remain intact.
+
+Fixture delta: completed synthetic snapshot now seeds waiting game, participant, and completed state within one transaction with rollback/finally, complying with the existing database guard. Full-drill source adds real unavailable-image pull-failure receipt with no quiesce/mutation and exact A health; locally built fixture OCI transport is explicitly described. None establishes a real service signing environment.
+
+Existing unit07 receipt reports27PASS0FAIL0SKIP exit0; lint07/lint08 exit0. Exact input packet still awaited. Fullquality02 is actual PASS1315/3skip on older round02 HEAD412b7e3/corebb7ed1; no claim it executed on current full core. API/domain TypeScript bytes are unchanged per bounded diff. Actual docker-round04 is FAIL after clean A install, distinct-UID ACL and independent-reader partial checks, due to rejected invalid fixture seed; it is not update/restore/fault/monotonic acceptance. Actual05 is pending. All earlier FAIL rounds remain retained.
+
+Remaining acceptance evidence required: completed current-source real Docker A/B update; atomic mode0600 PG backup, clean restore and synthetic decrypt/count proof; migration/health/pull/permissions/durable-phase faults, offline A recovery and original-error separation; old-DB/new-ledger non-resurrection and missing/corrupt/regressed fail-closed authority; no automatic restore; one native Chromium operator create/confirm/reload/reauth/cancel; measured durations/write boundary/post-backup writes; exact source/component pins. This states existing P06 gate coverage, not new test scope.
+
+Owner real-key activation remains pending; actual signed/published service acceptance requires separate later proof. Production/DNS/TLS/mobile/external backup-copy deferred. Card470 temporary local-pilot decision and450HOLD unchanged. P07 not reviewed or started.

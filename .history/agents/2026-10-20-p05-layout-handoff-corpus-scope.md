@@ -1,0 +1,5 @@
+# Layout06 handoff and remaining C2/M3 actual scope
+
+2026-10-20T20:23:08.475628+00:00 UTC — Root requests handoff-only ownlayout06 (cannot independently accept ownauthorbinding), then readonly exactnormative C2/M3 E0/E1/E2/wire gap audit vs ranges01(originalcounts, corrective02pending). No ACK/RUN/Docker/nativecorpus/sourcechanges/newworkload. Own UTF8 journal.
+
+2026-10-20T20:32:31.700497+00:00 — COMPLETE after priority Stop22/logging02 work. Readonly exactnormative scope: original7sections retaincounts, range01twoP2pending; semantic/exclusion+actualwire required but draft84kextra/220M not adopted numericnorm. Layout06 remains ownauthorhandoff NOTacceptance; actualbrowser13FAIL blocksACK. Missing guessed section-ranges/REPORT/HANDOFF.json reads exit1 preserved in tool outputs; actual range-plan/RANGE-PREREG/HANDOFF.md read. Frozen .docs/implementation/reviews/p05/layout06-handoff-corpus-remaining-scope-round01/INDEX.json 94e866cd3313d391f792484ada6b84310c019e933f088efd1ecef87afcf67a18. No RUN/newworkload/appwrites. Writes COMPLETE.

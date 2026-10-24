@@ -1,0 +1,138 @@
+{
+  "status": "FAIL",
+  "project": "venus-p06-028035da1c",
+  "actual": true,
+  "privileged_fixture_driver_uid": 0,
+  "runtime_uids": {
+    "executor": 1001,
+    "operator": 1002,
+    "consumer": 1000
+  },
+  "source_identity": "e3dc32ac0fd039e674f2ca0e5fd69a1a48595137168f7af474f59200825c1999",
+  "test_keys_only": true,
+  "restore_count_checks": [],
+  "job_rounds": [],
+  "checks": [
+    {
+      "id": "P06-INSTALL",
+      "status": "PASS",
+      "version": "0.0.9001",
+      "OCI": "sha256:e606a14f44aa837b04db3bdf8f0b672386b54deedc775d8f3bf54a927adb3124",
+      "config_digest": "sha256:e606a14f44aa837b04db3bdf8f0b672386b54deedc775d8f3bf54a927adb3124"
+    },
+    {
+      "id": "P06-UPDATE-ACL",
+      "status": "PASS",
+      "distinct_UIDs": {
+        "executor": 1001,
+        "operator": 1002,
+        "consumer": 1000
+      },
+      "room_host_denied": true,
+      "foreign_origin_denied": true,
+      "command_fields_denied": true
+    },
+    {
+      "id": "P06-INDEPENDENT-READER",
+      "status": "PASS",
+      "app_edge_IP": "172.22.0.2",
+      "db_not_on_reader_network": true,
+      "app_internals_not_mounted": true
+    }
+  ],
+  "production_daemon_isolation": false,
+  "install": {
+    "job_id": "78edc12c-1f1b-4d6b-91fd-750fd9138165",
+    "release_id": "fac173d094d1ee1140473358fd41cac1d92ae09b5de93261b8da91af9aad4286",
+    "phase": "COMMITTED",
+    "created_at": "2026-10-24T19:58:39.317Z",
+    "updated_at": "2026-10-24T19:58:43.795Z",
+    "original_error": null,
+    "failure_details": null,
+    "recovery_outcome": "INITIAL_INSTALL_HEALTHY",
+    "events": [
+      {
+        "sequence": 1,
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phase": "INSTALL_CREATED",
+        "at": "2026-10-24T19:58:39.317Z",
+        "hash": "0f44ac4766e905ece494838e324724eeff97ac953a401357915d2dbefcc02e26"
+      },
+      {
+        "sequence": 2,
+        "previous": "0f44ac4766e905ece494838e324724eeff97ac953a401357915d2dbefcc02e26",
+        "phase": "INSTALL_PREFLIGHT",
+        "at": "2026-10-24T19:58:39.488Z",
+        "hash": "8695ee5dfe894527e4822d08310fb5c11fb6e9b1435d46ab278a7c46709d038c"
+      },
+      {
+        "sequence": 3,
+        "previous": "8695ee5dfe894527e4822d08310fb5c11fb6e9b1435d46ab278a7c46709d038c",
+        "phase": "INSTALL_DATABASE",
+        "at": "2026-10-24T19:58:39.547Z",
+        "hash": "7d3fad314a4a289548c6d1f7a3f1a21e97813131b0924ed024573e4e32191eb7"
+      },
+      {
+        "sequence": 4,
+        "previous": "7d3fad314a4a289548c6d1f7a3f1a21e97813131b0924ed024573e4e32191eb7",
+        "phase": "INSTALL_STARTING",
+        "at": "2026-10-24T19:58:40.825Z",
+        "hash": "eac5ae1cf5c8d327014a368e3d23799f7ea2785a775e004160ff769e78e0b476"
+      },
+      {
+        "sequence": 5,
+        "previous": "eac5ae1cf5c8d327014a368e3d23799f7ea2785a775e004160ff769e78e0b476",
+        "phase": "COMMITTED",
+        "at": "2026-10-24T19:58:43.795Z",
+        "hash": "9c31f8c6f450d5a2072835d556f48b520a6246f71f01d385ea70f8313aeb58a6"
+      }
+    ],
+    "backup": null
+  },
+  "synthetic_data": {
+    "rooms": [
+      {
+        "room_id": "fd3a3d64-e60d-47ca-8229-284042967a7d",
+        "member_id": "eab908aa-3e61-41cd-8ae0-d001eca54418"
+      },
+      {
+        "room_id": "41149e57-750e-40bd-b39e-cd5f6615d9a0",
+        "member_id": "993d685d-b51f-46a6-8d86-21197918b4ba"
+      }
+    ],
+    "session_id": "77eb7abd-f28d-4268-b58c-f2125eb07ad3",
+    "initial": {
+      "counts": {
+        "rooms": 2,
+        "room_members": 2,
+        "private_preferences": 2,
+        "game_sessions": 1,
+        "game_participants": 1,
+        "venus_catalog_withdrawals": 0
+      },
+      "rooms": [
+        {
+          "id": "41149e57-750e-40bd-b39e-cd5f6615d9a0",
+          "state": "open"
+        },
+        {
+          "id": "fd3a3d64-e60d-47ca-8229-284042967a7d",
+          "state": "open"
+        }
+      ],
+      "catalog": {
+        "active_digest": "sha256:d1a7cb38be173c673665c30ae8e91792940438b675f8830d72503eebed9985d4",
+        "ledger_head": "0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "preferences_decrypted": 2,
+      "synthetic_completed_snapshots_decrypted": 1,
+      "post_backup_external_writes_present": 0
+    }
+  },
+  "error": "COMMAND_FAILED",
+  "error_type": "Error",
+  "failure_location": [
+    "driver.mjs:11:366"
+  ],
+  "finished_at_utc": "2026-10-24T19:58:50.245Z"
+}

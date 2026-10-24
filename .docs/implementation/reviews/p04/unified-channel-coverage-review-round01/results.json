@@ -1,0 +1,42 @@
+{
+  "at_utc": "2026-10-20T16:44:59.835736+00:00",
+  "status": "PASS_SCOPED_COVERAGE_CODE_ONLY",
+  "exact_inputs_unchanged": true,
+  "pins": {
+    "packages/card-catalog/src/coverage.ts": "0c309debb893b9bc381b78fcc401031877da0e340aac081c0627fd2e19410fea",
+    "packages/card-catalog/src/catalog.test.ts": "05783e5074ea046f800db19425295518eff5f73616f3670a90f5f426a12c2d63",
+    ".docs/adr/ADR-025-p05-unified-private-text-chat.md": "59d3cc96bbca5a9b82c89c2cc2118d1666d6ae7a7e4d0dcec4c68ad79b55c5ed",
+    ".docs/implementation/user-decisions.v3.json": "6b9433bee436cd9cd914fdbc737541822d9527109641b76856a2f48c342e5fbc",
+    "vitest.config.ts": "f74f2609dd59ad2984b2b670e9e20d6cb30b9f5c4f9c5ec574c11b3d2a0ef656",
+    "package-lock.json": "f5859f726e74a31854bcb67d37663de1bd98f84e7b943cb75ab5ca024c66ea04"
+  },
+  "commands": [
+    {
+      "command": "node node_modules/vitest/vitest.mjs run packages/card-catalog/src/catalog.test.ts",
+      "exit_code": 0,
+      "tests_pass": 9,
+      "raw": "existing-tests.txt"
+    },
+    {
+      "command": "node node_modules/vitest/vitest.mjs run --config .docs/implementation/reviews/p04/unified-channel-coverage-review-round01/review.config.mts",
+      "exit_code": 0,
+      "tests_pass": 4,
+      "raw": "independent-controls.txt"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js packages/card-catalog/src/coverage.ts packages/card-catalog/src/catalog.test.ts",
+      "exit_code": 0,
+      "raw": "scoped-lint.txt"
+    }
+  ],
+  "node": "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+  "vitest": "5.0.5",
+  "prior_author_attempts": {
+    ".artifacts\\p04-coverage-policy-unit01.txt": "54ec325b75f6a04b6c46263f5b7313c0c290ef123326695a879ffa6a71ede63c",
+    ".artifacts\\p04-coverage-policy-unit02.txt": "2b169fa3c950282c793c5780d290366e57bd1d1a6a0e1565b409b6f91834b075",
+    ".artifacts\\p04-coverage-policy-unit03.txt": "1894b3f2ef5524d36fff58880f18faaca9a49ba0b09932bc7bdfddc7d411fccc"
+  },
+  "full_stage_pass": false,
+  "docker_executed": false,
+  "global_typecheck_run": false
+}

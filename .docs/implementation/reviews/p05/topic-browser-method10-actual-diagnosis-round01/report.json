@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "status": "CONFIRMED_PRODUCT_PENDING_ACTIVE_GRANT_DEADLINE_CONFLATION",
+  "created_at": "2026-10-19T21:25:46.216366+00:00",
+  "reviewer": "/root/p05_topics_ui_review",
+  "exact_inputs": [
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/index.json",
+      "sha256": "91fcf66751d1ffb10f6fee329c5cb776438f2ef917dbfcfe64c9cde23ec9b020"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/receipt.json",
+      "sha256": "a43577644e225184d91d5677fdde073c6735a58708c9cbd938dc548d86593440"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/run/topic-browser-report.json",
+      "sha256": "f09de0f0f923de8c3bfd5659f48a1bcedb30f41f35103e80396d5f0616d10d15"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/run/failure-details.json",
+      "sha256": "0fd3ac7f72f8643c19931517f56cd0a8d091bbfb33bcb54482fd4e335b9f38fc"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/run/delivery-metadata.json",
+      "sha256": "d112468bc6b45be827dc793c7cf39096027902762a92228f9f406b184d5b7a32"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/run/runner.json",
+      "sha256": "6cf7448b158d5d3cf7ad990d32ab1536c3c8f03ae2ab753af18139d7bbffae2d"
+    },
+    {
+      "path": ".docs/implementation/evidence/p05/mapindex-topic-browser-preflight-01/run/producer/browser.mjs",
+      "sha256": "ab4ff3441240d186f7634acbb01891f1a5f20f18a800cb456fe3bcb64f702c01"
+    },
+    {
+      "path": "apps/web/src/topic-state.ts",
+      "sha256": "a04cc196ae20773acd179b33ecb413918f9628bb6b0a723c4714f2255becaf1a"
+    },
+    {
+      "path": "apps/web/src/topic-games-panel.tsx",
+      "sha256": "295dba938ecdc13cef940d115fd161daeffa90c60d81e42d3bfeaadfff470d8d"
+    },
+    {
+      "path": "apps/web/src/topic-test-harness.ts",
+      "sha256": "b40944c141bf4beae788ff1c069d7a53862deaeb2d1d82ea51cd4a67cd1aff7f"
+    },
+    {
+      "path": "apps/web/src/presentation-clock.ts",
+      "sha256": "f9a1120a1fbff31454eafdfac269ea8163d9e7ef99d916f6ceeecb2f4cceccb0"
+    },
+    {
+      "path": "apps/web/src/game-operations.ts",
+      "sha256": "50fc1aab56bdc9d327a228af817ee90a10409f6d5df655ed96c297b6434a20a4"
+    },
+    {
+      "path": "packages/relationship-engine/src/consent.ts",
+      "sha256": "f8e27f79971458a29dea756f2d2852e2339c51400445773f3baaf2661186e463"
+    },
+    {
+      "path": "apps/api/src/topic-games.ts",
+      "sha256": "0f3f0f28f44a960f88c752a50f338781dfd7099ac73bb83316922fddc275959a"
+    }
+  ],
+  "actual_packet_files_verified": 38,
+  "source_identity": "e9b9d97223ab38721255c67d041638f99594d0536b719a82a1531e58e137e6d4",
+  "included_files": 1813,
+  "image": "sha256:d316b97d6757d68b42aaca89dd68353b4d645301efbbbe1f02e6c0cd2428ac47",
+  "actual_result": {
+    "PASS": 4,
+    "FAIL": 1,
+    "NOT_RUN": 11,
+    "cleanup": "PASS",
+    "HTTP": 401,
+    "WS": 209,
+    "diagnostics": "COMPLETE"
+  },
+  "finding": {
+    "id": "TG-UI-GRANT-PHASE-001",
+    "severity": "P2",
+    "scope": "Confirmed client availability defect: TopicCache pending\u2192active invitation grant deadline conflation. Same mechanism should be assessed for action and conversation phases; no broader live exploit inferred.",
+    "source": "TopicCache.accept keys invitation deadline by offer_id/proposal_revision; deadline() always min(prior,new). bind(newrev) retains deadlines for same identity/session/round, and clear() retains them. Server consentResponse activates same offer/proposal with a new active_until, projected as expires_at.",
+    "actual_linkage": "Prior same-round pending invitation target was required for actual first invitation UI acceptance. Actual metadata shows pendingexpires1086443 then activeexpires1245905 with proposal1. Original private cached IDs/deadline map/cache.accept return were not instrumented; source/mandatory UI path and timestamp-fit plus reproduced exact-code counterexample establish the defect and strongly explain this run, without inventing a cache internal trace.",
+    "RU": {
+      "pending_self_start": 60745.527714,
+      "pending_server_time_ms": 1059233,
+      "pending_expiry_ms": 1086443,
+      "predicted_pending_floor_native_ms": 87955.527714,
+      "active_self_start": 85373.156213,
+      "active_complete": 88974.43365,
+      "fresh5s_permission_floor": 90373.156213,
+      "result": "Valid active batch rejected by retained expired pending invitation floor."
+    },
+    "TR": {
+      "pending_self_start": 58613.694803,
+      "pending_server_time_ms": 1057215,
+      "pending_expiry_ms": 1086443,
+      "predicted_pending_floor_native_ms": 87841.694803,
+      "active_complete": 87032.644547,
+      "DOM_READY": 87102.344841,
+      "result": "Prompt can briefly display before old pending floor; then clears despite ongoing active grant."
+    }
+  },
+  "own_exact_cache_and_unmodified_TSX_controls": 5,
+  "recommended_fix_constraints": [
+    "Distinguish authenticated pending vs active grant phases; retain within-phase nonextension bounds and5s fresh own permission lease.",
+    "Do not clear all deadline history on every game_rev, extend TTL/budget, or accept stale scope/generation/epoch/proposal.",
+    "Require monotonic phase/revision handling; old pending/active frames after Stop/Other/exclusion/reconnect must not revive private content.",
+    "Regression: pending seen before acceptance; same offer/proposal activates before old deadline; fresh active response after old pending deadline must display while active/permission valid; same-phase replay cannot prolong expiry.",
+    "Assess analogous action and conversation pending\u2192active boundaries explicitly; no blanket deadline removal.",
+    "New isolated candidate + tests/independent review before integration/freshsource/image/actualbrowser rerun. All16cases/method10 unchanged."
+  ],
+  "limits": [
+    "Exact actual private cache internal state was not logged. Timings/DTO shape validators are passive observer measurements, not proof of actual cache.accept call or cache internals. Strong matching source/mandatory UI history and exact-code counterexamples support the stated actual cause.",
+    "Own direct cache uses reconstructed valid synthetic DTO identities with actual metadata timestamps; own TSX uses unchanged module in deterministic hooks/API scheduler, not a new actual browser RUN.",
+    "No product/producer writes or functionalDocker/browser run. Historical FAILs and human450/fullP05 remain separate."
+  ],
+  "full_stage_pass": false
+}
