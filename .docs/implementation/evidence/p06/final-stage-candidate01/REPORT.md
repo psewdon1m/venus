@@ -1,0 +1,3 @@
+# P06 final gate candidate
+
+All required native inputs complete for exact main77ee/coreD44F and real signed venus-v0.0.1. Proposed all118 statuses74PASS/34narrowN_A/10productiondeferred; eight local stage gates await two final independent decisions. This packet is NOT acceptance. Qualified Linux actual install and cache-absent network-off archive recovery PASS; original Desktop export FAIL and helper-probe failure preserved, with no verifier weakening or source change. Fixture restore/fault proofs remain explicitly synthetic and are source-bound to unchanged implementation. Production and P07 not authorized.

@@ -1,16 +1,12 @@
-# Текущий статус — P06
+# Текущий статус — P06 закрыт в проверенном локальном Linux classic профиле
 
-По прямому U-021/ADR-033 четыре тяжёлых измерения P03 вынесены в отдельный ручной `Venus optional P03 statistics` без изменения выборок/порогов. Защита main фактически требует пять quality/integration проверок; strict и остальные поля защиты сохранены. Незавершённые статистические задания прежнего head отменены, это не PASS.
+**P06 PASS standalone-local-pilot-v2 только для Docker29.1.3 Linux amd64 / overlay2 classic. P07 не начат.** [Итоговый отчёт](evidence/p06/final-stage-acceptance01/REPORT.md) · [Решение и hashes](evidence/p06/final-stage-acceptance01/DECISION.json) · [Все118 IDs и8гейтов](evidence/p06/final-stage-acceptance01/ACCEPTANCE_LEDGER.json) · [Реестр](p06-registry.json) · [План](../10_IMPLEMENTATION_PLAN.md).
 
-CI policy revision8234e88e/coree87 passed5/5mandatory checks, statisticsNOTRUN. P04 expiry test source fix confirmed in actual CI. Это принятый компонент, не доказательство последующей I01-правки.
+[Настоящий подписанный0.0.1](https://github.com/psewdon1m/venus/releases/tag/venus-v0.0.1), main/tag77ee6ea5/coreD44F/1951files, опубликован и проверен анонимно. Два независимых финальных Engineering/Security gate PASS. 8гейтов PASS;118IDs=74PASS/34external-onlyNA/10production-deferred. Unit34, Docker18, все5обязательных PR/main CI и qualified workflow SUCCESS. Четыре больших статистических P03 suite доступны отдельно только вручную; в этой приёмке не запускались.
 
-Текущий clean source9434257/cored44f9f1f/1951: I01 исправлен, unit34PASS и fullDockeractual11:18PASS/41native0/9SIGKILL/реальныйofflinearchive reload/cleanup complete. Два независимых review06 закрыли I01 local и приняли [pre-sign05](evidence/p06/pre-sign-acceptance05/REPORT.md). Прежние source-only и pre-sign04 сохранены; полный EXIT ещё HOLD до currentCI/main/tag/настоящих подписанных assets/точного publishedimage install/anonymouspull.
+Actual service-key install COMMITTED и cache-absent/network-off archive recovery PASS; protected hashes неизменны. **Desktop29.1.3/containerd2.2.0: экспорт exact опубликованного image остаётся FAIL/unsupported/unrepaired**, verifier корректно блокирует mutation. Это ограничение не скрыто Linux результатом. [Нативные доказательства и operational addendum](evidence/p06/qualified-linux-install01/REPORT.md), [исходный FAIL и public release proof](evidence/p06/qualified-publication01/RESULT.json). Privileged daemon относится только к изолированной инфраструктуре теста; app/executor непривилегированы. Production/rootless isolation/DNS/TLS/UDP/devices/external backup copy/SLA не приняты.
 
-Предварительный образ version0.0.0 опубликован, владелец сделал пакет Public, анонимный pull точногоdigest0653678...f4b3e PASS. Это unsignedpreview source195e2302, не qualifiedrelease и не приёмка P06.
-
-Owner-approved key/env готовы U020. Осталось: текущий CI/independent rebind, exactmain/tag, подписанный0.0.1/один OCI/публичные assets, anonymous pull/install точного сервисного digest (пакет уже Public) и финальная независимая приёмка. P07 не начат.
-
-[Реестр](p06-registry.json) · [CI policy proof](evidence/p06/ci-policy-u02101/INDEX.json) · [План](../10_IMPLEMENTATION_PLAN.md).
+Review450 HOLD и временный owner PASS470 локального пилота сохранены; профессиональная/правовая/production приёмка не заявлена. Приложение после принятых source tests не менялось. Closing metadata не выдаётся за новый CI-tested application commit.
 
 Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
 
