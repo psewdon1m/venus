@@ -1,6 +1,6 @@
 # Текущий статус — P06
 
-P06 в работе по поручению владельца от 2026-10-24. Первоначальная реализация завершена до первого теста. Быстрый цикл:22/22 unit в Linux Docker, lint/typecheck/docs PASS; полные Docker install/update/restore и независимые stage-гейты ещё не пройдены. Реальный signing key подготовлен вне Git, активация/GitHub secret ожидают явного подтверждения владельца. P07 не начат.
+P06 в работе по поручению владельца от 2026-10-24. Первоначальная реализация завершена до первого теста. Быстрый цикл:26/26 unit в Linux Docker и lint PASS после четырёх исправленных замечаний независимых агентов; typecheck/docs ранее PASS. Первый полный quality выявил одно устаревшее ожидание списка CI jobs (1314 PASS/1 FAIL), исправленное сейчас; повтор на чистом исходнике выполняется. Полные Docker install/update/restore и независимые stage-гейты ещё не пройдены. Реальный signing key подготовлен вне Git, активация/GitHub secret ожидают явного подтверждения владельца. P07 не начат.
 
 [План P06](../10_IMPLEMENTATION_PLAN.md) · [Operator runbook](P06_OPERATOR_RUNBOOK.md) · [Recovery profile](p06-recovery-profile.v1.json) · [Реестр P06](p06-registry.json).
 
