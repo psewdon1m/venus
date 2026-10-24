@@ -48,3 +48,16 @@
 - Final engineering-signing-round02 INDEX SHA256 8467c1e0f6adf2906dbdc5d15926d75e623700e0576a2f5a8f7ee83993e90bdf; REPORT SHA256 7f942fce5749f39d67140c3ccc2f0a9cf5297150d9d60cc3de9ccd90088c8dd2; DECISION SHA256 45d14eeec860b233cf56c1a364bf061f1e5704fd2f967938bd91ae23611c2623; SOURCE_REBIND SHA256 5f8c87c18ad3361a3816f87f4a890b089b4d10ba041549a9ae7120fdd4bd1865.
 - Localpre-signPASS, E07GitHubclosure remainsPENDING correctedheadnonzeroGID/all9CI; fullstageHOLD actualservice main/tag/digest/signature/assets. Noextra testmechanism/runtime requested or run, noP07, no secretsaccess, historicalFAIL preserved.
 - COMPLETE_STOP. Allownreview/journalwrites complete; rootmayderive finalmanifest/pre-sign03 afterbothSTOP. FutureCI/finalrelease audit separatehandoff.
+
+## 2026-10-24T21:48:21Z — E07 GitHub execution follow-up audit
+- Root authorizes bounded new engineering-github-round01 +ownjournal only; prior reports immutable. No own tests/framework/Docker/API/privatekey/source/Git/remote mutations.
+- Supplied exact PRheadd3f7f60c63321fa17d2dd34b02d23144adff63c0/core5a917292b99797afaaf58c7f41e21a1a24cf3358d923da071cad782a96f5f087, unchanged implementation vs911ac077.
+- New github-pr-p06-pass02 packet reports run40134933732/job120994336366 success,18checks/45nativeexit0/cleanup and actualsocketGID118. FourmandatoryP03stats stillpending; nofullCI/stagePASS; actualsignedservicepublicationpending.
+
+## 2026-10-24T21:50:31Z — E07 GitHub FINAL / COMPLETE_STOP
+- All49 inputpacket hashes/sizes match INDEX5609b39bc9f850b7794c0fd398116279bf3bf6157c5267287a914c8f2ca4aaeb. GitHub jobmetadata wrapper.data inspected:120994336366/run40134933732/head d3f7f60 completed/success and allrelevantstepssuccess; artifact12576792661 samehead/run, archive digest matches receipt5b457912be0fbbdbd72cb5204068364ebf2a1b6472e87332ffa49139fd879e3d.
+- First exploratory selected metadata fields at wrapperroot producednull (notfailure); corrected to savedresponse.data before acceptance.
+- Rawreport exacthead/core5a917, clean,18PASS/45nativeexit0/17jobs/11countcomparisons equal/ownedcleanup0errors. Actual inspected executorUser1001:1002 GroupAdd118 socket; operator1002/consumer1000 have nullGroupAdd/no socket, consumerreadonly/nooperatorcredentialmount. E07 original nonzeroGID condition closed for this exacthead.
+- Direct newownersteering received via root whileaudit: laterCIpolicy/manualstats/GHCRpreview change. Acknowledged as forward-looking outside historicald3f E07report; no fullCI/stage/newpolicy/publication claim. Historical4statpending retained only at originalhandoff/oldpolicy.
+- New engineering-github-round01 INDEX SHA256 568c136c22d907989b6fe18341210116307f9486720c3c8b11dd43b8bff3fef7; REPORT SHA256 01205a7963fecf9fabd869420ab367b4c27e9691ebd79a632b1f16077f665061; DECISION SHA256 fc184cda633ad764391fab139ed3b094097676b67575f27974e266db2b0429a4. OldFAIL/reports unchanged. No own tests/API/Docker/Git/source/secret access.
+- COMPLETE_STOP. Allownwritesfinished; laterCIpolicy/finalserviceaudit separatehandoff, noP07.
