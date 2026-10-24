@@ -24,3 +24,6 @@
 2026-10-24T19:32:26.198953+00:00 — fix(p06): use exact local OCI cache for disposable fixture and check real pull rejection; freeze initial-source-freeze04 5de10b3e1c521fd30c430793a6abaae1a908b8f19324c97e3edabc5a31e30baa/1942. No P07.
 
 2026-10-24T19:35:50.662644+00:00 — fix(p06): resolve fault fixture base from owned local B tag without remote lookup; freeze initial-source-freeze05 26e08cb5534d14d6b3b6e774bea7bda301d330c6d7d14e55713611d68e66b457/1942. No P07.
+2026-10-24T19:38:44.7466501+00:00 — Actual Docker01/02 exit1 before install, fixture transport/base-resolution errors retained in packets. Exact local OCI cache and own just-built B tag fixed; relevant layer probe exit0/1.19s, lint04/05exit0. Freeze05 cleanf850cf4/core26e08/1942 round03 browser build running. Only2 harness files differ from fullquality02; app/executor unchanged. Long-line journal Python SyntaxError1 occurred twice, corrected by short input lines; no app failure. No P07.
+
+2026-10-24T19:42:55.558043+00:00 — fix(p06): fetch and verify pinned database image before clean install; freeze initial-source-freeze06 d22af2c721029c05953d258a45bd5018175cae6c096bf1cdbd3ffa749c3bfa34/1942. No P07.

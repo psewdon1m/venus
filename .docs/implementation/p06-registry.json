@@ -2,8 +2,8 @@
   "schema_version": 1,
   "stage": "P06",
   "profile": "standalone-local-pilot-v2",
-  "status": "FULL_QUALITY_PASS_ACTUAL_DOCKER_DRILL_RUNNING",
-  "updated_at_utc": "2026-10-24T19:29:31.666703+00:00",
+  "status": "FULL_QUALITY_PASS_ACTUAL_DOCKER_ROUND03_BUILDING",
+  "updated_at_utc": "2026-10-24T19:38:44.737777+00:00",
   "P07_started": false,
   "owner_pipeline": "Finish all stage code first with zero test/build/lint/typecheck runs, then issue/fix/relevant-test cycle; efficient single local Docker drill and independent agent gates",
   "entry_P05": {
@@ -108,8 +108,8 @@
     "evidence": ".docs/implementation/evidence/p06/quality-round02/INDEX.json"
   },
   "current_source": {
-    "git": "412b7e3f94b84ac094127d13f32c52aaa8d62896",
-    "core": "bb7ed1fc354e8ffb018493e4bb11b0cadff87e90e52165da15326639c57163b9",
+    "git": "f850cf4d45b9547711d2475a99b8dc71bd39e184",
+    "core": "26e08cb5534d14d6b3b6e774bea7bda301d330c6d7d14e55713611d68e66b457",
     "files": 1942
   },
   "quality_round01": {
@@ -119,5 +119,21 @@
     "fail": 1,
     "skip": 3,
     "evidence": ".docs/implementation/evidence/p06/quality-round01/INDEX.json"
-  }
+  },
+  "docker_attempts": [
+    {
+      "round": 1,
+      "status": "FAIL_PRE_INSTALL_REGISTRY_PUSH"
+    },
+    {
+      "round": 2,
+      "status": "FAIL_PRE_INSTALL_FAULT_FROM_RESOLUTION"
+    },
+    {
+      "round": 3,
+      "status": "RUNNING",
+      "project": "venus-p06-36b8655ff4"
+    }
+  ],
+  "quality_reuse_boundary": "Exact quality02 corebb7ed1; delta only2 fixture harness files; targeted lint04/05 PASS; actual new-source drill pending"
 }
