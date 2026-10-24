@@ -2,8 +2,8 @@
   "schema_version": 1,
   "stage": "P06",
   "profile": "standalone-local-pilot-v2",
-  "status": "ACTUAL_DOCKER06_MANDATORY_COVERAGE_RUNNING",
-  "updated_at_utc": "2026-10-24T19:58:44.171506+00:00",
+  "status": "HOLD_OWNER_KEY_AND_ACTUAL_SIGNED_SERVICE_RELEASE",
+  "updated_at_utc": "2026-10-24T20:35:28.287243+00:00",
   "P07_started": false,
   "owner_pipeline": "Finish all stage code first with zero test/build/lint/typecheck runs, then issue/fix/relevant-test cycle; efficient single local Docker drill and independent agent gates",
   "entry_P05": {
@@ -18,35 +18,91 @@
   "gates": [
     {
       "id": "PLAN-P06-RELEASE",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS_FIXTURE_AND_RELEASE_PIPELINE_READINESS_ONLY",
+      "full_stage": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-INSTALL",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-SCOPE",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-BACKUP",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-UPDATE-ACL",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-FAULTS",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-MONOTONIC",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     },
     {
       "id": "PLAN-P06-RECOVERY",
-      "status": "NOT_RUN"
+      "local_pre_sign": "PASS",
+      "full_stage": "PASS_STANDALONE_LOCAL_SUBSET",
+      "evidence": [
+        ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+        ".docs/implementation/evidence/p06/docker-round09/INDEX.json",
+        ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+        ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json"
+      ]
     }
   ],
   "real_signing_environment": "LOCAL_KEY_PREPARED_OWNER_APPROVAL_GITHUB_ENVIRONMENT_PENDING",
@@ -54,22 +110,14 @@
   "production_DNS_TLS_UDP": "DEFERRED_NOT_LOCAL_PASS",
   "independent_stage_reviews": [
     {
-      "reviewer": "engineering",
-      "round01": "CHANGES_REQUIRED",
-      "findings": [
-        "E01",
-        "E02"
-      ],
-      "round02": "RUNNING"
+      "path": ".docs/implementation/reviews/p06/engineering-round05/DECISION.json",
+      "sha256": "03746056278f94a2c01052966d79765894bd1eaae52eddde8a64969d82049dc5",
+      "independent_nonauthor": true
     },
     {
-      "reviewer": "security",
-      "round01": "HOLD",
-      "findings": [
-        "SEC01",
-        "SEC02"
-      ],
-      "round02": "RUNNING"
+      "path": ".docs/implementation/reviews/p06/security-round04/FINAL_DECISION.json",
+      "sha256": "714f7fbf89fac7b417c4e2529fe11e8eb351198fd2465a9a8802da232444b9a3",
+      "independent_nonauthor": true
     }
   ],
   "initial_implementation_completed_at_utc": "2026-10-24T18:48:40.499072+00:00",
@@ -106,7 +154,16 @@
       "native_exit": 0,
       "LinuxDocker": true
     },
-    "lint09": 0
+    "lint09": 0,
+    "unit09": {
+      "PASS": 28,
+      "FAIL": 0,
+      "SKIP": 0,
+      "native_exit": 0,
+      "LinuxDocker": true
+    },
+    "lint13": 0,
+    "types02": 0
   },
   "quality_round02": {
     "status": "PASS",
@@ -116,8 +173,8 @@
     "evidence": ".docs/implementation/evidence/p06/quality-round02/INDEX.json"
   },
   "current_source": {
-    "git": "4d9098932bd5922246d8db7a2bac7a8d89f9fe61",
-    "core": "e3dc32ac0fd039e674f2ca0e5fd69a1a48595137168f7af474f59200825c1999",
+    "git": "92b7f9d9c5dd5caa6a0953f28ed8e984e04393ba",
+    "core": "fe51759f0c5c3c605b260c14121ae60ed12e7999783b9dcc1c6aa3a2ea8f876d",
     "files": 1942
   },
   "quality_round01": {
@@ -131,30 +188,105 @@
   "docker_attempts": [
     {
       "round": 1,
-      "status": "FAIL_PRE_INSTALL_REGISTRY_PUSH"
+      "status": "FAIL_PRE_INSTALL_FIXTURE_REGISTRY_TRANSPORT",
+      "evidence": ".docs/implementation/evidence/p06/docker-round01/INDEX.json"
     },
     {
       "round": 2,
-      "status": "FAIL_PRE_INSTALL_FAULT_FROM_RESOLUTION"
+      "status": "FAIL_PRE_INSTALL_FIXTURE_BASE_RESOLUTION_FIXED",
+      "evidence": ".docs/implementation/evidence/p06/docker-round02/INDEX.json"
     },
     {
       "round": 3,
-      "status": "RUNNING",
-      "project": "venus-p06-36b8655ff4"
+      "status": "FAIL_INITIAL_INSTALL_MISSING_PINNED_POSTGRES_IMAGE",
+      "evidence": ".docs/implementation/evidence/p06/docker-round03/INDEX.json"
     },
     {
       "round": 4,
-      "status": "FAIL_AFTER_INSTALL_ACL_READER_VALID_FIXTURE_SQL_GUARD"
+      "status": "FAIL",
+      "evidence": ".docs/implementation/evidence/p06/docker-round04/INDEX.json"
     },
     {
       "round": 5,
-      "status": "FAIL_AFTER9_PARTIAL_CHECKS_FIXTURE_PID1_SIGNAL_IGNORED"
+      "status": "FAIL",
+      "evidence": ".docs/implementation/evidence/p06/docker-round05/INDEX.json"
     },
     {
       "round": 6,
-      "status": "RUNNING"
+      "status": "FAIL",
+      "evidence": ".docs/implementation/evidence/p06/docker-round06/INDEX.json"
+    },
+    {
+      "round": 7,
+      "status": "FAIL",
+      "evidence": ".docs/implementation/evidence/p06/docker-round07/INDEX.json"
+    },
+    {
+      "round": 8,
+      "status": "FAIL",
+      "evidence": ".docs/implementation/evidence/p06/docker-round08/INDEX.json"
+    },
+    {
+      "round": 9,
+      "status": "PASS",
+      "evidence": ".docs/implementation/evidence/p06/docker-round09/INDEX.json"
     }
   ],
-  "quality_reuse_boundary": "Exact quality02 corebb7ed1; delta only2 fixture harness files; targeted lint04/05 PASS; actual new-source drill pending",
-  "current_component_packet": ".docs/implementation/evidence/p06/fast-preflight03/INDEX.json"
+  "quality_reuse_boundary": "quality03 rerun on exact freeze11 after Rooms.maintain product change; earlier quality02 remains historical only.",
+  "current_component_packet": ".docs/implementation/evidence/p06/fast-preflight04/INDEX.json",
+  "quality_round03": {
+    "status": "PASS",
+    "exit": 0,
+    "source_git": "92b7f9d9c5dd5caa6a0953f28ed8e984e04393ba",
+    "source_identity": "fe51759f0c5c3c605b260c14121ae60ed12e7999783b9dcc1c6aa3a2ea8f876d",
+    "evidence": ".docs/implementation/evidence/p06/quality-round03/INDEX.json",
+    "JS_PASS": 1315,
+    "JS_SKIP": 3,
+    "Python_PASS": 124,
+    "catalog_history_PASS": 14,
+    "cleanup": "completed",
+    "clean_source_before_after": true
+  },
+  "measured_recovery": {
+    "packet": ".docs/implementation/evidence/p06/recovery-measurements01/INDEX.json",
+    "event_interval_ms": [
+      2578,
+      8792
+    ],
+    "backup_age_at_recovered_event_ms": [
+      3498,
+      36311
+    ],
+    "precision": "1ms UTC wall-clock event timestamps; not engine stopwatch or production SLA",
+    "recoveries": 7
+  },
+  "local_pre_sign": "PASS_PRE_SIGN_STANDALONE_LOCAL_PILOT",
+  "part12_status_counts": {
+    "PASS": 66,
+    "PENDING_FINAL_SIGNED_ARTIFACT_ONLY": 8,
+    "N_A": 34,
+    "DEFERRED_PRODUCTION_NOT_LOCAL_PASS": 10
+  },
+  "local_acceptance_packet": ".docs/implementation/evidence/p06/pre-sign-acceptance01/INDEX.json",
+  "open_local_findings": [],
+  "blockers": [
+    {
+      "id": "P06-OWNER-KEY-01",
+      "status": "PENDING_OWNER_ASYNC_REPLY",
+      "authority": ".docs/10_IMPLEMENTATION_PLAN.md section10: owner confirms real secrets when needed",
+      "key_id": "59a72237edc78adf5874cd609471324108e55b2ac6e81f7ac63ed31f1038e1fb",
+      "private_key_in_git_image_logs": false,
+      "requested_decision": "Approve this service key and storing its private part as VENUS_RELEASE_PRIVATE_KEY in GitHub Environment venus-release for psewdon1m/venus; or explicitly defer the real service release.",
+      "trust_owner_approved": false,
+      "environment_secret_uploaded": false,
+      "downstream_work_not_run": [
+        "Protect/configure signing environment and activate approved public trust through new source revision",
+        "Rebind exact changed source, applicable tests and two independent pre-sign reports",
+        "Required remote CI and exact main binding",
+        "Create immutable qualified venus-v0.0.1 with one OCI digest and signed bundle",
+        "Verify published assets anonymously and exact service-image installation; final EXIT decision"
+      ],
+      "P07_started": false
+    }
+  ]
 }

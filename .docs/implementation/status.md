@@ -1,10 +1,12 @@
 # Текущий статус — P06
 
-P06 в работе; P07 не начат. Полный clean-source Docker quality02 прошёл (1315 PASS, 3 SKIP); после него исправлена загрузка закреплённого PostgreSQL image для чистой установки, 27/27 профильных unit и lint PASS.
+**P06: реализация и независимые локальные pre-sign гейты PASS; полный EXIT HOLD до реального подписанного service release. P07 не начат.**
 
-Практический Docker-прогон подтвердил установку A, operator ACL, изоляцию читателя, Chromium UI, отказы по диску/правам/загрузке и full PostgreSQL restore после health/migration faults. Полный EXIT ещё не пройден: текущий round06 проверяет реальные SIGKILL-фазы, offline load, 502, порт, counts и новые ledgers поверх старой БД. Прежние FAIL сохранены. Реальный signing key подготовлен вне Git; его активация и GitHub secret ожидают явного подтверждения владельца.
+Clean tested Git `92b7f9d9c5dd5caa6a0953f28ed8e984e04393ba`, core `fe51759f0c5c3c605b260c14121ae60ed12e7999783b9dcc1c6aa3a2ea8f876d`, 1942 файла. Quality03: 1315 JS PASS/3 platform SKIP, 124 Python PASS; профильные unit28/28; Docker09:18 checks PASS,9 SIGKILL-фаз,full PostgreSQL restore и newer-ledger replay. Engineering/QA и Security/Privacy: PASS_PRE_SIGN, открытых локальных замечаний нет. Все118 ID:66localPASS/34N_A/8signed-artifact pending/10production deferred.
 
-[План P06](../10_IMPLEMENTATION_PLAN.md) · [Operator runbook](P06_OPERATOR_RUNBOOK.md) · [Recovery profile](p06-recovery-profile.v1.json) · [Реестр P06](p06-registry.json).
+От владельца ожидается ответ на уже отправленный запрос подтверждения реального ключа и GitHub secret. Public trust остаётся owner_approved:false, secret не загружен. После решения нужны exact-source rebind, main/tag/CI и фактические signed/published assets `venus-v0.0.1`; fixture PASS их не заменяет.
+
+[Итоговый отчёт P06](evidence/p06/pre-sign-acceptance01/REPORT.md) · [Решение/118 ID](evidence/p06/pre-sign-acceptance01/DECISION.json) · [Блокер](evidence/p06/pre-sign-acceptance01/BLOCKERS.json) · [Основной план](../10_IMPLEMENTATION_PLAN.md) · [Operator runbook](P06_OPERATOR_RUNBOOK.md) · [Реестр](p06-registry.json).
 
 Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
 
