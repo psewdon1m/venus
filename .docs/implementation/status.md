@@ -1,12 +1,12 @@
 # Текущий статус — P06
 
-**P06: реализация и независимые локальные pre-sign гейты PASS; полный EXIT HOLD до реального подписанного service release. P07 не начат.**
+P06: владелец подтвердил реальный signing key и GitHub secret (U-020/ADR-032). Protected Environment `venus-release` с owner review и только tags `venus-v*` настроен; secret загружен шифрованным LibSodium sealed box, проверены точный key_id и metadata. P07 не начат.
 
-Clean tested Git `92b7f9d9c5dd5caa6a0953f28ed8e984e04393ba`, core `fe51759f0c5c3c605b260c14121ae60ed12e7999783b9dcc1c6aa3a2ea8f876d`, 1942 файла. Quality03: 1315 JS PASS/3 platform SKIP, 124 Python PASS; профильные unit28/28; Docker09:18 checks PASS,9 SIGKILL-фаз,full PostgreSQL restore и newer-ledger replay. Engineering/QA и Security/Privacy: PASS_PRE_SIGN, открытых локальных замечаний нет. Все118 ID:66localPASS/34N_A/8signed-artifact pending/10production deferred.
+Новый clean source `c9ecc8cd484b28d4c21705ebf08274807663883c`, core `a1c9947e6d8f29ebf8fe17bd1e5935ebc5448ad9769d2f2e0b598b785a01d072`,1944 файла. Изменились только шесть файлов решений/trust/release workflow; код app/operator/DB/tests/compose не менялся. Профильные Linux unit10:28/28PASS; docs03:1914Markdown0errors. Независимые Engineering/Security выдали PASS_PRE_SIGN; открытых локальных замечаний нет. Новый [pre-sign02](evidence/p06/pre-sign-acceptance02/REPORT.md) сохраняет прежние proof отдельно. Прежние quality03/actual09 сохраняют старую provenance92b7f9/corefe517 и применяются только к неизменным компонентам.
 
-От владельца ожидается ответ на уже отправленный запрос подтверждения реального ключа и GitHub secret. Public trust остаётся owner_approved:false, secret не загружен. После решения нужны exact-source rebind, main/tag/CI и фактические signed/published assets `venus-v0.0.1`; fixture PASS их не заменяет.
+Настоящий `venus-v0.0.1`, exact main/tag/OCI/signature и опубликованные assets ещё NOT_RUN; полный EXIT-P06 пока HOLD до их проверки. Отдельно будет проверена возможность anonymous pull точного GHCR image для чистой установки; публичный GitHub release сам этого не доказывает.
 
-[Итоговый отчёт P06](evidence/p06/pre-sign-acceptance01/REPORT.md) · [Решение/118 ID](evidence/p06/pre-sign-acceptance01/DECISION.json) · [Блокер](evidence/p06/pre-sign-acceptance01/BLOCKERS.json) · [Основной план](../10_IMPLEMENTATION_PLAN.md) · [Operator runbook](P06_OPERATOR_RUNBOOK.md) · [Реестр](p06-registry.json).
+[Активный план](../10_IMPLEMENTATION_PLAN.md) · [U-020](user-decisions.v5.json) · [Signing environment receipts](evidence/p06/signing-environment01/INDEX.json) · [Targeted checks](evidence/p06/service-preflight01/INDEX.json) · [Реестр](p06-registry.json).
 
 Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
 
