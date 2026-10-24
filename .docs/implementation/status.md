@@ -1,3 +1,11 @@
+# Текущий статус — P06
+
+P06 в работе по поручению владельца от 2026-10-24. Первоначальная реализация завершена до первого теста. Быстрый цикл:22/22 unit в Linux Docker, lint/typecheck/docs PASS; полные Docker install/update/restore и независимые stage-гейты ещё не пройдены. Реальный signing key подготовлен вне Git, активация/GitHub secret ожидают явного подтверждения владельца. P07 не начат.
+
+[План P06](../10_IMPLEMENTATION_PLAN.md) · [Operator runbook](P06_OPERATOR_RUNBOOK.md) · [Recovery profile](p06-recovery-profile.v1.json) · [Реестр P06](p06-registry.json).
+
+Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
+
 # Статус Venus P05
 
 **P05 закрыт — PASS в scope standalone-local-pilot-v2.** Технический вход P04 локального пилота также принят. P06 не начат; дальнейшая работа остановлена.

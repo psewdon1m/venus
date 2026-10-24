@@ -66,6 +66,8 @@ jobs:
           mkdir -p .artifacts/p06-published-roundtrip
           gh release download "$RELEASE_TAG" --dir .artifacts/p06-published-roundtrip
           node tools/venus-operator/verify-published.mjs .artifacts/p06-service-candidate.json .artifacts/p06-published-roundtrip
-      - name: Publish after all gates
+      - name: Publish local-pilot prerelease without production latest alias
         env: {GH_TOKEN: '${{ github.token }}', RELEASE_TAG: '${{ github.ref_name }}'}
-        run: gh release edit "$RELEASE_TAG" --draft=false
+        run: gh release edit "$RELEASE_TAG" --draft=false --prerelease --latest=false
+      - name: Anonymous external signed-asset smoke
+        run: node tools/venus-operator/verify-published.mjs .artifacts/p06-service-candidate.json .artifacts/p06-published-roundtrip --anonymous
