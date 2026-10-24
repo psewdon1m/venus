@@ -29,7 +29,7 @@ export class DockerDriver{
   requireValue(Number.isInteger(this.c.port)&&this.c.port>=1024&&this.c.port<=65535,'INVALID_PORT');const origin=new URL(this.c.app_origin);requireValue(origin.origin===this.c.app_origin&&origin.protocol==='https:'&&['localhost','127.0.0.1','[::1]'].includes(origin.hostname),'ENVIRONMENT_NOT_LOCAL_PILOT');
   const existing=await this.inspect('app');if(!install)requireValue(existing?.State?.Running,'HEALTHY_A_REQUIRED');
   const ids=(await this.docker(['ps','-q'])).toString().trim().split('\n').filter(Boolean);
-  if(ids.length){const states=JSON.parse((await this.docker(['inspect',...ids])).toString());for(const row of states)for(const binds of Object.values(row.HostConfig.PortBindings??{}))for(const b of binds??[])if(Number(b.HostPort)===this.c.port)requireValue(row.Config.Labels?.['com.docker.compose.project']===this.c.project,'PORT_IN_USE');}
+  if(ids.length){const states=JSON.parse((await this.docker(['inspect',...ids])).toString());for(const row of states)for(const binds of [...Object.values(row.HostConfig.PortBindings??{}),...Object.values(row.NetworkSettings.Ports??{})])for(const b of binds??[])if(Number(b.HostPort)===this.c.port)requireValue(row.Config.Labels?.['com.docker.compose.project']===this.c.project,'PORT_IN_USE');}
   requireValue(release.schema.generation===1,'SCHEMA_UNSUPPORTED');
   if(existing)await this.healthy();
  }
