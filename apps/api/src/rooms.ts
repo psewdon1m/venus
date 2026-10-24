@@ -433,10 +433,14 @@ export class Rooms {
     if(privateHooks) {await c.query('DELETE FROM private_topic_preferences WHERE room_id=$1',[room.id]);await c.query('DELETE FROM private_topic_requests WHERE room_id=$1',[room.id]);}
   }
   async maintain() {
-    for(const [id,closedAt] of this.options.ledger.entries()) await this.options.pool.query('UPDATE rooms SET state=\'closed\',closed_at=COALESCE(closed_at,$2) WHERE id=$1 AND state<>\'closed\'',[id,new Date(closedAt)]);
+    const retired=new Map(this.options.ledger.entries());
     const rooms=await this.options.pool.query<{id:string}>('SELECT id FROM rooms ORDER BY id');
     for(const {id} of rooms.rows) await this.transaction(async c=>{
       const room=await this.room(c,id);
+      // Replay the protected global close through the same lifecycle authority
+      // under the room lock before cleanup; SQL state alone cannot retire V2.
+      const closedAt=retired.get(id);
+      if(closedAt!==undefined) await this.closeRoom(c,room,randomUUID(),closedAt);
       const privateHooks=this.privateHooks(room);
       if(privateHooks) {
         const recovery=await privateHooks.recovery(c,id);
