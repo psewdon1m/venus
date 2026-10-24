@@ -1,12 +1,12 @@
 # Текущий статус — P06
 
-P06: владелец подтвердил реальный signing key и GitHub secret (U-020/ADR-032). Protected Environment `venus-release` с owner review и только tags `venus-v*` настроен; secret загружен шифрованным LibSodium sealed box, проверены точный key_id и metadata. P07 не начат.
+Owner signing key и protected GitHub environment готовы (U020/ADR032). Текущий clean source911ac077/core5a917292,1944файла; actual10:18PASS/9SIGKILL/fullPGrestore и ledger replay. Engineering/QA и Security дали PASS_PRE_SIGN03. P07 не начат.
 
-Новый clean source `c9ecc8cd484b28d4c21705ebf08274807663883c`, core `a1c9947e6d8f29ebf8fe17bd1e5935ebc5448ad9769d2f2e0b598b785a01d072`,1944 файла. Изменились только шесть файлов решений/trust/release workflow; код app/operator/DB/tests/compose не менялся. Профильные Linux unit10:28/28PASS; docs03:1914Markdown0errors. Независимые Engineering/Security выдали PASS_PRE_SIGN; открытых локальных замечаний нет. Новый [pre-sign02](evidence/p06/pre-sign-acceptance02/REPORT.md) сохраняет прежние proof отдельно. Прежние quality03/actual09 сохраняют старую provenance92b7f9/corefe517 и применяются только к неизменным компонентам.
+В GitHub прежний candidate358a/corea1 получил FAIL из-за hardcoded socketgroup0 у fixture executor. Фикс измеряет GID сокета и добавляет группу только исполнителю, не меняя приложение/права сокета/consumer/operator. Localactual10 и lint14PASS; nonzero-GID GitHub должен пройти на новом head. Прежние FAIL/cancelled checks сохранены и не объявлены зелёными.
 
-Настоящий `venus-v0.0.1`, exact main/tag/OCI/signature и опубликованные assets ещё NOT_RUN; полный EXIT-P06 пока HOLD до их проверки. Отдельно будет проверена возможность anonymous pull точного GHCR image для чистой установки; публичный GitHub release сам этого не доказывает.
+Полный EXIT-P06 HOLD до нового обязательного CI, exactmain/tag, одного настоящего OCI/signature/assets и anonymous image pull. После первого GHCR publish владелец переведёт пакет в Public; до этого анонимная доступность не заявлена.
 
-[Активный план](../10_IMPLEMENTATION_PLAN.md) · [U-020](user-decisions.v5.json) · [Signing environment receipts](evidence/p06/signing-environment01/INDEX.json) · [Targeted checks](evidence/p06/service-preflight01/INDEX.json) · [Реестр](p06-registry.json).
+[Актуальный pre-sign03](evidence/p06/pre-sign-acceptance03/REPORT.md) · [Матрица118](evidence/p06/pre-sign-acceptance03/DECISION.json) · [Реестр](p06-registry.json) · [План](../10_IMPLEMENTATION_PLAN.md) · [Runbook](P06_OPERATOR_RUNBOOK.md).
 
 Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
 
