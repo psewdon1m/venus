@@ -1,0 +1,89 @@
+✔ P06 image archive reads actual config bytes in classic and OCI save formats without extracting layers (4.034001ms)
+✔ P06 image archive rejects config hash substitution, header corruption and truncation (2.107897ms)
+✖ P06 classic config ID is verified directly and used for serving without an extra archive (0.587634ms)
+✖ P06 containerd manifest ID requires actual config validation before native-ID mapping and serving (1.70364ms)
+✖ P06 native OCI ID alone cannot bypass signed config or exact repository digest validation (0.861075ms)
+✖ P06 offline archive restores both native ID families with config/OCI/labels binding and no registry (0.302872ms)
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (40.56413ms)
+✔ P06-RELEASE reject signed wrong version (18.497166ms)
+✔ P06-RELEASE reject signed wrong schema (18.369055ms)
+✔ P06-RELEASE reject signed wrong environment (21.737729ms)
+✔ P06-RELEASE reject signed wrong image digest (19.001736ms)
+✔ P06-RELEASE reject signed wrong main SHA (18.848688ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (18.667888ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (68.178686ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (44.100471ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (49.766327ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (51.308395ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (57.047144ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (61.655951ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (57.572089ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (58.35919ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (81.768096ms)
+✔ P06-JOURNAL corruption fails closed without mutation (34.470838ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (474.064515ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (122.867597ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (29.181161ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (33.28855ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1790.307005ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (59.402114ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (45.001002ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (55.215902ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (31.748686ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (31.553035ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (93.105358ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 30
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3764.106913
+
+✖ failing tests:
+
+test at tests/p06/image-identity.test.mjs:18:1
+✖ P06 classic config ID is verified directly and used for serving without an extra archive (0.587634ms)
+  Error: IMAGE_DIGEST_MISMATCH
+      at requireValue (file:///repo/tools/venus-operator/files.mjs:6:58)
+      at DockerDriver.imageMapFile (file:///repo/tools/venus-operator/driver.mjs:37:24)
+      at DockerDriver.bindImage (file:///repo/tools/venus-operator/driver.mjs:40:202)
+      at DockerDriver.verifyLocalImage (file:///repo/tools/venus-operator/driver.mjs:49:15)
+      at DockerDriver.ensureImage (file:///repo/tools/venus-operator/driver.mjs:56:113)
+      at async TestContext.<anonymous> (file:///repo/tests/p06/image-identity.test.mjs:18:252)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/p06/image-identity.test.mjs:19:1
+✖ P06 containerd manifest ID requires actual config validation before native-ID mapping and serving (1.70364ms)
+  Error: IMAGE_DIGEST_MISMATCH
+      at requireValue (file:///repo/tools/venus-operator/files.mjs:6:58)
+      at DockerDriver.imageMapFile (file:///repo/tools/venus-operator/driver.mjs:37:24)
+      at DockerDriver.bindImage (file:///repo/tools/venus-operator/driver.mjs:40:202)
+      at DockerDriver.verifyLocalImage (file:///repo/tools/venus-operator/driver.mjs:49:15)
+      at async DockerDriver.ensureImage (file:///repo/tools/venus-operator/driver.mjs:56:102)
+      at async TestContext.<anonymous> (file:///repo/tests/p06/image-identity.test.mjs:19:413)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/p06/image-identity.test.mjs:20:1
+✖ P06 native OCI ID alone cannot bypass signed config or exact repository digest validation (0.861075ms)
+  Error: IMAGE_DIGEST_MISMATCH
+      at requireValue (file:///repo/tools/venus-operator/files.mjs:6:58)
+      at DockerDriver.imageMapFile (file:///repo/tools/venus-operator/driver.mjs:37:24)
+      at TestContext.<anonymous> (file:///repo/tests/p06/image-identity.test.mjs:20:452)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+
+test at tests/p06/image-identity.test.mjs:21:1
+✖ P06 offline archive restores both native ID families with config/OCI/labels binding and no registry (0.302872ms)
+  Error: IMAGE_DIGEST_MISMATCH
+      at requireValue (file:///repo/tools/venus-operator/files.mjs:6:58)
+      at DockerDriver.imageMapFile (file:///repo/tools/venus-operator/driver.mjs:37:24)
+      at DockerDriver.bindImage (file:///repo/tools/venus-operator/driver.mjs:40:202)
+      at DockerDriver.verifyLocalImage (file:///repo/tools/venus-operator/driver.mjs:49:15)
+      at DockerDriver.ensureImage (file:///repo/tools/venus-operator/driver.mjs:56:113)
+      at async TestContext.<anonymous> (file:///repo/tests/p06/image-identity.test.mjs:21:593)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7)

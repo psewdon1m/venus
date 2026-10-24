@@ -1,0 +1,42 @@
+✔ P06 image archive reads actual config bytes in classic and OCI save formats without extracting layers (3.540779ms)
+✔ P06 image archive rejects config hash substitution, header corruption and truncation (1.746863ms)
+✔ P06 classic config ID is verified directly and used for serving without an extra archive (1.145905ms)
+✔ P06 containerd manifest ID requires actual config validation before native-ID mapping and serving (1.562664ms)
+✔ P06 native OCI ID alone cannot bypass signed config or exact repository digest validation (0.941155ms)
+✔ P06 offline archive restores both native ID families with config/OCI/labels binding and no registry (4.207666ms)
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (41.231207ms)
+✔ P06-RELEASE reject signed wrong version (19.569921ms)
+✔ P06-RELEASE reject signed wrong schema (20.000626ms)
+✔ P06-RELEASE reject signed wrong environment (18.522201ms)
+✔ P06-RELEASE reject signed wrong image digest (18.723766ms)
+✔ P06-RELEASE reject signed wrong main SHA (18.522501ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (18.97127ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (107.42904ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (41.990327ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (68.919107ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (62.16816ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (67.373653ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (57.421896ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (67.219638ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (63.011524ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (74.923192ms)
+✔ P06-JOURNAL corruption fails closed without mutation (43.573145ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (490.376483ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (110.664941ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (21.845548ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (34.951881ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1794.073843ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (61.306442ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (37.984733ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (38.204801ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (24.298412ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (27.982768ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (90.285744ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3833.133936

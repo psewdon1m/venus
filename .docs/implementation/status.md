@@ -2,11 +2,13 @@
 
 По прямому U-021/ADR-033 четыре тяжёлых измерения P03 вынесены в отдельный ручной `Venus optional P03 statistics` без изменения выборок/порогов. Защита main фактически требует пять quality/integration проверок; strict и остальные поля защиты сохранены. Незавершённые статистические задания прежнего head отменены, это не PASS.
 
-Текущий source cf2d6195/coree87d9b1b/1948: приложение не менялось; исправлены существующие CI-policy и P04 read-only expiry tests. Оба независимых source review05 приняли изменения. P04 preflight: native0,11PASS, sourcecore unchanged, cleanup completed; dirty tree не выдаётся за clean CI. Новый [pre-sign04](evidence/p06/pre-sign-acceptance04/REPORT.md) условен до пяти проверок финального head.
+CI policy revision8234e88e/coree87 passed5/5mandatory checks, statisticsNOTRUN. P04 expiry test source fix confirmed in actual CI. Это принятый компонент, не доказательство последующей I01-правки.
+
+Текущий clean source9434257/cored44f9f1f/1951: I01 исправлен, unit34PASS и fullDockeractual11:18PASS/41native0/9SIGKILL/реальныйofflinearchive reload/cleanup complete. Два независимых review06 закрыли I01 local и приняли [pre-sign05](evidence/p06/pre-sign-acceptance05/REPORT.md). Прежние source-only и pre-sign04 сохранены; полный EXIT ещё HOLD до currentCI/main/tag/настоящих подписанных assets/точного publishedimage install/anonymouspull.
 
 Предварительный образ version0.0.0 опубликован, владелец сделал пакет Public, анонимный pull точногоdigest0653678...f4b3e PASS. Это unsignedpreview source195e2302, не qualifiedrelease и не приёмка P06.
 
-Owner-approved key/env готовы U020. Осталось: текущий CI/independent rebind, exactmain/tag, подписанный0.0.1/один OCI/публичные assets, anonymous image pull после изменения видимости владельцем и финальная независимая приёмка. P07 не начат.
+Owner-approved key/env готовы U020. Осталось: текущий CI/independent rebind, exactmain/tag, подписанный0.0.1/один OCI/публичные assets, anonymous pull/install точного сервисного digest (пакет уже Public) и финальная независимая приёмка. P07 не начат.
 
 [Реестр](p06-registry.json) · [CI policy proof](evidence/p06/ci-policy-u02101/INDEX.json) · [План](../10_IMPLEMENTATION_PLAN.md).
 

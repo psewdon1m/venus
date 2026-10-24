@@ -1,0 +1,358 @@
+{
+  "status": "PASS",
+  "source_git": "9434257b3b651bf1f985eb782a04a8973f9673de",
+  "source_identity": "d44f9f1f0da5dd685685bedfe485046a0e31e5d3fd05c0f457b46e7e5e5e28cc",
+  "note": "PASS exact clean9434257/cored44f/1951; actual config08ee differs native OCIe03d;18checks including actual cache-absent registry-off offline recovery. Fixture keys only, no qualified service signature/publication claim.",
+  "partial_checks": [
+    {
+      "id": "P06-INSTALL",
+      "status": "PASS",
+      "version": "0.0.9001",
+      "OCI": "sha256:e03d22c957a5264c8b1718b322b5b5eae6302a135c23eef9d68e3b57e1b4078c",
+      "config_digest": "sha256:08ee956b51c90b0782ec8583e3e1503bf6ddb42dcd6fc6346de2cc54b326c3d6"
+    },
+    {
+      "id": "P06-UPDATE-ACL",
+      "status": "PASS",
+      "distinct_UIDs": {
+        "executor": 1001,
+        "operator": 1002,
+        "consumer": 1000
+      },
+      "room_host_denied": true,
+      "foreign_origin_denied": true,
+      "command_fields_denied": true
+    },
+    {
+      "id": "P06-INDEPENDENT-READER",
+      "status": "PASS",
+      "app_edge_IP": "172.22.0.2",
+      "db_not_on_reader_network": true,
+      "app_internals_not_mounted": true
+    },
+    {
+      "id": "P06-OPERATOR-NATIVE-UI",
+      "status": "PASS",
+      "browser": "Chromium",
+      "version": "156.0.8078.4",
+      "job_id": "58ae45e8-9d63-4635-a1e0-0ac33db69e2c",
+      "actual_UI_create_confirm_reload_reauth_cancel": true,
+      "injected_browser_edge_502_after_real_confirm": true,
+      "confirmed_server_side": true,
+      "same_job_recovered_after_lost_ack": true,
+      "no_browser_credential_storage": true,
+      "page_errors": 0
+    },
+    {
+      "id": "P06-PORT-NO-MUTATION",
+      "status": "PASS",
+      "occupied_by_owned_operator": true,
+      "healthy_A": true,
+      "counts_preserved": true
+    },
+    {
+      "id": "P06-DISK-NO-MUTATION",
+      "status": "PASS",
+      "real_available_bytes": 990306054144,
+      "required_bytes": 1125899906842624,
+      "healthy_A": true
+    },
+    {
+      "id": "P06-REAL-PULL-FAILURE",
+      "status": "PASS",
+      "healthy_A": true,
+      "no_quiesce_no_mutation": true,
+      "original_error": "COMMAND_FAILED",
+      "operation": "docker_pull"
+    },
+    {
+      "id": "P06-PERMISSIONS-NO-MUTATION",
+      "status": "PASS",
+      "actual_executor_UID": 1001,
+      "readonly_backup_directory": true,
+      "original_errno": "EACCES",
+      "healthy_A": true
+    },
+    {
+      "id": "P06-REAL-HEALTH-FAULT",
+      "status": "PASS",
+      "actual_Docker_start_failure": true,
+      "real_PG_restore": true,
+      "backup_committed_records_lost": 0,
+      "original_observable_error": "HEALTH_FAILED",
+      "failure_kind": "INTENTIONAL_FIXTURE_PROCESS_EXIT70"
+    },
+    {
+      "id": "P06-REAL-MIGRATION-FAULT",
+      "status": "PASS",
+      "actual_Docker_start_failure": true,
+      "real_PG_restore": true,
+      "backup_committed_records_lost": 0,
+      "original_observable_error": "HEALTH_FAILED",
+      "failure_kind": "POSTGRES_TRANSACTION_ERROR_ROLLED_BACK"
+    },
+    {
+      "id": "P06-OFFLINE-A-ABSENT",
+      "status": "PASS",
+      "own_A_cache_removed": true,
+      "own_registry_stopped": true,
+      "archive_hash_verified": true
+    },
+    {
+      "id": "P06-OFFLINE-A-LOADED",
+      "status": "PASS",
+      "cache_was_absent": true,
+      "actual_archive_loaded": true,
+      "registry_still_stopped": true,
+      "exact_A_runtime_healthy": true
+    },
+    {
+      "id": "P06-FAULTS",
+      "status": "PASS",
+      "actual_executor_SIGKILL_phases": 9,
+      "all_recovered_compatible_A": true,
+      "backup_committed_preferences_and_snapshot_preserved": true
+    },
+    {
+      "id": "P06-MONOTONIC",
+      "status": "PASS",
+      "old_backup_new_ledgers": true,
+      "newer_closed_room_not_revived": true,
+      "withdrawn_card_not_revived": true,
+      "external_post_backup_writes": 1,
+      "external_post_backup_writes_restored": 0,
+      "backup_records_lost_other_than_required_policy_deletion": 0,
+      "after": {
+        "counts": {
+          "rooms": 2,
+          "room_members": 2,
+          "private_preferences": 1,
+          "game_sessions": 1,
+          "game_participants": 1,
+          "venus_catalog_withdrawals": 1
+        },
+        "rooms": [
+          {
+            "id": "2bd04b3a-2eb2-4283-9b24-e32562960e94",
+            "state": "closed"
+          },
+          {
+            "id": "8cf685af-880c-4b15-98fd-0cf5907efab7",
+            "state": "open"
+          }
+        ],
+        "catalog": {
+          "active_digest": null,
+          "ledger_head": "a24f52331da0057e67c6498f5f6805f275bea3e88f8195420493caade5a48a3c"
+        },
+        "preferences_decrypted": 1,
+        "synthetic_completed_snapshots_decrypted": 1,
+        "post_backup_external_writes_present": 0
+      },
+      "protected_floor_sha256": "aa5d6e7234870d43dce1211b19b6fa50852a1ff458194602c0b727928af3e4b1"
+    },
+    {
+      "id": "P06-NO-AUTOMATIC-RESTORE",
+      "status": "PASS",
+      "ordinary_restart_preserves_post_backup_marker": true
+    },
+    {
+      "id": "P06-MONOTONIC-NEGATIVES",
+      "status": "PASS",
+      "missing_witness_not_recreated": true,
+      "regressed_catalogue_blocks_startup": true,
+      "explicit_fixture_repair_restored_same_authoritative_head": true
+    },
+    {
+      "id": "P06-UPDATE-COMMIT",
+      "status": "PASS",
+      "exact_B": true,
+      "replayed_apply_not_second_mutation": true,
+      "stable_job_after_operator_refresh_and_executor_restart": true
+    },
+    {
+      "id": "P06-BACKUP-RESTORE",
+      "status": "PASS",
+      "format": "VENUSBK1",
+      "owner_mode": "600",
+      "streaming": true,
+      "full_pg_restore_single_transaction": true,
+      "secrets_not_included": true,
+      "synthetic_encrypted_preferences_and_completed_snapshot_decrypted": true
+    }
+  ],
+  "files": {
+    "001.txt": {
+      "sha256": "b5bb65c444a6eea5fe102c52962a7394cbc6b24f4cdc39579b5bf2f1ff74b478",
+      "bytes": 206
+    },
+    "002.txt": {
+      "sha256": "309cd5a74c0ac5615a7babc109d1120b89e654d935df5dd5c6cf9d79869539e9",
+      "bytes": 2305
+    },
+    "003.txt": {
+      "sha256": "9e97f2f66c0160e33cf8b0a055d2a1aeea9189fed5a1a84b7705d8311af76f25",
+      "bytes": 2836
+    },
+    "004.txt": {
+      "sha256": "0db226916bd91e7df92ce4bfe433297e748b25045b054251b0a69a32d576de20",
+      "bytes": 2351
+    },
+    "005.txt": {
+      "sha256": "2ba88b3e467e46362be4e1aaeaca3fbed71cf85cc0dd72ffc4bba02d1c33b014",
+      "bytes": 65
+    },
+    "006.txt": {
+      "sha256": "604715fa1cdb6b3500ed7dcd0c28ae9b5b328ae05b1b78edb9d04b2b36271e42",
+      "bytes": 9054
+    },
+    "007.txt": {
+      "sha256": "72b536f0a8cfbc12a103943a86f15f61e2fb08f4d6a5d22dd41b877be95513db",
+      "bytes": 5300
+    },
+    "008.txt": {
+      "sha256": "7284bbf3ae9f058bcc066a697c943f1432077af05bae6cc233e04a3d81654d46",
+      "bytes": 3752
+    },
+    "009.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "010.txt": {
+      "sha256": "b8e1b7c51b0d5404278423957f0b802099d4f8a6ea2733490c54e0809c8f315e",
+      "bytes": 5305
+    },
+    "011.txt": {
+      "sha256": "79f614d8325c661eb3cc3d5f8a7c00ae1c4a5863bea7c82fdaa5ee295a8b469c",
+      "bytes": 3752
+    },
+    "012.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "013.txt": {
+      "sha256": "282cbb90c74e44509837c5e8a5cef8ad419050df4686b3a93da2e3859cf39424",
+      "bytes": 1746
+    },
+    "014.txt": {
+      "sha256": "86dd37ccba4c2e6ddc3577618550c4ef9e3e0b63da54851693b05f5ed02f57e2",
+      "bytes": 3967
+    },
+    "015.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "016.txt": {
+      "sha256": "a09c0f012cdeeb748893552c31f7934526ebcf5228e1e377d9f48f6251586f32",
+      "bytes": 1845
+    },
+    "017.txt": {
+      "sha256": "173a3be343de9cb377649f579d52ce9247a8a1282719676c3d375ab4065fb65b",
+      "bytes": 3973
+    },
+    "018.txt": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "019.txt": {
+      "sha256": "39c8b09a5f28d134981866e99cd6619db0cf3fbc7ade027bf08605d3631c42c5",
+      "bytes": 2210
+    },
+    "020.txt": {
+      "sha256": "1ab8e41f6dca2ef023487ad94c6ef3a17baa15d6f97591d365ee3bbaca8dd092",
+      "bytes": 2870
+    },
+    "021.txt": {
+      "sha256": "c251040ee0f09b40a33aa19f4d3e09f824afb5a2382dfb2f004a6b4fe1a5002f",
+      "bytes": 26
+    },
+    "022.txt": {
+      "sha256": "9bb1be8f940cd44cf6bc93257c1fae74bdbb60db1a5f6b735303987509fe26fc",
+      "bytes": 344
+    },
+    "023.txt": {
+      "sha256": "e19511fef4865cbfa353664f91bd05f891679dd261ddc4a9645e7b0eba4d97f2",
+      "bytes": 52090
+    },
+    "024.txt": {
+      "sha256": "80c2060e56654e7703399bcb8c024a7db3d5ace42b144b708b684abcd9d13769",
+      "bytes": 52
+    },
+    "025.txt": {
+      "sha256": "53c7ffadd3a342b7523c1c6a131a4d03dd4a46b46f3d4c196c8deef6a8e2df55",
+      "bytes": 8752
+    },
+    "026.txt": {
+      "sha256": "3bfd08abdf0b702a9628166985be2ec5071a09495b75f2e5b76bae7f70d49454",
+      "bytes": 13
+    },
+    "027.txt": {
+      "sha256": "f92175cdd3381854cee9948c90098b6e803ffaa9470c05706c16d518b60e50d3",
+      "bytes": 9798
+    },
+    "028.txt": {
+      "sha256": "93b3a5b498f8f99a178e65c5a358d91d676d64e4b0b44bb6ffcea774d88333e6",
+      "bytes": 13
+    },
+    "029.txt": {
+      "sha256": "42947b5e820731b570c5838c60a95bf889f7acdebcdb611f469242ff5cd21a55",
+      "bytes": 11557
+    },
+    "030.txt": {
+      "sha256": "b94c0cc9840dde384271ec91155cb28389f5670f8c9986f05b7e73894d842534",
+      "bytes": 13
+    },
+    "031.txt": {
+      "sha256": "f3e1692a6b6581a5cbf2de83d6623eefee2384b08e1cf87c075ee5eb1464bffb",
+      "bytes": 8664
+    },
+    "032.txt": {
+      "sha256": "a30dcb0517e115043e9764b954b8ea633841556f48078f9c676e63d8d4ed2dcf",
+      "bytes": 13
+    },
+    "033.txt": {
+      "sha256": "8568c66b16b6ec749ac1a5e61468a5d4b61cec5f97628d1b13f9ca7765901815",
+      "bytes": 26
+    },
+    "034.txt": {
+      "sha256": "2d6f13a1db35d188e45be9cc79d33e039f6fbb9424c564edae32a3a99f76ee2d",
+      "bytes": 15004
+    },
+    "035.txt": {
+      "sha256": "279b51e089878ccdb8bb9415cb1c8802e1c77261840ff3b0f3635f340c17abe0",
+      "bytes": 13
+    },
+    "036.txt": {
+      "sha256": "8eedd156f4be90a4825f1e38d4f2dbdd2c17aca511949f3837ad997a9cb0f9d5",
+      "bytes": 12652
+    },
+    "037.txt": {
+      "sha256": "a452f4273816c0bee5f404037c79e64f2661734b74a71df4c92db07df7ebbd0d",
+      "bytes": 13
+    },
+    "038.txt": {
+      "sha256": "c2e5eb44c0c8e404b3803924468839992c19e9c0e158675435477676732db842",
+      "bytes": 26
+    },
+    "039.txt": {
+      "sha256": "286e8a9d541f7a7b9bfcbdb8161d33507d916aad07fdaabb17f37e3b00a44016",
+      "bytes": 13
+    },
+    "040.txt": {
+      "sha256": "fbb7c4efa5490e93b17d430f36099be745f0edae3679bf5ad185d2660afbc949",
+      "bytes": 13
+    },
+    "041.txt": {
+      "sha256": "c251040ee0f09b40a33aa19f4d3e09f824afb5a2382dfb2f004a6b4fe1a5002f",
+      "bytes": 26
+    },
+    "report.json": {
+      "sha256": "c92595b90c966e5d8880d892d1f2be3c0626f3c924b05d23ce031428e3af478a",
+      "bytes": 82655
+    },
+    "DRILL.json": {
+      "sha256": "be90ddf36e576288a92230dfbe160919322145ac95ea7cb4e9e47a5940b90b72",
+      "bytes": 70537
+    }
+  }
+}
