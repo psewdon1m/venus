@@ -1,0 +1,29 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.failing
+#1 transferring dockerfile: 478B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for 127.0.0.1:32768/venus:fixture-0d1a8f7f88-b
+#2 DONE 0.0s
+
+#3 [internal] load build context
+#3 transferring context: 874B 0.0s done
+#3 DONE 0.0s
+
+#4 [1/2] FROM 127.0.0.1:32768/venus:fixture-0d1a8f7f88-b
+#4 DONE 0.1s
+
+#5 [2/2] COPY tests/p06/failing-start.mjs /app/p06-failing-start.mjs
+#5 DONE 0.0s
+
+#6 exporting to image
+#6 exporting layers
+#6 exporting layers 0.5s done
+#6 writing image sha256:8cae4c7f72974ccdc30e87fcb1c06f28e1a01b377a4e9501946a6760e79c53cf done
+#6 naming to 127.0.0.1:32768/venus:fixture-0d1a8f7f88-health done
+#6 DONE 0.5s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)
