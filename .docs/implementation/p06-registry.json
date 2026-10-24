@@ -2,8 +2,8 @@
   "schema_version": 1,
   "stage": "P06",
   "profile": "standalone-local-pilot-v2",
-  "status": "CORRECTED_SOURCE_LOCAL_PASS_NEW_HEAD_CI_PENDING",
-  "updated_at_utc": "2026-10-24T21:38:28.778364+00:00",
+  "status": "OWNER_OPTIONAL_STATISTICS_POLICY_FIVE_CI_AND_PREVIEW_IN_PROGRESS",
+  "updated_at_utc": "2026-10-24T21:52:01.834628+00:00",
   "P07_started": false,
   "owner_pipeline": "Finish all stage code first with zero test/build/lint/typecheck runs, then issue/fix/relevant-test cycle; efficient single local Docker drill and independent agent gates",
   "entry_P05": {
@@ -221,9 +221,10 @@
     "evidence": ".docs/implementation/evidence/p06/quality-round02/INDEX.json"
   },
   "current_source": {
-    "git": "911ac0771541a5f2c3c01f766f6222f383c21565",
-    "core": "5a917292b99797afaaf58c7f41e21a1a24cf3358d923da071cad782a96f5f087",
-    "files": 1944
+    "git": "195e2302899687e11cecde1920d64a040714745e",
+    "source_identity": "3a4eae5c3aef4ff8acf9a6cdb3ba6c0321614d8eabd0b61a632db850c2f9b3f6",
+    "files": 1948,
+    "source_freeze": ".docs/implementation/evidence/p06/service-source-freeze03/INDEX.json"
   },
   "quality_round01": {
     "status": "FAIL_PRESERVED_FIXED_CI_EXPECTATION",
@@ -334,7 +335,30 @@
   "E07": {
     "source_fix": "MEASURED_EXECUTOR_ONLY_DOCKER_SOCKET_GID",
     "local_actual10": "PASS_GID0_ONLY",
-    "corrected_head_GitHub_nonzero_GID": "PENDING_REQUIRED_CI",
-    "old_head_CI": "FAIL_PRESERVED_OTHER_INCOMPLETE_CHECKS_CANCELED_NOT_PASS"
+    "corrected_head_GitHub_nonzero_GID": "PASS_EXACT_D3F_GID118_TWO_INDEPENDENT_REVIEWS",
+    "old_head_CI": "FAIL_PRESERVED_OTHER_INCOMPLETE_CHECKS_CANCELED_NOT_PASS",
+    "GitHub_evidence": ".docs/implementation/evidence/p06/github-pr-p06-pass02/INDEX.json"
+  },
+  "CI_policy": {
+    "authority": "U-021/ADR-033",
+    "proof": ".docs/implementation/evidence/p06/ci-policy-u02101/INDEX.json",
+    "required_contexts": [
+      "quality",
+      "container-smoke",
+      "p02-integration",
+      "p03-integration",
+      "p06-release-integration"
+    ],
+    "optional_statistics": "workflow_dispatch_only",
+    "old_stats": "CANCELLED_NOT_PASS"
+  },
+  "preview_image": {
+    "status": "PASS_PUBLISHED_OWNER_PUBLIC_AND_ANONYMOUS_PULL",
+    "tag": "p06-preview-195e2302899687e11cecde1920d64a040714745e",
+    "version": "0.0.0",
+    "qualified_release": false,
+    "owner_makes_public": true,
+    "image": "ghcr.io/psewdon1m/venus@sha256:0653678d4cbc920daf684355ddde5c7006d04aa89f950e2697e7fe4a5b7f4b3e",
+    "proof": ".docs/implementation/evidence/p06/preview-publication01/INDEX.json"
   }
 }

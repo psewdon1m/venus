@@ -61,3 +61,15 @@
 - Direct newownersteering received via root whileaudit: laterCIpolicy/manualstats/GHCRpreview change. Acknowledged as forward-looking outside historicald3f E07report; no fullCI/stage/newpolicy/publication claim. Historical4statpending retained only at originalhandoff/oldpolicy.
 - New engineering-github-round01 INDEX SHA256 568c136c22d907989b6fe18341210116307f9486720c3c8b11dd43b8bff3fef7; REPORT SHA256 01205a7963fecf9fabd869420ab367b4c27e9691ebd79a632b1f16077f665061; DECISION SHA256 fc184cda633ad764391fab139ed3b094097676b67575f27974e266db2b0429a4. OldFAIL/reports unchanged. No own tests/API/Docker/Git/source/secret access.
 - COMPLETE_STOP. Allownwritesfinished; laterCIpolicy/finalserviceaudit separatehandoff, noP07.
+
+## 2026-10-24T21:52:43Z — signing round03 / U021 focused policy-source rebind
+- Authorized new engineering-signing-round03 DECISION/REPORT/INDEX/SOURCE_REBIND +ownjournal only; previousproofsimmutable. No tests/restarts/API/keyreads/source/Git/remote mutations.
+- Supplied clean C HEAD195e2302899687e11cecde1920d64a040714745e, core3a4eae5c3aef4ff8acf9a6cdb3ba6c0321614d8eabd0b61a632db850c2f9b3f6/1948 service-source-freeze03.
+- OwnerU021 removes4heavyP03 automatic/requiredstats, preserves matrix as manualworkflow_dispatch. Five requiredcontexts. Preview0.0.0 SHA-tag bootstrap/manual workflow packageswrite/no signingenvsecret; qualifiedreleasepointerpre-sign04. ADR033/v6/AGENTS/currentindex source changes complete beforetests.
+- ci-policy-u02101 supplied focusedYAML/protectiondelta/cancel202 receipts, old5success4cancelled notPASS; newCI5run40135828051+preview40135819383 inprogress. Task: independently audit delta and unchanged runtime component rebind; no fullstagePASS, preserve all118statuses67PASS34N_A7artifactpending10proddeferred unless concrete issue.
+
+## 2026-10-24T21:54:56Z — U021 round03 E08 FAIL / COMPLETE_STOP
+- All1948source hashes match195e/core3a4e,8sourcepolicy deltas, app/operator/runtime/statsimplementation unchanged. E08 stale existingci-policy.test lines8–10 stillrequires removedautomaticmatrix; mandatoryquality/pre-sign cannotPASS. Sent concretefindingpromptly.
+- Rootaccepted E08, correctedexistingunit, reports1targetedPASS nextsource and actualqualityFAILjob120997017109; authorasked preserveFAIL/STOP ASAP for newfreeze04. No new own tests or extra framework requested. Preview publication/Public/anonymouspull reported separately by root, not audited/held here.
+- Created engineering-signing-round03 REPORT/DECISION/SOURCE_REBIND/INDEX only; no newall118/8gatePASS. INDEX SHA256 d7e5cf48541b819a1194cd63df9902f7514c977d0d94b69ca4464ff3fc3cb9cd; REPORT abf86dbc14da224e285eae6abc4f359e77ff726a5ee2e0e1cc4169701636ba65; DECISION fb4de7878786949449031edf1f7af3dedb5242522d70e198c751163d16ee9048.
+- COMPLETE_STOP. Allownwritesfinished; no further195e audit. Correctedsource/focusedCIpolicy proof require separate newhandoff, noP07.

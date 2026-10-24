@@ -1,12 +1,14 @@
 # Текущий статус — P06
 
-Owner signing key и protected GitHub environment готовы (U020/ADR032). Текущий clean source911ac077/core5a917292,1944файла; actual10:18PASS/9SIGKILL/fullPGrestore и ledger replay. Engineering/QA и Security дали PASS_PRE_SIGN03. P07 не начат.
+По прямому U-021/ADR-033 четыре тяжёлых измерения P03 вынесены в отдельный ручной `Venus optional P03 statistics` без изменения выборок/порогов. Защита main фактически требует пять quality/integration проверок; strict и остальные поля защиты сохранены. Незавершённые статистические задания прежнего head отменены, это не PASS.
 
-В GitHub прежний candidate358a/corea1 получил FAIL из-за hardcoded socketgroup0 у fixture executor. Фикс измеряет GID сокета и добавляет группу только исполнителю, не меняя приложение/права сокета/consumer/operator. Localactual10 и lint14PASS; nonzero-GID GitHub должен пройти на новом head. Прежние FAIL/cancelled checks сохранены и не объявлены зелёными.
+Текущий clean Git195e2302/core3a4eae5c/1948; изменения только в CI/policy/release-proof path, код приложения сохранён. Запущены пять проверок текущего head и отдельная публикация unsigned `p06-preview-<sha>` version0.0.0, чтобы владелец мог сделать GHCR пакет Public. Предварительный образ не закрывает EXIT-P06 и не является подписанным релизом.
 
-Полный EXIT-P06 HOLD до нового обязательного CI, exactmain/tag, одного настоящего OCI/signature/assets и anonymous image pull. После первого GHCR publish владелец переведёт пакет в Public; до этого анонимная доступность не заявлена.
+Прежний Gitd3f/core5a: quality/container/P02/P03/P06 PASS; actual GitHub P06:18PASS/45nativeexit0/socketGID118, E07 подтверждён двумя независимыми агентами. Исторические proof сохранены с исходными source, не переименованы в новые запуски.
 
-[Актуальный pre-sign03](evidence/p06/pre-sign-acceptance03/REPORT.md) · [Матрица118](evidence/p06/pre-sign-acceptance03/DECISION.json) · [Реестр](p06-registry.json) · [План](../10_IMPLEMENTATION_PLAN.md) · [Runbook](P06_OPERATOR_RUNBOOK.md).
+Owner-approved key/env готовы U020. Осталось: текущий CI/independent rebind, exactmain/tag, подписанный0.0.1/один OCI/публичные assets, anonymous image pull после изменения видимости владельцем и финальная независимая приёмка. P07 не начат.
+
+[Реестр](p06-registry.json) · [CI policy proof](evidence/p06/ci-policy-u02101/INDEX.json) · [План](../10_IMPLEMENTATION_PLAN.md).
 
 Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
 
