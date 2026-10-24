@@ -122,10 +122,21 @@ describe('P04 actual PostgreSQL, HTTPS and WS catalogue controls',()=>{
   });
   it('final public projection cannot write or invent revisions even at exact consent expiry',async()=>{
     const r=await privateFixture(),row=(await pool.query('SELECT * FROM game_rounds WHERE session_id=$1 ORDER BY round_index DESC LIMIT 1',[r.gameId])).rows[0];
-    const data=keys.decrypt(row.cipher,`game-round:${r.id}:${r.gameId}:${row.id}:1`),before=(await pool.query('SELECT rev FROM game_sessions WHERE id=$1',[r.gameId])).rows[0].rev;
-    const clock=readFileSync(process.env.P02_CLOCK_FILE,'utf8');writeFileSync(process.env.P02_CLOCK_FILE,String(data.invitation.active_until));
-    const c=await pool.connect();try {await c.query('BEGIN READ ONLY');await c.query('SELECT pg_advisory_xact_lock_shared(746826405)');const view=await operator.games.publicDelivery(c,r.id,'en');assert.equal(view.current_round,null);assert.equal(view.game_rev,Number(before));await c.query('COMMIT');}finally {c.release();writeFileSync(process.env.P02_CLOCK_FILE,clock);}
-    assert.equal((await pool.query('SELECT rev FROM game_sessions WHERE id=$1',[r.gameId])).rows[0].rev,before);mark('P04-PUBLIC-READONLY',{postgres_read_only_transaction:true,expiry_boundary:true});
+    const data=keys.decrypt(row.cipher,`game-round:${r.id}:${r.gameId}:${row.id}:1`),clock=readFileSync(process.env.P02_CLOCK_FILE,'utf8');
+    const gate=await pool.connect(),c=await pool.connect();
+    try {
+      // Keep the runtime's independent maintenance writer outside this read-only
+      // measurement; V1 mutations serialize on the room row, not the V2 advisory.
+      await gate.query('BEGIN');await gate.query('SELECT pg_advisory_xact_lock_shared(746826405)');await gate.query('SELECT id FROM rooms WHERE id=$1 FOR UPDATE',[r.id]);
+      const before=(await pool.query('SELECT rev FROM game_sessions WHERE id=$1',[r.gameId])).rows[0].rev;
+      writeFileSync(process.env.P02_CLOCK_FILE,String(data.invitation.active_until));
+      await c.query('BEGIN READ ONLY');await c.query('SELECT pg_advisory_xact_lock_shared(746826405)');const view=await operator.games.publicDelivery(c,r.id,'en');assert.equal(view.current_round,null);assert.equal(view.game_rev,Number(before));await c.query('COMMIT');
+      assert.equal((await pool.query('SELECT rev FROM game_sessions WHERE id=$1',[r.gameId])).rows[0].rev,before);
+    } finally {
+      writeFileSync(process.env.P02_CLOCK_FILE,clock);
+      try {await c.query('ROLLBACK');} finally {c.release();try {await gate.query('ROLLBACK');} finally {gate.release();}}
+    }
+    mark('P04-PUBLIC-READONLY',{postgres_read_only_transaction:true,expiry_boundary:true});
   });
   it('withdrawal stops pinned games and fences a cached public WS projection before enqueue',async()=>{
     const r=await fixture(),privateRoom=await privateFixture(),cached=await ok(r.host,game(r)+'/current');assert.ok(cached.current_round.card_id);

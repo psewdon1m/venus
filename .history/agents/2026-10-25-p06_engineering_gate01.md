@@ -73,3 +73,14 @@
 - Rootaccepted E08, correctedexistingunit, reports1targetedPASS nextsource and actualqualityFAILjob120997017109; authorasked preserveFAIL/STOP ASAP for newfreeze04. No new own tests or extra framework requested. Preview publication/Public/anonymouspull reported separately by root, not audited/held here.
 - Created engineering-signing-round03 REPORT/DECISION/SOURCE_REBIND/INDEX only; no newall118/8gatePASS. INDEX SHA256 d7e5cf48541b819a1194cd63df9902f7514c977d0d94b69ca4464ff3fc3cb9cd; REPORT abf86dbc14da224e285eae6abc4f359e77ff726a5ee2e0e1cc4169701636ba65; DECISION fb4de7878786949449031edf1f7af3dedb5242522d70e198c751163d16ee9048.
 - COMPLETE_STOP. Allownwritesfinished; no further195e audit. Correctedsource/focusedCIpolicy proof require separate newhandoff, noP07.
+
+## 2026-10-24T21:56:56Z — bounded P04 consent-expiry race diagnosis
+- Root requests read-only diagnosis of retained CI03 P04revision28!=27 failure; no tests/source/product changes. New own boundeddiagnosis report +journal only; STOPafterreport.
+- Raw source p03-p04-native.txt around715, existing tests/p04/runtime.integration.test.mjs:123–129 sharedclock jumps to consentexpiry while childbackgroundmaintenance active; proposed catalogshared+roomadvisory gate with read-only publicDelivery and locked assertion/clockrestore beforegate release.
+- Current correctedunit Git708c796e/coreffbe/1948 CI4inprogress, runtimeunchanged; no new signoff until diagnosis. Need determine lock consistency/deadlock risk/minimal existingtest stabilization, no thresholdcuts/framework/product edits.
+
+## 2026-10-24T22:00:25Z — bounded P04 race diagnosis / COMPLETE_STOP
+- Both retained CI03/04 fail storedrev28!=27 at line128 after READONLY projector assertions pass. Confirmed legitimate background writer path; specific writer not traced. WS poll1000ms, maintenance10000ms. V1 fixture has no privateProtocol, advisory-only roomgate ineffective; room row FORUPDATE is authoritative existing fence.
+- Recommended separate RWsharedcatalog→roomrow gate beforebaseline/clock, real READONLY projection unchanged, storedrevassert insidegate, clockrestore before gate rollback, no HTTP/WS waitunderlock. Projector/catalog dependentreads plainSELECT; now read afterroomlock, no intrinsiccycle in scenario. Authorreported implementing exacttest-only fix+lint0; no independent correctedexecution claimed.
+- Read-only discovery mistakes preserved: rg literal socket*/runtime-child* yielded Windows path error123; guessed card-catalog.ts absent error2, corrected to rg --files→catalog.ts. No code/runtime/test mutations performed.
+- Created engineering-p04-race-round01 REPORT/DECISION/INDEX. INDEX SHA256 42576d390b1ff11718cbd419b61f126ea583b4d29223f4a4e3c18a76adb69872. Allwrites complete; nextcleanfreeze/actualproof separatehandoff. No pre-sign/stagePASS, noP07. COMPLETE_STOP.
