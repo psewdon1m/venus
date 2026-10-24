@@ -83,3 +83,5 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 2026-10-24T23:23:41.0445386Z — Производный FILE_MANIFEST обновлён после COMPLETE_STOP всех агентов:31899 source paths. Nativeverify_manifest01 PASS/errors0/exit0; документация1949Markdown native0. Финальные CLI/API/application tests не повторялись, поскольку implementation coreD44Fнеизменен. Предстоиттолькопубликацияготовыхclosingmetadata; P07не начат.
 
+
+2026-10-24T23:24:57.843562+00:00 — Closingmetadata опубликованы nativecommit/push0:78a4894f6690a72d2d14cfabcb44554961445034, auditветкаcodex/p06-stage-acceptance-20261025;276изменённыхфайлов толькоevidence/reviews/journals/status/manifest,1951implementationbytesнеизменны/coreD44F. До публикацииverify_manifest02:31899paths/errors0/native0. Реальныйrelease/main/tag77eeнеперемещались. Receiptсохранёнвclosing-publication01; последняяфиксацияэтогофактическогожурналаипроизводногоmanifestнеявляетсяновымapplicationCI. P06PASSтолькопроверенныйLinuxclassic; DesktopFAILсохранён; P07не начат, работаостановлена.
