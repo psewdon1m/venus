@@ -22,3 +22,5 @@
 2026-10-24T19:29:31.666703+00:00 — Full clean Dockerquality02 actual0/PASS on412b7e3/corebb7ed1; entire quality runner finished incl lint/typecheck/Vitest1315PASS3SKIP/Python124/build/docs/catalog/negative gates; exact source unchanged, owned cleanup complete. Packet quality-round02 preserves raw receipts. Serial actual P06 Dockerdrill01 now running. No P07; real key pending owner.
 
 2026-10-24T19:32:26.198953+00:00 — fix(p06): use exact local OCI cache for disposable fixture and check real pull rejection; freeze initial-source-freeze04 5de10b3e1c521fd30c430793a6abaae1a908b8f19324c97e3edabc5a31e30baa/1942. No P07.
+
+2026-10-24T19:35:50.662644+00:00 — fix(p06): resolve fault fixture base from owned local B tag without remote lookup; freeze initial-source-freeze05 26e08cb5534d14d6b3b6e774bea7bda301d330c6d7d14e55713611d68e66b457/1942. No P07.
