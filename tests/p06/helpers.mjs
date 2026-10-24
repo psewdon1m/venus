@@ -16,6 +16,7 @@ export class FakeDriver{
  async loadPrevious(){this.hit('OFFLINE_IMAGE_FAILED');}
  serving(value){this.open=value;}
  async stop(){this.stopped=true;}
+ cleanupBackupTemps(){}
  async initialize(){}
  async start(manifest){if(manifest.version.endsWith('9002'))this.hit('MIGRATION_FAILED');this.version=manifest.version;this.stopped=false;this.starts++;}
  async healthy(expected){if(this.version.endsWith('9002'))this.hit('HEALTH_FAILED');if(expected&&expected.version!==this.version)throw new Error('WRONG_IMAGE');}

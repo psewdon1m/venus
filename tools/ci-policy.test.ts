@@ -5,7 +5,7 @@ it('uses one PR head CI event, preserves full required checks and immutable acti
   const workflow=parse(readFileSync('.github/workflows/ci.yml','utf8'));
   expect(workflow.on.push.branches).toEqual(['main']);expect(workflow.on.pull_request.branches).toEqual(['main']);
   expect(Object.keys(workflow.on).sort()).toEqual(['pull_request','push']);
-  expect(Object.keys(workflow.jobs).sort()).toEqual(['container-smoke','p02-integration','p03-integration','p03-measurements','quality']);
+  expect(Object.keys(workflow.jobs).sort()).toEqual(['container-smoke','p02-integration','p03-integration','p03-measurements','p06-release-integration','quality']);
   expect(workflow.jobs['p03-measurements'].strategy.matrix.section).toEqual(['invariants','fairness','gf','inference']);
   expect(workflow.jobs['p03-measurements']['timeout-minutes']).toBeGreaterThanOrEqual(120);
   expect(workflow.jobs['p03-integration'].steps.some((s:{run?:string})=>s.run==='npm run test:p04')).toBe(true);

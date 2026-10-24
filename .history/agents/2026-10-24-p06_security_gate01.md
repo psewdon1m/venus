@@ -1,0 +1,6 @@
+# P06 Security/Privacy gate round01
+
+- 2026-10-24T19:13:56Z Task: independent nonauthor Security/Privacy source review for P06 only. Read-only implementation scope; allowed writes own journal and new security-round01 review directory only. No tests, Docker, remote actions, or source mutations. Final acceptance awaits actual proof pins and owner signing decision.
+
+- 2026-10-24T19:15:32Z Read frozen release/files/engine/http/driver/UI/CLI/provision, ProtectedRuntime/server/Rooms/DeletionLedger/RevocationLedger, fixed compose/systemd/release workflow and bounded tests as source only. Frozen HEAD checked; no tests/actions. SEC01 sent parent: initial-install explicit recovery omits preflight and can mutate after original disk/permissions/port/env rejection. Read attempts for absent compose.production.yaml and guessed tests paths returned errors; corrected discovery used actual compose.standalone.yml/operator.test.mjs/docker-drill.mjs. rg Windows wildcard error corrected via directory search. No source changes.
+- 2026-10-24T19:16:20Z SEC02 sent parent: public standalone schema version/tag regex source escaping rejects ordinary dotted version/tag after JSON decode. Source round01 HOLD report saved at .docs/implementation/reviews/p06/security-round01/SOURCE_ROUND01.md. No final/pre-sign acceptance; awaiting fixes and exact actual proof handoff.
