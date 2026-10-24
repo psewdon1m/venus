@@ -49,7 +49,8 @@ export class Keyring {
 }
 export class DeletionLedger {
   private closed=new Map<string,number>();
-  constructor(private readonly path:string) {
+  constructor(private readonly path:string,private readonly checkpoint?:()=>void) {
+    checkpoint?.();
     const fd=openSync(path,'a+',0o600);closeSync(fd);
     this.reload();
   }
@@ -61,14 +62,15 @@ export class DeletionLedger {
       this.closed.set(entry.room_id,entry.closed_at);
     }
   }
-  contains(roomId:string) {return this.closed.has(roomId);}
-  entries() {return [...this.closed.entries()];}
+  contains(roomId:string) {this.checkpoint?.();return this.closed.has(roomId);}
+  entries() {this.checkpoint?.();return [...this.closed.entries()];}
   revoke(roomId:string,now:number) {
     this.lock(()=>{
       if(this.closed.has(roomId)) return;
       const fd=openSync(this.path,'a');
       try {writeSync(fd,JSON.stringify({room_id:roomId,closed_at:now})+'\n');fsyncSync(fd);} finally {closeSync(fd);}
       this.closed.set(roomId,now);
+      this.checkpoint?.();
     });
   }
   private lock(operation:()=>void) {

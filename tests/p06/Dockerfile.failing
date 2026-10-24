@@ -1,0 +1,8 @@
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG FIXTURE_VERSION
+ARG FIXTURE_KIND
+LABEL org.opencontainers.image.version="$FIXTURE_VERSION" net.shmoza.venus.fixture="intentional-failed-start"
+ENV VENUS_P06_FIXTURE_KIND=$FIXTURE_KIND
+COPY tests/p06/failing-start.mjs /app/p06-failing-start.mjs
+CMD ["node","p06-failing-start.mjs"]

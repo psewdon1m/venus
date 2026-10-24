@@ -8,7 +8,7 @@ import {unavailableTopicContent} from './topic-content-availability.js';
 const DAY=86400000;
 export const timers={heartbeat:20000,presence:45000,reservation:90000,hostGrace:600000,idle:DAY,ticket:60000,primaryDelete:23*3600000,backup:7*DAY} as const;
 export interface Offer {version:string;digest:string;text:Record<'ru'|'en'|'tr',string>;synthetic:boolean}
-export interface RoomOptions {pool:pg.Pool;keys:Keyring;ledger:DeletionLedger;origin:string;offer:()=>Offer|null;now?:()=>number;privateProtocol?:RoomPrivateProtocolHooks}
+export interface RoomOptions {pool:pg.Pool;keys:Keyring;ledger:DeletionLedger;origin:string;offer:()=>Offer|null;now?:()=>number;privateProtocol?:RoomPrivateProtocolHooks;retainDeletionLedger?:boolean}
 interface RoomRow {id:string;host_member_id:string;meeting_context:'online'|'in_person';state:'open'|'closed';rev:string;invite_hash:string;created_at:Date;last_activity_at:Date;closed_at:Date|null;private_protocol?:number}
 interface MemberRow {id:string;room_id:string;display_name:string;locale:'ru'|'en'|'tr';role:'host'|'member';slot:number|null;socket_generation:string;presence:'online'|'reconnecting'|'inactive';heartbeat_at:Date;reserved_until:Date;removed_at:Date|null;ready?:boolean}
 interface Auth {room:RoomRow;member:MemberRow;sessionHash:string}
@@ -41,6 +41,8 @@ function name(value:string) {
 export class Rooms {
   readonly now:()=>number;
   private games:RoomGameHooks|undefined;
+  private servingBarrier:(()=>void)|undefined;
+  attachServingBarrier(barrier:()=>void) {requireThat(!this.servingBarrier,'SERVING_BARRIER_ALREADY_ATTACHED',503);this.servingBarrier=barrier;}
   constructor(readonly options:RoomOptions) {this.now=options.now??Date.now;}
   attachGames(games:RoomGameHooks) {requireThat(!this.games,'GAME_HOOKS_ALREADY_ATTACHED',503);this.games=games;}
   protocol(room:Pick<RoomRow,'private_protocol'>):1|2 {
@@ -60,7 +62,7 @@ export class Rooms {
       LEFT JOIN entry_acceptances e ON e.room_id=m.room_id AND e.member_id=m.id
       WHERE s.token_hash=$1 AND s.room_id=$2 AND s.member_id=$3 AND s.revoked_at IS NULL AND m.removed_at IS NULL`,[a.sessionHash,a.room.id,a.member.id])).rows[0];
     return ()=>{
-      external?.();const deleted=this.options.ledger.contains(a.room.id),offer=this.options.offer(),now=this.now();
+      this.servingBarrier?.();external?.();const deleted=this.options.ledger.contains(a.room.id),offer=this.options.offer(),now=this.now();
       requireThat(row&&row.expires_at.getTime()>now,'AUTH_REQUIRED',401);
       if(socketGeneration!==undefined) requireThat(revision(row.socket_generation)===socketGeneration&&row.slot!==null,'SOCKET_REPLACED',401);
       requireThat(a.room.state==='open'&&!deleted&&a.room.last_activity_at.getTime()+timers.idle>now,'ROOM_CLOSED',403);
@@ -75,6 +77,7 @@ export class Rooms {
   }
   async changed(c:pg.PoolClient,roomId:string,activity=true) {return this.emit(c,await this.room(c,roomId),activity);}
   async transaction<T>(operation:(client:pg.PoolClient)=>Promise<T>,catalogLock:'shared'|'exclusive'='shared'):Promise<T> {
+    this.servingBarrier?.();
     const c=await this.options.pool.connect();
     try {await c.query('BEGIN');await c.query(catalogLock==='exclusive'?'SELECT pg_advisory_xact_lock(746826405)':'SELECT pg_advisory_xact_lock_shared(746826405)');const result=await operation(c);await c.query('COMMIT');return result;}
     catch(error) {await c.query('ROLLBACK');throw error;} finally {c.release();}
@@ -465,6 +468,6 @@ export class Rooms {
     await this.options.pool.query('DELETE FROM outbox_events WHERE created_at<=$1',[new Date(this.now()-timers.idle)]);
     await this.options.pool.query('DELETE FROM audit_events WHERE created_at<=$1',[new Date(this.now()-30*DAY)]);
     await this.options.pool.query('DELETE FROM admission_limits WHERE window_start<$1',[Math.floor(this.now()/60000)-2]);
-    this.options.ledger.prune(this.now(),timers.backup);
+    if(!this.options.retainDeletionLedger)this.options.ledger.prune(this.now(),timers.backup);
   }
 }

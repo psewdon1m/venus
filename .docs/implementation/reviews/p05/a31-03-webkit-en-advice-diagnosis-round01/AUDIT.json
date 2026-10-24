@@ -1,0 +1,112 @@
+{
+  "status": "DIAGNOSIS_CLICK_ACTIONABILITY_FAILURE_CAUSE_UNPROVEN",
+  "created_utc": "2026-10-23T03:25:47.692525+00:00",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "input_pins": {
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-b1c0e5866f2a/layout-report.json": {
+      "bytes": 1128881,
+      "sha256": "fddd32a236e3229fe82898ddff1e7e9c417fd4a837238859c32496f453baa84e"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-b1c0e5866f2a/runner.json": {
+      "bytes": 681,
+      "sha256": "fdaff475284af665a97a9d1c7f740cd05573efd2df87d7adddc0ef8f80702efd"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-b1c0e5866f2a/browser-tests.txt": {
+      "bytes": 1542,
+      "sha256": "297e03dcecf3b38b050c9623583307385a97b55c64cb9cddc4cf84408aad6e77"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-b1c0e5866f2a/failure-dom-only.png": {
+      "bytes": 71667,
+      "sha256": "5e1737443e0d755b8faad906a32e3669f6bee163927cac95fd3b7071edbe92df"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-03/scene-driver.mjs": {
+      "bytes": 38728,
+      "sha256": "c59ee93b02dbd377b19af55cb2804f5a50be89b9693e2e69509c73f20b148d95"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-03/request-emission.mjs": {
+      "bytes": 4692,
+      "sha256": "2441671d6ed6ef14e136a007974e1b87e5d0181adabe48fa164ad7d936cd8b0f"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-03/private-batch-observer.mjs": {
+      "bytes": 17743,
+      "sha256": "48e2604052f3c8768fbd14efd2d4f315f6558f3ec00e8f1870aec28e3f172026"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-03/readiness-diagnostics.mjs": {
+      "bytes": 2466,
+      "sha256": "67dfd53ec2b09cd44170312c6f84f8530f208f23ef4a5e9d450e831694f4a673"
+    },
+    "apps/web/src/topic-games-panel.tsx": {
+      "bytes": 32514,
+      "sha256": "0a5102a1d1672539520e88c3ec0277110e8b9eff5e149805c35ddf556b817ecd"
+    },
+    "apps/web/src/game-controls.ts": {
+      "bytes": 13970,
+      "sha256": "21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c"
+    }
+  },
+  "actual": {
+    "project": "venus-v2-layout-b1c0e5866f2a",
+    "engine": "webkit",
+    "locale": "en",
+    "source_identity": "57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd",
+    "image": "sha256:edd7e3abd9faf89b15764e65edacdde0ac881b1045e9ecf7b5cbff7b7ebc5e82",
+    "producer_runtime_digest": "65e0c345d9ee1de37798e76d666f5704d9d3b8a25c6e5e3387e59f56c00273c3",
+    "PASS": 36,
+    "cellFAIL": 0,
+    "NOT_RUN": 15,
+    "cleanup": "PASS",
+    "page_errors": 0,
+    "phase": "private_active",
+    "previous_action_accept": "EXACT_RECEIPT_VERIFIED200;click326969.766473→327124.822159/request327071.765858",
+    "failed_advice": {
+      "readiness_cycle": 35,
+      "scope_sha256": "82c68adf4c0ef8568e387f052d544d1902f376ed31938ef3471494a48e0dcdb3",
+      "prepared_monotonic_ms": 327729.932057,
+      "lease_remaining_ms": 3488.916815000004,
+      "dispatch_budget_ms": 3469.646664,
+      "click_started_monotonic_ms": 327750.56788,
+      "click_finished_monotonic_ms": null,
+      "request_observed_monotonic_ms": null,
+      "private_ticket_failure_record": false,
+      "result": "NOT_DISPATCHED",
+      "failure": "NO_MATCHING_REQUEST_OBSERVED_BEFORE_DEADLINE_OR_CLICK_PRECONDITION"
+    }
+  },
+  "conclusions": [
+    {
+      "confidence": "SOURCE_AND_ACTUAL_SUPPORTED",
+      "statement": "This attempt differs from completed-click/noPOST failures. request-emission24 sets click_finished only after await click returns; here null. scene-driverclick private path records last_control then privateassert (would record private_ticket_failures on refusal) and awaits locator.click. Recorded lastcontrol and absent private-ticket-failure place the rejection most narrowly at original locator.click/actionability operation, absent an unrecorded exceptional recorder failure. No normal successful click completion is established."
+    },
+    {
+      "confidence": "ACTUAL_OBSERVATION",
+      "statement": "Viewed original screenshot, hashverified: later error notice Action failed/Refresh state,Round13/20,prepared-placeholder, adviceform absent. Raw lastcurrent/view responses200 and no matchingoffer_advicePOST. Screenshot is after failure/cleanup preparation, not contemporaneous controlstate at327750ms; it cannot time the disappearance or prove what caused it."
+    },
+    {
+      "confidence": "LIMITATION",
+      "statement": "Observer readiness is passive model cycle35 with cache_accept_observed=false/auth_generation_observed=false, not proof APP published or retained that batch. Existing privateDom confirms visible/enabled at preparation only. DOM may subsequently detach/disable/move, or Playwright may fail stability/interception checks; raw generic error discards original locator.calllog. Current evidence cannot distinguish these possibilities."
+    }
+  ],
+  "APP_source_assessment": {
+    "topic_games_panel": "sync42–56 may clear private presentation on failed/stale own acceptance or transport/error; clock57 clears text when cache.visible false; adviceform88 exists only with activeconversation/prompt and convCan(offer_advice), submit requires validtext/offer; command/run retain current authorization.",
+    "own_controls": "accept checks token/generation/revision/member/roomRev/sequence,local max5s request-start lease. Observer flags do not establish those APP decisions.",
+    "specific_production_bug_proven": false,
+    "smallest_APP_fix": "NONE supported by this evidence. Do not add retries/extendTTL/relaxACL, guessfocus/CSS, autoPOST or restart unchanged backendstatistics."
+  },
+  "precise_missing_observation": {
+    "first_need": "Retain bounded classification of ORIGINAL advice-offer locator.click failure before existing error is reduced to generic safeFailure. No additional click or replay needed for classifier; current raw cannot reconstruct discarded calllog.",
+    "bounded_fields_only": [
+      "fixed error booleans timeout/not_visible/not_enabled/not_stable/detached/pointer_intercepted derived from originalPlaywrightcalllog, no rawmessage/stack/DOM/text/UUID",
+      "optional one catch-time target exists/visible/enabled and document.hasFocus boolean; no value/privatecontent, no geometrypoll or extra waits",
+      "originaldeadline and elapsed bounds, preserve error rethrow and current failure result"
+    ],
+    "why_first": "If originalclick actionability says detached/disabled, later smallest observation is APP boolean clear/accept reason for currentgeneration, not observerpromotion. If intercept/stability, inspect only namedtarget numeric geometry. Handler/submitbranch instrumentation is premature until actualclickcompletion proven.",
+    "execution_authorized_by_this_review": false,
+    "prohibited": "No rerun now, no extra testframework/observer API, no sweep/reseed/key/wait/budget/oraclechange. Any future observation must be separately authorized and diagnostic-only; no stagecredit."
+  },
+  "findings": [],
+  "remaining": "Four earlier same03 shardPASS remain historical components; incompleteWebKitEN blocks requiredmatrix. FinalCI/full06 backend remainuntouched. Q10 notrerun.",
+  "own_new_tests_Docker_APP_producer_helper_Git_mutations": 0,
+  "full_stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

@@ -1,0 +1,97 @@
+{
+  "status": "DIAGNOSIS_MODEL_ORDER_PRECONDITION_UNSUPPORTED",
+  "created_utc": "2026-10-23T02:15:34.631549+00:00",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "scope": "Read-only actual Chromium/RU public preparation failure diagnosis, not new method/source/native admission.",
+  "input_pins": {
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-da953e4758a0/layout-report.json": {
+      "bytes": 2115042,
+      "sha256": "87d44dd29cdc7ffc8000731cb50df4d14557e79f876786cc220e3f5b361c9f6d"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-da953e4758a0/runner.json": {
+      "bytes": 683,
+      "sha256": "deead65457bd945b9ea22751ae06072094eb9d0f375e1f51c14be7b609aaf92f"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-da953e4758a0/browser-tests.txt": {
+      "bytes": 3162,
+      "sha256": "6234c39ed3f014158922082c271367b0b4c6b9c799387c156787da2c1a9b173b"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-02/scene-driver.mjs": {
+      "bytes": 38836,
+      "sha256": "bf3bfec9eab213ff48f128ab700161f266acee22c69a7a1639c4dff8fb69097e"
+    },
+    ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-02/private-batch-observer.mjs": {
+      "bytes": 17743,
+      "sha256": "48e2604052f3c8768fbd14efd2d4f315f6558f3ec00e8f1870aec28e3f172026"
+    },
+    "apps/web/src/topic-games-panel.tsx": {
+      "bytes": 32514,
+      "sha256": "0a5102a1d1672539520e88c3ec0277110e8b9eff5e149805c35ddf556b817ecd"
+    },
+    "apps/web/src/game-controls.ts": {
+      "bytes": 13970,
+      "sha256": "21dfe368314c6a56a801c2ecf02b43f6b6a6ba3ca107343a87ba408139a51a9c"
+    }
+  },
+  "actual": {
+    "project": "venus-v2-layout-da953e4758a0",
+    "engine": "chromium",
+    "locale": "ru",
+    "source_identity": "57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd",
+    "image": "sha256:edd7e3abd9faf89b15764e65edacdde0ac881b1045e9ecf7b5cbff7b7ebc5e82",
+    "runtime": "7b397bec3c9f7724a0d86f1811e661d594cafaf6d97dbd9af6784dbc043ab847",
+    "PASS_cells": 50,
+    "FAIL_cells": 0,
+    "NOT_RUN_cells": 1,
+    "preparations": 14,
+    "page_errors": 0,
+    "cleanup": "PASS",
+    "last_control": "game-skip",
+    "last_control_started_monotonic_ms": 609556.899622,
+    "failure_control": "game-next",
+    "result": "PUBLIC_PREPARATION_NOT_READY",
+    "reason": "OWN_PREDATES_CURRENT",
+    "checked_monotonic_ms": 610293.121922,
+    "failure_source": "scene-driver:87 preparePrivateClick before click",
+    "cache_accept_observed": false,
+    "auth_generation_observed": false
+  },
+  "finding": {
+    "severity": "P2_METHOD_MODEL",
+    "statement": "Cross-request own.started >= latest current.started is not a necessary public advance validity condition. It can reject a fresh exact-scope grant solely because a later same-revision public refresh arrived.",
+    "production_evidence": [
+      "topic-games-panel.tsx42-48: sync current then self-actions sequentially in one cycle;1500ms polling permits next current refresh while prior own remains live.",
+      "game-controls.ts68-83: acceptance validates generation/token,sequence,exact own scope/revision/roomRev and request-local duration capped5000ms; no comparison of own request start to every later current request.",
+      "private-batch-observer.mjs51,58-60,72: independently publishes latest current and own; current can replace lastGameView before next own projection arrives.",
+      "scene-driver.mjs54-81: exact scope and finite per-request times pass before OWN_PREDATES_CURRENT; additional own-start comparison short-circuits later grant/TTL checks.",
+      "scene-driver.mjs129/87: ownUiRound may observe READY, then DOM visibility/enabled assertions permit a passive new current projection before immediate preparation recheck. New current may have same exact revision; earlier own lease need not become invalid."
+    ],
+    "conclusion": "The observed stop is a model precondition failure before dispatch. Source establishes a valid counter-schedule under normal polling, so removing this additional chronology constraint is justified. The report does not establish a production defect or reveal exact own/current timestamps, and does not prove that later advance/lease checks would pass after removal."
+  },
+  "proposed_minimal_delta": {
+    "allowed_scope": "Remove ONLY OWN_PREDATES_CURRENT reason and cross-request own.started>=current.started wrapper, preserve contained checks exactly.",
+    "retain": [
+      "fixed room/member/UI room/session/round",
+      "own.game_rev===current.game_rev>=fixture minimum, safe integer",
+      "each own/current finite nonnegative timestamp<=checktime and own/current request-local started<=received",
+      "own.session_actions.advance===true",
+      "deadline=min(original wanted8s, prepared ceiling, own request-start+min5000ms/serverTTL)",
+      "minimum250ms remaining at preparation and immediate check",
+      "same original8s preparation budget, one original click bounded by public prepared deadline",
+      "all private grants/ACL/cache checks, original first geometry samples,9x51/cases/oracles/keys unchanged"
+    ],
+    "forbidden": "No request retry, new API, grant injection, extra window/wait, deadline extension, framework or APP modification."
+  },
+  "limits": [
+    "Passive model remains cache_accept_observed=false/auth_generation_observed=false; authenticated production POST remains authoritative.",
+    "Raw failure reason short-circuits before advanceBoolean and TTL evaluation; no claim these later conditions were satisfied at610293ms.",
+    "Earlier FFRU/FFEN success belongs original runtime; any changed producer needs separately frozen exact inverse/review/admission and full required current matrix.",
+    "This review does not alter producer or authorize execution; preserve Chromium FAIL,50 prior cells are not a complete current shard.",
+    "Q10 and uniform06/remote CI unchanged and not rerun by reviewer."
+  ],
+  "findings_count": 1,
+  "own_tests_Docker_APP_producer_Git_mutations": 0,
+  "stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

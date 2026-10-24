@@ -2,9 +2,9 @@
   "schema_version": 1,
   "stage": "P05",
   "gate": "EXIT-P05",
-  "status": "IN_PROGRESS_NOT_ACCEPTED",
+  "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
   "profile": "standalone-local-pilot-v2",
-  "updated_at": "2026-10-22T21:24:55.978499+00:00",
+  "updated_at": "2026-10-23T14:35:06.539550+00:00",
   "owner_instruction": "Complete P05 only, then stop; do not continue P06–P11.",
   "source_commit_before_p05": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
   "source_identity": "1274deb83295f121a4ba58b1a25bb5f4b5d00b20589aa2bf1465d9ab43856dad",
@@ -12,9 +12,9 @@
   "source_archive": ".docs/implementation/evidence/p05/renewal-source-freeze-01/included-source.zip",
   "source_archive_sha256": "82fac3944a024439ddce48f98263e96fe1f67568205d18e93d540acc3c00109e",
   "dirty_preflight": true,
-  "clean_source_acceptance": false,
+  "clean_source_acceptance": true,
   "owner_content_HOLD": false,
-  "approved_registry_changed": false,
+  "approved_registry_changed": true,
   "checks": [
     {
       "id": "P05-HOST",
@@ -809,7 +809,7 @@
   "requirements": [
     {
       "id": "P04-UX-SKIP",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "В каждом раунде и приватном предложении доступны равноправные действия «Ответить/принять» и «Пропустить/отказаться». Отказ и пропуск не требуют причины, публичного ответа, штрафа или придумывания специальной фразы; можно пропустить несколько следующих раундов.",
       "expected": null,
       "source_card_ids": [
@@ -854,11 +854,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Current ordinary/V2 browser coverage must confirm repeated refusal and button parity; the old SA10/11 proof is byte-bounded."
+      "remaining_gap": "Current ordinary/V2 browser coverage must confirm repeated refusal and button parity; the old SA10/11 proof is byte-bounded.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-WAIT",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Явное состояние «Пока не выбираю/пауза» не является согласием. Оно не создаёт обещания вернуться к сроку или обязательства участвовать позже. UI предлагает спокойный выбор без давления и автоматического принятия.",
       "expected": null,
       "source_card_ids": [
@@ -890,11 +898,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Verify final UI pause/wait language without deadlines or implied return obligations; do not equate timeout with agreement."
+      "remaining_gap": "Verify final UI pause/wait language without deadlines or implied return obligations; do not equate timeout with agreement.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-NO_REASON",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Уточнение условий и отказ не требуют раскрытия личных мотивов. Приложение не объясняет отказ одного игрока другому и не публикует частные причины без его разрешения.",
       "expected": null,
       "source_card_ids": [
@@ -933,11 +949,19 @@
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
       "remaining_gap": "Final exact-source browser/private-role audit must preserve no motive disclosure. Current470r4 language provisionally PASS for local pilot under U-019/v4; historical/formal professional review is not a new owner blocker or human-approval claim.",
-      "historical_remaining_gap_before_U019_scope_clarification": "Final browser/private-role audit must preserve no motive disclosure; edited card language remains HOLD-bound."
+      "historical_remaining_gap_before_U019_scope_clarification": "Final browser/private-role audit must preserve no motive disclosure; edited card language remains HOLD-bound.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-NO_PERSONAL_STORY",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Личная история или реальный пример всегда добровольны; доступна вымышленная/общая альтернатива либо пропуск без проверки достоверности и объяснений.",
       "expected": null,
       "source_card_ids": [
@@ -961,11 +985,19 @@
       "implementation_assessment": "COPY_AND_REFUSAL_PARTIAL",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "No exact reviewed real-story card acceptance is proven by synthetic tests. Verify edited content and actual RU/EN/TR meaning."
+      "remaining_gap": "No exact reviewed real-story card acceptance is proven by synthetic tests. Verify edited content and actual RU/EN/TR meaning.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-PER_ACTION",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Участие в комнате, игре или прошлом раунде не даёт согласия на следующий раунд или конкретное действие. Решение каждого участника сохраняется отдельно; согласие одного не заменяет другого.",
       "expected": null,
       "source_card_ids": [
@@ -1003,11 +1035,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final UI must demonstrate independent actors and fresh next-round decisions on the reviewed pack."
+      "remaining_gap": "Final UI must demonstrate independent actors and fresh next-round decisions on the reviewed pack.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-DECLINE_PERSISTS",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Первичный отказ остаётся действительным при обсуждении альтернативы. Предложенное ограничение не ослабляется автоматически и не запускает торг, повторное давление или автоматическое принятие.",
       "expected": null,
       "source_card_ids": [
@@ -1030,11 +1070,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "The exact alternative-after-decline user path needs final UI corroboration; existing terminal unit controls cover the invariant."
+      "remaining_gap": "The exact alternative-after-decline user path needs final UI corroboration; existing terminal unit controls cover the invariant.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-SILENCE",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Молчание и отсутствие ответа не считаются согласием или завершённым ответом. Переходы выполняются только после явного действия пользователя.",
       "expected": null,
       "source_card_ids": [
@@ -1057,11 +1105,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final browser checks must distinguish timeout/closed from agreed/completed."
+      "remaining_gap": "Final browser checks must distinguish timeout/closed from agreed/completed.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-WITHDRAW",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Каждый может отозвать прежнее согласие, прервать действие или сменить нежелательную тему без торга, оправданий и итогового отчёта. Остановка доступна непосредственным действием UI, включая приватную беседу.",
       "expected": null,
       "source_card_ids": [
@@ -1101,11 +1157,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Await current browser degradation and restore proofs; historical controls do not cover every new byte automatically."
+      "remaining_gap": "Await current browser degradation and restore proofs; historical controls do not cover every new byte automatically.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-TOPIC_BOUNDARY",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "До приватной беседы доступны выбор допустимых тем и непосредственная смена вопроса. Исключённые темы не требуют объяснений и не раскрываются группе; продолжение беседы не расширяет границы автоматически.",
       "expected": null,
       "source_card_ids": [
@@ -1150,11 +1214,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Finish new source-bound UI/lifecycle/restore acceptance; semantic taxonomy and content approval remain separate."
+      "remaining_gap": "Finish new source-bound UI/lifecycle/restore acceptance; semantic taxonomy and content approval remain separate.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-IDEA_ONLY",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "UI различает предложенную/сохранённую идею, обсуждение её формулировки и принятое действие. Сохранение, редактирование или обсуждение текста не создаёт обязательства и не запускает выполнение.",
       "expected": null,
       "source_card_ids": [
@@ -1185,11 +1257,19 @@
       "implementation_assessment": "PARTIAL_DOMAIN_COVERAGE",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "No separate saved-idea domain/entity is implemented or tested. Confirm the intended card workflow and copy; do not claim all idea/save/edit scenarios from consent invariants."
+      "remaining_gap": "No separate saved-idea domain/entity is implemented or tested. Confirm the intended card workflow and copy; do not claim all idea/save/edit scenarios from consent invariants.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-READ_NOT_ACCEPT",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Получение, доставка и прочтение сообщения отделены от принятия предложения; подтверждение доставки/прочтения никогда не меняет согласие.",
       "expected": null,
       "source_card_ids": [
@@ -1225,11 +1305,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "No read-receipt UI is claimed. Actual repeated-poll proof is not proof of a separate delivery/read-marker feature."
+      "remaining_gap": "No read-receipt UI is claimed. Actual repeated-poll proof is not proof of a separate delivery/read-marker feature.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-CHANGED_CONDITION",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Любое изменённое условие образует новую редакцию предложения и требует свободного повторного решения P1 и P2. Выполнение разрешено только после явного подтверждения обоих одной и той же редакции.",
       "expected": null,
       "source_card_ids": [
@@ -1261,11 +1349,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Use final browser condition/replay flow and real localized reviewed conditions before full row acceptance."
+      "remaining_gap": "Use final browser condition/replay flow and real localized reviewed conditions before full row acceptance.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-SHOW_SCOPE",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Полные условия и пределы предложения доступны до принятия; можно запросить уточнение, оставаясь без согласия на действие.",
       "expected": null,
       "source_card_ids": [
@@ -1294,11 +1390,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "A topic-label invitation is not an action agreement. Verify complete actual action wording in final UI/content review."
+      "remaining_gap": "A topic-label invitation is not an action agreement. Verify complete actual action wording in final UI/content review.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-ADVICE_OPT_IN",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Подсказка или совет не раскрывается до разрешения адресата. Отказ оставляет совет скрытым и не требует причины.",
       "expected": null,
       "source_card_ids": [
@@ -1327,11 +1431,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Await current real-browser advice paths; author actual WS adapter is explicitly not the ordinary browser WS route."
+      "remaining_gap": "Await current real-browser advice paths; author actual WS adapter is explicitly not the ordinary browser WS route.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-NEW_INVITATION",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Новое приглашение или тема требует собственного явного согласования. Текущее присутствие, переписка и готовность к прежней теме не означают готовности к новой.",
       "expected": null,
       "source_card_ids": [
@@ -1362,11 +1474,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final UI must show renewed choice in both locales/actors; no retained old callbacks may activate a new topic."
+      "remaining_gap": "Final UI must show renewed choice in both locales/actors; no retained old callbacks may activate a new topic.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-NO_SOCIAL_PRESSURE",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Основной UX не подталкивает к согласию фразами «все уже согласились», «только ты остался» или публичным объяснением задержки/отказа.",
       "expected": null,
       "source_card_ids": [
@@ -1401,11 +1521,19 @@
       "implementation_assessment": "COPY_AND_PRIVACY_PARTIAL",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Mechanical checks cannot certify absence of coercion in all edited card/UI wording; genuine language/comfort review remains open."
+      "remaining_gap": "Mechanical checks cannot certify absence of coercion in all edited card/UI wording; genuine language/comfort review remains open.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-REVIEW_TERMS",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Перед выполнением обоим показана одна актуальная редакция согласованных условий; подтверждения связаны с её идентификатором/хешем.",
       "expected": null,
       "source_card_ids": [
@@ -1434,11 +1562,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final content/UI acceptance must check identical displayed terms, not merely matching wire IDs."
+      "remaining_gap": "Final content/UI acceptance must check identical displayed terms, not merely matching wire IDs.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-NO_AGREEMENT_END",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Завершить обсуждение без итогового согласия — нормальная терминальная ветвь; интерфейс не требует найти компромисс для выхода.",
       "expected": null,
       "source_card_ids": [
@@ -1461,11 +1597,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final UI acceptance should exercise unresolved discussion exit rather than only successful agreement."
+      "remaining_gap": "Final UI acceptance should exercise unresolved discussion exit rather than only successful agreement.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-UX-TASTES",
-      "status": "NOT_ACCEPTED",
+      "status": "DEFERRED_OWNER_NOT_PASS",
       "requirement": "Правила комнаты и модерационные подсказки допускают разные музыкальные вкусы; отсутствие совпадения не становится оценкой/штрафом игрока и не требует спора.",
       "expected": null,
       "source_card_ids": [
@@ -1480,11 +1624,19 @@
       "implementation_assessment": "DEFERRED_MEDIA_AND_CONTENT",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Owner deferred Music scope; retain this obligation for applicable reviewed cards/media stage. Do not call it implemented from a generic Skip button."
+      "remaining_gap": "Owner deferred Music scope; retain this obligation for applicable reviewed cards/media stage. Do not call it implemented from a generic Skip button.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": false,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-COMFORT",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Check the independent global comfort level of both players. It is not a per-pair value and is not copied from P1 to P2.",
       "expected": null,
       "source_card_ids": [],
@@ -1505,11 +1657,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Card-specific V01 and changed-comfort UI acceptance must respect immutable-session/neutral-reset policy, not mutate old snapshot."
+      "remaining_gap": "Card-specific V01 and changed-comfort UI acceptance must respect immutable-session/neutral-reset policy, not mutate old snapshot.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-DIRECTED-RELATIONS",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "P1→P2 and P2→P1 are independent private directed relations. Selection or refusal must not reveal a relation or its asymmetry to participants or the room.",
       "expected": null,
       "source_card_ids": [],
@@ -1536,11 +1696,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "New ENGINE2 C2/fairness/inference is pending; deterministic noninterference units are not statistical leakage acceptance."
+      "remaining_gap": "New ENGINE2 C2/fairness/inference is pending; deterministic noninterference units are not statistical leakage acceptance.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-QUIET-PUBLIC-OPT-IN",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Before publicly addressing a pair, offer P2 a quiet way to decline. Publish neither the private refusal nor its motive; public wording alone is insufficient.",
       "expected": null,
       "source_card_ids": [],
@@ -1561,11 +1729,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Exact eight-player V03 ordinary-browser acceptance is still needed; historical QUIET-PUBLIC-ACK-REVOKE is scoped to older bytes."
+      "remaining_gap": "Exact eight-player V03 ordinary-browser acceptance is still needed; historical QUIET-PUBLIC-ACK-REVOKE is scoped to older bytes.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-YB-CONFIRMATION",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "A changed yes_but condition requires a fresh free decision by P1 and explicit confirmation by both for the identical final terms. Either can withdraw; one player's rejection is sufficient to stop.",
       "expected": null,
       "source_card_ids": [],
@@ -1592,11 +1768,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Real YB1111 veto meaning/TR competence remains a separate content gate."
+      "remaining_gap": "Real YB1111 veto meaning/TR competence remains a separate content gate.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-PRIVATE-CHANNEL",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Private in-person cards remain S3/C1 with bilateral eligible relations. Online private cards require a functioning private text chat for both devices. Offline chat-only cards are unavailable without that chat. Never silently send their answers to the room.",
       "expected": null,
       "source_card_ids": [],
@@ -1653,11 +1837,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Production registry is empty and V2 startup is intentionally closed under HOLD. Positive synthetic transport is not release acceptance."
+      "remaining_gap": "Production registry is empty and V2 startup is intentionally closed under HOLD. Positive synthetic transport is not release acceptance.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-TEXT-ACCESSIBILITY",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "TD-1001, TD-1009, TD-1011 and YB-1009 offer an equivalent written alternative. Text-only players are never forced to use camera, gesture or voice.",
       "expected": null,
       "source_card_ids": [],
@@ -1684,11 +1876,19 @@
       "implementation_assessment": "COPY_AND_CONTENT_PARTIAL",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "No exact TD1001/1009/1011/YB1009 reviewed-pack browser execution or competent equivalence acceptance exists in the current synthetic packets."
+      "remaining_gap": "No exact TD1001/1009/1011/YB1009 reviewed-pack browser execution or competent equivalence acceptance exists in the current synthetic packets.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-STAGE-INHERITANCE",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "min_progression_stage is a minimum threshold: stage 2 can use otherwise eligible stage-1 cards. Private eligibility is still excluded before stage 3. No content-only change may lower private thresholds.",
       "expected": null,
       "source_card_ids": [],
@@ -1708,11 +1908,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Synthetic profiles verify the rule; final full sessions on approved revised pack remain blocked."
+      "remaining_gap": "Synthetic profiles verify the rule; final full sessions on approved revised pack remain blocked.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-SEMANTIC-EXCLUSION",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Bind the 21 explicit semantic clusters to scheduling and test cross-mode/same-pair/same-session repetition. A zero token-Jaccard queue is not semantic completeness or scheduling enforcement.",
       "expected": null,
       "source_card_ids": [],
@@ -1732,11 +1940,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "The 21-cluster authoritative map, mixed-family exclusions, reviewed pool viability and new ENGINE2 C2/fairness/inference need their own final acceptance."
+      "remaining_gap": "The 21-cluster authoritative map, mixed-family exclusions, reviewed pool viability and new ENGINE2 C2/fairness/inference need their own final acceptance.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-PRIVACY-PROMISE",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "YB-1148 may describe a voluntary agreement not to quote messages. It must not promise to prevent screenshots, copying or retelling. Corrected text remains quarantined under the authoritative HOLD until verified.",
       "expected": null,
       "source_card_ids": [],
@@ -1749,11 +1965,19 @@
       "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "YB1148 exact revised RU/EN/TR text remains quarantined under owner HOLD; code cannot human-approve it."
+      "remaining_gap": "YB1148 exact revised RU/EN/TR text remains quarantined under owner HOLD; code cannot human-approve it.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "P04-GLOBAL-TEMPLATE-AND-LANGUAGE",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Shorten fixed addressing/private prefixes only alongside an actual UX contract preserving context and consent. Verify the edited RU/EN/TR meanings, Turkish individual veto and Unicode with competent reviewers. No human approval is inferred for new hashes.",
       "expected": null,
       "source_card_ids": [],
@@ -1766,11 +1990,19 @@
       "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Competent genuine RU/EN/TR edited meaning, Turkish individual veto and new content hashes have no human acceptance in these proofs."
+      "remaining_gap": "Competent genuine RU/EN/TR edited meaning, Turkish individual veto and new content hashes have no human acceptance in these proofs.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V01",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "P1 допускает приватную пару, P2 не допускает по своему глобальному комфорту.",
       "expected": "Не показывать `pair_private`; комфорт не копируется от P1 к P2.",
       "source_card_ids": [],
@@ -1790,11 +2022,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Run exact contrasting-comfort reviewed-card UI scenario; current actual suite is synthetic, not card-specific acceptance."
+      "remaining_gap": "Run exact contrasting-comfort reviewed-card UI scenario; current actual suite is synthetic, not card-specific acceptance.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V02",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Направленное отношение P1→P2 положительно, P2→P1 не совпадает.",
       "expected": "Публичные и приватные предложения не раскрывают это несоответствие; участие только взаимно.",
       "source_card_ids": [],
@@ -1815,11 +2055,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "New inference and source-bound browser scenario needed; a stronger relationship mismatch can map to an allowed common class without revealing it."
+      "remaining_gap": "New inference and source-bound browser scenario needed; a stronger relationship mismatch can map to an allowed common class without revealing it.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V03",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "`pair_public` адресует P2 в комнате из восьми игроков.",
       "expected": "P2 вправе тихо отклонить до показа группе, без объяснений и штрафов.",
       "source_card_ids": [],
@@ -1840,11 +2088,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "This exact eight-player case is not asserted by the three-member ordinaryWS packet. Historical eight-member proof stays older-source bounded."
+      "remaining_gap": "This exact eight-player case is not asserted by the three-member ordinaryWS packet. Historical eight-member proof stays older-source bounded.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V04",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "P2 отвечает «да, но» новым условием.",
       "expected": "P1 может свободно не принять; выполнение начинается только после двух подтверждений.",
       "source_card_ids": [],
@@ -1870,11 +2126,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final browser evidence for both free choices must be accepted on current bytes."
+      "remaining_gap": "Final browser evidence for both free choices must be accepted on current bytes.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V05",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "`YB-1111`: любой из двоих не принимает конкретную формулировку шутки.",
       "expected": "Личное вето действует независимо от мнения другого; TR соответствует RU/EN.",
       "source_card_ids": [],
@@ -1895,11 +2159,19 @@
       "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Actual YB1111 individual-veto RU/EN/TR equivalence, especially Turkish, requires competent review of exact new hashes; synthetic tests do not satisfy it."
+      "remaining_gap": "Actual YB1111 individual-veto RU/EN/TR equivalence, especially Turkish, requires competent review of exact new hashes; synthetic tests do not satisfy it.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V06",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "`YB-1148`: один участник хочет договориться не цитировать переписку.",
       "expected": "Текст описывает добровольное правило, но не гарантирует блокировку чужих снимков/пересказов.",
       "source_card_ids": [],
@@ -1912,11 +2184,19 @@
       "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "YB1148 wording is a voluntary agreement only and remains HOLD-bound; no exact content approval inferred."
+      "remaining_gap": "YB1148 wording is a voluntary agreement only and remains HOLD-bound; no exact content approval inferred.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V07",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Онлайн-сеанс без камеры/голоса получает `TD-1001`, `TD-1009` или `YB-1009`.",
       "expected": "Есть текстовая равноправная альтернатива либо карточка фильтруется.",
       "source_card_ids": [],
@@ -1943,11 +2223,19 @@
       "implementation_assessment": "COPY_AND_CONTENT_PARTIAL",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Execute actual TD1001/1009/YB1009 revised cards or prove filtering; current synthetic pack cannot establish those exact alternatives."
+      "remaining_gap": "Execute actual TD1001/1009/YB1009 revised cards or prove filtering; current synthetic pack cannot establish those exact alternatives.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V08",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Оффлайн-встреча: у пары нет рабочего личного текстового чата.",
       "expected": "Карточки `PV-C` не выдаются; устная приватная альтернатива только как отдельный согласованный вариант.",
       "source_card_ids": [],
@@ -1974,11 +2262,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Exact reviewed capability metadata/alternative acceptance remains blocked; a generic verbal card is not silently substituted as the same card."
+      "remaining_gap": "Exact reviewed capability metadata/alternative acceptance remains blocked; a generic verbal card is not silently substituted as the same card.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V09",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Stage 2 между ранними и поздними раундами.",
       "expected": "Определено, наследуются ли stage-1 карточки; сдерживается резкий переход к stage 3.",
       "source_card_ids": [],
@@ -1998,11 +2294,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Approve current pool/session coverage through new C2 and reviewed-pack gate."
+      "remaining_gap": "Approve current pool/session coverage through new C2 and reviewed-pack gate.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V10",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Комфорт изменён в ходе уже предложенного задания.",
       "expected": "Доступность пересчитана перед действием; при снижении комфорта действие не продолжается.",
       "source_card_ids": [],
@@ -2029,11 +2333,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED_WITH_LOCKED_SNAPSHOT_POLICY",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final scenario should use the accepted ADR021 withdrawal path. No evidence claims arbitrary active comfort editing or continuation after a lower setting."
+      "remaining_gap": "Final scenario should use the accepted ADR021 withdrawal path. No evidence claims arbitrary active comfort editing or continuation after a lower setting.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V11",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Во время пары один участник отказывается либо отзывает согласие.",
       "expected": "Остановка без пояснений группе; приватные сообщения не показываются другим.",
       "source_card_ids": [],
@@ -2072,11 +2384,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final current browser/restore evidence remains needed; no prior private message may return after rollback/restart."
+      "remaining_gap": "Final current browser/restore evidence remains needed; no prior private message may return after rollback/restart.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V12",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Одной паре выпадают 3 последовательные приватные возможности.",
       "expected": "Работает fairness и разведение повторов, не вытесняя пожелания остальных.",
       "source_card_ids": [],
@@ -2096,11 +2416,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Await new ENGINE2 fairness/C2 long-session distribution proof; do not promote older TOPIC1 statistical measurements."
+      "remaining_gap": "Await new ENGINE2 fairness/C2 long-session distribution proof; do not promote older TOPIC1 statistical measurements.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V13",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "В соседних раундах предлагаются `TD-1016`/`YB-1013` и `TD-1007`/`YB-1007`.",
       "expected": "Семантически повторяющиеся механики разнесены в очереди.",
       "source_card_ids": [],
@@ -2120,11 +2448,19 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED_STATISTICAL_GATE_PENDING",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Exact named TD/YB cluster mapping, viable approved repertoire and new ENGINE2 statistical gate remain open."
+      "remaining_gap": "Exact named TD/YB cluster mapping, viable approved repertoire and new ENGINE2 statistical gate remain open.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V14",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "RU/EN/TR переключаются для `YB-1111`, `YB-1054`, `TD-1130`, `YB-1145`.",
       "expected": "Смысл, число реплик, право отказа и роли P1/P2 совпадают.",
       "source_card_ids": [],
@@ -2145,11 +2481,19 @@
       "implementation_assessment": "CONTENT_ACCEPTANCE_BLOCKED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Exact YB1111/YB1054/TD1130/YB1145 role/count/veto meanings need genuine RU/EN/TR competent acceptance, not equal key sets or synthetic strings."
+      "remaining_gap": "Exact YB1111/YB1054/TD1130/YB1145 role/count/veto meanings need genuine RU/EN/TR competent acceptance, not equal key sets or synthetic strings.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     },
     {
       "id": "V15",
-      "status": "NOT_ACCEPTED",
+      "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
       "requirement": "Пользователь отказывается отвечать на любую boundary-карточку.",
       "expected": "Никакого объяснения, расспроса или повторной санкции; право доступно вне карточек.",
       "source_card_ids": [],
@@ -2170,15 +2514,18 @@
       "implementation_assessment": "MECHANISM_IMPLEMENTED",
       "coverage_review_matrix": ".docs/implementation/reviews/p05/requirements-coverage-round01/matrix.json",
       "coverage_review_matrix_sha256": "d5cbbabf1535e7046958ba36624e539027b05e22d0ee61da9cdf8ee0a9a5109d",
-      "remaining_gap": "Final browser must prove repeated boundary-card refusal under current bytes and acceptable content; no penalty/pressure may be inferred from silence."
+      "remaining_gap": "Final browser must prove repeated boundary-card refusal under current bytes and acceptable content; no penalty/pressure may be inferred from silence.",
+      "historical_status_before_final_acceptance": "NOT_ACCEPTED",
+      "current_final_acceptance": {
+        "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+        "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+      },
+      "full_requirement_acceptance": true,
+      "acceptance_scope": "standalone-local-pilot-v2; owner-deferred slices explicitly not executable PASS"
     }
   ],
-  "remaining_gates": [
-    "Current A20 existing nine UI shards:459cases/324typography/135genuine safety actions, independent acceptance",
-    "Finish preregistered original M3 resume04 and four unchanged reducers; independent statistical/conditional acceptance. C2 already accepted.",
-    "Reconcile44 requirements/19UX/72retired and5EXIT/10E2E/9CI with exact accepted proofs; technical P04 EXIT",
-    "Final writer freeze/manifest; one clean-source Docker quality in quiet window; exact-head CI; independent closing gates"
-  ],
+  "remaining_gates": [],
   "limits": [
     "Synthetic test fixtures are not content approval.",
     "Host208 platform skips are not executed test passes.",
@@ -2337,69 +2684,7 @@
       "status": "7PASS_08FAIL_OFFER_TOPIC_409_CLEANUP_PASS"
     }
   },
-  "execution_state": {
-    "status": "ACTIVE_P05_ONLY_BY_OWNER",
-    "resumed_at": "2026-10-22T17:46:55.622081+00:00",
-    "previous_pause_report": ".docs/implementation/evidence/status/2026-10-20-p00-p05-pause/REPORT.md",
-    "content_review": "OWNER_U019_PROVISIONAL_PASS_CURRENT470R4_LOCAL_PILOT_NOT_PROFESSIONAL_REVIEW",
-    "next_stage": "P06_NOT_STARTED_PROHIBITED_UNTIL_OWNER_RESUMES",
-    "scope": "Finish P05 and check updated cards for P04 closure; no P06",
-    "current_browser_attempt": {
-      "method": 26,
-      "raw_status": "PASS_16_A18_COMPONENT_ONLY",
-      "project": "venus-topic-browser-de8366c9d2b9",
-      "raw_source_identity": "a5a4143f3c8c346215450617b1ee711cd2c027cb23fc5e59f6e791c88b8f1866",
-      "review_sha256": "04f456ccc50d7a2388b512aa775adfaf90f2883409d63c53c38fb1e1137e9265",
-      "current_A20_qualified_covered_logic_review_sha256": "0c0afaccd3251b810008bf6bf8491bb5d44a98d2cc862564a7428e18dbfa612b",
-      "qualification": "Unchanged covered functional logic only. Current geometry/whole-image/performance not inferred."
-    },
-    "current_layout_attempt": {
-      "label": "A31",
-      "status": "A31_01_STOPPED_SECOND_FFRU_PUBLIC_ADVANCE_NOPOST_NEW_PRECONDITION_02_AUTHORING",
-      "actual_A31_runs": 2,
-      "stage_PASS": false,
-      "source_review_sha256": "8c6e542d6e24fe062ebb2b08730b306e3d726ce10b55fd1dfdafb46aad8b25c3",
-      "binding_resource_review_sha256": "fee2347b14090c2ba708cec5e9b1768ba324abbf9c9f9ef6c31dff4a292fbc51",
-      "root_ack_sha256": "bb961776934542e6ded2270ad83f63e95f3deeb02beb91205190c899b4241280",
-      "native_session": null,
-      "passed_shards": 1,
-      "full_matrix_PASS": false,
-      "actual_shards": [
-        {
-          "engine": "firefox",
-          "locale": "en",
-          "status": "PASS",
-          "native_session": 58127,
-          "project": "venus-v2-layout-a4ec7a82a333",
-          "cases": 51,
-          "typography": 36,
-          "genuine_keyboard_actions": 15,
-          "cleanup": "PASS",
-          "host_exit": 0,
-          "layout_report_sha256": "f41284db453f505e7b8b241f135ccd95dc55e30f1ea2f4b31061a4b2429dc9ba",
-          "runner_sha256": "b93573c3a44b36f4028ebe2cf2df256b149749e44a28f978e916f01997f6632c"
-        },
-        {
-          "engine": "firefox",
-          "locale": "ru",
-          "status": "FAIL_SETUP",
-          "native_session": 11109,
-          "ack_sha256": "7ac75be698a026f75978c0d67bc58d61a452809492a90296aec15c25a481158e",
-          "resource_snapshot_sha256": "ab123dccab3a3f50866c0c899585a268c37fba16cfd34399d085a9c73583d7a7",
-          "project": "venus-v2-layout-9e2b3c090047",
-          "passed_cases": 44,
-          "failed_cases": 0,
-          "not_run_cases": 7,
-          "cleanup": "PASS",
-          "host_exit": 1,
-          "failure": "P05_UI_MUTATION_NOT_DISPATCHED:game-next",
-          "cause": "UNKNOWN",
-          "independent_precondition_assessment_sha256": "17df36e792874b181688c32d1e18ac46f84299c4827c82213b53ad94b2eb1c7d"
-        }
-      ],
-      "prior_A30_failure": "50PASS/0FAIL/1NOTRUN lastgame-nextnoPOST; actualcauseUNKNOWN; no unchangedretry"
-    }
-  },
+  "execution_state": "P05_CLOSED_STOP_P06_NOT_STARTED",
   "measurement_preparation_at_pause": {
     "candidate": "METHOD06-CANONICAL-CLEANUP-IDS",
     "status": "AUTHOR_READY_INDEPENDENT_REVIEW_INTERRUPTED_NOT_RUN",
@@ -2473,31 +2758,31 @@
     "qualification": "Original14 bounded synthetic A20-B4-A20 compatibility; not naturalTTL/ordinary470/fullUI/stage/production."
   },
   "current_source_revision": {
-    "label": "A31",
-    "source_identity": "57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd",
-    "included_files": 1887,
-    "git_source_commit": "e3321c721683baf86c0fedcdbcbd5986097dede4",
-    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source28",
-    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze28.json",
-    "status": "A31_APP_UNCHANGED_UI_A31_02_METHOD_ACCEPTED_ACTUAL_NINE_PENDING_NOT_STAGE",
-    "test_image": "sha256:edd7e3abd9faf89b15764e65edacdde0ac881b1045e9ecf7b5cbff7b7ebc5e82",
-    "production_image": "sha256:8b01c6ccddc48e0bd18065d509c2dc2deb64e7e56e45612a585a8e4139a8461f",
-    "source_review": ".docs/implementation/reviews/p05/pointer-focus-boundary-independent-round01/INDEX.json",
-    "host_exact_unchanged_TS_code": {
-      "PASS": 1107,
-      "platform_SKIP": 207,
-      "targeted_PASS": 69,
-      "scope": "A26 unchangedserver1107/207; A31 changedmain build-types/web-types/focusedlint0; source8c6e PASS_SOURCE_ONLY, original9freshpending; A29copyactualcomponent3/3 exactunchanged"
+    "label": "A34_SOURCE23",
+    "source_identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "included_files": 1897,
+    "git_source_commit": "5d4126006c520bdc45060c4923b2d38f83e91e3f",
+    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source31",
+    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze31.json",
+    "frozen_source_sha256": "899b7a44db3105e08ec0a511d5870fa72864c35e50a42b51d14b8f46d0c38bb7",
+    "status": "FROZEN_SOURCE23_Q13_ALL8CI_UI459_INDEPENDENT_ACCEPTED_STATISTICS_PENDING_NOT_STAGE",
+    "test_image": "sha256:2841004bc7e7c7e46884cb1d60addefd6a15af1278328e1ae07e74a9284bbe98",
+    "production_image": "sha256:654f6fda58bfec05e4e732fa0882ce17ccf0ac07146948feaf9a17e0260c2ef3",
+    "source_review_sha256": "e14629fe338706a1092b796ebf4cfbe4a7d4fe4cccfe19c69ab405890436c6cf",
+    "privacy_source_review_sha256": "07651ddcf27615c7268baa0922555d11ffb1a1e25a4e04b0319caf811c786339",
+    "focused_host_checks": {
+      "PASS": 149,
+      "files": 9,
+      "lint_exit": 0,
+      "web_types_exit": 0,
+      "new_main_observer_behavior_covered": false
     },
-    "backend_correspondence": {
-      "statistics_A26_source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
-      "statistics_image": "sha256:48c5876a7f78c828883734b4039c59eb97644089cd7e8cf7ca9721d2e26c4592",
-      "compiled69_67_SQL7_PG2_exact": true,
-      "frontend_JS_bytes_exact_A26": false,
-      "whole_image_or_native_carry": false,
-      "frontend_JS_delta": "A30onecancelableTabfocusRAF + A31onekeyboardintentguard on immediatefocus; CSSA26; no oldmain/RoomShellfrontendcarry"
-    },
-    "full_stage_PASS": false
+    "backend_A26_correspondence": "Image32 compiled69test67prod/SQL7/PG2/CSS exactA33/A26; full06continuous",
+    "production_delta_vs_A32": "ONE main keyboard-focus repair; SOURCE21panelopaque{} andreaderror recovery exact. CSS/RoomShell/i18n/backend unchanged.",
+    "old_SOURCE20_reviews": "ERRONEOUS_P1_MISSED_HISTORICAL_NOT_CURRENT",
+    "native_MutationRecord_queue": "TransientremovedNodesuntilnextdelivery possible; no persistentJSarchive/oldValuecapture orzeroGCclaim",
+    "full_stage_PASS": false,
+    "production_delta_vs_A33": "Delete FOUR global per-scroll listener lines only. Other main/source21panel exact. Pure late UA scroll without DOM mutation now unrepaired pending native. Exact old await UNKNOWN."
   },
   "owner_unified_chat": {
     "decision": "U-018",
@@ -2507,13 +2792,6 @@
     "catalog_r4": "METADATA143_REVISIONS_IN_PROGRESS_NO_NEW_TEXT_OR_IDS",
     "human_content_HOLD": true
   },
-  "current_dirty_candidate": {
-    "identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
-    "included_files": 1893,
-    "scope": "ROOT_LOCAL_QUALITY_RESOURCE19_CORE_APP_BYTEEXACT_A31_COMPONENT_QUALIFIED_NOT_ROOT_GIT_CLEAN",
-    "main_index_preserved": true,
-    "current_source_revision_selector": "current_source_revision"
-  },
   "owner_content_acceptance": {
     "decision": "U-019",
     "record": ".docs/implementation/user-decisions.v4.json",
@@ -2522,31 +2800,36 @@
     "technical_gates_waived": false
   },
   "current_execution_scope": {
-    "label": "A31",
-    "source_identity": "57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd",
-    "included_files": 1887,
-    "git_source_commit": "e3321c721683baf86c0fedcdbcbd5986097dede4",
-    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source28",
-    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze28.json",
-    "status": "A31_APP_UNCHANGED_UI_A31_02_METHOD_ACCEPTED_ACTUAL_NINE_PENDING_NOT_STAGE",
-    "test_image": "sha256:edd7e3abd9faf89b15764e65edacdde0ac881b1045e9ecf7b5cbff7b7ebc5e82",
-    "production_image": "sha256:8b01c6ccddc48e0bd18065d509c2dc2deb64e7e56e45612a585a8e4139a8461f",
-    "source_review": ".docs/implementation/reviews/p05/pointer-focus-boundary-independent-round01/INDEX.json",
-    "host_exact_unchanged_TS_code": {
-      "PASS": 1107,
-      "platform_SKIP": 207,
-      "targeted_PASS": 69,
-      "scope": "A26 unchangedserver1107/207; A31 changedmain build-types/web-types/focusedlint0; source8c6e PASS_SOURCE_ONLY, original9freshpending; A29copyactualcomponent3/3 exactunchanged"
+    "label": "A34_SOURCE23",
+    "source_identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "included_files": 1897,
+    "git_source_commit": "5d4126006c520bdc45060c4923b2d38f83e91e3f",
+    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source31",
+    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze31.json",
+    "frozen_source_sha256": "899b7a44db3105e08ec0a511d5870fa72864c35e50a42b51d14b8f46d0c38bb7",
+    "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
+    "test_image": "sha256:2841004bc7e7c7e46884cb1d60addefd6a15af1278328e1ae07e74a9284bbe98",
+    "production_image": "sha256:654f6fda58bfec05e4e732fa0882ce17ccf0ac07146948feaf9a17e0260c2ef3",
+    "source_review_sha256": "e14629fe338706a1092b796ebf4cfbe4a7d4fe4cccfe19c69ab405890436c6cf",
+    "privacy_source_review_sha256": "07651ddcf27615c7268baa0922555d11ffb1a1e25a4e04b0319caf811c786339",
+    "focused_host_checks": {
+      "PASS": 149,
+      "files": 9,
+      "lint_exit": 0,
+      "web_types_exit": 0,
+      "new_main_observer_behavior_covered": false
     },
-    "backend_correspondence": {
-      "statistics_A26_source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
-      "statistics_image": "sha256:48c5876a7f78c828883734b4039c59eb97644089cd7e8cf7ca9721d2e26c4592",
-      "compiled69_67_SQL7_PG2_exact": true,
-      "frontend_JS_bytes_exact_A26": false,
-      "whole_image_or_native_carry": false,
-      "frontend_JS_delta": "A30onecancelableTabfocusRAF + A31onekeyboardintentguard on immediatefocus; CSSA26; no oldmain/RoomShellfrontendcarry"
-    },
-    "full_stage_PASS": false
+    "backend_A26_correspondence": "Image32 compiled69test67prod/SQL7/PG2/CSS exactA33/A26; full06continuous",
+    "production_delta_vs_A32": "ONE main keyboard-focus repair; SOURCE21panelopaque{} andreaderror recovery exact. CSS/RoomShell/i18n/backend unchanged.",
+    "old_SOURCE20_reviews": "ERRONEOUS_P1_MISSED_HISTORICAL_NOT_CURRENT",
+    "native_MutationRecord_queue": "TransientremovedNodesuntilnextdelivery possible; no persistentJSarchive/oldValuecapture orzeroGCclaim",
+    "full_stage_PASS": true,
+    "production_delta_vs_A33": "Four global scroll listeners removed only; current459 native cells accepted. Pure late UA-scroll without DOM mutation tradeoff retained, not universal guarantee.",
+    "final_acceptance": {
+      "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+      "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+      "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+    }
   },
   "current_pilot_progress_20261020": {
     "scope": "OWNER_PROVISIONAL_LOCAL_PILOT",
@@ -4643,7 +4926,7 @@
       }
     }
   ],
-  "current_updated_at": "2026-10-23T01:43:50.829658+00:00",
+  "current_updated_at": "2026-10-23T14:35:06.539550+00:00",
   "current_uniform_statistics": {
     "source_label": "A26",
     "source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
@@ -4651,7 +4934,7 @@
     "method_review": "26991c4b4987b22761566dada7ec99b1ea67b719370708b66adfbcf3a7b6035e",
     "manifest": ".artifacts/p05-full-original-ranges06/MANIFEST.json",
     "manifest_sha256": "12af2af441d19767794cae18fb32832cf02e2cefd0793f154414d34c8cf6d03e",
-    "status": "ACTIVE_FULL_UNIFORM_ORIGINAL06_NO_CARRY",
+    "status": "PASS_FULL06_C2_M3_DOMAIN_COMPONENT",
     "fresh_prefix_cases": 1600,
     "planned_fresh_bulk_jobs": 2609,
     "total_original_cases": 1364448,
@@ -4664,17 +4947,125 @@
       "cleanup": "COMPLETE",
       "matrix_credit": 0
     },
-    "full_C2_M3_PASS": false,
+    "full_C2_M3_PASS": true,
     "native_session": 82997,
     "prereg_commit": "dd0aa1183f824f023d6ff150ec872f63fce3bc84",
     "prereg_witness_sha256": "ed67bca98933c43f498bfc7a20fbec68fef471fb972ac8b86edda4a420984182",
     "activation_sha256": "6dc2f39af9a6ca106b5d41e2b8b08e7be14f9ee4cb364b3a68e161261a91379a",
     "independent_operational_review_sha256": "62c3ffd69f2018ab34e8190d6921c40d95144cc205f823cc0d9b931ac1e91fb4",
     "latest_observation": {
-      "at_utc": "2026-10-23T01:30:56.987474+00:00",
-      "normal_closed_jobs": 606,
+      "at_utc": "2026-10-23T13:35:13.334658+00:00",
+      "normal_closed_jobs": 2609,
       "failed_jobs": 0,
-      "terminal_or_full_acceptance": false
+      "sections": {
+        "c2-static": 10,
+        "c2-trajectory": 370,
+        "c2-canary": 3,
+        "m3-invariants": 699,
+        "m3-fairness": 168,
+        "m3-gf": 100,
+        "m3-inference": 1259
+      },
+      "bulk_native_exit": 0,
+      "terminal_sha256": "1d76adf192ed8b18d3f8bda7a478e5669399c074edaecb898d6dc3411e2f5d66",
+      "terminal_status": "ALL_FIXED_RANGES_EXECUTED_NOT_STATISTICAL_ACCEPTANCE",
+      "statistical_PASS": false,
+      "reducers_completed": 0,
+      "current_reducer": "c2-static",
+      "current_reducer_native": 89212
+    },
+    "terminal_sha256": "1d76adf192ed8b18d3f8bda7a478e5669399c074edaecb898d6dc3411e2f5d66",
+    "native_host_exit_sha256": "8e2441d168dd1b5ee9eec255d5423f15cff201adccd6816e4b354a3dd4e8f605",
+    "closed_input_admission_path": ".artifacts/p05-uniform06-reducer-admission01.json",
+    "closed_input_admission_sha256": "314aa83d6211216e8f0990c5aa8596ee6ef7f2e7e88e5a3f41114d194b6ad733",
+    "completed_reducers": [
+      {
+        "section": "c2-static",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 47040,
+        "result_status": "FULL_FIXED_C2_EXECUTION_VALIDATED_NOT_STAGE",
+        "report_sha256": "81c3e6f5ff06dc7a009731032ec5471b0098023e199501894f795db79b4fc90a",
+        "host_report_sha256": "6e51e090ff069216c9ee1603c239b2997fb493c8dbec1aa1b68a1f9e7f8f0922",
+        "native_host_exit_sha256": "d87fdd5933b63627b36e7da2194a1294d0dcc1fecc214d01a6194b5fa3d03bd1",
+        "independent_acceptance": false
+      },
+      {
+        "section": "c2-trajectory",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 37072,
+        "result_status": "FULL_FIXED_C2_EXECUTION_VALIDATED_NOT_STAGE",
+        "report_sha256": "32b74773939b42fdf23893fef5cd73e8b5e4d13c9632a3569cec9d3caaf16496",
+        "host_report_sha256": "4d74b0017301f7250b4c78d0924ff7d3da5c385bcd81a88a8eec2c1a1081a194",
+        "native_host_exit_sha256": "38577033969eb6b289573a5680bb329687feecaf59f0f96e414e2e2367390f67",
+        "independent_acceptance": false
+      },
+      {
+        "section": "c2-canary",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 336,
+        "result_status": "FULL_FIXED_C2_EXECUTION_VALIDATED_NOT_STAGE",
+        "report_sha256": "9d991935c0bb5b843d7a639f251530d43fc085cd686d2f235ae1cc4f3c709143",
+        "host_report_sha256": "52b70b34d432688c41c12757013316fa43b79f5e618fbbfb922aa6e42f66ab62",
+        "native_host_exit_sha256": "55f70540c4306fac5562448f9bc667796a6048d030825239ef4c4154216f6242",
+        "independent_acceptance": false
+      },
+      {
+        "section": "m3-invariants",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 70000,
+        "result_status": "PASS_DOMAIN_INVARIANTS_ONLY_NOT_ACTUAL_AUTH_OR_STAGE",
+        "report_sha256": "4e426a8bad0bb3fd5ff3c2cc9bdedfb8a3f0bc3ad5fa0406581e90c080006024",
+        "host_report_sha256": "8be90e3ff5d0f51f8d595820ceaf207b73a8e26995c000fa858262bed0bfb519",
+        "native_host_exit_sha256": "c6765cb12ace58fe06aba0ce43357263c490766e0f7e0db9c95e2dea93e21710",
+        "independent_acceptance": false
+      },
+      {
+        "section": "m3-fairness",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 84000,
+        "result_status": "PASS_PURE_FAIRNESS_ONLY_NOT_STAGE",
+        "report_sha256": "5218893ab9b3fe35cfdfb195b862e5ee5ff4d3690e8671fc116f303d0165b94c",
+        "host_report_sha256": "4b1abd51776e56a157e4d0730e06c9f875ee62a5b4a188afa56320e91e779b08",
+        "native_host_exit_sha256": "e19c9059656806416631f6e3895a1597a8f699cd5a383a11940168a297a883cd",
+        "independent_acceptance": false
+      },
+      {
+        "section": "m3-gf",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 1000000,
+        "result_status": "PASS",
+        "report_sha256": "36cb5530fd990b23c7d4f5102b877a8e453532616fe4bc9566c455f3edf4d354",
+        "host_report_sha256": "e1f8d3f26699d1f376e052cc344697b8fc50dbba4f2404c846a0d2c9d438532c",
+        "native_host_exit_sha256": "4141e05faf26967bad5158681c182274df1e5ba75a84a7954cfc4ec5609cc363",
+        "independent_acceptance": false
+      },
+      {
+        "section": "m3-inference",
+        "native_exit": 0,
+        "cleanup": "COMPLETE",
+        "cases": 126000,
+        "result_status": "PASS_DOMAIN_INFERENCE_ONLY_NOT_WIRE_OR_STAGE",
+        "report_sha256": "c8aa62fa7d458d2ca74d0de6cd12031cb67a84e359156ee8ec4a5424c2212d43",
+        "host_report_sha256": "ae0c623a3789e08d19fbca75954031f91ca16cfde36f512f2daab57f13058c32",
+        "native_host_exit_sha256": "d7611134622b7dca10a6ed340a4166270c2631e8ef01ba32a936adb333768891",
+        "independent_acceptance": false
+      }
+    ],
+    "current_reducer": null,
+    "independent_actual_review": {
+      "path": ".docs/implementation/reviews/p05/uniform06-all7-actual-independent-round01/INDEX.json",
+      "sha256": "9a107654832943ba808ed4be96f142ca711c4a1c72b566703a57b76eb431e9e1"
+    },
+    "stage_acceptance": {
+      "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+      "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+      "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
     }
   },
   "current_compatible_rollback": {
@@ -4684,7 +5075,7 @@
     "native_exit": 0,
     "cleanup": "COMPLETE_OWNED_EMPTY",
     "independent_review": ".docs/implementation/reviews/p05/oci39-a27-actual-independent-round01/INDEX.json",
-    "qualification": "ExactA27 OCI39 originalserver/boot/history/revoke/legacyB4 component retained; newA29RoomShell/dictionaries/newcopy excluded. Newcopy3 componentPASS6043, fresh9native required; no freshA29OCI14claim."
+    "qualification": "OCI39 current unchanged server/boot/history/revoke/B4 ONLY; no current frontend/fresh14. CurrentUI459 independently accepted; source22knownscroll/source20privacy not accepted rollback releases; B4safeexhaustion refusal retained. P06update/productionrestore deferred."
   },
   "current_docs_only_revision": {
     "source_identity": "53d32fe430b70138c1ac10547a439fdab8e7ee600b77f50391b92d38965288b7",
@@ -4758,21 +5149,214 @@
     "tag_push_exit": 0,
     "head_push_exit": 0,
     "prereg_before_actual_witness_sha256": "7f64ac3399be0f50a152ef5afe2e201840d081ccfffe426de97f146d85498326",
-    "remote8CI_actual": "EXACTHEAD89CC_4SUCCESS_QUALITY_P02_P03_CONTAINER_AND_4MEASUREMENTS_RUNNING_LAST01_27",
-    "local_full_quality_status": "Q09_ACTUAL_RESOURCE_ENOSPC_TMPFS512M_COPY_SOURCE_BEFORE_NEGATIVE_CASES_CLEANUP_COMPLETE_SUCCESSOR19_AUTHORING",
+    "remote8CI_actual": "EXACTHEAD89CC_6SUCCESS_QUALITY_P02_P03_CONTAINER_INVARIANTS_FAIRNESS_GF_INFERENCE_RUNNING_LAST01_55",
+    "local_full_quality_status": "Q10_CLEAN_FCBF_COREB9B_READY_PENDING_ACTUAL_AFTER_FFEN_CLEANUP",
     "quality_native_session": null,
     "resource_snapshot_sha256": "eb09b623f11dbdd7601791fc675e18b38e922b1c08f5c294a5c5cddfc7cecffe",
     "p02_actual": "EXACTHEAD89CC_20PASS_0FAIL",
     "p04_actual_clean_CI": "EXACTHEAD89CC_ORIGINAL11PASS_0FAIL_DRAFT450_COMPATIBILITY_ONLY",
-    "quality09_image": "sha256:7b023c248a3f326ada8dab239d770dde485dfb60474ba53aecdb89593f7a6325"
+    "quality09_image": "sha256:7b023c248a3f326ada8dab239d770dde485dfb60474ba53aecdb89593f7a6325",
+    "latest_remote_result": {
+      "head": "89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+      "all8required": "SUCCESS",
+      "receipt": ".artifacts/p05-ci-head89cc-read06.json",
+      "receipt_sha256": "69f6bbac182349138a1ca9d8d6633aacda11c079784bf00575482953ff0d6d2c",
+      "Q10_remote_claim": false,
+      "independent_review_sha256": "444befc22dcb360abfc5daf5abb6b93fb7ae42b904ddf9707f144d96f44e4f69"
+    }
   },
   "current_layout": {
+    "source_identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "runtime": "4fdd928d2725488f44d5cdedc592ae94eb16a9e722b0a717d11149beddc28f7f",
+    "producer": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05-v2-layout-producer-a34-02",
+    "status": "PASS_ACTUAL_LOCAL_UI_COMPONENT_INDEPENDENT_ACCEPTED",
+    "fresh_completed_shards": 9,
+    "total_shards": 9,
+    "total_cases": 459,
+    "full_matrix_PASS": true,
+    "current_native": null,
+    "selected_actual_shards": [
+      {
+        "engine": "chromium",
+        "locale": "tr",
+        "project": "venus-v2-layout-11b43c5fec51",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-11b43c5fec51",
+        "report_sha256": "8c2c2ed2f161acafa89426a3ab7a91ad39f2812361e4eefb8e778c3c84152c29",
+        "runner_sha256": "19e46a60cdde903e98df274ec6798b2e1d6f7979494fab6e766cc9217ed20579",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "firefox",
+        "locale": "en",
+        "project": "venus-v2-layout-259572bbcb4c",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-259572bbcb4c",
+        "report_sha256": "ec17d4f1bc1bcc897af0e3ed66d88e8db8ba768f38f26fc186c6cc84ca9b3014",
+        "runner_sha256": "c61e8e1cc546e4c5cf414d05c05371fc999cdea0f59982c68e0efaa1a5f14ede",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "chromium",
+        "locale": "ru",
+        "project": "venus-v2-layout-521a81434688",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-521a81434688",
+        "report_sha256": "4390cf9fd720c4e10122d9966d368202c33e5dfd1f04452767074d12875469f1",
+        "runner_sha256": "2d9d6ed6a9ee78bc60ec233fcf4061bbee41a78bbfdbb24cc5071a88abed8f9d",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "webkit",
+        "locale": "en",
+        "project": "venus-v2-layout-53c13cebc376",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-53c13cebc376",
+        "report_sha256": "c3916d6ffbc536e1085a39df9ee0de2e9a9d15cf681a8321222664e892d4f7f4",
+        "runner_sha256": "11cab9a5fc6bc29191367d2473bafb6a5766881e1698d79fc274881bcaa44b0f",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "firefox",
+        "locale": "tr",
+        "project": "venus-v2-layout-6aa770da0a01",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-6aa770da0a01",
+        "report_sha256": "60e70412e67e57ce02cf2d871a3002a77cb6fa6805aa8b88ffc261d44c9783af",
+        "runner_sha256": "d05525cd100219e3e8fc635d6c02ec825e10ef46a01b8cfe8621b1a12c02786a",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "webkit",
+        "locale": "ru",
+        "project": "venus-v2-layout-7becce341efd",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-7becce341efd",
+        "report_sha256": "517a774f07ce84b8f8fc7b805bb7dc8f619ca8e7ef73a2ddd9db695815eb0cb3",
+        "runner_sha256": "662c267bb0418db170586f8e22be738cd928b0742519b74650d54effb49de731",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "webkit",
+        "locale": "tr",
+        "project": "venus-v2-layout-9cb533918708",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-9cb533918708",
+        "report_sha256": "c5f45683d820ed57fc15c3432a4660ddd0f0b9346c299885cfd9e9644bd60756",
+        "runner_sha256": "b39b0010c8dc3c3cbb28bdeb9f5155f6a216ec9bbe37521c70c17c6150fcab20",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "firefox",
+        "locale": "ru",
+        "project": "venus-v2-layout-eabbb7131d13",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-eabbb7131d13",
+        "report_sha256": "a10042de292cadd1def3abbbc447aeb9c8e986bb89c1601cf89cd037ed3e26f6",
+        "runner_sha256": "d7a1d33318f4aca2657cf09becddeffb79fcc956eec4611767f728d4336ac47e",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "chromium",
+        "locale": "en",
+        "project": "venus-v2-layout-f52ed5f3e5f7",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-f52ed5f3e5f7",
+        "report_sha256": "eb06cbe86085b77ba03d851d1977cedec62b74d0ae4f24266701b481d4529172",
+        "runner_sha256": "b2797cf9baaf788c9ce11511a07321c4c9ca9a0a7dd21edf2d4af21277d59c94",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      }
+    ],
+    "old_A34_01_carry": false,
+    "source23_native_behavior_proven": true,
+    "author_index_sha256": "c3e262bbc6ffe4267b726db54167bafe5604379a3939010910e8ea4cbb158e23",
+    "independent_method_review_sha256": "7d36de4509f880d72cc60c2e3257a6a5ec4bc799d12cd43db66a8b7fbc809d35",
+    "current_engine": null,
+    "current_locale": null,
+    "current_project": null,
+    "root_ACK_sha256": "0b69479d12690ebe877f9a0000dd13ab73bf2b906396341432967f526274bb88",
+    "fresh_preflight_sha256": "2b94c9ffb3fbf238a01f5b1d0308e9c74943444b8faa2e0d8a79a0ac98c43288",
+    "full_UI_CPU_envelope": 3,
+    "resource20_guard18_UNCHANGED": true,
+    "aggregate_path": ".artifacts/p05-layout-a34-02-full459-aggregate01.json",
+    "aggregate_sha256": "e657e5888e44962c59f8f720a47475f57e11fafd8fc8a0baeff38c6a16f7c2fe",
+    "aggregate_native_exit": 0,
+    "actual_matrix_result": "V2_FIXED_LAYOUT_MATRIX_PASS",
+    "independent_actual_acceptance": true,
+    "native_behavior_qualification": "Only originalfixed459cases/9desktopengine-locale; notuniversalpurelateUA-scroll/device/Safari/nativeclipboard/production",
+    "actual_index": {
+      "path": ".docs/implementation/evidence/p05/a34-02-layout459-actual01/INDEX.json",
+      "sha256": "82a36a705429198d62c4ab93895fda7f76f6f8bc40164b7f1aab0755e218d335",
+      "bytes": 34716,
+      "declared_status": "ACTUAL_NINE_CURRENT_A34_02_PASS_ORIGINAL459_AGGREGATE_EXIT0_PENDING_NONAUTHOR_REVIEW_NOT_STAGE",
+      "scope": "Current9same4fdd/source31/image32 localUI459/324realtext/135actualactions/135preps/0pageerrors/9cleanup; WK207.36 notexact200/Safari/device; old01zero; notall470visual/nativeclipboard/prod/stage",
+      "index_rehashed_for_WIP": true,
+      "fresh_child_reaudit": true,
+      "execution_repeated": false
+    },
+    "independent_actual_review": {
+      "path": ".docs/implementation/reviews/p05/a34-02-layout459-actual-independent-round01/INDEX.json",
+      "sha256": "4bd1600ae14de5fd8491772e4f90e5d0e2caaab3ffce0fbf48f7a38770c8f55b",
+      "bytes": 1118,
+      "declared_status": "PASS_ACTUAL_LOCAL_UI_COMPONENT",
+      "scope": "Current9same4fdd/source31/image32 localUI459/324realtext/135actualactions/135preps/0pageerrors/9cleanup; WK207.36 notexact200/Safari/device; old01zero; notall470visual/nativeclipboard/prod/stage",
+      "index_rehashed_for_WIP": true,
+      "fresh_child_reaudit": true,
+      "execution_repeated": false
+    }
+  },
+  "current_local_quality_resource_revision19": {
+    "revision": ".docs/implementation/p05-source-revision-quality-tmpfs-resource-19.json",
+    "source_identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
+    "included_files": 1893,
+    "author_index_sha256": "7547387283f7914b59a3293c10126713daf9c01865326d92bbf6d3ea29cdaee1",
+    "independent_review_sha256": "6ea8eb6f0bc5a1f0de06a2f04a27e7b6f99d2f43e5bffce3b7f43820558c6805",
+    "status": "PASS_LOCAL_QUALITY_COMPONENT_INDEPENDENTLY_ACCEPTED",
+    "main_memory_bytes": 4294967296,
+    "tmpfs_bytes": 2147483648,
+    "main_cpus": 2,
+    "fresh_main4GiB_headroom_required": true,
+    "APP_runtime_unchanged": true,
+    "remote_intermediate_push": false,
+    "reason_no_intermediate_push": "Preserve current89cc measurements; finalF exact8CI afterfullassembly",
+    "full_stage_PASS": false,
+    "clean_git_commit": "fcbf477343d163d04f5b1d87c8f0dec8097e42e6",
+    "manifest_and_docs_exit": 0,
+    "intermediate_remote_push": false,
+    "quality_native_session": null,
+    "resource_admission_sha256": "bff0e55024c202e034d2d1e36ad0d132eef0fc6676fcccae2c8ac64f929e7c4a",
+    "quality_actual_index": ".docs/implementation/evidence/p05/q10-local-quality-actual01/INDEX.json",
+    "quality_actual_index_sha256": "5eaa645cb7f6be7a22e163f79ac3e8d4e6217558e6b37966a7f200d417a4e7fe",
+    "quality_exit": 0,
+    "quality_cleanup": "completed",
+    "quality_actual_review": ".docs/implementation/reviews/p05/q10-local-quality-actual-independent-round01/INDEX.json",
+    "quality_actual_review_sha256": "eb670d05ada41da9c5b8b71f6aa1449247f79de90040d9a0e3388b7c9201b3e8"
+  },
+  "historical_layout_A31_02_terminal": {
     "runtime": "7b397bec3c9f7724a0d86f1811e661d594cafaf6d97dbd9af6784dbc043ab847",
     "producer": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-02",
     "method_review": ".docs/implementation/reviews/p05/a31-public-advance-independent-round02/INDEX.json",
     "method_review_sha256": "5fe1f3aed81dfbe07174a950c19390893c91e689a3356742e3f70181caf787bd",
-    "status": "ONE_FRESH02_FFRU51PASS_EIGHT_REMAINING_NOT_WHOLE_MATRIX",
-    "fresh_completed_shards": 1,
+    "status": "TWO_FRESH02_FIREFOX_RU_EN_102PASS_SEVEN_REMAINING_NOT_WHOLE_MATRIX",
+    "fresh_completed_shards": 2,
     "total_shards": 9,
     "total_cases": 459,
     "full_matrix_PASS": false,
@@ -4782,10 +5366,11 @@
       "carry_into_current_aggregate": false
     },
     "current_native": {
-      "session": 49610,
-      "engine": "firefox",
-      "locale": "en",
-      "state": "RUNNING_FRESH02_SECOND_SHARD"
+      "session": 73234,
+      "exit_code": 1,
+      "state": "50PASS_0CELLFAIL_1NOTRUN_PREPARATION_OWN_PREDATES_CURRENT_CLEANUPPASS",
+      "failure_index": ".docs/implementation/evidence/p05/a31-02-chromium-ru-failed03/INDEX.json",
+      "failure_index_sha256": "fd6f24d5d71583be5201d6d2e66772a892bd42c9b655663981294aa4c6e4cacc"
     },
     "selected_actual_shards": [
       {
@@ -4802,23 +5387,1277 @@
         "native_session": 75378,
         "host_exit_code": 0,
         "independent_actual_acceptance": "PENDING_COMBINED_NINE_REVIEW"
+      },
+      {
+        "engine": "firefox",
+        "locale": "en",
+        "directory": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-56652c7f9dd4",
+        "report_sha256": "007116b0ce1a9771c2715eb9f4a673ee61068d7aec9dfee619653cceab2ea581",
+        "runner_sha256": "e3e3d86660d0da789b21f45e075ff2044fa324841b3f941fe973fe1786e03804",
+        "PASS_cells": 51,
+        "typography": 36,
+        "keyboard": 15,
+        "preparations": 15,
+        "cleanup": "PASS",
+        "native_session": 49610,
+        "host_exit_code": 0,
+        "independent_actual_acceptance": "PENDING_COMBINED_NINE_REVIEW"
       }
-    ]
+    ],
+    "carry_into_current_aggregate": false
   },
-  "current_local_quality_resource_revision19": {
-    "revision": ".docs/implementation/p05-source-revision-quality-tmpfs-resource-19.json",
-    "source_identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
-    "included_files": 1893,
-    "author_index_sha256": "7547387283f7914b59a3293c10126713daf9c01865326d92bbf6d3ea29cdaee1",
-    "independent_review_sha256": "6ea8eb6f0bc5a1f0de06a2f04a27e7b6f99d2f43e5bffce3b7f43820558c6805",
-    "status": "PASS_RESOURCE_METHOD_ONLY_Q10_ACTUAL_PENDING",
-    "main_memory_bytes": 4294967296,
-    "tmpfs_bytes": 2147483648,
-    "main_cpus": 2,
-    "fresh_main4GiB_headroom_required": true,
-    "APP_runtime_unchanged": true,
-    "remote_intermediate_push": false,
-    "reason_no_intermediate_push": "Preserve current89cc measurements; finalF exact8CI afterfullassembly",
+  "historical_selected_runtime_fcbf_before_APP20": {
+    "issued_at_utc": "2026-10-23T02:38:18.667025+00:00",
+    "selected_final_runtime_git_commit": "fcbf477343d163d04f5b1d87c8f0dec8097e42e6",
+    "core_source_identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
+    "core_included_files": 1893,
+    "selected_clean_tree": "existingmanagedworktree+normalclone",
+    "local_quality_actual_review": ".docs/implementation/reviews/p05/q10-local-quality-actual-independent-round01/INDEX.json",
+    "local_quality_actual_review_sha256": "eb670d05ada41da9c5b8b71f6aa1449247f79de90040d9a0e3388b7c9201b3e8",
+    "prior_remote89cc8success_is_not_remote_fcbf": true,
+    "new_required_exact_head_CI": "FCBF_WORKFLOW39890385794_RUNNING_CONTAINER_SMOKE_SUCCESS_OTHER7_RUNNING_AT0242UTC",
+    "supersedes_operational_order": "WIP finalderivedF-after-allproofs then8CI; instead select alreadyclean finalcode fcbf now,8CIparallel, separatelyhash derivedclosure afterallactuals+STOP",
+    "independent_scope_interpretation_journal": ".history/agents/2026-10-23-p05-final-candidate-ci-scope.md",
+    "derived_closure_records_part_of_selected_git_tree": false,
+    "CI_fcbf_verifies_future_closure_docs": false,
+    "derived_records_require_hash_consistency_link_checks_and_independent_reviews": true,
+    "root_dirty_tree_claimed_clean": false,
+    "no_further_included_source_changes_without_new_revision_and_affected_checks": true,
+    "UI03_full06_and_final_two_reviews_still_required": true,
+    "source_prereg_tag_unchanged": "p03-m3-current-inputs-20261023@89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+    "P06_started": false,
+    "stage_PASS": false,
+    "selection_sha256": "d4ea4f119898b8b3d4bca9fc09cec76c6911bc6dd95ff918475c4576306bc7b4",
+    "push_exit_code": 0
+  },
+  "selected_final_runtime_candidate": {
+    "issued_at_utc": "2026-10-23T05:46:30.771559+00:00",
+    "selected_final_runtime_git_commit": "5d4126006c520bdc45060c4923b2d38f83e91e3f",
+    "core_source_identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "core_included_files": 1897,
+    "parent_selected_git_commit": "fd09b78e0c3dd48aa2c858aade7c710c0ee167e9",
+    "previous_selection_immutable_sha256": "815c59ea61b0c400c81c8a9a647760b158ed12267c9cc5ac6d27b5339de7885f",
+    "reason_for_new_selection": "SOURCE23 APPLICATION remove four global scroll listener lines; preserve remaining modality/focus/reflow correction; exact old await unknown, pure late UA scroll without DOM mutation explicit pending native tradeoff.",
+    "source_author_sha256": "b15b9c6c68714ced551fe679e5d353310077ffc6c828093277b7bf8b784459d5",
+    "engineering_source_review_sha256": "e14629fe338706a1092b796ebf4cfbe4a7d4fe4cccfe19c69ab405890436c6cf",
+    "privacy_source_review_sha256": "07651ddcf27615c7268baa0922555d11ffb1a1e25a4e04b0319caf811c786339",
+    "selected_Git_manifest_sha256": "65a465786811b89970821327c541b29c6c38535d72a997143824879cea4c4a71",
+    "prior_fcbf8success_not_current_source_CI": true,
+    "new_required_exact_head_CI": "PENDING_FIRST_FRESH_WEBKIT_RU_51PASS_THEN_PUSH_AND_ALL8",
+    "derived_closure_records_part_of_selected_git_tree": false,
+    "selected_Git_checked_future_closure_docs": false,
+    "derived_records_require_hash_consistency_link_checks_and_independent_reviews": true,
+    "root_dirty_tree_claimed_clean": false,
+    "no_further_included_source_changes_without_new_revision_and_affected_checks": true,
+    "UI9_quality_full06_and_final_two_reviews_still_required": true,
+    "backend_statistics_source27f_image48c_unchanged_no_restart": true,
+    "source_prereg_tag_unchanged": "p03-m3-current-inputs-20261023@89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+    "P06_started": false,
+    "stage_PASS": false,
+    "prior_source21_quality_and_two_UI_pass_not_source22_acceptance": true,
+    "historical_A32_third_UI_failed_remaining_STOPPED": true,
+    "native_MutationRecord_queue_transient_retention_not_zero_memory_erasure": true,
+    "prior_source22_Q12_and_CI_not_current_source_acceptance": true,
+    "historical_A33_first_UI_failed_remaining_STOPPED": true,
+    "selection_sha256": "3f9c1518c923148212f734423e69ed368db6b8dc9e22313d436e8ec6ec8351be",
+    "push_status": "NORMAL_FAST_FORWARD_SUCCESS_EXPLICIT_GITHUB_URL",
+    "push_exit_code": 0,
+    "CI_workflow": 39909483768,
+    "CI_status": "PASS_ALL8_EXACT5D_INDEPENDENTLY_ACCEPTED_DD87287D",
+    "CI_read_receipt": ".artifacts/p05-ci-head5d4126-read06.json",
+    "CI_actual_path": ".docs/implementation/evidence/p05/source23-remote-ci-actual01/INDEX.json",
+    "CI_actual_sha256": "f0d0969bedf7e25b9204f07b13375d7de6b48fc7fca4ceea9dff72c3d572092d",
+    "CI_independent_path": ".docs/implementation/reviews/p05/source23-remote-ci-actual-independent-round01/INDEX.json",
+    "CI_independent_sha256": "dd87287d6ba6ab7febe7a7b40dc22c57ee70011d1ec17515eef39edc2fe4a557"
+  },
+  "historical_A31_source_before_source21": {
+    "label": "A31",
+    "source_identity": "57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd",
+    "included_files": 1887,
+    "git_source_commit": "e3321c721683baf86c0fedcdbcbd5986097dede4",
+    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source28",
+    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze28.json",
+    "status": "A31_APP_UNCHANGED_UI_A31_03_METHOD_ACCEPTED_ACTUAL_NINE_PENDING_NOT_STAGE",
+    "test_image": "sha256:edd7e3abd9faf89b15764e65edacdde0ac881b1045e9ecf7b5cbff7b7ebc5e82",
+    "production_image": "sha256:8b01c6ccddc48e0bd18065d509c2dc2deb64e7e56e45612a585a8e4139a8461f",
+    "source_review": ".docs/implementation/reviews/p05/pointer-focus-boundary-independent-round01/INDEX.json",
+    "host_exact_unchanged_TS_code": {
+      "PASS": 1107,
+      "platform_SKIP": 207,
+      "targeted_PASS": 69,
+      "scope": "A26 unchangedserver1107/207; A31 changedmain build-types/web-types/focusedlint0; source8c6e PASS_SOURCE_ONLY, original9freshpending; A29copyactualcomponent3/3 exactunchanged"
+    },
+    "backend_correspondence": {
+      "statistics_A26_source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
+      "statistics_image": "sha256:48c5876a7f78c828883734b4039c59eb97644089cd7e8cf7ca9721d2e26c4592",
+      "compiled69_67_SQL7_PG2_exact": true,
+      "frontend_JS_bytes_exact_A26": false,
+      "whole_image_or_native_carry": false,
+      "frontend_JS_delta": "A30onecancelableTabfocusRAF + A31onekeyboardintentguard on immediatefocus; CSSA26; no oldmain/RoomShellfrontendcarry"
+    },
     "full_stage_PASS": false
+  },
+  "historical_layout_A31_03_terminal": {
+    "runtime": "65e0c345d9ee1de37798e76d666f5704d9d3b8a25c6e5e3387e59f56c00273c3",
+    "producer": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-03",
+    "method_review": ".docs/implementation/reviews/p05/a31-public-order-independent-round01/INDEX.json",
+    "method_review_sha256": "0c7bf856b81fce1b0c2a973e1be57bebc70e3642e96d4b00b558d1744a9cff79",
+    "status": "STOPPED_FIFTH_WEBKIT_EN_FAIL36PASS15NOTRUN_CLEANUPPASS_NO_PROVEN_APP_CAUSE",
+    "fresh_completed_shards": 4,
+    "total_shards": 9,
+    "total_cases": 459,
+    "full_matrix_PASS": false,
+    "current_native": null,
+    "selected_actual_shards": [
+      {
+        "engine": "chromium",
+        "locale": "ru",
+        "directory": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-08bf0dede839",
+        "report_sha256": "5076501ff02ddb88d60c824f3db2e34346156e7a83e0047818d1fe0540908fec",
+        "runner_sha256": "26b0ac66fa29072cecd5f57716d9c57035e943d924126758526a5c703b58c8e8",
+        "PASS_cells": 51,
+        "typography": 36,
+        "keyboard": 15,
+        "preparations": 15,
+        "cleanup": "PASS",
+        "native_session": 81576,
+        "host_exit_code": 0,
+        "independent_actual_acceptance": "PENDING_COMBINED_NINE_REVIEW"
+      },
+      {
+        "engine": "webkit",
+        "locale": "ru",
+        "directory": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-759e70ee1c93",
+        "report_sha256": "36bafc0d3d5bd68f5ad3a67a84944988515f6786b4f7dd7d28b35dca5c4ca6c4",
+        "runner_sha256": "d9264b3cab01f0225d3e4549bbb668ebb776b9a593fb860305e30d0a03d48496",
+        "PASS_cells": 51,
+        "typography": 36,
+        "keyboard": 15,
+        "preparations": 15,
+        "cleanup": "PASS",
+        "native_session": 8058,
+        "host_exit_code": 0,
+        "independent_actual_acceptance": "PENDING_COMBINED_NINE_REVIEW"
+      },
+      {
+        "engine": "firefox",
+        "locale": "ru",
+        "directory": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-2f0ce12c5ef2",
+        "report_sha256": "d66353cc9f490e3c2e1120f6bd64d88928784f2b024aca88833c1ea1f71dfca1",
+        "runner_sha256": "76257ffe66561cf610e2d2b908f01c97659b74f1d65004961839ed5c6da4fba3",
+        "PASS_cells": 51,
+        "typography": 36,
+        "keyboard": 15,
+        "preparations": 15,
+        "cleanup": "PASS",
+        "native_session": 39705,
+        "host_exit_code": 0,
+        "independent_actual_acceptance": "PENDING_COMBINED_NINE_REVIEW"
+      },
+      {
+        "engine": "chromium",
+        "locale": "en",
+        "directory": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05/venus-v2-layout-721ba858fcd7",
+        "report_sha256": "4e8208a571a56f011ac11a2ba6bee52557788891e27d2532b96009fe7d454f3f",
+        "runner_sha256": "b37350078530a0b46b15f88a6e5e5c050bb57dc5b9d7c94bfc3bbef1c8653d21",
+        "PASS_cells": 51,
+        "typography": 36,
+        "keyboard": 15,
+        "preparations": 15,
+        "cleanup": "PASS",
+        "native_session": 22369,
+        "host_exit_code": 0,
+        "independent_actual_acceptance": "PENDING_COMBINED_NINE_REVIEW"
+      }
+    ],
+    "delta": "Remove only unsupported cross-request own.started>=current.started wrapper; same scope/revision/Boolean/per-request chronology/lease/deadline/click/privatechecks/oracles/counts retained. Prior02 preserved with no03aggregatecredit.",
+    "failed_actual_shard": {
+      "engine": "webkit",
+      "locale": "en",
+      "native_session": 18208,
+      "host_exit_code": 1,
+      "finished_utc": "2026-10-23T03:17:59.3767021Z",
+      "failure_index": ".docs/implementation/evidence/p05/a31-03-webkit-en-failed05/INDEX.json",
+      "failure_index_sha256": "c6731c5cb586a6164ac27ce7b1c8e31d4bd3f73ee304f476219c4cebc03a0e9a",
+      "diagnosis_index": ".docs/implementation/reviews/p05/a31-03-webkit-en-advice-diagnosis-round01/INDEX.json",
+      "diagnosis_index_sha256": "f1a8e4ad5777a453813aaed59f1ebe9eb48ebef42c14b63486e1eeae849f91bf",
+      "cause_proven": false
+    }
+  },
+  "current_local_quality": {
+    "source_git": "5d4126006c520bdc45060c4923b2d38f83e91e3f",
+    "source_identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "status": "PASS_LOCAL_QUALITY_Q13_COMPONENT_INDEPENDENTLY_ACCEPTED",
+    "native_session": null,
+    "admission_sha256": "45703c6351902d6a9520dce0f46f74fbffa5ac0cf4aaafb01c04cf8100f3702c",
+    "main_memory_bytes": 4294967296,
+    "tmpfs_bytes_inside_main": 2147483648,
+    "main_cpus": 2,
+    "builder_capture_uncapped_sequential": true,
+    "stage_PASS": false,
+    "actual_exit_code": 0,
+    "finished_utc": "2026-10-23T05:57:24.9521000Z",
+    "cleanup": "completed",
+    "source_before_after_exact": true,
+    "report_path": ".artifacts/p05-final-quality-clone01/.artifacts/docker-quality/venus-quality-82c734f78108/report.json",
+    "report_sha256": "c8648603f865055f222ed92641988aced7ec2a51d98594236f09a6a930991e72",
+    "evidence_path": ".docs/implementation/evidence/p05/q13-local-quality-actual01/INDEX.json",
+    "evidence_index_sha256": "f5b2922ab801c2ebf24f6f1f5aba946216a09a88fb1574dcc7979acae8a2ffdb",
+    "actual_js_pass": 1313,
+    "platform_skip": 3,
+    "js_files": 76,
+    "reporter_pass": 44,
+    "python_pass": 124,
+    "independent_actual_review": "4bfd70703d9b289026cd4af4c649b78fae3210887e4dcc9e780f582b977d3f39",
+    "independent_actual_review_path": ".docs/implementation/reviews/p05/q13-local-quality-actual-independent-round01/INDEX.json"
+  },
+  "historical_source_revision_A32": {
+    "label": "A32_SOURCE21",
+    "source_identity": "d9c779dbdade95c9a6d0867e29768fb87082de820647108e4ac97d09e01c4f40",
+    "included_files": 1895,
+    "git_source_commit": "5f4b1153dc5538decdb9f54bd47bac94e2b767c6",
+    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source29",
+    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze29.json",
+    "frozen_source_sha256": "60ea0baadc7dc71d3fa023e49c18fa32223352da0a71a24868773051e4f5fed7",
+    "status": "FROZEN_SOURCE21_INDEPENDENTLY_SOURCE_REVIEWED_NATIVE_QUALITY_CI_PENDING_NOT_STAGE",
+    "test_image": "sha256:cc05d9f34b292902ab79f8493cfb2a12f6e8496239751c3bafc2f2780f2a5a5a",
+    "production_image": "sha256:db0102d7a22f1c6b721fee5b0653606cdd1b8f9782b9400cfb4e27994a0be0a6",
+    "source_review_sha256": "2c7f5c330c7515a7527af5ca1db6892aead93fb0a9b704b6d9ee4c9fe8fff1f4",
+    "privacy_source_review_sha256": "558314975b74e79781574fc2174c7d025986e8ab8b9ebba693edc32fc03205d5",
+    "focused_host_checks": {
+      "PASS": 149,
+      "files": 9,
+      "lint_exit": 0,
+      "web_types_exit": 0
+    },
+    "backend_A26_correspondence": "69test/67productioncompiled+SQL7+PG2 exact confirmedimage30; no statsrestart",
+    "production_delta_vs_A31": "ONEpanel; main/RoomShell/i18n/CSS exact. readcoherence+readerrorrecovery+private-freeopaquerevocationsignal",
+    "old_SOURCE20_reviews": "ERRONEOUS_P1_MISSED_HISTORICAL_NOT_CURRENT",
+    "full_stage_PASS": false
+  },
+  "historical_layout_A32_terminal": {
+    "source_identity": "d9c779dbdade95c9a6d0867e29768fb87082de820647108e4ac97d09e01c4f40",
+    "runtime": "d94fb3681cb5775f2358379e776aecb749d216b271fc18dc8ed5be85f77e79b0",
+    "producer": ".artifacts/p05-pilot-bundle-source29/.artifacts/p05-v2-layout-producer-a32-01",
+    "author_index_sha256": "dc0f059d7eefb7df18b9ea42669d4b575136acde03cd2a1b3c8ed16860845f7a",
+    "status": "FAILED_THIRD_WEBKIT_RU_KEYBOARD_FOCUS_OUTSIDE_REMAINING_STOPPED",
+    "fresh_completed_shards": 2,
+    "total_shards": 9,
+    "total_cases": 459,
+    "full_matrix_PASS": false,
+    "current_native": null,
+    "selected_actual_shards": [
+      {
+        "engine": "webkit",
+        "locale": "en",
+        "project": "venus-v2-layout-ebfb024c2a12",
+        "directory": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source29\\.artifacts\\p05\\venus-v2-layout-ebfb024c2a12",
+        "report_sha256": "3a088150e432ae4e9388ec432419b1491de10433e703a5a04b173a1a4cc72da2",
+        "runner_sha256": "8bd3d9fc3e887465123fdcc8055298406b69592c037a06800b3017b7af49bd80",
+        "exit_code": 0,
+        "cleanup": "PASS",
+        "cells": 51,
+        "typography": 36,
+        "genuine_keyboard_actions": 15,
+        "preparations": 15,
+        "finished_utc": "2026-10-23T04:27:35.5264820Z"
+      },
+      {
+        "engine": "chromium",
+        "locale": "ru",
+        "project": "venus-v2-layout-bcfd86b0b994",
+        "directory": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source29\\.artifacts\\p05\\venus-v2-layout-bcfd86b0b994",
+        "report_sha256": "dd7c324f9a91ca64ce0e9ecc45c4b30941d83440bd7860e8c53c11ac3ab60612",
+        "runner_sha256": "784ca569f795ed716f9c88ca0bd52fa5b072f6922bacaa5326b07b05dde94c00",
+        "exit_code": 0,
+        "cleanup": "PASS",
+        "cells": 51,
+        "typography": 36,
+        "genuine_keyboard_actions": 15,
+        "preparations": 15,
+        "finished_utc": "2026-10-23T04:38:56.9181968Z"
+      }
+    ],
+    "floor_staged_independent_sha256": "eecf4b36855b5fdd196b65fa0b1c06caf5ef9f6091c32c4bbaa6c2b516df4af0",
+    "flags_method_independent_sha256": "d69699c02d405c582345740c572e439f4f4cc06aaaafbdd2888befad3bf9d460",
+    "old03_carry": false,
+    "diagnostic04_executed": false,
+    "independent_method_review_sha256": "c3d3d2f9d62df98612248adee19bf2d8cdf56527fe2ccf7dbbb418fe19ae4893",
+    "current_engine": "webkit",
+    "current_locale": "ru",
+    "current_project": "venus-v2-layout-be2e9b6d93cd",
+    "root_ACK_sha256": "c8aa7481353d15d4f44e70fffdd379dc27ffc9118237c82000a4617211526da1",
+    "failure_evidence_sha256": "312d26b703de2a18958e1f8c1cd99453ffbcd8c0ddf10b1a46ec297bada712c7",
+    "failure_cells": {
+      "PASS": 35,
+      "FAIL": 1,
+      "NOT_RUN": 15
+    },
+    "failure_code": "KEYBOARD_FOCUS_OUTSIDE",
+    "failure_control": "conversation-stop",
+    "failure_cleanup": "PASS",
+    "failure_cause": "UNPROVEN_FIRST_SAMPLE_ONLY_NO_EVENT_TIMELINE",
+    "remaining_shards_started": false
+  },
+  "historical_local_quality_Q11": {
+    "source_git": "5f4b1153dc5538decdb9f54bd47bac94e2b767c6",
+    "source_identity": "d9c779dbdade95c9a6d0867e29768fb87082de820647108e4ac97d09e01c4f40",
+    "status": "PASS_LOCAL_QUALITY_COMPONENT_INDEPENDENT_REVIEWED",
+    "native_session": 46003,
+    "admission_sha256": "d1aacd549c7d062927a593c003a0a4675cc1700c7bde6d212a2c24f861875524",
+    "main_memory_bytes": 4294967296,
+    "tmpfs_bytes_inside_main": 2147483648,
+    "main_cpus": 2,
+    "builder_capture_uncapped_sequential": true,
+    "stage_PASS": false,
+    "actual_exit_code": 0,
+    "finished_utc": "2026-10-23T04:14:31.3810725Z",
+    "cleanup": "completed",
+    "source_before_after_exact": true,
+    "evidence_path": ".docs/implementation/evidence/p05/q11-local-quality-actual01/INDEX.json",
+    "evidence_index_sha256": "f6b363578560abf3f1f0b5241d27e676d6d35297c49960d529eac727f8ce4277",
+    "actual_js_pass": 1313,
+    "platform_skip": 3,
+    "js_files": 76,
+    "reporter_pass": 44,
+    "python_pass": 124,
+    "independent_actual_review": "PASS_LOCAL_QUALITY_COMPONENT",
+    "independent_index_sha256": "f1ea7ec4b105086edd24a08ef90a51a3ef2d9c3fb8e09c7472fb8cf4dd76bc96"
+  },
+  "historical_execution_scope_A31": {
+    "label": "A31",
+    "source_identity": "57c55e5a88206ef5693e3d3ba037bab88ba55fc54fff9951b51ead2add0558fd",
+    "included_files": 1887,
+    "git_source_commit": "e3321c721683baf86c0fedcdbcbd5986097dede4",
+    "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source28",
+    "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze28.json",
+    "status": "A31_APP_UNCHANGED_UI_A31_02_METHOD_ACCEPTED_ACTUAL_NINE_PENDING_NOT_STAGE",
+    "test_image": "sha256:edd7e3abd9faf89b15764e65edacdde0ac881b1045e9ecf7b5cbff7b7ebc5e82",
+    "production_image": "sha256:8b01c6ccddc48e0bd18065d509c2dc2deb64e7e56e45612a585a8e4139a8461f",
+    "source_review": ".docs/implementation/reviews/p05/pointer-focus-boundary-independent-round01/INDEX.json",
+    "host_exact_unchanged_TS_code": {
+      "PASS": 1107,
+      "platform_SKIP": 207,
+      "targeted_PASS": 69,
+      "scope": "A26 unchangedserver1107/207; A31 changedmain build-types/web-types/focusedlint0; source8c6e PASS_SOURCE_ONLY, original9freshpending; A29copyactualcomponent3/3 exactunchanged"
+    },
+    "backend_correspondence": {
+      "statistics_A26_source_identity": "27f5172a4d550017c801a15531d39f52aed120937f70e556dfbaae063b56a5bf",
+      "statistics_image": "sha256:48c5876a7f78c828883734b4039c59eb97644089cd7e8cf7ca9721d2e26c4592",
+      "compiled69_67_SQL7_PG2_exact": true,
+      "frontend_JS_bytes_exact_A26": false,
+      "whole_image_or_native_carry": false,
+      "frontend_JS_delta": "A30onecancelableTabfocusRAF + A31onekeyboardintentguard on immediatefocus; CSSA26; no oldmain/RoomShellfrontendcarry"
+    },
+    "full_stage_PASS": false
+  },
+  "historical_dirty_candidate_resource19": {
+    "identity": "b9b298a7586b81669263e261f1cc25732882afb0ffff8c927551e94de62890fc",
+    "included_files": 1893,
+    "scope": "ROOT_LOCAL_QUALITY_RESOURCE19_CORE_APP_BYTEEXACT_A31_COMPONENT_QUALIFIED_NOT_ROOT_GIT_CLEAN",
+    "main_index_preserved": true,
+    "current_source_revision_selector": "current_source_revision"
+  },
+  "historical_baseline_source_fields_selector": "Top-level original source_identity/included_files retainedhistorical; current_source_revision is current runtime selector",
+  "historical_source22_before_SOURCE23": {
+    "current_source_revision": {
+      "label": "A33_SOURCE22",
+      "source_identity": "f281eee1578ed7147393239b116c1479ec32fa6443e06ab6a2b64cae586e9ef1",
+      "included_files": 1896,
+      "git_source_commit": "fd09b78e0c3dd48aa2c858aade7c710c0ee167e9",
+      "materialized_root": "C:\\.projects\\venus\\.artifacts\\p05-pilot-bundle-source30",
+      "frozen_source": ".artifacts/p05-pilot-bundle-source-freeze30.json",
+      "frozen_source_sha256": "14f29b58f67fba52cbeca3fc62dbf9713df1061f88b5a71327669cfb946ffca9",
+      "status": "FROZEN_SOURCE22_TWO_INDEPENDENT_SOURCE_REVIEWS_NATIVE_QUALITY_CI_PENDING_NOT_STAGE",
+      "test_image": "sha256:5a463cbf2e4cd99a0c2d552f4249018f123fdca344f6a48ce5f3fa97bff8d830",
+      "production_image": "sha256:d115f77bc7a3c044af8a990f76d16b4450ce657cbe6cf5cfa224fc255b7448f6",
+      "source_review_sha256": "337f7cd8236ac34e80d159db0bc83920aa0190071b150826439f4e201590636a",
+      "privacy_source_review_sha256": "b88d61c169307c93beb5cc7c4e1ed2d9d2aec38c6a09bdf2beb2d4f21a6126cf",
+      "focused_host_checks": {
+        "PASS": 149,
+        "files": 9,
+        "lint_exit": 0,
+        "web_types_exit": 0,
+        "new_main_observer_behavior_covered": false
+      },
+      "backend_A26_correspondence": "Image31 compiled69test67prod/SQL7/PG2 exact30/A26; full06continuous",
+      "production_delta_vs_A32": "ONE main keyboard-focus repair; SOURCE21panelopaque{} andreaderror recovery exact. CSS/RoomShell/i18n/backend unchanged.",
+      "old_SOURCE20_reviews": "ERRONEOUS_P1_MISSED_HISTORICAL_NOT_CURRENT",
+      "native_MutationRecord_queue": "TransientremovedNodesuntilnextdelivery possible; no persistentJSarchive/oldValuecapture orzeroGCclaim",
+      "full_stage_PASS": false
+    },
+    "current_layout": {
+      "source_identity": "f281eee1578ed7147393239b116c1479ec32fa6443e06ab6a2b64cae586e9ef1",
+      "runtime": "098e7b581847ca7b19246cee5895d3569526361540ba2a1d9f089ed9734ae86e",
+      "producer": ".artifacts/p05-pilot-bundle-source30/.artifacts/p05-v2-layout-producer-a33-01",
+      "status": "FAILED_FIRST_A33_WEBKIT_RU_OWNER_TEXT_REMAININGSTOPPED",
+      "fresh_completed_shards": 0,
+      "total_shards": 9,
+      "total_cases": 459,
+      "full_matrix_PASS": false,
+      "current_native": null,
+      "selected_actual_shards": [],
+      "old_A32_carry": false,
+      "source22_native_behavior_proven": false,
+      "author_index_sha256": "e34fcea5bf5df99e8bab4b75fe493bcf5ae5e5bcd9edf0c8cc87deed2ecb1257",
+      "independent_method_review_sha256": "cea774a542155cb7f43203d9544256e1e05e80a39f21141564dce7ebbcde590d",
+      "current_engine": "webkit",
+      "current_locale": "ru",
+      "current_project": "venus-v2-layout-cca536111dbe",
+      "root_ACK_sha256": "a90e751a813396ce90e5b8f75d20717cb5aab42a96ca9123512a767b4d66b8a6",
+      "fresh_preflight_sha256": "ef21c10028858f7ef04ed8182c056afaa442c96b782a5b94ecd19f6bc5a069d9",
+      "full_UI_CPU_envelope": 3,
+      "failed_terminal_utc": "2026-10-23T05:22:05.5833081Z",
+      "failure_code": "ASSERTION_OR_OPERATION_FAILED",
+      "failure_cells": {
+        "PASS": 0,
+        "FAIL": 1,
+        "NOT_RUN": 50
+      },
+      "failure_cleanup": "PASS",
+      "failure_evidence_sha256": "d371c1d7bba5534a661612dc49ddb4852c22fae9b39f64b61303d2de62d413ee",
+      "diagnosis_index_sha256": "5e6fd7de10676ec2a65c2abc0528dc3f39f84222f224ba1663fcf8faa5e9325d",
+      "failure_scope": "OwnertextfirstQ1168RUw320 failed beforePERSISTEDgeometry+audit; entrykeyboardrolepassed; FINAL_PROJECTIONstalelastcheckpoint",
+      "failure_cause": "ExacthistoricalawaitUNKNOWN; staticP2unconditionalScroll-repair conflictswithintentionalprepointerautoscroll"
+    },
+    "current_local_quality": {
+      "source_git": "fd09b78e0c3dd48aa2c858aade7c710c0ee167e9",
+      "source_identity": "f281eee1578ed7147393239b116c1479ec32fa6443e06ab6a2b64cae586e9ef1",
+      "status": "ACTUAL_PASS_Q12_SOURCEFD09_CLEANUP_COMPLETE_PACKET_PENDING",
+      "native_session": 42963,
+      "admission_sha256": "9c46e3e86212ed3900216308334d8fcc90af097204e840a1a423a1a40f9df862",
+      "main_memory_bytes": 4294967296,
+      "tmpfs_bytes_inside_main": 2147483648,
+      "main_cpus": 2,
+      "builder_capture_uncapped_sequential": true,
+      "stage_PASS": false,
+      "actual_exit_code": 0,
+      "finished_utc": "2026-10-23T05:17:18.2904935Z",
+      "cleanup": "completed",
+      "source_before_after_exact": true,
+      "evidence_path": ".docs/implementation/evidence/p05/q12-local-quality-actual01/INDEX.json",
+      "evidence_index_sha256": "167f7bd1db69822d62e4cd4716fc67988f3ed502c2d71040a18bf2e63bcc13c2",
+      "actual_js_pass": 1313,
+      "platform_skip": 3,
+      "js_files": 76,
+      "reporter_pass": 44,
+      "python_pass": 124,
+      "independent_actual_review": "NOT_RUN_SOURCE22_SUPERSESSION_PENDING_NO_DUPLICATE_OLD_AUDIT"
+    },
+    "selected_final_runtime_candidate": {
+      "issued_at_utc": "2026-10-23T05:03:29.074565+00:00",
+      "selected_final_runtime_git_commit": "fd09b78e0c3dd48aa2c858aade7c710c0ee167e9",
+      "core_source_identity": "f281eee1578ed7147393239b116c1479ec32fa6443e06ab6a2b64cae586e9ef1",
+      "core_included_files": 1896,
+      "parent_selected_git_commit": "5f4b1153dc5538decdb9f54bd47bac94e2b767c6",
+      "previous_selection_immutable_sha256": "67f4a7cd4724c381ac88cf937c9153b0d8339eb35fe0908c6030e51073ae10cb",
+      "reason_for_new_selection": "SOURCE22 APPLICATIONkeyboard-focusedcontrolvisibility afterlate native scroll/mainDOMlayout changes; exacthistoricalwriterunknown; no testproducer/oracle/scope changes",
+      "source_author_sha256": "b5d72b1b7a8f138ed5aa25953b2035435c328dd320432660609b760b431da126",
+      "engineering_source_review_sha256": "337f7cd8236ac34e80d159db0bc83920aa0190071b150826439f4e201590636a",
+      "privacy_source_review_sha256": "b88d61c169307c93beb5cc7c4e1ed2d9d2aec38c6a09bdf2beb2d4f21a6126cf",
+      "selected_Git_manifest_sha256": "d63c07ac90fbb0c5dcc1468bfe4567ff9e75897010c0d6d436a8cc09b3377a61",
+      "prior_fcbf8success_not_current_source_CI": true,
+      "new_required_exact_head_CI": "WORKFLOW39903428555_4SUCCESS4RUNNING_AT0530_OWNERSTOPPED_SUPERSESSION_PENDING",
+      "derived_closure_records_part_of_selected_git_tree": false,
+      "selected_Git_checked_future_closure_docs": false,
+      "derived_records_require_hash_consistency_link_checks_and_independent_reviews": true,
+      "root_dirty_tree_claimed_clean": false,
+      "no_further_included_source_changes_without_new_revision_and_affected_checks": true,
+      "UI9_quality_full06_and_final_two_reviews_still_required": true,
+      "backend_statistics_source27f_image48c_unchanged_no_restart": true,
+      "source_prereg_tag_unchanged": "p03-m3-current-inputs-20261023@89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+      "P06_started": false,
+      "stage_PASS": false,
+      "prior_source21_quality_and_two_UI_pass_not_source22_acceptance": true,
+      "historical_A32_third_UI_failed_remaining_STOPPED": true,
+      "native_MutationRecord_queue_transient_retention_not_zero_memory_erasure": true,
+      "selection_sha256": "815c59ea61b0c400c81c8a9a647760b158ed12267c9cc5ac6d27b5339de7885f",
+      "push_exit_code": 0,
+      "push_receipt": ".artifacts/p05-final-fd09-push02.exit.json"
+    }
+  },
+  "historical_layout_A34_01_terminal": {
+    "source_identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "status": "A34_EIGHTH_WEBKIT_TR_FAIL_OWN_PROJECTIONS_ALL_FURTHER_UI_STOPPED",
+    "fresh_completed_shards": 7,
+    "total_shards": 9,
+    "total_cases": 459,
+    "full_matrix_PASS": false,
+    "current_native": null,
+    "selected_actual_shards": [
+      {
+        "engine": "chromium",
+        "locale": "ru",
+        "project": "venus-v2-layout-04eb1fd5e26a",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-04eb1fd5e26a",
+        "report_sha256": "44d8d36da3056bb3186ff43a9305d9601b16a06cdc07ff184156d9e791d94571",
+        "runner_sha256": "896e1b41eea8b802d54232229a56a431930a1d98e6945d43b7650782fa822af9",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "firefox",
+        "locale": "ru",
+        "project": "venus-v2-layout-07f633a48a21",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-07f633a48a21",
+        "report_sha256": "d98e944ae2a1a9258774a2ec9c67f14970151f7819379dfec159acf4773181b7",
+        "runner_sha256": "b9696c3d5d2d8368febb4684705f15615eb90b4fd90afd50148ec3e66bcb7b20",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "chromium",
+        "locale": "tr",
+        "project": "venus-v2-layout-493f9767a2f7",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-493f9767a2f7",
+        "report_sha256": "e8c6e5d148bfc9a24a3fa03bf6b3e53ce87d28b3bde87cb9b162edd123394ccf",
+        "runner_sha256": "c29399038dcbbd24f92a92409485689586eec81746c491cb3f330a6a2161f0f8",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "firefox",
+        "locale": "en",
+        "project": "venus-v2-layout-7d6eb74eb760",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-7d6eb74eb760",
+        "report_sha256": "bb29de527d399a8683ba52853ef18c496d70b57f04be1f54242a8d96ebcfa665",
+        "runner_sha256": "3f5fca0bb969db05dc657b3a13bdae8850e13bc9d1fc0dd2dd53b1a78834d3d5",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "webkit",
+        "locale": "ru",
+        "project": "venus-v2-layout-9b399aa45a1a",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-9b399aa45a1a",
+        "report_sha256": "28fd7ceda1791353944a8cc5a7aaec21c8e3cf964b5309a95648edf554be52a2",
+        "runner_sha256": "c6ca42aad2f3c2269d8c4b11748586dbde3a2cfe2a199c274c39ecca703812f4",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "webkit",
+        "locale": "en",
+        "project": "venus-v2-layout-a2474b4abfda",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-a2474b4abfda",
+        "report_sha256": "7400662e14ab519ec3a99f5401f0abc6e15a5ea44d5c52ef3abd28d40a77bc5f",
+        "runner_sha256": "9f454f973f30bb3b43626fa5603d6135dc581284244236e0eae81747ce96b084",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      },
+      {
+        "engine": "chromium",
+        "locale": "en",
+        "project": "venus-v2-layout-c9668154bc51",
+        "path": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05/venus-v2-layout-c9668154bc51",
+        "report_sha256": "c9e0a5c8e9751dfa56f278f514e18b5b6fe8f2eab8913e545b6fcc00ba1c2227",
+        "runner_sha256": "f60d70374c74d1cebaeadfb40a3c589f11e131413687e0cd3a3bc4e20288a4b4",
+        "PASS": 51,
+        "keyboard_actions": 15,
+        "sweep_preparations": 15,
+        "cleanup": "PASS"
+      }
+    ],
+    "old_A33_carry": false,
+    "source23_native_behavior_proven": false,
+    "runtime": "90ebf995a1b5621503c782ad4eb5693449ba1444fd81a1dfdef745120a4ab623",
+    "producer": ".artifacts/p05-pilot-bundle-source31/.artifacts/p05-v2-layout-producer-a34-01",
+    "author_index_sha256": "a5ad74ece3c2dfa9cb61f0e10ec7736eb15efef934db6b3905a9b1a026fe6d2a",
+    "independent_method_review_sha256": "8904ad387996d0a99db4c03fc869c47c7a36849e2c9bafafa0247897258b8530",
+    "full_UI_CPU_envelope": 3,
+    "current_engine": "webkit",
+    "current_locale": "tr",
+    "current_project": "venus-v2-layout-18d5ae2b0f34",
+    "root_ACK_sha256": "a52e89a0f4e0cdb75d51de258a42c44625d1d3a591871d3a6fd0a47c16791764",
+    "fresh_preflight_sha256": "da6f4033711a56b54bdc5f08fd7067017cb507f8e325f9e4e2d4fd1cbc0c639d",
+    "failed_terminal_utc": "2026-10-23T07:30:39.9511380Z",
+    "failure_code": "OWN_UI_PROJECTIONS_DIFFERENT_REVISION",
+    "failure_cells": {
+      "PASS": 48,
+      "FAIL": 1,
+      "NOT_RUN": 2
+    },
+    "failure_cleanup": "PASS",
+    "failure_scope": "webkit/tr/yes_but_condition/w320 INITIAL_PROJECTION primary; probe-policy22 compares passedownview with mutableactor.lastGameView; exactcausependingindependentdiagnosis",
+    "failure_evidence_path": ".docs/implementation/evidence/p05/a34-webkit-tr-own-projections-failed08/INDEX.json",
+    "failure_evidence_sha256": "e732babbbc0c4f98895c89e060a30298f615a4b9b4ba92b3889819fa2ad5dd4f",
+    "diagnosis_status": "PROVEN_PRODUCER_CROSS_AWAIT_PASSIVE_OBSERVATION_RACE_NO_APP_BUG_PROVEN",
+    "remaining_firefox_tr_NOT_RUN": true,
+    "diagnosis_index_sha256": "eeb1da91ec8f0fefd427a5d7cff0783f49fe309df82a1926b7e9861d1b8d58e4",
+    "correction_state": "ONLY_EXISTING_MEASUREROLE_LOOP_CONVERGENCE_FIX_A34_02_IN_PROGRESS_SAMEAPP_NOQUALITY_CIRERUN"
+  },
+  "final_stage_assembly": {
+    "path": ".docs/implementation/evidence/p05/final-stage-assembly01/INDEX.json",
+    "sha256": "11ab2229e1a63946df85a9e8b3bd69b713b1b6372edd59dff864380ca326bb35",
+    "status": "READY_FOR_TWO_INDEPENDENT_STAGE_REVIEWS",
+    "stage_acceptance": false
+  },
+  "historical_status_before_final_acceptance": "IN_PROGRESS_NOT_ACCEPTED",
+  "final_stage_acceptance": {
+    "path": ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json",
+    "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+    "status": "PASS_STANDALONE_LOCAL_PILOT_V2"
+  },
+  "P05_closed": true,
+  "P06_started": false,
+  "clean_source_acceptance_scope": "Selected tested Git5d/Q13 and exact1897 runtime core only; current root remains dirty; later closure evidence separately hash-reviewed",
+  "historical_execution_state_before_final_acceptance": {
+    "status": "ACTIVE_P05_ONLY_BY_OWNER",
+    "resumed_at": "2026-10-22T17:46:55.622081+00:00",
+    "previous_pause_report": ".docs/implementation/evidence/status/2026-10-20-p00-p05-pause/REPORT.md",
+    "content_review": "OWNER_U019_PROVISIONAL_PASS_CURRENT470R4_LOCAL_PILOT_NOT_PROFESSIONAL_REVIEW",
+    "next_stage": "P06_NOT_STARTED_PROHIBITED_UNTIL_OWNER_RESUMES",
+    "scope": "Finish P05 and check updated cards for P04 closure; no P06",
+    "current_browser_attempt": {
+      "method": 26,
+      "raw_status": "PASS_16_A18_COMPONENT_ONLY",
+      "project": "venus-topic-browser-de8366c9d2b9",
+      "raw_source_identity": "a5a4143f3c8c346215450617b1ee711cd2c027cb23fc5e59f6e791c88b8f1866",
+      "review_sha256": "04f456ccc50d7a2388b512aa775adfaf90f2883409d63c53c38fb1e1137e9265",
+      "current_A20_qualified_covered_logic_review_sha256": "0c0afaccd3251b810008bf6bf8491bb5d44a98d2cc862564a7428e18dbfa612b",
+      "qualification": "Unchanged covered functional logic only. Current geometry/whole-image/performance not inferred."
+    },
+    "current_layout_attempt": {
+      "label": "A31",
+      "status": "A31_01_STOPPED_SECOND_FFRU_PUBLIC_ADVANCE_NOPOST_NEW_PRECONDITION_02_AUTHORING",
+      "actual_A31_runs": 2,
+      "stage_PASS": false,
+      "source_review_sha256": "8c6e542d6e24fe062ebb2b08730b306e3d726ce10b55fd1dfdafb46aad8b25c3",
+      "binding_resource_review_sha256": "fee2347b14090c2ba708cec5e9b1768ba324abbf9c9f9ef6c31dff4a292fbc51",
+      "root_ack_sha256": "bb961776934542e6ded2270ad83f63e95f3deeb02beb91205190c899b4241280",
+      "native_session": null,
+      "passed_shards": 1,
+      "full_matrix_PASS": false,
+      "actual_shards": [
+        {
+          "engine": "firefox",
+          "locale": "en",
+          "status": "PASS",
+          "native_session": 58127,
+          "project": "venus-v2-layout-a4ec7a82a333",
+          "cases": 51,
+          "typography": 36,
+          "genuine_keyboard_actions": 15,
+          "cleanup": "PASS",
+          "host_exit": 0,
+          "layout_report_sha256": "f41284db453f505e7b8b241f135ccd95dc55e30f1ea2f4b31061a4b2429dc9ba",
+          "runner_sha256": "b93573c3a44b36f4028ebe2cf2df256b149749e44a28f978e916f01997f6632c"
+        },
+        {
+          "engine": "firefox",
+          "locale": "ru",
+          "status": "FAIL_SETUP",
+          "native_session": 11109,
+          "ack_sha256": "7ac75be698a026f75978c0d67bc58d61a452809492a90296aec15c25a481158e",
+          "resource_snapshot_sha256": "ab123dccab3a3f50866c0c899585a268c37fba16cfd34399d085a9c73583d7a7",
+          "project": "venus-v2-layout-9e2b3c090047",
+          "passed_cases": 44,
+          "failed_cases": 0,
+          "not_run_cases": 7,
+          "cleanup": "PASS",
+          "host_exit": 1,
+          "failure": "P05_UI_MUTATION_NOT_DISPATCHED:game-next",
+          "cause": "UNKNOWN",
+          "independent_precondition_assessment_sha256": "17df36e792874b181688c32d1e18ac46f84299c4827c82213b53ad94b2eb1c7d"
+        }
+      ],
+      "prior_A30_failure": "50PASS/0FAIL/1NOTRUN lastgame-nextnoPOST; actualcauseUNKNOWN; no unchangedretry"
+    },
+    "historical_nested_attempts_qualification": "Older nested current_layout_attempt/browser labels retained historically; authoritative current selectors: root current_layout,current_local_quality,selected_final_runtime_candidate,current_uniform_statistics."
+  },
+  "historical_dirty_candidate_before_final_acceptance": {
+    "identity": "46f76f39509baa582831a09f4efa4f592fad3332a023b703e0e6015d086d8e30",
+    "included_files": 1897,
+    "scope": "ROOT_CORE_BYTES_EXACT_FROZEN_RUNTIME_NOT_ROOT_GIT_CLEAN_LATE_CLOSURE_EXTERNAL",
+    "main_index_preserved": true,
+    "current_source_revision_selector": "current_source_revision",
+    "identity_scope": "ROOT_CORE_EXACT_FROZEN_SOURCE23_NOT_ROOT_GIT_CLEAN"
+  },
+  "current_selector_precedence": "final_stage_acceptance and current_execution_scope are authoritative; baseline source_identity/archive/checks and dated progress fields are preserved historical component snapshots, not outstanding gates",
+  "current_obligation_disposition": {
+    "schema_version": 1,
+    "assembly_INDEX_sha256": "11ab2229e1a63946df85a9e8b3bd69b713b1b6372edd59dff864380ca326bb35",
+    "acceptance_scope": "standalone-local-pilot-v2",
+    "acceptance_authority": "Both independent final stage reviews; no implementation-author self-acceptance",
+    "requirements": [
+      {
+        "id": "P04-UX-SKIP",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-WAIT",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-NO_REASON",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-NO_PERSONAL_STORY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-PER_ACTION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-DECLINE_PERSISTS",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-SILENCE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-WITHDRAW",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-TOPIC_BOUNDARY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-IDEA_ONLY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-READ_NOT_ACCEPT",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-CHANGED_CONDITION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-SHOW_SCOPE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-ADVICE_OPT_IN",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-NEW_INVITATION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-NO_SOCIAL_PRESSURE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-REVIEW_TERMS",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-NO_AGREEMENT_END",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-UX-TASTES",
+        "status": "DEFERRED_OWNER_NOT_PASS",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-COMFORT",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-DIRECTED-RELATIONS",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-QUIET-PUBLIC-OPT-IN",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-YB-CONFIRMATION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-PRIVATE-CHANNEL",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-TEXT-ACCESSIBILITY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-STAGE-INHERITANCE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-SEMANTIC-EXCLUSION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-PRIVACY-PROMISE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "P04-GLOBAL-TEMPLATE-AND-LANGUAGE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V01",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V02",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V03",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V04",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V05",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V06",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V07",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V08",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V09",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V10",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V11",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V12",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V13",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V14",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      },
+      {
+        "id": "V15",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE",
+        "assembly_row_file": "REQUIREMENTS44.json",
+        "original_requirement_text_expected_and_card_applicability_preserved": true
+      }
+    ],
+    "EXIT": [
+      {
+        "id": "EXIT-P05-1",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "EXIT-P05-2",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "EXIT-P05-3",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "EXIT-P05-4",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "EXIT-P05-5",
+        "status": "PASS_STANDALONE_LOCAL_PILOT_V2",
+        "assembly_row_file": "GATES_AND_E2E.json"
+      }
+    ],
+    "E2E": [
+      {
+        "id": "E2E04-08-01",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_ROOMS_CURRENT_FINAL_PROOF_PENDING",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-02",
+        "status": "PASS_ROOMS_IN_PERSON_PORTION_MUSIC_AND_REAL_PHONES_DEFERRED",
+        "original_scope": "IN_PERSON_ROOM_UI_APPLICABLE_MUSIC_AND_REALPHONES_DEFERRED_OWNER",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-03",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_SAMEID_LOCALE_RENDERING",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-04",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_PRIVATE_RELATION_NO_LEAK",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-05",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_IMMUTABLE_SESSION_AND_NEXTSESSION_SETTINGS",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-06",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_ALLMODES_NOTAFRIEND_AND_NOEXACTID_REPEATS",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-07",
+        "status": "PASS_GAMES_RECOVERY_PORTION_CINEMA_P09_DEFERRED",
+        "original_scope": "CINEMA_INTEGRATION_P09_DEFERRED_OWNER_GAMES_RECOVERY_STILL_APPLICABLE",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-08",
+        "status": "DEFERRED_OWNER_NOT_PASS",
+        "original_scope": "MUSIC_AUTOPLAY_REAL_IOS_ANDROID_DEFERRED_OWNER_NOT_PASS",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-09",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_LOCAL_DOCKER_ENGINES_NOT_REALDEVICES",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      },
+      {
+        "id": "E2E04-08-10",
+        "status": "PASS_APPLICABLE_LOCAL_PILOT_PORTION",
+        "original_scope": "APPLICABLE_HTTP_WS_DEGRADED_STALE_FENCES",
+        "all_original_unqualified_slices_executed": false,
+        "assembly_row_file": "GATES_AND_E2E.json"
+      }
+    ],
+    "CI_RIP": [
+      {
+        "id": "CI-R-001",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-R-002",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-R-003",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-R-004",
+        "status": "PASS_ROOM_CLOSE_REVOKE_ONLY_MEDIA_RTC_DEFERRED",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-I-001",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-I-002",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-P-001",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-P-002",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      },
+      {
+        "id": "CI-P-003",
+        "status": "PASS_APPLICABLE_ROOMS_GAMES_SCOPE",
+        "assembly_row_file": "CI_RIP.json"
+      }
+    ],
+    "UX": [
+      {
+        "id": "P04-UX-SKIP",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-WAIT",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-NO_REASON",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-NO_PERSONAL_STORY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-PER_ACTION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-DECLINE_PERSISTS",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-SILENCE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-WITHDRAW",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-TOPIC_BOUNDARY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-IDEA_ONLY",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-READ_NOT_ACCEPT",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-CHANGED_CONDITION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-SHOW_SCOPE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-ADVICE_OPT_IN",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-NEW_INVITATION",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-NO_SOCIAL_PRESSURE",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-REVIEW_TERMS",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-NO_AGREEMENT_END",
+        "status": "ACCEPTED_IN_CURRENT_OWNER_SCOPE"
+      },
+      {
+        "id": "P04-UX-TASTES",
+        "status": "DEFERRED_OWNER_NOT_PASS"
+      }
+    ],
+    "retired_triggers": {
+      "count": 72,
+      "IDs": [
+        "Q-1017",
+        "Q-1020",
+        "Q-1049",
+        "Q-1085",
+        "Q-1086",
+        "Q-1088",
+        "Q-1090",
+        "Q-1091",
+        "Q-1092",
+        "Q-1095",
+        "Q-1096",
+        "Q-1097",
+        "Q-1099",
+        "Q-1100",
+        "Q-1121",
+        "Q-1122",
+        "Q-1124",
+        "Q-1128",
+        "Q-1144",
+        "Q-1146",
+        "Q-1147",
+        "Q-1148",
+        "Q-1149",
+        "TD-1019",
+        "TD-1087",
+        "TD-1088",
+        "TD-1090",
+        "TD-1091",
+        "TD-1092",
+        "TD-1093",
+        "TD-1094",
+        "TD-1095",
+        "TD-1097",
+        "TD-1098",
+        "TD-1099",
+        "TD-1100",
+        "TD-1121",
+        "TD-1122",
+        "TD-1123",
+        "TD-1124",
+        "TD-1125",
+        "TD-1146",
+        "TD-1147",
+        "TD-1148",
+        "TD-1149",
+        "TD-1150",
+        "YB-1017",
+        "YB-1018",
+        "YB-1019",
+        "YB-1020",
+        "YB-1083",
+        "YB-1085",
+        "YB-1087",
+        "YB-1088",
+        "YB-1089",
+        "YB-1091",
+        "YB-1092",
+        "YB-1093",
+        "YB-1094",
+        "YB-1095",
+        "YB-1097",
+        "YB-1098",
+        "YB-1099",
+        "YB-1100",
+        "YB-1121",
+        "YB-1122",
+        "YB-1123",
+        "YB-1125",
+        "YB-1146",
+        "YB-1147",
+        "YB-1148",
+        "YB-1149"
+      ],
+      "status": "RETIRED_NOT_EXECUTABLE_NOT_PASSED_TESTS"
+    }
   }
 }

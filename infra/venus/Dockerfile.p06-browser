@@ -1,0 +1,14 @@
+FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+WORKDIR /app
+COPY package.json package-lock.json .npmrc ./
+COPY apps/api/package.json apps/api/
+COPY apps/web/package.json apps/web/
+COPY packages/contracts/package.json packages/contracts/
+COPY packages/i18n/package.json packages/i18n/
+COPY packages/relationship-engine/package.json packages/relationship-engine/
+COPY packages/card-catalog/package.json packages/card-catalog/
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium
+COPY tests/p06/operator-browser.mjs operator-browser.mjs
+USER 1002:1002
+CMD ["node","operator-browser.mjs"]

@@ -1,0 +1,767 @@
+﻿2026-10-23T06:06:11.3117983Z Current runner version: '2.338.0'
+2026-10-23T06:06:11.3144344Z ##[group]Runner Image Provisioner
+2026-10-23T06:06:11.3145238Z Hosted Compute Agent
+2026-10-23T06:06:11.3145818Z Version: 20261012.601
+2026-10-23T06:06:11.3146541Z Commit: f3dc54e1fb89da6852db922499a0233137369e1d
+2026-10-23T06:06:11.3147286Z Build Date: 2026-10-12T17:48:21Z
+2026-10-23T06:06:11.3148008Z Worker ID: {cb622dc6-5300-4e20-89fc-0e0acdff210c}
+2026-10-23T06:06:11.3148782Z Region: westus
+2026-10-23T06:06:11.3149359Z Cloud: Azure
+2026-10-23T06:06:11.3149990Z ##[endgroup]
+2026-10-23T06:06:11.3151827Z ##[group]Operating System
+2026-10-23T06:06:11.3152612Z Ubuntu
+2026-10-23T06:06:11.3153415Z 24.04.5
+2026-10-23T06:06:11.3153949Z LTS
+2026-10-23T06:06:11.3154536Z ##[endgroup]
+2026-10-23T06:06:11.3155106Z ##[group]Runner Image
+2026-10-23T06:06:11.3155763Z Image: ubuntu-24.04
+2026-10-23T06:06:11.3156408Z Version: 20261012.334.1
+2026-10-23T06:06:11.3157657Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261012.334/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-23T06:06:11.3159354Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261012.334
+2026-10-23T06:06:11.3160391Z ##[endgroup]
+2026-10-23T06:06:11.3161600Z ##[group]GITHUB_TOKEN Permissions
+2026-10-23T06:06:11.3163761Z Contents: read
+2026-10-23T06:06:11.3164563Z Metadata: read
+2026-10-23T06:06:11.3165176Z ##[endgroup]
+2026-10-23T06:06:11.3167443Z Secret source: Actions
+2026-10-23T06:06:11.3168393Z Cache mode: write
+2026-10-23T06:06:11.3169156Z Prepare workflow directory
+2026-10-23T06:06:11.3519750Z Prepare all required actions
+2026-10-23T06:06:11.3569790Z Getting action download info
+2026-10-23T06:06:11.7308248Z Download action repository 'actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803' (SHA:d23441a48e516b6c34aea4fa41551a30e30af803)
+2026-10-23T06:06:11.8203367Z Download action repository 'actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38' (SHA:249970729cb0ef3589644e2896645e5dc5ba9c38)
+2026-10-23T06:06:12.0269457Z Download action repository 'actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f' (SHA:b7c566a772e6b6bfb58ed0dc250532a479d7789f)
+2026-10-23T06:06:12.2847284Z Complete job name: p03-integration
+2026-10-23T06:06:12.3774060Z ##[group]Run actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+2026-10-23T06:06:12.3775273Z with:
+2026-10-23T06:06:12.3775748Z   persist-credentials: false
+2026-10-23T06:06:12.3776278Z   fetch-depth: 0
+2026-10-23T06:06:12.3776786Z   ref: 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:12.3777405Z   repository: psewdon1m/venus
+2026-10-23T06:06:12.3781214Z   token: ***
+2026-10-23T06:06:12.3781664Z   ssh-strict: true
+2026-10-23T06:06:12.3782119Z   ssh-user: git
+2026-10-23T06:06:12.3782565Z   clean: true
+2026-10-23T06:06:12.3783218Z   sparse-checkout-cone-mode: true
+2026-10-23T06:06:12.3783781Z   fetch-tags: false
+2026-10-23T06:06:12.3784241Z   show-progress: true
+2026-10-23T06:06:12.3784697Z   lfs: false
+2026-10-23T06:06:12.3785128Z   submodules: false
+2026-10-23T06:06:12.3785617Z   set-safe-directory: true
+2026-10-23T06:06:12.3786132Z   allow-unsafe-pr-checkout: false
+2026-10-23T06:06:12.3786944Z ##[endgroup]
+2026-10-23T06:06:12.4835119Z Syncing repository: psewdon1m/venus
+2026-10-23T06:06:12.4837697Z ##[group]Getting Git version info
+2026-10-23T06:06:12.4839029Z Working directory is '/home/runner/work/venus/venus'
+2026-10-23T06:06:12.4840595Z [command]/usr/bin/git version
+2026-10-23T06:06:12.4910768Z git version 2.55.0
+2026-10-23T06:06:12.4935217Z ##[endgroup]
+2026-10-23T06:06:12.4959810Z Temporarily overriding HOME='/home/runner/work/_temp/e857a666-3ded-43b0-ba12-dcd29df4dd74' before making global git config changes
+2026-10-23T06:06:12.4984784Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-23T06:06:12.4988810Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-23T06:06:12.5021906Z Deleting the contents of '/home/runner/work/venus/venus'
+2026-10-23T06:06:12.5026300Z ##[group]Determining repository object format
+2026-10-23T06:06:12.5029113Z ##[endgroup]
+2026-10-23T06:06:12.5030338Z ##[group]Initializing the repository
+2026-10-23T06:06:12.5035110Z [command]/usr/bin/git init /home/runner/work/venus/venus
+2026-10-23T06:06:12.5161820Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-23T06:06:12.5163801Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-23T06:06:12.5164819Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-23T06:06:12.5165587Z hint: call:
+2026-10-23T06:06:12.5166010Z hint:
+2026-10-23T06:06:12.5166554Z hint: 	git config --global init.defaultBranch <name>
+2026-10-23T06:06:12.5167181Z hint:
+2026-10-23T06:06:12.5167796Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-23T06:06:12.5168748Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-23T06:06:12.5169507Z hint:
+2026-10-23T06:06:12.5169932Z hint: 	git branch -m <name>
+2026-10-23T06:06:12.5170473Z hint:
+2026-10-23T06:06:12.5171116Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-23T06:06:12.5177072Z Initialized empty Git repository in /home/runner/work/venus/venus/.git/
+2026-10-23T06:06:12.5188475Z [command]/usr/bin/git remote add origin https://github.com/psewdon1m/venus
+2026-10-23T06:06:12.5238916Z ##[endgroup]
+2026-10-23T06:06:12.5239810Z ##[group]Disabling automatic garbage collection
+2026-10-23T06:06:12.5243731Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-23T06:06:12.5277426Z ##[endgroup]
+2026-10-23T06:06:12.5279006Z ##[group]Setting up auth
+2026-10-23T06:06:12.5279942Z Removing SSH command configuration
+2026-10-23T06:06:12.5286001Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-23T06:06:12.5328571Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-23T06:06:12.5717736Z Removing HTTP extra header
+2026-10-23T06:06:12.5727623Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-23T06:06:12.5772686Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-23T06:06:12.6003963Z Removing includeIf entries pointing to credentials config files
+2026-10-23T06:06:12.6011143Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-23T06:06:12.6050763Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-23T06:06:12.6283898Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-23T06:06:12.6328832Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:12.6365717Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:12.6406091Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:12.6480052Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:12.6513731Z ##[endgroup]
+2026-10-23T06:06:12.6515077Z ##[group]Fetching the repository
+2026-10-23T06:06:12.6524191Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-23T06:06:19.0666179Z From https://github.com/psewdon1m/venus
+2026-10-23T06:06:19.0667514Z  * [new branch]        evidence/p04-technical-20261019 -> origin/evidence/p04-technical-20261019
+2026-10-23T06:06:19.0668656Z  * [new branch]        feature/p01-foundation -> origin/feature/p01-foundation
+2026-10-23T06:06:19.0669609Z  * [new branch]        feature/p02-rooms      -> origin/feature/p02-rooms
+2026-10-23T06:06:19.0670482Z  * [new branch]        feature/p03-engine     -> origin/feature/p03-engine
+2026-10-23T06:06:19.0671358Z  * [new branch]        feature/p04-catalog    -> origin/feature/p04-catalog
+2026-10-23T06:06:19.0672155Z  * [new branch]        main                   -> origin/main
+2026-10-23T06:06:19.0673348Z  * [new tag]           p01-accepted-20261018  -> p01-accepted-20261018
+2026-10-23T06:06:19.0674305Z  * [new tag]           p02-accepted-20261018  -> p02-accepted-20261018
+2026-10-23T06:06:19.0675246Z  * [new tag]           p03-accepted-20261019  -> p03-accepted-20261019
+2026-10-23T06:06:19.0676263Z  * [new tag]           p03-m1-preregistered-20261018 -> p03-m1-preregistered-20261018
+2026-10-23T06:06:19.0677382Z  * [new tag]           p03-m2-preregistered-20261018 -> p03-m2-preregistered-20261018
+2026-10-23T06:06:19.0678511Z  * [new tag]           p03-m3-current-inputs-20261023 -> p03-m3-current-inputs-20261023
+2026-10-23T06:06:19.0679706Z  * [new tag]           p03-m3-preregistered-20261018 -> p03-m3-preregistered-20261018
+2026-10-23T06:06:19.0682151Z  * [new tag]           p03-m3-proof-timeout-20261019 -> p03-m3-proof-timeout-20261019
+2026-10-23T06:06:19.0683458Z  * [new tag]           p03-proof-20261019     -> p03-proof-20261019
+2026-10-23T06:06:19.0685910Z [command]/usr/bin/git rev-parse --verify --quiet 5d4126006c520bdc45060c4923b2d38f83e91e3f^{object}
+2026-10-23T06:06:19.0709450Z 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:19.0716240Z ##[endgroup]
+2026-10-23T06:06:19.0716960Z ##[group]Determining the checkout info
+2026-10-23T06:06:19.0718120Z ##[endgroup]
+2026-10-23T06:06:19.0723958Z [command]/usr/bin/git sparse-checkout disable
+2026-10-23T06:06:19.0784987Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-23T06:06:19.0817930Z ##[group]Checking out the ref
+2026-10-23T06:06:19.0823999Z [command]/usr/bin/git checkout --progress --force 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:20.1097029Z Updating files:  25% (7761/29871)
+2026-10-23T06:06:20.1222082Z Updating files:  26% (7767/29871)
+2026-10-23T06:06:20.1419359Z Updating files:  27% (8066/29871)
+2026-10-23T06:06:20.2984739Z Updating files:  28% (8364/29871)
+2026-10-23T06:06:20.3746364Z Updating files:  29% (8663/29871)
+2026-10-23T06:06:20.3970895Z Updating files:  30% (8962/29871)
+2026-10-23T06:06:20.4263370Z Updating files:  31% (9261/29871)
+2026-10-23T06:06:20.4592175Z Updating files:  32% (9559/29871)
+2026-10-23T06:06:20.4873658Z Updating files:  33% (9858/29871)
+2026-10-23T06:06:20.5096490Z Updating files:  34% (10157/29871)
+2026-10-23T06:06:20.5661788Z Updating files:  35% (10455/29871)
+2026-10-23T06:06:20.6320342Z Updating files:  36% (10754/29871)
+2026-10-23T06:06:20.6550456Z Updating files:  37% (11053/29871)
+2026-10-23T06:06:20.7060880Z Updating files:  38% (11351/29871)
+2026-10-23T06:06:20.7750657Z Updating files:  39% (11650/29871)
+2026-10-23T06:06:20.8174501Z Updating files:  40% (11949/29871)
+2026-10-23T06:06:20.9396745Z Updating files:  41% (12248/29871)
+2026-10-23T06:06:21.0490761Z Updating files:  42% (12546/29871)
+2026-10-23T06:06:21.1095306Z Updating files:  43% (12845/29871)
+2026-10-23T06:06:21.1175010Z Updating files:  43% (13127/29871)
+2026-10-23T06:06:21.2131078Z Updating files:  44% (13144/29871)
+2026-10-23T06:06:21.2631790Z Updating files:  45% (13442/29871)
+2026-10-23T06:06:21.3209117Z Updating files:  46% (13741/29871)
+2026-10-23T06:06:21.3476806Z Updating files:  47% (14040/29871)
+2026-10-23T06:06:21.3739337Z Updating files:  48% (14339/29871)
+2026-10-23T06:06:21.3907159Z Updating files:  49% (14637/29871)
+2026-10-23T06:06:21.4032840Z Updating files:  50% (14936/29871)
+2026-10-23T06:06:21.4203477Z Updating files:  51% (15235/29871)
+2026-10-23T06:06:21.4336982Z Updating files:  52% (15533/29871)
+2026-10-23T06:06:21.4473636Z Updating files:  53% (15832/29871)
+2026-10-23T06:06:21.4681315Z Updating files:  54% (16131/29871)
+2026-10-23T06:06:21.4853286Z Updating files:  55% (16430/29871)
+2026-10-23T06:06:21.5017788Z Updating files:  56% (16728/29871)
+2026-10-23T06:06:21.5155768Z Updating files:  57% (17027/29871)
+2026-10-23T06:06:21.5284942Z Updating files:  58% (17326/29871)
+2026-10-23T06:06:21.5431073Z Updating files:  59% (17624/29871)
+2026-10-23T06:06:21.5563602Z Updating files:  60% (17923/29871)
+2026-10-23T06:06:21.5694243Z Updating files:  61% (18222/29871)
+2026-10-23T06:06:21.5848447Z Updating files:  62% (18521/29871)
+2026-10-23T06:06:21.6170135Z Updating files:  63% (18819/29871)
+2026-10-23T06:06:21.6419674Z Updating files:  64% (19118/29871)
+2026-10-23T06:06:21.6544512Z Updating files:  65% (19417/29871)
+2026-10-23T06:06:21.6686245Z Updating files:  66% (19715/29871)
+2026-10-23T06:06:21.6898568Z Updating files:  67% (20014/29871)
+2026-10-23T06:06:21.7054456Z Updating files:  68% (20313/29871)
+2026-10-23T06:06:21.7216784Z Updating files:  69% (20611/29871)
+2026-10-23T06:06:21.7378649Z Updating files:  70% (20910/29871)
+2026-10-23T06:06:21.7508127Z Updating files:  71% (21209/29871)
+2026-10-23T06:06:21.7675796Z Updating files:  72% (21508/29871)
+2026-10-23T06:06:21.7816968Z Updating files:  73% (21806/29871)
+2026-10-23T06:06:21.8069649Z Updating files:  74% (22105/29871)
+2026-10-23T06:06:21.8227748Z Updating files:  75% (22404/29871)
+2026-10-23T06:06:21.8390578Z Updating files:  76% (22702/29871)
+2026-10-23T06:06:21.8584741Z Updating files:  77% (23001/29871)
+2026-10-23T06:06:21.8757535Z Updating files:  78% (23300/29871)
+2026-10-23T06:06:21.8952231Z Updating files:  79% (23599/29871)
+2026-10-23T06:06:21.9146979Z Updating files:  80% (23897/29871)
+2026-10-23T06:06:21.9331092Z Updating files:  81% (24196/29871)
+2026-10-23T06:06:21.9549590Z Updating files:  82% (24495/29871)
+2026-10-23T06:06:21.9722772Z Updating files:  83% (24793/29871)
+2026-10-23T06:06:21.9862096Z Updating files:  84% (25092/29871)
+2026-10-23T06:06:22.0043829Z Updating files:  85% (25391/29871)
+2026-10-23T06:06:22.0214321Z Updating files:  86% (25690/29871)
+2026-10-23T06:06:22.0380475Z Updating files:  87% (25988/29871)
+2026-10-23T06:06:22.0502341Z Updating files:  88% (26287/29871)
+2026-10-23T06:06:22.0642769Z Updating files:  89% (26586/29871)
+2026-10-23T06:06:22.1108853Z Updating files:  90% (26884/29871)
+2026-10-23T06:06:22.1145277Z Updating files:  90% (27138/29871)
+2026-10-23T06:06:22.1367340Z Updating files:  91% (27183/29871)
+2026-10-23T06:06:22.1715475Z Updating files:  92% (27482/29871)
+2026-10-23T06:06:22.1892133Z Updating files:  93% (27781/29871)
+2026-10-23T06:06:22.2053338Z Updating files:  94% (28079/29871)
+2026-10-23T06:06:22.2207921Z Updating files:  95% (28378/29871)
+2026-10-23T06:06:22.2345686Z Updating files:  96% (28677/29871)
+2026-10-23T06:06:22.2616741Z Updating files:  97% (28975/29871)
+2026-10-23T06:06:22.2917818Z Updating files:  98% (29274/29871)
+2026-10-23T06:06:22.3219056Z Updating files:  99% (29573/29871)
+2026-10-23T06:06:22.3219899Z Updating files: 100% (29871/29871)
+2026-10-23T06:06:22.3220415Z Updating files: 100% (29871/29871), done.
+2026-10-23T06:06:22.3532613Z Note: switching to '5d4126006c520bdc45060c4923b2d38f83e91e3f'.
+2026-10-23T06:06:22.3533502Z 
+2026-10-23T06:06:22.3533780Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-23T06:06:22.3534413Z changes and commit them, and you can discard any commits you make in this
+2026-10-23T06:06:22.3535014Z state without impacting any branches by switching back to a branch.
+2026-10-23T06:06:22.3535358Z 
+2026-10-23T06:06:22.3535588Z If you want to create a new branch to retain commits you create, you may
+2026-10-23T06:06:22.3536140Z do so (now or later) by using -c with the switch command. Example:
+2026-10-23T06:06:22.3536762Z 
+2026-10-23T06:06:22.3536897Z   git switch -c <new-branch-name>
+2026-10-23T06:06:22.3537114Z 
+2026-10-23T06:06:22.3537236Z Or undo this operation with:
+2026-10-23T06:06:22.3537449Z 
+2026-10-23T06:06:22.3537551Z   git switch -
+2026-10-23T06:06:22.3537700Z 
+2026-10-23T06:06:22.3537963Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-23T06:06:22.3538378Z 
+2026-10-23T06:06:22.3538679Z HEAD is now at 5d412600 Allow intentional programmatic scrolling after keyboard navigation
+2026-10-23T06:06:22.3594414Z ##[endgroup]
+2026-10-23T06:06:22.3644660Z [command]/usr/bin/git log -1 --format=%H
+2026-10-23T06:06:22.3676026Z 5d4126006c520bdc45060c4923b2d38f83e91e3f
+2026-10-23T06:06:22.3686909Z ##[group]Removing auth
+2026-10-23T06:06:22.3687400Z Removing SSH command configuration
+2026-10-23T06:06:22.3692334Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-23T06:06:22.3732158Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-23T06:06:22.3992359Z Removing HTTP extra header
+2026-10-23T06:06:22.3997518Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-23T06:06:22.4038985Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-23T06:06:22.4300087Z Removing includeIf entries pointing to credentials config files
+2026-10-23T06:06:22.4304657Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-23T06:06:22.4337574Z includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-23T06:06:22.4338261Z includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-23T06:06:22.4338708Z includeif.gitdir:/github/workspace/.git.path
+2026-10-23T06:06:22.4339133Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-23T06:06:22.4349746Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git.path
+2026-10-23T06:06:22.4377740Z /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4390010Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git.path /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4430680Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path
+2026-10-23T06:06:22.4459720Z /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4477660Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/venus/venus/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4519882Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-23T06:06:22.4551317Z /github/runner_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4564148Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4608931Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-23T06:06:22.4636223Z /github/runner_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4644369Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config
+2026-10-23T06:06:22.4682027Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-23T06:06:22.4939859Z Removing credentials config '/home/runner/work/_temp/git-credentials-df844404-a596-45c2-bad1-05f76e37fe19.config'
+2026-10-23T06:06:22.4950700Z ##[endgroup]
+2026-10-23T06:06:22.5204465Z ##[group]Run actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+2026-10-23T06:06:22.5204871Z with:
+2026-10-23T06:06:22.5205089Z   node-version-file: .node-version
+2026-10-23T06:06:22.5205346Z   check-latest: false
+2026-10-23T06:06:22.5207760Z   token: ***
+2026-10-23T06:06:22.5207975Z   package-manager-cache: true
+2026-10-23T06:06:22.5208216Z ##[endgroup]
+2026-10-23T06:06:22.6558564Z Node version file is not JSON file
+2026-10-23T06:06:22.6560643Z Resolved .node-version as 24.22.0
+2026-10-23T06:06:22.6676644Z Attempting to download 24.22.0...
+2026-10-23T06:06:23.3125037Z Acquiring 24.22.0 - x64 from https://github.com/actions/node-versions/releases/download/24.22.0-38668177966/node-24.22.0-linux-x64.tar.gz
+2026-10-23T06:06:23.7924056Z Extracting ...
+2026-10-23T06:06:23.8033289Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/0290844d-5adf-4315-ae85-2f59859ae8f6 -f /home/runner/work/_temp/1da298c8-087d-425e-9883-2cdc7e9a3ac5
+2026-10-23T06:06:25.0735479Z Adding to the cache ...
+2026-10-23T06:06:27.0828583Z ##[group]Environment details
+2026-10-23T06:06:27.3951460Z node: v24.22.0
+2026-10-23T06:06:27.3951897Z npm: 11.19.1
+2026-10-23T06:06:27.3952263Z yarn: 1.22.22
+2026-10-23T06:06:27.3953243Z ##[endgroup]
+2026-10-23T06:06:27.3960999Z Detected npm as the package manager from package.json's packageManager field. Auto caching has been enabled for npm. If you want to disable it, set package-manager-cache input to false
+2026-10-23T06:06:27.3979369Z [command]/opt/hostedtoolcache/node/24.22.0/x64/bin/npm config get cache
+2026-10-23T06:06:27.4955011Z /home/runner/.npm
+2026-10-23T06:06:27.7499474Z Cache hit for: node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b
+2026-10-23T06:06:28.3158875Z Received 690 of 690 (100.0%), 0.0 MBs/sec
+2026-10-23T06:06:28.3159552Z Cache Size: ~0 MB (690 B)
+2026-10-23T06:06:28.3189113Z [command]/usr/bin/tar -xf /home/runner/work/_temp/5e0820b0-65eb-421e-b58d-4d90b04f57b6/cache.tzst -P -C /home/runner/work/venus/venus --use-compress-program unzstd
+2026-10-23T06:06:28.3267320Z Cache restored successfully
+2026-10-23T06:06:28.3272293Z Cache restored from key: node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b
+2026-10-23T06:06:28.3449982Z ##[group]Run npm ci
+2026-10-23T06:06:28.3450293Z [36;1mnpm ci[0m
+2026-10-23T06:06:28.3714257Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:06:28.3714566Z ##[endgroup]
+2026-10-23T06:06:33.5318232Z 
+2026-10-23T06:06:33.5325871Z added 288 packages, and audited 295 packages in 5s
+2026-10-23T06:06:33.5330380Z 
+2026-10-23T06:06:33.5330728Z found 0 vulnerabilities
+2026-10-23T06:06:33.5890036Z ##[group]Run npm run build
+2026-10-23T06:06:33.5890357Z [36;1mnpm run build[0m
+2026-10-23T06:06:33.5964311Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:06:33.5964624Z ##[endgroup]
+2026-10-23T06:06:33.7117150Z 
+2026-10-23T06:06:33.7117748Z > venus@0.0.0 build
+2026-10-23T06:06:33.7118328Z > tsc -b && npm run build -w @venus/web
+2026-10-23T06:06:33.7118688Z 
+2026-10-23T06:06:39.0196695Z 
+2026-10-23T06:06:39.0197889Z > @venus/web@0.0.0 build
+2026-10-23T06:06:39.0198284Z > vite build
+2026-10-23T06:06:39.0198424Z 
+2026-10-23T06:06:39.2351442Z [36mvite v8.3.4 [32mbuilding client environment for production...[36m[39m
+2026-10-23T06:06:39.2454560Z transforming...
+2026-10-23T06:06:39.3119985Z ✓ 35 modules transformed.
+2026-10-23T06:06:39.3366383Z rendering chunks...
+2026-10-23T06:06:39.3814519Z computing gzip size...
+2026-10-23T06:06:39.3866758Z dist/index.html                   0.39 kB │ gzip:   0.27 kB
+2026-10-23T06:06:39.3867511Z dist/assets/index-BoNI8E-V.css    9.58 kB │ gzip:   2.72 kB
+2026-10-23T06:06:39.3868426Z dist/assets/index-CQ4hcLem.js   347.42 kB │ gzip: 105.35 kB
+2026-10-23T06:06:39.3868907Z 
+2026-10-23T06:06:39.3870812Z [32m✓ built in 150ms[39m
+2026-10-23T06:06:39.4168738Z ##[group]Run npm run test:p03
+2026-10-23T06:06:39.4169067Z [36;1mnpm run test:p03[0m
+2026-10-23T06:06:39.4232306Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:06:39.4232569Z ##[endgroup]
+2026-10-23T06:06:39.5257363Z 
+2026-10-23T06:06:39.5257945Z > venus@0.0.0 test:p03
+2026-10-23T06:06:39.5258515Z > node tools/p03-integration.mjs
+2026-10-23T06:06:39.5258773Z 
+2026-10-23T06:06:39.9231243Z P03 isolated Docker scope: venus-p03-339c2fbef8ea; only this project and its volumes will be removed.
+2026-10-23T06:06:45.2194549Z #0 building with "default" instance using docker driver
+2026-10-23T06:06:45.2195187Z 
+2026-10-23T06:06:45.2195566Z #1 [internal] load build definition from Dockerfile
+2026-10-23T06:06:45.2196126Z #1 transferring dockerfile: 1.93kB 0.0s done
+2026-10-23T06:06:45.2196505Z #1 DONE 0.1s
+2026-10-23T06:06:45.2196662Z 
+2026-10-23T06:06:45.2197603Z #2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+2026-10-23T06:06:45.4707081Z #2 ...
+2026-10-23T06:06:45.4707263Z 
+2026-10-23T06:06:45.4707603Z #3 [auth] library/node:pull token for registry-1.docker.io
+2026-10-23T06:06:45.4708048Z #3 DONE 0.0s
+2026-10-23T06:06:45.6210577Z 
+2026-10-23T06:06:45.6212042Z #2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+2026-10-23T06:06:46.0144196Z #2 DONE 0.9s
+2026-10-23T06:06:46.1467964Z 
+2026-10-23T06:06:46.1468793Z #4 [internal] load .dockerignore
+2026-10-23T06:06:46.1469503Z #4 transferring context: 151B done
+2026-10-23T06:06:46.1470150Z #4 DONE 0.0s
+2026-10-23T06:06:46.1470520Z 
+2026-10-23T06:06:46.1470919Z #5 [internal] load build context
+2026-10-23T06:06:46.1471440Z #5 transferring context: 351.67kB 0.0s done
+2026-10-23T06:06:46.1471805Z #5 DONE 0.0s
+2026-10-23T06:06:46.1471930Z 
+2026-10-23T06:06:46.1473291Z #6 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+2026-10-23T06:06:46.1475316Z #6 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 done
+2026-10-23T06:06:46.1476772Z #6 sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 3.93kB / 3.93kB done
+2026-10-23T06:06:46.1477854Z #6 sha256:ec857ea6bb60cb3d0fa4d97495590c5fe7d51be8572c307b55957eeb06569cf7 1.93kB / 1.93kB done
+2026-10-23T06:06:46.1479330Z #6 sha256:a797d6440ed0b09e51fb884f30e47ec14cbf58482c5e19db681a0cb8df45b089 6.71kB / 6.71kB done
+2026-10-23T06:06:46.1480276Z #6 sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 7.34MB / 28.25MB 0.1s
+2026-10-23T06:06:46.1481655Z #6 sha256:fb7da8a11632ec8a1daa7a740e634c10c151eccee31d49ba459b25877c5780e4 0B / 3.31kB 0.1s
+2026-10-23T06:06:46.1482574Z #6 sha256:b9a701dba9fbaed52af5239f5eeaeec384346d232313fe2278e50f9259b8e3bc 0B / 51.04MB 0.1s
+2026-10-23T06:06:46.2601320Z #6 sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 28.25MB / 28.25MB 0.2s done
+2026-10-23T06:06:46.2602636Z #6 sha256:fb7da8a11632ec8a1daa7a740e634c10c151eccee31d49ba459b25877c5780e4 3.31kB / 3.31kB 0.2s done
+2026-10-23T06:06:46.2604141Z #6 sha256:182ecac4702d154abbcf12044dcb36915e067902b76ad52919b967c71be97f53 0B / 1.71MB 0.2s
+2026-10-23T06:06:46.2604960Z #6 sha256:4cec569cef036288a370045819d1a4fed7630cc6eb5e0c8051745f2b7d37c5f2 0B / 446B 0.2s
+2026-10-23T06:06:46.2605961Z #6 extracting sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39
+2026-10-23T06:06:46.3613717Z #6 sha256:b9a701dba9fbaed52af5239f5eeaeec384346d232313fe2278e50f9259b8e3bc 24.12MB / 51.04MB 0.3s
+2026-10-23T06:06:46.3615326Z #6 sha256:182ecac4702d154abbcf12044dcb36915e067902b76ad52919b967c71be97f53 1.71MB / 1.71MB 0.3s done
+2026-10-23T06:06:46.3616874Z #6 sha256:4cec569cef036288a370045819d1a4fed7630cc6eb5e0c8051745f2b7d37c5f2 446B / 446B 0.3s done
+2026-10-23T06:06:46.4625704Z #6 sha256:b9a701dba9fbaed52af5239f5eeaeec384346d232313fe2278e50f9259b8e3bc 51.04MB / 51.04MB 0.4s done
+2026-10-23T06:06:47.3740575Z #6 extracting sha256:7fd1ebe418b5079d4aa36f416af9b143d127bc75b0155d71cb5fd559b5e04d39 1.1s done
+2026-10-23T06:06:47.5651853Z #6 extracting sha256:fb7da8a11632ec8a1daa7a740e634c10c151eccee31d49ba459b25877c5780e4 done
+2026-10-23T06:06:49.6755353Z #6 extracting sha256:b9a701dba9fbaed52af5239f5eeaeec384346d232313fe2278e50f9259b8e3bc
+2026-10-23T06:06:51.0718753Z #6 extracting sha256:b9a701dba9fbaed52af5239f5eeaeec384346d232313fe2278e50f9259b8e3bc 1.3s done
+2026-10-23T06:06:51.0720159Z #6 extracting sha256:182ecac4702d154abbcf12044dcb36915e067902b76ad52919b967c71be97f53
+2026-10-23T06:06:51.1725032Z #6 extracting sha256:182ecac4702d154abbcf12044dcb36915e067902b76ad52919b967c71be97f53 0.0s done
+2026-10-23T06:06:51.1726643Z #6 extracting sha256:4cec569cef036288a370045819d1a4fed7630cc6eb5e0c8051745f2b7d37c5f2 done
+2026-10-23T06:06:51.1727647Z #6 DONE 5.1s
+2026-10-23T06:06:51.1727962Z 
+2026-10-23T06:06:51.1729475Z #7 [build  2/15] WORKDIR /app
+2026-10-23T06:06:51.1730219Z #7 DONE 0.0s
+2026-10-23T06:06:51.1730434Z 
+2026-10-23T06:06:51.1730872Z #8 [build  3/15] COPY package.json package-lock.json .npmrc ./
+2026-10-23T06:06:51.1731466Z #8 DONE 0.0s
+2026-10-23T06:06:51.3758229Z 
+2026-10-23T06:06:51.3759243Z #9 [build  4/15] COPY apps/api/package.json apps/api/
+2026-10-23T06:06:51.3759873Z #9 DONE 0.0s
+2026-10-23T06:06:51.3760079Z 
+2026-10-23T06:06:51.3760448Z #10 [build  5/15] COPY apps/web/package.json apps/web/
+2026-10-23T06:06:51.3760998Z #10 DONE 0.0s
+2026-10-23T06:06:51.3761204Z 
+2026-10-23T06:06:51.3761691Z #11 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+2026-10-23T06:06:51.3762354Z #11 DONE 0.0s
+2026-10-23T06:06:51.3762558Z 
+2026-10-23T06:06:51.3762824Z #12 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+2026-10-23T06:06:51.3763626Z #12 DONE 0.0s
+2026-10-23T06:06:51.3763833Z 
+2026-10-23T06:06:51.3764619Z #13 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+2026-10-23T06:06:51.3765161Z #13 DONE 0.0s
+2026-10-23T06:06:51.3765294Z 
+2026-10-23T06:06:51.3765640Z #14 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+2026-10-23T06:06:51.3766069Z #14 DONE 0.0s
+2026-10-23T06:06:51.3766185Z 
+2026-10-23T06:06:51.3766317Z #15 [build 10/15] RUN npm ci
+2026-10-23T06:06:56.1754255Z #15 4.950 
+2026-10-23T06:06:56.1755116Z #15 4.950 added 285 packages, and audited 292 packages in 5s
+2026-10-23T06:06:56.2824968Z #15 4.951 
+2026-10-23T06:06:56.2831333Z #15 4.951 found 0 vulnerabilities
+2026-10-23T06:06:56.2834597Z #15 4.953 npm notice
+2026-10-23T06:06:56.2839937Z #15 4.953 npm notice New major version of npm available! 11.19.1 -> 12.2.1
+2026-10-23T06:06:56.2844429Z #15 4.953 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+2026-10-23T06:06:56.2847020Z #15 4.953 npm notice To update run: npm install -g npm@12.2.1
+2026-10-23T06:06:56.2848029Z #15 4.953 npm notice
+2026-10-23T06:06:56.2848753Z #15 DONE 5.0s
+2026-10-23T06:06:56.2849517Z 
+2026-10-23T06:06:56.2850108Z #16 [build 11/15] COPY tsconfig*.json ./
+2026-10-23T06:06:56.6450464Z #16 DONE 0.4s
+2026-10-23T06:06:56.8250594Z 
+2026-10-23T06:06:56.8251486Z #17 [build 12/15] COPY apps apps
+2026-10-23T06:06:56.8252089Z #17 DONE 0.0s
+2026-10-23T06:06:56.8252317Z 
+2026-10-23T06:06:56.8252602Z #18 [build 13/15] COPY packages packages
+2026-10-23T06:06:56.8253339Z #18 DONE 0.0s
+2026-10-23T06:06:56.8253578Z 
+2026-10-23T06:06:56.8255738Z #19 [build 14/15] RUN test -n "12a028b174cc03a4a8ea1398f321d23c6a4c6e98" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+2026-10-23T06:06:56.9128563Z #19 0.238 
+2026-10-23T06:06:56.9130197Z #19 0.238 > venus@0.0.0 build
+2026-10-23T06:06:56.9131953Z #19 0.238 > tsc -b && npm run build -w @venus/web
+2026-10-23T06:06:56.9132868Z #19 0.238 
+2026-10-23T06:06:59.7676564Z #19 3.093 
+2026-10-23T06:06:59.7677127Z #19 3.093 > @venus/web@0.0.0 build
+2026-10-23T06:06:59.7678493Z #19 3.093 > vite build
+2026-10-23T06:06:59.7678923Z #19 3.093 
+2026-10-23T06:06:59.9896546Z #19 3.315 vite v8.3.4 building client environment for production...
+2026-10-23T06:07:00.1234673Z #19 3.326 transforming...
+2026-10-23T06:07:00.1235919Z #19 3.389 ✓ 21 modules transformed.
+2026-10-23T06:07:00.1236418Z #19 3.413 rendering chunks...
+2026-10-23T06:07:00.1236743Z #19 3.449 computing gzip size...
+2026-10-23T06:07:00.3506048Z #19 3.453 dist/index.html                   0.39 kB │ gzip:  0.27 kB
+2026-10-23T06:07:00.3507118Z #19 3.453 dist/assets/index-McaKYTmT.css    4.60 kB │ gzip:  1.62 kB
+2026-10-23T06:07:00.3508036Z #19 3.453 dist/assets/index-wjZi3Dn0.js   245.15 kB │ gzip: 77.56 kB
+2026-10-23T06:07:00.3508583Z #19 3.453 
+2026-10-23T06:07:00.3509159Z #19 3.454 ✓ built in 137ms
+2026-10-23T06:07:00.3509644Z #19 DONE 3.5s
+2026-10-23T06:07:00.3509959Z 
+2026-10-23T06:07:00.3510834Z #20 [build 15/15] RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
+2026-10-23T06:07:01.5264649Z #20 1.326 
+2026-10-23T06:07:01.5265367Z #20 1.326 removed 173 packages, and audited 119 packages in 1s
+2026-10-23T06:07:01.7087288Z #20 1.327 
+2026-10-23T06:07:01.7088229Z #20 1.327 found 0 vulnerabilities
+2026-10-23T06:07:01.7089072Z #20 DONE 1.4s
+2026-10-23T06:07:01.8824011Z 
+2026-10-23T06:07:01.8825153Z #21 [stage-1  3/11] COPY --from=build /app/node_modules ./node_modules
+2026-10-23T06:07:02.4176586Z #21 DONE 0.5s
+2026-10-23T06:07:02.5389321Z 
+2026-10-23T06:07:02.5391517Z #22 [stage-1  4/11] COPY --from=build /app/packages ./packages
+2026-10-23T06:07:02.5392241Z #22 DONE 0.0s
+2026-10-23T06:07:02.5392464Z 
+2026-10-23T06:07:02.5392944Z #23 [stage-1  5/11] COPY --from=build /app/apps/api/dist ./apps/api/dist
+2026-10-23T06:07:02.5399782Z #23 DONE 0.0s
+2026-10-23T06:07:02.5400023Z 
+2026-10-23T06:07:02.5400660Z #24 [stage-1  6/11] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+2026-10-23T06:07:02.5401328Z #24 DONE 0.0s
+2026-10-23T06:07:02.5401483Z 
+2026-10-23T06:07:02.5401958Z #25 [stage-1  7/11] COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+2026-10-23T06:07:02.5402416Z #25 DONE 0.1s
+2026-10-23T06:07:02.6969467Z 
+2026-10-23T06:07:02.6970458Z #26 [stage-1  8/11] COPY --from=build /app/apps/api/migrations ./apps/api/migrations
+2026-10-23T06:07:02.6971240Z #26 DONE 0.0s
+2026-10-23T06:07:02.6971444Z 
+2026-10-23T06:07:02.6971931Z #27 [stage-1  9/11] COPY --from=build /app/apps/web/dist ./apps/web/dist
+2026-10-23T06:07:02.6972572Z #27 DONE 0.0s
+2026-10-23T06:07:02.6972775Z 
+2026-10-23T06:07:02.6973571Z #28 [stage-1 10/11] COPY --from=build /app/package.json /app/build-metadata.json ./
+2026-10-23T06:07:02.6974093Z #28 DONE 0.0s
+2026-10-23T06:07:02.6974342Z 
+2026-10-23T06:07:02.6974804Z #29 [stage-1 11/11] RUN mkdir -p /var/lib/venus && chown node:node /var/lib/venus
+2026-10-23T06:07:02.6975401Z #29 DONE 0.1s
+2026-10-23T06:07:02.8491234Z 
+2026-10-23T06:07:02.8491859Z #30 exporting to image
+2026-10-23T06:07:02.8492425Z #30 exporting layers
+2026-10-23T06:07:04.6123063Z #30 exporting layers 1.9s done
+2026-10-23T06:07:04.6308640Z #30 writing image sha256:b26a7da4dfa44306ef0b8a98ccc8a814877db249797716c5d3038edca0e764c8 done
+2026-10-23T06:07:04.6309906Z #30 naming to docker.io/library/venus-p03-339c2fbef8ea-previous:local done
+2026-10-23T06:07:04.6310608Z #30 DONE 1.9s
+2026-10-23T06:07:16.3225752Z  db Pulling 
+2026-10-23T06:07:16.3226259Z  039e6f9f9752 Pulling fs layer 
+2026-10-23T06:07:16.3226854Z  be042ae6b713 Pulling fs layer 
+2026-10-23T06:07:16.3227358Z  60b84cfa966d Pulling fs layer 
+2026-10-23T06:07:16.3227834Z  94f9f9794ec5 Pulling fs layer 
+2026-10-23T06:07:16.3228303Z  022a1c9e1586 Pulling fs layer 
+2026-10-23T06:07:16.3228766Z  8da6e65472d0 Pulling fs layer 
+2026-10-23T06:07:16.3229247Z  72df0795a8a1 Pulling fs layer 
+2026-10-23T06:07:16.3229714Z  eafb328c6c12 Pulling fs layer 
+2026-10-23T06:07:16.3230175Z  62a05a147476 Pulling fs layer 
+2026-10-23T06:07:16.3230636Z  0186b98685b7 Pulling fs layer 
+2026-10-23T06:07:16.3231802Z  c34108561533 Pulling fs layer 
+2026-10-23T06:07:16.3232371Z  13bd8e71a61f Pulling fs layer 
+2026-10-23T06:07:16.3232670Z  ad5bb5716226 Pulling fs layer 
+2026-10-23T06:07:16.3232947Z  456b1c98cb14 Pulling fs layer 
+2026-10-23T06:07:16.3233575Z  eafb328c6c12 Waiting 
+2026-10-23T06:07:16.3233815Z  62a05a147476 Waiting 
+2026-10-23T06:07:16.3234032Z  13bd8e71a61f Waiting 
+2026-10-23T06:07:16.3234245Z  ad5bb5716226 Waiting 
+2026-10-23T06:07:16.3234454Z  456b1c98cb14 Waiting 
+2026-10-23T06:07:16.3234671Z  0186b98685b7 Waiting 
+2026-10-23T06:07:16.3234883Z  c34108561533 Waiting 
+2026-10-23T06:07:16.3235092Z  94f9f9794ec5 Waiting 
+2026-10-23T06:07:16.3235305Z  022a1c9e1586 Waiting 
+2026-10-23T06:07:16.3235513Z  8da6e65472d0 Waiting 
+2026-10-23T06:07:16.3235720Z  72df0795a8a1 Waiting 
+2026-10-23T06:07:16.3236129Z  60b84cfa966d Downloading [>                                                  ]  48.51kB/4.534MB
+2026-10-23T06:07:16.3236701Z  039e6f9f9752 Downloading [>                                                  ]  294.2kB/28.23MB
+2026-10-23T06:07:16.3237269Z  be042ae6b713 Downloading [==================================================>]  1.169kB/1.169kB
+2026-10-23T06:07:16.3237702Z  be042ae6b713 Verifying Checksum 
+2026-10-23T06:07:16.3237988Z  be042ae6b713 Download complete 
+2026-10-23T06:07:16.3238269Z  60b84cfa966d Verifying Checksum 
+2026-10-23T06:07:16.3238555Z  60b84cfa966d Download complete 
+2026-10-23T06:07:16.3238963Z  039e6f9f9752 Downloading [=============================================>     ]  25.95MB/28.23MB
+2026-10-23T06:07:16.3239376Z  039e6f9f9752 Verifying Checksum 
+2026-10-23T06:07:16.3239650Z  039e6f9f9752 Download complete 
+2026-10-23T06:07:16.3240049Z  039e6f9f9752 Extracting [>                                                  ]  294.9kB/28.23MB
+2026-10-23T06:07:16.3240585Z  94f9f9794ec5 Downloading [>                                                  ]  15.74kB/1.25MB
+2026-10-23T06:07:16.3240995Z  94f9f9794ec5 Download complete 
+2026-10-23T06:07:16.3241398Z  022a1c9e1586 Downloading [>                                                  ]  81.28kB/8.066MB
+2026-10-23T06:07:16.3241937Z  039e6f9f9752 Extracting [==========>                                        ]  6.193MB/28.23MB
+2026-10-23T06:07:16.3242344Z  022a1c9e1586 Verifying Checksum 
+2026-10-23T06:07:16.3242613Z  022a1c9e1586 Download complete 
+2026-10-23T06:07:16.3243411Z  8da6e65472d0 Downloading [>                                                  ]  15.74kB/1.196MB
+2026-10-23T06:07:16.3243996Z  8da6e65472d0 Verifying Checksum 
+2026-10-23T06:07:16.3244277Z  8da6e65472d0 Download complete 
+2026-10-23T06:07:16.3244689Z  039e6f9f9752 Extracting [================>                                  ]  9.437MB/28.23MB
+2026-10-23T06:07:16.3245237Z  72df0795a8a1 Downloading [==================================================>]     116B/116B
+2026-10-23T06:07:16.3245648Z  72df0795a8a1 Verifying Checksum 
+2026-10-23T06:07:16.3245920Z  72df0795a8a1 Download complete 
+2026-10-23T06:07:16.3246327Z  039e6f9f9752 Extracting [========================>                          ]  13.57MB/28.23MB
+2026-10-23T06:07:16.3246882Z  eafb328c6c12 Downloading [==================================================>]   3.14kB/3.14kB
+2026-10-23T06:07:16.3247298Z  eafb328c6c12 Verifying Checksum 
+2026-10-23T06:07:16.3247580Z  eafb328c6c12 Download complete 
+2026-10-23T06:07:16.3247981Z  039e6f9f9752 Extracting [======================================>            ]  21.82MB/28.23MB
+2026-10-23T06:07:16.3248565Z  62a05a147476 Downloading [>                                                  ]  538.9kB/111.8MB
+2026-10-23T06:07:16.3249110Z  62a05a147476 Downloading [==============>                                    ]  31.57MB/111.8MB
+2026-10-23T06:07:16.3249648Z  0186b98685b7 Downloading [=================>                                 ]    3.5kB/9.964kB
+2026-10-23T06:07:16.3250187Z  0186b98685b7 Downloading [==================================================>]  9.964kB/9.964kB
+2026-10-23T06:07:16.3250592Z  0186b98685b7 Download complete 
+2026-10-23T06:07:16.3251169Z  c34108561533 Downloading [==================================================>]     128B/128B
+2026-10-23T06:07:16.3251703Z  c34108561533 Verifying Checksum 
+2026-10-23T06:07:16.3251971Z  c34108561533 Download complete 
+2026-10-23T06:07:16.3252367Z  62a05a147476 Downloading [============================>                      ]  64.12MB/111.8MB
+2026-10-23T06:07:16.3252931Z  039e6f9f9752 Extracting [==========================================>        ]  23.89MB/28.23MB
+2026-10-23T06:07:16.3253941Z  62a05a147476 Downloading [===========================================>       ]  96.69MB/111.8MB
+2026-10-23T06:07:16.3254624Z  13bd8e71a61f Downloading [==================================================>]     167B/167B
+2026-10-23T06:07:16.3255034Z  13bd8e71a61f Download complete 
+2026-10-23T06:07:16.3255306Z  62a05a147476 Verifying Checksum 
+2026-10-23T06:07:16.3255585Z  62a05a147476 Download complete 
+2026-10-23T06:07:16.3255983Z  ad5bb5716226 Downloading [============================>                      ]    3.5kB/6.109kB
+2026-10-23T06:07:16.3256549Z  ad5bb5716226 Downloading [==================================================>]  6.109kB/6.109kB
+2026-10-23T06:07:16.3256972Z  ad5bb5716226 Verifying Checksum 
+2026-10-23T06:07:16.3257245Z  ad5bb5716226 Download complete 
+2026-10-23T06:07:16.3257643Z  039e6f9f9752 Extracting [===============================================>   ]  26.84MB/28.23MB
+2026-10-23T06:07:16.3258181Z  456b1c98cb14 Downloading [==================================================>]     185B/185B
+2026-10-23T06:07:16.3258589Z  456b1c98cb14 Verifying Checksum 
+2026-10-23T06:07:16.3258860Z  456b1c98cb14 Download complete 
+2026-10-23T06:07:16.3259267Z  039e6f9f9752 Extracting [================================================>  ]  27.43MB/28.23MB
+2026-10-23T06:07:16.3259798Z  039e6f9f9752 Extracting [==================================================>]  28.23MB/28.23MB
+2026-10-23T06:07:16.3260214Z  039e6f9f9752 Pull complete 
+2026-10-23T06:07:16.3260615Z  be042ae6b713 Extracting [==================================================>]  1.169kB/1.169kB
+2026-10-23T06:07:16.3261158Z  be042ae6b713 Extracting [==================================================>]  1.169kB/1.169kB
+2026-10-23T06:07:16.3261540Z  be042ae6b713 Pull complete 
+2026-10-23T06:07:16.3261944Z  60b84cfa966d Extracting [>                                                  ]  65.54kB/4.534MB
+2026-10-23T06:07:16.3262727Z  60b84cfa966d Extracting [==================================================>]  4.534MB/4.534MB
+2026-10-23T06:07:16.3263674Z  60b84cfa966d Pull complete 
+2026-10-23T06:07:16.3264395Z  94f9f9794ec5 Extracting [=>                                                 ]  32.77kB/1.25MB
+2026-10-23T06:07:16.3265392Z  94f9f9794ec5 Extracting [==================================================>]   1.25MB/1.25MB
+2026-10-23T06:07:16.3265802Z  94f9f9794ec5 Pull complete 
+2026-10-23T06:07:16.3266194Z  022a1c9e1586 Extracting [>                                                  ]   98.3kB/8.066MB
+2026-10-23T06:07:16.3266722Z  022a1c9e1586 Extracting [========================>                          ]  3.932MB/8.066MB
+2026-10-23T06:07:16.3267269Z  022a1c9e1586 Extracting [=====================================>             ]  6.095MB/8.066MB
+2026-10-23T06:07:16.3267794Z  022a1c9e1586 Extracting [==================================================>]  8.066MB/8.066MB
+2026-10-23T06:07:16.3268172Z  022a1c9e1586 Pull complete 
+2026-10-23T06:07:16.3268561Z  8da6e65472d0 Extracting [=>                                                 ]  32.77kB/1.196MB
+2026-10-23T06:07:16.3269085Z  8da6e65472d0 Extracting [==================================================>]  1.196MB/1.196MB
+2026-10-23T06:07:16.3269751Z  8da6e65472d0 Extracting [==================================================>]  1.196MB/1.196MB
+2026-10-23T06:07:16.3270176Z  8da6e65472d0 Pull complete 
+2026-10-23T06:07:16.3270935Z  72df0795a8a1 Extracting [==================================================>]     116B/116B
+2026-10-23T06:07:16.3271950Z  72df0795a8a1 Extracting [==================================================>]     116B/116B
+2026-10-23T06:07:16.3272833Z  72df0795a8a1 Pull complete 
+2026-10-23T06:07:16.3274086Z  eafb328c6c12 Extracting [==================================================>]   3.14kB/3.14kB
+2026-10-23T06:07:16.3275047Z  eafb328c6c12 Extracting [==================================================>]   3.14kB/3.14kB
+2026-10-23T06:07:16.3275605Z  eafb328c6c12 Pull complete 
+2026-10-23T06:07:16.3276220Z  62a05a147476 Extracting [>                                                  ]  557.1kB/111.8MB
+2026-10-23T06:07:16.3276774Z  62a05a147476 Extracting [===>                                               ]  7.799MB/111.8MB
+2026-10-23T06:07:16.3277468Z  62a05a147476 Extracting [====>                                              ]  10.58MB/111.8MB
+2026-10-23T06:07:16.3278004Z  62a05a147476 Extracting [======>                                            ]  15.04MB/111.8MB
+2026-10-23T06:07:16.3279803Z  62a05a147476 Extracting [========>                                          ]  20.05MB/111.8MB
+2026-10-23T06:07:16.3280369Z  62a05a147476 Extracting [===========>                                       ]  26.18MB/111.8MB
+2026-10-23T06:07:16.3281085Z  62a05a147476 Extracting [===============>                                   ]  35.65MB/111.8MB
+2026-10-23T06:07:16.3281616Z  62a05a147476 Extracting [====================>                              ]  45.12MB/111.8MB
+2026-10-23T06:07:16.3282303Z  62a05a147476 Extracting [=======================>                           ]  53.48MB/111.8MB
+2026-10-23T06:07:16.3282833Z  62a05a147476 Extracting [==========================>                        ]  59.05MB/111.8MB
+2026-10-23T06:07:16.3283636Z  62a05a147476 Extracting [==============================>                    ]  67.96MB/111.8MB
+2026-10-23T06:07:16.3284158Z  62a05a147476 Extracting [==================================>                ]  77.99MB/111.8MB
+2026-10-23T06:07:16.3284874Z  62a05a147476 Extracting [======================================>            ]   86.9MB/111.8MB
+2026-10-23T06:07:16.3285642Z  62a05a147476 Extracting [==========================================>        ]   94.7MB/111.8MB
+2026-10-23T06:07:16.3286648Z  62a05a147476 Extracting [============================================>      ]   98.6MB/111.8MB
+2026-10-23T06:07:16.3287359Z  62a05a147476 Extracting [=============================================>     ]  100.8MB/111.8MB
+2026-10-23T06:07:16.3288040Z  62a05a147476 Extracting [==============================================>    ]  104.7MB/111.8MB
+2026-10-23T06:07:16.3288586Z  62a05a147476 Extracting [===============================================>   ]    107MB/111.8MB
+2026-10-23T06:07:16.3289346Z  62a05a147476 Extracting [================================================>  ]  108.6MB/111.8MB
+2026-10-23T06:07:16.3289896Z  62a05a147476 Extracting [=================================================> ]  110.3MB/111.8MB
+2026-10-23T06:07:16.3290602Z  62a05a147476 Extracting [==================================================>]  111.8MB/111.8MB
+2026-10-23T06:07:16.3290993Z  62a05a147476 Pull complete 
+2026-10-23T06:07:16.3291407Z  0186b98685b7 Extracting [==================================================>]  9.964kB/9.964kB
+2026-10-23T06:07:16.3292108Z  0186b98685b7 Extracting [==================================================>]  9.964kB/9.964kB
+2026-10-23T06:07:16.3292490Z  0186b98685b7 Pull complete 
+2026-10-23T06:07:16.3293323Z  c34108561533 Extracting [==================================================>]     128B/128B
+2026-10-23T06:07:16.3294062Z  c34108561533 Extracting [==================================================>]     128B/128B
+2026-10-23T06:07:16.3294524Z  c34108561533 Pull complete 
+2026-10-23T06:07:16.3294906Z  13bd8e71a61f Extracting [==================================================>]     167B/167B
+2026-10-23T06:07:16.3295614Z  13bd8e71a61f Extracting [==================================================>]     167B/167B
+2026-10-23T06:07:16.3295991Z  13bd8e71a61f Pull complete 
+2026-10-23T06:07:16.3296490Z  ad5bb5716226 Extracting [==================================================>]  6.109kB/6.109kB
+2026-10-23T06:07:16.3297408Z  ad5bb5716226 Extracting [==================================================>]  6.109kB/6.109kB
+2026-10-23T06:07:16.3298001Z  ad5bb5716226 Pull complete 
+2026-10-23T06:07:16.3298391Z  456b1c98cb14 Extracting [==================================================>]     185B/185B
+2026-10-23T06:07:16.3299084Z  456b1c98cb14 Extracting [==================================================>]     185B/185B
+2026-10-23T06:07:16.3299474Z  456b1c98cb14 Pull complete 
+2026-10-23T06:07:16.3299813Z  db Pulled 
+2026-10-23T06:07:16.3300320Z  Network venus-p03-339c2fbef8ea_default  Creating
+2026-10-23T06:07:16.3300750Z  Network venus-p03-339c2fbef8ea_default  Created
+2026-10-23T06:07:16.3301129Z  Container venus-p03-339c2fbef8ea-db-1  Creating
+2026-10-23T06:07:16.3301662Z  Container venus-p03-339c2fbef8ea-db-1  Created
+2026-10-23T06:07:16.3302018Z  Container venus-p03-339c2fbef8ea-db-1  Starting
+2026-10-23T06:07:16.3302421Z  Container venus-p03-339c2fbef8ea-db-1  Started
+2026-10-23T06:07:16.3302862Z  Container venus-p03-339c2fbef8ea-db-1  Waiting
+2026-10-23T06:07:16.3303355Z  Container venus-p03-339c2fbef8ea-db-1  Healthy
+2026-10-23T06:07:17.8448239Z ▶ EXIT-P03 actual PostgreSQL / HTTPS / WS
+2026-10-23T06:07:17.8448973Z   ✔ checks extension migration repeat/checksum/future generation and real readiness (42.567201ms)
+2026-10-23T06:07:18.3218975Z   ✔ serializes concurrent start and same-key duplicate advance without extra rounds (478.058426ms)
+2026-10-23T06:07:18.6246885Z   ✔ pins encrypted snapshot and locks preferences/context in active and safety pause (302.630568ms)
+2026-10-23T06:07:19.7255248Z   ✔ requires exact actors, independent invitation/action consent and terminal decline (1100.391754ms)
+2026-10-23T06:07:20.0617318Z   ✔ keeps YesBut condition actor scoped and invalidates old proposal acknowledgements (336.273029ms)
+2026-10-23T06:07:23.0032027Z   ✔ denies private access on clock rollback and exact invitation/action deadline (2941.28678ms)
+2026-10-23T06:07:23.9520056Z   ✔ revalidates a prepared private reference after committed revoke before dispatch (949.006224ms)
+2026-10-23T06:07:24.8589954Z   ✔ clears old actor recipients when stop and advance happen before the next WS poll (906.84019ms)
+2026-10-23T06:07:27.0065713Z   ✔ delivers actual WS private prompt only to selected actors and clears it after decline (2146.557064ms)
+2026-10-23T06:07:27.2716786Z   ✔ replays the original finish alias and rejects conflicting payloads (265.953255ms)
+2026-10-23T06:07:29.2793437Z   ✔ retains exact old pack/snapshot across restart, refreshed pack, locale and spectator (2007.418897ms)
+2026-10-23T06:07:31.7493381Z   ✔ fails closed on unknown persisted policy/pack and an empty safe pool without weakening X veto (2470.105393ms)
+2026-10-23T06:07:31.9477324Z   ✔ enforces actual SQL actor scope, exactly two consent actors and one running game (197.942824ms)
+2026-10-23T06:07:35.0018875Z   ✔ makes decline terminal in both serial orders and concurrent HTTP races (3054.301446ms)
+2026-10-23T06:07:36.3513167Z   ✔ transport pause/reconnect preserves snapshot and never revives consent or safety pause (1348.651756ms)
+2026-10-23T06:07:47.0763760Z   ✔ stop, leave and room close revoke HTTP/WS and room close deletes private engine rows (10724.291223ms)
+2026-10-23T06:07:48.2220887Z   ✔ does not substitute a new same-name identity for a departed pinned actor (1147.113583ms)
+2026-10-23T06:07:52.3049891Z   ✔ restores exact encrypted engine scope but reapplies ledger and expiry before access (4082.110178ms)
+2026-10-23T06:07:57.9089801Z   ✔ quiesces with API stopped, runs accepted P02 OCI against upgraded DB and returns without reviving consent (5603.936089ms)
+2026-10-23T06:07:57.9731565Z ✔ EXIT-P03 actual PostgreSQL / HTTPS / WS (41042.007773ms)
+2026-10-23T06:07:57.9974589Z ℹ tests 19
+2026-10-23T06:07:57.9975155Z ℹ suites 1
+2026-10-23T06:07:57.9975594Z ℹ pass 19
+2026-10-23T06:07:57.9975982Z ℹ fail 0
+2026-10-23T06:07:57.9976418Z ℹ cancelled 0
+2026-10-23T06:07:57.9976920Z ℹ skipped 0
+2026-10-23T06:07:57.9977311Z ℹ todo 0
+2026-10-23T06:07:57.9977800Z ℹ duration_ms 41548.265276
+2026-10-23T06:07:58.4930061Z  Container venus-p03-339c2fbef8ea-db-1  Stopping
+2026-10-23T06:07:58.4930841Z  Container venus-p03-339c2fbef8ea-db-1  Stopped
+2026-10-23T06:07:58.4931510Z  Container venus-p03-339c2fbef8ea-db-1  Removing
+2026-10-23T06:07:58.4932047Z  Container venus-p03-339c2fbef8ea-db-1  Removed
+2026-10-23T06:07:58.4932725Z  Network venus-p03-339c2fbef8ea_default  Removing
+2026-10-23T06:07:58.4933614Z  Network venus-p03-339c2fbef8ea_default  Removed
+2026-10-23T06:07:58.5060192Z ##[group]Run npm run test:p04
+2026-10-23T06:07:58.5060499Z [36;1mnpm run test:p04[0m
+2026-10-23T06:07:58.5125867Z shell: /usr/bin/bash -e {0}
+2026-10-23T06:07:58.5126139Z ##[endgroup]
+2026-10-23T06:07:58.6127666Z 
+2026-10-23T06:07:58.6128131Z > venus@0.0.0 test:p04
+2026-10-23T06:07:58.6128526Z > node tools/p04-integration.mjs
+2026-10-23T06:07:58.6128739Z 
+2026-10-23T06:08:06.0826163Z P04 isolated owned Docker scope: venus-p04-e53e9577d9fa
+2026-10-23T06:08:07.8491249Z  Network venus-p04-e53e9577d9fa_default  Creating
+2026-10-23T06:08:07.8491871Z  Network venus-p04-e53e9577d9fa_default  Created
+2026-10-23T06:08:07.8492271Z  Container venus-p04-e53e9577d9fa-db-1  Creating
+2026-10-23T06:08:07.8492647Z  Container venus-p04-e53e9577d9fa-db-1  Created
+2026-10-23T06:08:07.8493307Z  Container venus-p04-e53e9577d9fa-db-1  Starting
+2026-10-23T06:08:07.8493725Z  Container venus-p04-e53e9577d9fa-db-1  Started
+2026-10-23T06:08:07.8494081Z  Container venus-p04-e53e9577d9fa-db-1  Waiting
+2026-10-23T06:08:07.8494499Z  Container venus-p04-e53e9577d9fa-db-1  Healthy
+2026-10-23T06:08:09.4103964Z ▶ P04 actual PostgreSQL, HTTPS and WS catalogue controls
+2026-10-23T06:08:09.4105326Z   ✔ uses a separate checked migration stream and rejects future/checksum corruption (8.446856ms)
+2026-10-23T06:08:09.4257273Z   ✔ rejects drafts in production Catalog and commits one compare-and-swap pointer winner (10.923337ms)
+2026-10-23T06:08:09.7653028Z   ✔ uses active Catalog for Prepare and reports safe shortage before Start without private details (344.593812ms)
+2026-10-23T06:08:10.0548124Z   ✔ keeps an existing pinned pack through pointer switch/compatible rollback and process restart (289.426431ms)
+2026-10-23T06:08:10.3275291Z   ✔ preserves stop/abort scalar receipts and original view mutation session/revision across idempotent replay (272.296944ms)
+2026-10-23T06:08:10.4972302Z   ✔ final HTTP authorization never reserves/reactivates an inactive member before enqueue (169.827903ms)
+2026-10-23T06:08:11.8152655Z   ✔ final public projection cannot write or invent revisions even at exact consent expiry (1317.650938ms)
+2026-10-23T06:08:15.1444925Z   ✔ withdrawal stops pinned games and fences a cached public WS projection before enqueue (3328.948071ms)
+2026-10-23T06:08:15.9498138Z   ✔ an fsynced withdrawal intent survives a real PostgreSQL commit failure and gates all cached serving (798.165056ms)
+2026-10-23T06:08:17.2912848Z   ✔ replays the external ledger after restoring a genuine older full database backup (1348.47197ms)
+2026-10-23T06:08:17.2929696Z   ✔ production Games with missing catalogue configuration refuse even retained cached packs (1.617664ms)
+2026-10-23T06:08:17.3140868Z ✔ P04 actual PostgreSQL, HTTPS and WS catalogue controls (8772.053648ms)
+2026-10-23T06:08:17.3393377Z ℹ tests 11
+2026-10-23T06:08:17.3393829Z ℹ suites 1
+2026-10-23T06:08:17.3394200Z ℹ pass 11
+2026-10-23T06:08:17.3394582Z ℹ fail 0
+2026-10-23T06:08:17.3394956Z ℹ cancelled 0
+2026-10-23T06:08:17.3395344Z ℹ skipped 0
+2026-10-23T06:08:17.3395736Z ℹ todo 0
+2026-10-23T06:08:17.3396171Z ℹ duration_ms 9375.854352
+2026-10-23T06:11:09.3496645Z DRAFT CHECK COMPLETE: 450 cards; human review remains REQUIRED. Output /home/runner/work/venus/venus/.artifacts/p04/catalog-venus-p04-e53e9577d9fa
+2026-10-23T06:11:09.8422066Z  Container venus-p04-e53e9577d9fa-db-1  Stopping
+2026-10-23T06:11:09.8422827Z  Container venus-p04-e53e9577d9fa-db-1  Stopped
+2026-10-23T06:11:09.8423751Z  Container venus-p04-e53e9577d9fa-db-1  Removing
+2026-10-23T06:11:09.8424379Z  Container venus-p04-e53e9577d9fa-db-1  Removed
+2026-10-23T06:11:09.8425358Z  Network venus-p04-e53e9577d9fa_default  Removing
+2026-10-23T06:11:09.8425970Z  Network venus-p04-e53e9577d9fa_default  Removed
+2026-10-23T06:11:12.1594942Z ##[group]Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+2026-10-23T06:11:12.1595377Z with:
+2026-10-23T06:11:12.1595574Z   name: p03-integration
+2026-10-23T06:11:12.1595806Z   path: .artifacts/p03/
+2026-10-23T06:11:12.1596034Z   if-no-files-found: error
+2026-10-23T06:11:12.1596272Z   compression-level: 6
+2026-10-23T06:11:12.1596488Z   overwrite: false
+2026-10-23T06:11:12.1596702Z   include-hidden-files: false
+2026-10-23T06:11:12.1596943Z ##[endgroup]
+2026-10-23T06:11:12.3242331Z With the provided path, there will be 7 files uploaded
+2026-10-23T06:11:12.3250636Z Artifact name is valid!
+2026-10-23T06:11:12.3251346Z Root directory input is valid!
+2026-10-23T06:11:12.7052325Z Beginning upload of artifact content to blob storage
+2026-10-23T06:11:13.0169310Z Uploaded bytes 6806
+2026-10-23T06:11:13.0873587Z Finished uploading artifact content to blob storage!
+2026-10-23T06:11:13.0875082Z SHA256 digest of uploaded artifact zip is ad3c2ae8c132299965ac30b5d6c7a3a9008b5995aed24e2957fb940b310a5c88
+2026-10-23T06:11:13.0876101Z Finalizing artifact upload
+2026-10-23T06:11:13.7138705Z Artifact p03-integration.zip successfully finalized. Artifact ID 12481839996
+2026-10-23T06:11:13.7140197Z Artifact p03-integration has been successfully uploaded! Final size is 6806 bytes. Artifact ID is 12481839996
+2026-10-23T06:11:13.7144988Z Artifact download URL: https://github.com/psewdon1m/venus/actions/runs/39909483768/artifacts/12481839996
+2026-10-23T06:11:13.7316290Z ##[group]Run actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
+2026-10-23T06:11:13.7317063Z with:
+2026-10-23T06:11:13.7317437Z   name: p04-integration
+2026-10-23T06:11:13.7317878Z   path: .artifacts/p04/
+2026-10-23T06:11:13.7318323Z   if-no-files-found: error
+2026-10-23T06:11:13.7318793Z   compression-level: 6
+2026-10-23T06:11:13.7319218Z   overwrite: false
+2026-10-23T06:11:13.7319632Z   include-hidden-files: false
+2026-10-23T06:11:13.7320086Z ##[endgroup]
+2026-10-23T06:11:13.9104800Z With the provided path, there will be 9 files uploaded
+2026-10-23T06:11:13.9105755Z Artifact name is valid!
+2026-10-23T06:11:13.9106272Z Root directory input is valid!
+2026-10-23T06:11:14.2787848Z Beginning upload of artifact content to blob storage
+2026-10-23T06:11:14.8959562Z Uploaded bytes 348563
+2026-10-23T06:11:14.9664723Z Finished uploading artifact content to blob storage!
+2026-10-23T06:11:14.9665865Z SHA256 digest of uploaded artifact zip is b24f71d5760af656861bb20e0333513bd7f616ffc2fb1d3571e8a956d6a570c8
+2026-10-23T06:11:14.9667108Z Finalizing artifact upload
+2026-10-23T06:11:15.6605216Z Artifact p04-integration.zip successfully finalized. Artifact ID 12482820393
+2026-10-23T06:11:15.6607088Z Artifact p04-integration has been successfully uploaded! Final size is 348563 bytes. Artifact ID is 12482820393
+2026-10-23T06:11:15.6611493Z Artifact download URL: https://github.com/psewdon1m/venus/actions/runs/39909483768/artifacts/12482820393
+2026-10-23T06:11:15.6809572Z Post job cleanup.
+2026-10-23T06:11:15.8075874Z Cache hit occurred on the primary key node-cache-Linux-x64-npm-c7dd39f978306a6a856c94360e0bead7399148ec55e9c3774580c5ecf376fb6b, not saving cache.
+2026-10-23T06:11:15.8226426Z Post job cleanup.
+2026-10-23T06:11:15.9155063Z [command]/usr/bin/git version
+2026-10-23T06:11:15.9204098Z git version 2.55.0
+2026-10-23T06:11:15.9248685Z Temporarily overriding HOME='/home/runner/work/_temp/1af9adb3-ea68-46e3-9e3e-cd208dc9e392' before making global git config changes
+2026-10-23T06:11:15.9250253Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-23T06:11:15.9255599Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/venus/venus
+2026-10-23T06:11:15.9294920Z Removing SSH command configuration
+2026-10-23T06:11:15.9303536Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-23T06:11:15.9348292Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-23T06:11:15.9646622Z Removing HTTP extra header
+2026-10-23T06:11:15.9647910Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-23T06:11:15.9691243Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-23T06:11:16.0115196Z Removing includeIf entries pointing to credentials config files
+2026-10-23T06:11:16.0124157Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-23T06:11:16.0183636Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-23T06:11:16.0671642Z Cleaning up orphan processes

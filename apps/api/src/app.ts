@@ -20,6 +20,7 @@ export interface AppOptions {
   topicGames?:TopicGames;
   roomCreationProtocol?:1|2;
   schemaGeneration?:number;
+  servingBarrier?:()=>void;
 }
 export async function createApp(options: AppOptions) {
   const app = Fastify({logger: options.logger ?? true, logController: new LogController({disableRequestLogging: true}),
@@ -51,6 +52,7 @@ export async function createApp(options: AppOptions) {
     return reply.code(status).send({code: error instanceof DomainError?error.code:status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
   });
   await app.register(websocket,{options:{maxPayload:8192,perMessageDeflate:false}});
+  if(options.servingBarrier)app.addHook('onRequest',async request=>{if(!['/health/live','/health/ready','/api/v1/version'].includes(request.url))options.servingBarrier!();});
   if(options.rooms) await registerRooms(app,options.rooms,options.games,options.privateTopics,options.topicGames,options.roomCreationProtocol??1);
   app.get('/health/live', async (): Promise<HealthLive> => ({status: 'alive'}));
   app.get('/health/ready', async (_request, reply): Promise<HealthReady> => {

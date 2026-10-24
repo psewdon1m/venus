@@ -12,12 +12,14 @@ COPY tsconfig*.json ./
 COPY apps apps
 COPY packages packages
 ARG SOURCE_REVISION
-RUN test -n "$SOURCE_REVISION" && npm run build && node --input-type=module -e 'import fs from "node:fs"; fs.writeFileSync("build-metadata.json",JSON.stringify({version:"0.0.0",source_revision:process.env.SOURCE_REVISION}))'
+ARG RELEASE_VERSION=0.0.0
+RUN test -n "$SOURCE_REVISION" && npm run build && node --input-type=module -e 'import fs from "node:fs"; const version=process.env.RELEASE_VERSION; if(!/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(version))process.exit(1); fs.writeFileSync("build-metadata.json",JSON.stringify({version,source_revision:process.env.SOURCE_REVISION}))'
 RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
 
 FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
 ARG SOURCE_REVISION
-LABEL org.opencontainers.image.title="Venus" org.opencontainers.image.version="0.0.0" org.opencontainers.image.revision="$SOURCE_REVISION" org.opencontainers.image.source="https://github.com/psewdon1m/venus"
+ARG RELEASE_VERSION=0.0.0
+LABEL org.opencontainers.image.title="Venus" org.opencontainers.image.version="$RELEASE_VERSION" org.opencontainers.image.revision="$SOURCE_REVISION" org.opencontainers.image.source="https://github.com/psewdon1m/venus"
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules

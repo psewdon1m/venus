@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "revision": "P05-KEYBOARD-FOCUS-REFLOW-22",
+  "kind": "FRONTEND_KEYBOARD_VISIBILITY_CORRECTION_ONLY",
+  "parent_revision": "P05-REJECTED-VIEW-SIGNAL-21",
+  "before_source_identity": "d9c779dbdade95c9a6d0867e29768fb87082de820647108e4ac97d09e01c4f40",
+  "before_source_files": {
+    "apps/web/src/main.tsx": "cf19987a458928a48cfeaf3d9c44d76aa8680862878f648a1ae43bed7bdb1f46"
+  },
+  "changed_source_files": {
+    "apps/web/src/main.tsx": "59212239e1c917d605cb16c331910d344f09956d55cc8750585e4bee4c02e3a9"
+  },
+  "finding": "Actual A32 WebKit/RU first focus sample conversation-stop is clipped after keyboard focus (recttop587.88/bottom631.88 viewportheight463). Independent diagnosis confirms clipping; precise historical scroll/layout writer remains unknown.",
+  "fix": "One synchronous guarded repair on native document/window scroll and one owned main-subtree MutationObserver. Reread activeElement under keyboard intent/document focus/connected/eligible/focus-visible/current main/fits/clipped checks. Reuse same repair on focus/Tab keyup and one cancellable coalesced focus RAF. Primitive reentry/generation only; no loop/timer/focus() or event/field/MutationRecord/private-value retention. Global capture tracks body-origin Tab and clears intent/cancels before pointer/wheel/touch/nonTab actions. Observer ignores records, disconnects/drains on window blur/unmount and reconnects on focus; listeners removed on unmount. Visible/oversize controls are no-op.",
+  "compatibility": "SOURCE21 panel opaque revoke/read recovery byte-exact. Backend/API/contracts/privacy scopes/TTL/catalog/CSS/transport/statistical model unchanged. Historical A32 first two PASS/current third FAIL immutable, no source22 credit. Uniform06 source27f/image48c continuous, no restart. No producer/oracle/wait/deadline/case changes.",
+  "validation": {
+    "existing_tests_PASS": 149,
+    "existing_test_files": 9,
+    "focused_ESLint_exit": 0,
+    "web_typecheck_exit": 0,
+    "new_tests_or_harness": false,
+    "native_Docker_CI_by_author": 0
+  },
+  "rollback": "Restore exact main.tsx from keyboard-focus-reflow-author-round01/before/main.tsx (SHA cf19987a458928a48cfeaf3d9c44d76aa8680862878f648a1ae43bed7bdb1f46) and remove revision22. This restores pre22 keyboard scroll/reflow limitation; no DB/config migration. SOURCE21 panel correction stays intact. Preserve historical evidence.",
+  "evidence": "reviews/p05/keyboard-focus-reflow-author-round01/INDEX.json",
+  "historical_internal_cause_proven": false,
+  "native_PASS_claimed": false,
+  "full_stage_PASS": false,
+  "P06_started": false
+}

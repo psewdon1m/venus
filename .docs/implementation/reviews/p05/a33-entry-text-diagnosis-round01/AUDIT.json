@@ -1,0 +1,112 @@
+{
+  "status": "DIAGNOSIS_STATIC_PRODUCT_SCROLL_CONFLICT_ACTUAL_AWAIT_UNKNOWN",
+  "created_utc": "2026-10-23T05:33:27.441208+00:00",
+  "reviewer": "/root/p05_gate_reviewer22",
+  "input_pins": {
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05/venus-v2-layout-cca536111dbe/layout-report.json": {
+      "bytes": 21569,
+      "sha256": "8aaf058de3647fb0c34bec42043de2aeb2d8cea046c3bd2925edf1236031d063"
+    },
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05/venus-v2-layout-cca536111dbe/runner.json": {
+      "bytes": 681,
+      "sha256": "a3404b1c075b744473d9483249bff6a911d721e8f9b66296d75404a85d761a9b"
+    },
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05/venus-v2-layout-cca536111dbe/browser-tests.txt": {
+      "bytes": 180,
+      "sha256": "a8e121d70c4380c89ea32bcd1c7780a7b3fcacad5a3d73c70ed7409b8ca9db2e"
+    },
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05/venus-v2-layout-cca536111dbe/webkit-ru-entry-w320-entry.png": {
+      "bytes": 26802,
+      "sha256": "9f483dafc6bb1ae97db8de7bd4c994175c60a9d9fc94aa1c24b2839e47faec18"
+    },
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05-v2-layout-producer-a33-01/browser.mjs": {
+      "bytes": 8607,
+      "sha256": "1c8473f9e6eae2cc4c0da1209499b535173d7c011e5dcf3c80e3a6dcdcd30ab7"
+    },
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05-v2-layout-producer-a33-01/real-text-probe.mjs": {
+      "bytes": 8079,
+      "sha256": "52787950ec6333c01d8e03c63f48fca178c2dad3e5e7c6cd4d0b5457a1c89f69"
+    },
+    ".artifacts/p05-pilot-bundle-source30/.artifacts/p05-v2-layout-producer-a33-01/measure.mjs": {
+      "bytes": 14622,
+      "sha256": "c80f07c9a6f4487361eb9bad5157f65a7b5aa5fa162a2aa5ba4d76e96a33ab92"
+    },
+    ".artifacts/p05-pilot-bundle-source30/apps/web/src/main.tsx": {
+      "bytes": 13875,
+      "sha256": "59212239e1c917d605cb16c331910d344f09956d55cc8750585e4bee4c02e3a9"
+    }
+  },
+  "frozen_failure_INDEX_sha256": "d371c1d7bba5534a661612dc49ddb4852c22fae9b39f64b61303d2de62d413ee",
+  "actual": {
+    "project": "venus-v2-layout-cca536111dbe",
+    "source_identity": "f281eee1578ed7147393239b116c1479ec32fa6443e06ab6a2b64cae586e9ef1",
+    "image": "sha256:5a463cbf2e4cd99a0c2d552f4249018f123fdca344f6a48ce5f3fa97bff8d830",
+    "producer_runtime_digest": "098e7b581847ca7b19246cee5895d3569526361540ba2a1d9f089ed9734ae86e",
+    "engine": "webkit",
+    "locale": "ru",
+    "row": "entry/w320",
+    "native_zoom": false,
+    "DPR": 1,
+    "cell_PASS": 0,
+    "cell_FAIL": 1,
+    "NOT_RUN": 50,
+    "keyboard_actions": 0,
+    "preparations": 1,
+    "page_errors": 0,
+    "cleanup": "PASS",
+    "entry_role_completed": {
+      "five_targets_reached": true,
+      "firstfocus_visible_inviewport_nonoccluded": true,
+      "audit_contrast_unresolved_failures": 0,
+      "normal_clock": true,
+      "elapsed_ms": 283.347452,
+      "PNG_sha256": "9f483dafc6bb1ae97db8de7bd4c994175c60a9d9fc94aa1c24b2839e47faec18"
+    },
+    "first_owner_text": {
+      "id": "Q-1168/ru/question",
+      "profile": "w320",
+      "status": "FAIL",
+      "cleanup": "PASS",
+      "geometry_persisted": false,
+      "audit_persisted": false
+    },
+    "failure": "GenericError/ASSERTION_OR_OPERATION_FAILED",
+    "last_checkpoint": "FINAL_PROJECTION"
+  },
+  "precise_locus": "browser.mjs measureRole completed/savedrole then callsmeasureOwnerText withoutnewcheckpoint. FINAL_PROJECTION islastrolecheckpoint, noterrorlocation. real-text-probe awaitsgeometryANDdomAudit beforeassigningrecord.geometry/audit; absenceonlyproves failurebeforethosefieldsPERSISTED,notbeforegeometryevaluation. Possibletryawaits remaininstallText/paragraphassert,headingclick,End,awaitTextBottom,geometry,audit. BackupcompletedbecausefinallycleanupPASS present. Exactfailingawaitandoriginalerrorcalllog unavailable. No native200focusfailureclaim.",
+  "source_supported_finding": {
+    "severity": "P2_PRODUCT_SCROLL_INTENT_CONFLICT",
+    "statement": "SOURCE22 unconditionaldocument/window scroll repair cannot distinguish corrective latefocus scroll fromintentionalprogrammaticscroll while lastTab-focusedfield remainsactive. This can oppose legitimate scroll beforepointerdown modalityclear is delivered.",
+    "supported_counter_schedule": [
+      "Entrykeyboardrole leavesjoin-invite active/focus-visible and keyboard mode true after6genuineTab events.",
+      "Ownertext installappendsmainchild; thenoriginalheadinglocatorclick performsactionability/autoscroll beforepointerdown. EndnonTab would clearintent only AFTERheadingclick returns.",
+      "Whenheadingautoscrollclipsoldjoin-invite,globaldocument/window scroll listener callsrepair synchronously; keyboard/docfocus/connected/:focus-visible/currentmain/fit checks allmayremaintrue,so repairrecentersoldfield.",
+      "Originalpointerdowninterrupt cannotauthorize earlierautoscroll; itarrivesonlyaftertargetactionability. Repeatedauto-scrollandrepair canpreventheadingclickfromreachingpointerdown. This issource-supportedprogrammatic-scrollconflict evenwithoutattributingthishistoricalgenericerror tothatpath."
+    ],
+    "causal_limit": "No per-await/calllog/scrolltimeline establisheswhichawaitactuallyfailed. Actualrecordfitsconflictbutdoesnotproveheadingclickorwhichscrollwriter. No browserflaky or testoracle defect conclusion."
+  },
+  "minimal_SOURCE23_recommendation": {
+    "APP_delta_only": [
+      "remove document.addEventListener(scroll,repair,true)",
+      "remove window.addEventListener(scroll,repair)",
+      "remove corresponding document.removeEventListener(scroll,repair,true)",
+      "remove corresponding window.removeEventListener(scroll,repair)"
+    ],
+    "keep": "Globalcapturekeyboardmodality/body-originTab/pointerwheel/touch/nonTabinterrupt,focus/Tabkeyupguardedrepair+ONEpendingcoalescedRAF,ONEownedmainDOMMutationObserverrepair/drain/disconnect. No TTL/ACL/source21panel/CSS/backend/producer change.",
+    "why_supported": "Removesa concrete user/programmatic-scrollintentionconflict, notanextraobserver/lateframeguess; intentionalautoscroll isallowedwithoutchangingkeypress/firstsample/oracle.",
+    "tradeoff": "PurelateUA-scrollwithoutDOMmutation willnolongertriggerrecovery. DOMreflowstilltriggersexistingobserver; originalA32causeunknown, so narrowerfixmustpassfreshunchanged9andcannotbeclaimedcompletebeforeactuals.",
+    "risks": "DOMmutationrepair canstillinteractwithintentionalconcurrentDOMchanges; activekeyboard/fullyvisible/fit/reentrymodalityguards remainessential. No numericperformance orguaranteednewPASS.",
+    "newtests_helpers_instrumentation_framework_oracle_wait_retry": "NONE requested",
+    "execution_or_source_edit_by_review": false
+  },
+  "boundaries": [
+    "OldA33source22entryrolepassesremainpartialrowevidence; cellstillFAIL,nogatePASS.",
+    "Q12oldsource22actualquality preservedbutno obsoletecomponentreview/rerun bythisreviewer.",
+    "RootnewSOURCE23author/freeze/source/image/native/CI reviews separate; no retrospectiveeditingofSOURCE22proof.",
+    "Backendfull06source27f/image48c continuesunchanged, norestartjustified."
+  ],
+  "own_tests_helpers_APP_native_Docker_Git_rootWIP_mutations": 0,
+  "full_stage_PASS": false,
+  "P06_started": false,
+  "writes": "COMPLETE_STOP"
+}

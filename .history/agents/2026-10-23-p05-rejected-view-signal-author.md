@@ -1,0 +1,5 @@
+# P05 rejected-view signal retention correction
+
+2026-10-23T03:51:28.649494+00:00 — Root found concrete retention introduced by SOURCE20: controls.revokeRound(value) stores whole rejected private envelope in OwnControls.lastRoundSignal after clear. My source20 author and initial independent reviews missed this; preserve all frozen packets. Authorized one-line panel change to fresh empty opaque signal, new source21/round02, same149/lint/types rerun; no test/harness/control-module/backend/Docker/CI/statistics changes. No actual historical WK failure causation claim.
+
+2026-10-23T03:52:57.165309+00:00 — Corrected sole literal controls.revokeRound(value)→controls.revokeRound({}); exact inverse/all other APP bytes match20. Test86fd unchanged. Same existing9files149PASS, focusedlint0, webtypes0. Source21 and round02 frozen, allsource20/round01/historicalprivacy/source validator/control/cache/harness/full06manifest/index pins unchanged. New authorINDEX 806596c1dadd84100cdf37d1e75102d9b0febf8e124bd8036db427ebfe5191dd. Independent final-byte review pending; no Docker/native/CI/source28/backend/statistics edits. STOP.

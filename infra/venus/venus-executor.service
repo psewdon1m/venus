@@ -1,0 +1,30 @@
+[Unit]
+Description=Venus restricted update executor
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+User=venus-executor
+Group=venus-operator
+RuntimeDirectory=venus-executor
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=yes
+Environment=DOCKER_HOST=unix:///run/user/1001/docker.sock
+ExecStart=/usr/bin/node /opt/venus/tools/venus-operator/cli.mjs worker /etc/venus/executor.json
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadOnlyPaths=/opt/venus /etc/venus
+ReadWritePaths=/var/lib/venus /run/venus-executor /run/user/1001
+InaccessiblePaths=/etc/letsencrypt
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=1G
+TasksMax=128
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,53 @@
+Unable to find image 'node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5' locally
+docker.io/library/node@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5: Pulling from library/node
+4cec569cef03: Pulling fs layer
+182ecac4702d: Pulling fs layer
+7fd1ebe418b5: Pulling fs layer
+fb7da8a11632: Pulling fs layer
+b9a701dba9fb: Pulling fs layer
+1537fcc6f7d2: Download complete
+fb7da8a11632: Download complete
+4cec569cef03: Download complete
+2aa69c36f237: Download complete
+182ecac4702d: Download complete
+7fd1ebe418b5: Download complete
+fb7da8a11632: Pull complete
+7fd1ebe418b5: Pull complete
+b9a701dba9fb: Download complete
+b9a701dba9fb: Pull complete
+4cec569cef03: Pull complete
+182ecac4702d: Pull complete
+Digest: sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+Status: Downloaded newer image for node@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+file:///workspace/tools/venus-operator/http.mjs:18
+export function executorRequest(socket,method,route,payload){return new Promise((resolve,reject)=>{const request=http.request({socketPath:socket,path:route,method,timeout:180000,headers:{'Content-Type':'application/json'}},response=>{const parts=[];let size=0;response.on('data',b=>{size+=b.length;if(size>1024*1024)request.destroy(new Error('EXECUTOR_RESPONSE_LIMIT'));else parts.push(b);});response.on('end',()=>{try{const value=JSON.parse(Buffer.concat(parts));resolve({status:response.statusCode,value});}catch{reject(new Error('EXECUTOR_UNAVAILABLE'));}});request.on('timeout',()=>request.destroy(new Error('EXECUTOR_TIMEOUT')));request.on('error',()=>reject(new Error('EXECUTOR_UNAVAILABLE')));request.end(payload?JSON.stringify(payload):undefined);});}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^
+
+SyntaxError: missing ) after argument list
+    at compileSourceTextModule (node:internal/modules/esm/utils:319:16)
+    at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:89:18)
+    at #translate (node:internal/modules/esm/loader:438:20)
+    at afterLoad (node:internal/modules/esm/loader:506:29)
+    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:511:12)
+    at #getOrCreateModuleJobAfterResolve (node:internal/modules/esm/loader:564:36)
+    at afterResolve (node:internal/modules/esm/loader:611:52)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:617:12)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:381:17)
+
+Node.js v24.22.0
+✖ tests/p06/operator.test.mjs (107.874112ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.232759
+
+✖ failing tests:
+
+test at tests/p06/operator.test.mjs:1:1
+✖ tests/p06/operator.test.mjs (107.874112ms)
+  'test failed'

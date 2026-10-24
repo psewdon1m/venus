@@ -10,7 +10,7 @@ export interface WithdrawalEntry {seq:number;previous:string;hash:string;withdra
 export const emptyLedgerHead='0'.repeat(64);
 export class RevocationLedger {
   private observed:WithdrawalEntry[]=[];
-  constructor(readonly path:string) {this.read();}
+  constructor(readonly path:string,private readonly checkpoint?:()=>void) {this.read();}
   /** Only initial operator provisioning; never called automatically on startup/restore. */
   static provision(path:string) {const fd=openSync(path,'wx',0o600);try {fsyncSync(fd);}finally {closeSync(fd);}return new RevocationLedger(path);}
   read() {
@@ -23,7 +23,7 @@ export class RevocationLedger {
       entries.push(entry);previous=entry.hash;
     }
     requireCatalog(this.observed.every((entry,i)=>entries[i]?.hash===entry.hash),'CATALOG_LEDGER_REGRESSED');this.observed=entries;
-    return {entries,head:previous};
+    this.checkpoint?.();return {entries,head:previous};
   }
   append(withdrawal:Withdrawal) {
     const lock=this.path+'.lock',locked=openSync(lock,'wx',0o600);

@@ -1,0 +1,285 @@
+{
+  "source_sha": "89cc1898c4711dbe41349d9e45f27e6f14d220cf",
+  "source_dirty": false,
+  "synthetic": true,
+  "pack_digest": "sha256:f9d28982ab613b86eecf743e82520d3b2fdd9455de749b71976444a107945634",
+  "tests": [
+    {
+      "id": "P03-SCHEMA",
+      "status": "PASS",
+      "detail": {
+        "core_generation": 1,
+        "engine_generation": 1,
+        "accepted_p02_core_checksum_verified": true,
+        "concurrent_first_upgrade_calls": 3,
+        "checksum_rejection": true,
+        "future_rejection": true
+      }
+    },
+    {
+      "id": "P03-START-RACE",
+      "status": "PASS",
+      "detail": {
+        "concurrent_starts": 6,
+        "concurrent_duplicate_advances": 6,
+        "rounds": 2
+      }
+    },
+    {
+      "id": "P03-SNAPSHOT-LOCK",
+      "status": "PASS",
+      "detail": {
+        "snapshot_sha256": "9404183dc5fe432e6da0054d2e4a4077b26e712c2a4019454a14bc0979bf1f6d",
+        "active_and_paused_locked": true,
+        "neutral_skip_available": true,
+        "p05_safety_clear_aborts_before_new_snapshot": true
+      }
+    },
+    {
+      "id": "P03-CONSENT-ACL",
+      "status": "PASS",
+      "detail": {
+        "nonactor_host_denied": true,
+        "unauth_denied": true,
+        "two_scopes": true,
+        "late_decline_revokes": true
+      }
+    },
+    {
+      "id": "P03-CONDITION-REVISION",
+      "status": "PASS",
+      "detail": {
+        "condition_private": true,
+        "old_acks_reset": true,
+        "active_condition_immutable": true
+      }
+    },
+    {
+      "id": "P03-CLOCK-DEADLINE",
+      "status": "PASS",
+      "detail": {
+        "invitation_pre_final_ack_denied": true,
+        "action_pre_final_ack_denied": true,
+        "at_final_ack_allowed": true,
+        "exact_invitation_pending_deadline_denied": true,
+        "exact_action_pending_deadline_denied": true
+      }
+    },
+    {
+      "id": "P03-DISPATCH-FENCE",
+      "status": "PASS",
+      "detail": {
+        "prepared_references": 1,
+        "committed_decline_before_dispatch": true,
+        "only_clear_delivered": true
+      }
+    },
+    {
+      "id": "P03-OLD-RECIPIENT-CLEAR",
+      "status": "PASS",
+      "detail": {
+        "old_round": "3a711d6c-767b-433a-9b58-c66b77e032bc",
+        "current_round": "41e0fc48-3480-47d4-ae81-38afbd950258",
+        "clear_delivered": true
+      }
+    },
+    {
+      "id": "P03-HTTP-WS-PRIVACY",
+      "status": "PASS",
+      "detail": {
+        "two_authenticated_actor_sockets": true,
+        "independent_nonactor_host_socket": true,
+        "public_generic_only": true,
+        "revoke_clears": true
+      }
+    },
+    {
+      "id": "P03-FINISH-REPLAY",
+      "status": "PASS",
+      "detail": {
+        "same_key_replay_after_advance": true,
+        "both_alias_directions": true,
+        "cross_alias_changed_body_rejected": true
+      }
+    },
+    {
+      "id": "P03-PINNING-RESTART",
+      "status": "PASS",
+      "detail": {
+        "old_pack": "sha256:f9d28982ab613b86eecf743e82520d3b2fdd9455de749b71976444a107945634",
+        "new_provider_revision": 2,
+        "snapshot_unchanged": true,
+        "locale_and_spectator_unchanged": true
+      }
+    },
+    {
+      "id": "P03-VERSION-REFUSAL",
+      "status": "PASS",
+      "detail": {
+        "unknown_policy_rejected": true,
+        "unknown_snapshot_pack_rejected": true,
+        "pinned_pack_retained_without_current_provider": true,
+        "new_game_without_provider_rejected": true,
+        "empty_safe_pool_no_round": true,
+        "x_veto_preserved": true
+      }
+    },
+    {
+      "id": "P03-SQL-SCOPE",
+      "status": "PASS",
+      "detail": {
+        "consent_exactly_two": true,
+        "nonparticipant_actor_fk_denied": true,
+        "one_running_game": true
+      }
+    },
+    {
+      "id": "P03-DECLINE-RACES",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          {
+            "order": "accept_then_decline",
+            "statuses": [
+              200,
+              200
+            ],
+            "state": "stopped"
+          },
+          {
+            "order": "decline_then_accept",
+            "statuses": [
+              200,
+              409
+            ],
+            "state": "declined"
+          },
+          {
+            "order": "concurrent",
+            "statuses": [
+              200,
+              200
+            ],
+            "state": "stopped"
+          }
+        ]
+      }
+    },
+    {
+      "id": "P03-TRANSPORT-RESUME",
+      "status": "PASS",
+      "detail": {
+        "same_identity": true,
+        "snapshot_unchanged": true,
+        "old_consent_not_revived": true,
+        "safety_requires_host_resume": true
+      }
+    },
+    {
+      "id": "P03-STOP-LEAVE-CLOSE",
+      "status": "PASS",
+      "detail": {
+        "cases": [
+          {
+            "operation": "stop",
+            "http_denied": true,
+            "ws_cleared_or_closed": true
+          },
+          {
+            "operation": "leave",
+            "http_denied": true,
+            "ws_cleared_or_closed": true
+          },
+          {
+            "operation": "close",
+            "http_denied": true,
+            "ws_cleared_or_closed": true,
+            "private_engine_rows_deleted": true
+          }
+        ],
+        "room_close_private_wipe": true,
+        "host_close_available_without_current_offer": true
+      }
+    },
+    {
+      "id": "P03-IDENTITY-NO-SUBSTITUTION",
+      "status": "PASS",
+      "detail": {
+        "same_name": true,
+        "new_uuid": true,
+        "old_cookie_revoked": true,
+        "new_actor_http_denied": true,
+        "no_private_ws": true,
+        "snapshot_unchanged": true
+      }
+    },
+    {
+      "id": "P03-BACKUP-RESTORE",
+      "status": "PASS",
+      "detail": {
+        "encrypted_roundtrip": true,
+        "seven_day_expiry": true,
+        "exact_snapshot_identity_preferences_preserved": true,
+        "external_closed_ledger_reapplied": true,
+        "expired_scopes_revoked_before_access": true,
+        "private_condition_erased": true
+      }
+    },
+    {
+      "id": "P03-ROLLBACK",
+      "status": "PASS",
+      "detail": {
+        "previous_source": "12a028b174cc03a4a8ea1398f321d23c6a4c6e98",
+        "previous_image": "sha256:4c39789cc9203430412f2dbe4a2b13edd95e4075bc1420f6bd1a559a59730a82",
+        "api_stopped_before_quiesce": true,
+        "core_identities_preferences_unchanged": true,
+        "old_room_leave_close_work": true,
+        "old_close_requires_synthetic_offer": true,
+        "old_default_close_status": 503,
+        "old_default_close_code": "ENTRY_POLICY_UNAVAILABLE",
+        "compatibility_bootstrap": "Exact accepted P02 image/modules, explicitly synthetic offer adapter; no production approval",
+        "linux_ledger_permissions": {
+          "owner_uid": 12345,
+          "owner_gid": 12346,
+          "mode": "0660",
+          "runtime_uid": 1000,
+          "supplementary_gid": 12346
+        },
+        "rollback_diagnostics": [
+          ".artifacts/p03/rollback-venus-p03-34928d618608-production-before-stop.txt",
+          ".artifacts/p03/rollback-venus-p03-34928d618608-production-after-stop.txt",
+          ".artifacts/p03/rollback-venus-p03-34928d618608-synthetic-after-close.txt",
+          ".artifacts/p03/rollback-venus-p03-34928d618608-synthetic-before-stop.txt",
+          ".artifacts/p03/rollback-venus-p03-34928d618608-synthetic-after-stop.txt"
+        ],
+        "private_volume_cleaned": true,
+        "closed_engine_rows_purged": true,
+        "old_consent_not_revived": true,
+        "new_session_seed": true
+      }
+    }
+  ],
+  "all_expected_checks": 19,
+  "expected_checks": [
+    "P03-SCHEMA",
+    "P03-START-RACE",
+    "P03-SNAPSHOT-LOCK",
+    "P03-CONSENT-ACL",
+    "P03-CONDITION-REVISION",
+    "P03-CLOCK-DEADLINE",
+    "P03-DISPATCH-FENCE",
+    "P03-OLD-RECIPIENT-CLEAR",
+    "P03-HTTP-WS-PRIVACY",
+    "P03-FINISH-REPLAY",
+    "P03-PINNING-RESTART",
+    "P03-VERSION-REFUSAL",
+    "P03-SQL-SCOPE",
+    "P03-DECLINE-RACES",
+    "P03-TRANSPORT-RESUME",
+    "P03-STOP-LEAVE-CLOSE",
+    "P03-IDENTITY-NO-SUBSTITUTION",
+    "P03-BACKUP-RESTORE",
+    "P03-ROLLBACK"
+  ],
+  "status": "PASS"
+}

@@ -1,0 +1,25 @@
+[Unit]
+Description=Venus loopback operator interface
+After=venus-executor.service
+Requires=venus-executor.service
+
+[Service]
+Type=simple
+User=venus-operator
+Group=venus-operator
+ExecStart=/usr/bin/node /opt/venus/tools/venus-operator/cli.mjs operator /etc/venus/operator.json
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadOnlyPaths=/opt/venus /etc/venus /run/venus-executor /var/lib/venus/operator-credentials
+InaccessiblePaths=/etc/letsencrypt /run/docker.sock /var/run/docker.sock /run/user
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=128M
+TasksMax=32
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

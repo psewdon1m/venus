@@ -13,7 +13,7 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint apps packages tools/*.mjs tests/**/*.mjs",
+    "lint": "eslint apps packages tools/*.mjs tools/venus-operator/*.mjs tools/venus-operator/ui/*.js tests/**/*.mjs",
     "typecheck": "tsc -b && tsc -p apps/web/tsconfig.json",
     "build": "tsc -b && npm run build -w @venus/web",
     "test": "vitest run",
@@ -28,6 +28,8 @@
     "test:p05:chat": "node tools/p05-browser.mjs --chat",
     "test:p05:self-actions": "node tools/p05-browser.mjs --self-actions",
     "test:p05:reporter": "node --test tests/p05/report-contract.test.mjs",
+    "test:p06:unit": "node --test tests/p06/*.test.mjs",
+    "test:p06": "node tools/p06-integration.mjs",
     "test:catalog-r2": "node tools/check-catalog-r2.mjs",
     "quality:docker": "node tools/docker-quality.mjs",
     "test:p02": "node tools/p02-integration.mjs",

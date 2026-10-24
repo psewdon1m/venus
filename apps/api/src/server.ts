@@ -24,6 +24,7 @@ import {RoomGames} from './room-games.js';
 import {ReleaseTopicGameSource,OwnerProvisionalTopicGameSource,pilotAdmissionEnabled,legacyReleaseCatalog,bootstrapPilotCatalog} from './topic-game-source.js';
 import {topicGamesEnabled,releasedRoomTopicProfile,topicStorageDirectories} from './topic-runtime.js';
 import {requireThat} from './security.js';
+import {ProtectedRuntime,servingBarrier} from './protected-runtime.js';
 let db:ReturnType<typeof database>|undefined;
 async function main() {
   const metadata=JSON.parse(readFileSync(new URL('../../../build-metadata.json',import.meta.url),'utf8')) as {version:string;source_revision:string};
@@ -36,7 +37,9 @@ async function main() {
   const pilotConfig={deploymentProfile:process.env.VENUS_DEPLOYMENT_PROFILE,origin:origin.origin,privateTopicsEnabled};
   const pilotEnabled=pilotAdmissionEnabled(pilotConfig);
   db=database();const pool=db.pool;
-  const keys=Keyring.fromFile(process.env.KEYRING_FILE),ledger=new DeletionLedger(process.env.DELETION_LEDGER_FILE);
+  const protectedRuntime=process.env.VENUS_PROTECTED_ROOT?new ProtectedRuntime(process.env.VENUS_PROTECTED_ROOT):null;
+  if(protectedRuntime)requireThat(process.env.DELETION_LEDGER_FILE===process.env.VENUS_PROTECTED_ROOT+'/deletions.jsonl'&&process.env.CATALOG_REVOCATION_LEDGER_FILE===process.env.VENUS_PROTECTED_ROOT+'/catalog.jsonl'&&process.env.VENUS_SERVING_GATE_FILE,'PROTECTED_CONFIGURATION_REQUIRED',503);
+  const keys=Keyring.fromFile(process.env.KEYRING_FILE),ledger=new DeletionLedger(process.env.DELETION_LEDGER_FILE,protectedRuntime?.checkpoint);
   await migrate(pool);await migrateGames(pool);await migrateCatalog(pool);await migrateChat(pool);await migratePrivateTopics(pool);
   const existing=(await pool.query<{present:boolean}>('SELECT EXISTS(SELECT 1 FROM rooms WHERE private_protocol=2) AS present')).rows[0]!.present;
   let topicGames:TopicGames|undefined,privateTopics:PrivateTopicPreferences|undefined,registry:TopicRoomRegistry|undefined;
@@ -55,8 +58,8 @@ async function main() {
       requireThat(topicGames,'TOPIC_RUNTIME_UNAVAILABLE',503);await topicGames.topicsChanged(c,room,owner);
     }});
   }
-  const rooms=new Rooms({pool,keys,ledger,origin:origin.origin,offer:()=>offer,...(registry?{privateProtocol:registry}:{})}),games=new Games(rooms,()=>null,false,privateTextChat,true);
-  const revocations=process.env.CATALOG_REVOCATION_LEDGER_FILE?new RevocationLedger(process.env.CATALOG_REVOCATION_LEDGER_FILE):null;
+  const rooms=new Rooms({pool,keys,ledger,origin:origin.origin,offer:()=>offer,retainDeletionLedger:!!protectedRuntime,...(registry?{privateProtocol:registry}:{})}),games=new Games(rooms,()=>null,false,privateTextChat,true);
+  const revocations=process.env.CATALOG_REVOCATION_LEDGER_FILE?new RevocationLedger(process.env.CATALOG_REVOCATION_LEDGER_FILE,protectedRuntime?.checkpoint):null;
   const catalog=revocations?new Catalog(rooms,{withdrawPacks:async(c,digests)=>{await games.withdrawPacks(c,digests);await topicGames?.withdrawPacks(c,digests);}},revocations,pilotEnabled?[...bundledPacks,ownerProvisionalPilot.pack]:bundledPacks):null;
   if(catalog)games.attachCatalog(legacyReleaseCatalog(catalog));
   if(profile&&registry) {
@@ -73,7 +76,9 @@ async function main() {
   // Neither environment nor network can supply card bytes or approval records.
   await catalog?.reconcile('startup');
   await games.reconcilePublicPairPolicy();await rooms.maintain();
-  const app=await createApp({probe:async()=>{await schemaProbe(pool);await engineSchemaProbe(pool);await catalogSchemaProbe(pool);await chatSchemaProbe(pool);await privateTopicSchemaProbe(pool);},schemaGeneration,rooms,games,...(privateTopics?{privateTopics}:{}),...(topicGames?{topicGames}:{}),roomCreationProtocol:privateTopicsEnabled?2:1,version,staticRoot:fileURLToPath(new URL('../../web/dist',import.meta.url))});
+  const barrier=process.env.VENUS_SERVING_GATE_FILE?servingBarrier(process.env.VENUS_SERVING_GATE_FILE):undefined;
+  if(barrier)rooms.attachServingBarrier(barrier);
+  const app=await createApp({probe:async()=>{protectedRuntime?.checkpoint();await schemaProbe(pool);await engineSchemaProbe(pool);await catalogSchemaProbe(pool);await chatSchemaProbe(pool);await privateTopicSchemaProbe(pool);},...(barrier?{servingBarrier:barrier}:{}),schemaGeneration,rooms,games,...(privateTopics?{privateTopics}:{}),...(topicGames?{topicGames}:{}),roomCreationProtocol:privateTopicsEnabled?2:1,version,staticRoot:fileURLToPath(new URL('../../web/dist',import.meta.url))});
   app.addHook('onClose',async()=>{topicGames?.clearSnapshotCache();});
   for(const signal of ['SIGINT','SIGTERM']) process.once(signal,()=>{void app.close().then(()=>pool.end()).catch(()=>{process.exitCode=1;});});
   await app.listen({port:4300,host:'0.0.0.0'});

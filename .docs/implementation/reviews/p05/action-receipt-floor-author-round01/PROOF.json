@@ -1,0 +1,171 @@
+{
+  "status": "STAGED_METHOD_DELTA_ONLY_NOT_EXECUTED",
+  "created_at_utc": "2026-10-23T03:52:41.911267+00:00",
+  "parent_driver": {
+    "path": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-click-diag04/scene-driver.mjs",
+    "sha256": "58ffaa688a9b40a54e91ea17d8540d7836232ca6c832df9ce9e9fdf831e0a72f",
+    "bytes": 40522
+  },
+  "parent_diagnostic_index": {
+    "path": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-click-diag04/INDEX.json",
+    "sha256": "bf3451b995d29857efe3eda33723e488e04c2d0458dc8734b84ff3b83a2e02ef",
+    "bytes": 13072
+  },
+  "parent_diagnostic_runtime": "6687622ab9e5715c0b8e5c716021b4c019b26994c3d0a5a6340ab955b1393dbf",
+  "observer": {
+    "path": ".artifacts/p05-pilot-bundle-source28/.artifacts/p05-v2-layout-producer-a31-click-diag04/private-batch-observer.mjs",
+    "sha256": "48e2604052f3c8768fbd14efd2d4f315f6558f3ec00e8f1870aec28e3f172026",
+    "bytes": 17743
+  },
+  "raw_report": {
+    "path": ".docs/implementation/evidence/p05/a31-03-webkit-en-failed05/layout-report.json",
+    "sha256": "fddd32a236e3229fe82898ddff1e7e9c417fd4a837238859c32496f453baa84e",
+    "bytes": 1128881
+  },
+  "failed_actual_index": {
+    "path": ".docs/implementation/evidence/p05/a31-03-webkit-en-failed05/INDEX.json",
+    "sha256": "c6731c5cb586a6164ac27ce7b1c8e31d4bd3f73ee304f476219c4cebc03a0e9a",
+    "bytes": 5121
+  },
+  "original_cause_diagnosis": {
+    "path": ".docs/implementation/reviews/p05/a31-03-webkit-en-advice-diagnosis-round01/INDEX.json",
+    "sha256": "f1a8e4ad5777a453813aaed59f1ebe9eb48ebef42c14b63486e1eeae849f91bf",
+    "bytes": 541
+  },
+  "scope_mapping": {
+    "synthetic_scope_revision31": {
+      "room": "c2a4a540-8e9a-49b9-bb26-e20591d937d2",
+      "member": "2aca3430-6a19-4500-964a-cdc1a7b56f05",
+      "session": "728a2077-e799-49b2-8f9f-d2793401151f",
+      "round": "c576b8e8-b85d-4637-b78a-2af7ea9da39e",
+      "rev": 31
+    },
+    "json_key_order": [
+      "room",
+      "member",
+      "session",
+      "round",
+      "rev"
+    ],
+    "encoding": "compact JSON UTF-8; same key order as observer gameScope line29 and JSON.stringify line88",
+    "revision31_sha256": "82c68adf4c0ef8568e387f052d544d1902f376ed31938ef3471494a48e0dcdb3",
+    "revision32_sha256": "3f425df99514435adb94bcb6552004e8caf0531b3f0d09fd026fffa8302c2037",
+    "raw_ready_matches_revision31": true
+  },
+  "action_receipts": {
+    "json_pointer": "/action_preparation_phases/0",
+    "game_revs": [
+      31,
+      32
+    ],
+    "status": "READY",
+    "finished_monotonic_ms": 327555.544866
+  },
+  "second_action_dispatch": {
+    "json_pointer": "/mutation_dispatches/125",
+    "result": "EXACT_RECEIPT_VERIFIED",
+    "response_status": 200,
+    "click_started_monotonic_ms": 326969.766473,
+    "click_finished_monotonic_ms": 327124.822159,
+    "request_observed_monotonic_ms": 327071.765858
+  },
+  "subsequent_private_readiness": [
+    {
+      "json_pointer": "/private_preparation/16",
+      "control": "advice-input",
+      "prepared_monotonic_ms": 327624.359358,
+      "phase_deadline_monotonic_ms": 335575.954001,
+      "scope_sha256": "82c68adf4c0ef8568e387f052d544d1902f376ed31938ef3471494a48e0dcdb3"
+    },
+    {
+      "json_pointer": "/private_preparation/17",
+      "control": "advice-offer",
+      "prepared_monotonic_ms": 327729.932057,
+      "phase_deadline_monotonic_ms": 335575.954001,
+      "scope_sha256": "82c68adf4c0ef8568e387f052d544d1902f376ed31938ef3471494a48e0dcdb3"
+    }
+  ],
+  "finding": "Accepted receipt floor32 was discarded; advice input and offer readiness accepted revision31. Proven test prerequisite bug; precise original locator click cause remains unknown.",
+  "staged_candidate_sha256": "47cac744e6a72ab79d4f6c2c7f4844b3e4f76c1a2060ab13f853c4f9b142179d",
+  "exact_reverse_to_parent_bytes": true,
+  "literal_replacements": [
+    {
+      "before": "expected:wanted,intendedValue:intent?.scope.session===wanted.session",
+      "after": "expected:samePrior?{...wanted,minRev:Math.max(wanted.minRev,prior.expected.rev)}:wanted,intendedValue:intent?.scope.session===wanted.session"
+    },
+    {
+      "before": "async function fillPrivate(a,id,value,submit){",
+      "after": "async function fillPrivate(a,id,value,submit,expected={}){"
+    },
+    {
+      "before": "ticket=await normalPrivateReady(a,id,{deadline});await a.page.getByTestId(id).fill(value)",
+      "after": "ticket=await normalPrivateReady(a,id,{deadline,expected});await a.page.getByTestId(id).fill(value)"
+    },
+    {
+      "before": "await acceptTopics(f);if(f.plan.requires_action_consent)await acceptActionsUi(f);",
+      "after": "await acceptTopics(f);const actionReady=f.plan.requires_action_consent?await acceptActionsUi(f):null;"
+    },
+    {
+      "before": "await fillPrivate(primary,'advice-input','SYNTHETIC LAYOUT ADVICE','advice-offer');",
+      "after": "await fillPrivate(primary,'advice-input','SYNTHETIC LAYOUT ADVICE','advice-offer',actionReady?{session:f.session,round:f.plan.round_id,minRev:actionReady.minRev}:{});"
+    }
+  ],
+  "budget_token_counts": {
+    "performance.now()+8000": {
+      "before": 4,
+      "after": 4
+    },
+    "deadline=started+12000": {
+      "before": 1,
+      "after": 1
+    },
+    "while(performance.now()<deadline)": {
+      "before": 1,
+      "after": 1
+    },
+    "privateBatches.requireReady": {
+      "before": 1,
+      "after": 1
+    },
+    "privateDom(a,control,observed.round_index)": {
+      "before": 1,
+      "after": 1
+    },
+    "prior.phase_deadline_monotonic_ms": {
+      "before": 1,
+      "after": 1
+    },
+    "await l.click(": {
+      "before": 1,
+      "after": 1
+    },
+    "locatorClickFailureFlags": {
+      "before": 4,
+      "after": 4
+    }
+  },
+  "preserved": [
+    "original same 8s preparation phase",
+    "same prior.phase_deadline_monotonic_ms for samePrior",
+    "existing 12s action phase",
+    "5s request-start lease and 250ms minimum",
+    "original observer and private DOM predicate",
+    "eight diagnostic flags unchanged",
+    "all bytes outside five exact literal substitutions unchanged",
+    "51 cells/shard and 459 aggregate unchanged"
+  ],
+  "not_performed": [
+    "code execution",
+    "tests",
+    "native launch",
+    "Docker",
+    "Git",
+    "APP mutation",
+    "source28 mutation",
+    "future A32 runtime/source/image binding",
+    "ACK",
+    "diagnostic04 run"
+  ],
+  "full_stage_PASS": false,
+  "precise_original_click_cause_proven": false
+}

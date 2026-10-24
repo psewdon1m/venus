@@ -1,0 +1,80 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.checks
+#1 transferring dockerfile: 1.60kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a
+#3 DONE 1.1s
+
+#4 [python 1/1] FROM docker.io/library/python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a
+#4 resolve docker.io/library/python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  1/13] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#5 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 191.41kB 0.1s
+#6 transferring context: 8.46MB 1.9s done
+#6 DONE 2.0s
+
+#7 [dependencies  8/13] COPY packages/contracts/package.json packages/contracts/
+#7 CACHED
+
+#8 [dependencies  9/13] COPY packages/i18n/package.json packages/i18n/
+#8 CACHED
+
+#9 [dependencies 12/13] COPY tools/requirements.lock /tmp/requirements.lock
+#9 CACHED
+
+#10 [dependencies 11/13] COPY packages/card-catalog/package.json packages/card-catalog/
+#10 CACHED
+
+#11 [dependencies  3/13] RUN apt-get update && apt-get install --no-install-recommends -y git ca-certificates libsqlite3-0 libbz2-1.0 libffi8 liblzma5 && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [dependencies  5/13] COPY package.json package-lock.json .npmrc ./
+#12 CACHED
+
+#13 [dependencies  7/13] COPY apps/web/package.json apps/web/
+#13 CACHED
+
+#14 [dependencies 10/13] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#14 CACHED
+
+#15 [dependencies  2/13] COPY --from=python /usr/local /usr/local
+#15 CACHED
+
+#16 [dependencies  6/13] COPY apps/api/package.json apps/api/
+#16 CACHED
+
+#17 [dependencies  4/13] WORKDIR /workspace
+#17 CACHED
+
+#18 [dependencies 13/13] RUN npm ci && python -m pip install --no-cache-dir --require-hashes -r /tmp/requirements.lock && python -c "import ssl,sqlite3,bz2,lzma,ctypes" && node --version && python --version
+#18 CACHED
+
+#19 [stage-2 1/2] COPY . .
+#19 DONE 7.2s
+
+#20 [stage-2 2/2] RUN chown -R node:node /workspace
+#20 DONE 61.1s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 33.4s done
+#21 exporting manifest sha256:34640629c1c0ca582282a1bde5d338de70e46e3b8e2db955b5d37a5f76d73016 0.0s done
+#21 exporting config sha256:78e122b4416d1ca473f0045b22fadb87e8bdf06f4269c2c82c9bd24304341313 0.0s done
+#21 exporting attestation manifest sha256:44797cce9569e4978c710ca89f7ff0a1fd00e97430d57ba5cdee6aa218091fe4 0.0s done
+#21 exporting manifest list sha256:1a0fbc8ac57f368a748e0866163720e89b7a9c6a6feb5ba3fbc28c3ab07948bc 0.0s done
+#21 naming to docker.io/library/venus-quality-f2c4de6eca2c:local done
+#21 unpacking to docker.io/library/venus-quality-f2c4de6eca2c:local
+#21 unpacking to docker.io/library/venus-quality-f2c4de6eca2c:local 25.9s done
+#21 DONE 59.4s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/7ah3ajbdzc80mdh94x6eimlen

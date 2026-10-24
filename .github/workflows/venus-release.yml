@@ -1,0 +1,71 @@
+name: Venus qualified release
+on:
+  push:
+    tags: ['venus-v*']
+permissions:
+  contents: read
+concurrency:
+  group: venus-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    environment: venus-release
+    timeout-minutes: 45
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with: {fetch-depth: 0, persist-credentials: false}
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with: {node-version-file: .node-version}
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with: {python-version: '3.12.14'}
+      - name: Bind exact qualified tag to main
+        env: {RELEASE_TAG: '${{ github.ref_name }}', RELEASE_SHA: '${{ github.sha }}'}
+        run: node tools/venus-operator/check-release-context.mjs
+      - run: python -m pip install --require-hashes -r tools/requirements.lock
+      - run: npm ci
+      - name: Existing quality and P06 gates before signing key
+        run: npm run quality && node --test tests/p06/*.test.mjs && node tools/p06-integration.mjs
+      - name: Source-bound independent and all118 ID pre-sign gate
+        run: node tools/venus-operator/release-gate.mjs .docs/implementation/evidence/p06/pre-sign-acceptance01/DECISION.json
+      - name: Refuse existing immutable release
+        env: {GH_TOKEN: '${{ github.token }}', RELEASE_TAG: '${{ github.ref_name }}'}
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then exit 1; fi
+      - name: Registry authentication
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "${GITHUB_REPOSITORY_OWNER}" --password-stdin
+      - name: Build one immutable service image
+        env: {RELEASE_TAG: '${{ github.ref_name }}', RELEASE_SHA: '${{ github.sha }}'}
+        run: |
+          VERSION="${RELEASE_TAG#venus-v}"
+          docker buildx build --push --provenance=false --metadata-file .artifacts/p06-image-metadata.json --build-arg SOURCE_REVISION="$RELEASE_SHA" --build-arg RELEASE_VERSION="$VERSION" -f infra/venus/Dockerfile -t "ghcr.io/psewdon1m/venus:$RELEASE_TAG" .
+      - name: Prepare exact-image release inputs
+        env: {RELEASE_TAG: '${{ github.ref_name }}', RELEASE_SHA: '${{ github.sha }}'}
+        run: python -B tools/p06_release_inputs.py
+      - name: Exact built-image install and release check before signature
+        run: node tools/p06-integration.mjs --release-candidate .artifacts/p06-service-candidate.json
+      - name: Sign prepared exact bytes
+        env:
+          VENUS_RELEASE_PRIVATE_KEY: ${{ secrets.VENUS_RELEASE_PRIVATE_KEY }}
+        run: |
+          umask 077
+          test -n "$VENUS_RELEASE_PRIVATE_KEY"
+          trap 'rm -f "$RUNNER_TEMP/venus-signing.pem"' EXIT
+          printf '%s' "$VENUS_RELEASE_PRIVATE_KEY" > "$RUNNER_TEMP/venus-signing.pem"
+          node tools/venus-operator/create-release.mjs .artifacts/p06-service-candidate.json
+      - name: Draft immutable assets
+        env: {GH_TOKEN: '${{ github.token }}', RELEASE_TAG: '${{ github.ref_name }}'}
+        run: gh release create "$RELEASE_TAG" .artifacts/p06-service-release/* --draft --title "$RELEASE_TAG" --notes 'Standalone local-pilot Venus release; production deployment is not authorized.'
+      - name: Verify published draft bytes
+        env: {GH_TOKEN: '${{ github.token }}', RELEASE_TAG: '${{ github.ref_name }}'}
+        run: |
+          mkdir -p .artifacts/p06-published-roundtrip
+          gh release download "$RELEASE_TAG" --dir .artifacts/p06-published-roundtrip
+          node tools/venus-operator/verify-published.mjs .artifacts/p06-service-candidate.json .artifacts/p06-published-roundtrip
+      - name: Publish after all gates
+        env: {GH_TOKEN: '${{ github.token }}', RELEASE_TAG: '${{ github.ref_name }}'}
+        run: gh release edit "$RELEASE_TAG" --draft=false
