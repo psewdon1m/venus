@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "source_sha": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "synthetic": true,
+  "required": [
+    "P04-MIGRATION",
+    "P04-ATOMIC-POINTER",
+    "P04-SHORTAGE-ACL",
+    "P04-PINNED-ROLLBACK",
+    "P04-MUTATION-RECEIPTS",
+    "P04-READONLY-AUTH",
+    "P04-PUBLIC-READONLY",
+    "P04-PUBLIC-REVOKE-FENCE",
+    "P04-HTTP-REVOKE-FENCE",
+    "P04-PRIVATE-REVOKE-CLEAR",
+    "P04-COMMIT-FAILURE",
+    "P04-RESTORE-LEDGER",
+    "P04-MISSING-LEDGER"
+  ],
+  "records": [
+    {
+      "id": "P04-MIGRATION",
+      "status": "PASS",
+      "detail": {}
+    },
+    {
+      "id": "P04-ATOMIC-POINTER",
+      "status": "PASS",
+      "detail": {}
+    },
+    {
+      "id": "P04-SHORTAGE-ACL",
+      "status": "PASS",
+      "detail": {}
+    },
+    {
+      "id": "P04-PINNED-ROLLBACK",
+      "status": "PASS",
+      "detail": {
+        "pinned_digest": "sha256:f9d28982ab613b86eecf743e82520d3b2fdd9455de749b71976444a107945634",
+        "rollback_target": "sha256:f9d28982ab613b86eecf743e82520d3b2fdd9455de749b71976444a107945634"
+      }
+    },
+    {
+      "id": "P04-MUTATION-RECEIPTS",
+      "status": "PASS",
+      "detail": {
+        "scalar_stop_contract": true,
+        "exact_view_replay_after_another_session": true
+      }
+    },
+    {
+      "id": "P04-READONLY-AUTH",
+      "status": "PASS",
+      "detail": {
+        "inactive_no_reserve": true,
+        "real_write_rejection_trigger": true
+      }
+    },
+    {
+      "id": "P04-PUBLIC-READONLY",
+      "status": "PASS",
+      "detail": {
+        "postgres_read_only_transaction": true,
+        "expiry_boundary": true
+      }
+    },
+    {
+      "id": "P04-HTTP-REVOKE-FENCE",
+      "status": "PASS",
+      "detail": {
+        "actual_delayed_https_public_and_private": true,
+        "security_headers_preserved": true
+      }
+    },
+    {
+      "id": "P04-PRIVATE-REVOKE-CLEAR",
+      "status": "PASS",
+      "detail": {
+        "both_prior_recipients_cleared": true,
+        "monotonic_stream_revisions": true
+      }
+    },
+    {
+      "id": "P04-PUBLIC-REVOKE-FENCE",
+      "status": "PASS",
+      "detail": {
+        "delayed_actual_ws_projection": true,
+        "withdrawn_card": "Q-0001"
+      }
+    },
+    {
+      "id": "P04-COMMIT-FAILURE",
+      "status": "PASS",
+      "detail": {
+        "intent_head": "b1cef4fc66a5aa7f5d8af1a87c8d78e4f4a0753596dd95bbc96145c01834a700"
+      }
+    },
+    {
+      "id": "P04-RESTORE-LEDGER",
+      "status": "PASS",
+      "detail": {
+        "full_pg_dump_restore": true,
+        "backup_sha256": "dfd3d7226ab780983bc0957801bfeca42757ff8569d3dfa6db4e87014a0332b1",
+        "revived_active_game_aborted": true,
+        "external_head": "8af4cdcffccc531d66dc35b188f4b87487ce1037f608ff4fd9ba7873eafd650f"
+      }
+    },
+    {
+      "id": "P04-MISSING-LEDGER",
+      "status": "PASS",
+      "detail": {}
+    }
+  ],
+  "status": "PASS"
+}

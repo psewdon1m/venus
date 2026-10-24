@@ -2,9 +2,9 @@
 
 По прямому U-021/ADR-033 четыре тяжёлых измерения P03 вынесены в отдельный ручной `Venus optional P03 statistics` без изменения выборок/порогов. Защита main фактически требует пять quality/integration проверок; strict и остальные поля защиты сохранены. Незавершённые статистические задания прежнего head отменены, это не PASS.
 
-Текущий clean Git195e2302/core3a4eae5c/1948; изменения только в CI/policy/release-proof path, код приложения сохранён. Запущены пять проверок текущего head и отдельная публикация unsigned `p06-preview-<sha>` version0.0.0, чтобы владелец мог сделать GHCR пакет Public. Предварительный образ не закрывает EXIT-P06 и не является подписанным релизом.
+Текущий source cf2d6195/coree87d9b1b/1948: приложение не менялось; исправлены существующие CI-policy и P04 read-only expiry tests. Оба независимых source review05 приняли изменения. P04 preflight: native0,11PASS, sourcecore unchanged, cleanup completed; dirty tree не выдаётся за clean CI. Новый [pre-sign04](evidence/p06/pre-sign-acceptance04/REPORT.md) условен до пяти проверок финального head.
 
-Прежний Gitd3f/core5a: quality/container/P02/P03/P06 PASS; actual GitHub P06:18PASS/45nativeexit0/socketGID118, E07 подтверждён двумя независимыми агентами. Исторические proof сохранены с исходными source, не переименованы в новые запуски.
+Предварительный образ version0.0.0 опубликован, владелец сделал пакет Public, анонимный pull точногоdigest0653678...f4b3e PASS. Это unsignedpreview source195e2302, не qualifiedrelease и не приёмка P06.
 
 Owner-approved key/env готовы U020. Осталось: текущий CI/independent rebind, exactmain/tag, подписанный0.0.1/один OCI/публичные assets, anonymous image pull после изменения видимости владельцем и финальная независимая приёмка. P07 не начат.
 
