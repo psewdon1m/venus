@@ -8,10 +8,10 @@ interface Active {revision:number;room?:Room;capture?:MediaStream;grant?:MediaGr
 /** Capture permission is always a direct user gesture. A resource generation owns
  * its tracks, lease and teardown; late completion cannot stop a newer scope. */
 export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId:string;locale:Locale;connected:boolean}){
- const t=cinemaCopy(locale),root=`/api/v1/rooms/${roomId}`,video=useRef<HTMLVideoElement>(null),audio=useRef<HTMLAudioElement>(null),active=useRef<Active|null>(null),serial=useRef(0),alive=useRef(true);
+ const t=cinemaCopy(locale),root=`/api/v1/rooms/${roomId}`,video=useRef<HTMLVideoElement>(null),active=useRef<Active|null>(null),serial=useRef(0),alive=useRef(true);
  const [state,setState]=useState<CinemaState|null>(null),[local,setLocal]=useState<LocalState>('idle'),[volume,setVolume]=useState(.7),[publishing,setPublishing]=useState(false),[hasMedia,setHasMedia]=useState(false),[engaged,setEngaged]=useState(false);
  const volumeRef=useRef(volume);useEffect(()=>{volumeRef.current=volume;},[volume]);
- const clearElements=()=>{for(const element of [video.current,audio.current])if(element){element.pause();element.srcObject=null;}};
+ const clearElements=()=>{for(const element of [video.current])if(element){element.pause();element.srcObject=null;}};
  const retire=(value:Active,notify=true)=>{
   if(value.closed)return;value.closed=true;if(value.renew)clearInterval(value.renew);value.capture?.getTracks().forEach(track=>track.stop());void value.room?.disconnect(true);
   if(active.current===value){active.current=null;clearElements();if(alive.current){setHasMedia(false);setPublishing(false);setEngaged(false);}}
@@ -26,7 +26,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
  },[api,root,connected]);
  const play=async(value:Active)=>{
   if(value.closed||active.current!==value)return;
-  try{if(video.current?.srcObject)await video.current.play();if(value.closed||active.current!==value)return;if(audio.current?.srcObject){audio.current.volume=volumeRef.current;audio.current.muted=false;await audio.current.play();}if(!value.closed&&active.current===value)setLocal('live');}
+  try{if(video.current?.srcObject){video.current.volume=volumeRef.current;video.current.muted=value.grant?.publisher===true;await video.current.play();}if(!value.closed&&active.current===value)setLocal('live');}
   catch(error){if(value.closed||active.current!==value)return;if(error instanceof DOMException&&error.name==='AbortError')return;setLocal(error instanceof DOMException&&error.name==='NotAllowedError'?'blocked':'error');}
  };
  const begin=async(publisher:boolean)=>{
@@ -48,27 +48,27 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
    room.on(RoomEvent.Disconnected,()=>{if(current()){retire(value);setLocal('error');}});
    room.on(RoomEvent.TrackSubscribed,(track)=>{
     if(!current()||publisher)return;
-    const element=track.kind===Track.Kind.Video?video.current:audio.current;if(!element)return;
-    if(track.kind===Track.Kind.Video)element.muted=true;
+    const element=video.current;if(!element)return;
+    element.muted=false;
     track.attach(element);setHasMedia(true);void play(value);
    });
    room.on(RoomEvent.TrackUnsubscribed,track=>{track.detach();if(current()){retire(value);setLocal('idle');}});
    await room.connect(grant.signaling_url,grant.token,{autoSubscribe:true,rtcConfig:{iceServers:[]}});if(!current()){void room.disconnect(true);return;}
    value.renew=setInterval(()=>{if(!current())return;void api.request(`${root}/media/leases/${grant.lease_id}/renew`,{idempotency_key:crypto.randomUUID()}).catch(()=>{if(current()){retire(value);setLocal('error');}});},5000);
    if(publisher){
-    await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,videoCodec:'vp8',simulcast:false,videoEncoding:{maxBitrate:1500000,maxFramerate:15},screenShareEncoding:{maxBitrate:1500000,maxFramerate:15}});
+    await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,stream:'cinema',videoCodec:'vp8',simulcast:false,videoEncoding:{maxBitrate:1500000,maxFramerate:15},screenShareEncoding:{maxBitrate:1500000,maxFramerate:15}});
     if(!current())return;
-    await room.localParticipant.publishTrack(value.capture!.getAudioTracks()[0]!,{source:Track.Source.ScreenShareAudio});
+    await room.localParticipant.publishTrack(value.capture!.getAudioTracks()[0]!,{source:Track.Source.ScreenShareAudio,stream:'cinema'});
     if(!current())return;
     await api.request(root+'/cinema/source',{lease_id:grant.lease_id,scope_id:grant.scope_id,video:true,audio:true,idempotency_key:crypto.randomUUID()});if(current()){setHasMedia(true);setLocal('live');}
    }else if(current())setLocal('live');
   }catch(error){if(!current())return;retire(value);setLocal(error instanceof DOMException&&error.name==='NotAllowedError'?'denied':error instanceof ApiError&&error.code==='MEDIA_AUDIO_REQUIRED'?'no_audio':'error');}
  };
  return <section className="panel cinema-panel" data-testid="cinema-panel"><h2>{t.title}</h2><p role="status" data-testid="cinema-status">{!connected?t.offline:local!=='idle'?t[local]:state?t[state.state]:t.connecting}</p>
-  <video ref={video} playsInline muted controls={false} aria-label={publishing?t.preview:t.viewer} data-testid="cinema-video" hidden={!hasMedia&&local!=='connecting'}/><audio ref={audio} data-testid="cinema-audio"/>
+  <video ref={video} playsInline controls={false} aria-label={publishing?t.preview:t.viewer} data-testid="cinema-video" hidden={!hasMedia&&local!=='connecting'}/>
   <div className="actions">{!engaged?<>{state?.can_publish?<button data-testid="cinema-share" disabled={!connected||!state.transport_ready||['starting','live'].includes(state.state)} onClick={()=>{void begin(true);}}>{t.share}</button>:null}<button data-testid="cinema-watch" disabled={!connected||state?.state!=='live'} onClick={()=>{void begin(false);}}>{t.watch}</button></>:<button data-testid="cinema-stop" onClick={()=>{const value=active.current;if(value)retire(value);setLocal('idle');}}>{publishing?t.stop:t.leave}</button>}
   {hasMedia&&!publishing?<button data-testid="cinema-sound" onClick={()=>{const value=active.current;if(value){void value.room?.startAudio().then(()=>play(value)).catch(()=>{if(active.current===value&&!value.closed)setLocal('blocked');});}}}>{t.sound}</button>:null}</div>
-  {hasMedia&&!publishing?<label>{t.volume}<input type="range" min="0" max="1" step="0.05" value={volume} onChange={event=>{const n=Number(event.target.value);setVolume(n);if(audio.current)audio.current.volume=n;}}/></label>:null}
+  {hasMedia&&!publishing?<label>{t.volume}<input type="range" min="0" max="1" step="0.05" value={volume} onChange={event=>{const n=Number(event.target.value);setVolume(n);if(video.current)video.current.volume=n;}}/></label>:null}
   {state?.can_publish?<p className="hint">{t.hint}</p>:null}
  </section>;
 }

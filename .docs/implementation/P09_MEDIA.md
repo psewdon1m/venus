@@ -65,3 +65,9 @@ S09-01: additive migration002 хранит pending cutoff по lease; непод
 S09-02: v3 operator healthy дополнительно вызывает HMAC-only /internal/v1/media/prepare при закрытом serving gate. Эта maintenance-команда исключает старые lease из protected authority, подтверждает остановку прежнего child, запускает пустой child и реально проверяет admin ListRooms. Consumer barriers не обходятся; running/RTC/grants остаются закрыты до обычного current-authority poll после commit/open. Preparation grace ≤4s, не продлевается повторным probe; нет подтверждения — gateFAIL. Обычный v2 health не меняется.
 
 ICE: loopbackcandidatefalse исключает alias loopbackFD при explicitnodeIP rewrite; HTTPbind127 остаётся. Временный debug/credential-hash instrumentation удалён. Возвращён SDK default single-PC V1 и обычный browser mDNS; они не были доказанной причиной. Normal/degraded repeats проверят итоговые байты.
+
+## Normal profile revision2 до повторного испытания
+
+Порог120ms/30s/≥20matched samples и семь получателей сохранены. В предыдущей реализации два отдельных HTML elements не давали браузеру единую точку AVplayout. Исправление приложения — обе remote tracks в одном HTMLvideo/MediaStream, одинаковый named publication stream. Измерительный tap перенесён с сырого remote AudioStream на MediaElementAudioSourceNode этого реально воспроизводимого video; analyser подключён к null-sink output. VideoRVFC/encodedtimestamp остаются, никаких искусственных delay/смещений для подгонки не добавлено. Исторический round16 FAIL125ms сохранён как прежняя методика/source, новый результат не переписывает его.
+
+Open v3 readiness — HMAC read-only currentepoch/running, child/grants не меняет; closed mode выполняет описанную preparation. API boot и неизвестный bootUUID не считаются cutoff receipt: pending flags сохраняются до подтверждённого backend/supervisor cutoff. Старый lease release ограничен своимUUID/upstream scope.
