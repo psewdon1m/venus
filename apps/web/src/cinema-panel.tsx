@@ -42,6 +42,7 @@ export function CinemaPanel({api,roomId,locale,connected,ducked=false}:{api:Sess
     value.capture=await navigator.mediaDevices.getDisplayMedia({video:{frameRate:{ideal:30,max:30},width:{ideal:1280,max:1920},height:{ideal:720,max:1080}},audio:true});
     if(!current()){value.capture.getTracks().forEach(track=>track.stop());return;}
     if(!value.capture.getVideoTracks().some(track=>track.readyState==='live')||!value.capture.getAudioTracks().some(track=>track.readyState==='live')){retire(value);setLocal('no_audio');return;}
+    value.capture.getVideoTracks()[0]!.contentHint='motion';
     for(const track of value.capture.getTracks())track.addEventListener('ended',()=>{if(current()){retire(value);setLocal('idle');}},{once:true});
     if(video.current){video.current.srcObject=value.capture;video.current.muted=true;void video.current.play().catch(()=>{});}
    }
@@ -60,7 +61,7 @@ export function CinemaPanel({api,roomId,locale,connected,ducked=false}:{api:Sess
    await room.connect(grant.signaling_url,grant.token,{autoSubscribe:true,rtcConfig:{iceServers:[]}});if(!current()){void room.disconnect(true);return;}
    value.renew=setInterval(()=>{if(!current())return;void api.request(`${root}/media/leases/${grant.lease_id}/renew`,{idempotency_key:crypto.randomUUID()}).catch(()=>{if(current()){retire(value);setLocal('error');}});},5000);
    if(publisher){
-    await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,stream:'cinema',videoCodec:'vp8',simulcast:false,videoEncoding:{maxBitrate:1500000,maxFramerate:30},screenShareEncoding:{maxBitrate:1500000,maxFramerate:30}});
+    await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,stream:'cinema',videoCodec:'vp8',simulcast:false,degradationPreference:'maintain-framerate',videoEncoding:{maxBitrate:1500000,maxFramerate:30},screenShareEncoding:{maxBitrate:1500000,maxFramerate:30}});
     if(!current())return;
     await room.localParticipant.publishTrack(value.capture!.getAudioTracks()[0]!,{source:Track.Source.ScreenShareAudio,stream:'cinema'});
     if(!current())return;

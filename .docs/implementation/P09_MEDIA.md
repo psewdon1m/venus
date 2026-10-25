@@ -95,3 +95,7 @@ Round22 подтвердил media-onlydegraded/TCP/failed-old-release/retry/exp
 ## Restore fixture revision7
 
 Round23 sourcecalibrationPASS(176frames/7pairs/p9562ms) и все functionalcasesдоrestorePASS. Restore403 оказался правильной защитой deletionledger: основной snapshotroom был явно закрыт послеdump. Для независимой проверки двух границ основной snapshotroom теперь остаётся openпослеsourceend; заранее созданный admissionroom изтого жеdump используется для actual1publisher+1viewer+pendingjoin→close. Послеrestore primarycookieHTTP200+oldJWT401 доказывают mediaepochreplay, а restored secondroom с валидной прежнейcookie остаётся403ROOM_CLOSEDпо protectedledger. Защита приложения не ослаблена.
+
+## P11 coexistence source tuning (2026-10-25)
+
+Round06 P11 recorded strict jitter FAIL40ms even with zero browser quota throttling. Grouped native stats: CallsPC0 audio max24ms/video10ms; CinemaPC1 audio5ms/video40ms. This identifies the failing stream class, not a proven cause. Cinema is moving-picture media: explicitly use captured track contentHint=motion and SDK degradationPreference=maintain-framerate rather than implicit screen/detail degradation. Same1280/720ideal,1920/1080max,30fps and1.5Mbps cap, sameAV/jitter targets. This is an application encoder-hint change; actual P11 and affected P09 A/V regressions must rerun. Historical P09 proof is preserved and not automatically rebound. If ineffective, retain FAIL. Roll back these two hints only on a new source revision, without changing data/authority.

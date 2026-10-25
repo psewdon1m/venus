@@ -1,0 +1,70 @@
+ Container venus-p05-e704884c6e74-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (11.15268ms)
+✔ P06-RELEASE reject signed wrong version (4.294264ms)
+✔ P06-RELEASE reject signed wrong schema (4.003431ms)
+✔ P06-RELEASE reject signed wrong environment (5.404583ms)
+✔ P06-RELEASE reject signed wrong image digest (4.153218ms)
+✔ P06-RELEASE reject signed wrong main SHA (4.215625ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.275514ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (61.364935ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (10.896754ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (14.871511ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (9.686701ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (11.140081ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (9.963833ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (14.270768ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (11.121039ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (26.082675ms)
+✔ P06-JOURNAL corruption fails closed without mutation (7.903076ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (87.926194ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (33.095747ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.745127ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (6.164903ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1759.799487ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (11.443651ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (6.373312ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (8.935673ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.953886ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.632485ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (13.775313ms)
+✔ host authority denies stale database grants, rollback and unsafe state (4.491532ms)
+✔ backup and restore cannot run while a media container survives API stop (1.763234ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (13.74626ms)
+{"id":"P11-ADMISSION-SOURCES","phase":"START"}
+{"id":"P11-ADMISSION-SOURCES","status":"PASS"}
+{"id":"P11-CINEMA-GAMES","phase":"START"}
+{"id":"P11-CINEMA-GAMES","status":"PASS"}
+{"id":"P11-QUALITY-30S-8","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","status":"PASS"}
+{"id":"P11-TWO-PRIVATE-PAIRS","phase":"START"}
+{"id":"P11-TWO-PRIVATE-PAIRS","status":"PASS"}
+{"id":"P11-SWITCH-AND-STALE-ACL","phase":"START"}
+{"id":"P11-SWITCH-AND-STALE-ACL","status":"PASS"}
+{"id":"P11-TCP-FALLBACK","phase":"START"}
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (93286.055368ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 96156.481387
+
+✖ failing tests:
+
+test at tests/p11/integration.mjs:44:1
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (93286.055368ms)
+  locator.waitFor: Timeout 12000ms exceeded.
+  Call log:
+    - waiting for getByTestId('calls-general-join') to be visible
+  
+      at leave (/app/tests/p11/integration.mjs:33:218)
+      at async file:///app/tests/p11/integration.mjs:55:66
+      at async record (/app/tests/p11/integration.mjs:23:95)
+      at async TestContext.<anonymous> (/app/tests/p11/integration.mjs:55:3) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for getByTestId('calls-general-join') to be visible" ]
+  }
+
