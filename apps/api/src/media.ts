@@ -114,7 +114,7 @@ export class Media {
   let rows=(await c.query<MediaLease>('SELECT * FROM room_media_leases WHERE '+conditions.join(' AND '),values)).rows;
   // A retained exact old pair lease still identifies only its old upstream.
   if(leaseId&&!rows.length)rows=(await c.query<MediaLease>('SELECT * FROM room_media_leases WHERE room_id=$1 AND member_id=$2 AND id=$3',[id,member,leaseId])).rows;
-  const callScopes=options.filter==='cinema'?[]:await this.calls.retirementScopes(c,id,member,rows,{leaseId,scopeId:options.scopeId,except:options.except});
+  const callScopes=options.filter==='cinema'?[]:await this.calls.retirementScopes(c,id,member,rows,{...(leaseId?{leaseId}:{}),...(options.scopeId?{scopeId:options.scopeId}:{}),...(options.except?{except:options.except}:{})});
   const scopes=new Set([...rows.filter(l=>l.kind==='cinema'&&l.publisher).map(l=>l.upstream_room),...callScopes.map(s=>s.upstream_room)]);
   if(scopes.size){const expanded=(await c.query<MediaLease>('SELECT * FROM room_media_leases WHERE room_id=$1 AND upstream_room=ANY($2::text[]) AND (revoked_at IS NULL OR cutoff_pending)',[id,[...scopes]])).rows;rows=[...new Map([...rows,...expanded].map(l=>[l.id,l])).values()];}
   const ids=rows.map(l=>l.id);if(ids.length){this.authority.mutate(this.epoch,entries=>{for(const leaseId of ids)delete entries[leaseId];});this.closeSockets(ids);}
@@ -122,7 +122,7 @@ export class Media {
   const cinemaScopes=rows.filter(l=>l.kind==='cinema'&&l.publisher).map(l=>l.upstream_room);if(cinemaScopes.length||(!member&&options.filter!=='calls'))await c.query("UPDATE room_cinema_state SET state='ended',reason='revoked',rev=rev+1,updated_at=$2 WHERE room_id=$1 AND ($4::boolean OR upstream_room=ANY($3::text[])) AND ($5::uuid IS NULL OR scope_id=$5)",[id,new Date(this.rooms.now()),cinemaScopes,!member&&options.filter!=='calls',options.scopeId??null]);
   await this.calls.ended(c,callScopes);await this.calls.emptyGenerals(c,id);await c.query('UPDATE venus_media_runtime SET cutoff_confirmed=$1 AND NOT EXISTS(SELECT 1 FROM room_media_leases WHERE cutoff_pending) WHERE singleton',[confirmed]);return confirmed;
  }
- async retireCallsMember(c:pg.PoolClient,id:string,member:string,except?:string,scopeId?:string){await this.lock(c);return this.retireLocked(c,id,member,undefined,{filter:'calls',except,scopeId});}
+ async retireCallsMember(c:pg.PoolClient,id:string,member:string,except?:string,scopeId?:string){await this.lock(c);return this.retireLocked(c,id,member,undefined,{filter:'calls',...(except?{except}:{}),...(scopeId?{scopeId}:{})});}
 
  async retireRoom(c:pg.PoolClient,id:string){await this.lock(c);return this.retireLocked(c,id);}
  async retireMember(c:pg.PoolClient,id:string,member:string){await this.lock(c);return this.retireLocked(c,id,member);}
