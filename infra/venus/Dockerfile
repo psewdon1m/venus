@@ -1,3 +1,4 @@
+FROM livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5 AS media_binary
 FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 AS build
 WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
@@ -20,6 +21,7 @@ FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a986
 ARG SOURCE_REVISION
 ARG RELEASE_VERSION=0.0.0
 LABEL org.opencontainers.image.title="Venus" org.opencontainers.image.version="$RELEASE_VERSION" org.opencontainers.image.revision="$SOURCE_REVISION" org.opencontainers.image.source="https://github.com/psewdon1m/venus"
+COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
@@ -32,6 +34,8 @@ COPY --from=build /app/apps/api/game-migrations ./apps/api/game-migrations
 COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
 COPY --from=build /app/apps/api/chat-migrations ./apps/api/chat-migrations
 COPY --from=build /app/apps/api/music-migrations ./apps/api/music-migrations
+COPY --from=build /app/apps/api/media-migrations ./apps/api/media-migrations
+COPY infra/venus/media-supervisor.mjs ./infra/venus/media-supervisor.mjs
 COPY --from=build /app/apps/api/private-topic-migrations ./apps/api/private-topic-migrations
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY --from=build /app/package.json /app/build-metadata.json ./

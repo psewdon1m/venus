@@ -6,3 +6,4 @@ export * from './private-chat.js';
 export * from './self-actions.js';
 export * from './topic-games.js';
 export * from './music.js';
+export * from './media.js';

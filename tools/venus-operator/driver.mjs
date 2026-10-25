@@ -1,5 +1,6 @@
 import * as fs from 'node:fs';
 import path from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 import {randomUUID} from 'node:crypto';
 import {json,read,writeJson,atomic,requireValue,directory,HEX,UUID,fileHash,canonical,syncDirectory} from './files.mjs';
@@ -13,7 +14,9 @@ export function command(program,args,{input,file_input,timeout=180000,max=MAX_DU
  });
 }
 export class DockerDriver{
- constructor(config){this.c=config;requireValue(/^venus-[a-z0-9-]{1,36}$/.test(config.project),'INVALID_PROJECT');for(const k of ['local_root','host_root','compose_template'])requireValue(typeof config[k]==='string'&&config[k].length<500&&!/[\r\n\0]/.test(config[k]),'INVALID_CONFIGURATION');directory(config.local_root);}
+ constructor(config){this.c=config;requireValue(/^venus-[a-z0-9-]{1,36}$/.test(config.project),'INVALID_PROJECT');for(const k of ['local_root','host_root','compose_template'])requireValue(typeof config[k]==='string'&&config[k].length<500&&!/[\r\n\0]/.test(config[k]),'INVALID_CONFIGURATION');directory(config.local_root);requireValue(!config.release_environment||['standalone-local-pilot-v2','standalone-local-media-v3'].includes(config.release_environment),'RELEASE_ENVIRONMENT');if(config.release_environment==='standalone-local-media-v3')requireValue(read(config.compose_template).equals(read(fileURLToPath(new URL('../../infra/venus/compose.media.standalone.yml',import.meta.url)))),'MEDIA_TEMPLATE_REQUIRED');}
+ mediaEnabled(){return this.c.release_environment==='standalone-local-media-v3';}
+ async requireQuiesced(){for(const service of ['app','media'])requireValue(!(await this.inspect(service))?.State?.Running,'QUIESCE_REQUIRED');}
  docker(args,options){return command('docker',args,options);}
  env(image,oci=image){return {VENUS_IMAGE:image,VENUS_OCI_DIGEST:oci,VENUS_HTTP_PORT:String(this.c.port),VENUS_STATE_ROOT:this.c.host_root,VENUS_ORIGIN:this.c.app_origin,VENUS_DEPLOYMENT_PROFILE:'local-pilot',VENUS_PRIVATE_TEXT_CHAT:'true',VENUS_PRIVATE_TOPICS:'true'};}
  async compose(args,image,oci=image){
@@ -32,7 +35,7 @@ export class DockerDriver{
   const ids=(await this.docker(['ps','-q'])).toString().trim().split('\n').filter(Boolean);
   if(ids.length){const states=JSON.parse((await this.docker(['inspect',...ids])).toString());for(const row of states)for(const binds of [...Object.values(row.HostConfig.PortBindings??{}),...Object.values(row.NetworkSettings.Ports??{})])for(const b of binds??[])if(Number(b.HostPort)===this.c.port)requireValue(row.Config.Labels?.['com.docker.compose.project']===this.c.project,'PORT_IN_USE');}
   requireValue(release.schema.generation===1,'SCHEMA_UNSUPPORTED');
-  if(existing)await this.healthy();
+  if(this.mediaEnabled()){for(const port of [7881,7882])requireValue(port!==this.c.port,'MEDIA_PORT_CONFLICT');const media=fs.lstatSync(path.join(this.c.local_root,'protected','media'));requireValue(media.isDirectory()&&!media.isSymbolicLink(),'MEDIA_EXPLICIT_PROVISION_REQUIRED');}if(existing)await this.healthy();
  }
  imageMapFile(release){requireValue(/^sha256:[a-f0-9]{64}$/.test(release.image.oci_digest),'IMAGE_DIGEST_MISMATCH');return path.join(this.c.local_root,'image-identity-'+release.image.oci_digest.slice(7)+'.json');}
  imageLabels(release,labels){requireValue(labels?.['org.opencontainers.image.revision']===release.main_sha&&labels?.['org.opencontainers.image.version']===release.version,'IMAGE_SOURCE_MISMATCH');}
@@ -68,8 +71,8 @@ export class DockerDriver{
   await this.docker(['image','load','--input',file],{timeout:600000,max:1024*1024});const image=await this.image(receipt.image_id);requireValue(image.Id===receipt.image_id,'PREVIOUS_IMAGE_MISMATCH');this.bindImage(release,image);
  }}
  serving(open){writeJson(path.join(this.c.local_root,'control','serving.json'),{format:1,serving:open},0o444);}
- async stop(){const app=await this.container('app',false);if(app)await this.docker(['stop','--time','15',app]);requireValue(!(await this.inspect('app'))?.State?.Running,'QUIESCE_FAILED');}
- async start(release){const image=await this.localImage(release);await this.compose(['up','-d','--no-build','--pull','never','app'],image.Id,release.image.oci_digest);}
+ async stop(){const media=await this.container('media',false);if(media)await this.docker(['stop','--time','15',media]);requireValue(!(await this.inspect('media'))?.State?.Running,'MEDIA_QUIESCE_FAILED');const app=await this.container('app',false);if(app)await this.docker(['stop','--time','15',app]);requireValue(!(await this.inspect('app'))?.State?.Running,'QUIESCE_FAILED');}
+ async start(release){const image=await this.localImage(release);await this.compose(['up','-d','--no-build','--pull','never',...(this.mediaEnabled()?['media','app']:['app'])],image.Id,release.image.oci_digest);}
  async initialize(release){
   const pin=/^ {4}image: (postgres:[a-z0-9.-]+@sha256:[a-f0-9]{64})$/m.exec(read(this.c.compose_template,1024*1024).toString().replace(/\r\n/g,'\n'))?.[1];requireValue(pin,'DATABASE_IMAGE_PIN_REQUIRED');
   let image;try{image=await this.image(pin);}catch{await this.docker(['pull',pin],{timeout:600000});image=await this.image(pin);}requireValue(image.RepoDigests?.some(ref=>ref.endsWith('@'+pin.split('@')[1])),'DATABASE_IMAGE_DIGEST_MISMATCH');
@@ -79,7 +82,7 @@ export class DockerDriver{
  expireBackups(now=Date.now()){const dir=path.join(this.c.local_root,'backups');let removed=0;for(const name of fs.readdirSync(dir)){if(!/^[a-f0-9-]{36}\.vbackup$/.test(name))continue;const file=path.join(dir,name),s=fs.lstatSync(file);if(!s.isFile()||s.isSymbolicLink()||s.nlink!==1||(s.mode&0o777)!==0o600)continue;const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);let old=false;try{const prefix=Buffer.alloc(12);if(fs.readSync(fd,prefix,0,12,0)!==12||prefix.subarray(0,8).toString()!=='VENUSBK1')continue;const size=prefix.readUInt32BE(8);if(size<1||size>65536)continue;const header=Buffer.alloc(size);if(fs.readSync(fd,header,0,size,12)!==size)continue;const manifest=JSON.parse(header.toString());old=manifest.format==='VENUS-HOST-BACKUP-1'&&Number.isFinite(Date.parse(manifest.created_at))&&now-Date.parse(manifest.created_at)>=7*86400000-3600000;}catch{ /* corrupt files are retained for explicit repair, never called successful */ }finally{fs.closeSync(fd);}if(old){fs.unlinkSync(file);removed++;}}if(removed)syncDirectory(dir);return {removed};}
  async backup(current,jobId){
   this.expireBackups();
-  requireValue(!(await this.inspect('app'))?.State?.Running,'BACKUP_REQUIRES_QUIESCE');const db=await this.container('db');const started=Date.now();
+  await this.requireQuiesced();const db=await this.container('db');const started=Date.now();
   const dir=path.join(this.c.local_root,'backups'),dumpFile=path.join(dir,jobId+'.dump.tmp'),file=path.join(dir,jobId+'.vbackup'),tmp=file+'.tmp';
   try{
    await new Promise((resolve,reject)=>{const fd=fs.openSync(dumpFile,'wx',0o600),output=fs.createWriteStream(dumpFile,{fd,autoClose:false}),child=spawn('docker',['exec',db,'pg_dump','-U','venus','-d','venus','--format=custom','--no-owner','--no-acl'],{shell:false,stdio:['ignore','pipe','ignore']});let count=0,code=null,finished=false,settled=false;const end=error=>{if(settled)return;settled=true;clearTimeout(timer);if(error){child.kill('SIGKILL');output.destroy();try{fs.closeSync(fd);}catch{ /* already closed */ }reject(error);}else{fs.fsyncSync(fd);fs.closeSync(fd);resolve();}};const complete=()=>{if(code!==null&&finished)end(code===0?null:new Error('BACKUP_DUMP_FAILED'));};const timer=setTimeout(()=>end(new Error('BACKUP_TIMEOUT')),180000);child.on('error',()=>end(new Error('BACKUP_DUMP_FAILED')));child.stdout.on('data',b=>{count+=b.length;if(count>MAX_DUMP)end(new Error('BACKUP_SIZE_LIMIT'));});output.on('error',()=>end(new Error('BACKUP_WRITE_FAILED')));output.on('finish',()=>{finished=true;complete();});child.on('close',value=>{code=value??1;complete();});child.stdout.pipe(output);});
@@ -91,7 +94,7 @@ export class DockerDriver{
  }
  readBackup(name){requireValue(/^[a-f0-9-]{36}\.vbackup$/.test(name),'BACKUP_NAME');const file=path.join(this.c.local_root,'backups',name),s=fs.lstatSync(file);requireValue(s.isFile()&&!s.isSymbolicLink()&&s.nlink===1&&(s.mode&0o777)===0o600&&s.size<=MAX_DUMP+65548,'BACKUP_UNSAFE');const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);let manifest,offset;try{const prefix=Buffer.alloc(12);requireValue(fs.readSync(fd,prefix,0,12,0)===12&&prefix.subarray(0,8).toString()==='VENUSBK1','BACKUP_TRUNCATED');const size=prefix.readUInt32BE(8);requireValue(size>0&&size<=65536,'BACKUP_HEADER');const header=Buffer.alloc(size);requireValue(fs.readSync(fd,header,0,size,12)===size,'BACKUP_TRUNCATED');manifest=JSON.parse(header.toString());offset=12+size;const magic=Buffer.alloc(5);requireValue(fs.readSync(fd,magic,0,5,offset)===5&&magic.toString()==='PGDMP','BACKUP_FORMAT');}finally{fs.closeSync(fd);}requireValue(manifest.format==='VENUS-HOST-BACKUP-1'&&manifest.schema===1&&manifest.keys_included===false&&manifest.protected_ledgers_included===false&&manifest.write_boundary==='APP_STOPPED_AND_ALL_APP_WRITERS_QUIESCED'&&HEX.test(manifest.dump_sha256)&&Date.parse(manifest.created_at)<=Date.now()&&Date.parse(manifest.expires_at)>Date.now()&&Date.parse(manifest.expires_at)-Date.parse(manifest.created_at)===7*86400000,'BACKUP_MANIFEST');requireValue(s.size-offset===manifest.dump_size&&fileHash(file,offset)===manifest.dump_sha256,'BACKUP_CORRUPT');return {manifest,file,offset};}
  async restore(backup,current){
-  requireValue(!(await this.inspect('app'))?.State?.Running,'RESTORE_REQUIRES_QUIESCE');const {manifest,file,offset}=this.readBackup(backup.file);requireValue(manifest.source===current.manifest.main_sha&&manifest.schema===current.manifest.schema.generation&&manifest.job_id+'.vbackup'===backup.file,'BACKUP_SOURCE_MISMATCH');requireValue(fileHash(file)===backup.sha256,'BACKUP_FILE_CHANGED');
+  await this.requireQuiesced();const {manifest,file,offset}=this.readBackup(backup.file);requireValue(manifest.source===current.manifest.main_sha&&manifest.schema===current.manifest.schema.generation&&manifest.job_id+'.vbackup'===backup.file,'BACKUP_SOURCE_MISMATCH');requireValue(fileHash(file)===backup.sha256,'BACKUP_FILE_CHANGED');
   const db=await this.container('db');await this.docker(['exec',db,'psql','-X','-U','venus','-d','postgres','-v','ON_ERROR_STOP=1','-c',"SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='venus' AND pid<>pg_backend_pid();"]);
   await this.docker(['exec',db,'dropdb','--if-exists','-U','venus','venus']);await this.docker(['exec',db,'createdb','-U','venus','-O','venus','venus']);await this.docker(['exec','-i',db,'pg_restore','-U','venus','-d','venus','--single-transaction','--exit-on-error','--no-owner','--no-acl'],{file_input:{file,start:offset},max:65536});
  }

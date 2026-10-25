@@ -22,6 +22,7 @@ export const gameDeliveryFence=Symbol('venus.game.delivery.final-fence');
 export type FencedGameView=GameView&{[gameDeliveryFence]?:()=>void};
 export interface PrivateDelivery {eventId:string;revision:number;type:string;payload:unknown;[gameDeliveryFence]?:()=>void}
 export type PrivateReference=Pick<PrivateDelivery,'eventId'|'revision'>;
+export interface RoomMediaHooks {retireRoom(c:pg.PoolClient,roomId:string):Promise<boolean>;retireMember(c:pg.PoolClient,roomId:string,memberId:string):Promise<boolean>}
 export interface RoomGameHooks {
   featureAvailable(c:pg.PoolClient,roomId:string):Promise<boolean>;
   publicDelivery(c:pg.PoolClient,roomId:string,locale:'ru'|'en'|'tr'):Promise<FencedGameView|null>;
@@ -43,6 +44,8 @@ export class Rooms {
   private games:RoomGameHooks|undefined;
   private servingBarrier:(()=>void)|undefined;
   attachServingBarrier(barrier:()=>void) {requireThat(!this.servingBarrier,'SERVING_BARRIER_ALREADY_ATTACHED',503);this.servingBarrier=barrier;}
+  private media:RoomMediaHooks|undefined;
+  attachMedia(hooks:RoomMediaHooks){requireThat(!this.media,'MEDIA_ALREADY_ATTACHED',503);this.media=hooks;}
   private musicAvailable:(()=>boolean)|undefined;
   attachMusic(available:()=>boolean){requireThat(!this.musicAvailable,'MUSIC_ALREADY_ATTACHED',503);this.musicAvailable=available;}
   constructor(readonly options:RoomOptions) {this.now=options.now??Date.now;}
@@ -84,6 +87,7 @@ export class Rooms {
     try {await c.query('BEGIN');await c.query(catalogLock==='exclusive'?'SELECT pg_advisory_xact_lock(746826405)':'SELECT pg_advisory_xact_lock_shared(746826405)');const result=await operation(c);await c.query('COMMIT');return result;}
     catch(error) {await c.query('ROLLBACK');throw error;} finally {c.release();}
   }
+  async recordMedia(c:pg.PoolClient,roomId:string,memberId:string,action:'media_source'|'media_stop'|'media_leave'|'media_revoke',requestId:string){await this.audit(c,roomId,memberId,action,requestId);}
   csrf(session:string) {return this.options.keys.sign('csrf:'+session);}
   async rateLimit(scope:string,limit=120) {
     const window=Math.floor(this.now()/60000);
@@ -135,7 +139,7 @@ export class Rooms {
     const rows=await c.query<MemberRow>(`SELECT m.*,COALESCE(p.ready,false) AS ready FROM room_members m LEFT JOIN private_preferences p ON p.room_id=m.room_id AND p.owner_member_id=m.id
       WHERE m.room_id=$1 AND m.removed_at IS NULL AND m.slot IS NOT NULL ORDER BY m.id`,[room.id]);
     const games=await this.games?.featureAvailable(c,room.id)??false;
-    return {room_id:room.id,room_rev:revision(room.rev),state:room.state,meeting_context:room.meeting_context,members:rows.rows.map(m=>this.project(m)),features:{games:games?'available':'unavailable',music:this.musicAvailable?.()?'available':'unavailable',cinema:'unavailable',calls:'unavailable'}};
+    return {room_id:room.id,room_rev:revision(room.rev),state:room.state,meeting_context:room.meeting_context,members:rows.rows.map(m=>this.project(m)),features:{games:games?'available':'unavailable',music:this.musicAvailable?.()?'available':'unavailable',cinema:this.media?'available':'unavailable',calls:'unavailable'}};
   }
   async boundEvents(c:pg.PoolClient,table:'audit_events'|'outbox_events'|'game_outbox_refs',age:number) {
     // The same transaction lock serializes insertion+hard caps across rooms.
@@ -287,7 +291,7 @@ export class Rooms {
     if(this.protocol(a.room)===2) (await this.finalAccessFence(c,a))();return view;
   });}
   async mutate(roomId:string,session:string|undefined,operation:'context'|'profile'|'preferences'|'skip'|'leave'|'close',input:Record<string,unknown>,requestId:string):Promise<StoredReply> {
-    return this.transaction(async c=>{
+    let mediaConfirmed=true;const result=await this.transaction(async c=>{
       const safety=operation==='leave'||operation==='skip'||operation==='close';
       const a=await this.auth(c,roomId,session,safety,safety);const scope=`${roomId}:${a.member.id}:${operation}`;
       if(operation==='context'||operation==='close') requireThat(a.member.role==='host'&&a.room.host_member_id===a.member.id,'HOST_REQUIRED');
@@ -315,6 +319,7 @@ export class Rooms {
         body=await this.preference(c,a);
       }
       if(operation==='leave') {
+        mediaConfirmed=await this.media?.retireMember(c,roomId,a.member.id)??true;
         const privateHooks=this.privateHooks(a.room);
         if(privateHooks) {(await this.finalAccessFence(c,a,true))();await privateHooks.retireMember(c,roomId,a.member.id,requestId);}
         await this.games?.removing(c,roomId,a.member.id);
@@ -333,7 +338,7 @@ export class Rooms {
       }
       if(operation==='close') {
         if(this.protocol(a.room)===2) (await this.finalAccessFence(c,a,true))();
-        await this.closeRoom(c,a.room,requestId);
+        mediaConfirmed=await this.closeRoom(c,a.room,requestId);
       }
       const view=await this.emit(c,a.room,operation!=='close');
       if(operation==='context') body=view;
@@ -344,9 +349,12 @@ export class Rooms {
       // committed safety receipt. Other own-state responses require a late fence.
       if(this.protocol(a.room)===2&&operation!=='leave'&&operation!=='close') (await this.finalAccessFence(c,a,safety))();return result;
     });
+    // Safety changes are committed even if an unreachable media process cannot
+    // confirm its cutoff. A 503 never claims successful media termination.
+    requireThat(mediaConfirmed,'MEDIA_CUTOFF_UNCONFIRMED',503);return result;
   }
   async reaccept(roomId:string,session:string|undefined,input:EntryAcceptance,requestId:string) {
-    return this.transaction(async c=>{const a=await this.auth(c,roomId,session,true);await this.accept(c,roomId,a.member.id,input);await this.audit(c,roomId,a.member.id,'reaccept',requestId);const r=await c.query<{rev:string}>('SELECT rev FROM entry_acceptances WHERE room_id=$1 AND member_id=$2',[roomId,a.member.id]);if(this.protocol(a.room)===2) (await this.finalAccessFence(c,a))();return {rev:revision(r.rows[0]!.rev),request_id:requestId};});
+    this.assertAcceptance(input);let confirmed=true;const result=await this.transaction(async c=>{const a=await this.auth(c,roomId,session,true);confirmed=await this.media?.retireMember(c,roomId,a.member.id)??true;await this.accept(c,roomId,a.member.id,input);await this.audit(c,roomId,a.member.id,'reaccept',requestId);const r=await c.query<{rev:string}>('SELECT rev FROM entry_acceptances WHERE room_id=$1 AND member_id=$2',[roomId,a.member.id]);if(this.protocol(a.room)===2) (await this.finalAccessFence(c,a))();return {rev:revision(r.rows[0]!.rev),request_id:requestId};});requireThat(confirmed,'MEDIA_CUTOFF_UNCONFIRMED',503);return result;
   }
   async newTicket(roomId:string,session:string|undefined) {
     return this.transaction(async c=>{const a=await this.auth(c,roomId,session);const result=await this.ticket(c,roomId,a.member.id,a.sessionHash);if(this.protocol(a.room)===2) (await this.finalAccessFence(c,a))();return result;});
@@ -354,7 +362,7 @@ export class Rooms {
   async connect(roomId:string,session:string|undefined,ticket:string):Promise<SocketGrant> {
     return this.transaction(async c=>{
       const a=await this.auth(c,roomId,session);const t=await c.query('DELETE FROM ws_tickets WHERE token_hash=$1 AND room_id=$2 AND member_id=$3 AND session_hash=$4 AND expires_at>$5 RETURNING token_hash',[hash(ticket),roomId,a.member.id,a.sessionHash,new Date(this.now())]);
-      requireThat(t.rowCount===1,'TICKET_INVALID',401);if(a.member.slot===null) await this.reserve(c,roomId,a.member.id);
+      requireThat(t.rowCount===1,'TICKET_INVALID',401);requireThat(await this.media?.retireMember(c,roomId,a.member.id)??true,'MEDIA_CUTOFF_UNCONFIRMED',503);if(a.member.slot===null) await this.reserve(c,roomId,a.member.id);
       const member=await c.query<{socket_generation:string}>(`UPDATE room_members SET socket_generation=socket_generation+1,presence='online',heartbeat_at=$3,reserved_until=$4 WHERE room_id=$1 AND id=$2 RETURNING socket_generation`,[roomId,a.member.id,new Date(this.now()),new Date(this.now()+timers.reservation)]);
       await this.games?.memberStateChanged(c,roomId);
       await this.emit(c,a.room,false);
@@ -424,6 +432,7 @@ export class Rooms {
     });
   }
   private async closeRoom(c:pg.PoolClient,room:RoomRow,operationId:string=randomUUID(),retiredAt:number=this.now()) {
+    const mediaConfirmed=await this.media?.retireRoom(c,room.id)??true;
     const privateHooks=this.privateHooks(room);
     if(privateHooks) retiredAt=(await privateHooks.retireRoom(c,room.id,operationId,retiredAt)).retiredAt;
     this.options.ledger.revoke(room.id,retiredAt);
@@ -433,6 +442,7 @@ export class Rooms {
     await c.query('DELETE FROM ws_tickets WHERE room_id=$1',[room.id]);await c.query('DELETE FROM private_preferences WHERE room_id=$1',[room.id]);
     await c.query('DELETE FROM idempotency_keys WHERE room_id=$1',[room.id]);Object.assign(room,await this.room(c,room.id));
     if(privateHooks) {await c.query('DELETE FROM private_topic_preferences WHERE room_id=$1',[room.id]);await c.query('DELETE FROM private_topic_requests WHERE room_id=$1',[room.id]);}
+    return mediaConfirmed;
   }
   async maintain() {
     const retired=new Map(this.options.ledger.entries());

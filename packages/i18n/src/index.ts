@@ -7,3 +7,5 @@ export const locales: Locale[] = ['ru', 'en', 'tr'];
 export function dictionary(locale: Locale) {return dictionaries[locale];}
 export {topicCopy} from './topics.js';
 export {musicCopy} from './music.js';
+
+export {cinemaCopy} from './cinema.js';

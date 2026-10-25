@@ -28,6 +28,8 @@ import {ProtectedRuntime,servingBarrier} from './protected-runtime.js';
 import {Music} from './music.js';
 import {MusicCatalog} from './music-catalog.js';
 import {migrateMusic,musicSchemaProbe} from './music-migrations.js';
+import {Media} from './media.js';
+import {migrateMedia,mediaSchemaProbe} from './media-migrations.js';
 let db:ReturnType<typeof database>|undefined;
 async function main() {
   const metadata=JSON.parse(readFileSync(new URL('../../../build-metadata.json',import.meta.url),'utf8')) as {version:string;source_revision:string};
@@ -43,7 +45,7 @@ async function main() {
   const protectedRuntime=process.env.VENUS_PROTECTED_ROOT?new ProtectedRuntime(process.env.VENUS_PROTECTED_ROOT):null;
   if(protectedRuntime)requireThat(process.env.DELETION_LEDGER_FILE===process.env.VENUS_PROTECTED_ROOT+'/deletions.jsonl'&&process.env.CATALOG_REVOCATION_LEDGER_FILE===process.env.VENUS_PROTECTED_ROOT+'/catalog.jsonl'&&process.env.VENUS_SERVING_GATE_FILE,'PROTECTED_CONFIGURATION_REQUIRED',503);
   const keys=Keyring.fromFile(process.env.KEYRING_FILE),ledger=new DeletionLedger(process.env.DELETION_LEDGER_FILE,protectedRuntime?.checkpoint);
-  await migrate(pool);await migrateGames(pool);await migrateCatalog(pool);await migrateChat(pool);await migratePrivateTopics(pool);await migrateMusic(pool);
+  await migrate(pool);await migrateGames(pool);await migrateCatalog(pool);await migrateChat(pool);await migratePrivateTopics(pool);await migrateMusic(pool);await migrateMedia(pool);
   const existing=(await pool.query<{present:boolean}>('SELECT EXISTS(SELECT 1 FROM rooms WHERE private_protocol=2) AS present')).rows[0]!.present;
   let topicGames:TopicGames|undefined,privateTopics:PrivateTopicPreferences|undefined,registry:TopicRoomRegistry|undefined;
   // Existing pilot rooms retain taxonomy metadata for the source-independent boot
@@ -72,6 +74,8 @@ async function main() {
       safety:{read:privateTopics.readForPlanner.bind(privateTopics),assertCurrent:privateTopics.assertPlannerCurrent.bind(privateTopics),excludeLocked:privateTopics.excludeForPlannerLocked.bind(privateTopics)}});
   }
   const music=process.env.VENUS_MUSIC_CATALOG_FILE?new Music(rooms,new MusicCatalog(process.env.VENUS_MUSIC_CATALOG_FILE,process.env.VENUS_DEPLOYMENT_PROFILE==='local-pilot')):undefined;
+  const media=process.env.VENUS_MEDIA_KEY_FILE?new Media(rooms,{keyFile:process.env.VENUS_MEDIA_KEY_FILE,authorityDirectory:process.env.VENUS_MEDIA_AUTHORITY_DIRECTORY??'',internalOrigin:process.env.VENUS_MEDIA_INTERNAL_ORIGIN??'http://media:7890'},music):undefined;
+  await media?.bootGate();
   rooms.attachGames(registry?new RoomGames(games,topicGames??null):games);
   // Startup grants never survive a database restore or an API process restart.
   // This barrier is source-independent and must complete before listen/admission.
@@ -82,7 +86,7 @@ async function main() {
   await games.reconcilePublicPairPolicy();await rooms.maintain();
   const barrier=process.env.VENUS_SERVING_GATE_FILE?servingBarrier(process.env.VENUS_SERVING_GATE_FILE):undefined;
   if(barrier)rooms.attachServingBarrier(barrier);
-  const app=await createApp({probe:async()=>{protectedRuntime?.checkpoint();await schemaProbe(pool);await engineSchemaProbe(pool);await catalogSchemaProbe(pool);await chatSchemaProbe(pool);await privateTopicSchemaProbe(pool);await musicSchemaProbe(pool);},...(barrier?{servingBarrier:barrier}:{}),schemaGeneration,rooms,games,...(music?{music}:{}),...(privateTopics?{privateTopics}:{}),...(topicGames?{topicGames}:{}),roomCreationProtocol:privateTopicsEnabled?2:1,version,staticRoot:fileURLToPath(new URL('../../web/dist',import.meta.url))});
+  const app=await createApp({probe:async()=>{protectedRuntime?.checkpoint();await schemaProbe(pool);await engineSchemaProbe(pool);await catalogSchemaProbe(pool);await chatSchemaProbe(pool);await privateTopicSchemaProbe(pool);await musicSchemaProbe(pool);await mediaSchemaProbe(pool);},...(barrier?{servingBarrier:barrier}:{}),schemaGeneration,rooms,games,...(music?{music}:{}),...(media?{media}:{}),...(privateTopics?{privateTopics}:{}),...(topicGames?{topicGames}:{}),roomCreationProtocol:privateTopicsEnabled?2:1,version,staticRoot:fileURLToPath(new URL('../../web/dist',import.meta.url))});
   app.addHook('onClose',async()=>{topicGames?.clearSnapshotCache();});
   for(const signal of ['SIGINT','SIGTERM']) process.once(signal,()=>{void app.close().then(()=>pool.end()).catch(()=>{process.exitCode=1;});});
   await app.listen({port:4300,host:'0.0.0.0'});

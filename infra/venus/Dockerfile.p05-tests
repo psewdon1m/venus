@@ -1,6 +1,11 @@
-FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 AS dependencies
+ARG VENUS_BROWSER_BASE=node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+FROM livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5 AS media_binary
+FROM ${VENUS_BROWSER_BASE} AS dependencies
+USER root
 WORKDIR /app
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN rm -rf /app/apps /app/packages /app/tests /app/tools /app/node_modules
+COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
 COPY package.json package-lock.json .npmrc ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
@@ -9,7 +14,7 @@ COPY packages/i18n/package.json packages/i18n/
 COPY packages/relationship-engine/package.json packages/relationship-engine/
 COPY packages/card-catalog/package.json packages/card-catalog/
 RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
-RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio iproute2 iptables && rm -rf /var/lib/apt/lists/*
 COPY tests/p05/probe.mjs tests/p05/probe.mjs
 USER 1000:1000
 CMD ["node", "tests/p05/probe.mjs"]
@@ -21,6 +26,8 @@ COPY apps apps
 COPY packages packages
 COPY tests tests
 COPY tools/music-demo.mjs tools/music-demo.mjs
-RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+COPY tools/media-provision.mjs tools/media-provision.mjs
+COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
+RUN npm run build && mkdir /artifacts /media-fixture && chown node:node /artifacts /media-fixture
 USER 1000:1000
 CMD ["node", "tests/p05/browser.mjs"]

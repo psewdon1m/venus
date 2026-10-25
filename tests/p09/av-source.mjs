@@ -1,0 +1,20 @@
+/* global document,window,AudioContext */
+/** Original generated AV; 32-bit wall-clock marker plus checksum survives VP8.
+ * The source tab and receiving browsers use this Docker host's same clock. */
+export const sourceHtml=`<!doctype html><html><title>Venus Cinema Source</title><body><button id="start">Start original synthetic AV</button><canvas width="640" height="360"></canvas><script>
+const canvas=document.querySelector('canvas'),ctx=canvas.getContext('2d');
+function paint(){const now=Date.now(),stamp=now>>>0,bytes=[stamp>>>24,(stamp>>>16)&255,(stamp>>>8)&255,stamp&255],check=bytes.reduce((a,b)=>a^b,90);ctx.fillStyle=now%1000<100?'white':'#202040';ctx.fillRect(0,0,640,360);ctx.font='24px sans-serif';ctx.fillStyle='#e05080';ctx.fillText('Venus · original synthetic AV',30,120);ctx.fillText(String(now),30,160);for(let i=0;i<40;i++){const byte=i<32?bytes[Math.floor(i/8)]:check,bit=7-i%8;ctx.fillStyle=(byte>>>bit)&1?'white':'black';ctx.fillRect(i*16,0,16,24);}requestAnimationFrame(paint);}paint();
+document.querySelector('#start').onclick=async()=>{if(window.venusSource)return;const ac=new AudioContext({sampleRate:48000}),destination=ac.createMediaStreamDestination(),osc=ac.createOscillator(),gain=ac.createGain();osc.frequency.value=880;gain.gain.value=0;osc.connect(gain);gain.connect(destination);gain.connect(ac.destination);osc.start();await ac.resume();function schedule(){const wall=Date.now(),next=Math.ceil(wall/1000)*1000,at=ac.currentTime+(next-wall)/1000;gain.gain.setValueAtTime(.12,at);gain.gain.setValueAtTime(0,at+.1);}schedule();const pulse=setInterval(schedule,500);window.venusSource={stream:new MediaStream([...canvas.captureStream(15).getVideoTracks(),...destination.stream.getAudioTracks()]),audio:ac,pulse};};
+</script></body></html>`;
+/** Executed in a subscriber page. Measures decoded video and received audio,
+ * not WebSocket delivery or the publisher's local preview. */
+export async function startReceiverMeasurement(){
+ const video=document.querySelector('[data-testid="cinema-video"]'),audio=document.querySelector('[data-testid="cinema-audio"]');
+ if(!video?.srcObject||!audio?.srcObject)throw Error('Remote AV missing');
+ const clock=new AudioContext({sampleRate:48000}),input=clock.createMediaStreamSource(audio.srcObject),analyser=clock.createAnalyser();analyser.fftSize=256;input.connect(analyser);await clock.resume();
+ const canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;const ctx=canvas.getContext('2d',{willReadFrequently:true}),pcm=new Float32Array(256),m={frames:[],videoPulses:[],audioPulses:[],started:Date.now(),clockUncertaintyMs:1,stopped:false};window.venusMeasurement=m;
+ let previousVideo=-1,previousAudio=0;
+ function frame(){if(m.stopped)return;try{ctx.drawImage(video,0,0,640,360);let stamp=0,checksum=0;const bytes=[];for(let i=0;i<40;i++){const v=ctx.getImageData(i*16+8,12,1,1).data,bit=v[0]+v[1]+v[2]>382?1:0;if(i<32){stamp=stamp*2+bit;if(i%8===7)bytes.push(stamp&255);}else checksum=checksum*2+bit;}const now=Date.now(),source=now-(((now>>>0)-stamp+4294967296)%4294967296);if(bytes.reduce((a,b)=>a^b,90)===checksum&&now-source>=0&&now-source<10000){const pulse=ctx.getImageData(10,40,1,1).data[0]>200,second=Math.floor(source/1000);m.frames.push({at:now,source,age:now-source});if(pulse&&second!==previousVideo){previousVideo=second;m.videoPulses.push({second,at:now});}}}catch{/* No forged marker for undecodable frame. */}video.requestVideoFrameCallback(frame);}video.requestVideoFrameCallback(frame);
+ const timer=setInterval(()=>{if(m.stopped)return;analyser.getFloatTimeDomainData(pcm);const rms=Math.sqrt(pcm.reduce((n,v)=>n+v*v,0)/pcm.length),now=Date.now();if(rms>.02&&now-previousAudio>400){previousAudio=now;m.audioPulses.push({at:now});}},10);
+ m.close=()=>{m.stopped=true;clearInterval(timer);input.disconnect();void clock.close();};return {audio_clock:clock.state,video_tracks:video.srcObject.getVideoTracks().length,audio_tracks:audio.srcObject.getAudioTracks().length};
+}
