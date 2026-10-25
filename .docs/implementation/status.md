@@ -1,3 +1,9 @@
+# Текущий статус — презентации реализованы, исправляются замечания выходного гейта
+
+На clean31b4a57c проходят46/46 Docker tests и12/12 сценариев презентаций: PDF library/import/live, room ACL, cancel, old-PG restore, UI RU/EN/TR и реальный BK2 restore почти64MiB. Локальный unsigned image собран, Python/Poppler pins подтверждены. [Доказательства](evidence/preza/native-round04/INDEX.json). Независимые [Engineering01](reviews/preza/engineering-round01/REPORT.md) и [Security01](reviews/preza/security-round01/REPORT.md) выдали **FAIL**: требуется абсолютный upload deadline и дополнительные точечные recovery/timeout доказательства. Исправления и повторная приёмка в работе; полный PASS презентаций ещё не выдан.
+
+P08/P09/P11 приняты как локальные функциональные компоненты. P10 — только подготовка, полный native/device scope HOLD. [P07 подготовлен](P07_FINAL_RUN_PREPARATION.md), общий прогон не запускался. Публичная поставка нового набора модулей пока не принята. Ниже сохранена история.
+
 # Текущий статус — P11 функционально принят; следующий блок — презентации
 
 P11: clean32/32tests и12/12mandatoryrecords PASS, независимые Engineering02/Security02 PASS. AffectedMusic12cases (явная композицияreceipts) и Cinema32tests/19cases PASS. [Итоговая приёмка](evidence/p11/functional-acceptance01/REPORT.md) · [Реестр](p11-registry.json). P08/P09 локальные функциональные компоненты приняты; P10 только boundedprep, полныйnativeэтап HOLD. ОбщийP07/fullG5/publicdelivery/devices остаются NOT_PASS. ПрезентацииPreza: sourceaudit/entry выполнены, реализация следующая. Ниже сохранены прежние статусы/FAIL.

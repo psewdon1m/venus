@@ -6,6 +6,9 @@ import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash,randomUUID} from 'node:crypto';
+import {fixture} from '../p06/helpers.mjs';
+import {createRelease} from '../../tools/venus-operator/create-release.mjs';
+import {verifyRelease} from '../../tools/venus-operator/release.mjs';
 import {DockerDriver} from '../../tools/venus-operator/driver.mjs';
 import {canonical,atomic} from '../../tools/venus-operator/files.mjs';
 import {readPresentationBackup,MAX_PRESENTATION_DUMP} from '../../tools/venus-operator/presentation-backup.mjs';
@@ -24,3 +27,10 @@ test('BK2 profile binds converter and fixed environment without implicit v3 acti
 test('BK2 framing verifies hash, exact declaration and permissions; ordinary BK1 stays readable',linux,()=>{const c=context();try{const good=frame(c.root);assert.equal(c.driver.readBackup(good.name).manifest.format,'VENUS-HOST-BACKUP-2');const legacy=frame(c.root,{kind:1});assert.equal(c.driver.readBackup(legacy.name).manifest.format,'VENUS-HOST-BACKUP-1');const b=fs.readFileSync(good.file);b[b.length-1]^=1;atomic(good.file,b);assert.throws(()=>readPresentationBackup(good.file),/CORRUPT/);const unsafe=frame(c.root);fs.chmodSync(unsafe.file,0o644);assert.throws(()=>readPresentationBackup(unsafe.file),/UNSAFE/);const bad=frame(c.root,{changes:{volatile_spool_included:true}});assert.throws(()=>readPresentationBackup(bad.file),/MANIFEST/);const linked=path.join(c.root,'backups',randomUUID()+'.vbackup');fs.symlinkSync(legacy.file,linked);assert.throws(()=>readPresentationBackup(linked),/UNSAFE/);}finally{c.cleanup();}});
 test('BK2 supports129MiB frame while BK1 rejects it, and BK2 still has finite256MiB cap',linux,()=>{const c=context();try{const large=frame(c.root,{size:129*1024*1024});assert.equal(readPresentationBackup(large.file).manifest.dump_size,129*1024*1024);const legacy=frame(c.root,{kind:1,size:129*1024*1024});assert.throws(()=>c.driver.readBackup(legacy.name),/UNSAFE/);fs.truncateSync(large.file,MAX_PRESENTATION_DUMP+65549);assert.throws(()=>readPresentationBackup(large.file),/UNSAFE/);}finally{c.cleanup();}});
 test('BK2 restore rejects legacy generation before any database command',linux,async()=>{const c=context();try{const legacy=frame(c.root,{kind:1});c.driver.requireQuiesced=async()=>{};let commands=0;c.driver.docker=async()=>{commands++;throw Error('UNEXPECTED_DATABASE_COMMAND');};await assert.rejects(c.driver.restore({file:legacy.name},{manifest:{schema:{generation:1}}}),/PROFILE_MISMATCH/);assert.equal(commands,0);}finally{c.cleanup();}});
+
+test('signed fixture profile4 binds its exact converter and BK2 descriptor; old environment rejects it',linux,()=>{
+ const c=fixture();try{const compose=path.resolve('infra/venus/compose.presentations.standalone.yml'),output=path.join(c.base,'presentations-v4'),digest='d'.repeat(64);createRelease({trust_file:c.trustFile,private_key_file:c.privateFile,version:'0.0.9004',main_sha:'1'.repeat(40),source_identity:'2'.repeat(64),image_reference:'ghcr.io/psewdon1m/venus@sha256:'+digest,oci_digest:'sha256:'+digest,config_digest:'sha256:'+digest,compose_template:compose,environment:PRESENTATIONS_ENVIRONMENT,output});
+  const accepted=verifyRelease(output,c.trust,{environment:PRESENTATIONS_ENVIRONMENT,schema:1,compose_template:compose});assert.deepEqual(accepted.manifest.presentations,PRESENTATIONS_RELEASE);assert.equal(accepted.manifest.environment,PRESENTATIONS_ENVIRONMENT);
+  assert.throws(()=>verifyRelease(output,c.trust,{environment:'standalone-local-media-v3',schema:1,compose_template:compose}),/ENV_SCHEMA/);
+ }finally{c.cleanup();}
+});

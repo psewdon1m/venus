@@ -397,3 +397,18 @@ API fix01 завершён: import admission проверяет отсутств
 ### 2026-10-25T07:24:25.064856+00:00 — Native round03 44/46, две конкретные правки
 
 Clean12f2956e: capacity/library/ACL/live/replace/cancel/oldrestore/featureoff/Games(realWS)/retention PASS. Hostile child фактически имеет CapEff/Prm/Amb0, NNP1, SIGTERM/KILL/STOP к guardian EPERM, forbidden paths absent. Проверка cleanup ошибочно читала scratch0700 uid65534 от root без DAC capability: корректный PermissionError, не нарушение изоляции. Root control теперь отдельно проверяет отсутствие orphan UID65534 и читает scratch через фактический guardian.dropped(65534), права не расширялись. Новый UI import/replace/start/stop прошёл; смена locale сразу после него получила настоящий REVISION_CONFLICT из-за ещё не доставленного room WS frame. main.chooseLocale теперь получает свежую room revision перед первой mutation, фиксирует body/key для транспортного retry. Targeted lint exit0, далее browser regression. Round03 остаётся FAIL и сохранён. Static04 на12f: types/lint/schema/i18n exit0,56/56units PASS.
+
+
+### 2026-10-25T07:34:03.543773+00:00 — Независимые гейты round01 FAIL, точечные обязательные исправления
+
+Native04 на clean31b4/corebd08:46/46 tests и12/12 presentation cases PASS, cleanup/source unchanged подтверждены; production build/inventory exit0, exact pins/copyright files доступны, unsigned image7b09df39. Engineering round01 aa8cb84a иSecurity c24f49a1 независимо проверили hashes и зафиксировали FAIL. Реальный дефект: raw.setTimeout измерял inactivity, а не абсолютные60s. Root добавил owned абсолютный timer с очисткой всех release hooks, lint0; actual slow-body60s regression готовит API-автор. Обязательные proof gaps: post-floor/pre-pointer failure rollforward (finitePGsequence+trigger), настоящий profile4 DockerDriver.stop/quiesce/purge/restore и разные совместимые A/B images, timeout и cleanup-failure закрытие worker. Авторы дописывают только эти узкие проверки; текущий набор не объявляется полным stagePASS. Гейт-авторы STOP; новые журналы fix01 отделены. P07 не запускался.
+
+
+### 2026-10-25T07:47:01.748162+00:00 — Подготовка точного повторного кандидата
+
+API-author завершил source-only post-floor trigger+actual60s slow-body checks; Node syntax/ESLint0, STOP. Для нового подписываемого profile4 добавлен один Linux targeted unit: реальная fixture signature+точный descriptor принимаются только v4, старый environment отклоняет,1/1PASS; это preflight с явным testfile bind поверх native04image, не финальный stage proof. Проверен реальный export локально собранного productionA: dockerimage save0, existingdockerArchiveConfig0/config819866..., временный157,776,384-byte tar удалён строго по собственному пути. Исторический pulled Desktop export FAIL этим не отменяется. Чистый checkoutC получил ignored dependency junction на уже pinned workspace node_modules; gitstatus остался чистым. Это позволит выполнить последние scoped static checks в cleanC без повторной установки пакетов. Profile4 source writer заканчивает единственный bounded realDriver drill; прочие writers STOP.
+
+
+### 2026-10-25T07:50:25.796071+00:00 — Gate-fix source freeze / все writers STOP
+
+Завершены абсолютный60s timer в production route, actual slow-body и post-floor trigger proofs, signedv4 fixture unit, bounded profile4 realDriver helper/wrapper и2 отдельные negative worker probes. API/profile authors STOP; оба initialgate reviewerSTOP. Новые sourcefiles прошли syntax/targetedlint только, runtime их не заявляется. Далее единый clean commit, параллельно scopedstatic/native47 и unsignedproductionbuild; после productionimage — actual profile4 operator drill. Никаких новых пользовательских функций, общего P07 или статистических наборов.

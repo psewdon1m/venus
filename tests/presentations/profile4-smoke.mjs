@@ -1,0 +1,118 @@
+/** Bounded real profile4 operator proof. Synthetic only; never a release signer.
+ * Run solely in the existing Linux P06 fixture helper with owned Docker socket.
+ * Root provisions once; all Driver actions execute as actual executorUID1001.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert/strict';
+import {randomUUID,createHash} from 'node:crypto';
+import {setTimeout as delay} from 'node:timers/promises';
+import {DockerDriver,command as dockerCommand} from '../../tools/venus-operator/driver.mjs';
+import {provision} from '../../tools/venus-operator/provision.mjs';
+import {PRESENTATIONS_ENVIRONMENT,PRESENTATIONS_RELEASE} from '../../tools/venus-operator/presentations-profile.mjs';
+import {writeJson,fileHash} from '../../tools/venus-operator/files.mjs';
+import {fixturePdf} from './fixture-pdf.mjs';
+
+const input=JSON.parse(Buffer.from(process.env.VENUS_PROFILE_SMOKE_INPUT??'','base64').toString());
+assert.match(input.project,/^venus-preza-[a-f0-9]{10}$/);assert.match(input.app_source,/^[a-f0-9]{40}$/);assert.match(input.app_identity,/^[a-f0-9]{64}$/);
+for(const key of ['imageA','imageB'])assert.match(input[key],/^sha256:[a-f0-9]{64}$/);
+const root='/data',reportFile=path.join(root,'profile4-smoke.json'),stamp=()=>new Date().toISOString(),sha=b=>createHash('sha256').update(b).digest('hex');
+const report={format:1,scope:'UNSIGNED_LOCAL_PROFILE4_OPERATOR_AND_CONVERTER_PROOF',status:'FAIL',source:input.app_source,source_identity:input.app_identity,imageA:input.artifactA,imageB:input.artifactB,driver_identity_checks_overridden:false,synthetic_only:true,signed_release:false,offline_signed_recovery:false,public_distribution:false,P07:false,records:[],started_at:stamp()};
+const config={project:input.project,local_root:root,host_root:input.host_root,port:input.port,app_origin:'https://127.0.0.1:4300',compose_template:'/opt/venus/infra/venus/compose.presentations.standalone.yml',release_environment:PRESENTATIONS_ENVIRONMENT,calls_enabled:false,presentations_enabled:true};
+let on,off,A,B;
+const raw=async(args,options={})=>(await dockerCommand(args,{max:6*1024*1024,timeout:20000,...options})).toString().trim();
+const json=async(args,options)=>JSON.parse(await raw(args,options));
+function save(){writeJson(reportFile,report);}
+async function record(id,operation){const start=Date.now();console.log(JSON.stringify({id,phase:'START'}));try{const details=await operation();report.records.push({id,status:'PASS',elapsed_ms:Date.now()-start,...details});save();console.log(JSON.stringify({id,status:'PASS'}));return details;}catch(error){report.records.push({id,status:'FAIL',elapsed_ms:Date.now()-start,error:String(error.message).slice(0,500)});save();throw error;}}
+async function owned(driver,role){const state=await driver.inspect(role);assert(state,'Owned '+role+' missing');assert.equal(state.Config.Labels['com.docker.compose.project'],driver.c.project);assert.equal(state.Config.Labels['com.docker.compose.service'],role);return state;}
+async function descriptor(imageId,version){const image=await json(['image','inspect',imageId]);const actual=image[0],metadata=version==='0.0.0'?input.artifactA:input.artifactB;assert.equal(actual.Id,imageId);assert.equal(metadata.id,imageId);assert.match(metadata.config_digest,/^sha256:[a-f0-9]{64}$/);assert.match(metadata.oci_digest,/^sha256:[a-f0-9]{64}$/);assert(actual.RepoDigests?.includes(metadata.reference));assert(metadata.reference.endsWith('@'+metadata.oci_digest));assert.equal(actual.Config.Labels['org.opencontainers.image.revision'],input.app_source);assert.equal(actual.Config.Labels['org.opencontainers.image.version'],version);return {version,main_sha:input.app_source,source_identity:input.app_identity,image:{reference:metadata.reference,oci_digest:metadata.oci_digest,config_digest:metadata.config_digest},schema:{generation:1,read_min:1,read_max:1},environment:PRESENTATIONS_ENVIRONMENT,presentations:PRESENTATIONS_RELEASE};}
+async function start(driver,description){driver.serving(false);await driver.start(description);await driver.healthy(description);driver.serving(true);return {image:(await owned(driver,'app')).Image,version:description.version,presentations_enabled:driver.c.presentations_enabled};}
+async function stop(driver){await driver.stop();await driver.requireQuiesced();for(const role of ['app','media','presentation-renderer'])assert.equal((await owned(driver,role)).State.Running,false);return {authenticated_quiesce_confirmed:true,roles_stopped:['app','media','presentation-renderer'],verified_spool_purged:true};}
+async function appNode(program,payload,options={}){const app=(await owned(on,'app')).Id;return json(['exec','-i','--user','1000:1000',app,'node','--input-type=module','-e',program],{input:Buffer.from(JSON.stringify(payload??{})),...options});}
+const HTTP=String.raw`import fs from 'node:fs';const q=JSON.parse(fs.readFileSync(0,'utf8')),headers={Origin:process.env.APP_ORIGIN,...q.headers};let body;if(q.pdf){body=Buffer.from(q.pdf,'base64');headers['content-type']='application/pdf';headers['content-length']=String(body.length);}else if(q.body!==undefined){body=JSON.stringify(q.body);headers['content-type']='application/json';}const r=await fetch('http://127.0.0.1:4300'+q.url,{method:q.method??'GET',headers,body,signal:AbortSignal.timeout(10000)});const b=Buffer.from(await r.arrayBuffer());if(b.length>5*1024*1024)throw Error('RESPONSE_LIMIT');let value;try{value=JSON.parse(b.toString());}catch{}console.log(JSON.stringify({status:r.status,value,bytes:b.toString('base64'),cookies:r.headers.getSetCookie(),csrf:r.headers.get('x-csrf-token'),content_type:r.headers.get('content-type')}));`;
+async function actor(){const jar=new Map(),csrf=new Map();let admission='';return {async call(url,{method='GET',body,pdf,headers={}}={}){const room=url.match(/rooms\/([a-f0-9-]{36})/)?.[1],publicAction=/^\/api\/v[12]\/rooms$/.test(url),r=await appNode(HTTP,{url,method,body,...(pdf?{pdf:pdf.toString('base64')}:{}),headers:{Cookie:[...jar].map(([k,v])=>k+'='+v).join('; '),'x-csrf-token':publicAction?admission:csrf.get(room)??admission,...headers}});for(const cookie of r.cookies??[]){const pair=cookie.split(';')[0],index=pair.indexOf('=');jar.set(pair.slice(0,index),pair.slice(index+1));}if(r.csrf)csrf.set(room??r.value?.room_id,r.csrf);return r;},async policy(){const p=await this.call('/api/v1/entry-policy');assert.equal(p.status,200);admission=p.value.csrf_token;return {adult18:true,accept_offer:true,offer_version:p.value.offer.version,offer_digest:p.value.offer.digest};}};}
+async function ok(actor,url,body,method='GET'){const r=await actor.call(url,{method,body});assert.equal(r.status,url==='/api/v2/rooms'?201:200,'HTTP '+r.status+' '+(r.value?.code??''));return r.value;}
+async function room(){const host=await actor(),acceptance=await host.policy(),value=await ok(host,'/api/v2/rooms',{name:'SYNTHETIC profile4',locale:'en',meeting_context:'online',idempotency_key:randomUUID(),entry_acceptance:acceptance},'POST');const f={host,id:value.room_id,base:'/api/v1/rooms/'+value.room_id};f.prefix=f.base+'/presentations';await ok(host,f.base);return f;}
+const snapshot=f=>ok(f.host,f.prefix);
+async function waitUntil(operation,timeout=15000){const end=Date.now()+timeout;for(;;){const value=await operation();if(value)return value;if(Date.now()>=end)throw Error('BOUNDED_WAIT_EXPIRED');await delay(100);}}
+async function allocate(f,pdf,document=null){const s=await waitUntil(async()=>{const v=await snapshot(f);return v.import_available?v:false;});const body={document_id:document,expected_rev:s.rev,idempotency_key:randomUUID(),title:'SYNTHETIC profile4 PDF',default_mode:'scroll',allow_switch:true,source_bytes:pdf.length,source_sha256:sha(pdf)};return ok(f.host,f.prefix+'/jobs',body,'POST');}
+async function upload(f,job,pdf){const r=await f.host.call(f.prefix+'/jobs/'+job.id+'/source',{method:'PUT',pdf,headers:{'x-content-sha256':sha(pdf)}});assert.equal(r.status,200,'SOURCE '+r.status+' '+r.value?.code);return r.value;}
+async function imported(f,pdf,document=null){const j=await allocate(f,pdf,document);await upload(f,j,pdf);const terminal=await waitUntil(async()=>{const state=await ok(f.host,f.prefix+'/jobs/'+j.id);return ['ready','failed','cancelled'].includes(state.state)?state:false;},25000);assert.equal(terminal.state,'ready','RENDER '+terminal.failure);const s=await snapshot(f),doc=s.documents.find(d=>d.id===j.document_id);assert(doc);return doc;}
+async function command(f,body){const s=await snapshot(f);return ok(f.host,f.prefix,{...body,expected_rev:s.rev,idempotency_key:randomUUID()},'POST');}
+function pageUrl(f,doc,rev){return f.prefix+'/documents/'+doc.id+'/versions/'+doc.content_version+'/pages/0?expected_rev='+rev;}
+async function page(f,doc){const s=await snapshot(f),r=await f.host.call(pageUrl(f,doc,s.rev));assert.equal(r.status,200,'PNG '+r.status+' '+r.value?.code);const b=Buffer.from(r.bytes,'base64');assert.equal(r.content_type,'image/png');assert(b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])));return sha(b);}
+async function entries(){return appNode(String.raw`import fs from 'node:fs';import {createHash}from'node:crypto';const s=JSON.parse(fs.readFileSync(process.env.VENUS_PRESENTATIONS_AUTHORITY_DIRECTORY+'/authority.json'));const b=Object.fromEntries(Object.entries(s.entries).sort());console.log(JSON.stringify({count:Object.keys(b).length,sha256:createHash('sha256').update(JSON.stringify(b)).digest('hex')}));`);}
+async function pgState(){const db=(await owned(on,'db')).Id,sql="SELECT json_build_object('documents',(SELECT count(*) FROM room_presentation_documents),'assets',(SELECT count(*) FROM room_presentation_assets),'cipher_bytes',(SELECT coalesce(sum(octet_length(cipher)),0) FROM room_presentation_assets),'hash',(SELECT md5(coalesce(string_agg(content_version::text||':'||page_index::text||':'||sha256||':'||md5(cipher),',' ORDER BY content_version,page_index),'')) FROM room_presentation_assets))::text;";return json(['exec',db,'psql','-X','-U','venus','-d','venus','-At','-v','ON_ERROR_STOP=1','-c',sql]);}
+
+const IPC_CLIENT=String.raw`import fs from 'node:fs';import {randomUUID,createHash}from'node:crypto';import {setTimeout as delay}from'node:timers/promises';import {PresentationSpool}from'/app/apps/api/dist/presentation-spool.js';const input=JSON.parse(fs.readFileSync(0,'utf8')),root='/run/venus-presentations/spool',spool=new PresentationSpool(root),sha=b=>createHash('sha256').update(b).digest('hex');function write(name,value){const file=root+'/'+name,tmp=root+'/.api-'+randomUUID(),fd=fs.openSync(tmp,'wx',384);try{fs.writeFileSync(fd,value);fs.fchmodSync(fd,292);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(tmp,file);}function read(name){const p=root+'/'+name,s=fs.lstatSync(p);if(!s.isFile()||s.isSymbolicLink()||s.uid!==0||(s.mode&511)!==292||s.nlink!==1||s.size>65536)throw Error('UNSAFE_ROOT_RESULT');return JSON.parse(fs.readFileSync(p));}const source=Buffer.from(input.pdf,'base64'),start=Date.now();while(!spool.available()){if(Date.now()-start>10000)throw Error('INITIAL_IDLE_TIMEOUT');await delay(100);}const h=spool.health(),id={guardian_epoch:h.guardian_epoch,job_id:randomUUID(),nonce:randomUUID(),api_epoch:randomUUID()};write('source.pdf',source);write('request.json',JSON.stringify({schema_version:1,...id,source_bytes:source.length,source_sha256:sha(source),output_budget_bytes:16*1024*1024}));let result=null,unavailable=false;for(;;){if(fs.existsSync(root+'/result.json')){result=read('result.json');for(const k of Object.keys(id))if(result[k]!==id[k])throw Error('IDENTITY_MISMATCH');break;}try{if(spool.health().state==='closed'){unavailable=true;break;}}catch{unavailable=true;break;}if(Date.now()-start>140000)throw Error('NEGATIVE_RENDERER_DEADLINE');await delay(100);}if(input.kind==='deadline'){if(!result||result.status!=='failed'||result.error!=='PDF_TIMEOUT')throw Error('EXPECTED_ACTUAL_GUARDIAN_TIMEOUT');if(Date.now()-start<110000||Date.now()-start>135000)throw Error('WRONG_DEADLINE_ENVELOPE');write('ack.json',JSON.stringify({schema_version:1,...id}));await spool.quiesce();if(!spool.available())throw Error('TIMEOUT_DID_NOT_CLEAN');console.log(JSON.stringify({kind:input.kind,result_status:result.status,result_error:result.error,elapsed_ms:Date.now()-start,idle_after:true,no_source:!fs.existsSync(root+'/source.pdf')}));}else{if(result?.status==='ready')throw Error('UNSAFE_CLEANUP_PUBLISHED_READY');if(!unavailable)throw Error('UNSAFE_CLEANUP_DID_NOT_CLOSE');await delay(5500);const before=fs.readdirSync(root).sort();let denied=false,code;try{await spool.render({id:randomUUID(),nonce:randomUUID(),epoch:randomUUID(),source:source,source_sha256:sha(source),output_budget_bytes:1024*1024},()=>false);}catch(error){denied=true;code=error.code??error.message;}if(!denied||fs.existsSync(root+'/source.pdf')||fs.existsSync(root+'/request.json'))throw Error('NEXT_PLAINTEXT_NOT_DENIED');console.log(JSON.stringify({kind:input.kind,closed_or_stale:true,next_plaintext_denied:true,denial_code:code,spool_before:before,spool_after:fs.readdirSync(root).sort(),elapsed_ms:Date.now()-start}));}`;
+const STALL=String.raw`import os,time,signal,json
+end=time.monotonic()+15
+while time.monotonic()<end:
+ for name in os.listdir('/proc'):
+  if not name.isdigit(): continue
+  try:
+   command=open('/proc/'+name+'/cmdline','rb').read()
+   if b'presentation-render.py' in command:
+    uid=int(next(x for x in open('/proc/'+name+'/status').read().splitlines() if x.startswith('Uid:')).split()[1])
+    if uid==65534:
+     os.kill(int(name),signal.SIGSTOP)
+     print(json.dumps({'stopped_uid':uid,'pid':int(name),'signal':'SIGSTOP'}),flush=True)
+     raise SystemExit(0)
+  except (OSError,StopIteration): pass
+ time.sleep(.01)
+raise SystemExit('renderer child absent')`;
+const DEEP=String.raw`import os,time,runpy,json
+end=time.monotonic()+15
+found=False
+while time.monotonic()<end and not found:
+ for name in os.listdir('/proc'):
+  if not name.isdigit(): continue
+  try:
+   command=open('/proc/'+name+'/cmdline','rb').read()
+   uid=int(next(x for x in open('/proc/'+name+'/status').read().splitlines() if x.startswith('Uid:')).split()[1])
+   if uid==65534 and b'presentation-render.py' in command: found=True;break
+  except (OSError,StopIteration): pass
+ if not found: time.sleep(.01)
+if not found: raise SystemExit('renderer child absent')
+guard=runpy.run_path('/app/infra/venus/presentation-guardian.py');guard['dropped'](65534)
+target='/run/venus-presentations/scratch/unsafe-depth'
+os.mkdir(target,448)
+for index in range(40):
+ target+='/d';os.mkdir(target,448)
+os.chmod(target,0)
+status=open('/proc/self/status').read();caps={x.split(':')[0]:x.split(':')[1].strip() for x in status.splitlines() if x.startswith(('CapEff:','CapPrm:','CapAmb:','NoNewPrivs:'))}
+print(json.dumps({'uid':os.getuid(),'groups':os.getgroups(),'depth':40,'caps':caps}),flush=True)`;
+
+async function negative(kind,index){
+ const project=input.project+'-n'+index,local_root=path.join(root,'negative-'+index);fs.mkdirSync(local_root,{mode:0o700});const driver=new DockerDriver({...config,project,local_root,host_root:input.host_root+'/negative-'+index}),clientName=project+'-client';
+ try{await driver.compose(['up','--detach','--no-deps','--no-build','--pull','never','presentation-renderer'],input.imageA,input.artifactA.oci_digest);const renderer=(await owned(driver,'presentation-renderer')).Id;
+  // Do not inject a process into the guardian's initial namespace cleanup.
+  await waitUntil(async()=>{try{const h=await json(['exec','--user','0',renderer,'/usr/bin/python3','-I','-B','-c',"import json;print(json.dumps(json.load(open('/run/venus-presentations/spool/health.json'))))"],{timeout:3000,max:4096});return h.state==='idle'?h:false;}catch{return false;}},10000);
+  const volume=project+'_presentation-spool';const v=(await json(['volume','inspect',volume]))[0];assert.equal(v.Labels['com.docker.compose.project'],project);assert.equal(v.Labels['com.docker.compose.volume'],'presentation-spool');
+  const injector=raw(['exec','--user','0',renderer,'/usr/bin/python3','-I','-B','-c',kind==='deadline'?STALL:DEEP],{timeout:20000,max:16384}).then(JSON.parse);
+  const client=json(['run','--rm','-i','--name',clientName,'--label','venus.presentation-profile='+input.project,'--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--user','1000:1000','--cpus','0.5','--memory','128m','--pids-limit','32','--tmpfs','/var/lib/venus:size=4k,mode=0000,ro,noexec,nosuid,nodev','--mount','type=volume,source='+volume+',target=/run/venus-presentations/spool','--entrypoint','node',input.imageA,'--input-type=module','-e',IPC_CLIENT],{input:Buffer.from(JSON.stringify({kind,pdf:fixturePdf({pages:100,width:320,height:240}).toString('base64')})),timeout:155000,max:65536});
+  const [injected,result]=await Promise.all([injector,client]);if(kind==='deadline'){assert.equal(injected.stopped_uid,65534);assert.equal(result.result_error,'PDF_TIMEOUT');assert.equal(result.idle_after,true);assert.equal((await owned(driver,'presentation-renderer')).State.Running,true);}else{assert.equal(injected.uid,65534);assert.deepEqual(injected.groups,[]);assert.equal(injected.depth,40);for(const k of ['CapEff','CapPrm','CapAmb'])assert.equal(BigInt('0x'+injected.caps[k]),0n);assert.equal(injected.caps.NoNewPrivs,'1');assert.equal(result.next_plaintext_denied,true);assert.equal((await owned(driver,'presentation-renderer')).State.Running,false);}
+  return {isolation_probe:'host-controlled actual renderer IPC; not HTTP admission',project,injected,result,healthy_profile_volume_separate:true};
+ }finally{try{const state=(await json(['inspect',clientName]))[0];if(state.Config.Labels['venus.presentation-profile']===input.project)await raw(['rm','--force',clientName]);}catch{/* --rm client already gone */}await driver.compose(['down','--volumes','--remove-orphans','--timeout','5'],input.imageA,input.artifactA.oci_digest);}
+}
+
+async function main(){
+ if(process.argv[2]==='--provision'){assert.equal(process.getuid(),0);fs.writeFileSync('/tmp/operator-credential','synthetic profile operator credential',{mode:0o600});provision(root,'/tmp/operator-credential',{presentations:true});console.log(JSON.stringify({status:'EXPLICIT_PROVISIONED',authority_owner:1000,docker_socket_gid:fs.statSync('/var/run/docker.sock').gid}));return;}
+ assert.equal(process.getuid(),1001,'Real executor UID required');report.executor_uid=process.getuid();on=new DockerDriver(config);off=new DockerDriver({...config,presentations_enabled:false});A=await descriptor(input.imageA,'0.0.0');B=await descriptor(input.imageB,'0.0.9001');
+ let f,keep,removed,replaced,oldVersion,keepHash,backup,atBackup;
+ try{
+  await record('PROFILE4-INITIALIZE-READY',async()=>{await on.preflight(A,{install:true});on.serving(false);await on.initialize(A);return start(on,A);});
+  await record('PROFILE4-HTTP-REAL-CONTENT',async()=>{f=await room();keep=await imported(f,fixturePdf({pages:1,width:320,height:240}));removed=await imported(f,fixturePdf({pages:1,width:340,height:240}));replaced=await imported(f,fixturePdf({pages:1,width:360,height:240}));oldVersion=replaced.content_version;await command(f,{action:'settings',document_id:keep.id,title:'SYNTHETIC kept settings',default_mode:'slides',allow_switch:false});keepHash=await page(f,keep);await command(f,{action:'start',document_id:keep.id,content_version:keep.content_version,page_index:0});return {room:f.id,accepted_offer18:true,documents:3,keep_png_sha256:keepHash,protected:await entries()};});
+  await record('PROFILE4-AUTHENTICATED-QUIESCENCE-BK2',async()=>{const pdf=fixturePdf({pages:100,width:320,height:240}),j=await allocate(f,pdf);await upload(f,j,pdf);const renderer=(await owned(on,'presentation-renderer')).Id;await waitUntil(async()=>{const h=await json(['exec','--user','0',renderer,'/usr/bin/python3','-I','-B','-c',"import json;print(json.dumps(json.load(open('/run/venus-presentations/spool/health.json'))))"]);return h.state==='busy'?h:false;},10000);const stopped=await stop(on);backup=await on.backup({manifest:A},randomUUID());const checked=on.readBackup(backup.file);assert.equal(checked.manifest.format,'VENUS-HOST-BACKUP-2');assert.equal(checked.manifest.write_boundary,'APP_CONVERTER_AND_ALL_APP_WRITERS_QUIESCED');assert.equal(checked.manifest.protected_ledgers_included,false);atBackup=await pgState();return {...stopped,backup:{format:checked.manifest.format,bytes:checked.manifest.dump_size,sha256:backup.sha256,file_sha256:fileHash(checked.file)},atBackup};});
+  await record('PROFILE4-A-TO-B-COMPATIBLE',async()=>{const state=await start(on,B);assert.equal(await page(f,keep),keepHash);await command(f,{action:'delete',document_id:removed.id});replaced=await imported(f,fixturePdf({pages:1,width:400,height:240}),replaced.id);assert.notEqual(replaced.content_version,oldVersion);return {...state,protected_after_retirement:await entries(),distinct_fixture_image:true,metadata_only_derivative:true};});
+  const floors=await entries();
+  await record('PROFILE4-B-TO-A-RESTORE-OFF',async()=>{await stop(on);await on.restore(backup,{manifest:A});assert.deepEqual(await pgState(),atBackup);const started=await start(off,A),s=await snapshot(f);assert.equal(s.available,false);const denied=await f.host.call(pageUrl(f,keep,s.rev));assert([403,409,503].includes(denied.status));assert.deepEqual(await entries(),floors);return {...started,feature_off_status:denied.status,protected_floors_preserved:true,pg_dump_exact_before_reconcile:true};});
+  await record('PROFILE4-ON-RESTORE-FLOORS',async()=>{await stop(off);const started=await start(on,A),s=await snapshot(f);assert.equal(s.live,null);assert(s.documents.some(d=>d.id===keep.id));assert(!s.documents.some(d=>d.id===removed.id||d.id===replaced.id));const kept=s.documents.find(d=>d.id===keep.id);assert.equal(kept.title,'SYNTHETIC kept settings');assert.equal(kept.default_mode,'slides');assert.equal(kept.allow_switch,false);assert.equal(await page(f,keep),keepHash);const oldDeleted=await f.host.call(pageUrl(f,removed,s.rev)),oldReplaced=await f.host.call(pageUrl(f,{...replaced,content_version:oldVersion},s.rev));assert([403,404,409].includes(oldDeleted.status));assert([403,404,409].includes(oldReplaced.status));assert.deepEqual(await entries(),floors);return {...started,keep_png_sha256:keepHash,retired_status:oldDeleted.status,old_version_status:oldReplaced.status,live_stopped:true};});
+  await record('PROFILE4-REJECT-OLD-PROFILE',async()=>{const before=(await owned(on,'app')).Id;await assert.rejects(on.start({...A,environment:'standalone-local-media-v3'}),/PRESENTATIONS_ROLLBACK_PROFILE/);await assert.rejects(on.start({...A,presentations:{...PRESENTATIONS_RELEASE,module_generation:0}}),/PRESENTATIONS_ROLLBACK_PROFILE/);assert.equal((await owned(on,'app')).Id,before);await on.healthy(A);return {rejected_before_restart:true,healthy_container_unchanged:true};});
+  await record('RENDERER-ACTUAL-120S-DEADLINE',()=>negative('deadline',0));
+  await record('RENDERER-UNCLEANABLE-CLOSES',()=>negative('cleanup',1));
+  await record('PROFILE4-FINAL-HEALTH-QUIESCE',async()=>{assert.equal(await page(f,keep),keepHash);return stop(on);});
+  assert.equal(report.records.length,10);assert(report.records.every(row=>row.status==='PASS'));report.status='PASS';
+ }catch(error){report.error=String(error.message).slice(0,500);throw error;}finally{report.finished_at=stamp();save();}
+}
+await main().catch(error=>{report.status='FAIL';report.finished_at=stamp();if(process.getuid()===1001)save();console.error(JSON.stringify({event:'PROFILE4_SMOKE_FAILED',code:error.code??error.name,last_record:report.records.at(-1)?.id??null}));process.exitCode=1;});
