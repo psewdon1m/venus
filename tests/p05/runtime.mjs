@@ -11,7 +11,7 @@ import pg from 'pg';
 import {Keyring} from '../../apps/api/dist/security.js';
 export async function runtime({server='tests/p05/server.mjs'}={}){
   if(process.env.VENUS_P05_ISOLATED_FIXTURE!=='1')throw new Error('Owned Docker fixture required');
-  const mediaFixture=['tests/p09/server.mjs','tests/p11/server.mjs'].includes(server),presentationsFixture=server==='tests/presentations/server.mjs';
+  const mediaFixture=['tests/p09/server.mjs','tests/p11/server.mjs','tests/p07/server.mjs'].includes(server),presentationsFixture=['tests/presentations/server.mjs','tests/p07/server.mjs'].includes(server);
   const directory=mkdtempSync(join(tmpdir(),'venus-p05-runtime-'));
   const env={...process.env,KEYRING_FILE:join(directory,'keys.json'),DELETION_LEDGER_FILE:join(directory,'deletions.jsonl'),P05_CLOCK_FILE:join(directory,'clock')};
   writeFileSync(env.KEYRING_FILE,JSON.stringify({current:'v1',keys:{v1:randomBytes(32).toString('base64')}}));

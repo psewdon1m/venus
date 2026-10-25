@@ -1,3 +1,7 @@
+# Текущий статус — P07 разрешён; mobileWEB и техническая поставка в работе
+
+U-025…028 / [ADR-043](../adr/ADR-043-local-aggregate-mobile-web-and-delivery.md): новый P10 только [мобильныйвеб](P10_MOBILE_WEB.md); nativeapps больше не требуются. P07 выполняется по [фиксированномупрофилю](P07_EXECUTION_PROFILE.md). Node/LiveKit patchedpins иполнаяsource/license/signedv4поставка реализуются до первых проверок. Реальныетрекипозже; реальныеусловия/устройствапослеdeploy. Tests пока NOT_RUN, P07/P10/deliveryPASSневыданы. Ниже сохраненаистория.
+
 # Текущий статус — локальные функции приняты; общий P07 подготовлен
 
 Презентации: **PASS_FUNCTIONAL_LOCAL_COMPONENT**. PDF-библиотека комнаты, личный просмотр и live-показ реализованы; clean native47/12cases, static56, actualoperator10 и два независимых выходных гейта PASS. Все обязательные замечания закрыты, прежние FAIL сохранены. [Итоговая приёмка](evidence/preza/functional-acceptance01/REPORT.md) · [Реестр](presentations-registry.json).

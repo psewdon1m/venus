@@ -1,6 +1,11 @@
-ARG VENUS_BROWSER_BASE=node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
-FROM livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5 AS media_binary
+ARG VENUS_BROWSER_BASE=node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+FROM livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105 AS media_binary
+FROM node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae AS patched_node
 FROM ${VENUS_BROWSER_BASE} AS dependencies
+# A cached browser layer never retains its earlier Node/npm/headers.
+COPY --from=patched_node /usr/local/bin/node /usr/local/bin/node
+COPY --from=patched_node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=patched_node /usr/local/include/node /usr/local/include/node
 USER root
 WORKDIR /app
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright

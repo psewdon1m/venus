@@ -1,3 +1,4 @@
+import {parseDistribution} from './distribution.mjs';
 import {createPublicKey,sign,verify} from 'node:crypto';
 import {gunzipSync} from 'node:zlib';
 import path from 'node:path';
@@ -36,6 +37,7 @@ export function verifyRelease(dir,trust,policy){
  exactKeys(m.bundle,['sha256','size']);requireValue(HEX.test(m.bundle.sha256)&&Number.isSafeInteger(m.bundle.size)&&m.bundle.size>0&&m.bundle.size<=16*1024*1024,'BUNDLE_LIMIT');
  const bundle=read(path.join(dir,'bundle.tar.gz'),16*1024*1024);requireValue(bundle.length===m.bundle.size&&sha256(bundle)===m.bundle.sha256,'BUNDLE_DIGEST');const members=inspectBundle(bundle);
  requireValue(members.size===2&&members.has('README.md')&&members.get('compose.production.yaml').equals(read(policy.compose_template,1024*1024)),'BUNDLE_SEMANTICS');
- return {manifest:m,release_id:sha256(bytes)};
+ const distribution_assets=parseDistribution(members.get('README.md'),presentations&&trust.environment==='service');
+ return {manifest:m,release_id:sha256(bytes),distribution_assets};
 }
 export function signManifest(manifest,privateKey){const bytes=Buffer.from(canonical(manifest));return {bytes,signature:canonical({algorithm:'Ed25519',key_id:manifest.key_id,signature:sign(null,bytes,privateKey).toString('base64')})};}

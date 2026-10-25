@@ -11,7 +11,7 @@ jobs:
   release:
     runs-on: ubuntu-24.04
     environment: venus-release
-    timeout-minutes: 45
+    timeout-minutes: 60
     permissions:
       contents: write
       packages: write
@@ -30,7 +30,7 @@ jobs:
       - name: Existing quality and P06 gates before signing key
         run: npm run quality && node --test tests/p06/*.test.mjs && node tools/p06-integration.mjs
       - name: Source-bound independent and all118 ID pre-sign gate
-        run: node tools/venus-operator/release-gate.mjs .docs/implementation/evidence/p06/pre-sign-acceptance05/DECISION.json
+        run: node tools/venus-operator/release-gate.mjs .docs/implementation/evidence/p07/pre-sign-acceptance01/DECISION.json
       - name: Refuse existing immutable release
         env: {GH_TOKEN: '${{ github.token }}', RELEASE_TAG: '${{ github.ref_name }}'}
         run: |
@@ -43,6 +43,14 @@ jobs:
         run: |
           VERSION="${RELEASE_TAG#venus-v}"
           docker buildx build --push --provenance=false --metadata-file .artifacts/p06-image-metadata.json --build-arg SOURCE_REVISION="$RELEASE_SHA" --build-arg RELEASE_VERSION="$VERSION" -f infra/venus/Dockerfile -t "ghcr.io/psewdon1m/venus:$RELEASE_TAG" .
+      - name: Corresponding sources and notices for exact new image
+        env: {RELEASE_SHA: '${{ github.sha }}'}
+        run: |
+          IMAGE="ghcr.io/psewdon1m/venus@$(node -p 'JSON.parse(require("fs").readFileSync(".artifacts/p06-image-metadata.json"))["containerimage.digest"]')"
+          docker pull "$IMAGE"
+          docker run --rm --read-only --network none --cap-drop ALL --security-opt no-new-privileges:true --cpus 1 --memory 512m --entrypoint node "$IMAGE" tools/delivery-inventory.mjs > .artifacts/delivery-inventory.json
+          IMAGE_ID="$(docker image inspect "$IMAGE" --format '{{.Id}}')"
+          PYTHON=python node tools/delivery-sources.mjs --inventory .artifacts/delivery-inventory.json --image "$IMAGE_ID" --source "$RELEASE_SHA" --output .artifacts/delivery-release
       - name: Prepare exact-image release inputs
         env: {RELEASE_TAG: '${{ github.ref_name }}', RELEASE_SHA: '${{ github.sha }}'}
         run: python -B tools/p06_release_inputs.py
@@ -85,3 +93,6 @@ jobs:
             .artifacts/p06-service-release/
             .artifacts/p06-published-roundtrip/
             .artifacts/p06-published-roundtrip.anonymous/
+            .artifacts/delivery-release/SOURCE-INDEX.json
+            .artifacts/delivery-release/THIRD-PARTY-NOTICES.md
+            .artifacts/delivery-release/SOURCES-RECEIPT.json

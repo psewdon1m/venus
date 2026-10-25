@@ -41,7 +41,7 @@ export function validateBrowserReport(report,{engine='all',selectedCase=null}={}
   assert.equal(report.status,'PASS');assert.equal(report.error??null,null);
   assert.equal(report.synthetic_fixture_only,true);assert.equal(report.production_approval,false);assert.equal(report.desktop_linux_engines_only,true);
   assert.equal(report.selected_engine,engine,'Inner engine selection differs from caller');assert.equal(report.selected_case,selectedCase,'Inner case selection differs from caller');assert.equal(report.full_suite,!selectedCase,'Inner suite selection differs from caller');
-  assert.deepEqual(report.toolchain,{node:'v24.22.0',npm:'11.19.1',playwright:'1.64.1'});
+  assert.deepEqual(report.toolchain,{node:'v24.22.1',npm:'11.19.1',playwright:'1.64.1'});
   assert.equal(report.runtime_cleanup,'completed');assert.equal(report.display_cleanup,'completed');assertPageErrors(report);
   exact(report.versions,expectedEngines,row=>row.engine,'Engine versions');assert.ok(report.versions.every(row=>typeof row.version==='string'&&row.version.length>0),'Actual browser version missing');
   exact(report.records,expectedEngines.flatMap(value=>expectedCases.map(id=>value+':'+id)),row=>row.engine+':'+row.id,'Case results');assert.ok(report.records.every(row=>row.status==='PASS'),'Failed case result');

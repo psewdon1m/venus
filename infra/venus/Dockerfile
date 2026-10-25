@@ -1,5 +1,5 @@
-FROM livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5 AS media_binary
-FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 AS build
+FROM livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105 AS media_binary
+FROM node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae AS build
 WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 COPY apps/api/package.json apps/api/
@@ -17,7 +17,7 @@ ARG RELEASE_VERSION=0.0.0
 RUN test -n "$SOURCE_REVISION" && npm run build && node --input-type=module -e 'import fs from "node:fs"; const version=process.env.RELEASE_VERSION; if(!/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(version))process.exit(1); fs.writeFileSync("build-metadata.json",JSON.stringify({version,source_revision:process.env.SOURCE_REVISION}))'
 RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
 
-FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+FROM node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
 RUN apt-get update && apt-get install -y --no-install-recommends \
     poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3 \
     python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1 \
@@ -28,7 +28,7 @@ ARG SOURCE_REVISION
 ARG RELEASE_VERSION=0.0.0
 LABEL org.opencontainers.image.title="Venus" org.opencontainers.image.version="$RELEASE_VERSION" org.opencontainers.image.revision="$SOURCE_REVISION" org.opencontainers.image.source="https://github.com/psewdon1m/venus"
 COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
-COPY third-party/livekit-server-1.13.10 /usr/share/licenses/venus/livekit-server-1.13.10
+COPY third-party/livekit-server-1.13.11 /usr/share/licenses/venus/livekit-server-1.13.11
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
@@ -58,3 +58,5 @@ CMD ["node", "apps/api/dist/server.js"]
 
 COPY tools/media-inventory.mjs tools/media-inventory.mjs
 COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs
+
+COPY tools/delivery-inventory.mjs tools/delivery-inventory.mjs

@@ -1,0 +1,569 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2. The Debian Archive &mdash; Debian Policy Manual v4.7.4.1</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=98b44b8a" />
+      <link rel="stylesheet" type="text/css" href="_static/debian.css?v=bf0c9607" />
+
+  
+      <script src="_static/jquery.js?v=958b65b0"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5c767b5b"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="3. Binary packages" href="ch-binary.html" />
+    <link rel="prev" title="1. About this manual" href="ch-scope.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Debian Policy Manual
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="ch-scope.html">1. About this manual</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">2. The Debian Archive</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-debian-free-software-guidelines">2.1. The Debian Free Software Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#archive-areas">2.2. Archive areas</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#the-main-archive-area">2.2.1. The main archive area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-non-free-firmware-archive-area">2.2.2. The non-free-firmware archive area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-contrib-archive-area">2.2.3. The contrib archive area</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-non-free-archive-area">2.2.4. The non-free archive area</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#copyright-considerations">2.3. Copyright considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sections">2.4. Sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#priorities">2.5. Priorities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ch-binary.html">3. Binary packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-source.html">4. Source packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-controlfields.html">5. Control files and their fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-maintainerscripts.html">6. Package maintainer scripts and installation procedure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-relationships.html">7. Declaring relationships between packages</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-sharedlibs.html">8. Shared libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-opersys.html">9. The Operating System</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-files.html">10. Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-customized-programs.html">11. Customized programs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ch-docs.html">12. Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-scope.html">1. Introduction and scope of these appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-binarypkg.html">2. Binary packages (from old Packaging Manual)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-sourcepkg.html">3. Source packages (from old Packaging Manual)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-controlfields.html">4. Control files and their fields (from old Packaging Manual)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-conffiles.html">5. Configuration file handling (from old Packaging Manual)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-alternatives.html">6. Alternative versions of an interface - <code class="docutils literal notranslate"><span class="pre">update-alternatives</span></code> (from old Packaging Manual)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-pkg-diversions.html">7. Diversions - overriding a package’s version of a file (from old Packaging Manual)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-process.html">8. Debian Policy changes process</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-flowcharts.html">9. Maintainer script flowcharts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="upgrading-checklist.html">10. Upgrading checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ap-license.html">11. License</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Debian Policy Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>The Debian Archive</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/ch-archive.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul><div class="rst-breadcrumbs-buttons" role="navigation" aria-label="Sequential page navigation">
+        <a href="ch-scope.html" class="btn btn-neutral float-left" title="1. About this manual" accesskey="p"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ch-binary.html" class="btn btn-neutral float-right" title="3. Binary packages" accesskey="n">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+  </div>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-debian-archive">
+<h1><span class="section-number">2. </span>The Debian Archive<a class="headerlink" href="#the-debian-archive" title="Link to this heading"></a></h1>
+<p>The Debian system is maintained and distributed as a collection of
+<em>packages</em>. Since there are so many of them (currently well over 15000),
+they are split into <em>sections</em> and given <em>priorities</em> to simplify the
+handling of them.</p>
+<p>The effort of the Debian project is to build a free operating system,
+but not every package we want to make accessible is <em>free</em> in our sense
+(see the Debian Free Software Guidelines, below), or may be
+imported/exported without restrictions. Thus, the archive is split into
+areas <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> based on their licenses and other restrictions.</p>
+<p>The aims of this are:</p>
+<ul class="simple">
+<li><p>to allow us to make as much software available as we can</p></li>
+<li><p>to allow us to encourage everyone to write free software, and</p></li>
+<li><p>to allow us to make it easy for people to produce CD-ROMs of our
+system without violating any licenses, import/export restrictions, or
+any other laws.</p></li>
+</ul>
+<p>The <em>main</em> archive area forms the <em>Debian distribution</em>.</p>
+<p>Packages in the other archive areas (<code class="docutils literal notranslate"><span class="pre">non-free-firmware</span></code>,
+<code class="docutils literal notranslate"><span class="pre">contrib</span></code>, <code class="docutils literal notranslate"><span class="pre">non-free</span></code>) are not considered to be part of the Debian
+distribution, although we support their use and provide infrastructure
+for them (such as our bug-tracking system and mailing lists). This
+Debian Policy Manual applies to these packages as well.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>The Debian archive software uses the term “component” internally and
+in the Release file format to refer to the division of an archive.
+The Debian Social Contract simply refers to “areas.” This document
+uses terminology similar to the Social Contract.</p>
+</aside>
+</aside>
+<section id="the-debian-free-software-guidelines">
+<span id="s-dfsg"></span><h2><span class="section-number">2.1. </span>The Debian Free Software Guidelines<a class="headerlink" href="#the-debian-free-software-guidelines" title="Link to this heading"></a></h2>
+<p>The Debian Free Software Guidelines (DFSG) form our definition of “free
+software”. These are:</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>Free Redistribution</dt><dd><p>The license of a Debian component may not restrict any party from
+selling or giving away the software as a component of an aggregate
+software distribution containing programs from several different
+sources. The license may not require a royalty or other fee for such
+sale.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Source Code</dt><dd><p>The program must include source code, and must allow distribution in
+source code as well as compiled form.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Derived Works</dt><dd><p>The license must allow modifications and derived works, and must
+allow them to be distributed under the same terms as the license of
+the original software.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Integrity of The Author’s Source Code</dt><dd><p>The license may restrict source-code from being distributed in
+modified form <em>only</em> if the license allows the distribution of
+“patch files” with the source code for the purpose of modifying the
+program at build time. The license must explicitly permit
+distribution of software built from modified source code. The
+license may require derived works to carry a different name or
+version number from the original software. (This is a compromise.
+The Debian Project encourages all authors to not restrict any files,
+source or binary, from being modified.)</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>No Discrimination Against Persons or Groups</dt><dd><p>The license must not discriminate against any person or group of
+persons.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>No Discrimination Against Fields of Endeavor</dt><dd><p>The license must not restrict anyone from making use of the program
+in a specific field of endeavor. For example, it may not restrict
+the program from being used in a business, or from being used for
+genetic research.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Distribution of License</dt><dd><p>The rights attached to the program must apply to all to whom the
+program is redistributed without the need for execution of an
+additional license by those parties.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>License Must Not Be Specific to Debian</dt><dd><p>The rights attached to the program must not depend on the program’s
+being part of a Debian system. If the program is extracted from
+Debian and used or distributed without Debian but otherwise within
+the terms of the program’s license, all parties to whom the program
+is redistributed must have the same rights as those that are granted
+in conjunction with the Debian system.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>License Must Not Contaminate Other Software</dt><dd><p>The license must not place restrictions on other software that is
+distributed along with the licensed software. For example, the
+license must not insist that all other programs distributed on the
+same medium must be free software.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Example Licenses</dt><dd><p>The “GPL,” “BSD,” and “Artistic” licenses are examples of licenses
+that we consider <em>free</em>.</p>
+</dd>
+</dl>
+</li>
+</ol>
+</section>
+<section id="archive-areas">
+<span id="s-sections"></span><h2><span class="section-number">2.2. </span>Archive areas<a class="headerlink" href="#archive-areas" title="Link to this heading"></a></h2>
+<section id="the-main-archive-area">
+<span id="s-main"></span><h3><span class="section-number">2.2.1. </span>The main archive area<a class="headerlink" href="#the-main-archive-area" title="Link to this heading"></a></h3>
+<p>The <em>main</em> archive area comprises the Debian distribution. Only the
+packages in this area are considered part of the distribution. None of
+the packages in the <em>main</em> archive area require software outside of that
+area to function. Anyone may use, share, modify and redistribute the
+packages in this archive area freely <a class="footnote-reference brackets" href="#id5" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>Every package in <em>main</em> must comply with the DFSG (Debian Free Software
+Guidelines).  <a class="footnote-reference brackets" href="#id6" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p>
+<p>In addition, the packages in <em>main</em></p>
+<ul class="simple">
+<li><p>must not require or recommend a package outside of <em>main</em> for
+compilation or execution (thus, the package must not declare a
+<code class="docutils literal notranslate"><span class="pre">Pre-Depends</span></code>, <code class="docutils literal notranslate"><span class="pre">Depends</span></code>, <code class="docutils literal notranslate"><span class="pre">Recommends</span></code>, <code class="docutils literal notranslate"><span class="pre">Build-Depends</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Build-Depends-Indep</span></code>, or <code class="docutils literal notranslate"><span class="pre">Build-Depends-Arch</span></code> relationship on a
+non-<em>main</em> package unless that package is only listed as a non-default
+alternative for a package in <em>main</em>),</p></li>
+<li><p>must not be so buggy that we refuse to support them, and</p></li>
+<li><p>must meet all policy requirements presented in this manual.</p></li>
+</ul>
+<p>If a source package is in the <em>main</em> archive area, then at least one of
+its binary packages must be in the <em>main</em> archive area, and each of the
+remaining packages must be in either the <em>main</em> or <em>contrib</em> archive
+area. Each binary package’s archive area is indicated by its <code class="docutils literal notranslate"><span class="pre">Section</span></code>
+field: see <a class="reference internal" href="#s-subsections"><span class="std std-ref">Sections</span></a>.</p>
+<p>Source packages in <em>main</em> with a mixture of <em>main</em> and <em>contrib</em> binary
+packages are more complex for archive tooling to handle, and therefore
+should be limited to situations where it would be inconvenient to split
+the source package. If it is straightforward to split the source package
+into a <em>main</em> part and a <em>contrib</em> part that are built separately, then
+those parts should be represented as separate source packages.</p>
+<p>When a <em>main</em> source package has a mixture of <em>main</em> and <em>contrib</em> binary
+packages, the source package and the <em>main</em> binary packages must follow
+the requirements for <em>main</em> packages, but the <em>contrib</em> binary packages
+may follow the weaker requirements for <em>contrib</em> packages. In particular,
+source packages in <em>main</em> must not have build dependencies outside <em>main</em>,
+but the <em>contrib</em> binary packages may have runtime dependencies outside
+<em>main</em>.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>See <a class="reference external" href="https://www.debian.org/intro/free">What Does Free Mean?</a> for
+more about what we mean by free software.</p>
+</aside>
+<aside class="footnote brackets" id="id6" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p>Debian’s FTP Masters publish a
+<a class="reference external" href="https://ftp-master.debian.org/REJECT-FAQ.html">REJECT-FAQ</a> which
+details the project’s current working interpretation of the DFSG.</p>
+</aside>
+</aside>
+</section>
+<section id="the-non-free-firmware-archive-area">
+<span id="s-non-free-firmware"></span><h3><span class="section-number">2.2.2. </span>The non-free-firmware archive area<a class="headerlink" href="#the-non-free-firmware-archive-area" title="Link to this heading"></a></h3>
+<p>The <em>non-free-firmware</em> archive area contains packages providing
+firmware needed to initialize, use or keep updated hardware required
+by our users, typically necessary for important functions to be
+available (i.e. wireless network connectivity) or for fixing security
+defects in hardware (i.e. CPU microcode updates). Packages in this
+archive may not comply with all of the policy requirements in this
+manual due to lack of source code availability, restrictions on
+modification or other limitations.</p>
+<p>Packages in <em>non-free-firmware</em></p>
+<ul class="simple">
+<li><p>must not be so buggy that we refuse to support them, and</p></li>
+<li><p>must meet all policy requirements presented in this manual that it is
+possible for them to meet. <a class="footnote-reference brackets" href="#id9" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+</ul>
+</section>
+<section id="the-contrib-archive-area">
+<span id="s-contrib"></span><h3><span class="section-number">2.2.3. </span>The contrib archive area<a class="headerlink" href="#the-contrib-archive-area" title="Link to this heading"></a></h3>
+<p>The <em>contrib</em> archive area contains supplemental packages intended to
+work with the Debian distribution, but which require software outside of
+the distribution to either build or function.</p>
+<p>Every package in <em>contrib</em> must comply with the DFSG.</p>
+<p>In addition, the packages in <em>contrib</em></p>
+<ul class="simple">
+<li><p>must not be so buggy that we refuse to support them, and</p></li>
+<li><p>must meet all policy requirements presented in this manual.</p></li>
+</ul>
+<p>Examples of packages which would be included in <em>contrib</em> are:</p>
+<ul class="simple">
+<li><p>free packages which require <em>contrib</em>, <em>non-free</em> packages or
+packages which are not in our archive at all for compilation or
+execution, and</p></li>
+<li><p>wrapper packages or other sorts of free accessories for non-free
+programs.</p></li>
+</ul>
+<p>If a source package is in the <em>contrib</em> archive area, then each of the
+binary packages that it produces must also be in the <em>contrib</em> archive
+area.</p>
+</section>
+<section id="the-non-free-archive-area">
+<span id="s-non-free"></span><h3><span class="section-number">2.2.4. </span>The non-free archive area<a class="headerlink" href="#the-non-free-archive-area" title="Link to this heading"></a></h3>
+<p>The <em>non-free</em> archive area contains supplemental packages intended to
+work with the Debian distribution that do not comply with the DFSG or
+have other problems that make their distribution problematic. They may
+not comply with all of the policy requirements in this manual due to
+restrictions on modifications or other limitations.</p>
+<p>Packages must be placed in <em>non-free</em> if they are not compliant with the
+DFSG or are encumbered by patents or other legal issues that make their
+distribution problematic.</p>
+<p>In addition, the packages in <em>non-free</em></p>
+<ul class="simple">
+<li><p>must not be so buggy that we refuse to support them, and</p></li>
+<li><p>must meet all policy requirements presented in this manual that it is
+possible for them to meet.  <a class="footnote-reference brackets" href="#id9" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<p>If a source package is in the <em>non-free</em> archive area, then each of the
+binary packages that it produces must also be in the <em>non-free</em> archive
+area.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id9" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id8">2</a>)</span>
+<p>It is possible that there are policy requirements which the package
+is unable to meet, for example, if the source is unavailable. These
+situations will need to be handled on a case-by-case basis.</p>
+</aside>
+</aside>
+</section>
+</section>
+<section id="copyright-considerations">
+<span id="s-pkgcopyright"></span><h2><span class="section-number">2.3. </span>Copyright considerations<a class="headerlink" href="#copyright-considerations" title="Link to this heading"></a></h2>
+<p>Every package must be accompanied by a verbatim copy of its
+distribution license(s) in the file <code class="docutils literal notranslate"><span class="pre">/usr/share/doc/PACKAGE/copyright</span></code>.</p>
+<p>The copyright information for files in a package must be copied
+verbatim into <code class="docutils literal notranslate"><span class="pre">/usr/share/doc/PACKAGE/copyright</span></code>, when all of the
+following hold:</p>
+<ol class="arabic simple">
+<li><p>the distribution license for those files requires that copyright
+information be included in all copies and/or binary distributions;</p></li>
+<li><p>the files are shipped in the binary package, either in source or
+compiled form; and</p></li>
+<li><p>the form in which the files are present in the binary package does
+not include a plain text version of their copyright notices.</p></li>
+</ol>
+<p>Thus, the copyright information for files in the source package which
+are only part of its build process, such as autotools files, need not
+be included in <code class="docutils literal notranslate"><span class="pre">/usr/share/doc/PACKAGE/copyright</span></code>, because those
+files do not get installed into the binary package.  Similarly, plain
+text files which include their own copyright information and are
+installed into the binary package unmodified need not have that
+copyright information copied into <code class="docutils literal notranslate"><span class="pre">/usr/share/doc/PACKAGE/copyright</span></code></p>
+<p>However, the copyright notices for any files which are compiled into
+the object code shipped in the binary package must all be included in
+<code class="docutils literal notranslate"><span class="pre">/usr/share/doc/PACKAGE/copyright</span></code> when the license requires that
+copyright information be included in all copies and/or binary
+distributions, as most do.  <a class="footnote-reference brackets" href="#id11" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p>
+<p>See <a class="reference internal" href="ch-docs.html#s-copyrightfile"><span class="std std-ref">Copyright information</span></a> for further details.</p>
+<p>We reserve the right to restrict files from being included anywhere in
+our archives if</p>
+<ul class="simple">
+<li><p>their use or distribution would break a law,</p></li>
+<li><p>there is an ethical conflict in their distribution or use,</p></li>
+<li><p>we would have to sign a license for them, or</p></li>
+<li><p>their distribution would conflict with other project policies.</p></li>
+</ul>
+<p>Programs whose authors encourage the user to make donations are fine for
+the main distribution, provided that the authors do not claim that not
+donating is immoral, unethical, illegal or something similar; in such a
+case they must go in <em>non-free</em>.</p>
+<p>Packages whose copyright permission notices (or patent problems) do not
+even allow redistribution of binaries only, and where no special
+permission has been obtained, must not be placed on the Debian FTP site
+and its mirrors at all.</p>
+<p>Note that under international copyright law (this applies in the United
+States, too), <em>no</em> distribution or modification of a work is allowed
+without an explicit notice saying so. Therefore a program without a
+copyright notice <em>is</em> copyrighted and you may not do anything to it
+without risking being sued! Likewise if a program has a copyright notice
+but no statement saying what is permitted then nothing is permitted.</p>
+<p>Many authors are unaware of the problems that restrictive copyrights (or
+lack of copyright notices) can cause for the users of their
+supposedly-free software. It is often worthwhile contacting such authors
+diplomatically to ask them to modify their license terms. However, this
+can be a politically difficult thing to do and you should ask for advice
+on the <code class="docutils literal notranslate"><span class="pre">debian-legal</span></code> mailing list first, as explained below.</p>
+<p>When in doubt about a copyright, send mail to
+<a class="reference external" href="mailto:debian-legal&#37;&#52;&#48;lists&#46;debian&#46;org">debian-legal<span>&#64;</span>lists<span>&#46;</span>debian<span>&#46;</span>org</a>. Be prepared to provide us with the
+copyright statement. Software covered by the GPL, public domain software
+and BSD-like copyrights are safe; be wary of the phrases “commercial use
+prohibited” and “distribution restricted”.</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id11" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">5</a><span class="fn-bracket">]</span></span>
+<p>Licenses that are not thought to require the copying of all
+copyright notices into Debian’s copyright file include Apache-2.0
+and the Boost Software License, version 1.0.  Final determination
+as to whether a package’s copyright file is sufficient lies with
+the FTP team.</p>
+<p>To help find copyright notices you need to copy, you might try
+<code class="docutils literal notranslate"><span class="pre">grep</span> <span class="pre">--color=always</span> <span class="pre">-Eir</span> <span class="pre">'(copyright|©)'</span> <span class="pre">*</span> <span class="pre">|</span> <span class="pre">less</span> <span class="pre">-R</span></code></p>
+</aside>
+</aside>
+</section>
+<section id="sections">
+<span id="s-subsections"></span><h2><span class="section-number">2.4. </span>Sections<a class="headerlink" href="#sections" title="Link to this heading"></a></h2>
+<p>The packages in the archive areas <em>main</em>, <em>non-free-firmware</em>, <em>contrib</em>
+and <em>non-free</em> are grouped further into <em>sections</em> to simplify handling.</p>
+<p>The archive area and section for each package should be specified in the
+package’s <code class="docutils literal notranslate"><span class="pre">Section</span></code> control field (see
+<a class="reference internal" href="ch-controlfields.html#s-f-section"><span class="std std-ref">Section</span></a>). However, the maintainer of the
+Debian archive may override this selection to ensure the consistency of
+the Debian distribution. The <code class="docutils literal notranslate"><span class="pre">Section</span></code> field should be of the form:</p>
+<ul class="simple">
+<li><p><em>section</em> if the package is in the <em>main</em> archive area,</p></li>
+<li><p><em>area/section</em> if the package is in the <em>non-free-firmware</em>, <em>contrib</em>
+or <em>non-free</em> archive areas.</p></li>
+</ul>
+<p>The Debian archive maintainers provide the authoritative list of
+sections. At present, they are: admin, cli-mono, comm, database, debug,
+devel, doc, editors, education, electronics, embedded, fonts, games,
+gnome, gnu-r, gnustep, graphics, hamradio, haskell, httpd, interpreters,
+introspection, java, javascript, kde, kernel, libdevel, libs, lisp,
+localization, mail, math, metapackages, misc, net, news, ocaml, oldlibs,
+otherosfs, perl, php, python, ruby, rust, science, shells, sound, tasks,
+tex, text, utils, vcs, video, web, x11, xfce, zope. The additional
+section <em>debian-installer</em> contains special packages used by the
+installer and is not used for normal Debian packages.</p>
+<p>For more information about the sections and their definitions, see the
+<a class="reference external" href="https://packages.debian.org/unstable/">list of sections in
+unstable</a>.</p>
+</section>
+<section id="priorities">
+<span id="s-priorities"></span><h2><span class="section-number">2.5. </span>Priorities<a class="headerlink" href="#priorities" title="Link to this heading"></a></h2>
+<p>Each package must have a <em>priority</em> value, which is set in the metadata
+for the Debian archive and is also included in the package’s binary
+control (see <a class="reference internal" href="ch-controlfields.html#s-f-priority"><span class="std std-ref">Priority</span></a>), <code class="docutils literal notranslate"><span class="pre">.dsc</span></code> and <code class="docutils literal notranslate"><span class="pre">.changes</span></code> files.
+This information is used to control which packages are included in
+standard or minimal Debian installations.</p>
+<p>Starting with dpkg version 1.22.13, the <em>Priority</em> of a binary package is
+set to <code class="docutils literal notranslate"><span class="pre">optional</span></code> unless specified otherwise in the source or its binary
+stanza in the source package template control file.
+Therefore, explicitly specifying <em>Priority</em> as <code class="docutils literal notranslate"><span class="pre">optional</span></code> may be omitted.</p>
+<p>Most Debian packages will have a priority of <code class="docutils literal notranslate"><span class="pre">optional</span></code>. Priority
+levels other than <code class="docutils literal notranslate"><span class="pre">optional</span></code> are only used for packages that should be
+included by default in a standard installation of Debian.</p>
+<p>The priority of a package is determined solely by the functionality it
+provides directly to the user. The priority of a package should not be
+increased merely because another higher-priority package depends on it;
+instead, the tools used to construct Debian installations will correctly
+handle package dependencies. In particular, this means that C-like
+libraries will almost never have a priority above <code class="docutils literal notranslate"><span class="pre">optional</span></code>, since
+they do not provide functionality directly to users. However, as an
+exception, the maintainers of Debian installers may request an increase
+of the priority of a package to resolve installation issues and ensure
+that the correct set of packages is included in a standard or minimal
+install.</p>
+<p>The following <em>priority levels</em> are recognized by the Debian package
+management tools.</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">required</span></code></dt><dd><p>Packages which are necessary for the proper functioning of the
+system (usually, this means that dpkg functionality depends on these
+packages). Removing a <code class="docutils literal notranslate"><span class="pre">required</span></code> package may cause your system to
+become totally broken and you may not even be able to use <code class="docutils literal notranslate"><span class="pre">dpkg</span></code>
+to put things back, so only do so if you know what you are doing.</p>
+<p>Systems with only the <code class="docutils literal notranslate"><span class="pre">required</span></code> packages installed have at least
+enough functionality for the sysadmin to boot the system and install
+more software.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">important</span></code></dt><dd><p>Important programs, including those which one would expect to find
+on any Unix-like system. If the expectation is that an experienced
+Unix person who found it missing would say “What on earth is going
+on, where is <code class="docutils literal notranslate"><span class="pre">foo</span></code>?”, it must be an <code class="docutils literal notranslate"><span class="pre">important</span></code> package.  <a class="footnote-reference brackets" href="#id13" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a>
+Other packages without which the system will not run well or be
+usable must also have priority <code class="docutils literal notranslate"><span class="pre">important</span></code>. This does <em>not</em>
+include Emacs, the X Window System, TeX or any other large
+applications. The <code class="docutils literal notranslate"><span class="pre">important</span></code> packages are just a bare minimum of
+commonly-expected and necessary tools.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">standard</span></code></dt><dd><p>These packages provide a reasonably small but not too limited
+character-mode system. This is what will be installed by default if
+the user doesn’t select anything else. It doesn’t include many large
+applications.</p>
+<p>Two packages that both have a priority of <code class="docutils literal notranslate"><span class="pre">standard</span></code> or higher must
+not conflict with each other.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">optional</span></code></dt><dd><p>This is the default priority for the majority of the archive. Unless
+a package should be installed by default on standard Debian systems,
+it should have a priority of <code class="docutils literal notranslate"><span class="pre">optional</span></code>. Packages with a priority
+of <code class="docutils literal notranslate"><span class="pre">optional</span></code> may conflict with each other.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">extra</span></code></dt><dd><p><em>This priority is deprecated.</em> Use the <code class="docutils literal notranslate"><span class="pre">optional</span></code> priority
+instead. This priority should be treated as equivalent to
+<code class="docutils literal notranslate"><span class="pre">optional</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">extra</span></code> priority was previously used for packages that
+conflicted with other packages and packages that were only likely to
+be useful to people with specialized requirements. However, this
+distinction was somewhat arbitrary, not consistently followed, and
+not useful enough to warrant the maintenance effort.</p>
+</dd>
+</dl>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id13" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">6</a><span class="fn-bracket">]</span></span>
+<p>This is an important criterion because we are trying to produce,
+amongst other things, a free Unix.</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="ch-scope.html" class="btn btn-neutral float-left" title="1. About this manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ch-binary.html" class="btn btn-neutral float-right" title="3. Binary packages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

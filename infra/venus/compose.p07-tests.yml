@@ -1,0 +1,11 @@
+# Last override in the union of P05/P09/presentation isolated fixtures.
+# The combined API+browser fixture budget is not production API capacity.
+services:
+  browser:
+    cpus: 12
+    mem_limit: 6g
+    pids_limit: 1024
+    environment:
+      VENUS_P07_MODE: ${VENUS_P07_MODE:?Choose preflight or soak}
+      VENUS_P07_AGGREGATE_FIXTURE: "1"
+    networks: [isolated, media_fixture]

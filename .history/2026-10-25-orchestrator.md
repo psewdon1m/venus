@@ -457,3 +457,13 @@ Engineering02 dbc0b920 иSecurity02 e970b1b6 PASS на59ca/coref704,106proofhash
 ### 2026-10-25T08:22:59.174101+00:00 — Derived sync guard
 
 Повторныйguardedsync exit1 отказал ROOTconcurrent для собственного журнала: ROOT содержит предыдущую ещёнеcommitted производнуюревизию, а W ужеappend. Это ожидаемоограниченный guard, не ошибкаприложения. Дляразрешения проверяются normalizedROOTjournal prefixofW и manifestdelta ровнодвасобственныхжурнала; затемкопируются толькоэтидваownedjournal+производныйmanifest. Agentjournals/reviews не меняются.
+
+
+### 2026-10-25T14:31:37.522496+00:00 — U025–U028: P07 разрешён, P10 mobileWEB, технические долги
+
+Получено прямое разрешение P07. Реальная musicбиблиотекапозже; realworlddevice/network послеdeploy. P10 переопределён: responsive mobileWEB, nativeapp/capturepipelines не нужны. Владелец поручил закрыть техническиедолги. Workingbranch cleanf8c77b75, ROOTindexa4bb сохранён. Начаты3nonauthorread-onlyentryagentа со своимижурналами: P07reuse/scope, mobileWEB, security/delivery. Tests/build/lint/install не запускались. Первый широкийrg былусечён; дальнейшиечтенияограниченыточнымипутями. Старыйgoalbackendpaused, инструментresumeнедоступен; новаяавторизацияработыисполняется, не создаёмдубликатgoal и невыдаём его заactive.
+
+
+### 2026-10-25T14:54:37.777528+00:00 — Initial implementation complete / авторы STOP / до первого теста
+
+P07author завершилactualV2/current470jointfixture/8browserprocess/60min12completed3modes/preflightprivChatTTL180s/mobile21cells/media/PDF/music/DBstoprecreate/diskalerts; entry/authorjournalssealedраздельно, авторнепринимаетсебя. P10author2UIправки+21cellhelper STOP. Deliveryauthoractualinventory+correspondingsourcescollector+newLiveKitnotices STOP. RootсогласовалNode24.22.1/npm11.19.1 иofficialLiveKit1.13.11, v4producer/exactcandidateinstall, signature-bound3sourceassetsвbundleREADME/streaminganonymouschecks/workflow, originalencryptedPDFnegative+distributiontests. CachedbrowserbaseразрешёнтолькоCOPYpatchedNode/npm/headersдоinstall, фактическийNodeвфинальномfixtureбудетпроверен. Sourceonlyниоднойtests/build/lint/types/syntax/install/pull/containerоперации; Dockerinfo/PSDriveбылиreadonlyресурснойинвентаризацией(16CPU/33.6GB/147.6GBfreeC). P07agentturnоднаждывернулсяcapacityerror, продолжентойжемодельюбезпотеричастичныхправок; intentnotPASS. Первичныеошибкичтенийнесуществующихпутейвернули1; исходникинеповреждены. НовыеADR043/U025–028/mobilewebcontract/executionprofile/source-revisionвнесены, nativeoldregistryсохранёнsnapshot. СейчасnormalizeEOL/guardedROOTsync/derivedmanifest/cleancommit, затемпервыеscopedchecks.

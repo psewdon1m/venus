@@ -1,5 +1,5 @@
 FROM python:3.12.14-slim-bookworm@sha256:1aaa65a85fda306ffb8b910824d4e93bdce61e212c7e87168123ea3073b41a1a AS python
-FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 AS dependencies
+FROM node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae AS dependencies
 COPY --from=python /usr/local /usr/local
 RUN apt-get update && apt-get install --no-install-recommends -y git ca-certificates libsqlite3-0 libbz2-1.0 libffi8 liblzma5 && rm -rf /var/lib/apt/lists/*
 WORKDIR /workspace
