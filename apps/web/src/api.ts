@@ -5,7 +5,7 @@ export class SessionApi {
   admissionCsrf='';private roomCsrf=new Map<string,string>();
   async request<T>(path:string,body?:unknown,method=body===undefined?'GET':'POST'):Promise<T> {
     const room=path.match(/^\/api\/v[12]\/rooms\/([a-f0-9-]{36})/i)?.[1];
-    const publicAction=/^\/api\/v[12]\/rooms$/.test(path)||path==='/api/v1/invitations/resolve'||path.endsWith('/join');
+    const publicAction=/^\/api\/v[12]\/rooms$/.test(path)||path==='/api/v1/invitations/resolve'||/^\/api\/v[12]\/rooms\/[a-f0-9-]{36}\/join$/i.test(path);
     let response:Response;
     try {response=await fetch(path,{method,credentials:'same-origin',signal:AbortSignal.timeout(8000),headers:body===undefined?(room?{'x-csrf-token':this.roomCsrf.get(room)??''}:{}):{'content-type':'application/json','x-csrf-token':publicAction?this.admissionCsrf:this.roomCsrf.get(room??'')??''},...(body===undefined?{}:{body:JSON.stringify(body)})});}
     catch {throw new ApiError('SERVICE_UNAVAILABLE');}
