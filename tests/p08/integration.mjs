@@ -1,3 +1,4 @@
+/* global document -- Browser-only predicates serialized by Playwright. */
 /** Narrow P08 suite reuses P05 Docker/TLS/PG lifecycle. Synthetic own PCM only. */
 import {test} from 'node:test';
 import {spawn} from 'node:child_process';
