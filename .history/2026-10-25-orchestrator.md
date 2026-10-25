@@ -308,3 +308,9 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 На9c710aa6: DockerAPI/Webtypes,affectedlint,90/90focusedunit tests(10files,8.96s),schema/i18n exit0. source identityeaf8e52b unchanged. targeted-static02 INDEXd97735f6db2720f200098fa4bb71feb1165c0fff5d8662207ce49a93ffd59a03. Nativeproductionbuild02/imageinspect/inventory exit0; unsigned0.0.0image3d5c4660e51b0cbc8e25431b1ac37401615d2b57035f79c056904eca77d11cf0, inventory exact previousbaseline. Ничего не опубликовано; Nodepatch/licenses/signeddeliveryP07 obligationsHOLD. MusicпервыйcoldDockerbuild скачивает штатные трибраузера; приложение не меняется, новых тестовых механизмов нет.
 
+
+### 2026-10-25T06:03:17.263179+00:00 — Affected Music round01 FAIL и bounded test correction
+
+Чистый9c710aa6, exit1/source unchanged/cleanup completed.6recordsPASS: APIACL/Range/restart/actualaudio/Games/8client60sdrift(480samples,p95132.389ms,max146.874ms). Reconnect case остановился на старомfixed1500ms ожиданииoffline pause, раньше действовавшем1s fallback. Backup/browseralternatives дальше NOT_RUN, PASSневыдан. Сохранён affected-music-round01 INDEXfdf8cde897b351a0579aca3cf44f7812bc1cf841b6a301845ac1d73a178e6565.
+
+Приложение не меняется. Только существующий Music testcase заменяет1500/2500/1800ms fixed sleeps на фактические stop/resume/allstop с явным4500ms local deadline(3s fallback+localrequestlatency) и записывает измеренные времена. НовыйпорогсоответствуетADR041, не исходномуисторическому1sконтракту; прежнийFAILсохранён. FullP11native32/12 иstatic90 остаются proofsточных9cappbytes; test-onlyP08delta не требует повторять Calls. Следующий Music repeat сcachedDockerdependencies.
