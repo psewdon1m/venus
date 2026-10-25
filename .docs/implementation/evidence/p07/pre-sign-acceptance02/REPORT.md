@@ -1,0 +1,5 @@
+# Pre-sign source revision02: finite test/pointer delta
+
+Original accepted01 matrix and both complete118nonauthor reports remain immutable for36de10. New95f359 differs only in the existing classic-controls testfile (correct actual4000ms timer, assert real request entered; negative lease assertions unchanged) and one release-workflow argument pointing to additive decision02. Consumer/API/UI/controller/Driver/backup/renderer code is unchanged. The previous actual hour/source06/install02 and118localdispositions retain their original exact inputs via this explicit delta; none is labelled a new run.
+
+CI onfef had1374PASS/3skip/1FAIL because its test never invoked the actual polltimer, not an application refusal failure. Existing affectedfile16/16PASS and ESLint0 after fix; existing CI policy1/1PASS after pointeradvance. No new suite or runtime change. Root will create NEW DECISION02 only after two independent additive reviews, binding new95f359 and the unchanged118rows; oldDECISION01 is preserved. All future current-head CI/new-tag source+image+install/sign/public obligations remain required/unpassed; no fullstagePASS.

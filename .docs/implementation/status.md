@@ -1,3 +1,15 @@
+# Текущий статус — CItest-onlyошибкаисправлена; pre-signревизия02 PASS
+
+2026-10-25T20:36:35.426827+00:00. ПервыйCI(fef66316):container/P02/P03/P06PASS,qualityFAIL1/1378 — тествызывалустаревший1500msтаймервместофактического4000ms, heldnegativeнеотправлялся. Исправлены2селектораводномсуществующемtestfile+проверенофактическоеначалозапроса;16/16PASS/ESLint0. Приложение/UI/controls/Driver/hourruntimeнеизменны; повторчасанетребуется.
+
+Commitc9c652da/core95f359 включаеттолькоtestfile+workflowpointer01→02. ОбаsupplementalнезависимыхгейтаPASS, новаяDECISION02/release-gatePASS118; стараяDECISION01/всеproofсохранены. Docs2209/0errors, policy1/1PASS. ФинальныебайтысmanifestотправляютсявновыйобязательныйCI; предыдущийFAILнепереписан. ПолныйP07/sign/public0.0.2ещёpending. История ниже сохранена.
+
+# Текущий статус — PR6, пять обязательныхCIзаданий выполняются
+
+2026-10-25T20:23:50.229053+00:00. [PR6](https://github.com/psewdon1m/venus/pull/6), exactheadfef66316/core36de10a9. Локальныеpre-signгейты/118решений PASS; finalmanifest34624paths проверен0errors вcleanW доcommit. ОсновнаяROOTсверка сначалаобнаружила2нескопированныхисторическихфайлаcontroller-fix12; точныеGitбайтыдобавленыбезизменениясодержимого, повторROOTmanifest0errors. UserGitindex иimmutableP05/P06/P11INDEX сохранены.
+
+ПятьобязательныхGitHubконтекстовRUNNING; длинныестатистическиепроверкиневызываются. Новыезаписижурнала/statusпослеfreeze — производнаялокальнаяревизия, не подменаcleanGitHubsnapshotfef66316. Merge/mainCI/qualified0.0.2/source/image/install/sign/anonymousпроверкивпереди; fullP07PASSfalse. История ниже сохранена.
+
 # Текущий статус — локальный pre-sign PASS; финальные CI и настоящий выпуск0.0.2 впереди
 
 2026-10-25T20:19:59.870405+00:00. Два независимых финальных pre-signгейта приняли все118пунктов:67localPASS/34N_A/10deferred/7ожидаютподписанныеартефакты. DECISION связан с обоими INDEX; существующийrelease-gate выполнен PRE_SIGN_GATE_PASS/core36de10a9. Реальныйчасовойпрогон/продуктовыецелевыеизмерения/установка/источники иограниченныйоператорскийjitter прошли. Проверка2201Markdownдокумента:0ошибок.
