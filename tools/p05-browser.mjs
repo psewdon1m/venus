@@ -21,7 +21,7 @@ if(dirty&&!allowDirty)throw new Error('Clean source required; --allow-dirty is e
 const inputs=inventory(),project='venus-p05-'+randomBytes(6).toString('hex'),directory=mkdtempSync(join(tmpdir(),'venus-p05-owned-'));
 const output=resolve('.artifacts/p05/'+project);mkdirSync(output,{recursive:true});
 console.log(JSON.stringify({phase:'starting',output,probe_only:probe,chat_only:chat,catalog_only:catalog,self_actions_only:selfActions,selected_engine:engine??'all',selected_case:selectedCase??null}));
-const env={...selected.env,VENUS_P05_DB_PASSWORD_FILE:join(directory,'db-password'),VENUS_P05_ARTIFACT_DIRECTORY:output};
+const env={...selected.env,VENUS_P05_DB_PASSWORD_FILE:join(directory,'db-password'),VENUS_P05_ARTIFACT_DIRECTORY:output,VENUS_MEDIA_BROWSER_CPUS:calls?'12':'8'};
 writeFileSync(env.VENUS_P05_DB_PASSWORD_FILE,randomBytes(32).toString('hex'),{mode:0o444});
 writeFileSync(join(output,'inputs-before.json'),JSON.stringify({source_sha:source,source_dirty:dirty,...inputs},null,2));
 let status='FAIL',cleanup,image,bodyError;

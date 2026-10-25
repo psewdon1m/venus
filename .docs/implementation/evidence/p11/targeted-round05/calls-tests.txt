@@ -1,0 +1,83 @@
+ Container venus-p05-ea0473a656b0-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (19.679597ms)
+✔ P06-RELEASE reject signed wrong version (6.762793ms)
+✔ P06-RELEASE reject signed wrong schema (6.389554ms)
+✔ P06-RELEASE reject signed wrong environment (12.087762ms)
+✔ P06-RELEASE reject signed wrong image digest (8.771446ms)
+✔ P06-RELEASE reject signed wrong main SHA (4.646795ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.365661ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (73.04297ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (18.981851ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (16.925918ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (14.109925ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (15.100805ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (13.312925ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (14.789939ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (13.454672ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (30.438591ms)
+✔ P06-JOURNAL corruption fails closed without mutation (9.825823ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (92.754922ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (36.402885ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.793962ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (6.212375ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1762.199619ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (19.352292ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (7.567379ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (7.454352ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (4.727101ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.956993ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (26.567622ms)
+✔ host authority denies stale database grants, rollback and unsafe state (4.631356ms)
+✔ backup and restore cannot run while a media container survives API stop (1.956075ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (13.201903ms)
+{"id":"P11-ADMISSION-SOURCES","phase":"START"}
+{"id":"P11-ADMISSION-SOURCES","status":"PASS"}
+{"id":"P11-CINEMA-GAMES","phase":"START"}
+{"id":"P11-CINEMA-GAMES","status":"PASS"}
+{"id":"P11-QUALITY-30S-8","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","status":"PASS"}
+{"id":"P11-TWO-PRIVATE-PAIRS","phase":"START"}
+{"id":"P11-TWO-PRIVATE-PAIRS","status":"PASS"}
+{"id":"P11-SWITCH-AND-STALE-ACL","phase":"START"}
+{"id":"P11-SWITCH-AND-STALE-ACL","status":"PASS"}
+{"id":"P11-TCP-FALLBACK","phase":"START"}
+{"id":"P11-TCP-FALLBACK","status":"PASS"}
+{"id":"P11-UI-LOCAL","phase":"START"}
+{"id":"P11-UI-LOCAL","status":"PASS"}
+{"id":"P11-API-LOSS","phase":"START"}
+{"id":"P11-API-LOSS","status":"PASS"}
+{"id":"P11-OLD-PG-RESTORE","phase":"START"}
+{"id":"P11-OLD-PG-RESTORE","status":"PASS"}
+{"id":"P11-MINIMAL-SOURCE-GRANT","phase":"START"}
+{"id":"P11-MINIMAL-SOURCE-GRANT","status":"PASS"}
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (119434.468124ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 122603.079579
+
+✖ failing tests:
+
+test at tests/p11/integration.mjs:44:1
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (119434.468124ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(report.records.every(r=>r.status==='PASS'))
+  
+      at TestContext.<anonymous> (file:///app/tests/p11/integration.mjs:61:99)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+

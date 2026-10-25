@@ -4,7 +4,7 @@ services:
     mem_limit: 512m
   browser:
     mem_limit: 4g
-    cpus: 8
+    cpus: ${VENUS_MEDIA_BROWSER_CPUS:-8}
     networks: [isolated, media_fixture]
     volumes:
       - media-fixture:/media-fixture

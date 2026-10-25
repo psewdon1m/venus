@@ -38,3 +38,7 @@ Cases: general8normal; одновременноgeneral4+pair2+pair2 сразли
 ## Отключение, совместимость, откат
 
 Versionedoperator calls_enabled=false выставляетservercapabilityunavailable, не просто скрываетUI. Safetyrelease/leaveнеблокироватьdisabledмодулем. Новоеsignedv3изданиепослефункций; 0.0.1неизменен. ОтключитьCalls, terminate/retireleases/scopes, подтвердитьcutoff, вернутьсовместимыйclient/API/image; additivetables/protectedwitnessсохранить. Incompatibleoldschema — closed-servingtrustedrecovery, неblinddown/автоDBrestore. Cinemaостаётсядоступнымпослесобственныхпроверок, fatalsharedSFUfailможетзакрытьвсёmedia. NativeP10/publicDNS/TLS/NAT/deviceclaimsнеполучаютPASSотэтихтестов.
+
+## Profile revision 2
+
+Current candidate client-fixture budget and rationale: ADR-039. The preceding frozen revision1/8CPU profile is historical; all8CPU failures remain. New runs use12CPU/4GiB for browser+API, same2CPU/1GiB SFU and all strict quality targets. This is not production8CPU capacity acceptance.

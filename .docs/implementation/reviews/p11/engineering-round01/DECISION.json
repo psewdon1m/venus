@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-25T04:57:17.542760+00:00",
+  "stage": "P11",
+  "gate": "ENGINEERING_SOURCE_PREFLIGHT",
+  "reviewer": "/root/p08_entry_gate01",
+  "independent_nonauthor": true,
+  "status": "PASS_SOURCE_ONLY_PENDING_CLEAN_ACTUAL_AND_API_FENCE_REVIEW",
+  "preflight_only": true,
+  "source_dirty": true,
+  "source_frozen": false,
+  "full_stage_pass": false,
+  "functional_stage_pass": false,
+  "observed_HEAD": "075b7bc9d5644504cc120db303f3b2ed663a9e68",
+  "finding_dispositions": [
+    {
+      "id": "E11-01",
+      "priority": 2,
+      "finding": "Source-intent request generation assigned after async stop and device selector ignored pendingcapture",
+      "current_source": "CORRECTED_BY_AUTHOR_BEFORE_REVIEW_SEAL",
+      "actual_regression": "NOT_RUN_BY_REVIEWER_PENDING_EXACT_CLEAN_PROOF"
+    }
+  ],
+  "open_additional_source_findings_in_reviewed_scope": [],
+  "excluded_inflight_API": "calls.ts currentPair/finalpairtimefences S11-04 author writing; finalnonauthorreview required",
+  "required_before_final": [
+    "ConcurrentAPIauthorCOMPLETE_STOP",
+    "Cleanexactsourcefreeze",
+    "E11-01latecapture/cancel/device regressionactual",
+    "Allaffected11case boundedP11runtime/staticproof onnewprofile",
+    "StrictqualitytargetsPASS orhonestFAIL",
+    "Independentfinalengineeringsecurity"
+  ],
+  "inputsha256": "ccac8e48883d7bff429c49ad7b4633bf7596b3ec72692e5e2ff6b06bf5f2dca5",
+  "writer_status": "COMPLETE_STOP"
+}

@@ -1,0 +1,6 @@
+# P11 measured fixture profile correction review02
+
+- 2026-10-25T04:51:43.4763284Z START. Independent review BEFORE next run: measured8CPUqualityFAIL source075b7bc9, proposedversionedADR039 browser+API12CPU/4GiB only, SFU2CPU/1GiB/strictqualitytargetsunchanged. Ownwritesjournal+.docs/implementation/reviews/p11/quality-review02/{REPORT.md,INPUTS.json,INDEX.json}. No source/test/Docker/Gitchanges. Assessboundedmeasurement, noinventedrootcause/productionclaim.
+- 2026-10-25T04:53:08.2296332Z Exactraw05/source075bverified,10/11PASS/strictmax33msFAIL. Independentlycalculatedusage273166209µs,periods370/throttled77=20.81%,throttled1653003µs; nearquotaDocker780.94%. Approx37smean7.38core, firstlastsample36.8892snotexactcgroupelapsed. Memorycurrent3.017GBnotabsolutepeak. Broadquality_observeddumpwastruncated; correctedscalar/samplesonlyread.
+- 2026-10-25T04:53:08.2296332Z Verdictnew12CPUfixturecandidate justifiedbymeasuredpressure BEFORE next run; keepSFU2CPU1GiB/1.6core768MiB/strictmax30msalltargetsunmodified. ADR039retain8CPUFAIL/exactsourcemap; actualnextqualitystillrequired, rootcauseunproven, noneold10PASSautorebindtosecurityfixes. No source/tests/Docker/Gitmutation.
+- 2026-10-25T04:53:08.2296332Z Finalpackethashesintoolresult/handoff. COMPLETE_STOP allownwritersstopped; rootindexA4bbunchanged.
