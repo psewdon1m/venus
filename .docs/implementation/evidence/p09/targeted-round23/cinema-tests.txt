@@ -1,0 +1,102 @@
+ Container venus-p05-72cf98da8a41-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (13.449391ms)
+✔ P06-RELEASE reject signed wrong version (4.825035ms)
+✔ P06-RELEASE reject signed wrong schema (4.386397ms)
+✔ P06-RELEASE reject signed wrong environment (5.280122ms)
+✔ P06-RELEASE reject signed wrong image digest (4.469072ms)
+✔ P06-RELEASE reject signed wrong main SHA (4.824604ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (14.937712ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (66.087372ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (11.540703ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (14.10274ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (9.191946ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (10.319376ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (13.691445ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (11.199907ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (8.54645ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (20.63323ms)
+✔ P06-JOURNAL corruption fails closed without mutation (5.571982ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (72.526794ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (27.617971ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.429527ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.044958ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1758.531377ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (10.574848ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (5.769933ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (6.500561ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (2.973758ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (2.801927ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (17.489965ms)
+✔ host authority denies stale database grants, rollback and unsafe state (5.080611ms)
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","phase":"START"}
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","status":"PASS"}
+{"id":"P09-DENIED-NO-AUDIO","phase":"START"}
+{"id":"P09-DENIED-NO-AUDIO","status":"PASS"}
+{"id":"P09-REAL-TAB-CAPTURE-8","phase":"START"}
+{"id":"P09-REAL-TAB-CAPTURE-8","status":"PASS"}
+{"id":"P09-SOURCE-CALIBRATION","phase":"START"}
+{"id":"P09-SOURCE-CALIBRATION","status":"PASS"}
+{"id":"P09-ACL-FOUR-PATHS","phase":"START"}
+{"id":"P09-ACL-FOUR-PATHS","status":"PASS"}
+{"id":"P09-OPEN-READINESS-AND-AUTOPLAY","phase":"START"}
+{"id":"P09-OPEN-READINESS-AND-AUTOPLAY","status":"PASS"}
+{"id":"P09-GAMES-COEXISTENCE-ADMISSION","phase":"START"}
+{"id":"P09-GAMES-COEXISTENCE-ADMISSION","status":"PASS"}
+{"id":"P09-AV-30S-8","phase":"START"}
+{"id":"P09-AV-30S-8","status":"PASS"}
+{"id":"P09-DEGRADED-10S","phase":"START"}
+{"id":"P09-DEGRADED-10S","status":"PASS"}
+{"id":"P09-REVOKE-STALE-JWT","phase":"START"}
+{"id":"P09-REVOKE-STALE-JWT","status":"PASS"}
+{"id":"P09-UDP-BLOCKED-TCP-10S","phase":"START"}
+{"id":"P09-UDP-BLOCKED-TCP-10S","status":"PASS"}
+{"id":"P09-OLD-RELEASE-KEEPS-NEW-SCOPE","phase":"START"}
+{"id":"P09-OLD-RELEASE-KEEPS-NEW-SCOPE","status":"PASS"}
+{"id":"P09-UNCONFIRMED-RETRY-AND-EXPIRY","phase":"START"}
+{"id":"P09-UNCONFIRMED-RETRY-AND-EXPIRY","status":"PASS"}
+{"id":"P09-STOP-RETRY-CUTOFF","phase":"START"}
+{"id":"P09-STOP-RETRY-CUTOFF","status":"PASS"}
+{"id":"P09-SOURCE-END-AND-CLOSE","phase":"START"}
+{"id":"P09-SOURCE-END-AND-CLOSE","status":"PASS"}
+{"id":"P09-PENDING-JOIN-VS-CLOSE","phase":"START"}
+{"id":"P09-PENDING-JOIN-VS-CLOSE","status":"PASS"}
+{"id":"P09-PENDING-CUTOFF-API-RESTART","phase":"START"}
+{"id":"P09-PENDING-CUTOFF-API-RESTART","status":"PASS"}
+{"id":"P09-API-LOSS-WATCHDOG","phase":"START"}
+{"id":"P09-API-LOSS-WATCHDOG","status":"PASS"}
+{"id":"P09-OLD-LIVE-PG-RESTORE","phase":"START"}
+✖ P09 actual media and current-authority lifecycle (102421.698294ms)
+✔ backup and restore cannot run while a media container survives API stop (1.344025ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (11.980673ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 105234.994949
+
+✖ failing tests:
+
+test at tests/p09/integration.mjs:41:1
+✖ P09 actual media and current-authority lifecycle (102421.698294ms)
+  AssertionError [ERR_ASSERTION]: HTTP 403 ROOM_CLOSED
+  
+  403 !== 200
+  
+      at ok (file:///app/tests/p09/integration.mjs:25:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///app/tests/p09/integration.mjs:67:514
+      at async record (file:///app/tests/p09/integration.mjs:22:95)
+      at async TestContext.<anonymous> (file:///app/tests/p09/integration.mjs:67:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 403,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

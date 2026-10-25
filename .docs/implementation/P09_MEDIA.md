@@ -91,3 +91,7 @@ Native-source calibration использует временный видимый
 ## Final fixture revision6
 
 Round22 подтвердил media-onlydegraded/TCP/failed-old-release/retry/expiry/stop/sourceend/pendingjoin/restart/watchdog; normalAV68ms/glass75/skew41, watchdog2138ms. Остались ошибки fixture: muted source preview в background даётRVFC1fps дажесвидимымclone — calibration явно активирует собственную вкладку; restore test теперь возвращает сохранённую на моментdump cookie, проверяет текущий roomHTTP200/new mediaepochready и только затем старыйJWT401 по4paths. Иначе403 от очищеннойcookie не проверял authority replay. UIactions bounded5s, explicit15/20/25s ICE waits сохранены. Приложение со17a418 не менялось.
+
+## Restore fixture revision7
+
+Round23 sourcecalibrationPASS(176frames/7pairs/p9562ms) и все functionalcasesдоrestorePASS. Restore403 оказался правильной защитой deletionledger: основной snapshotroom был явно закрыт послеdump. Для независимой проверки двух границ основной snapshotroom теперь остаётся openпослеsourceend; заранее созданный admissionroom изтого жеdump используется для actual1publisher+1viewer+pendingjoin→close. Послеrestore primarycookieHTTP200+oldJWT401 доказывают mediaepochreplay, а restored secondroom с валидной прежнейcookie остаётся403ROOM_CLOSEDпо protectedledger. Защита приложения не ослаблена.
