@@ -1,0 +1,6 @@
+import {test,expect} from 'vitest';
+import type {MusicState} from '@venus/contracts';
+import {musicSample,musicPosition,applyMusicSync} from './music-sync.js';
+const state:MusicState={schema_version:1,room_id:'fixture',rev:1,catalog_digest:'fixture',server_time:'2030-01-01T00:00:00Z',status:'playing',queue:['a'],index:0,track:{id:'a',title:{ru:'a',en:'a',tr:'a'},duration_ms:10000,synthetic:true},position_ms:2000,reason:'ready',can_control:false,default_speaker:true};
+test('audio synchronization uses monotonic RTT and caps position at actual track duration',()=>{const s=musicSample(state,100,300);expect(musicPosition(s,1200)).toBe(3);expect(musicPosition(s,50000)).toBe(10);expect(musicPosition(musicSample({...state,status:'paused'},100,300),50000)).toBe(2);});
+test('local listening refusal pauses without changing the shared tuple',()=>{let paused=false;const a={pause:()=>{paused=true;},duration:10,currentTime:9,playbackRate:2,paused:false} as unknown as HTMLAudioElement;const s=musicSample(state,100,300);applyMusicSync(a,s,1200,false);expect(paused).toBe(true);expect(a.currentTime).toBe(9);expect(s.state.rev).toBe(1);applyMusicSync(a,s,1200,true);expect(a.currentTime).toBe(3);expect(a.playbackRate).toBe(1);});

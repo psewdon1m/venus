@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "revision": "FUNCTIONAL-STAGES-FIRST-20261025",
+  "prior_decisions_preserved": ".docs/implementation/user-decisions.v6.json",
+  "source": {
+    "kind": "direct_owner_messages",
+    "observed_at_utc": "2026-10-24T23:44:57.518531+00:00",
+    "resume": "Начинай работу"
+  },
+  "decisions": [
+    {
+      "id": "U-022",
+      "decision": "Develop P08–P11 first; defer P07 aggregate deployment/integration/load/soak/restore acceptance to after functional modules. Each stage: independent entry review, all implementation before tests, only impacted tests without long statistical suites, test/fix/retest until PASS, independent nonauthor exit reports then closure. Preserve unmet external gates honestly.",
+      "P07_is_PASS": false
+    },
+    {
+      "id": "U-023",
+      "decision": "Adapt functional presentation implementation from owner repository psewdon1m/preza into Venus Rooms before final P07. Preserve functional behavior, integrate room/session/host/18+/revocation/retention and Venus UI. Dedicated feature gate PLAN-PRESENTATIONS; no invented claim of PPTX support."
+    }
+  ],
+  "P08_content_source": "OWNER_QUESTION_PENDING_LOCAL_FILE_CATALOG_RECOMMENDED",
+  "P10_actual_devices": "NOT_PROVIDED_NO_DEVICE_PASS_INFERRED",
+  "ADR": ".docs/adr/ADR-035-functional-development-before-final-pilot.md"
+}

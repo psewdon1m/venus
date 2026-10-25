@@ -9,7 +9,7 @@ import {once} from 'node:events';
 import {clearTimeout} from 'node:timers';
 import pg from 'pg';
 import {Keyring} from '../../apps/api/dist/security.js';
-export async function runtime(){
+export async function runtime({server='tests/p05/server.mjs'}={}){
   if(process.env.VENUS_P05_ISOLATED_FIXTURE!=='1')throw new Error('Owned Docker fixture required');
   const directory=mkdtempSync(join(tmpdir(),'venus-p05-runtime-'));
   const env={...process.env,KEYRING_FILE:join(directory,'keys.json'),DELETION_LEDGER_FILE:join(directory,'deletions.jsonl'),P05_CLOCK_FILE:join(directory,'clock')};
@@ -35,7 +35,7 @@ export async function runtime(){
   });
   edge.listen(0,'127.0.0.1');await once(edge,'listening');env.APP_ORIGIN=`https://127.0.0.1:${edge.address().port}`;
   async function boot(){
-    child=spawn(process.execPath,['tests/p05/server.mjs'],{env,stdio:['ignore','pipe','pipe','ipc']});
+    child=spawn(process.execPath,[server],{env,stdio:['ignore','pipe','pipe','ipc']});
     let errors='';child.stderr.on('data',bytes=>{errors=(errors+bytes.toString()).slice(-2000);capture(bytes);});child.stdout.on('data',capture);
     port=await new Promise((done,reject)=>{
       const timer=setTimeout(()=>reject(new Error('Fixture server startup timed out')),30000);let output='',startupDone=false;

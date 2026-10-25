@@ -31,6 +31,7 @@ COPY --from=build /app/apps/api/migrations ./apps/api/migrations
 COPY --from=build /app/apps/api/game-migrations ./apps/api/game-migrations
 COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
 COPY --from=build /app/apps/api/chat-migrations ./apps/api/chat-migrations
+COPY --from=build /app/apps/api/music-migrations ./apps/api/music-migrations
 COPY --from=build /app/apps/api/private-topic-migrations ./apps/api/private-topic-migrations
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY --from=build /app/package.json /app/build-metadata.json ./

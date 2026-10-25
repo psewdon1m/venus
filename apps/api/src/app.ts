@@ -9,6 +9,7 @@ import {DomainError} from './security.js';
 import type {Games} from './games.js';
 import type {PrivateTopicPreferences} from './private-topic-preferences.js';
 import type {TopicGames} from './topic-games.js';
+import type {Music} from './music.js';
 import {requestErrorDiagnostic} from './request-error-diagnostic.js';
 
 export interface AppOptions {
@@ -20,6 +21,7 @@ export interface AppOptions {
   topicGames?:TopicGames;
   roomCreationProtocol?:1|2;
   schemaGeneration?:number;
+  music?:Music;
   servingBarrier?:()=>void;
 }
 export async function createApp(options: AppOptions) {
@@ -53,7 +55,7 @@ export async function createApp(options: AppOptions) {
   });
   await app.register(websocket,{options:{maxPayload:8192,perMessageDeflate:false}});
   if(options.servingBarrier)app.addHook('onRequest',async request=>{if(!['/health/live','/health/ready','/api/v1/version'].includes(request.url))options.servingBarrier!();});
-  if(options.rooms) await registerRooms(app,options.rooms,options.games,options.privateTopics,options.topicGames,options.roomCreationProtocol??1);
+  if(options.rooms) await registerRooms(app,options.rooms,options.games,options.privateTopics,options.topicGames,options.roomCreationProtocol??1,options.music);
   app.get('/health/live', async (): Promise<HealthLive> => ({status: 'alive'}));
   app.get('/health/ready', async (_request, reply): Promise<HealthReady> => {
     try {

@@ -43,6 +43,8 @@ export class Rooms {
   private games:RoomGameHooks|undefined;
   private servingBarrier:(()=>void)|undefined;
   attachServingBarrier(barrier:()=>void) {requireThat(!this.servingBarrier,'SERVING_BARRIER_ALREADY_ATTACHED',503);this.servingBarrier=barrier;}
+  private musicAvailable:(()=>boolean)|undefined;
+  attachMusic(available:()=>boolean){requireThat(!this.musicAvailable,'MUSIC_ALREADY_ATTACHED',503);this.musicAvailable=available;}
   constructor(readonly options:RoomOptions) {this.now=options.now??Date.now;}
   attachGames(games:RoomGameHooks) {requireThat(!this.games,'GAME_HOOKS_ALREADY_ATTACHED',503);this.games=games;}
   protocol(room:Pick<RoomRow,'private_protocol'>):1|2 {
@@ -133,7 +135,7 @@ export class Rooms {
     const rows=await c.query<MemberRow>(`SELECT m.*,COALESCE(p.ready,false) AS ready FROM room_members m LEFT JOIN private_preferences p ON p.room_id=m.room_id AND p.owner_member_id=m.id
       WHERE m.room_id=$1 AND m.removed_at IS NULL AND m.slot IS NOT NULL ORDER BY m.id`,[room.id]);
     const games=await this.games?.featureAvailable(c,room.id)??false;
-    return {room_id:room.id,room_rev:revision(room.rev),state:room.state,meeting_context:room.meeting_context,members:rows.rows.map(m=>this.project(m)),features:{games:games?'available':'unavailable',music:'unavailable',cinema:'unavailable',calls:'unavailable'}};
+    return {room_id:room.id,room_rev:revision(room.rev),state:room.state,meeting_context:room.meeting_context,members:rows.rows.map(m=>this.project(m)),features:{games:games?'available':'unavailable',music:this.musicAvailable?.()?'available':'unavailable',cinema:'unavailable',calls:'unavailable'}};
   }
   async boundEvents(c:pg.PoolClient,table:'audit_events'|'outbox_events'|'game_outbox_refs',age:number) {
     // The same transaction lock serializes insertion+hard caps across rooms.

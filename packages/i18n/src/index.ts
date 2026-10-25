@@ -6,3 +6,4 @@ export const dictionaries = {ru, en, tr} satisfies Record<Locale, Record<keyof t
 export const locales: Locale[] = ['ru', 'en', 'tr'];
 export function dictionary(locale: Locale) {return dictionaries[locale];}
 export {topicCopy} from './topics.js';
+export {musicCopy} from './music.js';
