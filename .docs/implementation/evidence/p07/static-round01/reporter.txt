@@ -1,0 +1,82 @@
+✔ X11 genuinely empty query is distinct from transient BadWindow with partial output (1.7898ms)
+✔ X11 inventory fails after bounded BadWindow retries and on non-transient failures (1.1259ms)
+✔ independent normative fixture has 30 unique cases,216 layouts,27 native observations (1.985ms)
+✔ receipt rejects missing engine (1.0491ms)
+✔ receipt rejects duplicate engine (0.3666ms)
+✔ receipt rejects unknown case (0.5387ms)
+✔ receipt rejects missing case (0.3983ms)
+✔ receipt rejects duplicate case (0.3144ms)
+✔ receipt rejects failed record (0.3394ms)
+✔ receipt rejects missing layout (1.1786ms)
+✔ receipt rejects duplicate layout (0.5011ms)
+✔ receipt rejects wrong actual viewport (0.6594ms)
+✔ receipt rejects missing native (1.0679ms)
+✔ receipt rejects duplicate native (0.9505ms)
+✔ receipt rejects unmeasured native (0.78ms)
+✔ receipt rejects native reset absent (0.5497ms)
+✔ receipt rejects shared process (0.7427ms)
+✔ receipt rejects main zoom leaked (0.5821ms)
+✔ receipt rejects wrong toolchain (0.2082ms)
+✔ receipt rejects runtime cleanup incomplete (0.2831ms)
+✔ receipt rejects display cleanup incomplete (0.1747ms)
+✔ receipt rejects pageerror (0.1738ms)
+✔ receipt rejects error overflow (0.1611ms)
+✔ receipt rejects missing overflow witness (0.1654ms)
+✔ receipt rejects native reused main room (0.8614ms)
+✔ receipt rejects native altered main game (0.6303ms)
+✔ receipt rejects native inactive scene (0.5317ms)
+✔ receipt rejects native reused main identity (0.676ms)
+✔ targeted and full receipts cannot interchange (0.2569ms)
+✔ pageerrors acceptance rejects both actual errors and overflow independently (0.1752ms)
+✔ caller selection overrides inherited narrowing (0.1298ms)
+✔ actual wrapper refuses narrowed inner report despite Docker success and inherited selectors (70.0668ms)
+✔ actual wrapper accepts correctly requested targeted report (66.7167ms)
+✔ actual wrapper rejects forged full PASS missing matrix cells (75.8651ms)
+✔ actual wrapper rejects pageerror even if inner status says PASS (66.4635ms)
+✔ actual probe timeout cleanup: owned (62.5694ms)
+✔ actual probe timeout cleanup: inspectUnconfirmed (60.4024ms)
+✔ actual probe timeout cleanup: wrongOwner (65.9579ms)
+✔ actual probe timeout cleanup: removeFailed (62.1668ms)
+✔ self-actions component receipt requires actual nonempty unique checks and matching scope (1.0899ms)
+✖ actual self-actions wrapper selects the fixed service suite without claiming browser matrix (62.5222ms)
+✔ actual self-actions wrapper rejects missing or empty component receipt despite a browser PASS (141.2546ms)
+✔ actual failed service test process cannot be overridden by its PASS receipt (79.5553ms)
+✔ self-actions rejects conflicting modes and unused browser selectors before creating resources (343.8516ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 43
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1273.4669
+
+✖ failing tests:
+
+test at tests\p05\report-contract.test.mjs:59:1
+✖ actual self-actions wrapper selects the fixed service suite without claiming browser matrix (62.5222ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  -   'browser',
+      'node',
+      '--test',
+  +   '--test-concurrency=1',
+      'tests/p05-self-actions/integration.mjs'
+    ]
+  
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p05/report-contract.test.mjs:62:69)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'node', '--test', '--test-concurrency=1', 'tests/p05-self-actions/integration.mjs' ],
+    expected: [ 'browser', 'node', '--test', 'tests/p05-self-actions/integration.mjs' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

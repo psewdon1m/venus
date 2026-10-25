@@ -1,0 +1,317 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 3.73kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/venus-p07-browser-cache:14c5930b
+#4 DONE 0.5s
+
+#5 [patched_node 1/1] FROM docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+#5 resolve docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae 0.0s done
+#5 CACHED
+
+#6 [media_binary 1/1] FROM docker.io/livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105
+#6 resolve docker.io/livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105 0.0s done
+#6 CACHED
+
+#7 [dependencies  1/18] FROM docker.io/library/venus-p07-browser-cache:14c5930b@sha256:b2b19b69c0c22d01b7516c0e9ef625ffdcceba42e9ee362e42b4efa9ec0eb12d
+#7 resolve docker.io/library/venus-p07-browser-cache:14c5930b@sha256:b2b19b69c0c22d01b7516c0e9ef625ffdcceba42e9ee362e42b4efa9ec0eb12d 0.0s done
+#7 ...
+
+#8 [internal] load build context
+#8 transferring context: 1.57MB 0.1s done
+#8 DONE 0.1s
+
+#7 [dependencies  1/18] FROM docker.io/library/venus-p07-browser-cache:14c5930b@sha256:b2b19b69c0c22d01b7516c0e9ef625ffdcceba42e9ee362e42b4efa9ec0eb12d
+#7 DONE 0.8s
+
+#9 [dependencies  2/18] COPY --from=patched_node /usr/local/bin/node /usr/local/bin/node
+#9 DONE 0.2s
+
+#10 [dependencies  3/18] COPY --from=patched_node /usr/local/lib/node_modules /usr/local/lib/node_modules
+#10 DONE 0.7s
+
+#11 [dependencies  4/18] COPY --from=patched_node /usr/local/include/node /usr/local/include/node
+#11 DONE 0.2s
+
+#12 [dependencies  5/18] WORKDIR /app
+#12 DONE 0.0s
+
+#13 [dependencies  6/18] RUN rm -rf /app/apps /app/packages /app/tests /app/tools /app/node_modules
+#13 DONE 2.0s
+
+#14 [dependencies  7/18] COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
+#14 DONE 0.1s
+
+#15 [dependencies  8/18] COPY package.json package-lock.json .npmrc ./
+#15 DONE 0.0s
+
+#16 [dependencies  9/18] COPY apps/api/package.json apps/api/
+#16 DONE 0.0s
+
+#17 [dependencies 10/18] COPY apps/web/package.json apps/web/
+#17 DONE 0.0s
+
+#18 [dependencies 11/18] COPY packages/contracts/package.json packages/contracts/
+#18 DONE 0.0s
+
+#19 [dependencies 12/18] COPY packages/i18n/package.json packages/i18n/
+#19 DONE 0.0s
+
+#20 [dependencies 13/18] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#20 DONE 0.0s
+
+#21 [dependencies 14/18] COPY packages/card-catalog/package.json packages/card-catalog/
+#21 DONE 0.0s
+
+#22 [dependencies 15/18] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#22 7.723 
+#22 7.723 added 306 packages, and audited 313 packages in 7s
+#22 7.725 
+#22 7.725 1 moderate severity vulnerability
+#22 7.725 
+#22 7.725 To address all issues, run:
+#22 7.725   npm audit fix
+#22 7.725 
+#22 7.725 Run `npm audit` for details.
+#22 8.130 Installing dependencies...
+#22 8.245 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#22 8.317 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#22 8.343 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#22 8.377 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+#22 9.155 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#22 9.156 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [357 kB]
+#22 9.747 Fetched 9395 kB in 2s (5901 kB/s)
+#22 9.747 Reading package lists...
+#22 10.09 Reading package lists...
+#22 10.43 Building dependency tree...
+#22 10.54 Reading state information...
+#22 10.55 libasound2 is already the newest version (1.2.8-1+b1).
+#22 10.55 libatk-bridge2.0-0 is already the newest version (2.46.0-5).
+#22 10.55 libatk1.0-0 is already the newest version (2.46.0-5).
+#22 10.55 libatspi2.0-0 is already the newest version (2.46.0-5).
+#22 10.55 libcairo2 is already the newest version (1.16.0-7).
+#22 10.55 libcups2 is already the newest version (2.4.2-3+deb12u9).
+#22 10.55 libdbus-1-3 is already the newest version (1.14.10-1~deb12u1).
+#22 10.55 libdrm2 is already the newest version (2.4.114-1+b1).
+#22 10.55 libgbm1 is already the newest version (22.3.6-1+deb12u2).
+#22 10.55 libglib2.0-0 is already the newest version (2.74.6-2+deb12u9).
+#22 10.55 libnspr4 is already the newest version (2:4.35-1).
+#22 10.55 libnss3 is already the newest version (2:3.87.1-1+deb12u4).
+#22 10.55 libpango-1.0-0 is already the newest version (1.50.12+ds-1).
+#22 10.55 libx11-6 is already the newest version (2:1.8.4-2+deb12u2).
+#22 10.55 libxcb1 is already the newest version (1.15-1).
+#22 10.55 libxcomposite1 is already the newest version (1:0.4.5-1).
+#22 10.55 libxdamage1 is already the newest version (1:1.1.6-1).
+#22 10.55 libxext6 is already the newest version (2:1.3.4-1+b1).
+#22 10.55 libxfixes3 is already the newest version (1:6.0.0-2).
+#22 10.55 libxkbcommon0 is already the newest version (1.5.0-1).
+#22 10.55 libxrandr2 is already the newest version (2:1.5.2-2+b1).
+#22 10.55 xvfb is already the newest version (2:21.1.7-3+deb12u13).
+#22 10.55 fonts-noto-color-emoji is already the newest version (2.042-0+deb12u1).
+#22 10.55 fonts-unifont is already the newest version (1:15.0.01-2).
+#22 10.55 libfontconfig1 is already the newest version (2.14.1-4).
+#22 10.55 libfreetype6 is already the newest version (2.12.1+dfsg-5+deb12u4).
+#22 10.55 xfonts-scalable is already the newest version (1:1.0.3-1.3).
+#22 10.55 fonts-liberation is already the newest version (1:1.07.4-11).
+#22 10.55 fonts-ipafont-gothic is already the newest version (00303-23).
+#22 10.55 fonts-wqy-zenhei is already the newest version (0.9.45-8).
+#22 10.55 fonts-tlwg-loma-otf is already the newest version (1:0.7.3-1).
+#22 10.55 fonts-freefont-ttf is already the newest version (20120503-10).
+#22 10.55 libavcodec59 is already the newest version (7:5.1.9-0+deb12u1).
+#22 10.55 libcairo-gobject2 is already the newest version (1.16.0-7).
+#22 10.55 libdbus-glib-1-2 is already the newest version (0.112-3).
+#22 10.55 libgdk-pixbuf-2.0-0 is already the newest version (2.42.10+dfsg-1+deb12u4).
+#22 10.55 libgtk-3-0 is already the newest version (3.24.38-2~deb12u3).
+#22 10.55 libharfbuzz0b is already the newest version (6.0.0+dfsg-3).
+#22 10.55 libpangocairo-1.0-0 is already the newest version (1.50.12+ds-1).
+#22 10.55 libx11-xcb1 is already the newest version (2:1.8.4-2+deb12u2).
+#22 10.55 libxcb-shm0 is already the newest version (1.15-1).
+#22 10.55 libxcursor1 is already the newest version (1:1.2.1-1).
+#22 10.55 libxi6 is already the newest version (2:1.8-1+b1).
+#22 10.55 libxrender1 is already the newest version (1:0.9.10-1.1).
+#22 10.55 libxtst6 is already the newest version (2:1.2.3-1.1).
+#22 10.55 libsoup-3.0-0 is already the newest version (3.2.3-0+deb12u2).
+#22 10.55 gstreamer1.0-libav is already the newest version (1.22.0-2).
+#22 10.55 gstreamer1.0-plugins-bad is already the newest version (1.22.0-4+deb12u8).
+#22 10.55 gstreamer1.0-plugins-base is already the newest version (1.22.0-3+deb12u7).
+#22 10.55 gstreamer1.0-plugins-good is already the newest version (1.22.0-5+deb12u4).
+#22 10.55 libegl1 is already the newest version (1.6.0-1).
+#22 10.55 libenchant-2-2 is already the newest version (2.3.3-2).
+#22 10.55 libepoxy0 is already the newest version (1.5.10-1).
+#22 10.55 libevdev2 is already the newest version (1.13.0+dfsg-1).
+#22 10.55 libgles2 is already the newest version (1.6.0-1).
+#22 10.55 libglx0 is already the newest version (1.6.0-1).
+#22 10.55 libgstreamer-gl1.0-0 is already the newest version (1.22.0-3+deb12u7).
+#22 10.55 libgstreamer-plugins-base1.0-0 is already the newest version (1.22.0-3+deb12u7).
+#22 10.55 libgstreamer1.0-0 is already the newest version (1.22.0-2+deb12u1).
+#22 10.55 libgtk-4-1 is already the newest version (4.8.3+ds-2+deb12u1).
+#22 10.55 libgudev-1.0-0 is already the newest version (237-2).
+#22 10.55 libharfbuzz-icu0 is already the newest version (6.0.0+dfsg-3).
+#22 10.55 libhyphen0 is already the newest version (2.8.8-7).
+#22 10.55 libicu72 is already the newest version (72.1-3+deb12u1).
+#22 10.55 libjpeg62-turbo is already the newest version (1:2.1.5-2).
+#22 10.55 liblcms2-2 is already the newest version (2.14-2+deb12u1).
+#22 10.55 libmanette-0.2-0 is already the newest version (0.2.6-3+b1).
+#22 10.55 libnotify4 is already the newest version (0.8.1-1).
+#22 10.55 libopengl0 is already the newest version (1.6.0-1).
+#22 10.64 libopenjp2-7 is already the newest version (2.5.0-2+deb12u3).
+#22 10.64 libopus0 is already the newest version (1.3.1-3).
+#22 10.64 libpng16-16 is already the newest version (1.6.39-2+deb12u6).
+#22 10.64 libproxy1v5 is already the newest version (0.4.18-1.2).
+#22 10.64 libsecret-1-0 is already the newest version (0.20.5-3).
+#22 10.64 libwayland-client0 is already the newest version (1.21.0-1).
+#22 10.64 libwayland-egl1 is already the newest version (1.21.0-1).
+#22 10.64 libwayland-server0 is already the newest version (1.21.0-1).
+#22 10.64 libwebp7 is already the newest version (1.2.4-0.2+deb12u1).
+#22 10.64 libwebpdemux2 is already the newest version (1.2.4-0.2+deb12u1).
+#22 10.64 libwoff1 is already the newest version (1.0.2-2).
+#22 10.64 libxml2 is already the newest version (2.9.14+dfsg-1.3~deb12u6).
+#22 10.64 libxslt1.1 is already the newest version (1.1.35-1+deb12u4).
+#22 10.64 libatomic1 is already the newest version (12.2.0-14+deb12u1).
+#22 10.64 libevent-2.1-7 is already the newest version (2.1.12-stable-8+deb12u1).
+#22 10.64 libavif15 is already the newest version (0.11.1-1+deb12u1).
+#22 10.64 0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+#22 DONE 10.7s
+
+#23 [dependencies 16/18] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio iproute2 iptables && rm -rf /var/lib/apt/lists/*
+#23 0.375 Hit:1 http://deb.debian.org/debian bookworm InRelease
+#23 0.389 Hit:2 http://deb.debian.org/debian bookworm-updates InRelease
+#23 0.410 Hit:3 http://deb.debian.org/debian-security bookworm-security InRelease
+#23 0.530 Reading package lists...
+#23 0.910 Reading package lists...
+#23 1.265 Building dependency tree...
+#23 1.368 Reading state information...
+#23 1.472 xdotool is already the newest version (1:3.20160805.1-5).
+#23 1.472 ffmpeg is already the newest version (7:5.1.9-0+deb12u1).
+#23 1.472 pulseaudio is already the newest version (16.1+dfsg1-2+b1).
+#23 1.472 iproute2 is already the newest version (6.1.0-3).
+#23 1.472 iptables is already the newest version (1.8.9-2).
+#23 1.472 0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+#23 DONE 1.5s
+
+#24 [dependencies 17/18] RUN apt-get update && apt-get install -y --no-install-recommends     poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3     python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1     python3.11=3.11.2-6+deb12u9 python3.11-minimal=3.11.2-6+deb12u9     libpython3.11-minimal=3.11.2-6+deb12u9 libpython3.11-stdlib=3.11.2-6+deb12u9     && rm -rf /var/lib/apt/lists/*
+#24 0.331 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#24 0.396 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#24 0.427 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#24 0.460 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+#24 1.256 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#24 1.256 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [357 kB]
+#24 1.794 Fetched 9395 kB in 2s (6241 kB/s)
+#24 1.794 Reading package lists...
+#24 2.118 Reading package lists...
+#24 2.482 Building dependency tree...
+#24 2.581 Reading state information...
+#24 2.676 poppler-utils is already the newest version (22.12.0-2+deb12u3).
+#24 2.676 libpoppler126 is already the newest version (22.12.0-2+deb12u3).
+#24 2.676 python3 is already the newest version (3.11.2-1+b1).
+#24 2.676 python3-minimal is already the newest version (3.11.2-1+b1).
+#24 2.676 libpython3-stdlib is already the newest version (3.11.2-1+b1).
+#24 2.676 python3.11 is already the newest version (3.11.2-6+deb12u9).
+#24 2.676 python3.11-minimal is already the newest version (3.11.2-6+deb12u9).
+#24 2.676 libpython3.11-minimal is already the newest version (3.11.2-6+deb12u9).
+#24 2.676 libpython3.11-stdlib is already the newest version (3.11.2-6+deb12u9).
+#24 2.676 0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
+#24 DONE 2.7s
+
+#25 [dependencies 18/18] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#25 DONE 0.0s
+
+#26 [runtime  1/18] COPY tsconfig*.json ./
+#26 DONE 0.0s
+
+#27 [runtime  2/18] COPY apps apps
+#27 DONE 0.1s
+
+#28 [runtime  3/18] COPY packages packages
+#28 DONE 0.0s
+
+#29 [runtime  4/18] COPY tests tests
+#29 DONE 0.0s
+
+#30 [runtime  5/18] COPY tools/music-demo.mjs tools/music-demo.mjs
+#30 DONE 0.0s
+
+#31 [runtime  6/18] COPY tools/media-provision.mjs tools/media-provision.mjs
+#31 DONE 0.0s
+
+#32 [runtime  7/18] COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
+#32 DONE 0.0s
+
+#33 [runtime  8/18] COPY tools/venus-operator tools/venus-operator
+#33 DONE 0.0s
+
+#34 [runtime  9/18] COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
+#34 DONE 0.0s
+
+#35 [runtime 10/18] COPY infra/venus/presentation-guardian.py infra/venus/presentation-render.py infra/venus/presentation-dependencies.json infra/venus/
+#35 DONE 0.0s
+
+#36 [runtime 11/18] COPY infra/venus/presentation-app-entry.mjs infra/venus/
+#36 DONE 0.0s
+
+#37 [runtime 12/18] COPY infra/venus/compose.standalone.yml infra/venus/compose.media.standalone.yml infra/venus/
+#37 DONE 0.0s
+
+#38 [runtime 13/18] COPY infra/venus/compose.presentations.standalone.yml infra/venus/
+#38 DONE 0.0s
+
+#39 [runtime 14/18] COPY .docs/contracts/venus-standalone-release.v1.schema.json .docs/contracts/venus-standalone-release.v2.schema.json .docs/contracts/
+#39 DONE 0.0s
+
+#40 [runtime 15/18] COPY .docs/contracts/venus-standalone-release.v4.schema.json .docs/contracts/
+#40 DONE 0.0s
+
+#41 [runtime 16/18] RUN npm run build && mkdir -p /artifacts /media-fixture && chown node:node /artifacts /media-fixture
+#41 0.269 
+#41 0.269 > venus@0.0.0 build
+#41 0.269 > tsc -b && npm run build -w @venus/web
+#41 0.269 
+#41 4.606 
+#41 4.606 > @venus/web@0.0.0 build
+#41 4.606 > vite build
+#41 4.606 
+#41 4.750 vite v8.3.4 building client environment for production...
+#41 4.757 transforming...
+#41 4.867 ✓ 47 modules transformed.
+#41 4.944 rendering chunks...
+#41 5.017 computing gzip size...
+#41 5.023 dist/index.html                               0.41 kB │ gzip:   0.28 kB
+#41 5.023 dist/assets/index-B_V4fdZc.css               13.39 kB │ gzip:   3.53 kB
+#41 5.023 dist/assets/index-DoI-RFH5.js               417.63 kB │ gzip: 125.46 kB
+#41 5.023 dist/assets/livekit-client.esm-BzVyFppo.js  532.27 kB │ gzip: 138.15 kB
+#41 5.023 
+#41 5.024 ✓ built in 273ms
+#41 5.025 [plugin builtin:vite-reporter] 
+#41 5.025 (!) Some chunks are larger than 500 kB after minification. Consider:
+#41 5.025 - Using dynamic import() to code-split the application
+#41 5.025 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+#41 5.025 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#41 DONE 5.1s
+
+#42 [runtime 17/18] COPY tools/media-inventory.mjs tools/media-inventory.mjs
+#42 DONE 0.0s
+
+#43 [runtime 18/18] COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs
+#43 DONE 0.0s
+
+#44 exporting to image
+#44 exporting layers
+#44 exporting layers 6.2s done
+#44 exporting manifest sha256:9725d7b19f5e29498009b91df550edee38903652c1f14506c9138c1bb45a1b5c done
+#44 exporting config sha256:1c4684834a8075b9ae807278a39d757c4649c0f6c096a7ef78e2e213944035f1 done
+#44 exporting attestation manifest sha256:fb560930eca0ac56cbcfd61b2efdc89975e1f020b124ac4db95a5ddded82a4f7 0.0s done
+#44 exporting manifest list sha256:38096859186500f40d389e87dfd0d36a333f73b95fc6478a7c955efe30d5edb5 0.0s done
+#44 naming to docker.io/library/venus-p07-9dea323938ed:local done
+#44 unpacking to docker.io/library/venus-p07-9dea323938ed:local
+#44 unpacking to docker.io/library/venus-p07-9dea323938ed:local 4.5s done
+#44 DONE 10.8s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/ino0xirbiay6puf6bw5x1wd16

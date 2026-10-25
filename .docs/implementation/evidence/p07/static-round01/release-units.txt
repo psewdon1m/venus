@@ -1,0 +1,224 @@
+✖ new service-v4 signature binds all three source assets and denies tampering/missing material (11.2155ms)
+✔ P06 image archive reads actual config bytes in classic and OCI save formats without extracting layers (4.7894ms)
+✔ P06 image archive rejects config hash substitution, header corruption and truncation (2.7533ms)
+﹣ P06 classic config ID is verified directly and used for serving without an extra archive (0.0934ms) # SKIP
+﹣ P06 containerd manifest ID requires actual config validation before native-ID mapping and serving (0.0765ms) # SKIP
+﹣ P06 native OCI ID alone cannot bypass signed config or exact repository digest validation (0.0926ms) # SKIP
+﹣ P06 offline archive restores both native ID families with config/OCI/labels binding and no registry (0.0741ms) # SKIP
+✖ P06-RELEASE signed exact source/bundle and fixture/service identities (5.3786ms)
+✖ P06-RELEASE reject signed wrong version (1.9505ms)
+✖ P06-RELEASE reject signed wrong schema (1.7351ms)
+✖ P06-RELEASE reject signed wrong environment (2.0165ms)
+✖ P06-RELEASE reject signed wrong image digest (1.9354ms)
+✖ P06-RELEASE reject signed wrong main SHA (2.2391ms)
+✖ P06-RELEASE tampered signature and bundle fail independently (2.0522ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (76.9935ms)
+﹣ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (0.154ms) # SKIP
+﹣ P06-FAULTS DISK_SPACE preserves A/data and original error (0.1364ms) # SKIP
+﹣ P06-FAULTS PULL_FAILED preserves A/data and original error (0.0983ms) # SKIP
+﹣ P06-FAULTS BACKUP_FAILED preserves A/data and original error (0.1177ms) # SKIP
+﹣ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (0.052ms) # SKIP
+﹣ P06-FAULTS HEALTH_FAILED preserves A/data and original error (0.0446ms) # SKIP
+﹣ P06-FAULTS failed recovery remains closed and retains original fault (0.0768ms) # SKIP
+﹣ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (0.0743ms) # SKIP
+﹣ P06-JOURNAL corruption fails closed without mutation (0.0861ms) # SKIP
+﹣ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (0.0664ms) # SKIP
+﹣ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (0.044ms) # SKIP
+✖ P06 archive template digest is signed, not executed or accepted by filename alone (1.9869ms)
+﹣ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (0.0504ms) # SKIP
+﹣ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (0.0741ms) # SKIP
+﹣ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (0.0546ms) # SKIP
+﹣ P06-E02 explicit recovery removes only owned interrupted-job backup temps (0.0357ms) # SKIP
+﹣ P06-SEC01 install recovery repeats preflight before initialization or start (0.0384ms) # SKIP
+✖ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (2.0288ms)
+﹣ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (0.0675ms) # SKIP
+﹣ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (0.0408ms) # SKIP
+ℹ tests 35
+ℹ suites 0
+ℹ pass 3
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 22
+ℹ todo 0
+ℹ duration_ms 230.7953
+
+✖ failing tests:
+
+test at tests\delivery\distribution.test.mjs:11:1
+✖ new service-v4 signature binds all three source assets and denies tampering/missing material (11.2155ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at createRelease (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/create-release.mjs:16:128)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/delivery/distribution.test.mjs:15:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:20:1
+✖ P06-RELEASE signed exact source/bundle and fixture/service identities (5.3786ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:20:91)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:21:336
+✖ P06-RELEASE reject signed wrong version (1.9505ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:21:394)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:21:336
+✖ P06-RELEASE reject signed wrong schema (1.7351ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:21:394)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:21:336
+✖ P06-RELEASE reject signed wrong environment (2.0165ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:21:394)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:21:336
+✖ P06-RELEASE reject signed wrong image digest (1.9354ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:21:394)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:21:336
+✖ P06-RELEASE reject signed wrong main SHA (2.2391ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:21:394)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:22:1
+✖ P06-RELEASE tampered signature and bundle fail independently (2.0522ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:22:82)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:32:1
+✖ P06 archive template digest is signed, not executed or accepted by filename alone (1.9869ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:32:103)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
+
+test at tests\p06\operator.test.mjs:38:1
+✖ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (2.0288ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:21:31)
+      at writeJson (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tools/venus-operator/files.mjs:23:50)
+      at fixture (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/helpers.mjs:9:468)
+      at TestContext.<anonymous> (file:///C:/.projects/venus/.artifacts/p06-clean-source01/tests/p06/operator.test.mjs:38:104)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }
