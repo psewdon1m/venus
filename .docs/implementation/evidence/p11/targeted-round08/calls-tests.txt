@@ -1,0 +1,87 @@
+ Container venus-p05-64f0fc046991-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (14.219399ms)
+✔ P06-RELEASE reject signed wrong version (6.025372ms)
+✔ P06-RELEASE reject signed wrong schema (5.484767ms)
+✔ P06-RELEASE reject signed wrong environment (4.407832ms)
+✔ P06-RELEASE reject signed wrong image digest (3.811215ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.43424ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.1351ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (68.878475ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (18.582688ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (12.468482ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (10.646813ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (12.683781ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (11.052031ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (12.136509ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (12.121237ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (23.790465ms)
+✔ P06-JOURNAL corruption fails closed without mutation (6.24032ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (167.89779ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (45.855691ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.596846ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.52143ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1760.351469ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (16.819472ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (8.859039ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (7.980093ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.426449ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.079394ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (15.0846ms)
+✔ host authority denies stale database grants, rollback and unsafe state (14.214828ms)
+✔ backup and restore cannot run while a media container survives API stop (1.60415ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (14.213143ms)
+{"id":"P11-ADMISSION-SOURCES","phase":"START"}
+{"id":"P11-ADMISSION-SOURCES","status":"PASS"}
+{"id":"P11-CINEMA-GAMES","phase":"START"}
+{"id":"P11-CINEMA-GAMES","status":"PASS"}
+{"id":"P11-QUALITY-30S-8","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","status":"PASS"}
+{"id":"P11-TWO-PRIVATE-PAIRS","phase":"START"}
+{"id":"P11-TWO-PRIVATE-PAIRS","status":"PASS"}
+{"id":"P11-SWITCH-AND-STALE-ACL","phase":"START"}
+{"id":"P11-SWITCH-AND-STALE-ACL","status":"PASS"}
+{"id":"P11-TCP-FALLBACK","phase":"START"}
+{"id":"P11-TCP-FALLBACK","status":"PASS"}
+{"id":"P11-UI-LOCAL","phase":"START"}
+{"id":"P11-UI-LOCAL","status":"PASS"}
+{"id":"P11-API-LOSS","phase":"START"}
+{"id":"P11-API-LOSS","status":"PASS"}
+{"id":"P11-OLD-PG-RESTORE","phase":"START"}
+{"id":"P11-OLD-PG-RESTORE","status":"PASS"}
+{"id":"P11-MINIMAL-SOURCE-GRANT","phase":"START"}
+{"id":"P11-MINIMAL-SOURCE-GRANT","status":"PASS"}
+{"id":"P11-COMPATIBLE-DISABLE-RESTART","phase":"START"}
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (127359.845561ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 130388.107224
+
+✖ failing tests:
+
+test at tests/p11/integration.mjs:44:1
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (127359.845561ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  503 !== 401
+  
+      at denied (file:///app/tests/p11/integration.mjs:41:109)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///app/tests/p11/integration.mjs:61:491
+      at async record (file:///app/tests/p11/integration.mjs:23:95)
+      at async TestContext.<anonymous> (file:///app/tests/p11/integration.mjs:61:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 503,
+    expected: 401,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

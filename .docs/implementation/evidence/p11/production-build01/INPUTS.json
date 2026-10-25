@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "source_git": "f510c30329d8c0ab90788d271970682245bf2fe9",
+  "source_identity_sha256": "6509ee7b54a01f1bc1c5d1993d133bf7219af67e200a53835ad71fb053025dcd",
+  "source_inputs": [
+    {
+      "path": "infra/venus/Dockerfile",
+      "sha256": "497f41c9c67231790d781db04b53e378f2f2c78a13df5b1e5809c41e453b8b35",
+      "bytes": 3170
+    },
+    {
+      "path": ".dockerignore",
+      "sha256": "ace6443b0f6d7d0bd74d1e034d4cf09e0df4988a185a5db74730690154cac29f",
+      "bytes": 124
+    },
+    {
+      "path": "package.json",
+      "sha256": "c088bf89785bae16826b04f744f13fb85c04c33a86a7db6eb8d16646d17b2c2e",
+      "bytes": 2807
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "76b51e7a0daa4695bad1b349d32ca5564216cfa1e2fbd236cbc446b0183fee3b",
+      "bytes": 167221
+    },
+    {
+      "path": ".npmrc",
+      "sha256": "994f7cb40cf8035ac70be35a65bf3cb51aa62e5b8fe94531d596b279f66740cb",
+      "bytes": 46
+    },
+    {
+      "path": "tools/media-inventory.mjs",
+      "sha256": "62e61799e29a0ee3651d296c05d4404b40a3600aa706e9543f4c91b5dc350cc8",
+      "bytes": 1614
+    },
+    {
+      "path": "tools/stage_inventory.py",
+      "sha256": "0215ada3334f8013ee03193d9d62b8934f7a57c3d44dae64d5e59e08dda40c49",
+      "bytes": 948
+    }
+  ],
+  "wait_before_build": {
+    "project": "venus-p05-64f0fc046991",
+    "log": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-64f0fc046991/calls-tests.txt",
+    "observed_markers": [
+      "P11-QUALITY-30S-8 START",
+      "P11-DEVICE-LIFECYCLE START/PASS",
+      "P11-TWO-PRIVATE-PAIRS START"
+    ],
+    "quality_status_not_inferred": true,
+    "parent_notified_before_context_build": true
+  },
+  "inventory_image_id": "sha256:f1199f9061e7296788add7a9b2bfae1a4efd19b61c28025fb91307062c179713",
+  "inventory_resources": {
+    "network": "none",
+    "read_only": true,
+    "cap_drop": "ALL",
+    "no_new_privileges": true,
+    "cpus": 1,
+    "memory": "512MiB",
+    "pids": 64,
+    "uid_gid": "1000:1000"
+  },
+  "p09_inventory_baseline": {
+    "path": ".docs/implementation/evidence/p09/production-build02/inventory.json",
+    "sha256": "62179b78984afa208f25180e161d73321f56d753ff6871e92802b4a4c6bf5b33",
+    "binary_buildinfo_node_os_matches": true
+  },
+  "native_exit_codes": [
+    {
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+        "--no-optional-locks",
+        "rev-parse",
+        "HEAD"
+      ],
+      "started_at_utc": "2026-10-25T05:14:28.004485+00:00",
+      "finished_at_utc": "2026-10-25T05:14:28.048448+00:00",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+        "--no-optional-locks",
+        "status",
+        "--porcelain"
+      ],
+      "started_at_utc": "2026-10-25T05:14:28.048448+00:00",
+      "finished_at_utc": "2026-10-25T05:14:28.154151+00:00",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "build",
+        "--progress=plain",
+        "--file",
+        "infra/venus/Dockerfile",
+        "--build-arg",
+        "SOURCE_REVISION=f510c30329d8c0ab90788d271970682245bf2fe9",
+        "--build-arg",
+        "RELEASE_VERSION=0.0.0",
+        "--tag",
+        "venus-p11-production:f510c303",
+        "--iidfile",
+        "C:\\.projects\\venus\\.artifacts\\p06-clean-source01\\.artifacts\\p11-production01\\image-id.txt",
+        "."
+      ],
+      "started_at_utc": "2026-10-25T05:14:31.034195+00:00",
+      "finished_at_utc": "2026-10-25T05:14:54.634815+00:00",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "image",
+        "inspect",
+        "sha256:f1199f9061e7296788add7a9b2bfae1a4efd19b61c28025fb91307062c179713"
+      ],
+      "started_at_utc": "2026-10-25T05:14:54.634815+00:00",
+      "finished_at_utc": "2026-10-25T05:14:54.914627+00:00",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "docker",
+        "run",
+        "--rm",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--cpus",
+        "1",
+        "--memory",
+        "512m",
+        "--pids-limit",
+        "64",
+        "--user",
+        "1000:1000",
+        "--entrypoint",
+        "node",
+        "sha256:f1199f9061e7296788add7a9b2bfae1a4efd19b61c28025fb91307062c179713",
+        "tools/media-inventory.mjs"
+      ],
+      "started_at_utc": "2026-10-25T05:14:54.914627+00:00",
+      "finished_at_utc": "2026-10-25T05:14:55.745012+00:00",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+        "--no-optional-locks",
+        "rev-parse",
+        "HEAD"
+      ],
+      "started_at_utc": "2026-10-25T05:14:55.746611+00:00",
+      "finished_at_utc": "2026-10-25T05:14:55.806507+00:00",
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+        "--no-optional-locks",
+        "status",
+        "--porcelain"
+      ],
+      "started_at_utc": "2026-10-25T05:14:55.806507+00:00",
+      "finished_at_utc": "2026-10-25T05:14:55.949694+00:00",
+      "exit_code": 0
+    }
+  ],
+  "tests_run": false,
+  "published": false,
+  "signed_release": false,
+  "root_git_index_modified": false
+}

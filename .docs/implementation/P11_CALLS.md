@@ -42,3 +42,7 @@ Versionedoperator calls_enabled=false выставляетservercapabilityunavai
 ## Profile revision 2
 
 Current candidate client-fixture budget and rationale: ADR-039. The preceding frozen revision1/8CPU profile is historical; all8CPU failures remain. New runs use12CPU/4GiB for browser+API, same2CPU/1GiB SFU and all strict quality targets. This is not production8CPU capacity acceptance.
+
+## Profile revision3 candidate
+
+ADR-040 specifies8independent Chromium processes/1context per simulated user, with the same total12CPU/4GiB and all acceptance thresholds unchanged. Independent approval is required before first measurement. Older one-browser FAILs remain visible; no cause or stage PASS is inferred.
