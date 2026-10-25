@@ -26,6 +26,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
  },[api,root,connected]);
  const play=async(value:Active)=>{
   if(value.closed||active.current!==value)return;
+  if(!value.grant?.publisher){const stream=video.current?.srcObject;if(!(stream instanceof MediaStream)||!stream.getVideoTracks().some(t=>t.readyState==='live')||!stream.getAudioTracks().some(t=>t.readyState==='live'))return;}
   try{if(video.current?.srcObject){video.current.volume=volumeRef.current;video.current.muted=value.grant?.publisher===true;await video.current.play();}if(!value.closed&&active.current===value)setLocal('live');}
   catch(error){if(value.closed||active.current!==value)return;if(error instanceof DOMException&&error.name==='AbortError')return;setLocal(error instanceof DOMException&&error.name==='NotAllowedError'?'blocked':'error');}
  };
@@ -61,7 +62,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
     await room.localParticipant.publishTrack(value.capture!.getAudioTracks()[0]!,{source:Track.Source.ScreenShareAudio,stream:'cinema'});
     if(!current())return;
     await api.request(root+'/cinema/source',{lease_id:grant.lease_id,scope_id:grant.scope_id,video:true,audio:true,idempotency_key:crypto.randomUUID()});if(current()){setHasMedia(true);setLocal('live');}
-   }else if(current())setLocal('live');
+   }
   }catch(error){if(!current())return;retire(value);setLocal(error instanceof DOMException&&error.name==='NotAllowedError'?'denied':error instanceof ApiError&&error.code==='MEDIA_AUDIO_REQUIRED'?'no_audio':'error');}
  };
  return <section className="panel cinema-panel" data-testid="cinema-panel"><h2>{t.title}</h2><p role="status" data-testid="cinema-status">{!connected?t.offline:local!=='idle'?t[local]:state?t[state.state]:t.connecting}</p>
