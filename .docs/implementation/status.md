@@ -1,3 +1,9 @@
+# Текущий статус — P09 в работе; P08 принят
+
+Cinema реализован на встроенном медиасервере; проходят реальные1+7 capture/ACL, Games coexistence, admission, autoplay retry и media readiness. Полный P09 PASS пока НЕ выдан: текущий чистый прогон e0841312 проверяет A/V после независимого исправления synthetic source clocks и остальные cutoff/restart/restore cases. Исторические FAIL сохранены. [Журнал P09](../../.history/2026-10-25-p09.md) · [Реестр](p09-registry.json).
+
+P10/P11/показ презентаций ещё не реализованы; P07 общий прогон отложен до функций по U022. Условия локального пилота и public/device limitations прежние. Ниже предыдущие статусы сохранены для истории.
+
 # Текущий статус — P08 функционально принят; следующий P09
 
 P08: PASS локального музыкального компонента по новому порядку U022/U024.12 actual cases,3 browser engines,8Chromium/480samples/p95=104.320ms, реальные ACL/revoke/backpressure и PGrestore5rows PASS. Два независимых round02 gate PASS, все3 замечания закрыты. [Итог P08](evidence/p08/functional-acceptance01/REPORT.md) · [Реестр](p08-registry.json).

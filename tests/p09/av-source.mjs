@@ -8,8 +8,8 @@ document.querySelector('#start').onclick=async()=>{if(window.venusSource)return;
 </script></body></html>`;
 /** Executed in a subscriber page. Measures decoded video and received audio,
  * not WebSocket delivery or the publisher's local preview. */
-export async function startReceiverMeasurement(){
- const video=document.querySelector('[data-testid="cinema-video"]'),audio=video;
+export async function startReceiverMeasurement(testId='cinema-video'){
+ const video=document.querySelector('[data-testid="'+testId+'"]'),audio=video;
  if(!video?.srcObject||!audio?.srcObject)throw Error('Remote AV missing');
  const clock=new AudioContext({sampleRate:48000}),input=clock.createMediaStreamSource(audio.srcObject),analyser=clock.createAnalyser();analyser.fftSize=256;input.connect(analyser);await clock.resume();
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=360;const ctx=canvas.getContext('2d',{willReadFrequently:true}),pcm=new Float32Array(256),m={frames:[],videoPulses:[],audioPulses:[],started:Date.now(),clockUncertaintyMs:1,stopped:false};window.venusMeasurement=m;

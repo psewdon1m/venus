@@ -1,0 +1,78 @@
+ Container venus-p05-2864154c0378-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (12.37156ms)
+✔ P06-RELEASE reject signed wrong version (5.454583ms)
+✔ P06-RELEASE reject signed wrong schema (4.186916ms)
+✔ P06-RELEASE reject signed wrong environment (4.917539ms)
+✔ P06-RELEASE reject signed wrong image digest (4.046895ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.479885ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.03232ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (57.107758ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (13.990352ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (10.168832ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (10.740684ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (14.293138ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (25.02452ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (12.505279ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (9.804166ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (19.549588ms)
+✔ P06-JOURNAL corruption fails closed without mutation (8.149512ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (144.957537ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (27.835298ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.671593ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.026244ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1761.070357ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (12.198436ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (6.406036ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (6.718611ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (2.952682ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (2.829357ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (14.192545ms)
+✔ host authority denies stale database grants, rollback and unsafe state (4.242329ms)
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","phase":"START"}
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","status":"PASS"}
+{"id":"P09-DENIED-NO-AUDIO","phase":"START"}
+{"id":"P09-DENIED-NO-AUDIO","status":"PASS"}
+{"id":"P09-REAL-TAB-CAPTURE-8","phase":"START"}
+{"id":"P09-REAL-TAB-CAPTURE-8","status":"PASS"}
+{"id":"P09-SOURCE-CALIBRATION","phase":"START"}
+{"id":"P09-SOURCE-CALIBRATION","status":"PASS"}
+{"id":"P09-ACL-FOUR-PATHS","phase":"START"}
+{"id":"P09-ACL-FOUR-PATHS","status":"PASS"}
+{"id":"P09-OPEN-READINESS-AND-AUTOPLAY","phase":"START"}
+{"id":"P09-OPEN-READINESS-AND-AUTOPLAY","status":"PASS"}
+{"id":"P09-GAMES-COEXISTENCE-ADMISSION","phase":"START"}
+{"id":"P09-GAMES-COEXISTENCE-ADMISSION","status":"PASS"}
+{"id":"P09-AV-30S-8","phase":"START"}
+{"id":"P09-AV-30S-8","status":"PASS"}
+{"id":"P09-DEGRADED-10S","phase":"START"}
+{"id":"P09-DEGRADED-10S","status":"PASS"}
+{"id":"P09-REVOKE-STALE-JWT","phase":"START"}
+{"id":"P09-REVOKE-STALE-JWT","status":"PASS"}
+{"id":"P09-UDP-BLOCKED-TCP-10S","phase":"START"}
+✖ P09 actual media and current-authority lifecycle (107352.071238ms)
+✔ backup and restore cannot run while a media container survives API stop (1.309778ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (12.362615ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110250.000661
+
+✖ failing tests:
+
+test at tests/p09/integration.mjs:41:1
+✖ P09 actual media and current-authority lifecycle (107352.071238ms)
+  locator.click: Timeout 30000ms exceeded.
+  Call log:
+    - waiting for getByTestId('cinema-stop')
+  
+      at /app/tests/p09/integration.mjs:59:90
+      at record (/app/tests/p09/integration.mjs:22:101)
+      at TestContext.<anonymous> (/app/tests/p09/integration.mjs:59:9) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for getByTestId('cinema-stop')" ]
+  }
+
