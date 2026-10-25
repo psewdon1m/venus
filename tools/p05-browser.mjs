@@ -1,6 +1,6 @@
 /** Host control only; browser, API, fixture and database all execute inside isolated Docker. */
 import {spawnSync,execFileSync} from 'node:child_process';
-import {randomBytes} from 'node:crypto';
+import {createHash,randomBytes} from 'node:crypto';
 import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,rmSync,openSync,closeSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {resolve,dirname,join} from 'node:path';
@@ -32,11 +32,23 @@ function removeOwnedContainer(role){
   else if(!/No such (object|container)/i.test((inspect.stderr??'')+(inspect.stdout??'')))throw new Error('Owned browser cleanup state unconfirmed');
 }
 const compose=extra=>['compose','--project-name',project,'--file','infra/venus/compose.p05-tests.yml',...extra];
+function musicBackupRestore(){
+  const db=command(compose(['ps','--quiet','db']),'music-db-id.txt').trim();if(!/^[a-f0-9]{64}$/.test(db))throw Error('Owned database ID missing');
+  const sql="SELECT coalesce(json_agg(t ORDER BY room_id)::text,'[]') FROM room_music_state t;",query=(database,log)=>command(['exec',db,'psql','-X','-U','venus','-d',database,'-At','-v','ON_ERROR_STOP=1','-c',sql],log).trim();
+  const before=query('venus','music-backup-before.txt');if(JSON.parse(before).length===0)throw Error('Music backup fixture empty');
+  command(['exec',db,'pg_dump','-U','venus','-d','venus','--format=custom','--no-owner','--no-acl','--file=/tmp/p08-music.dump'],'music-backup-dump.txt');
+  command(['exec',db,'createdb','-U','venus','venus_p08_restore'],'music-restore-create.txt');
+  command(['exec',db,'pg_restore','-U','venus','-d','venus_p08_restore','--single-transaction','--exit-on-error','--no-owner','--no-acl','/tmp/p08-music.dump'],'music-restore.txt');
+  const after=query('venus_p08_restore','music-backup-after.txt');if(after!==before)throw Error('Restored Music data differ');
+  command(['exec',db,'dropdb','-U','venus','venus_p08_restore'],'music-restore-drop.txt');
+  writeFileSync(join(output,'music-backup-restore.json'),JSON.stringify({status:'PASS',transport:'real PostgreSQL16 custom dump/restore inside owned Docker',rows:JSON.parse(before).length,before_sha256:createHash('sha256').update(before).digest('hex'),after_sha256:createHash('sha256').update(after).digest('hex'),external_audio_files_in_backup:false},null,2));
+}
 try{
   command(['build','--platform','linux/amd64','--target',probe?'dependencies':'runtime','-f','infra/venus/Dockerfile.p05-tests','-t',project+':local','.'],'build.txt');
   image=command(['image','inspect',project+':local','--format','{{.Id}}'],'image-id.txt').trim();if(!/^sha256:[a-f0-9]{64}$/.test(image))throw new Error('Exact image ID missing');env.VENUS_P05_IMAGE=image;
   if(probe)command(['run','--rm','--name',project+'-probe','--label','venus.p05.project='+project,'--label','venus.p05.role=probe','--init','--user','1000:1000','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--network','none','--shm-size','1g','--tmpfs','/tmp:size=1g,mode=1777,exec','--tmpfs','/home/node:size=64m,uid=1000,gid=1000',image],'browser-probe.txt');
   else{command(compose(['up','--detach','--wait','--wait-timeout','120','db']),'database-start.txt');const suite=chat?'tests/p05-chat/integration.mjs':catalog?'tests/p05-catalog/integration.mjs':selfActions?'tests/p05-self-actions/integration.mjs':music?'tests/p08/integration.mjs':null;command(compose(['run','--rm','--name',project+'-browser','--label','venus.p05.project='+project,'--label','venus.p05.role=browser','browser',...(suite?['node','--test',suite]:[])]),chat?'chat-tests.txt':catalog?'catalog-tests.txt':selfActions?'self-actions-tests.txt':music?'music-tests.txt':'browser-tests.txt');if(!suite){const browserReport=JSON.parse(readFileSync(join(output,'browser-report.json'),'utf8'));validateBrowserReport(browserReport,selected);}if(music){const m=JSON.parse(readFileSync(join(output,'p08-report.json'),'utf8'));if(m.status!=='PASS'||m.runtime_cleanup!=='completed'||m.records.length<8||!m.records.every(row=>row.status==='PASS'))throw Error('P08 targeted evidence missing');}if(selfActions)validateSelfActionsReport(JSON.parse(readFileSync(join(output,'self-actions-report.json'),'utf8')));}
+  if(music)musicBackupRestore();
   status='PASS';
 }catch(error){bodyError=error;}
 finally{
