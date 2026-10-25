@@ -297,3 +297,14 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 Первый UI прогон:31 PASS/4 FAIL из-за hardcoded1500ms в существующем harness, который перестал вызывать реальный3000ms fallback. Исправлен только выбор interval в harness; повтор47/47 PASS,4files,5.56s,exit0. ESLint/Webtypes предыдущей проверки exit0. Исправлена newline-экранизация собственного Y4M до первого nativefile запуска. Кандидат фиксируется до чистого Docker прогона.
 
+
+### 2026-10-25T05:52:22.740009+00:00 — P11 targeted-round11 PASS
+
+Чистый9c710aa6b47c7550a6c21b2dd36e7f62e7acd866, identity eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6, exit0/source unchanged/cleanup complete. Все12 обязательных records и32 native tests PASS за139.434s. Quality300samples/2400receiver samples,RTTp95=3ms,maxjitter20ms,p95jitter4ms,loss0,freeze121ms,SFUp95.606core/peak165691392B. Actual8independentbrowser PIDs/native own WAV/Y4M inputs confirmed. TCP2participants, privatepairs/listenonlycount/cutoffretry, permissions/cancel, APIloss, actualoldPGrestore/minimalJWT/compatibleoff-on PASS. Это локальный компонентный результат, не P07/fullG5/public/device acceptance.
+
+Запущен единственный affected P08 Music repeat на тех же clean appbytes; P09следующий. ADR041 явным currentoverlay supersedes old1s Music statement, historicalproofs unchanged. До закрытия — affectedstatic/productionbuild и два независимых финальных агента.
+
+### 2026-10-25T05:55:59.7054514Z — Clean affectedstatic/build
+
+На9c710aa6: DockerAPI/Webtypes,affectedlint,90/90focusedunit tests(10files,8.96s),schema/i18n exit0. source identityeaf8e52b unchanged. targeted-static02 INDEXd97735f6db2720f200098fa4bb71feb1165c0fff5d8662207ce49a93ffd59a03. Nativeproductionbuild02/imageinspect/inventory exit0; unsigned0.0.0image3d5c4660e51b0cbc8e25431b1ac37401615d2b57035f79c056904eca77d11cf0, inventory exact previousbaseline. Ничего не опубликовано; Nodepatch/licenses/signeddeliveryP07 obligationsHOLD. MusicпервыйcoldDockerbuild скачивает штатные трибраузера; приложение не меняется, новых тестовых механизмов нет.
+

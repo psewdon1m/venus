@@ -1,0 +1,69 @@
+[
+  {
+    "argv": [
+      "docker",
+      "build",
+      "--progress=plain",
+      "--file",
+      "infra/venus/Dockerfile",
+      "--build-arg",
+      "SOURCE_REVISION=9c710aa6b47c7550a6c21b2dd36e7f62e7acd866",
+      "--build-arg",
+      "RELEASE_VERSION=0.0.0",
+      "--tag",
+      "venus-p11-production:9c710aa6",
+      "--iidfile",
+      "C:\\.projects\\venus\\.artifacts\\p06-clean-source01\\.artifacts\\p11-production02\\image-id.txt",
+      "."
+    ],
+    "started_at_utc": "2026-10-25T05:54:57.541782+00:00",
+    "finished_at_utc": "2026-10-25T05:55:19.217307+00:00",
+    "exit_code": 0,
+    "stdout": "build.stdout",
+    "stderr": "build.stderr"
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "sha256:3d5c4660e51b0cbc8e25431b1ac37401615d2b57035f79c056904eca77d11cf0"
+    ],
+    "started_at_utc": "2026-10-25T05:55:19.218392+00:00",
+    "finished_at_utc": "2026-10-25T05:55:19.487700+00:00",
+    "exit_code": 0,
+    "stdout": "image-inspect.stdout",
+    "stderr": "image-inspect.stderr"
+  },
+  {
+    "argv": [
+      "docker",
+      "run",
+      "--rm",
+      "--network",
+      "none",
+      "--read-only",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges:true",
+      "--cpus",
+      "1",
+      "--memory",
+      "512m",
+      "--pids-limit",
+      "64",
+      "--user",
+      "1000:1000",
+      "--entrypoint",
+      "node",
+      "sha256:3d5c4660e51b0cbc8e25431b1ac37401615d2b57035f79c056904eca77d11cf0",
+      "tools/media-inventory.mjs"
+    ],
+    "started_at_utc": "2026-10-25T05:55:19.487700+00:00",
+    "finished_at_utc": "2026-10-25T05:55:20.193803+00:00",
+    "exit_code": 0,
+    "stdout": "inventory.stdout",
+    "stderr": "inventory.stderr"
+  }
+]

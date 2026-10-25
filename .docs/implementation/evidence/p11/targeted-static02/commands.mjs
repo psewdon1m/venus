@@ -1,0 +1,8 @@
+import {spawnSync} from 'node:child_process';
+const checks=[
+ ['api-types','node_modules/typescript/bin/tsc','-p','apps/api/tsconfig.json','--noEmit'],
+ ['web-types','node_modules/typescript/bin/tsc','-p','apps/web/tsconfig.json','--noEmit'],
+ ['affected-lint','node_modules/eslint/bin/eslint.js','apps/api/src/calls.ts','apps/api/src/calls-fence.test.ts','apps/api/src/call-routes.ts','apps/api/src/media.ts','apps/api/src/media-migrations.ts','apps/web/src/calls-panel.tsx','apps/web/src/cinema-panel.tsx','apps/web/src/games-panel.tsx','apps/web/src/topic-games-panel.tsx','apps/web/src/music-panel.tsx','apps/web/src/topic-test-harness.ts','tests/p05/runtime.mjs','tests/p05/server.mjs','tests/p11/integration.mjs','tests/p11/device-inputs.mjs','tests/p11/native-input-files.mjs','/app/tools/p05-browser.mjs','packages/contracts/src/calls.ts','packages/i18n/src/calls.ts'],
+ ['focused-regressions','node_modules/vitest/vitest.mjs','run','apps/api/src/calls-fence.test.ts','apps/api/src/native-publication.test.ts','apps/web/src/display-capture.test.ts','apps/api/src/app.test.ts','apps/web/src/session-api.test.ts','apps/web/src/music-sync.test.ts','apps/web/src/topic-controls.test.ts','apps/web/src/topic-panel.test.ts','apps/web/src/topic-round-view.test.ts','apps/web/src/topic-own-exclusion-refresh.test.ts','--maxWorkers=1']
+];
+for(const [name,...args] of checks){process.stdout.write(JSON.stringify({check:name,command:['node',...args]})+'\n');const r=spawnSync(process.execPath,args,{stdio:'inherit'});process.stdout.write(JSON.stringify({check:name,exit_code:r.status})+'\n');if(r.error||r.status!==0)process.exit(r.status||1);}
