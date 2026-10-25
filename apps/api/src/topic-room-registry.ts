@@ -47,10 +47,13 @@ export class TopicRoomRegistry implements RoomPrivateProtocolHooks,PrivateTopicL
   this.options.storage.open(roomId,birth).read({roomId,ownerId:memberId});
  }
  async guard(c:pg.PoolClient,roomId:string,memberId?:string) {
+  const fence=await this.prepareGuard(c,roomId,memberId);fence();return fence;
+ }
+ async prepareGuard(c:pg.PoolClient,roomId:string,memberId?:string) {
   const birth=await this.birthRecord(c,roomId);
   // Member authority already freshly checks room retirement under the same metadata lock.
   const fence=()=>{if(memberId===undefined)this.options.storage.assertRoomAuthority(roomId,birth);else this.options.storage.assertMemberAuthority(roomId,birth,memberId);};
-  fence();return fence;
+  return fence;
  }
  async retireMember(c:pg.PoolClient,roomId:string,memberId:string,operationId:string) {
   this.options.storage.retireMember(roomId,await this.birthRecord(c,roomId),memberId,operationId,held);

@@ -398,12 +398,12 @@ describe.skipIf(process.platform!=='linux')('inactive authenticated recovery and
   });
 });
 describe.skipIf(process.platform!=='linux')('metadata-only authority for authenticated safety operations',()=>{
-  it.each(['member','room'] as const)('combined registry member guard freshly rejects real %s withdrawal at final publication',async kind=>{
+  it.each([['eager','member'],['eager','room'],['prepared','member'],['prepared','room']] as const)('%s registry member guard freshly rejects real %s withdrawal at final publication',async(style,kind)=>{
     const f=admitted(),registry=new TopicRoomRegistry({storage:f.manager,pins,provision:()=>{throw new Error('Read must not provision');},topicsChanged:async()=>{}});
     // Only PG birth lookup is a seam; admission/room retirement and every guard
     // use the actual Linux protected lifecycle implementation and files.
     const c={query:async()=>({rows:[{private_protocol:2,incarnation:f.birth.incarnation,minimum_sequence:String(f.birth.minimumSequence),taxonomy_digest:pins.taxonomy,policy_digest:pins.policy}]})} as unknown as Parameters<TopicRoomRegistry['guard']>[0];
-    const fence=await registry.guard(c,roomId,owner);expect(fence).not.toThrow();
+    const fence=await (style==='prepared'?registry.prepareGuard(c,roomId,owner):registry.guard(c,roomId,owner));expect(fence).not.toThrow();
     if(kind==='member')f.manager.retireMember(roomId,f.birth,owner,request,proof);
     else f.manager.retireRoom(roomId,f.birth,{operationId:request,retiredAt:9000},proof);
     const code=kind==='member'?'TOPIC_ROOM_MEMBER_RETIRED':'TOPIC_ROOM_RETIRED';

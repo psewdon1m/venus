@@ -61,7 +61,8 @@ export class Rooms {
   /** Call as the final awaited operation, then invoke the returned closure at
    * synchronous enqueue/publication. Do not await unrelated work afterwards. */
   async finalAccessFence(c:pg.PoolClient,a:Auth,safety=false,socketGeneration?:number):Promise<()=>void> {
-    const external=await this.privateHooks(a.room)?.guard(c,a.room.id,a.member.id);
+    const hooks=this.privateHooks(a.room);
+    const external=await (hooks?.prepareGuard?hooks.prepareGuard(c,a.room.id,a.member.id):hooks?.guard(c,a.room.id,a.member.id));
     const row=(await c.query<{expires_at:Date;offer_version:string|null;offer_digest:string|null;socket_generation:string;slot:number|null}>(`SELECT s.expires_at,e.offer_version,e.offer_digest,m.socket_generation,m.slot
       FROM room_sessions s JOIN room_members m ON m.room_id=s.room_id AND m.id=s.member_id
       LEFT JOIN entry_acceptances e ON e.room_id=m.room_id AND e.member_id=m.id

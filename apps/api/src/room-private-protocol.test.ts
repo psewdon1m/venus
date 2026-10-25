@@ -24,6 +24,26 @@ function fixture() {
  return {rooms,room,member,c,query,hooks,a,grant,setNow:(n:number)=>{now=n;},expire:()=>{expiry=99;},retire:()=>{retired=true;},remove:()=>{deleted=true;},changeOffer:()=>{offer={version:'new',digest:'new'};},replaceSocket:()=>{generation='8';}};
 }
 describe('protocol2 final credential and exact-value delivery fences',()=>{
+ it('prepares authority before credential SQL and runs the fresh physical fence only at publication',async()=>{
+  const f=fixture(),trace:string[]=[],physical=vi.fn(()=>{trace.push('physical');});
+  f.hooks.prepareGuard=vi.fn(async()=>{trace.push('prepare');return physical;});
+  const original=f.query.getMockImplementation()!;f.query.mockImplementation(async sql=>{const value=await original(sql);if(sql.startsWith('SELECT s.expires_at'))trace.push('credential-read');return value;});
+  const fence=await f.rooms.finalAccessFence(f.c,f.a);expect(trace).toEqual(['prepare','credential-read']);expect(f.hooks.guard).not.toHaveBeenCalled();expect(physical).not.toHaveBeenCalled();
+  fence();expect(trace).toEqual(['prepare','credential-read','physical']);
+ });
+ it('prepared final fence rejects withdrawal during the credential SQL await',async()=>{
+  const f=fixture();f.hooks.prepareGuard=vi.fn(async()=>()=>{if(retired())throw new Error('EXTERNAL_RETIRED');});
+  let withdrawn=false;const retired=()=>withdrawn,original=f.query.getMockImplementation()!;
+  f.query.mockImplementation(async sql=>{const value=await original(sql);if(sql.startsWith('SELECT s.expires_at'))withdrawn=true;return value;});
+  const fence=await f.rooms.finalAccessFence(f.c,f.a);expect(fence).toThrow('EXTERNAL_RETIRED');expect(f.hooks.guard).not.toHaveBeenCalled();
+ });
+ it('does not fall back to eager guard when the trusted prepared builder fails',async()=>{
+  const f=fixture(),failure=new Error('BIRTH_UNAVAILABLE');f.hooks.prepareGuard=vi.fn(async()=>{throw failure;});
+  await expect(f.rooms.finalAccessFence(f.c,f.a)).rejects.toBe(failure);expect(f.hooks.guard).not.toHaveBeenCalled();expect(f.query).not.toHaveBeenCalled();
+ });
+ it('keeps eager legacy hooks when no prepared builder is provided',async()=>{
+  const f=fixture(),fence=await f.rooms.finalAccessFence(f.c,f.a);expect(f.hooks.guard).toHaveBeenCalledWith(f.c,f.room.id,f.member.id);f.retire();expect(fence).toThrow('EXTERNAL_RETIRED');
+ });
  it('rechecks clock at invocation rather than capturing the earlier clock',async()=>{
   const f=fixture(),fence=await f.rooms.finalAccessFence(f.c,f.a);f.setNow(1000);expect(fence).toThrow(expect.objectContaining({code:'AUTH_REQUIRED'}));
  });

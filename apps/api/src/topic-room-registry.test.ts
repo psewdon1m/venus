@@ -64,6 +64,20 @@ describe('protocol2 PG/lifecycle bridge; explicit storage seam',()=>{
   f.storage.assertRoomAuthority.mockImplementation(()=>{throw new TopicRoomLifecycleError('TOPIC_ROOM_RETIRED');});
   expect(fence).toThrow('TOPIC_ROOM_RETIRED');expect(f.storage.assertMemberAuthority).not.toHaveBeenCalled();
  });
+ for(const member of [undefined,owner])it(`prepared ${member===undefined?'room':'member'} scope grants no physical authority until invocation`,async()=>{
+  const f=fixture(),fence=await f.registry.prepareGuard(f.c,room,member);
+  expect(f.storage.assertRoomAuthority).not.toHaveBeenCalled();expect(f.storage.assertMemberAuthority).not.toHaveBeenCalled();expect(f.provision).not.toHaveBeenCalled();
+  const check=member===undefined?f.storage.assertRoomAuthority:f.storage.assertMemberAuthority;
+  check.mockImplementation(()=>{throw new TopicRoomLifecycleError('TOPIC_ROOM_RETIRED');});expect(fence).toThrow('TOPIC_ROOM_RETIRED');
+ });
+ it('default eager guard rejects existing withdrawal before returning a fence',async()=>{
+  const f=fixture();f.storage.assertMemberAuthority.mockImplementation(()=>{throw new TopicRoomLifecycleError('TOPIC_ROOM_MEMBER_RETIRED');});
+  await expect(f.registry.guard(f.c,room,owner)).rejects.toThrow('TOPIC_ROOM_MEMBER_RETIRED');
+ });
+ it('prepared guard propagates invalid DB birth instead of creating a usable closure',async()=>{
+  const f=fixture();f.setProtocol(1);await expect(f.registry.prepareGuard(f.c,room,owner)).rejects.toMatchObject({code:'PRIVATE_PROTOCOL_UNAVAILABLE'});
+  expect(f.storage.assertMemberAuthority).not.toHaveBeenCalled();expect(f.provision).not.toHaveBeenCalled();
+ });
  it('rechecks member retirement at actual synchronous publication',async()=>{
   const f=fixture(),fence=await f.registry.guard(f.c,room,owner);
   f.storage.assertMemberAuthority.mockImplementation(()=>{throw new TopicRoomLifecycleError('TOPIC_ROOM_MEMBER_RETIRED');});
