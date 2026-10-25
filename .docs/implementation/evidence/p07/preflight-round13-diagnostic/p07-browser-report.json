@@ -1,0 +1,507 @@
+{
+  "format": 1,
+  "suite": "P07_JOINT_CURRENT_V2",
+  "mode": "preflight",
+  "status": "FAIL",
+  "protocol": 2,
+  "pack_digest": "sha256:d1a7cb38be173c673665c30ae8e91792940438b675f8830d72503eebed9985d4",
+  "topic_map_digest": "fb1a179db6210c3a36ee299c325982877c38f2971c15c3a2e15fb6333cc355a9",
+  "content_approval": "OWNER_PROVISIONAL_LOCAL_PILOT",
+  "synthetic_identities": true,
+  "physical_devices": false,
+  "production": false,
+  "full_stage_pass": false,
+  "restore": "SEPARATE_REQUIRED_PRODUCTION_OPERATOR_PROOF",
+  "clock_advanced": false,
+  "context_count": 8,
+  "records": [
+    {
+      "id": "P07-ENTRY-ADMISSION-AND-LIMITS",
+      "status": "PASS",
+      "elapsed_ms": 25.29006499999923,
+      "detail": {
+        "room_slots": 8,
+        "ninth_rejected": true,
+        "adult_refusal": true,
+        "offer_refusal": true
+      }
+    },
+    {
+      "id": "P10-WEB-ENTRY-18PLUS-MOBILE",
+      "status": "PASS",
+      "elapsed_ms": 313.1316370000004,
+      "detail": {
+        "portrait": {
+          "width": 320,
+          "document_width": 320,
+          "controls": 11,
+          "outside": [],
+          "small": [],
+          "viewport_height": 568
+        },
+        "landscape": {
+          "width": 640,
+          "document_width": 640,
+          "controls": 11,
+          "outside": [],
+          "small": [],
+          "viewport_height": 360
+        },
+        "adult_and_offer_independently_required": true,
+        "touch_checkbox": true,
+        "keyboard_withdrawal": true,
+        "room_created": false,
+        "physical_devices": false
+      }
+    },
+    {
+      "id": "P07-ENCRYPTED-PDF-REJECTS-PASSWORD-AND-RECOVERS",
+      "status": "PASS",
+      "elapsed_ms": 929.4123500000005,
+      "detail": {
+        "actual_guardian": true,
+        "encrypted_input_rejected": true,
+        "password_field400": true,
+        "no_published_document": true,
+        "ordinary_pdf_recovery": "Required by subsequent P07-JOINT-ALL-MODULES import on this fixture"
+      }
+    },
+    {
+      "id": "P07-REAL-DB-OUTAGE-DISK-ALERT-RECREATE",
+      "status": "PASS",
+      "elapsed_ms": 34998.480222,
+      "detail": {
+        "room_id": "87dfe23a-9171-4100-807a-bc910ec8b683",
+        "db_recreate": {
+          "old_container": "4bd63ba3dc81b43cde71b7526a9a8303a4bc5a89ef33d4747c4f427c3bb1e1bf",
+          "new_container": "0d6f46fe803d16ff155d7d69880c3977ed92bb874e48017f1e68a6578ac0b2e3",
+          "persistent_volume_unchanged": true
+        },
+        "actual_browser_reload_after_deliberate_restart": true,
+        "automatic_reconnect_not_claimed": true,
+        "actual_db_stopped": true,
+        "live200_ready503": true,
+        "real_filesystem_canary_fault": true,
+        "api_child_restart": true,
+        "production_container_repro": "SEPARATE_OPERATOR_PROOF"
+      }
+    },
+    {
+      "id": "P07-THREE-MODES-AND-SESSION-SATURATION",
+      "status": "PASS",
+      "elapsed_ms": 27278.964950999994,
+      "detail": {
+        "completed": [
+          {
+            "session_id": "43a16482-b6ba-42c4-933c-43b2d254fe84",
+            "mode": "questions"
+          },
+          {
+            "session_id": "acc6fd68-462c-470a-8334-b9dc9034ee00",
+            "mode": "truth_or_dare"
+          },
+          {
+            "session_id": "68ceb0de-d19d-4d42-b1f3-37ad91da162e",
+            "mode": "yes_but"
+          }
+        ],
+        "one_active_game_per_room": true
+      }
+    },
+    {
+      "id": "P07-REAL-BROWSER-RECONNECT-IDENTITY",
+      "status": "PASS",
+      "elapsed_ms": 4378.913133999988,
+      "detail": {
+        "actual_browser_offline": true,
+        "actual_ws_disconnect": true,
+        "same_identity": true,
+        "completed_game_persisted": true,
+        "idempotent_prepare_start_finish_checked": true
+      }
+    },
+    {
+      "id": "P07-PRIVATE-CALL-ACL-AND-LEAVE",
+      "status": "PASS",
+      "elapsed_ms": 9629.9856,
+      "detail": {
+        "actual_pair_streams": true,
+        "host_and_other_denied": true,
+        "owned_inputs_ended": true
+      }
+    },
+    {
+      "id": "P10-WEB-LAYOUT-LOCALES",
+      "status": "FAIL",
+      "elapsed_ms": 14361.511865000008,
+      "error": "page.waitForFunction: Timeout 12000ms exceeded."
+    },
+    {
+      "id": "P07-JOINT-ALL-MODULES-AND-MEDIA-SATURATION",
+      "status": "FAIL",
+      "elapsed_ms": 81767.086418,
+      "error": "HTTP 502 unexpected /api/v1/rooms/87dfe23a-9171-4100-807a-bc910ec8b683\n\n502 !== 200\n"
+    }
+  ],
+  "page_errors": [],
+  "runtime_cleanup": "completed",
+  "started_at": "2026-10-25T17:08:32.512Z",
+  "profile": {
+    "soak_ms": 3600000,
+    "contexts": 8,
+    "min_completed_sessions": 10,
+    "session_spacing_ms": 300000,
+    "sample_ms": 5000,
+    "p95_rtt_ms": 300,
+    "p95_jitter_seconds": 0.03,
+    "maximum_loss_fraction": 0.01,
+    "sampled_freeze_limit_ms": 10000,
+    "real_music": false,
+    "media_native_files_and_original_tab": true
+  },
+  "native_inputs": [
+    {
+      "index": 0,
+      "audio_sha256": "3ff3a91e3dba7eeb9a1905d3f0f9a167458cf028d17b4e4446e260c4c00422eb",
+      "camera_sha256": "7852e27319a8917d71cf5b0c9b56c33b2fe96eea3bff5716fecbfda09f7eecf9",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 1,
+      "audio_sha256": "61febb6aff1fd7562dc62f9dcbe8ea7a2b29bc2c2ca90193f5cc2d1c22d48819",
+      "camera_sha256": "5ef861aad783ad4a4ed25ae2c1c81795fa35b909d0e8e3f910209f8a2a0e9706",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 2,
+      "audio_sha256": "166c40359145e68ef46a8c63d92c52846adce12780204715473b00f380ed629d",
+      "camera_sha256": "4e0e8e81c1cdeaecd95540ddc4a7c83b0931af2a976442f0fcc026e5d5aeea58",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 3,
+      "audio_sha256": "761d3c09f6046882eb8919297f2576d03fd730df8fb2c6aa9f246f1f44e3dfa9",
+      "camera_sha256": "fb0ef150ba692889e6ce353ae0f70fd8074b2fc346ee30eddbb65e42bce00f21",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 4,
+      "audio_sha256": "c18f69133512fc7dc1dc841d132697b7bd41f7253407e9b16dede5123aa048c9",
+      "camera_sha256": "e0edfb67b2d8b5cf09cfd2c481558fbd6e0567e350aee734897716cfef513772",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 5,
+      "audio_sha256": "01d5fac6ab82b1dcd8ae4a563b0f3b944897fe923afc7a138e289cb806228fe4",
+      "camera_sha256": "370ffe563a9e3a4ef86f1275d83585ff8ac46a7a71092b4cd4cbb0254b59568f",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 6,
+      "audio_sha256": "193271ed0d51179131e1c059df4af0e1dcbb9bcf76c4e4030a30a7d73bdc2730",
+      "camera_sha256": "93dcead4b3bec19da2a16508542279898113250c4507d01ee9d81ad3980fbf66",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    },
+    {
+      "index": 7,
+      "audio_sha256": "f2af6512ec77424f2afb2dd4b16733595747289de03b1d9cab660cf7ad17714c",
+      "camera_sha256": "42196b559b40737a6d272f15f65b9f726729f4cd5365964fe3ba7aeee5760948",
+      "audio_bytes": 192044,
+      "camera_bytes": 2592223
+    }
+  ],
+  "browser_initialization": {
+    "index": 7,
+    "phase": "ready",
+    "at": "2026-10-25T17:08:39.149Z"
+  },
+  "browser_process_ids": [
+    37,
+    264,
+    488,
+    715,
+    944,
+    1170,
+    1396,
+    1621
+  ],
+  "browser_version": "156.0.8078.4",
+  "presentation_http": [
+    {
+      "at": "2026-10-25T17:09:56.395Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 151.277
+    },
+    {
+      "at": "2026-10-25T17:09:59.464Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 220.184
+    },
+    {
+      "at": "2026-10-25T17:10:00.883Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 97.835
+    },
+    {
+      "at": "2026-10-25T17:10:01.081Z",
+      "kind": "page",
+      "status": 200,
+      "response_start_ms": 192.57
+    },
+    {
+      "at": "2026-10-25T17:10:01.884Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 98.299
+    },
+    {
+      "at": "2026-10-25T17:10:02.620Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 340.007
+    },
+    {
+      "at": "2026-10-25T17:10:05.556Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 312.737
+    },
+    {
+      "at": "2026-10-25T17:10:08.592Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 351.23
+    },
+    {
+      "at": "2026-10-25T17:10:11.624Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 382.921
+    },
+    {
+      "at": "2026-10-25T17:10:14.536Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 294.104
+    },
+    {
+      "at": "2026-10-25T17:10:17.345Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 103.246
+    },
+    {
+      "at": "2026-10-25T17:10:20.360Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 118.433
+    },
+    {
+      "at": "2026-10-25T17:10:23.577Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 334.03
+    },
+    {
+      "at": "2026-10-25T17:10:26.595Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 352.545
+    },
+    {
+      "at": "2026-10-25T17:10:29.407Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 164.594
+    },
+    {
+      "at": "2026-10-25T17:10:32.734Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 488.596
+    },
+    {
+      "at": "2026-10-25T17:10:35.488Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 245.451
+    },
+    {
+      "at": "2026-10-25T17:10:38.603Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 362.399
+    },
+    {
+      "at": "2026-10-25T17:10:40.955Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 805.707
+    },
+    {
+      "at": "2026-10-25T17:10:41.671Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 431.004
+    },
+    {
+      "at": "2026-10-25T17:10:44.101Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 232.105
+    },
+    {
+      "at": "2026-10-25T17:10:44.523Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 282.363
+    },
+    {
+      "at": "2026-10-25T17:10:47.533Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 290.967
+    },
+    {
+      "at": "2026-10-25T17:10:50.446Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 205.79
+    },
+    {
+      "at": "2026-10-25T17:10:53.424Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 182.22
+    },
+    {
+      "at": "2026-10-25T17:10:56.410Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 420.667
+    },
+    {
+      "at": "2026-10-25T17:10:59.649Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 406.957
+    },
+    {
+      "at": "2026-10-25T17:11:01.095Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 678.684
+    },
+    {
+      "at": "2026-10-25T17:11:02.384Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 406.261
+    },
+    {
+      "at": "2026-10-25T17:11:06.182Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 941.642
+    },
+    {
+      "at": "2026-10-25T17:11:09.081Z",
+      "kind": "metadata",
+      "status": 200,
+      "response_start_ms": 1559.751
+    },
+    {
+      "at": "2026-10-25T17:11:11.019Z",
+      "kind": "metadata",
+      "status": 502,
+      "response_start_ms": 445.114
+    }
+  ],
+  "general_call_leases": [
+    "51741e9c-4151-4b76-a7d8-cb35304e924c",
+    "b4758778-4bbe-4e5d-a570-9352f368f36d",
+    "cfe20625-849a-4556-a14b-a1ff24e8453c",
+    "2cf2a7d0-182d-4fd3-b4c5-43d9190fdee9",
+    "faf610bb-350d-47cc-93c6-59fd6e62e3f7",
+    "f18c35ae-1222-4ab4-8544-2d8e0f7034d7",
+    "40a44690-a50b-42b2-a8c4-4a05315893ba",
+    "17194847-f1bc-4fc7-a66e-393fe792ae3e"
+  ],
+  "music_cinema_policy": {
+    "automatic_pause_verified": true,
+    "resume": "explicit host Music play UI",
+    "automatic_resume": false
+  },
+  "error": "HTTP 502 unexpected /api/v1/rooms/87dfe23a-9171-4100-807a-bc910ec8b683\n\n502 !== 200\n",
+  "failure_diagnostics": {
+    "at": "2026-10-25T17:11:19.881Z",
+    "phase": {
+      "index": 7,
+      "phase": "ready",
+      "at": "2026-10-25T17:08:39.149Z"
+    },
+    "browsers_created": 8,
+    "contexts_created": 8,
+    "browser_connections": [
+      {
+        "index": 0,
+        "connected": true
+      },
+      {
+        "index": 1,
+        "connected": true
+      },
+      {
+        "index": 2,
+        "connected": true
+      },
+      {
+        "index": 3,
+        "connected": true
+      },
+      {
+        "index": 4,
+        "connected": true
+      },
+      {
+        "index": 5,
+        "connected": true
+      },
+      {
+        "index": 6,
+        "connected": true
+      },
+      {
+        "index": 7,
+        "connected": true
+      }
+    ],
+    "cgroup": {
+      "pids.current": "1412\n",
+      "pids.max": "2048\n",
+      "pids.events": "max 0\n",
+      "memory.current": "2349166592\n",
+      "memory.max": "6442450944\n",
+      "memory.peak": "3376033792\n",
+      "memory.events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "memory.events.local": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0\n",
+      "cpu.stat": "usage_usec 415188151\nuser_usec 291239184\nsystem_usec 123948967\nnice_usec 0\nnr_periods 1681\nnr_throttled 1\nthrottled_usec 24075\nnr_bursts 0\nburst_usec 0\n"
+    },
+    "message_tail": "HTTP 502 unexpected /api/v1/rooms/87dfe23a-9171-4100-807a-bc910ec8b683\n\n502 !== 200\n",
+    "stack_tail": "AssertionError [ERR_ASSERTION]: HTTP 502 unexpected /api/v1/rooms/87dfe23a-9171-4100-807a-bc910ec8b683\n\n502 !== 200\n\n    at ok (file:///app/tests/p07/integration.mjs:39:115)\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n    at async file:///app/tests/p07/integration.mjs:43:212\n    at async until (file:///app/tests/p07/integration.mjs:36:108)\n    at async setLocale (file:///app/tests/p07/integration.mjs:43:182)\n    at async runMobileWebChecks (file:///app/tests/p10/mobile-web.mjs:161:51)\n    at async file:///app/tests/p07/integration.mjs:114:133\n    at async record (file:///app/tests/p07/integration.mjs:35:132)\n    at async preflight (file:///app/tests/p07/integration.mjs:114:2)\n    at async file:///app/tests/p07/integration.mjs:120:1253",
+    "credentials_dumped": false
+  },
+  "api_log_truncated": false,
+  "cleanup_errors": [],
+  "finished_at": "2026-10-25T17:11:20.341Z"
+}

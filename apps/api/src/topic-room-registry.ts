@@ -48,7 +48,8 @@ export class TopicRoomRegistry implements RoomPrivateProtocolHooks,PrivateTopicL
  }
  async guard(c:pg.PoolClient,roomId:string,memberId?:string) {
   const birth=await this.birthRecord(c,roomId);
-  const fence=()=>{this.options.storage.assertRoomAuthority(roomId,birth);if(memberId!==undefined) this.options.storage.assertMemberAuthority(roomId,birth,memberId);};
+  // Member authority already freshly checks room retirement under the same metadata lock.
+  const fence=()=>{if(memberId===undefined)this.options.storage.assertRoomAuthority(roomId,birth);else this.options.storage.assertMemberAuthority(roomId,birth,memberId);};
   fence();return fence;
  }
  async retireMember(c:pg.PoolClient,roomId:string,memberId:string,operationId:string) {

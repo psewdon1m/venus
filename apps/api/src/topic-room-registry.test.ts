@@ -54,6 +54,16 @@ describe('protocol2 PG/lifecycle bridge; explicit storage seam',()=>{
  it('missing DB scope cannot recreate external authority',async()=>{
   const f=fixture();f.missing();await expect(f.registry.guard(f.c,room)).rejects.toMatchObject({code:'PRIVATE_PROTOCOL_UNAVAILABLE'});expect(f.provision).not.toHaveBeenCalled();
  });
+ it('member scope uses the combined room/member authority at both initial and final publication',async()=>{
+  const f=fixture(),fence=await f.registry.guard(f.c,room,owner);fence();
+  expect(f.storage.assertMemberAuthority).toHaveBeenCalledTimes(2);expect(f.storage.assertMemberAuthority).toHaveBeenLastCalledWith(room,birth,owner);
+  expect(f.storage.assertRoomAuthority).not.toHaveBeenCalled();
+ });
+ it('room-only scope freshly rejects retirement at synchronous publication',async()=>{
+  const f=fixture(),fence=await f.registry.guard(f.c,room);
+  f.storage.assertRoomAuthority.mockImplementation(()=>{throw new TopicRoomLifecycleError('TOPIC_ROOM_RETIRED');});
+  expect(fence).toThrow('TOPIC_ROOM_RETIRED');expect(f.storage.assertMemberAuthority).not.toHaveBeenCalled();
+ });
  it('rechecks member retirement at actual synchronous publication',async()=>{
   const f=fixture(),fence=await f.registry.guard(f.c,room,owner);
   f.storage.assertMemberAuthority.mockImplementation(()=>{throw new TopicRoomLifecycleError('TOPIC_ROOM_MEMBER_RETIRED');});

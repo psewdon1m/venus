@@ -7,6 +7,7 @@ import {spawnSync} from 'node:child_process';
 import ts from 'typescript';
 import {Keyring,canonical} from './security.js';
 import {PrivateTopicLedger} from './private-topic-ledger.js';
+import {TopicRoomRegistry} from './topic-room-registry.js';
 import {TopicRoomLifecycle,topicLifecyclePins,type RoomStorageDirectories,type TopicRoomOptions,type TopicRoomControls,type TopicRoomPhase,type TopicRoomBirth} from './topic-room-lifecycle.js';
 const roomId='11111111-1111-4111-8111-111111111111',owner='22222222-2222-4222-8222-222222222222',other='33333333-3333-4333-8333-333333333333';
 const request='44444444-4444-4444-8444-444444444444',third='55555555-5555-4555-8555-555555555555';
@@ -397,6 +398,18 @@ describe.skipIf(process.platform!=='linux')('inactive authenticated recovery and
   });
 });
 describe.skipIf(process.platform!=='linux')('metadata-only authority for authenticated safety operations',()=>{
+  it.each(['member','room'] as const)('combined registry member guard freshly rejects real %s withdrawal at final publication',async kind=>{
+    const f=admitted(),registry=new TopicRoomRegistry({storage:f.manager,pins,provision:()=>{throw new Error('Read must not provision');},topicsChanged:async()=>{}});
+    // Only PG birth lookup is a seam; admission/room retirement and every guard
+    // use the actual Linux protected lifecycle implementation and files.
+    const c={query:async()=>({rows:[{private_protocol:2,incarnation:f.birth.incarnation,minimum_sequence:String(f.birth.minimumSequence),taxonomy_digest:pins.taxonomy,policy_digest:pins.policy}]})} as unknown as Parameters<TopicRoomRegistry['guard']>[0];
+    const fence=await registry.guard(c,roomId,owner);expect(fence).not.toThrow();
+    if(kind==='member')f.manager.retireMember(roomId,f.birth,owner,request,proof);
+    else f.manager.retireRoom(roomId,f.birth,{operationId:request,retiredAt:9000},proof);
+    const code=kind==='member'?'TOPIC_ROOM_MEMBER_RETIRED':'TOPIC_ROOM_RETIRED';
+    expect(fence).toThrow(code);await expect(registry.guard(c,roomId,owner)).rejects.toThrow(code);
+  });
+
   it.each(['missing-chain','missing-witness','corrupt-chain','corrupt-witness','unsafe-chain','missing-personal-directories','unsafe-personal-directories'])('healthy metadata authority survives %s while every private-content fence still denies',fault=>{
       const f=admitted(),wrapped=f.manager.open(roomId,f.birth),chain=join(f.directories.personalChainDirectory,'chain'),witness=join(f.directories.personalWitnessDirectory,'witness');
       if(fault==='missing-chain') fs.unlinkSync(chain);
