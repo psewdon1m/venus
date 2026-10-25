@@ -1,0 +1,1042 @@
+{
+  "schema_version": 1,
+  "review": "P11_SECURITY_EXIT_ROUND02",
+  "reviewer": "p06_engineering_gate01",
+  "created_at_utc": "2026-10-25T06:17:48.205Z",
+  "final_source": {
+    "git": "c6b9320af5d13951270042f51f848347fb970040",
+    "portable_core": "d884b5125e91309223ce239aa9189780cf213832878f7cd338ab5bf9d1eee3e8",
+    "files": 2042,
+    "administrative_git_file_excluded": true
+  },
+  "clean_calls_runtime": {
+    "git": "9c710aa6b47c7550a6c21b2dd36e7f62e7acd866",
+    "core": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+    "files": 2041
+  },
+  "clean_selected_engine_cinema_runtime": {
+    "git": "6a66446d33886a141dc6c574e8c35a53c0cf5463",
+    "core": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+    "files": 2042
+  },
+  "component_rebind": {
+    "app_build_inputs_9c_to_final_unchanged": true,
+    "old_run_not_relabelled_as_new": true,
+    "changes_after_clean_9c": [
+      "Additive ADR041/P08 documentation/index",
+      "P08 fixture synchronization/global declaration comment",
+      "Administrative source inventory file exclusion"
+    ],
+    "source_sha256": {
+      ".docs/adr/ADR-041-coexistence-snapshot-request-budget.md": "86890e512bcbf14f49870e7d1d043ddd3a542a4d96b5cd426b09561038df3f53",
+      ".docs/adr/current-index.json": "796b24c86110893e19ad2468234de4b0bf390f27bb6b90b2b633b3a56d742305",
+      ".docs/implementation/P08_MUSIC.md": "f293bf62877c4a5f01e5fe0e777626c88e7b49a275c0132d832a8c4e27192527",
+      ".docs/implementation/P11_CALLS.md": "0ace415e2900a9b59565e4a6781d0cea5fa2d5388a831040cc78a89c74dd6cc9",
+      "apps/api/src/call-routes.ts": "ba920fb806460e2468f51fdbcb56dfe99ce1c867973d5e2b0d84451b6e2e4679",
+      "apps/api/src/calls.ts": "7d558a5ff8479d513f71afc605e753f38b88580a7c7916963b825ea4f43a106a",
+      "apps/api/src/media-migrations.ts": "13ef72cd45cab9a8a818275bb7765228e3410225e870d7a96bad6943fb461b66",
+      "apps/api/src/media-routes.ts": "eef7372c8da3603be22de58ce278fed886821c8ad858768a1c36634ae9e08417",
+      "apps/api/src/media.ts": "103f863c7a4e7a078f3ef814c2a64b8ab11203a35a9894791c684f6ebfe8a390",
+      "apps/web/src/calls-panel.tsx": "add1e06b281c36b1ee65890525156ae9db03cefcc97937b76e296f6b12e03c45",
+      "apps/web/src/cinema-panel.tsx": "43a3d7ffe6281f4582de32fb4e3e13e420c72eb1b07ef6b0ba0d661c031473e2",
+      "apps/web/src/games-panel.tsx": "5f411e620c32bcbd9fd9b50b89da5e67326fa636a5f36d6a937b19c88de59986",
+      "apps/web/src/music-panel.tsx": "2481da7eb85d57d3b1c70ff2a87c5da2d9ee6ad86400494b3afd4767c6934da5",
+      "apps/web/src/topic-games-panel.tsx": "acc655db4c308e641869396979d481f1719348f9c0bdb4e9acae57c75ffa5b34",
+      "tests/p11/device-inputs.mjs": "40c8903bb143676ce60f0f172d80e5d3cb45295a60ec0f1f813f4e3d2ee3454d",
+      "tests/p11/integration.mjs": "9a7c1892a10e4d8b4aa9437b82880d44a9e74dcfefbd461b260f4afd3cef1d39",
+      "tests/p11/native-input-files.mjs": "ce48f3e08cb223a75c8d9540f812175c04298dadb20b289cb2a728c463b29c38",
+      "tests/p11/server.mjs": "ffac0b114dacb0d359a3774e518d3569e13f1f9a06172e328aa1747add2dab46",
+      "tools/source_inventory.py": "058a29a28f5c4f98c2ea2b2422cc1d57521736ae980dcaf13687c486a899df60"
+    },
+    "music_reused_block": {
+      "definition": "from await record('P08-ACL-STATE' to FF/WK loop",
+      "sha256_by_git": {
+        "b3e6dd58": "4e06d386ad38e117beb9fb7e623bc8776e87bf3327f0cac998329f7b90053e3d",
+        "6a66446d": "4e06d386ad38e117beb9fb7e623bc8776e87bf3327f0cac998329f7b90053e3d",
+        "983230b3": "4e06d386ad38e117beb9fb7e623bc8776e87bf3327f0cac998329f7b90053e3d"
+      }
+    },
+    "focused_test_meaning": "31 real Calls/Media class tests with controlled SQL/final-await clocks; real PG/network native proof separate."
+  },
+  "verified_evidence": [
+    {
+      "packet": ".docs/implementation/evidence/p11/targeted-round11",
+      "index_sha256": "93cc88224b5df99cab406e0205cc7ebe2dfad9b10ebcf16dc0f981badb809c38",
+      "status": "PASS",
+      "native_exit_code": 0,
+      "verified_files": {
+        "build.txt": {
+          "sha256": "2f43e190f454c98cd17f710ba83f906733c3fe460bf15059954156b9515df512",
+          "bytes": 5595
+        },
+        "calls-tests.txt": {
+          "sha256": "57409d3452a110ca963094ff8a4c28a5585b3a5cc67893c4555ac2603aba17f6",
+          "bytes": 4016
+        },
+        "cleanup.txt": {
+          "sha256": "94fcf204a0ced8aed32cf19c58b909eec331c3496f93c2b03db0fc47a5f52b15",
+          "bytes": 830
+        },
+        "inputs-after.json": {
+          "sha256": "a034523149f4d6b30b9d125459292465cab95dd14d242ce548ef65177c70b3c9",
+          "bytes": 236707
+        },
+        "inputs-before.json": {
+          "sha256": "5492ddd3b0622c3190a2e136df6ffe505bcbd8d8008b4816d82c6518e3f0db39",
+          "bytes": 236792
+        },
+        "media-binary-and-fixture-os.json": {
+          "sha256": "1da970cdd5e516ef7c3bdfbce74113d4f51047b9f678dc2b14f3e74b787e0641",
+          "bytes": 35706
+        },
+        "p11-api-safe.log": {
+          "sha256": "ae7c53a86ef118e46eee03d567715e2f5325ab774c268927df085542096abe0a",
+          "bytes": 733602
+        },
+        "p11-report.json": {
+          "sha256": "d7098fe0af3477fb19eb1ead6e6a5522549242343447c629a7b5701253eec9d7",
+          "bytes": 10178742
+        },
+        "runner.json": {
+          "sha256": "be29cf885ab8473d0096d5487e4cba2bd264fb120d2cf3ea0c5ea5c8eba5a179",
+          "bytes": 818
+        }
+      },
+      "runner.json": {
+        "source_sha": "9c710aa6b47c7550a6c21b2dd36e7f62e7acd866",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+        "source_identity_after": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-f33c28a27523",
+        "image": "sha256:f701b840d008dc2155ffa35734108408786a83de098ed7fcd7ea1545dda51310",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": false,
+        "selected_engine": "all",
+        "selected_case": null,
+        "music_only": false,
+        "cinema_only": false,
+        "calls_only": true,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "recomputed_core": {
+        "before": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+        "after": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+        "files": 2041
+      }
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/targeted-static02",
+      "index_sha256": "d97735f6db2720f200098fa4bb71feb1165c0fff5d8662207ce49a93ffd59a03",
+      "status": "PASS_AFFECTED_STATIC_AND_UNIT",
+      "verified_files": {
+        "checks.txt": {
+          "sha256": "10f66edfa87ecd00e8b8a209bd0bed4e353ea63c7eba1375abf1f0e96dc4330d",
+          "bytes": 3972
+        },
+        "commands.mjs": {
+          "sha256": "7f395958e26fede32abeea75f6ce681b82283dd0041aef21fe6aad50960a0629",
+          "bytes": 1650
+        },
+        "core-after.txt": {
+          "sha256": "33fcfaf3864433a77d433f707a485a3b17ff8694e662f70dd19736ab995decdd",
+          "bytes": 66
+        },
+        "core-before.txt": {
+          "sha256": "33fcfaf3864433a77d433f707a485a3b17ff8694e662f70dd19736ab995decdd",
+          "bytes": 66
+        },
+        "i18n.txt": {
+          "sha256": "79d00633bef0d72e7cac6e64d2afde59cda043e321051c7a2564b8b50e5da938",
+          "bytes": 49
+        },
+        "result.json": {
+          "sha256": "4fb9d7a6eb7f6ae0e3883f3faa0c926c40a451235d08057fa4eda465f26521a8",
+          "bytes": 426
+        },
+        "schemas.txt": {
+          "sha256": "b0a4e8097258bb6baeb23ecbce5764b268774e6857906a220deff9ad10d27f9c",
+          "bytes": 56
+        },
+        "source.txt": {
+          "sha256": "f566a8e9295388eb34d59c67c22fe76f3d1c95dc5574d07d4fbc2a7a3c33d07d",
+          "bytes": 41
+        }
+      },
+      "RESULT.json": {
+        "checks_exit": 0,
+        "i18n_exit": 0,
+        "schemas_exit": 0,
+        "status": "PASS_AFFECTED_STATIC_AND_UNIT",
+        "source_git": "9c710aa6b47c7550a6c21b2dd36e7f62e7acd866",
+        "source_identity": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+        "clean_source": true,
+        "focused_unit_tests": 90,
+        "unit_files": 10,
+        "unit_duration_ms": 8960,
+        "application_stage_pass": false,
+        "P07_pass": false
+      }
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/production-build02",
+      "index_sha256": "aeef33656aaa21c098f1027a5c2b302b0847c5c3ff6fbbd33364b8459c5ed9b2",
+      "status": "PASS_LOCAL_UNSIGNED_BUILD_INVENTORY",
+      "verified_files": {
+        "build.stderr": {
+          "sha256": "ce5a16febdb5fb594d2760317c55ce61440db198c9a143c675a4ea2aa43261da",
+          "bytes": 7021
+        },
+        "build.stdout": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "COMMANDS.json": {
+          "sha256": "2f45723b003e005c1ce314f43721f275179ff2330906c35452ee8b13f4ac7778",
+          "bytes": 1800
+        },
+        "image-id.txt": {
+          "sha256": "db8fbffc40ecfdb926ee787a02836a7cd23458f9f0872b3ee06d4faee5534356",
+          "bytes": 71
+        },
+        "image-inspect.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "image-inspect.stdout": {
+          "sha256": "f2c5865fdf407e7c5532b89d0d8a8d95ba45d78034dbe8e13fd19915936ad3b0",
+          "bytes": 4282
+        },
+        "inputs-after.json": {
+          "sha256": "074ca97e4dddae1246a40f0410916269f5629af9901877e041441a6bdc70eaf0",
+          "bytes": 234556
+        },
+        "inputs-before.json": {
+          "sha256": "074ca97e4dddae1246a40f0410916269f5629af9901877e041441a6bdc70eaf0",
+          "bytes": 234556
+        },
+        "inventory.json": {
+          "sha256": "62179b78984afa208f25180e161d73321f56d753ff6871e92802b4a4c6bf5b33",
+          "bytes": 17063
+        },
+        "inventory.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "inventory.stdout": {
+          "sha256": "62179b78984afa208f25180e161d73321f56d753ff6871e92802b4a4c6bf5b33",
+          "bytes": 17063
+        },
+        "RESULT.json": {
+          "sha256": "7f5e1077c4a69b7050b4081293c903ec70907bde84d3835a05c3cac58dbfd579",
+          "bytes": 660
+        }
+      },
+      "RESULT.json": {
+        "status": "PASS_LOCAL_UNSIGNED_BUILD_INVENTORY",
+        "source_git": "9c710aa6b47c7550a6c21b2dd36e7f62e7acd866",
+        "source_identity": "eaf8e52bf5d1669a3e5a01a725a045ca701b913a894d446b20138afd13e536e6",
+        "source_unchanged": true,
+        "clean_source": true,
+        "image_id": "sha256:3d5c4660e51b0cbc8e25431b1ac37401615d2b57035f79c056904eca77d11cf0",
+        "version": "0.0.0",
+        "published": false,
+        "signed": false,
+        "inventory_exact_previous_baseline": true,
+        "P07_pass": false,
+        "production_delivery_pass": false,
+        "known_remaining_obligations": "Node patch24.22.1, full license/OS-source/advisory readiness and new signedv3 delivery remain HOLD"
+      },
+      "build_input_metadata_identical_before_after": true
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/affected-music-composition01",
+      "index_sha256": "38093a234372ebbd18667aebc9d7f42cab5afb3638c29a669dfdc1fcc71e23c9",
+      "status": "PASS_AFFECTED_CASE_COMPOSITION",
+      "verified_files": {
+        "REPORT.md": {
+          "sha256": "e8c34ae7a2c92d1dc776116492383d8e78aa73e9ccd2cf96a0a798dacd4983c3",
+          "bytes": 945
+        },
+        "RESULT.json": {
+          "sha256": "7d4aa855329644945e37a7610446bdfff6e744868f8115bf58334968fd502d67",
+          "bytes": 3684
+        }
+      },
+      "RESULT.json": {
+        "status": "PASS_AFFECTED_CASE_COMPOSITION",
+        "single_all_engine_native_green_run": false,
+        "previous_overall_round02_status": "FAIL_RETAINED_FIREFOX_FIXTURE_RACE",
+        "application_source": "9c710aa6b47c7550a6c21b2dd36e7f62e7acd866",
+        "chromium_api_source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0",
+        "firefox_webkit_source": "6a66446d33886a141dc6c574e8c35a53c0cf5463",
+        "application_build_P11_test_bytes_unchanged": true,
+        "chromium_case_block_sha256": "7c0a24674f880a22d34d77715be1135c5a6de1eccbf8d29bada51233793aa21a",
+        "cases": [
+          {
+            "id": "P08-ACL-STATE",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-RANGE-ROOM-BOUNDARY",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-PAUSE-SEEK-RESTART-AUTONEXT",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-NATIVE-AUDIO-LOCAL-VOLUME",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-MUSIC-WITH-GAMES",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-DRIFT-8-60S",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-RECONNECT-AND-CATALOG-REVOKE",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-INPERSON-OUTPUT-EXPLICIT",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-RAW-BACKPRESSURE-REVOKE",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-CLOSE-IDLE-SCHEMA-FENCES",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-round02/INDEX.json",
+            "source": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0"
+          },
+          {
+            "id": "P08-DECODE-FIREFOX",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-firefox03/INDEX.json",
+            "source": "6a66446d33886a141dc6c574e8c35a53c0cf5463"
+          },
+          {
+            "id": "P08-DECODE-WEBKIT",
+            "status": "PASS",
+            "receipt": ".docs/implementation/evidence/p11/affected-music-webkit04/INDEX.json",
+            "source": "6a66446d33886a141dc6c574e8c35a53c0cf5463"
+          }
+        ],
+        "postgres_backup_restore_receipts": [
+          ".docs/implementation/evidence/p11/affected-music-firefox03/music-backup-restore.json",
+          ".docs/implementation/evidence/p11/affected-music-webkit04/music-backup-restore.json"
+        ],
+        "scope": "ADR0413s fallback; no physicaldevices/productionrights/P07pass",
+        "created_at_utc": "2026-10-25T06:09:22.482915+00:00"
+      }
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/affected-music-round02",
+      "index_sha256": "d62982bb0b75f9928e760ce039bacdb3232711f7bb4541888b8dbdf8d7251b98",
+      "status": "FAIL",
+      "native_exit_code": 1,
+      "verified_files": {
+        "build.txt": {
+          "sha256": "7c7b3a32ccce134e2f149e4c4b6c5ad492531c39b4aaaf90f164ab3a9f89f921",
+          "bytes": 5557
+        },
+        "cleanup.txt": {
+          "sha256": "5242b92aad78c0a1126f836895c69583d4a993c3c25e3a8702e41d74c7f32a94",
+          "bytes": 404
+        },
+        "inputs-after.json": {
+          "sha256": "f66a219cb84007701096b9a57867a7692ad2d41e02e2d80413f02f9fd08ade05",
+          "bytes": 236839
+        },
+        "inputs-before.json": {
+          "sha256": "40c6eed17215b4ad42a74690fab912ff8619a91c39df225c009bc0a809b93df1",
+          "bytes": 236924
+        },
+        "runner.json": {
+          "sha256": "3c14bce4b7839b26d2e984755b9f5463e2ce5ce6ca24b4a8e0ef87ccf954216e",
+          "bytes": 862
+        },
+        "music-tests.txt": {
+          "sha256": "7eca3aa4f6786bc499d878f1f3a649fbde24b453dc2d6bedfd7b1883459a590b",
+          "bytes": 838
+        },
+        "p08-report.json": {
+          "sha256": "bae01d97a3a694a852a3530db85bac612e7ec6c12aeeb87013fd9f12b5953a7d",
+          "bytes": 3338
+        }
+      },
+      "runner.json": {
+        "source_sha": "b3e6dd583a7e694a09ecb047bcb44cea0d19fcb0",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "3669896afb3a893a57189c63364dc39630118c109cf92d2676fbf2636458b818",
+        "source_identity_after": "3669896afb3a893a57189c63364dc39630118c109cf92d2676fbf2636458b818",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-520d0a5013fe",
+        "image": "sha256:71f58fba27ffb7a6c8deb88d915c0f2c1eda298c7d811942ddb9151e1ae46619",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": false,
+        "selected_engine": "all",
+        "selected_case": null,
+        "music_only": true,
+        "cinema_only": false,
+        "calls_only": false,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "FAIL",
+        "error": "Docker command failed, exit 1; music-tests.txt"
+      },
+      "recomputed_core": {
+        "before": "3669896afb3a893a57189c63364dc39630118c109cf92d2676fbf2636458b818",
+        "after": "3669896afb3a893a57189c63364dc39630118c109cf92d2676fbf2636458b818",
+        "files": 2042
+      }
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/affected-music-firefox03",
+      "index_sha256": "ae0bc41d447f6cf60a0dd7ea4a8389dc30ab275eb0dcb3547294c8d909c09f58",
+      "status": "PASS",
+      "native_exit_code": 0,
+      "verified_files": {
+        "build.txt": {
+          "sha256": "2512f02b1f0353ce392fa83d0b7b0cb8b8025df9115eee3152516b071d0fb8a5",
+          "bytes": 5582
+        },
+        "cleanup.txt": {
+          "sha256": "b12603e1e46b383e3bb7c7ac27f9dc2ce51f6a5754edc3a37d5a9ccf3e7f17ea",
+          "bytes": 404
+        },
+        "inputs-after.json": {
+          "sha256": "e5d0012e23bc37988ebc90aa50a8d319d28dd0f3cabce146a744b4538105611b",
+          "bytes": 236839
+        },
+        "inputs-before.json": {
+          "sha256": "eacee846f44f831e48eb7985db2ab742d3a1994897e5a984e2c56fdbda005675",
+          "bytes": 236924
+        },
+        "runner.json": {
+          "sha256": "ffcc8b8d1cc89bb36cdfd0819ba7004ab0286021cedc9f183dde9bfedb174815",
+          "bytes": 822
+        },
+        "music-tests.txt": {
+          "sha256": "7685dac5582c7ff79292d352bd9d85beb93a8b395affec7397ef1910a3c5ecd1",
+          "bytes": 264
+        },
+        "p08-report.json": {
+          "sha256": "0237aedd2e05581bda1d22998e14a26a1446156493bde275211e8dfd7087ab07",
+          "bytes": 846
+        },
+        "music-backup-restore.json": {
+          "sha256": "4aedadfbf11b95be25821d6d6afadc29d63cf40ac4f57120657c0dc0b403ad6c",
+          "bytes": 327
+        },
+        "music-backup-dump.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "music-restore.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "runner.json": {
+        "source_sha": "6a66446d33886a141dc6c574e8c35a53c0cf5463",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "source_identity_after": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-3ba657e90ff7",
+        "image": "sha256:fd98c8320e590d7db53cfd86dd73185b6886e8df3eac24216cc0e7b61139fd81",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": false,
+        "selected_engine": "firefox",
+        "selected_case": null,
+        "music_only": true,
+        "cinema_only": false,
+        "calls_only": false,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "recomputed_core": {
+        "before": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "after": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "files": 2042
+      }
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/affected-music-webkit04",
+      "index_sha256": "252d0bc7d8c81d14509dc261ef7429744f98719883a981bfcd0f976122d560de",
+      "status": "PASS",
+      "native_exit_code": 0,
+      "verified_files": {
+        "build.txt": {
+          "sha256": "4b3e1a6e86d496100140bb375aaddf7574263dc9c9230a823af72926bb1fbb69",
+          "bytes": 4267
+        },
+        "cleanup.txt": {
+          "sha256": "360f15e5adf0b4828f0a4bbf29d83920792e602723fa5eb2270c0d7ba9ba3ace",
+          "bytes": 404
+        },
+        "inputs-after.json": {
+          "sha256": "e5d0012e23bc37988ebc90aa50a8d319d28dd0f3cabce146a744b4538105611b",
+          "bytes": 236839
+        },
+        "inputs-before.json": {
+          "sha256": "eacee846f44f831e48eb7985db2ab742d3a1994897e5a984e2c56fdbda005675",
+          "bytes": 236924
+        },
+        "runner.json": {
+          "sha256": "bd2e113f9cc3282de180acf2399372d304548c2ebca61a2128f45bc515867ccc",
+          "bytes": 821
+        },
+        "music-tests.txt": {
+          "sha256": "74b01da54efa8758df593db43379c754d24659fbbfdf0043360b0957c4e9112d",
+          "bytes": 263
+        },
+        "p08-report.json": {
+          "sha256": "98b2ed627223418d5174874ab2b950b13a7e8f88848588a0be990d6ee4de5898",
+          "bytes": 842
+        },
+        "music-backup-restore.json": {
+          "sha256": "914e331ee626dab4fe7205160c794810d63f95e396875abcb6e223661d468366",
+          "bytes": 327
+        },
+        "music-backup-dump.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "music-restore.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "runner.json": {
+        "source_sha": "6a66446d33886a141dc6c574e8c35a53c0cf5463",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "source_identity_after": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-8aa96815a9d6",
+        "image": "sha256:e8fb18d5be36b1a65c39e5bfaad87ada9d6b8bfda1057e5b5b4ef9d8e5dab61b",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": false,
+        "selected_engine": "webkit",
+        "selected_case": null,
+        "music_only": true,
+        "cinema_only": false,
+        "calls_only": false,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "recomputed_core": {
+        "before": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "after": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "files": 2042
+      }
+    },
+    {
+      "packet": ".docs/implementation/evidence/p11/affected-cinema-round01",
+      "index_sha256": "5a6fdfb79549223313909d382f4b215883f0af6f6385b38781e4968212a143d5",
+      "status": "PASS",
+      "native_exit_code": 0,
+      "verified_files": {
+        "build.txt": {
+          "sha256": "06b85f80493cf1e08d3aa1bd39289dc1802a1d41506705b642f832296ca107c7",
+          "bytes": 5512
+        },
+        "cleanup.txt": {
+          "sha256": "03bacc3e9cbae6236accbc24ca729251213dd7df41ed7864d751de407cbd811f",
+          "bytes": 830
+        },
+        "inputs-after.json": {
+          "sha256": "e5d0012e23bc37988ebc90aa50a8d319d28dd0f3cabce146a744b4538105611b",
+          "bytes": 236839
+        },
+        "inputs-before.json": {
+          "sha256": "eacee846f44f831e48eb7985db2ab742d3a1994897e5a984e2c56fdbda005675",
+          "bytes": 236924
+        },
+        "runner.json": {
+          "sha256": "d3db2b48ea290100032234cc0286d189e6a1ddab3fecea86a5894891f1ed2571",
+          "bytes": 818
+        },
+        "cinema-tests.txt": {
+          "sha256": "5469493d506257ad489fda0ec1ad0c89bb438bde27bfa3981eb60a11764f0988",
+          "bytes": 4788
+        },
+        "media-binary-and-fixture-os.json": {
+          "sha256": "1da970cdd5e516ef7c3bdfbce74113d4f51047b9f678dc2b14f3e74b787e0641",
+          "bytes": 35706
+        },
+        "p09-api-safe.log": {
+          "sha256": "9149c2bee38ce42f38532b2e380b8e6499cadde4ba3de46ec568de200526cbf2",
+          "bytes": 540566
+        },
+        "p09-report.json": {
+          "sha256": "19baf104956ecdd11ace6300ef98036bb08135d66da191915833c0e3e8198c1f",
+          "bytes": 74014
+        },
+        "p09-live-dump.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "p09-old-live-restore.txt": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "runner.json": {
+        "source_sha": "6a66446d33886a141dc6c574e8c35a53c0cf5463",
+        "source_dirty": false,
+        "preflight_only": false,
+        "source_identity_sha256": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "source_identity_after": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "source_unchanged": true,
+        "isolated_project": "venus-p05-9c068bcfe761",
+        "image": "sha256:54c548b8c304f07aa1b3fd1a441747d9bca1855cc9a61c6d03ffaf56ab1368d7",
+        "probe_only": false,
+        "chat_only": false,
+        "catalog_only": false,
+        "self_actions_only": false,
+        "selected_engine": "all",
+        "selected_case": null,
+        "music_only": false,
+        "cinema_only": true,
+        "calls_only": false,
+        "full_browser_matrix": false,
+        "synthetic_fixture_only": true,
+        "cleanup": "completed",
+        "status": "PASS",
+        "error": null
+      },
+      "recomputed_core": {
+        "before": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "after": "a67a2a3ea0d3647488e2261888f4855645723d357cc7b8ab985e5d5b3b534abc",
+        "files": 2042
+      }
+    }
+  ],
+  "total_indexed_artifacts_verified": 69,
+  "actual_calls_records": [
+    {
+      "id": "P11-ADMISSION-SOURCES",
+      "status": "PASS",
+      "detail": {
+        "general": 8,
+        "remote_streams": 56,
+        "join_device_requests": 0,
+        "only_requested_sources": true
+      }
+    },
+    {
+      "id": "P11-CINEMA-GAMES",
+      "status": "PASS",
+      "detail": {
+        "actual_tab_capture": true,
+        "cinema_viewers": 7,
+        "calls": 8,
+        "game": "active",
+        "local_cinema_duck": 0.2
+      }
+    },
+    {
+      "id": "P11-QUALITY-30S-8",
+      "status": "PASS",
+      "detail": {
+        "samples": 300,
+        "receiver_samples": 2400,
+        "actual_rtt_samples": 4800,
+        "rtt_p95_ms": 3,
+        "max_jitter_seconds": 0.02,
+        "jitter_p95_seconds": 0.004,
+        "max_loss_fraction": 0,
+        "jitter_offenders": [],
+        "max_freeze_ms": 121,
+        "video_track_progress": 63,
+        "sfu": {
+          "p95_cpu_cores": 0.606039585804998,
+          "peak_memory_bytes": 165691392,
+          "p95_egress_bps": 15654193.185148502
+        }
+      }
+    },
+    {
+      "id": "P11-DEVICE-LIFECYCLE",
+      "status": "PASS",
+      "detail": {
+        "actual_permission_denied": true,
+        "raw_device_tracks_stopped": true,
+        "missing_device_muted": true,
+        "explicit_retry": true,
+        "echo_constraints": true
+      }
+    },
+    {
+      "id": "P11-TWO-PRIVATE-PAIRS",
+      "status": "PASS",
+      "detail": {
+        "pair_cutoff_retry_both_peers_confirmed": true,
+        "private_listen_only_not_cinema_viewer": true,
+        "general": 4,
+        "pairs": [
+          2,
+          2
+        ],
+        "actual_distinct_audio_video_markers": true,
+        "host_pair_projection": 0,
+        "foreign_media": 404,
+        "cinema_stop_kept_calls": true
+      }
+    },
+    {
+      "id": "P11-SWITCH-AND-STALE-ACL",
+      "status": "PASS",
+      "detail": {
+        "old_pair_backend_deleted": true,
+        "old_token_four_paths_denied": true,
+        "former_peer_no_new_media": true,
+        "pending_not_grant": true,
+        "decline_terminal": true,
+        "private_action_no_global_music_mutation": true
+      }
+    },
+    {
+      "id": "P11-TCP-FALLBACK",
+      "status": "PASS",
+      "detail": {
+        "udp_blocked": true,
+        "actual_tcp_participants": 2,
+        "duration_seconds": 10
+      }
+    },
+    {
+      "id": "P11-UI-LOCAL",
+      "status": "PASS",
+      "detail": {
+        "widths": [
+          320,
+          768,
+          1024
+        ],
+        "zoom": 200,
+        "keyboard_leave": true,
+        "room_context_locales": [
+          "ru",
+          "en",
+          "tr"
+        ],
+        "physical_devices": false
+      }
+    },
+    {
+      "id": "P11-API-LOSS",
+      "status": "PASS",
+      "detail": {
+        "deadline_ms": 5000,
+        "actual_ms": 3267,
+        "owned_media_stopped": true
+      }
+    },
+    {
+      "id": "P11-OLD-PG-RESTORE",
+      "status": "PASS",
+      "detail": {
+        "actual_pg16_restore": true,
+        "authenticated_cookie": true,
+        "old_scope_and_consents_not_resurrected": true,
+        "old_token_all_four_paths_denied": true
+      }
+    },
+    {
+      "id": "P11-MINIMAL-SOURCE-GRANT",
+      "status": "PASS",
+      "detail": {
+        "camera_rejected": true,
+        "forged_source_expansion_denied": true,
+        "sdk_bundle_sha256": "fb646f2260d84f91238d0a2dc10726c456631d6a26c7cafc43cfee5959b4d31d"
+      }
+    },
+    {
+      "id": "P11-COMPATIBLE-DISABLE-RESTART",
+      "status": "PASS",
+      "detail": {
+        "disabled_transport_ready_ms": 2704,
+        "same_schema003_restart": true,
+        "disabled_api_denied": true,
+        "safety_leave_allowed": true,
+        "old_jwt_denied_all_four_paths": true,
+        "cinema_transport_remains_available": true,
+        "reenable_does_not_restore_old_consent": true,
+        "binary_downgrade_test": false
+      }
+    }
+  ],
+  "actual_calls_cleanup": "completed",
+  "actual_calls_profile": {
+    "contexts": 8,
+    "browser_processes": 8,
+    "contexts_per_browser": 1,
+    "camera_max": [
+      320,
+      180,
+      15
+    ],
+    "camera_bitrate": 180000,
+    "warmup_seconds": 3,
+    "measure_seconds": 30,
+    "stats_interval_ms": 100,
+    "rtt_p95_ms": 300,
+    "loss": 0.01,
+    "jitter_seconds": 0.03,
+    "freeze_ms": 2000,
+    "sfu_cpus": 2,
+    "sfu_memory_bytes": 1073741824,
+    "browser_cpus": 12,
+    "browser_memory_bytes": 4294967296,
+    "physical_device": false
+  },
+  "actual_calls_quality": {
+    "samples": 300,
+    "receiver_samples": 2400,
+    "actual_rtt_samples": 4800,
+    "rtt_p95_ms": 3,
+    "max_jitter_seconds": 0.02,
+    "jitter_p95_seconds": 0.004,
+    "max_loss_fraction": 0,
+    "jitter_offenders": [],
+    "max_freeze_ms": 121,
+    "video_track_progress": 63,
+    "sfu": {
+      "p95_cpu_cores": 0.606039585804998,
+      "peak_memory_bytes": 165691392,
+      "p95_egress_bps": 15654193.185148502
+    }
+  },
+  "actual_calls_quality_elapsed_ms": 36130,
+  "actual_calls_quality_browser_pids": [
+    65,
+    292,
+    519,
+    744,
+    1014,
+    1240,
+    1465,
+    1695
+  ],
+  "actual_cinema_records": [
+    {
+      "id": "P09-MAINTENANCE-MEDIA-READINESS",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-DENIED-NO-AUDIO",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-REAL-TAB-CAPTURE-8",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-SOURCE-CALIBRATION",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-ACL-FOUR-PATHS",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-OPEN-READINESS-AND-AUTOPLAY",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-GAMES-COEXISTENCE-ADMISSION",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-AV-30S-8",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-DEGRADED-10S",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-REVOKE-STALE-JWT",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-UDP-BLOCKED-TCP-10S",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-OLD-RELEASE-KEEPS-NEW-SCOPE",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-UNCONFIRMED-RETRY-AND-EXPIRY",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-STOP-RETRY-CUTOFF",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-SOURCE-END",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-PENDING-JOIN-VS-CLOSE",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-PENDING-CUTOFF-API-RESTART",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-API-LOSS-WATCHDOG",
+      "status": "PASS"
+    },
+    {
+      "id": "P09-OLD-LIVE-PG-RESTORE",
+      "status": "PASS"
+    }
+  ],
+  "music_composition": {
+    "single_all_engine_green_run": false,
+    "old_overall_fail_retained": true,
+    "chromium_api_positive_cases": [
+      "P08-ACL-STATE",
+      "P08-RANGE-ROOM-BOUNDARY",
+      "P08-PAUSE-SEEK-RESTART-AUTONEXT",
+      "P08-NATIVE-AUDIO-LOCAL-VOLUME",
+      "P08-MUSIC-WITH-GAMES",
+      "P08-DRIFT-8-60S",
+      "P08-RECONNECT-AND-CATALOG-REVOKE",
+      "P08-INPERSON-OUTPUT-EXPLICIT",
+      "P08-RAW-BACKPRESSURE-REVOKE",
+      "P08-CLOSE-IDLE-SCHEMA-FENCES"
+    ],
+    "selected_engines": [
+      "firefox",
+      "webkit"
+    ],
+    "pg_restore_rows_each": 1,
+    "external_audio_in_backup": false
+  },
+  "accepted_findings": [
+    {
+      "id": "S11-01",
+      "status": "CLOSED",
+      "basis": "Cinema kind/current scope/upstream filtering; native pair listen-only count0."
+    },
+    {
+      "id": "S11-02",
+      "status": "CLOSED",
+      "basis": "Retained pair row whole-upstream cutoff; repeated503 then actual retry both peers denied."
+    },
+    {
+      "id": "S11-03",
+      "status": "CLOSED",
+      "basis": "Intent/generation before await; held pending device change/cancel and stale capture/publish/catch fences."
+    },
+    {
+      "id": "S11-04",
+      "status": "CLOSED",
+      "basis": "Synchronous peer/session/lease/scope/policy closure after final awaited caller fence; post-admin watchdog filtering."
+    }
+  ],
+  "prior_round_preserved": {
+    "path": ".docs/implementation/reviews/p11/security-round01",
+    "index_sha256": "39c170201a86e06ca013ccf9b9e0e58de467cd0e6f5407c403d2da94a97e6c9c",
+    "status": "CHANGES_REQUIRED"
+  },
+  "defined_publication_scan": {
+    "scanned_at_utc": "2026-10-25T06:17:48.205Z",
+    "roots": [
+      {
+        "label": "W_P11_EVIDENCE",
+        "path": "C:/Users/pc/.codex/worktrees/p06-standalone-release/venus/.docs/implementation/evidence/p11"
+      },
+      {
+        "label": "ROOT_P11_EVIDENCE",
+        "path": "C:/.projects/venus/.docs/implementation/evidence/p11"
+      }
+    ],
+    "text_extensions": [
+      "json",
+      "jsonl",
+      "txt",
+      "log",
+      "md",
+      "csv",
+      "yaml",
+      "yml"
+    ],
+    "files": 400,
+    "bytes": 206556966,
+    "manifest_sha256": "b0528ccd69626ca3814607367982dcf0ee7fd7d99c4de9f492aa56ea8ba717f1",
+    "candidate_hits": [],
+    "limitations": "Defined text-pattern hygiene, not complete encoding/secret-absence proof. Redacted/fixture placeholders and UUID-only values excluded. Values never emitted."
+  },
+  "reviewer_executions": {
+    "tests": 0,
+    "docker": 0,
+    "build": 0,
+    "network_api": 0,
+    "app_edits": 0
+  },
+  "exclusions": [
+    "full original G5",
+    "P07 aggregate release/load/soak/pilot",
+    "physical/native devices,AEC,hardware lip-sync,battery",
+    "public DNS/TLS/NAT,signed public v3",
+    "professional content/music rights",
+    "Node patch and license/OS-source/advisory clearance"
+  ]
+}

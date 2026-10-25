@@ -1,3 +1,7 @@
+# Текущий статус — P11 функционально принят; следующий блок — презентации
+
+P11: clean32/32tests и12/12mandatoryrecords PASS, независимые Engineering02/Security02 PASS. AffectedMusic12cases (явная композицияreceipts) и Cinema32tests/19cases PASS. [Итоговая приёмка](evidence/p11/functional-acceptance01/REPORT.md) · [Реестр](p11-registry.json). P08/P09 локальные функциональные компоненты приняты; P10 только boundedprep, полныйnativeэтап HOLD. ОбщийP07/fullG5/publicdelivery/devices остаются NOT_PASS. ПрезентацииPreza: sourceaudit/entry выполнены, реализация следующая. Ниже сохранены прежние статусы/FAIL.
+
 # Текущий статус — P11: чистые обязательные сценарии PASS, выходной гейт в работе
 
 На9c710aa6 завершён чистый Docker прогон:32/32tests,12/12mandatory scenarios PASS; max jitter20ms при30ms,RTTp953ms,loss0,APIloss3267ms. Исходники неизменны, очистка завершена. [Доказательство](evidence/p11/targeted-round11/INDEX.json). Выполняются affected Music/Cinema/static/build и независимые финальные Engineering/Security; **полный P11 ещё не принят**. Изменение fallback опроса явно описано в ADR041; старые FAIL сохранены.
