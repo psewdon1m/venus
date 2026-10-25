@@ -1,0 +1,60 @@
+ Container venus-p05-507a41c2f5db-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (15.512623ms)
+✔ P06-RELEASE reject signed wrong version (4.904908ms)
+✔ P06-RELEASE reject signed wrong schema (5.365277ms)
+✔ P06-RELEASE reject signed wrong environment (4.891737ms)
+✔ P06-RELEASE reject signed wrong image digest (4.919239ms)
+✔ P06-RELEASE reject signed wrong main SHA (4.47811ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (6.303908ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (53.641764ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (10.924175ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (10.73695ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (11.912959ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (11.148208ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (8.866336ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (9.998844ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (8.685467ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (19.11161ms)
+✔ P06-JOURNAL corruption fails closed without mutation (5.336747ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (75.474974ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (31.221473ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.829673ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.719973ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1759.453276ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (10.258714ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (5.6619ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (6.332278ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (2.908324ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (2.627482ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (13.176588ms)
+✔ host authority denies stale database grants, rollback and unsafe state (9.554434ms)
+{"id":"P09-DENIED-NO-AUDIO","phase":"START"}
+{"id":"P09-DENIED-NO-AUDIO","status":"PASS"}
+{"id":"P09-REAL-TAB-CAPTURE-8","phase":"START"}
+✖ P09 actual media and current-authority lifecycle (29789.783384ms)
+✔ backup and restore cannot run while a media container survives API stop (1.675531ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (11.171458ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 32539.792084
+
+✖ failing tests:
+
+test at tests/p09/integration.mjs:35:1
+✖ P09 actual media and current-authority lifecycle (29789.783384ms)
+  locator.waitFor: Timeout 25000ms exceeded.
+  Call log:
+    - waiting for getByTestId('cinema-status').filter({ hasText: /Идёт показ/ }) to be visible
+  
+      at /app/tests/p09/integration.mjs:43:472
+      at async record (/app/tests/p09/integration.mjs:19:95)
+      at async TestContext.<anonymous> (/app/tests/p09/integration.mjs:43:3) {
+    name: 'TimeoutError',
+    log: [ "  - waiting for getByTestId('cinema-status').filter({ hasText: /Идёт показ/ }) to be visible" ]
+  }
+
