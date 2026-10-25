@@ -71,7 +71,7 @@ function readJointUi(){
 }
 async function jointSample(){
  assert.equal(contexts.length,8);const room=await ok(f.host,f.base),online=room.members.filter(m=>actors.some(a=>a.memberId===m.id)&&m.presence==='online').length;assert.equal(online,8,'All eight room identities must remain online');
- const ui=await Promise.all(actors.map(async a=>{let value=await a.page.evaluate(readJointUi);if(!value.music?.playing||value.music.ready<2){await a.page.waitForFunction(()=>{const audio=document.querySelector('[data-testid="music-panel"] audio');return audio&&!audio.paused&&audio.readyState>=2;},null,{timeout:4500});value=await a.page.evaluate(readJointUi);}return value;}));
+ const ui=await Promise.all(actors.map(async a=>{let value=await a.page.evaluate(readJointUi);if(!value.music?.playing||value.music.ready<2){await a.page.waitForFunction(()=>{const audio=document.querySelector('[data-testid="music-panel"] audio');return audio&&!audio.paused&&audio.readyState>=2;},null,{timeout:4500});value=await a.page.evaluate(readJointUi);}if(!value.presentation){await a.page.waitForFunction(()=>{const images=[...document.querySelectorAll('[data-testid="presentation-page-image"]')];return images.length>0&&images.every(image=>image.complete&&image.naturalWidth>0);},null,{timeout:4500});value=await a.page.evaluate(readJointUi);}return value;}));
  for(const [index,value]of ui.entries()){
   assert(value.music?.playing&&value.music.ready>=2&&value.music.source,'Actual music playback missing '+index);assert(value.presentation,'Decoded PDF missing '+index);
   if(index>0)assert(value.cinema?.playing&&value.cinema.ready>=2&&value.cinema.audio&&value.cinema.video&&value.cinema.frames>0,'Actual Cinema AV missing '+index);
