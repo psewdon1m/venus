@@ -116,9 +116,18 @@ function App() {
     const id=room.room_id;let input:{locale:Locale;expected_rev:number;idempotency_key:string}|undefined;
     await perform(async()=>{
       // Media commands can commit before their room WebSocket frame arrives.
-      // Capture a fresh revision once; a transport retry keeps the same body/key.
-      if(!input){const current=await api.request<RoomView>(`/api/v1/rooms/${id}`);input={locale:value,expected_rev:current.room_rev,idempotency_key:crypto.randomUUID()};}
-      await api.request<Member>(`/api/v1/rooms/${id}/me`,input,'PATCH');await refresh(id);
+      // A transport retry keeps its original body/key; only a rejected CAS refreshes them.
+      for(let attempt=0;attempt<2;attempt++){
+        if(!input){const current=await api.request<RoomView>(`/api/v1/rooms/${id}`);input={locale:value,expected_rev:current.room_rev,idempotency_key:crypto.randomUUID()};}
+        try {await api.request<Member>(`/api/v1/rooms/${id}/me`,input,'PATCH');break;}
+        catch(error){
+          // A rejected CAS committed nothing. Re-read once for this locale-only
+          // intent; transport failures retain the original body and key.
+          if(error instanceof ApiError&&error.code==='REVISION_CONFLICT'){input=undefined;if(attempt===0)continue;}
+          throw error;
+        }
+      }
+      await refresh(id);
     });
   }
   const hasApproval=Boolean(policy?.available&&accepted&&adult);

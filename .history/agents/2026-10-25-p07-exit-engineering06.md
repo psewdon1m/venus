@@ -1,0 +1,4 @@
+# P07 independent engineering review06 — bounded locale CAS retry
+
+2026-10-25T16:49:54Z — Started root-author fix07 source-only independent review on clean06f95base plus dirty main.tsx. Inspected chooseLocale, perform/error/manualRetry closure behavior, SessionApi errors/transport, actual Rooms.mutateCAS-before-UPDATE/remember and routeguards. No tests/Docker/network/code edits.
+2026-10-25T16:51:00.699353+00:00 — SOURCE_ONLY_ACCEPTED no blocker. Max2PATCH, definiteCASonlyfreshrevision/key, unknownfailures preservebody/key, finalconflictthrow/no3rdattempt. ManualRetryconflictrefresh-only remains explicitly documented, no falseintent-reapply claim. MainCRLF preserved SHA73e4443127a1a716d56fcbc3eb194e417dbcb1d8ba851d490535a723e52f5568. Runtimeactive21cellmatrix/cleanaggregatepending. REPORT/INPUTS saved; all reviewer writes STOP; oldseals intact.

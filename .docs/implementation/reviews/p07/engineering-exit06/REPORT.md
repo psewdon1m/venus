@@ -1,0 +1,11 @@
+# Independent engineering review06 — bounded locale CAS retry
+
+Verdict: SOURCE_ONLY_ACCEPTED. Narrow readonly review of root-authored main.tsx chooseLocale, not P07 or mobile runtime acceptance. HEAD06f95c5978b52aef82e81c3f6c41db1be5eb7972 plus dirty exactCRLF module, bound in INPUTS.json. No implementation edits, test executions, Docker, network, ROOT/C changes or manifest writes by reviewer. Prior seals remain untouched.
+
+The action performs at most2PATCH attempts. Only a definite ApiError REVISION_CONFLICT clears the captured input and permits one fresh room revision/new idempotency key. The server Rooms.mutate checks expected_rev inside its transaction before profile UPDATE and remember, so that response represents an uncommitted rejected CAS. Other API/domain/transport failures retain the exact captured body and key and are rethrown. In particular, an uncertain second PATCH keeps its second input/key, and a successful PATCH followed by failed refresh still retries with its original successful key. Fresh-room GET failures have not issued the PATCH and keep input absent.
+
+A second CAS conflict clears input then throws; the loop does not issue a third PATCH or silently report success. Existing perform/handleError surfaces the error. The global manual Retry handler for REVISION_CONFLICT deliberately only refreshes, as before; this does not reapply the desired locale, and the user can click the language again. No report should claim that that manual button reissues the locale intent. For unknown failures the stored closure retries with the same captured idempotency input. Server CAS, ACL, room/session/entry fences, locale validation, deadlines and capacity remain unchanged.
+
+The change is restricted to a user-selected locale-only intent and does not generalize retries of consent, topic preferences, commands or other mutations. The new upper bound does not bypass ongoing concurrent writers; final conflict stays visible. The existing actual active21cell locale matrix is the appropriate runtime check; no mirrored unit test or another test framework is requested.
+
+Root reports scoped ESLint0. Actual clean combined preflight and mobile matrix remain pending. The earlier preflight09 timeout/conflict is retained as an observed failure; this source review does not award aggregate PASS or infer unrelated PDF/media failure causes.
