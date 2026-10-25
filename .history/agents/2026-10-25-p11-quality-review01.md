@@ -1,0 +1,7 @@
+# P11 bounded independent quality failure review01
+
+- 2026-10-25T04:41:40.3663492Z START. Failure-source/evidence review only, no implementation/tests/build/Docker/network mutations. Currentclean45e43a13, lastfinishedraw1d2f79389c31 native1/cleanup. Ownwritesjournal+.docs/implementation/reviews/p11/quality-review01/{REPORT.md,INPUTS.json,INDEX.json}. Do not infer CPU saturation without actualcgroup/CPU evidence; no threshold/capchanges. FullP11NOTPASS.
+- 2026-10-25T04:44:13.8535807Z Readexactdevice marker/quality/leave source andprofile. W3C/RFC3550primaryGET confirms jitterseconds/smoothedinterarrival, notRTT or100ms-windowstat. Keepstrictmax30ms andcapsunchanged; lowRTTdoesnotprovequality. BrowserCPU/throttleunknown, saturationnotinferred.
+- 2026-10-25T04:44:13.8535807Z Verifiedallmembersofhistoricaltargetedround01/02bySHA256; round01qualitysubtestPASS maxaudio21ms/video26ms independentlycomputed, wholehistoricalrunFAIL. Latest03qualitysamplesmissingconfirmed; sourceclean/unchanged/correct45e/nativeFAIL/cleanupcomplete. Packetpersistencebeforeassertminimalneeded; oneboundedsnapshot+cgroupdeltaappropriate. No tests/build/Docker/networkmutations; onlyreadonlyprimaryGET.
+- Absenttargetedround02/RESULT.json readingfailed; actualINDEXfilesused. Broad initialoutputs truncated; finalconclusionsfromspecificsource/rawJSONparsedaggregation. Noalteredoldproofs.
+- 2026-10-25T04:44:13.8535807Z Finalpackethashesintoolresult/handoff. COMPLETE_STOP allownwritersstopped, noapp/sharedregistry/manifest/Gitwrites; rootindexread/hashpreserved.
