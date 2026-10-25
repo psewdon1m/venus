@@ -78,3 +78,8 @@ Clean c2d5b3c3/coreb1e529: native05 47/47 tests/12records PASS, включая a
 ### 2026-10-25T07:59:42.316736+00:00 — Реальный operator purge bug исправлен
 
 Profile02 helper530/appc2: actual initialize/healthy иHTTP3PDF/18+ PASS, stop/BK2 FAIL COMMAND_FAILED. Причина подтверждена отдельным actual Docker probe: --user65534:65534 даёт groups[65534]; trusted cleanup script требуетemptygroups. Production operator.purge теперь запускает fixed trustedPython подroot толькосSETUID/SETGID, вызывает фактическую guardian.dropped(uid), затем тотже helper. Renderer/проверкиidentity не ослаблялись. Это изменение executor, consumer imagec2 остаётся byte-identical. Profile02FAIL сохранён. В helper добавлены только safeoperation/exit_code для последующего отказа. Native05(47PASS), production02 иcleanstatic56PASS зафиксированы наc2; повторяется только executor/profile путь.
+
+
+### 2026-10-25T08:05:59.971092+00:00 — Profile03: девять PASS, устаревшее ожидание сессии
+
+RealDriver initialize/HTTP/quiesce/BK2/A→B/B→A/feature-off/on/floors и оба actual worker negative probes PASS:120405ms PDF_TIMEOUT+idle; depth40/caps0/emptygroups отказ следующего plaintext. Последний assertion ожидал PNG200 после >120s отсутствия heartbeat; приложение правильно ответило403 MEMBER_INACTIVE (reservation90s). Исправляется только ожидание helper: driver healthy, явный403/код, затем настоящий stop/quiesce. Доступ не ослабляется. Profile03FAIL сохранён, исходникconsumer/native47 прежний.
