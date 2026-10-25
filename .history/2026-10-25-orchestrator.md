@@ -412,3 +412,8 @@ API-author завершил source-only post-floor trigger+actual60s slow-body c
 ### 2026-10-25T07:50:25.796071+00:00 — Gate-fix source freeze / все writers STOP
 
 Завершены абсолютный60s timer в production route, actual slow-body и post-floor trigger proofs, signedv4 fixture unit, bounded profile4 realDriver helper/wrapper и2 отдельные negative worker probes. API/profile authors STOP; оба initialgate reviewerSTOP. Новые sourcefiles прошли syntax/targetedlint только, runtime их не заявляется. Далее единый clean commit, параллельно scopedstatic/native47 и unsignedproductionbuild; после productionimage — actual profile4 operator drill. Никаких новых пользовательских функций, общего P07 или статистических наборов.
+
+
+### 2026-10-25T07:55:17.055708+00:00 — Native05 PASS47 / profile01 wiring FAIL
+
+Clean c2d5b3c3/coreb1e529: native05 47/47 tests/12records PASS, включая actual60s trickle cutoff иpost-floor pointer rollback+rollforward; источник неизменён, cleanup completed. CleanC final static56units/schema/i18n/APIwebtypes/lint PASS после исправления dependencyjunction layout (первый tsc exit2 не видел workspace-localAJV; повтор/directAPItypes0, приложение не менялось). Production02 build/inventory0 натомжеc2. Realprofile01 остановился до первогоrecord: helper неправильно вызывал export command(args,opts) вместо command(docker,args,opts), ERR_INVALID_ARG_TYPE. Исправлен только helper wiring; wrapper owned rm теперь удаляет anonymous volumes явно, named/failedstate policy прежняя. Profile01FAIL сохранён. Дальше повтор только profile4drill, новые app/native47 не нужны при доказанной runtime-source parity.

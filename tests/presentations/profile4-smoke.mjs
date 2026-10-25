@@ -20,7 +20,7 @@ const root='/data',reportFile=path.join(root,'profile4-smoke.json'),stamp=()=>ne
 const report={format:1,scope:'UNSIGNED_LOCAL_PROFILE4_OPERATOR_AND_CONVERTER_PROOF',status:'FAIL',source:input.app_source,source_identity:input.app_identity,imageA:input.artifactA,imageB:input.artifactB,driver_identity_checks_overridden:false,synthetic_only:true,signed_release:false,offline_signed_recovery:false,public_distribution:false,P07:false,records:[],started_at:stamp()};
 const config={project:input.project,local_root:root,host_root:input.host_root,port:input.port,app_origin:'https://127.0.0.1:4300',compose_template:'/opt/venus/infra/venus/compose.presentations.standalone.yml',release_environment:PRESENTATIONS_ENVIRONMENT,calls_enabled:false,presentations_enabled:true};
 let on,off,A,B;
-const raw=async(args,options={})=>(await dockerCommand(args,{max:6*1024*1024,timeout:20000,...options})).toString().trim();
+const raw=async(args,options={})=>(await dockerCommand('docker',args,{max:6*1024*1024,timeout:20000,...options})).toString().trim();
 const json=async(args,options)=>JSON.parse(await raw(args,options));
 function save(){writeJson(reportFile,report);}
 async function record(id,operation){const start=Date.now();console.log(JSON.stringify({id,phase:'START'}));try{const details=await operation();report.records.push({id,status:'PASS',elapsed_ms:Date.now()-start,...details});save();console.log(JSON.stringify({id,status:'PASS'}));return details;}catch(error){report.records.push({id,status:'FAIL',elapsed_ms:Date.now()-start,error:String(error.message).slice(0,500)});save();throw error;}}
