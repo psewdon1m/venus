@@ -1,0 +1,52 @@
+{
+  "format": 1,
+  "reviewer": "p08-exit-security01",
+  "independent_nonauthor": true,
+  "stage": "P08",
+  "gate": "SECURITY_PRIVACY_EXIT",
+  "status": "CHANGES_REQUIRED",
+  "full_stage_pass": false,
+  "security_privacy_pass": false,
+  "source_git": "8600fe2f7c80a9b6cbf8c72507b869f55f71cbd0",
+  "source_identity": "3ca43ec1112e618e4a1212b14769fa1d270faa349d57207b30936983ae966c4f",
+  "findings": [
+    {
+      "id": "S01",
+      "priority": 2,
+      "file": "apps/api/src/music-routes.ts",
+      "line": 8,
+      "issue": "reply.send leaves async onSend gap after final authority fence",
+      "minimum_fix": "Reuse enqueueFencedJson",
+      "status": "OPEN_ACCEPTED_BY_AUTHOR_NOT_YET_FIXED_OR_RETESTED"
+    },
+    {
+      "id": "S02",
+      "priority": 2,
+      "file": "apps/api/src/music.ts",
+      "line": 57,
+      "issue": "Readable prefetch buffer can drain after revoke without a transport-write fence",
+      "minimum_fix": "Synchronous guarded raw.write per chunk; await drain after transaction; reauthorize next chunk; retain HEAD/timer/close cleanup",
+      "status": "OPEN_ACCEPTED_BY_AUTHOR_NOT_YET_FIXED_OR_RETESTED"
+    }
+  ],
+  "exact_current_evidence": "targeted-round10 all16files verified;11PASS/native0/restore5rows, not delivery-race proof",
+  "narrow_probe": {
+    "standalone_Node_buffering_mechanism": true,
+    "native_exit": 0,
+    "actual_endpoint_exploit": false,
+    "new_test_files": false
+  },
+  "next": "Fix -> new frozen source -> relevant JSON/HTTPS backpressure-revoke/HEAD cleanup checks -> independent round02; no broad rerun",
+  "holds": [
+    "Real third-party rights",
+    "Physical devices/publicproduction",
+    "Actual Cinema+Music atP09",
+    "Final P07 integration"
+  ],
+  "signed_001_Music_claim": false,
+  "P07_pass": false,
+  "production_pass": false,
+  "root_index_or_shared_files_mutated": false,
+  "writer_status": "COMPLETE_STOP",
+  "created_at_utc": "2026-10-25T00:37:30Z"
+}

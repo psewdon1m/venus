@@ -1,0 +1,107 @@
+{
+  "suite": "P08_MUSIC",
+  "status": "FAIL",
+  "synthetic_only": true,
+  "production": false,
+  "records": [
+    {
+      "id": "P08-ACL-STATE",
+      "status": "PASS",
+      "detail": {
+        "host_only": true,
+        "replay": true,
+        "conflict": true,
+        "origin": true
+      }
+    },
+    {
+      "id": "P08-RANGE-ROOM-BOUNDARY",
+      "status": "PASS",
+      "detail": {
+        "range": true,
+        "suffix": true,
+        "invalid416": true,
+        "cross_site403": true,
+        "foreign401": true
+      }
+    },
+    {
+      "id": "P08-PAUSE-SEEK-RESTART-AUTONEXT",
+      "status": "PASS",
+      "detail": {
+        "restart_persisted": true,
+        "paused_position": 2500,
+        "server_auto_next": true
+      }
+    },
+    {
+      "id": "P08-NATIVE-AUDIO-LOCAL-VOLUME",
+      "status": "PASS",
+      "detail": {
+        "decoded_audio": true,
+        "contexts": 8,
+        "volume_does_not_mutate": true
+      }
+    },
+    {
+      "id": "P08-MUSIC-WITH-GAMES",
+      "status": "PASS",
+      "detail": {
+        "actual_game_start": true,
+        "music_continues": true,
+        "game_actions_still_audited": true
+      }
+    },
+    {
+      "id": "P08-DRIFT-8-60S",
+      "status": "PASS",
+      "detail": {
+        "samples": 480,
+        "p95_ms": 118.13199999999779,
+        "max_ms": 135.73300000000017,
+        "seconds": 60
+      }
+    },
+    {
+      "id": "P08-RECONNECT-AND-CATALOG-REVOKE",
+      "status": "PASS",
+      "detail": {
+        "offline_stop": true,
+        "reconnect": true,
+        "revoke_stops_all": true
+      }
+    },
+    {
+      "id": "P08-INPERSON-OUTPUT-EXPLICIT",
+      "status": "PASS",
+      "detail": {
+        "host_default_only": true,
+        "personal_explicit": true
+      }
+    },
+    {
+      "id": "P08-DECODE-FIREFOX",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    }
+  ],
+  "browser_versions": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4"
+    },
+    {
+      "engine": "firefox",
+      "version": "157.0"
+    }
+  ],
+  "drift_profile": {
+    "clients": 8,
+    "warmup_seconds": 2,
+    "seconds": 60,
+    "sample_ms": 1000,
+    "p95_limit_ms": 300
+  },
+  "runtime_cleanup": "completed",
+  "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+}

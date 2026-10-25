@@ -1,0 +1,58 @@
+{
+  "suite": "P08_MUSIC",
+  "status": "FAIL",
+  "synthetic_only": true,
+  "production": false,
+  "records": [
+    {
+      "id": "P08-ACL-STATE",
+      "status": "PASS",
+      "detail": {
+        "host_only": true,
+        "replay": true,
+        "conflict": true,
+        "origin": true
+      }
+    },
+    {
+      "id": "P08-RANGE-ROOM-BOUNDARY",
+      "status": "PASS",
+      "detail": {
+        "range": true,
+        "suffix": true,
+        "invalid416": true,
+        "cross_site403": true,
+        "foreign401": true
+      }
+    },
+    {
+      "id": "P08-PAUSE-SEEK-RESTART-AUTONEXT",
+      "status": "PASS",
+      "detail": {
+        "restart_persisted": true,
+        "paused_position": 2500,
+        "server_auto_next": true
+      }
+    },
+    {
+      "id": "P08-NATIVE-AUDIO-LOCAL-VOLUME",
+      "status": "FAIL",
+      "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByTestId('music-track').filter({ hasText: /440/ }) to be visible\n"
+    }
+  ],
+  "browser_versions": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4"
+    }
+  ],
+  "drift_profile": {
+    "clients": 8,
+    "warmup_seconds": 2,
+    "seconds": 60,
+    "sample_ms": 1000,
+    "p95_limit_ms": 300
+  },
+  "runtime_cleanup": "completed",
+  "error": "locator.waitFor: Timeout 30000ms exceeded.\nCall log:\n  - waiting for getByTestId('music-track').filter({ hasText: /440/ }) to be visible\n"
+}

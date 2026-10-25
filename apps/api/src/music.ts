@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-import {Readable} from 'node:stream';
+import type {Writable} from 'node:stream';
 import type pg from 'pg';
 import type {MusicCommand,MusicState} from '@venus/contracts';
 import {Rooms,revision} from './rooms.js';
@@ -47,17 +47,40 @@ export class Music {
   await this.rooms.transaction(async c=>{const a=await authorize(c);streamKey=id+':'+a.member.id;streamGeneration=revision(a.member.socket_generation);(await this.rooms.finalAccessFence(c,a,false,streamGeneration))();});
   const asset=this.catalog.asset(trackId,this.rooms.now()),selection=musicRange(range,asset.bytes);
   requireThat(this.streamCount<64&&(this.streams.get(streamKey)??0)<2,'MUSIC_STREAM_LIMIT',429);
-  fd=fs.openSync(asset.file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);let offset=selection.start,pending=false,ended=false;
+  fd=fs.openSync(asset.file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
   this.streamCount++;this.streams.set(streamKey,(this.streams.get(streamKey)??0)+1);counted=true;
-  const release=()=>{if(timer)clearTimeout(timer);if(fd!==undefined){fs.closeSync(fd);fd=undefined;}if(counted){counted=false;this.streamCount--;const n=(this.streams.get(streamKey)??1)-1;if(n)this.streams.set(streamKey,n);else this.streams.delete(streamKey);}};
-  const readable=new Readable({highWaterMark:65536,read:()=>{
-   if(pending||ended)return;pending=true;timer?.refresh();
-   void this.rooms.transaction(async c=>{
-    const a=await authorize(c);requireThat(fd!==undefined,'MUSIC_STREAM_CLOSED',403);const bytes=Buffer.alloc(Math.min(65536,selection.end-offset+1)),n=fs.readSync(fd,bytes,0,bytes.length,offset);requireThat(n===bytes.length,'MUSIC_ASSET_CHANGED',503);
-    (await this.rooms.finalAccessFence(c,a,false,streamGeneration))();this.catalog.unchanged(asset,fd,this.rooms.now());offset+=n;pending=false;readable.push(bytes);if(offset>selection.end){ended=true;readable.push(null);release();}
-   }).catch(()=>{ended=true;pending=false;release();readable.destroy(Error('MUSIC_STREAM_UNAVAILABLE'));});
-  },destroy(error,done){ended=true;release();done(error);}});
-  const timer=setTimeout(()=>readable.destroy(Error('MUSIC_STREAM_IDLE')),30000);timer.unref();
-  return {readable,...selection,size:asset.bytes,mime:asset.mime,etag:'"'+asset.sha256+'"'};
+  let aborted=false,output:Writable|undefined,started=false;
+  const release=()=>{clearTimeout(timer);if(fd!==undefined){fs.closeSync(fd);fd=undefined;}if(counted){counted=false;this.streamCount--;const n=(this.streams.get(streamKey)??1)-1;if(n)this.streams.set(streamKey,n);else this.streams.delete(streamKey);}};
+  const close=()=>{aborted=true;if(!output?.writableEnded)output?.destroy();release();};
+  const timer=setTimeout(close,30000);timer.unref();
+  const drain=async(target:Writable)=>{
+   if(!target.writableNeedDrain)return;
+   await new Promise<void>((resolve,reject)=>{const clean=()=>{target.off('drain',ready);target.off('close',failed);target.off('error',failed);},ready=()=>{clean();resolve();},failed=()=>{clean();reject(Error('MUSIC_STREAM_CLOSED'));};target.once('drain',ready);target.once('close',failed);target.once('error',failed);if(target.destroyed)failed();});
+  };
+  const deliver=async(target:Writable,begin:()=>void=()=>{},headOnly=false)=>{
+   requireThat(!started,'MUSIC_STREAM_ALREADY_STARTED',503);started=true;output=target;let began=false,offset=selection.start;
+   target.once('close',close);target.once('error',close);
+   try{
+    do{
+     let writable=true;
+     await this.rooms.transaction(async c=>{
+      const a=await authorize(c);requireThat(!aborted&&!target.destroyed&&fd!==undefined,'MUSIC_STREAM_CLOSED',403);
+      const bytes=headOnly?Buffer.alloc(0):Buffer.alloc(Math.min(65536,selection.end-offset+1));
+      if(!headOnly)requireThat(fs.readSync(fd,bytes,0,bytes.length,offset)===bytes.length,'MUSIC_ASSET_CHANGED',503);
+      const fence=await this.rooms.finalAccessFence(c,a,false,streamGeneration);requireThat(!aborted&&!target.destroyed&&fd!==undefined,'MUSIC_STREAM_CLOSED',403);this.catalog.unchanged(asset,fd,this.rooms.now());fence();
+      if(!began){begin();began=true;}
+      // No async hooks, intermediate Readable or prefetched chunk after this fence.
+      if(headOnly)target.end();else{writable=target.write(bytes);offset+=bytes.length;}
+     });
+     // Never hold a room transaction while waiting for a slow receiver.
+     if(headOnly||offset>selection.end)break;
+     if(!writable)await drain(target);
+     timer.refresh();
+    }while(!aborted);
+    if(!aborted&&!target.writableEnded)target.end();
+   }catch(error){if(!began)throw error;target.destroy();}
+   finally{target.off('close',close);target.off('error',close);release();}
+  };
+  return {deliver,close,...selection,size:asset.bytes,mime:asset.mime,etag:'"'+asset.sha256+'"'};
  }
 }

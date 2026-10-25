@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-25T00:33:13.017060+00:00",
+  "stage": "P08",
+  "gate": "EXIT_ENGINEERING",
+  "reviewer": "/root/p08_entry_gate01",
+  "independent_nonauthor": true,
+  "status": "FAIL_P08_ENGINEERING_AUTOPLAY_RECOVERY",
+  "full_stage_pass": false,
+  "source_git": "8600fe2f7c80a9b6cbf8c72507b869f55f71cbd0",
+  "source_identity": "3ca43ec1112e618e4a1212b14769fa1d270faa349d57207b30936983ae966c4f",
+  "source_files": 1971,
+  "findings": [
+    {
+      "id": "P08-ENG-001",
+      "severity": "P2",
+      "status": "OPEN",
+      "title": "Asynchronous autoplay denial is swallowed outside explicit enable handler",
+      "locations": [
+        {
+          "path": "apps/web/src/music-sync.ts",
+          "line": 13
+        },
+        {
+          "path": "apps/web/src/music-panel.tsx",
+          "line": 24
+        },
+        {
+          "path": "apps/web/src/music-panel.tsx",
+          "line": 30
+        },
+        {
+          "path": "apps/web/src/music-panel.tsx",
+          "line": 36
+        }
+      ],
+      "requirement": "CI-M-003 explicit recoverable blocked autoplay UI; P08 Music contract autoplay recovery",
+      "risk": "Silent paused audio, wrong disable-audio affordance, repeated denied play calls until user toggles twice",
+      "required_fix": "Feedback asynchronous NotAllowedError into current lifecycle UI, stop background retries until explicit enable; do not misclassify AbortError",
+      "required_retest": "Narrow rejected-play regression plus forced browser/UI blocked/retry recovery; no repeat full drift if clock unchanged"
+    }
+  ],
+  "existing_actual_tests_status": "PASS_TARGETED_P08_MATRIX_DOES_NOT_COVER_DENIED_ASYNC_PLAY",
+  "native_reproduction_exit": 0,
+  "inputs_sha256": "d97fa0350d297de062c5555fb7d5bfb57a7fa1bf2dedf8035a1901558b62b818",
+  "retained_limits": [
+    "synthetic owned audio only; realtrack rights NOT_APPROVED",
+    "P07 final aggregate NOT_RUN",
+    "Music+Cinema actual pending P09",
+    "signed0.0.1 remains immutable and does not include new code",
+    "Desktop export FAIL preserved",
+    "production/DNS/TLS/devices not accepted"
+  ],
+  "required_next_step": "Fix P08-ENG-001 and other independent review findings, targeted retest and new exact-source independent review",
+  "writer_status": "COMPLETE_STOP"
+}
