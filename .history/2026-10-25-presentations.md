@@ -73,3 +73,8 @@ API-author завершил source-only post-floor trigger+actual60s slow-body c
 ### 2026-10-25T07:55:17.055708+00:00 — Native05 PASS47 / profile01 wiring FAIL
 
 Clean c2d5b3c3/coreb1e529: native05 47/47 tests/12records PASS, включая actual60s trickle cutoff иpost-floor pointer rollback+rollforward; источник неизменён, cleanup completed. CleanC final static56units/schema/i18n/APIwebtypes/lint PASS после исправления dependencyjunction layout (первый tsc exit2 не видел workspace-localAJV; повтор/directAPItypes0, приложение не менялось). Production02 build/inventory0 натомжеc2. Realprofile01 остановился до первогоrecord: helper неправильно вызывал export command(args,opts) вместо command(docker,args,opts), ERR_INVALID_ARG_TYPE. Исправлен только helper wiring; wrapper owned rm теперь удаляет anonymous volumes явно, named/failedstate policy прежняя. Profile01FAIL сохранён. Дальше повтор только profile4drill, новые app/native47 не нужны при доказанной runtime-source parity.
+
+
+### 2026-10-25T07:59:42.316736+00:00 — Реальный operator purge bug исправлен
+
+Profile02 helper530/appc2: actual initialize/healthy иHTTP3PDF/18+ PASS, stop/BK2 FAIL COMMAND_FAILED. Причина подтверждена отдельным actual Docker probe: --user65534:65534 даёт groups[65534]; trusted cleanup script требуетemptygroups. Production operator.purge теперь запускает fixed trustedPython подroot толькосSETUID/SETGID, вызывает фактическую guardian.dropped(uid), затем тотже helper. Renderer/проверкиidentity не ослаблялись. Это изменение executor, consumer imagec2 остаётся byte-identical. Profile02FAIL сохранён. В helper добавлены только safeoperation/exit_code для последующего отказа. Native05(47PASS), production02 иcleanstatic56PASS зафиксированы наc2; повторяется только executor/profile путь.
