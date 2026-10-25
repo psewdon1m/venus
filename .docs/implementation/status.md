@@ -1,6 +1,10 @@
-# Текущий статус — P08 в работе
+# Текущий статус — P08 функционально принят; следующий P09
 
-U-022/U-023: функциональные P08–P11 и презентации перед финальным P07. U-024: источник музыки — локальные файлы на хосте; реальные треки подключаются отдельно. Входной независимый P08 gate разрешил разработку; код завершён до первого теста. Lint/types после исправлений native0, Linux Range/catalog unit3 и monotonic-sync unit2 PASS. Сейчас собирается холодный browser Docker image для узкого API/native-audio/8context60s drift; длинная статистика и P07 не запускались. Выходной независимый gate ещё NOT_RUN, полного P08 PASS нет. [РеестрP08](p08-registry.json) · [Контракт и профиль](P08_MUSIC.md).
+P08: PASS локального музыкального компонента по новому порядку U022/U024.12 actual cases,3 browser engines,8Chromium/480samples/p95=104.320ms, реальные ACL/revoke/backpressure и PGrestore5rows PASS. Два независимых round02 gate PASS, все3 замечания закрыты. [Итог P08](evidence/p08/functional-acceptance01/REPORT.md) · [Реестр](p08-registry.json).
+
+Это не полный исходный G2 и не P07: общий release/load/soak/restore, actual Cinema+Music, реальные tracks/devices/public deployment перечислены отдельно. Signed0.0.1 и исторические accepted proof сохранены. P09 entry и source audit готовы; реализация P09 начинается после закрытия этой записи. Новый исходный код тестируется только после завершения всех правок этапа.
+
+Следующий раздел описывает ранее принятый P06 source, а не наличие Music в опубликованном0.0.1.
 
 # Принятый вход — P06 закрыт в проверенном локальном Linux classic профиле
 

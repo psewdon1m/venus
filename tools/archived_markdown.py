@@ -1,14 +1,15 @@
 """Read exact historical text without rewriting captured evidence.
 
-Ordinary Markdown remains strict UTF-8. Twenty immutable capture records have
-explicit byte pins: five original Windows-1252 producer documents, twelve source
+Ordinary Markdown remains strict UTF-8. Twenty-one immutable capture records have
+explicit byte pins: five original Windows-1252 producer documents, thirteen source
 copies retaining original link context, and three exact historical link-target errata.
 This is not a wildcard encoding fallback or an exclusion from link validation.
 """
 from pathlib import Path
 import hashlib
 
-ARCHIVES = {'.docs/implementation/reviews/p05/c2-m3-owner-pilot-rebind-author-round02/inputs/.docs/10_IMPLEMENTATION_PLAN.md': {'sha256': '8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9', 'bytes': 78597, 'encoding': 'utf-8', 'origin': '.docs/10_IMPLEMENTATION_PLAN.md'},
+ARCHIVES = {'.docs/implementation/evidence/pipeline-v3-owner-order01/PLAN-v2-SNAPSHOT.md': {'sha256': '8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9', 'bytes': 78597, 'encoding': 'utf-8', 'origin': '.docs/10_IMPLEMENTATION_PLAN.md'},
+ '.docs/implementation/reviews/p05/c2-m3-owner-pilot-rebind-author-round02/inputs/.docs/10_IMPLEMENTATION_PLAN.md': {'sha256': '8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9', 'bytes': 78597, 'encoding': 'utf-8', 'origin': '.docs/10_IMPLEMENTATION_PLAN.md'},
  '.docs/implementation/reviews/p05/oci-rollback-author-resume-round01/producer/README.md': {'sha256': '04490dd8f0f637247893af05132bc032a2338453e6e1dff7e182bfbc75084e51', 'bytes': 4151, 'encoding': 'cp1252', 'origin': None},
  '.docs/implementation/reviews/p05/oci-rollback-operational-rebind-author-round03/producer/README-resume01.md': {'sha256': '04490dd8f0f637247893af05132bc032a2338453e6e1dff7e182bfbc75084e51', 'bytes': 4151, 'encoding': 'cp1252', 'origin': None},
  '.docs/implementation/reviews/p05/oci-rollback-author-resume-round02/producer/README-resume01.md': {'sha256': '04490dd8f0f637247893af05132bc032a2338453e6e1dff7e182bfbc75084e51', 'bytes': 4151, 'encoding': 'cp1252', 'origin': None},
