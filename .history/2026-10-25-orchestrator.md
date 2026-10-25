@@ -344,3 +344,7 @@ Closinghelper перваяпопыткаостановиласьнаKeyErrorcomp
 ### 2026-10-25T06:23:17.068572+00:00 — Closing consistency PASS / writer freeze
 
 check_docs exit0/2046Markdown/0errors;check_stage_history exit0/P01–P03historicalbindings;verify_manifest exit0/32738paths/0errors. AcceptedP05/P06INDEXSHAиROOTindexa4bbнеизменны. closing-consistency01 фиксируетпервыйfreeze доегоreceipt. Послеэтойпоследнейзаписиповторно обновляетсяпроизводныйmanifest и проверяетсяW/ROOT,безновыхapp/runtimechecks. Последующиеисходникиотносятся кновомуPrezaблоку. P11functionalacceptanceINDEX3248ecc77c189a8ecf95198527f1105f14e22b6d16b99bfa9657f56ab917858f.
+
+### 2026-10-25T06:29:19.396221+00:00 — PLAN-PRESENTATIONS: входной контракт
+
+P11 d21a7e9e закрыт, финальныйmanifestW/ROOT32740paths exit0; обаreviewerSTOP. ПодготовленыADR042/PRESENTATIONS.v1: exactPreza source, многодокументнаяPDFкомната,nonrootPoppler+trustedPID1guardian,global64MiB/BK2bounded256MiB/profile4,protectedpositivecontentbindingsбезочисткинаrestart, Games4s coexistencebudget209/min. Это contract/preflight, неimplementation/testPASS. Требуется supplementaryindependententry наguardianexception/backupenvelope. Appкодещёнепишется, ниодногоPrezatest/build/lint/typesнебыло.
