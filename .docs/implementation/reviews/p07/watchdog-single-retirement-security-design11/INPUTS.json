@@ -1,0 +1,17 @@
+{
+  "created_at_utc": "2026-10-25T17:54:01.931960+00:00",
+  "source_HEAD": "5de418d7ffb6a0198616a78c6774d54beb0b2437",
+  "files": {
+    "apps/api/src/media.ts": "103f863c7a4e7a078f3ef814c2a64b8ab11203a35a9894791c684f6ebfe8a390",
+    "apps/api/src/calls.ts": "7d558a5ff8479d513f71afc605e753f38b88580a7c7916963b825ea4f43a106a",
+    "apps/api/src/rooms.ts": "ee4f9d3752c8912c5a79b9b6317d3cd3b8900dd6bb71b2f2a8987bb7fe3dde33",
+    "apps/api/src/media-routes.ts": "eef7372c8da3603be22de58ce278fed886821c8ad858768a1c36634ae9e08417",
+    "apps/api/src/protected-authority.ts": "3fc2c39dedc589316fc2e10c0635692dcbafc7ae3289748601010ca494ee3c7b",
+    "infra/venus/media-supervisor.mjs": "30a5d66e6b4949f66f01f1b87f6b1b4ad29f32392bd2a45c1232ccee33372e8e",
+    "apps/api/media-migrations/001_media.sql": "cb0b0db3e6743e2c07b7d851195ed531e9138c5b3a10caac222497b1d058aeb4",
+    "apps/api/media-migrations/002_cutoff_receipts.sql": "dbebda02c16d435a490acb9566880b95fc6ebdd14a34f67ea16e5aadd2ccca6a"
+  },
+  "reported_regression": "Cinema01 source5de31PASS1FAIL, Calls32PASS; reacceptexpected503actual500PG40P01",
+  "reported_cause": "Engineering investigating PG16 ownxmin FK lock after duplicate watchdog lease UPDATE; no causation claim made by this reviewer",
+  "proposed_delta": "Only watchdogbootmismatch initialleaseUPDATE→SELECT bootRetireIds(revoked_at IS NULL OR cutoff_pending); mergeinto existingallIds; retainone existingfinalleaseUPDATE afterbackendresult; earlyauthorityclear/callsboot/cinemastate unchanged"
+}

@@ -133,3 +133,35 @@ it('cleans stale accepted pair status with no leases, retiring only the locked r
  expect(mutatedRooms).not.toContain(foreign);expect(foreignActive.state).toBe('active');expect(foreignPending.state).toBe('pending');
  await expect(calls.assertScope(c,room,expired[0]!.id,peer)).rejects.toMatchObject({code:'CALL_SCOPE_RETIRED'});
 });
+
+for(const confirmed of [true,false])it(`boot watchdog retires every unpublished/pending kind once and preserves cutoff confirmation=${confirmed}`,async()=>{
+ const now=1000,entries:Record<string,string>={[leaseId]:'a'.repeat(64)},closed=new Set<string>(),writes:Array<{ids:string[];pending:boolean}>=[],backend:string[]=[];
+ const kinds=['cinema','cinema','pair_call','general_call'] as const;
+ const rows:MediaLease[]=kinds.map((kind,i)=>({id:'00000000-0000-4000-8000-'+String(30+i).padStart(12,'0'),room_id:room,member_id:caller,session_hash:'synthetic-session',socket_generation:'7',kind,scope_id:scopeId,upstream_room:kind==='cinema'?'venus-c-'+'a'.repeat(48):'venus-p-'+String(i).repeat(48),publisher:i!==0,api_epoch:epoch,sfu_epoch:epoch,binding_sha256:'b'.repeat(64),expires_at:new Date(10000),revoked_at:i===3?new Date(500):null,cutoff_pending:i===3}));
+ const query=async(sql:string,values:unknown[]=[])=>{
+  if(sql.includes('FROM venus_media_runtime'))return {rows:[{sfu_epoch:epoch}]};
+  if(sql.startsWith('SELECT l.*'))return {rows:[]};
+  if(sql==='SELECT * FROM room_media_leases WHERE revoked_at IS NULL OR cutoff_pending')return {rows};
+  if(sql==='SELECT * FROM room_media_leases WHERE cutoff_pending')return {rows:rows.filter(r=>r.cutoff_pending)};
+  if(sql.startsWith('SELECT * FROM room_media_leases')){
+   if(sql.includes('WHERE (revoked_at IS NULL'))return {rows:rows.filter(r=>r.cutoff_pending)};
+   if(sql.includes('id=ANY'))return {rows:rows.filter(r=>(values[0] as string[]).includes(r.id))};
+   if(sql.includes('upstream_room=ANY'))return {rows:rows.filter(r=>(values[0] as string[]).includes(r.upstream_room))};
+  }
+  if(sql.startsWith('UPDATE room_media_leases')){
+   expect(sql).toBe('UPDATE room_media_leases SET revoked_at=COALESCE(revoked_at,$2),cutoff_pending=$3 WHERE id=ANY($1::uuid[])');
+   expect(backend.length).toBeGreaterThan(0);const ids=values[0] as string[],pending=values[2] as boolean;writes.push({ids:[...ids],pending});
+   for(const r of rows)if(ids.includes(r.id)){r.revoked_at??=values[1] as Date;r.cutoff_pending=pending;}return {rows:[]};
+  }
+  if(sql.startsWith('SELECT pg_advisory')||sql.startsWith('UPDATE')||sql.startsWith('DELETE'))return {rows:[]};
+  throw Error('Unexpected boot watchdog SQL: '+sql);
+ };
+ const c={query} as unknown as pg.PoolClient,rooms={now:()=>now,options:{offer:()=>({version:'v1',digest:'digest'}),ledger:{contains:()=>false}},transaction:async<T>(fn:(c:pg.PoolClient)=>Promise<T>)=>fn(c)} as unknown as Rooms;
+ const cutoff=async(name:string)=>{expect(Object.keys(entries)).toEqual([]);expect(closed.size).toBe(4);expect(writes).toHaveLength(0);backend.push(name);if(!confirmed)throw Error('Synthetic admin unavailable');};
+ const media=Object.assign(Object.create(Media.prototype) as Media,{rooms,epoch,sockets:new Map(rows.map(r=>[r.id,new Set([{close:()=>{closed.add(r.id);}}])])),authority:{checkpoint:()=>({epoch,entries}),mutate:(_epoch:string,fn:(value:Record<string,string>)=>void)=>fn(entries)},client:{deleteRoom:cutoff,removeParticipant:cutoff},control:async()=>({running:true,cutoff_confirmed:false})});
+ Object.assign(media,{calls:new Calls(media,true)});
+ await expect(media.watchdog(boot)).resolves.toMatchObject({leases:[]});
+ expect(writes).toHaveLength(1);expect(writes[0]!.ids.sort()).toEqual(rows.map(r=>r.id).sort());expect(writes[0]!.pending).toBe(!confirmed);
+ expect(rows.every(r=>r.revoked_at&&r.cutoff_pending===!confirmed)).toBe(true);expect(rows[3]!.revoked_at?.getTime()).toBe(500);
+ if(!confirmed){backend.length=0;writes.length=0;await expect(media.admitVenue(c,room)).rejects.toMatchObject({code:'MEDIA_CUTOFF_UNCONFIRMED'});expect(writes).toHaveLength(0);}
+});
