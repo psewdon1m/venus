@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:calls-grant:v1",
+  "title": "Calls minimal source-bound grant",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "lease_id",
+    "scope_id",
+    "kind",
+    "call_rev",
+    "audio",
+    "video",
+    "expires_at",
+    "signaling_url",
+    "token"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "lease_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "scope_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "kind": {
+      "enum": [
+        "general_call",
+        "pair_call"
+      ]
+    },
+    "call_rev": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "audio": {
+      "type": "boolean"
+    },
+    "video": {
+      "type": "boolean"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signaling_url": {
+      "type": "string",
+      "maxLength": 1024
+    },
+    "token": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 8192
+    }
+  }
+}
