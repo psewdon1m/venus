@@ -106,3 +106,6 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 
 2026-10-25T00:16:51.307744+00:00 — Docker02 clean047 FAIL: первая Music queue HTTP500, новый action music_queue отсутствовал в существующем audit_events CHECK. Cleanup completed. Исправление только новой Music migration: сохранены все room/game actions, добавлены6Musicactions; historical migrations не изменены. Добавлена fail-closed проверка future schema generation как в соседних модулях. Узкий Music+Games case проверит реальный старт игры и непрерывность аудио; полный Games regression/statistics не запускается. Следующий clean candidate после targeted static checks.
+
+
+2026-10-25T00:18:25.176901+00:00 — Docker03 clean28ad3 PASS ACL/replay/conflict/origin/Range/cross-room/restart/seek/auto-next; FAIL browser helper ожидалtone-a после повторной установки тойжеqueue, хотяapp корректно сохраняетcurrenttone-b/index. Исправленtestsetup явнойкомандой previous, семантикаappнеослаблена. Cleanup completed; все4records/FАILсохранены. Audit500исправленреальноймиграцией. Lint04/types04 native0. Backuprestore hookпереиспользуетownDBpg_dump/pg_restore безновогоframework; ещёNOT_RUN из-за раннегоFAIL.
