@@ -20,7 +20,14 @@ Browser preflight — только securecontext+наличие getDisplayMedia.
 
 ## Что требуется для native продолжения
 
-P10-X01: модели/OS Android+iPhone и доступ QA, разрешённый источник с воспроизводимым video+audio. X02: Mac/Xcode/SDKexecution; WindowsDocker не заменяетiOSbuild. X03: AndroidSDK/Gradle/JDK и pinnedRTC SDK обеихплатформ сlicenses/sourceaudit. X04: devdistribution/signing/provisioning/team и выбранные OSfloors. X05: явный bounded nativecredential handoff через текущую roomauthority; realtimegeneration/20slease/5srenewal/stop/revoke, не directSFUJWT. X06: отдельный device-reachable trustedLAN/TLS/ICE profile: loopbackадрес Docker непригоден телефону, TLSvalidationнеотключать. Parentreadonly Get-Command нашёлтолькоjava, adb/xcodebuild/gradle/swiftнеобнаружены; это не исчерпывающая инвентаризациявсехдисков.
+- P10-X01: реальные Android и iPhone/iPad, модели/OS, доступ QA и разрешённый источник с воспроизводимым video+audio.
+- P10-X02: поддерживаемый Mac/Xcode/SDKexecution и Apple account/team/capability/provisioning; WindowsDocker не заменяетiOSbuild.
+- P10-X03: точные Android JDK/Gradle/AGP/SDK/build-tools и Android native dependencies сpins/licenses/sourceaudit.
+- P10-X04: выбранный iOS deploymentfloor/captureroute по реальным устройствам и точный iOS native SDKpin.
+- P10-X05: pilotdistribution и identity — Androiddebug/privateAPK/store, iOSdev/AdHoc/TestFlight/team/bundleID/AppGroup; реальные signing/provisioning не выдумываются.
+- P10-X06: отдельный device-reachable trustedLAN/TLS/ICE profile: loopbackадрес Docker непригоден телефону, TLSvalidationнеотключать.
+
+Сохранены точные значения P10-X01…06 из INPUTS независимогоentry01. Отдельная engineeringобязанность P10-E02: bounded nativecredential handoff через текущую roomauthority; realtimegeneration/20slease/5srenewal/stop/revoke, не directSFUJWT. Это не переименованный внешнийX05. Parentreadonly Get-Command нашёлтолькоjava, adb/xcodebuild/gradle/swiftнеобнаружены; это не исчерпывающая инвентаризациявсехдисков.
 
 ## Обязательный последующий device план
 
