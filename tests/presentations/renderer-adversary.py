@@ -62,4 +62,4 @@ if pid == 0:
 os.waitpid(pid, 0)
 print(json.dumps({"probe": "host-controlled-adversary", "caps": caps, "guardian_signals": signals,
                   "forbidden_paths_visible": visible, "spool_owner": os.stat(SPOOL).st_uid,
-                  "spool_mode": oct(stat.S_IMODE(os.stat(SPOOL).st_mode))), flush=True)
+                  "spool_mode": oct(stat.S_IMODE(os.stat(SPOOL).st_mode))}), flush=True)

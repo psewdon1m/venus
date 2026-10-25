@@ -13,15 +13,28 @@ export class PresentationSpool {
  constructor(readonly root:string){requireThat(path.isAbsolute(root),'PRESENTATION_SPOOL_UNSAFE',503);const s=fs.lstatSync(root);requireThat(s.isDirectory()&&!s.isSymbolicLink()&&s.uid===process.getuid?.()&&(s.mode&0o7777)===0o1777,'PRESENTATION_SPOOL_UNSAFE',503);}
  private read(name:string,max:number){const file=path.join(this.root,name),s=fs.lstatSync(file);requireThat(s.isFile()&&!s.isSymbolicLink()&&s.nlink===1&&s.uid===0&&(s.mode&0o777)===0o444&&s.size<=max,'PRESENTATION_WORKER_UNAVAILABLE',503);const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);try{const a=fs.fstatSync(fd);requireThat(a.ino===s.ino&&a.dev===s.dev&&a.size===s.size,'PRESENTATION_WORKER_UNAVAILABLE',503);const bytes=fs.readFileSync(fd);requireThat(bytes.length===s.size,'PRESENTATION_WORKER_UNAVAILABLE',503);return {bytes,mtime:s.mtimeMs};}finally{fs.closeSync(fd);}}
  health():Health {const raw=this.read('health.json',4096);requireThat(Date.now()-raw.mtime<5000&&raw.mtime<=Date.now()+1000,'PRESENTATION_WORKER_UNAVAILABLE',503);const h=JSON.parse(raw.bytes.toString()) as Health;requireThat(h.schema_version===1&&UUID.test(h.guardian_epoch)&&['idle','busy','closed'].includes(h.state)&&(h.state!=='busy'||[h.job_id,h.api_epoch,h.nonce].every(x=>typeof x==='string'&&UUID.test(x))),'PRESENTATION_WORKER_UNAVAILABLE',503);return h;}
- available(){try{return this.health().state==='idle';}catch{return false;}}
+ private clean(){const names=fs.readdirSync(this.root);return names.length===1&&names[0]==='health.json';}
+ available(){try{const h=this.health();return h.state==='idle'&&this.clean()&&this.health().guardian_epoch===h.guardian_epoch;}catch{return false;}}
+ /** A request may be durable before the guardian has changed its idle health.
+  * Only the immutable API-owned request can identify that pending work. */
+ private pending(guardianEpoch:string):Identity|null{
+  const file=path.join(this.root,'request.json');let s:fs.Stats;
+  try{s=fs.lstatSync(file);}catch(error){if((error as NodeJS.ErrnoException).code==='ENOENT')return null;throw error;}
+  requireThat(s.isFile()&&!s.isSymbolicLink()&&s.nlink===1&&s.uid===process.getuid?.()&&(s.mode&0o777)===0o444&&s.size>0&&s.size<=4096,'PRESENTATION_WORKER_UNAVAILABLE',503);
+  const fd=fs.openSync(file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);
+  try{const a=fs.fstatSync(fd);requireThat(a.ino===s.ino&&a.dev===s.dev&&a.size===s.size,'PRESENTATION_WORKER_UNAVAILABLE',503);const bytes=fs.readFileSync(fd);requireThat(bytes.length===s.size,'PRESENTATION_WORKER_UNAVAILABLE',503);const r=JSON.parse(bytes.toString()) as Identity&{schema_version:number;source_bytes:number;source_sha256:string;output_budget_bytes:number};
+   requireThat(Object.keys(r).sort().join(',')==='api_epoch,guardian_epoch,job_id,nonce,output_budget_bytes,schema_version,source_bytes,source_sha256'&&r.schema_version===1&&r.guardian_epoch===guardianEpoch&&[r.guardian_epoch,r.job_id,r.api_epoch,r.nonce].every(x=>typeof x==='string'&&UUID.test(x))&&Number.isSafeInteger(r.source_bytes)&&r.source_bytes>0&&r.source_bytes<=16*1024*1024&&typeof r.source_sha256==='string'&&/^[a-f0-9]{64}$/.test(r.source_sha256)&&Number.isSafeInteger(r.output_budget_bytes)&&r.output_budget_bytes>0&&r.output_budget_bytes<=64*1024*1024,'PRESENTATION_WORKER_UNAVAILABLE',503);
+   return {guardian_epoch:r.guardian_epoch,job_id:r.job_id,api_epoch:r.api_epoch,nonce:r.nonce};
+  }finally{fs.closeSync(fd);}
+ }
  private write(name:string,bytes:Buffer){const file=path.join(this.root,name),tmp=path.join(this.root,'.api-'+randomUUID());requireThat(!fs.existsSync(file),'PRESENTATION_WORKER_BUSY',409);const fd=fs.openSync(tmp,'wx',0o600);try{fs.writeFileSync(fd,bytes);fs.fchmodSync(fd,0o444);fs.fsyncSync(fd);}finally{fs.closeSync(fd);}fs.renameSync(tmp,file);}
  private json(name:string,value:unknown){this.write(name,Buffer.from(JSON.stringify(value)+'\n'));}
  private same(a:Identity,b:Identity){return a.guardian_epoch===b.guardian_epoch&&a.job_id===b.job_id&&a.nonce===b.nonce&&a.api_epoch===b.api_epoch;}
  private result(id:Identity){if(!fs.existsSync(path.join(this.root,'result.json')))return null;const r=JSON.parse(this.read('result.json',65536).bytes.toString()) as RenderResult;requireThat(r.schema_version===1&&this.same(r,id),'PRESENTATION_WORKER_UNAVAILABLE',503);return r;}
  private signal(name:'cancel.json'|'ack.json',id:Identity){if(!fs.existsSync(path.join(this.root,name)))this.json(name,{schema_version:1,...id});}
- async quiesce(){const deadline=Date.now()+125000;for(;;){const h=this.health();requireThat(h.state!=='closed','PRESENTATION_WORKER_UNAVAILABLE',503);if(h.state==='idle')return;const id=h as Identity;if(this.result(id))this.signal('ack.json',id);else this.signal('cancel.json',id);requireThat(Date.now()<deadline,'PRESENTATION_WORKER_UNAVAILABLE',503);await sleep(100);}}
+ async quiesce(){const deadline=Date.now()+125000;let acknowledged:Identity|null=null;for(;;){const h=this.health();requireThat(h.state!=='closed','PRESENTATION_WORKER_UNAVAILABLE',503);if(h.state==='idle'&&this.clean())return;const id=h.state==='busy'?h as Identity:this.pending(h.guardian_epoch);if(id&&(!acknowledged||!this.same(acknowledged,id))){if(this.result(id)){this.signal('ack.json',id);acknowledged=id;}else if(!fs.existsSync(path.join(this.root,'ack.json')))this.signal('cancel.json',id);}requireThat(Date.now()<deadline,'PRESENTATION_WORKER_UNAVAILABLE',503);await sleep(100);}}
  async render(input:{id:string;nonce:string;epoch:string;source:Buffer;source_sha256:string;output_budget_bytes:number},cancelled:()=>boolean){
-  const h=this.health();requireThat(h.state==='idle','PRESENTATION_WORKER_BUSY',409);
+  const h=this.health();requireThat(h.state==='idle'&&this.available(),'PRESENTATION_WORKER_BUSY',409);
   const id:Identity={guardian_epoch:h.guardian_epoch,job_id:input.id,nonce:input.nonce,api_epoch:input.epoch};
   this.write('source.pdf',input.source);this.json('request.json',{schema_version:1,...id,source_bytes:input.source.length,source_sha256:input.source_sha256,output_budget_bytes:input.output_budget_bytes});
   const deadline=Date.now()+125000;let result:RenderResult|null=null;
