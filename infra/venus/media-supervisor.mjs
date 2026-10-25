@@ -4,7 +4,7 @@ import {performance} from 'node:perf_hooks';
 import os from 'node:os';
 import http from 'node:http';
 import {spawn} from 'node:child_process';
-import {randomUUID,createHmac,timingSafeEqual} from 'node:crypto';
+import {randomUUID,createHash,createHmac,timingSafeEqual} from 'node:crypto';
 import WebSocket,{WebSocketServer} from 'ws';
 const keyFile=process.env.VENUS_MEDIA_KEY_FILE??'/run/secrets/media_key',authorityOrigin=process.env.VENUS_MEDIA_AUTHORITY_ORIGIN??'http://app:4300';
 const owner=new URL(authorityOrigin);if(owner.protocol!=='http:'||!['app','browser','127.0.0.1','localhost'].includes(owner.hostname)||owner.pathname!=='/'||owner.search||owner.hash||owner.username||owner.password)throw Error('MEDIA_CONFIGURATION');
@@ -15,9 +15,9 @@ if(!key||Object.keys(key).sort().join(',')!=='key_id,secret'||!/^[a-z0-9_-]{6,64
 const credential=createHmac('sha256',key.secret).update('venus-media-internal-v1').digest('base64url'),secret=Buffer.from(credential);
 const authenticated=request=>{const v=request.headers['x-venus-media-internal'],b=Buffer.from(typeof v==='string'?v:'');return b.length===secret.length&&timingSafeEqual(b,secret);};
 let child=null,boot=randomUUID(),apiEpoch='',lastAuthority=0,lastReconcile=0,generation=0,retiring=null,running=false,stopping=false,polling=false,cutoff=true,metrics=[],lastMetric=null;
-const diagnostic=process.env.VENUS_P09_MEDIA_DIAGNOSTIC==='1',diagnosticCounts={};
+const diagnostic=process.env.VENUS_P09_MEDIA_DIAGNOSTIC==='1',diagnosticCounts={},diagnosticIceHashes=[];
 let diagnosticBuffer='';
-function diagnosticLine(bytes){if(!diagnostic)return;diagnosticBuffer+=bytes.toString();if(diagnosticBuffer.length>65536){diagnosticBuffer='';return;}const lines=diagnosticBuffer.split('\n');diagnosticBuffer=lines.pop();for(const line of lines){let row;try{row=JSON.parse(line);}catch{continue;}const text=String(row.msg??row.message??'').toLowerCase(),failure=/fail|error|invalid|unknown|not found|could not|no conn|mismatch|unauth/.test(text),category=/ufrag|username/.test(text)?'ice_ufrag':/integrity/.test(text)?'ice_integrity':/stun|binding request/.test(text)?'stun':/drop|discard/.test(text)?'discard':/ice/.test(text)?'ice':/connection state/.test(text)?'connection_state':/dtls/.test(text)?'dtls':/candidate/.test(text)?'candidate':'other',name=category+(failure?'_failure':'');diagnosticCounts[name]=(diagnosticCounts[name]??0)+1;}}
+function diagnosticLine(bytes){if(!diagnostic)return;diagnosticBuffer+=bytes.toString();if(diagnosticBuffer.length>65536){diagnosticBuffer='';return;}const lines=diagnosticBuffer.split('\n');diagnosticBuffer=lines.pop();for(const line of lines){let row;try{row=JSON.parse(line);}catch{continue;}const original=String(row.msg??row.message??''),credentials=/remoteUfrag: "([^"]+)", remotePwd: "([^"]+)"/.exec(original);if(credentials&&diagnosticIceHashes.length<16)diagnosticIceHashes.push(createHash('sha256').update(JSON.stringify([credentials[1],credentials[2]])).digest('hex'));const text=original.toLowerCase(),failure=/fail|error|invalid|unknown|not found|could not|no conn|mismatch|unauth|broken|wrong/.test(text),category=/ufrag|username/.test(text)?'ice_ufrag':/integrity/.test(text)?'ice_integrity':/stun|binding request/.test(text)?'stun':/drop|discard/.test(text)?'discard':/ice/.test(text)?'ice':/connection state/.test(text)?'connection_state':/dtls/.test(text)?'dtls':/candidate/.test(text)?'candidate':'other',known=[['discard request with broken integrity','stun_request_bad_integrity'],['discard request with wrong username','stun_request_wrong_username'],['discard success response with broken integrity','stun_response_bad_integrity'],['discard success message from','stun_response_unknown_remote'],['discarded','expired_or_discarded']].find(([prefix])=>text.startsWith(prefix)),name=known?.[1]??category+(failure?'_failure':'');diagnosticCounts[name]=(diagnosticCounts[name]??0)+1;}}
 
 const connections=new Set(),rtcPaths=new Set(['/rtc','/rtc/v1','/rtc/validate','/rtc/v1/validate']);
 const rpcPaths=new Set(['CreateRoom','DeleteRoom','ListRooms','ListParticipants','GetParticipant','RemoveParticipant'].map(name=>'/twirp/livekit.RoomService/'+name));
@@ -57,7 +57,7 @@ async function poll(){
 }
 const server=http.createServer((request,reply)=>{
  const url=new URL(request.url,'http://media');
- if(url.pathname==='/internal/health'&&request.method==='GET'){if(!authenticated(request)){send(reply,401,{ready:false});return;}send(reply,200,{running:running&&performance.now()-lastAuthority<5000,boot_id:boot,api_epoch:apiEpoch,cutoff_confirmed:cutoff,authority_age_ms:lastAuthority?performance.now()-lastAuthority:null,metrics,...(diagnostic?{diagnostic_counts:diagnosticCounts}:{})});return;}
+ if(url.pathname==='/internal/health'&&request.method==='GET'){if(!authenticated(request)){send(reply,401,{ready:false});return;}send(reply,200,{running:running&&performance.now()-lastAuthority<5000,boot_id:boot,api_epoch:apiEpoch,cutoff_confirmed:cutoff,authority_age_ms:lastAuthority?performance.now()-lastAuthority:null,metrics,...(diagnostic?{diagnostic_counts:diagnosticCounts,diagnostic_remote_ice_hashes:diagnosticIceHashes}:{})});return;}
  if(url.pathname==='/internal/quiesce'&&request.method==='POST'){if(!authenticated(request)){send(reply,401,{ready:false});return;}void quiesce().then(confirmed=>{send(reply,confirmed?200:503,{running:false,boot_id:boot,api_epoch:apiEpoch,cutoff_confirmed:confirmed});});return;}
  const rpc=rpcPaths.has(url.pathname)&&request.method==='POST';
  if(!(rpc||rtcPaths.has(url.pathname)&&request.method==='GET')||(!rpc&&!authenticated(request))||!running||performance.now()-lastAuthority>=5000||request.headers['content-length']&&Number(request.headers['content-length'])>65536){send(reply,403,{code:'MEDIA_UNAVAILABLE'});return;}
