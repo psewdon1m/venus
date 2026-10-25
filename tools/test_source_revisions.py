@@ -10,7 +10,7 @@ import zipfile
 from p00_history import validate_p00_history
 from source_revisions import (ADR_PATH, ARCHIVE_PATH, ARCHIVE_SHA, AUTHORITY_PATH,
     LINKS, MANIFEST_PATH, ORIGINAL_PLAN_SHA, PLAN_PATH, authorized_plan_revision,
-    expected_manifest, validate_source_revisions)
+    expected_manifest, validate_source_revisions, V3_PATH, V3_INPUTS)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -29,7 +29,7 @@ class ExactPlanRevisionTests(unittest.TestCase):
                 target = self.root / entry.filename.replace('\\', '/')
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(archive.read(entry))
-        for path in (ARCHIVE_PATH, PLAN_PATH, ADR_PATH, AUTHORITY_PATH, MANIFEST_PATH):
+        for path in (ARCHIVE_PATH, PLAN_PATH, ADR_PATH, AUTHORITY_PATH, MANIFEST_PATH, V3_PATH, *V3_INPUTS):
             target = self.root / path
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes((ROOT / path).read_bytes())
@@ -55,6 +55,26 @@ class ExactPlanRevisionTests(unittest.TestCase):
         with (self.root / '.docs/implementation/traceability.csv').open(encoding='utf-8', newline='') as f:
             rows = list(csv.DictReader(f))
         self.assertEqual(check_rows(self.root, rows), [])
+
+    def test_v3_chain_tampering_and_extra_exemption_fail(self):
+        original = (self.root / V3_PATH).read_bytes()
+        for name in V3_INPUTS:
+            if name == MANIFEST_PATH:
+                continue  # Existing manifest tamper cases cover the sealed V2 descriptor.
+            with self.subTest(path=name):
+                target = self.root / name
+                before = target.read_bytes()
+                target.write_bytes(before + b' ')
+                self.assert_blocked()
+                target.write_bytes(before)
+        value = json.loads(original)
+        value['inputs']['.docs/README.md'] = '0' * 64
+        (self.root / V3_PATH).write_text(json.dumps(value), encoding='utf-8')
+        self.assert_blocked()
+
+    def test_missing_v3_does_not_authorize_new_plan(self):
+        (self.root / V3_PATH).unlink()
+        self.assert_blocked()
 
     def test_plan_byte_drift_fails(self):
         with (self.root / PLAN_PATH).open('ab') as f:
