@@ -1,0 +1,56 @@
+ Container venus-p05-8c5d2679f2ec-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (11.537512ms)
+✔ P06-RELEASE reject signed wrong version (4.269823ms)
+✔ P06-RELEASE reject signed wrong schema (5.018622ms)
+✔ P06-RELEASE reject signed wrong environment (4.527775ms)
+✔ P06-RELEASE reject signed wrong image digest (3.703548ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.450976ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (3.98988ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (60.565608ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (7.969631ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (11.718175ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (10.331287ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (12.60629ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (9.750995ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (11.173746ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (8.82392ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (21.822126ms)
+✔ P06-JOURNAL corruption fails closed without mutation (5.840524ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (75.452975ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (29.244096ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.646174ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.42292ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1761.47709ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (10.459222ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (6.176459ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (6.443191ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.202324ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (2.991685ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (13.685067ms)
+✔ host authority denies stale database grants, rollback and unsafe state (4.249722ms)
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","phase":"START"}
+✖ P09 actual media and current-authority lifecycle (34444.116618ms)
+✔ backup and restore cannot run while a media container survives API stop (1.763597ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (11.570213ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 37127.545528
+
+✖ failing tests:
+
+test at tests/p09/integration.mjs:41:1
+✖ P09 actual media and current-authority lifecycle (34444.116618ms)
+  Error: HEALTH_FAILED
+      at DockerDriver.healthy (file:///app/tools/venus-operator/driver.mjs:102:275)
+      at async operatorHealthExit (file:///app/tests/p09/integration.mjs:39:221)
+      at async file:///app/tests/p09/integration.mjs:45:489
+      at async record (file:///app/tests/p09/integration.mjs:22:95)
+      at async TestContext.<anonymous> (file:///app/tests/p09/integration.mjs:45:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+

@@ -78,12 +78,13 @@ export async function checkMobileEntry({context,origin}){
 }
 
 async function populatedModules(page){
+ try{
  await expect(page.getByTestId('game-state')).toBeVisible();
  await expect(page.locator('.game-card')).toBeVisible();
  for(const id of ['calls-leave','calls-microphone','calls-camera','cinema-stop','presentation-stop','presentation-page-image'])await expect(page.getByTestId(id).first()).toBeVisible();
  await expect(page.getByTestId('calls-microphone')).toHaveAttribute('aria-pressed','true');
  await expect(page.getByTestId('calls-camera')).toHaveAttribute('aria-pressed','true');
- try{await page.waitForFunction(()=>{
+ await page.waitForFunction(()=>{
   const audio=document.querySelector('[data-testid="music-panel"] audio'),images=[...document.querySelectorAll('[data-testid="presentation-page-image"]')],cinema=document.querySelector('[data-testid="cinema-video"]');
   return audio&&!audio.paused&&audio.readyState>=2&&images.length>0&&images.every(image=>image.complete&&image.naturalWidth>0)&&cinema?.srcObject?.getVideoTracks().some(track=>track.readyState==='live')&&cinema.srcObject.getAudioTracks().some(track=>track.readyState==='live');
  });}catch(error){

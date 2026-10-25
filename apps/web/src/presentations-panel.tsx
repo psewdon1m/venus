@@ -33,6 +33,9 @@ function PresentationSession({api,roomId,memberId,locale,connected,roomRevision,
   try{const next=await api.request<PresentationState>(prefix);if(!alive.current||serial!==generation.current)return null;if(!validState(next,roomId))throw new ApiError('SERVICE_UNAVAILABLE');
    const expiry=started+Math.min(5000,Date.parse(next.expires_at)-Date.parse(next.server_time));if(expiry<=performance.now())throw new ApiError('PRESENTATION_SNAPSHOT_EXPIRED');
    if(snapshot.current&&snapshot.current.epoch!==next.epoch)clearAuthority();
+   // A fresh authority snapshot permits one retry of transient binary failures.
+   // imageTick alone never clears failures; manual Retry remains available.
+   if(failedPages.current.size){failedPages.current.clear();setPageErrors(new Set());}
    snapshot.current=next;deadline.current=expiry;if(expiryTimer.current)clearTimeout(expiryTimer.current);const token=generation.current;expiryTimer.current=setTimeout(()=>{if(alive.current&&generation.current===token&&deadline.current<=performance.now()){clearAuthority();setMessage('expired');void refreshRef.current();}},Math.max(0,expiry-performance.now()));setView(next);setMessage(null);setOwnJob(next.job);return next;
   }catch(error){if(alive.current&&serial===generation.current){clearAuthority();if(error instanceof ApiError&&error.status===404){absentRef.current=true;setAbsent(true);}else{setMessage('error');if(error instanceof ApiError&&['AUTH_REQUIRED','ENTRY_REACCEPT_REQUIRED','ROOM_CLOSED'].includes(error.code))onErrorRef.current?.(error);}}return null;}
   finally{if(reading.current===serial)reading.current=null;}
