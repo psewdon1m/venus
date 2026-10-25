@@ -53,7 +53,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
     track.attach(element);setHasMedia(true);void play(value);
    });
    room.on(RoomEvent.TrackUnsubscribed,track=>{track.detach();if(current()){retire(value);setLocal('idle');}});
-   await room.connect(grant.signaling_url,grant.token,{autoSubscribe:true});if(!current()){void room.disconnect(true);return;}
+   await room.connect(grant.signaling_url,grant.token,{autoSubscribe:true,rtcConfig:{iceServers:[]}});if(!current()){void room.disconnect(true);return;}
    value.renew=setInterval(()=>{if(!current())return;void api.request(`${root}/media/leases/${grant.lease_id}/renew`,{idempotency_key:crypto.randomUUID()}).catch(()=>{if(current()){retire(value);setLocal('error');}});},5000);
    if(publisher){
     await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,videoCodec:'vp8',simulcast:false,videoEncoding:{maxBitrate:1500000,maxFramerate:15},screenShareEncoding:{maxBitrate:1500000,maxFramerate:15}});
