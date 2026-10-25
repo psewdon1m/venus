@@ -2,6 +2,7 @@ services:
   browser:
     mem_limit: 4g
     cpus: 4
+    networks: [isolated, media_fixture]
     volumes:
       - media-fixture:/media-fixture
   media:
@@ -22,6 +23,10 @@ services:
       VENUS_MEDIA_KEY_FILE: /media-fixture/venus/key.json
       VENUS_MEDIA_AUTHORITY_ORIGIN: http://browser:4300
     volumes: ["media-fixture:/media-fixture:ro"]
-    networks: [isolated]
+    networks: [media_fixture]
+networks:
+  # Chromium needs an ordinary local default route to enumerate ICE interfaces.
+  # No host ports; PG remains on the separate internal isolated network.
+  media_fixture: {}
 volumes:
   media-fixture:
