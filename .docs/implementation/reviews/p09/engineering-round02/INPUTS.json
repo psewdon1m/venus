@@ -1,0 +1,938 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/contract_review",
+  "captured_at_utc": "2026-10-25T03:16:58.924986+00:00",
+  "status": "FAIL",
+  "scope": "P09_LOCAL_FUNCTIONAL_ENGINEERING_SUBGATE_NOT_FULL_G3",
+  "source_git": "94baae5936f56c49c96d05062ff6432d51001bfb",
+  "source_identity_sha256": "825d04a212d12cb7814e92bf3c2d2e82f2ffe662b0045c5a61ca1b357af31b25",
+  "runtime_image": "sha256:96340589aad94c2a8170b0e4922ca39aa13c9eadf26cc297d2bfe4caab5be149",
+  "source_unchanged": true,
+  "cleanup": "completed",
+  "source_inputs": [
+    {
+      "path": "AGENTS.md",
+      "committed_sha256": "b14a918e631b79f2684bfd50a85aa7cc9d5f70c480cbe881d46bbfb9627479cb",
+      "committed_bytes": 4220,
+      "working_sha256_at_capture": "b14a918e631b79f2684bfd50a85aa7cc9d5f70c480cbe881d46bbfb9627479cb"
+    },
+    {
+      "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+      "committed_sha256": "171139ce387bc9af063fdf7f5e68b235166c7b2fa1728a745a159e182b46c501",
+      "committed_bytes": 81891,
+      "working_sha256_at_capture": "171139ce387bc9af063fdf7f5e68b235166c7b2fa1728a745a159e182b46c501"
+    },
+    {
+      "path": ".docs/implementation/P09_MEDIA.md",
+      "committed_sha256": "9de3f58e70e2c2e7a24fa33c3e0e3569a802c1c8bcbf084bcd3276f0b5cce2df",
+      "committed_bytes": 23819,
+      "working_sha256_at_capture": "9de3f58e70e2c2e7a24fa33c3e0e3569a802c1c8bcbf084bcd3276f0b5cce2df"
+    },
+    {
+      "path": ".docs/adr/ADR-036-venus-owned-media-authority.md",
+      "committed_sha256": "84068198d523d25de79f44d9adeb6983a6c398f8aeade04bba094bdebfb6d2dd",
+      "committed_bytes": 1863,
+      "working_sha256_at_capture": "84068198d523d25de79f44d9adeb6983a6c398f8aeade04bba094bdebfb6d2dd"
+    },
+    {
+      "path": "apps/api/src/media.ts",
+      "committed_sha256": "68bcf8366fd5f0c6b1f3d271a43c24f8e9a6270776283ce3ae231291835422db",
+      "committed_bytes": 28794,
+      "working_sha256_at_capture": "68bcf8366fd5f0c6b1f3d271a43c24f8e9a6270776283ce3ae231291835422db"
+    },
+    {
+      "path": "apps/api/src/rooms.ts",
+      "committed_sha256": "bb29170d39e8ba936c8a65bd901b322cbd3c5450b0af0eeb353b7339143f3085",
+      "committed_bytes": 45877,
+      "working_sha256_at_capture": "bb29170d39e8ba936c8a65bd901b322cbd3c5450b0af0eeb353b7339143f3085"
+    },
+    {
+      "path": "apps/api/src/media-routes.ts",
+      "committed_sha256": "fdc6ba7b04474a8fd1d2ec7ceaca6e0169bb64b8d808bf484fc57da8495338df",
+      "committed_bytes": 8012,
+      "working_sha256_at_capture": "fdc6ba7b04474a8fd1d2ec7ceaca6e0169bb64b8d808bf484fc57da8495338df"
+    },
+    {
+      "path": "apps/api/src/app.ts",
+      "committed_sha256": "b331ec32d1558b14aa4998c1042a09962cb1a1d0f09b1c3135f472e42e84bb5a",
+      "committed_bytes": 5127,
+      "working_sha256_at_capture": "b331ec32d1558b14aa4998c1042a09962cb1a1d0f09b1c3135f472e42e84bb5a"
+    },
+    {
+      "path": "apps/web/src/cinema-panel.tsx",
+      "committed_sha256": "d361931e2b3029a9cd6900ef464423b0ae39d6673fa43619069817ab267629a1",
+      "committed_bytes": 8497,
+      "working_sha256_at_capture": "d361931e2b3029a9cd6900ef464423b0ae39d6673fa43619069817ab267629a1"
+    },
+    {
+      "path": "infra/venus/media-supervisor.mjs",
+      "committed_sha256": "30a5d66e6b4949f66f01f1b87f6b1b4ad29f32392bd2a45c1232ccee33372e8e",
+      "committed_bytes": 13177,
+      "working_sha256_at_capture": "30a5d66e6b4949f66f01f1b87f6b1b4ad29f32392bd2a45c1232ccee33372e8e"
+    },
+    {
+      "path": "infra/venus/compose.media.standalone.yml",
+      "committed_sha256": "e8854e8d8dd2d2ee88c08579d0c0024e45799c0a0a87c8f4f1888850335cacb9",
+      "committed_bytes": 3632,
+      "working_sha256_at_capture": "e8854e8d8dd2d2ee88c08579d0c0024e45799c0a0a87c8f4f1888850335cacb9"
+    },
+    {
+      "path": "infra/venus/compose.p09-tests.yml",
+      "committed_sha256": "61fa1ae75e3656e1e1d7413651b0764257a879eb5b52f6bac8911ab8d73fe962",
+      "committed_bytes": 1078,
+      "working_sha256_at_capture": "61fa1ae75e3656e1e1d7413651b0764257a879eb5b52f6bac8911ab8d73fe962"
+    },
+    {
+      "path": "infra/venus/Dockerfile",
+      "committed_sha256": "497f41c9c67231790d781db04b53e378f2f2c78a13df5b1e5809c41e453b8b35",
+      "committed_bytes": 3170,
+      "working_sha256_at_capture": "497f41c9c67231790d781db04b53e378f2f2c78a13df5b1e5809c41e453b8b35"
+    },
+    {
+      "path": "tools/venus-operator/driver.mjs",
+      "committed_sha256": "a7efa78eb9bd1d94b4d13aab4e80629c3411ed5d7ee95c437b7aeff4d62f6dbd",
+      "committed_bytes": 20723,
+      "working_sha256_at_capture": "a7efa78eb9bd1d94b4d13aab4e80629c3411ed5d7ee95c437b7aeff4d62f6dbd"
+    },
+    {
+      "path": "tools/venus-operator/engine.mjs",
+      "committed_sha256": "cdd712f4215073dbdb1799c4d1972e422b73a8d7a7ee2a9dd84f069646897ab6",
+      "committed_bytes": 12996,
+      "working_sha256_at_capture": "cdd712f4215073dbdb1799c4d1972e422b73a8d7a7ee2a9dd84f069646897ab6"
+    },
+    {
+      "path": "tools/p05-browser.mjs",
+      "committed_sha256": "f3b6d4a6f1b0578fd28aa8ef19f2eb3bbada185a5c2055852b0902b3df6247f2",
+      "committed_bytes": 13091,
+      "working_sha256_at_capture": "f3b6d4a6f1b0578fd28aa8ef19f2eb3bbada185a5c2055852b0902b3df6247f2"
+    },
+    {
+      "path": "tests/p09/integration.mjs",
+      "committed_sha256": "a8633393715286a6712e4f24d5bdc426bbcf246b62c4479b1fda604aee92abb6",
+      "committed_bytes": 35392,
+      "working_sha256_at_capture": "0ccb8f36983c66832db4573915e54242d47e1c28dd87edf624f94a973e051f12"
+    },
+    {
+      "path": "tests/p09/av-source.mjs",
+      "committed_sha256": "eaa1fa7d05cd13239d1f4788e0d453147a55ae1e155e1c3e9c141361e5361a20",
+      "committed_bytes": 4274,
+      "working_sha256_at_capture": "eaa1fa7d05cd13239d1f4788e0d453147a55ae1e155e1c3e9c141361e5361a20"
+    },
+    {
+      "path": "tests/p09/operator.test.mjs",
+      "committed_sha256": "95639448013eeaf943474db57248022407cb4454dc9116fc833c2d33b34323ad",
+      "committed_bytes": 2011,
+      "working_sha256_at_capture": "95639448013eeaf943474db57248022407cb4454dc9116fc833c2d33b34323ad"
+    },
+    {
+      "path": "package-lock.json",
+      "committed_sha256": "76b51e7a0daa4695bad1b349d32ca5564216cfa1e2fbd236cbc446b0183fee3b",
+      "committed_bytes": 167221,
+      "working_sha256_at_capture": "76b51e7a0daa4695bad1b349d32ca5564216cfa1e2fbd236cbc446b0183fee3b"
+    }
+  ],
+  "evidence_inputs": [
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/runner.json",
+      "sha256": "af3d582c97412f69365b717fd92349d64aa0219cdc321007b8d2e8b4db92a683",
+      "bytes": 833
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/inputs-before.json",
+      "sha256": "7650d9175016db134bc10c687e6a4256e78d966023bf201045b5ece2c80e275d",
+      "bytes": 233986
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/inputs-after.json",
+      "sha256": "7ff86286c79310cdc4a0e32bc872a84396084234dea9bde9333956a03880e0c5",
+      "bytes": 233901
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/cinema-tests.txt",
+      "sha256": "8746971200b6698ce11fed4563084846a2602a52a273e0a38add7bff906a6444",
+      "bytes": 5233
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/p09-report.json",
+      "sha256": "8d6af7d168fc34ab2f470940c8df3f588c68cab0b705a67be604b9d47c1da606",
+      "bytes": 70774
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/cleanup.txt",
+      "sha256": "b003e99144c1a4179d1e8ec00d84026948a39824b7f1f35849d039cdace45a5f",
+      "bytes": 830
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/image-id.txt",
+      "sha256": "ffeb4d119b907e71d06bd765f9d0ecd5f8a4f20f16593a6f7acf255f0259f6e3",
+      "bytes": 72
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/media-binary-and-fixture-os.json",
+      "sha256": "1da970cdd5e516ef7c3bdfbce74113d4f51047b9f678dc2b14f3e74b787e0641",
+      "bytes": 35706
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p05/venus-p05-d0dae0919672/p09-live-dump.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p09-production02/build.txt",
+      "sha256": "b8e879b7429edc43de02f455f04d4b08b14fee10c5459a41458d4e7e471fd0fb",
+      "bytes": 7195
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p09-production02/image-id.txt",
+      "sha256": "0f6e685423b8e9fa771f1f87fa74cb84e0f4b0d7ebdaf8c12db2ae334f2185f7",
+      "bytes": 72
+    },
+    {
+      "path": ".artifacts/p06-clean-source01/.artifacts/p09-production02/inventory.json",
+      "sha256": "62179b78984afa208f25180e161d73321f56d753ff6871e92802b4a4c6bf5b33",
+      "bytes": 17063
+    },
+    {
+      "path": ".docs/implementation/evidence/p09/targeted-round23/runner.json",
+      "sha256": "8c5ec940ef1967077414d87c64d217e2eba47bcf58a5b927bc78732875eb2f37",
+      "bytes": 833
+    },
+    {
+      "path": ".docs/implementation/evidence/p09/targeted-round23/p09-report.json",
+      "sha256": "56e1747910b8f60b6fca744e9dc4079095467e08d15e7ec07f2df812e04b3811",
+      "bytes": 73122
+    },
+    {
+      "path": ".docs/implementation/evidence/p09/targeted-static01/RESULT.json",
+      "sha256": "fa800e11c3558df8bee4e90d40fecc56b0cced447662b29c9a10d9cd8b2197b7",
+      "bytes": 2268
+    },
+    {
+      "path": ".docs/implementation/evidence/p09/targeted-static01/regression-unit.txt",
+      "sha256": "b7d54edd483b03547ec329b0908bf9307a456cb8fe240b1661a45cd476dce160",
+      "bytes": 219
+    },
+    {
+      "path": ".docs/implementation/reviews/p09/engineering-round01/REPORT.md",
+      "sha256": "923d8527d7770c4bd0ae76cf11a2bf1b94ae27adfbd70ffe9538c5240bfd4517",
+      "bytes": 5759
+    },
+    {
+      "path": ".docs/implementation/reviews/p09/av-source-round01/REPORT.md",
+      "sha256": "39bcf06e488b81cc206ae54bd858c1204a11b0b1d996d86a62f52e6b0a8bde42",
+      "bytes": 7008
+    },
+    {
+      "path": ".docs/implementation/reviews/p09/dependency-round02/INDEX.json",
+      "sha256": "11651cb48ac98fd4f17bc204cf3cd46930798d0237c09a0c547a3a7572dc7cfa",
+      "bytes": 1673
+    },
+    {
+      "path": ".docs/implementation/reviews/p09/security-round04/INDEX.json",
+      "sha256": "da69c05fc74609cd4f494ca886e7b4d666d7c314851d50a721fd5f6940c9c08a",
+      "bytes": 656
+    }
+  ],
+  "findings": [
+    {
+      "id": "E09-04",
+      "severity": "P2",
+      "category": "fixture_expectation_blocks_required_proof",
+      "path": "tests/p09/integration.mjs",
+      "line": 64,
+      "actual": "401 after immediate close",
+      "expected_in_fixture": "403",
+      "reason": "Close revokes room_sessions, Rooms.auth rejects revoked session before checking room/deletionledger. After old PG restore a formerly active snapshot session can pass DB auth but protected deletion ledger must still give403 ROOM_CLOSED.",
+      "fix": "Expect exact401 AUTH_REQUIRED for immediate closed-room revoked session; preserve distinct postrestore403 ROOM_CLOSED; repeat impacted exact clean run; no application ACL relaxation."
+    }
+  ],
+  "app_diff_since17a": [],
+  "production_build02": {
+    "source_git": "a8a2ad226bd15aee3c82e3b8100009c21fd5df9d",
+    "image_id": "sha256:332ab2fba19c7ca53386f7917aa7f7eb9ad14f3261650619b3a5098c8c5d73dd",
+    "production_input_diff_to_current": [],
+    "qualification": "Production Docker inputs unchanged; SOURCE_REVISION metadata differs. Not exact94baa production image and not publication."
+  },
+  "current_records": [
+    {
+      "id": "P09-MAINTENANCE-MEDIA-READINESS",
+      "status": "PASS",
+      "detail": {
+        "api_alive_media_dead_rejected": true,
+        "empty_child_prepared_while_admission_closed": true,
+        "no_rtc_authority_during_prepare": true
+      }
+    },
+    {
+      "id": "P09-DENIED-NO-AUDIO",
+      "status": "PASS",
+      "detail": {
+        "explicit_denied": true,
+        "no_audio_never_live": true
+      }
+    },
+    {
+      "id": "P09-REAL-TAB-CAPTURE-8",
+      "status": "PASS",
+      "detail": {
+        "capture": "actual getDisplayMedia; browser tab containing own generated AV",
+        "participants": 8,
+        "one_embedded_sfu": true,
+        "music_paused": true
+      }
+    },
+    {
+      "id": "P09-SOURCE-CALIBRATION",
+      "status": "PASS",
+      "detail": {
+        "native_capture_before_sfu": true,
+        "video_pulses": [
+          {
+            "source": 1792898031335,
+            "at": 1792898031404
+          },
+          {
+            "source": 1792898032334,
+            "at": 1792898032406
+          },
+          {
+            "source": 1792898033301,
+            "at": 1792898033372
+          },
+          {
+            "source": 1792898034301,
+            "at": 1792898034372
+          },
+          {
+            "source": 1792898035268,
+            "at": 1792898035342
+          },
+          {
+            "source": 1792898036268,
+            "at": 1792898036339
+          }
+        ],
+        "audio_pulses": [
+          {
+            "at": 1792898031328
+          },
+          {
+            "at": 1792898032328
+          },
+          {
+            "at": 1792898033328
+          },
+          {
+            "at": 1792898034318
+          },
+          {
+            "at": 1792898035318
+          },
+          {
+            "at": 1792898036318
+          }
+        ],
+        "matched": 6,
+        "signed_audio_minus_video_ms": [
+          -76,
+          -78,
+          -44,
+          -54,
+          -24,
+          -21
+        ],
+        "p95_ms": 78,
+        "frames": 175
+      }
+    },
+    {
+      "id": "P09-ACL-FOUR-PATHS",
+      "status": "PASS",
+      "detail": {
+        "guest_publish403": true,
+        "second_publish409": true,
+        "all_four_foreign_cookie401": true,
+        "all_four_foreign_origin403": true
+      }
+    },
+    {
+      "id": "P09-OPEN-READINESS-AND-AUTOPLAY",
+      "status": "PASS",
+      "detail": {
+        "open_probe_nonmutating": true,
+        "child_boot_unchanged": true,
+        "controlled_NotAllowedError": true,
+        "explicit_sound_retry": true
+      }
+    },
+    {
+      "id": "P09-GAMES-COEXISTENCE-ADMISSION",
+      "status": "PASS",
+      "detail": {
+        "games_active_with_cinema": true,
+        "music_stays_paused": true,
+        "second_venus_room_admission409": true
+      }
+    },
+    {
+      "id": "P09-AV-30S-8",
+      "status": "PASS",
+      "detail": {
+        "per_viewer": [
+          {
+            "matched": 35,
+            "p95_ms": 66,
+            "decoded_frames": 1014
+          },
+          {
+            "matched": 35,
+            "p95_ms": 53,
+            "decoded_frames": 1021
+          },
+          {
+            "matched": 35,
+            "p95_ms": 67,
+            "decoded_frames": 1034
+          },
+          {
+            "matched": 35,
+            "p95_ms": 54,
+            "decoded_frames": 1031
+          },
+          {
+            "matched": 35,
+            "p95_ms": 52,
+            "decoded_frames": 1020
+          },
+          {
+            "matched": 35,
+            "p95_ms": 68,
+            "decoded_frames": 1020
+          },
+          {
+            "matched": 35,
+            "p95_ms": 67,
+            "decoded_frames": 1014
+          }
+        ],
+        "av_p95_ms": 65,
+        "glass_p95_ms": 72,
+        "viewer_skew_p95_ms": 37,
+        "samples": 2100,
+        "audio": "received audio track from combined remote video MediaStream, analysed without altering the actual null-sink playback",
+        "clock": "same Docker host wall clock; encoded timestamp+checksum, 1ms clock granularity",
+        "sfu": {
+          "p95_cpu_cores": 0.1110511871175485,
+          "peak_memory_bytes": 115261440,
+          "p95_egress_bps": 4933491.587398178
+        },
+        "rtp": [
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1080,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 141578
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 2662,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 2405790
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1408,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 185715
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 3518,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 3203203
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1395,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 183581
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 3459,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 3144761
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1380,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 182004
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 3391,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 3079173
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1351,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 177212
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 3338,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 3032721
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1337,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 175229
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 3264,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 2962609
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1320,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 173210
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 3195,
+              "packetsLost": 0,
+              "jitter": 0.002,
+              "bytesReceived": 2894093
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P09-DEGRADED-10S",
+      "status": "PASS",
+      "detail": {
+        "profile": "owned media eth0 sourceports7881/7882 only:50ms±10ms,0.5%loss,4Mbit;10s;internal authority/control unshaped",
+        "advanced": true,
+        "normal_targets_claimed": false
+      }
+    },
+    {
+      "id": "P09-REVOKE-STALE-JWT",
+      "status": "PASS",
+      "detail": {
+        "protected_revoke": true,
+        "all_four_old_token401": true,
+        "old_frames_cleared": true
+      }
+    },
+    {
+      "id": "P09-UDP-BLOCKED-TCP-10S",
+      "status": "PASS",
+      "detail": {
+        "profile": "owned SFU INPUT drops UDP7882;new explicit capture+joins;10s",
+        "protocols": [
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ]
+        ],
+        "no_external_relay": true
+      }
+    },
+    {
+      "id": "P09-OLD-RELEASE-KEEPS-NEW-SCOPE",
+      "status": "PASS",
+      "detail": {
+        "delayed_old_release_does_not_retire_current_scope": true
+      }
+    },
+    {
+      "id": "P09-UNCONFIRMED-RETRY-AND-EXPIRY",
+      "status": "PASS",
+      "detail": {
+        "persistent_failure_retries_never200": true,
+        "reaccept_retries_never200": true,
+        "recovered_cutoff_confirmed": true,
+        "lease_expired_with_clock_advance_ms": 21000
+      }
+    },
+    {
+      "id": "P09-STOP-RETRY-CUTOFF",
+      "status": "PASS",
+      "detail": {
+        "terminal_stop_retries503_until_actual_cutoff": true
+      }
+    },
+    {
+      "id": "P09-SOURCE-END",
+      "status": "PASS",
+      "detail": {
+        "source_stop": true,
+        "snapshot_room_kept_open_for_authority_restore_test": true,
+        "music_not_resumed": true
+      }
+    },
+    {
+      "id": "P09-PENDING-JOIN-VS-CLOSE",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\n401 !== 403\n"
+    }
+  ],
+  "not_run": [
+    "P09-PENDING-CUTOFF-API-RESTART",
+    "P09-API-LOSS-WATCHDOG",
+    "P09-OLD-LIVE-PG-RESTORE"
+  ],
+  "source_calibration": {
+    "native_capture_before_sfu": true,
+    "video_pulses": [
+      {
+        "source": 1792898031335,
+        "at": 1792898031404
+      },
+      {
+        "source": 1792898032334,
+        "at": 1792898032406
+      },
+      {
+        "source": 1792898033301,
+        "at": 1792898033372
+      },
+      {
+        "source": 1792898034301,
+        "at": 1792898034372
+      },
+      {
+        "source": 1792898035268,
+        "at": 1792898035342
+      },
+      {
+        "source": 1792898036268,
+        "at": 1792898036339
+      }
+    ],
+    "audio_pulses": [
+      {
+        "at": 1792898031328
+      },
+      {
+        "at": 1792898032328
+      },
+      {
+        "at": 1792898033328
+      },
+      {
+        "at": 1792898034318
+      },
+      {
+        "at": 1792898035318
+      },
+      {
+        "at": 1792898036318
+      }
+    ],
+    "matched": 6,
+    "signed_audio_minus_video_ms": [
+      -76,
+      -78,
+      -44,
+      -54,
+      -24,
+      -21
+    ],
+    "p95_ms": 78,
+    "frames": 175
+  },
+  "normal_av": {
+    "per_viewer": [
+      {
+        "matched": 35,
+        "p95_ms": 66,
+        "decoded_frames": 1014
+      },
+      {
+        "matched": 35,
+        "p95_ms": 53,
+        "decoded_frames": 1021
+      },
+      {
+        "matched": 35,
+        "p95_ms": 67,
+        "decoded_frames": 1034
+      },
+      {
+        "matched": 35,
+        "p95_ms": 54,
+        "decoded_frames": 1031
+      },
+      {
+        "matched": 35,
+        "p95_ms": 52,
+        "decoded_frames": 1020
+      },
+      {
+        "matched": 35,
+        "p95_ms": 68,
+        "decoded_frames": 1020
+      },
+      {
+        "matched": 35,
+        "p95_ms": 67,
+        "decoded_frames": 1014
+      }
+    ],
+    "av_p95_ms": 65,
+    "glass_p95_ms": 72,
+    "viewer_skew_p95_ms": 37,
+    "samples": 2100,
+    "audio": "received audio track from combined remote video MediaStream, analysed without altering the actual null-sink playback",
+    "clock": "same Docker host wall clock; encoded timestamp+checksum, 1ms clock granularity",
+    "sfu": {
+      "p95_cpu_cores": 0.1110511871175485,
+      "peak_memory_bytes": 115261440,
+      "p95_egress_bps": 4933491.587398178
+    },
+    "rtp": [
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1080,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 141578
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 2662,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 2405790
+        }
+      ],
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1408,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 185715
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 3518,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 3203203
+        }
+      ],
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1395,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 183581
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 3459,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 3144761
+        }
+      ],
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1380,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 182004
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 3391,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 3079173
+        }
+      ],
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1351,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 177212
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 3338,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 3032721
+        }
+      ],
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1337,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 175229
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 3264,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 2962609
+        }
+      ],
+      [
+        {
+          "kind": "audio",
+          "packetsReceived": 1320,
+          "packetsLost": 0,
+          "jitter": 0,
+          "bytesReceived": 173210
+        },
+        {
+          "kind": "video",
+          "packetsReceived": 3195,
+          "packetsLost": 0,
+          "jitter": 0.002,
+          "bytesReceived": 2894093
+        }
+      ]
+    ]
+  },
+  "mandatory_scope_map": [
+    {
+      "requirement": "PLAN-P09-ACCESS / EXIT01",
+      "current": "PARTIAL_PASS",
+      "evidence": [
+        "P09-REAL-TAB-CAPTURE-8",
+        "P09-ACL-FOUR-PATHS",
+        "P09-REVOKE-STALE-JWT",
+        "P09-OLD-RELEASE-KEEPS-NEW-SCOPE",
+        "P09-PENDING-JOIN-VS-CLOSE"
+      ],
+      "remaining": "Close case aborted at status expectation; pending restart and actual old-live restore not reached."
+    },
+    {
+      "requirement": "PLAN-P09-AV / EXIT02",
+      "current": "QUALIFIED_LOCAL_PROFILE_PASS",
+      "evidence": [
+        "P09-SOURCE-CALIBRATION",
+        "P09-AV-30S-8",
+        "P09-DEGRADED-10S",
+        "P09-UDP-BLOCKED-TCP-10S"
+      ],
+      "limit": "Raw received-audio tap vs rendered-video metric; no physical-output lip-sync/public network claim."
+    },
+    {
+      "requirement": "PLAN-P09-FAILURE / EXIT03",
+      "current": "PARTIAL_PASS",
+      "evidence": [
+        "P09-DENIED-NO-AUDIO",
+        "P09-OPEN-READINESS-AND-AUTOPLAY",
+        "P09-UNCONFIRMED-RETRY-AND-EXPIRY",
+        "P09-STOP-RETRY-CUTOFF",
+        "P09-SOURCE-END"
+      ],
+      "remaining": [
+        "P09-PENDING-CUTOFF-API-RESTART",
+        "P09-API-LOSS-WATCHDOG",
+        "P09-OLD-LIVE-PG-RESTORE"
+      ]
+    },
+    {
+      "requirement": "PLAN-P09-CAPACITY / EXIT04",
+      "current": "QUALIFIED_SINGLE_ROOM_FIXTURE_PASS",
+      "evidence": [
+        "P09-GAMES-COEXISTENCE-ADMISSION",
+        "P09-AV-30S-8"
+      ],
+      "limit": "SFU2CPU/1GiB,DB1CPU/512MiB,API+browser fixture shared8CPU/4GiB; separate productionapp2CPU capacity and P07 load NOT_RUN."
+    },
+    {
+      "requirement": "EXIT05 Cinema+Games+Music and P06/P07 regression",
+      "current": "PARTIAL_SCOPED_PASS_FULL_GATE_NOT_PASS",
+      "evidence": [
+        "P09-GAMES-COEXISTENCE-ADMISSION",
+        "P09-REAL-TAB-CAPTURE-8",
+        "P06 operator32-test combined suite with current integration fail",
+        "targeted-static01 unchanged app17a sixchecks/10unitPASS"
+      ],
+      "limit": "Final P07, new signed/public v3 release and actual deployment/update/rollback remain separate."
+    }
+  ],
+  "prior_findings": [
+    {
+      "id": "E09-01",
+      "status": "CLOSED_SOURCE_AND_OPEN_READINESS_CASE"
+    },
+    {
+      "id": "E09-02",
+      "status": "NORMAL_METRIC_CLOSED_CURRENT_RUN_OVERALL_FAIL"
+    },
+    {
+      "id": "E09-03",
+      "status": "CLOSED_CONTROLLED_NOTALLOWEDERROR_SOUND_RETRY"
+    }
+  ],
+  "no_reviewer_tests_or_docker": true
+}
