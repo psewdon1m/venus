@@ -121,3 +121,6 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 
 2026-10-25T00:25:13.705743+00:00 — WebKit08 FAIL: нативная ошибка Could not create temp file /var/tmp/WebKit-Media-XXXXXX. Same-origin audio GET200 подтверждён. Ограниченный tmpfs64MiB /var/tmp добавлен только browser service; read-only root сохранён. Все среды очищены. Перед финальной матрицей добавлены короткие отрицательные проверки новых Music routes для сохранённой cookie после leave, closed/idle expiry и future schema generation; это обязательные security fences, без статистических прогонов. Общая матрица повторяется из-за нового реального audio-output профиля, который затрагивает и измерение Chromium clock.
+
+
+2026-10-25T00:27:26.353660+00:00 — Docker09 clean142e70c9: основные Music/Chromium/Games/drift/revoke/leave cases PASS, затем testhelper FAIL401!=410. Прочитан существующий Rooms.closeRoom: закрытие отзывает все sessions, поэтому норма401 AUTH_REQUIRED; исправлена только ошибочная проверка на401, код приложения не изменён. Старый FAIL сохранён, cleanup completed. Предварительно объявленный профиль из456c949 сохранён отдельным неизменным snapshot; runbook status теперь ссылается на текущий registry. Следующая чистая матрица — те же app bytes, исправленный assert и актуальная документация.
