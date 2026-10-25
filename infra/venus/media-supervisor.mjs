@@ -15,6 +15,10 @@ if(!key||Object.keys(key).sort().join(',')!=='key_id,secret'||!/^[a-z0-9_-]{6,64
 const credential=createHmac('sha256',key.secret).update('venus-media-internal-v1').digest('base64url'),secret=Buffer.from(credential);
 const authenticated=request=>{const v=request.headers['x-venus-media-internal'],b=Buffer.from(typeof v==='string'?v:'');return b.length===secret.length&&timingSafeEqual(b,secret);};
 let child=null,boot=randomUUID(),apiEpoch='',lastAuthority=0,lastReconcile=0,generation=0,retiring=null,running=false,stopping=false,polling=false,cutoff=true,metrics=[],lastMetric=null;
+const diagnostic=process.env.VENUS_P09_MEDIA_DIAGNOSTIC==='1',diagnosticCounts={};
+let diagnosticBuffer='';
+function diagnosticLine(bytes){if(!diagnostic)return;diagnosticBuffer+=bytes.toString();if(diagnosticBuffer.length>65536){diagnosticBuffer='';return;}const lines=diagnosticBuffer.split('\n');diagnosticBuffer=lines.pop();for(const line of lines){let row;try{row=JSON.parse(line);}catch{continue;}const text=String(row.msg??row.message??'').toLowerCase(),failure=/fail|error|invalid|unknown|not found|could not|no conn|mismatch|unauth/.test(text),category=/ufrag|username/.test(text)?'ice_ufrag':/integrity/.test(text)?'ice_integrity':/stun|binding request/.test(text)?'stun':/drop|discard/.test(text)?'discard':/ice/.test(text)?'ice':/connection state/.test(text)?'connection_state':/dtls/.test(text)?'dtls':/candidate/.test(text)?'candidate':'other',name=category+(failure?'_failure':'');diagnosticCounts[name]=(diagnosticCounts[name]??0)+1;}}
+
 const connections=new Set(),rtcPaths=new Set(['/rtc','/rtc/v1','/rtc/validate','/rtc/v1/validate']);
 const rpcPaths=new Set(['CreateRoom','DeleteRoom','ListRooms','ListParticipants','GetParticipant','RemoveParticipant'].map(name=>'/twirp/livekit.RoomService/'+name));
 function send(reply,status,value){const bytes=Buffer.from(JSON.stringify(value));reply.writeHead(status,{'content-type':'application/json','content-length':bytes.length,'cache-control':'no-store','x-content-type-options':'nosniff'});reply.end(bytes);}
@@ -30,10 +34,10 @@ async function quiesce(){
 }
 function launch(){
  const ip=process.env.VENUS_MEDIA_NODE_IP??Object.values(os.networkInterfaces()).flat().find(v=>v&&v.family==='IPv4'&&!v.internal)?.address;if(!ip||!/^[0-9.]{7,15}$/.test(ip))throw Error('MEDIA_NODE_ADDRESS');
- const config={port:7880,bind_addresses:['127.0.0.1'],keys:{[key.key_id]:key.secret},rtc:{node_ip:ip,use_external_ip:false,stun_servers:[],tcp_port:7881,udp_port:7882,force_tcp:process.env.VENUS_MEDIA_FORCE_TCP==='1',enable_loopback_candidate:true},room:{auto_create:false,empty_timeout:30,departure_timeout:5,max_participants:8},turn:{enabled:false},logging:{level:'error',json:true},enable_data_tracks:false};
- const file='/tmp/venus-livekit.json';fs.writeFileSync(file,JSON.stringify(config),{mode:0o600});child=spawn('/usr/local/bin/venus-media-server',['--config',file],{stdio:['ignore','ignore','pipe'],env:{PATH:process.env.PATH,HOME:'/tmp'}});
+ const config={port:7880,bind_addresses:['127.0.0.1'],keys:{[key.key_id]:key.secret},rtc:{node_ip:ip,use_external_ip:false,stun_servers:[],tcp_port:7881,udp_port:7882,force_tcp:process.env.VENUS_MEDIA_FORCE_TCP==='1',enable_loopback_candidate:true},room:{auto_create:false,empty_timeout:30,departure_timeout:5,max_participants:8},turn:{enabled:false},logging:{level:diagnostic?'debug':'error',pion_level:diagnostic?'debug':'error',json:true},enable_data_tracks:false};
+ const file='/tmp/venus-livekit.json';fs.writeFileSync(file,JSON.stringify(config),{mode:0o600});child=spawn('/usr/local/bin/venus-media-server',['--config',file],{stdio:['ignore',diagnostic?'pipe':'ignore','pipe'],env:{PATH:process.env.PATH,HOME:'/tmp'}});
  // Upstream diagnostics may contain protocol details: never forward raw lines.
- child.stderr.on('data',()=>{});child.once('error',()=>{running=false;cutoff=false;});const launched=child;child.once('exit',()=>{if(child===launched){child=null;resetEpoch();}});lastReconcile=performance.now();cutoff=false;
+ child.stderr.on('data',diagnosticLine);child.stdout?.on('data',diagnosticLine);child.once('error',()=>{running=false;cutoff=false;});const launched=child;child.once('exit',()=>{if(child===launched){child=null;resetEpoch();}});lastReconcile=performance.now();cutoff=false;
 }
 async function admin(method,body){const {AccessToken}=await import('livekit-server-sdk');const token=new AccessToken(key.key_id,key.secret,{ttl:10});token.addGrant(method==='ListRooms'?{roomList:true}:{roomAdmin:true,room:body.room});const response=await fetch('http://127.0.0.1:7880/twirp/livekit.RoomService/'+method,{method:'POST',headers:{authorization:'Bearer '+await token.toJwt(),'content-type':'application/json'},body:JSON.stringify(body),signal:AbortSignal.timeout(1000)});if(!response.ok)throw Error('MEDIA_RECONCILE_UNAVAILABLE');const raw=await response.text();if(raw.length>65536)throw Error('MEDIA_RECONCILE_LIMIT');return JSON.parse(raw);}
 async function poll(){
@@ -53,7 +57,7 @@ async function poll(){
 }
 const server=http.createServer((request,reply)=>{
  const url=new URL(request.url,'http://media');
- if(url.pathname==='/internal/health'&&request.method==='GET'){if(!authenticated(request)){send(reply,401,{ready:false});return;}send(reply,200,{running:running&&performance.now()-lastAuthority<5000,boot_id:boot,api_epoch:apiEpoch,cutoff_confirmed:cutoff,authority_age_ms:lastAuthority?performance.now()-lastAuthority:null,metrics});return;}
+ if(url.pathname==='/internal/health'&&request.method==='GET'){if(!authenticated(request)){send(reply,401,{ready:false});return;}send(reply,200,{running:running&&performance.now()-lastAuthority<5000,boot_id:boot,api_epoch:apiEpoch,cutoff_confirmed:cutoff,authority_age_ms:lastAuthority?performance.now()-lastAuthority:null,metrics,...(diagnostic?{diagnostic_counts:diagnosticCounts}:{})});return;}
  if(url.pathname==='/internal/quiesce'&&request.method==='POST'){if(!authenticated(request)){send(reply,401,{ready:false});return;}void quiesce().then(confirmed=>{send(reply,confirmed?200:503,{running:false,boot_id:boot,api_epoch:apiEpoch,cutoff_confirmed:confirmed});});return;}
  const rpc=rpcPaths.has(url.pathname)&&request.method==='POST';
  if(!(rpc||rtcPaths.has(url.pathname)&&request.method==='GET')||(!rpc&&!authenticated(request))||!running||performance.now()-lastAuthority>=5000||request.headers['content-length']&&Number(request.headers['content-length'])>65536){send(reply,403,{code:'MEDIA_UNAVAILABLE'});return;}
