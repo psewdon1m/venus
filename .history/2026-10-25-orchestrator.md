@@ -142,3 +142,6 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 
 2026-10-25T00:50:05.167466+00:00 — Closing docs check FAIL20 links: exact перенесённый PLAN-v2-SNAPSHOT сохраняет относительные ссылки исходного .docs/контекста. Manifest32079 PASS. Snapshot bytes не меняются. Использован существующий archived_markdown exact-hash/origin механизм: одна новая запись SHA8b5e/78597bytes с исходным .docs/10_IMPLEMENTATION_PLAN.md context; inventory count20→21. Никакого нового framework/исключения проверки ссылок. Требуются только existing archive unit+docs check; Music app bytes70ec неизменны, P08 component reviews остаются применимы. FAIL сохранён в .artifacts/p08-closing-docs.txt.
+
+
+2026-10-25T00:53:44.583070+00:00 — FINAL P08 closing metadata PASS. Existing7 archive unit/native0, docs1971 Markdown/0errors/native0; independent closing-docs review PASS/STOP INDEXec42fae7. Byte-exact old plan snapshot сохранён; source delta от проверенного app70ec — только2архивных tool-файла. Closing source d3b3c346/core20e06fa37886ec2b8e86b69bafc827ffc13652c7f0c02801ac73fe3639bf4ec9. App/Engineering/Security proof70ec остаются неизменными. ВсеwritersSTOP, ниже только однократное обновление manifest и verification; дальнейшие записи относятся к P09. Rootindexa4bb не менялся.
