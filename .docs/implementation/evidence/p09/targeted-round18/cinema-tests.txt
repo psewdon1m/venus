@@ -1,0 +1,73 @@
+ Container venus-p05-8fb1e503adef-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (14.637056ms)
+✔ P06-RELEASE reject signed wrong version (4.434418ms)
+✔ P06-RELEASE reject signed wrong schema (4.158195ms)
+✔ P06-RELEASE reject signed wrong environment (8.139554ms)
+✔ P06-RELEASE reject signed wrong image digest (4.075952ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.534648ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.621385ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (65.307183ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (12.991476ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (13.937197ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (12.45968ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (10.969624ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (11.571827ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (13.916951ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (10.028378ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (23.268414ms)
+✔ P06-JOURNAL corruption fails closed without mutation (6.87486ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (82.078342ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (29.695795ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.243354ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.002234ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1758.483701ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (12.094379ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (6.857336ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (7.679732ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.987188ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.402172ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (16.231104ms)
+✔ host authority denies stale database grants, rollback and unsafe state (4.157176ms)
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","phase":"START"}
+{"id":"P09-MAINTENANCE-MEDIA-READINESS","status":"PASS"}
+{"id":"P09-DENIED-NO-AUDIO","phase":"START"}
+{"id":"P09-DENIED-NO-AUDIO","status":"PASS"}
+{"id":"P09-REAL-TAB-CAPTURE-8","phase":"START"}
+{"id":"P09-REAL-TAB-CAPTURE-8","status":"PASS"}
+{"id":"P09-ACL-FOUR-PATHS","phase":"START"}
+{"id":"P09-ACL-FOUR-PATHS","status":"PASS"}
+{"id":"P09-OPEN-READINESS-AND-AUTOPLAY","phase":"START"}
+{"id":"P09-OPEN-READINESS-AND-AUTOPLAY","status":"PASS"}
+{"id":"P09-GAMES-COEXISTENCE-ADMISSION","phase":"START"}
+{"id":"P09-GAMES-COEXISTENCE-ADMISSION","status":"PASS"}
+{"id":"P09-AV-30S-8","phase":"START"}
+✖ P09 actual media and current-authority lifecycle (53013.592431ms)
+✔ backup and restore cannot run while a media container survives API stop (1.301495ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (18.321059ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 55846.513166
+
+✖ failing tests:
+
+test at tests/p09/integration.mjs:41:1
+✖ P09 actual media and current-authority lifecycle (53013.592431ms)
+  AssertionError [ERR_ASSERTION]: Insufficient matched remote AV pulses 0
+      at file:///app/tests/p09/integration.mjs:54:905
+      at async record (file:///app/tests/p09/integration.mjs:22:95)
+      at async TestContext.<anonymous> (file:///app/tests/p09/integration.mjs:54:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
