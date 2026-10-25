@@ -477,3 +477,8 @@ NativeNode24.22.1/npm11.19.1 downloadedofficialSHA d2046d28..., archiveverified/
 ### 2026-10-25T15:11:25.794084+00:00 — Shortpreflight01 FAIL retained / narrowdiagnosticfollowup
 
 Clean04lint0/reporter44PASS. Jointpreflight0recordsFAIL:8Chromeprocesslaunched, grantPermissions後Targetclosed, ошибка500charsобрезалапричину. Authorsfix02добавилпередcleanupread-onlycgroupPID/RAM/OOMсчётчикииredactedtailошибки, targetedlint0, capsнеизменены. Sourcecollector14c actualHOLD4packagingfindings,724756992Btarсохранёнтольковignoredartifact; READMElicenseитиповойnpmroot-issuesправитавторсverifiedreusecache. Bundleнепубликовался/невыдавалсязаPASS. Независимыйнеавторrestoreagentготовитодин11recordactualprofile+отдельныйfreshPGproject/key/protectedrecovery, избегаятекущегоповторного120s. Собственныйisolatedverificationcheckout04 неROOT. Далееparentповторshortpreflight, часовойещёNOT_RUN.
+
+
+### 2026-10-25T15:14:47.340014+00:00 — Packaging fix источников / force-add retainedsafeproof
+
+Приархивацииgitadd вернул1иззаignoredapi-safe.log, прочиепутибыличастичностадированы; PowerShellпродолжилcommit2bb. Этоошибкаоркестрации, неappFAIL: безопасныйlog byteexactкопируется/forceaddсейчас, INDEXостаётсяпервоначальным. Deliveryauthorfix01сохранилHOLD: полныеMITвREADME,кореньDefinitelyTyped, publisher-linkedMITtemplate/authorдляabstractlogging; verifiedreusecacheисходныхархивов, исходныеintegritychecksнеослаблены. Targetlint0/cache3PASSуавтора, parentcleanповторследующий. НезависимыйrestoreagentalreadyactualcleanprojectBK2/key/protected/floors/PNG/settingsPASS; полногоего11recordрезультатапокаещёнет. Производственныйкоднеисправлялся, browserdiagnosticstillnextrepeat.
