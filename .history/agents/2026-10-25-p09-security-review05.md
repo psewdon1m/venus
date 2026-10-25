@@ -1,0 +1,13 @@
+# P09 independent security actual-rebind round05
+
+## 2026-10-25T03:22:34.0741235Z — final actual handoff and boundaries
+- Exact clean runtime3dad49ae02d62708977fd83aa1b3cfdfecd564eb/core1b7758fd93c67d92312d9338760c08ff63d7616615bb001cadf3a2a88ccceb40, implementation unchanged since17a per author. Round04 source closure immutable. Final targeted-round25 INDEXa73ecfb60d3f2fa5a510dd1a550e6bef25bc26a38ead3980122558cd28c54c29/native0/32of32/19mandatoryPASS/sourceunchanged/cleanup/actualoldPGrestore supplied; verify independently.
+- Scope actual-rebind S09-01..04 and exact relevant assertions/source hash parity, qualified local functional component only. No new runtime/tests/Docker/network/API/app/registry/shared/Git/otherjournal mutation. Owned writes this journal and ROOT reviews/p09/security-round05 REPORT/INPUTS/DECISION/INDEX. FulloriginalG3/P07/publicsignedv3/devices false. Production-build02 separate metadata, not new runtime.
+
+
+## 2026-10-25T03:26:09.973Z — independent actual closure and final STOP
+- Verified target25 INDEX exacta73ecf and all11 raw/exported file SHA256. Recomputed canonical2016-source core1b7758, equal before/aftermaps, all2016 W hashes match. 12 reviewed production components exact source04/runtime/ROOT parity;17a→runtime Gitdiff app/runtime inputs empty. Fixture/contract deltas honestly bound to new run, not oldGit relabel.
+- Read final assertions:19mandatoryPASS, native32PASS0FAIL0SKIP, runnerclean/sourceunchanged/PASS/nativechild0/cleanup. Actual S09-01 persistent stop/release/reaccept503, receipt APIrestart and recovery; S09-02/03 closed failure/positive and open nonmutating readiness; S09-04 failed oldrelease503→retry200→currentlive/viewer passes. All four findings CLOSED_SOURCE_AND_FINAL_ACTUAL_PROOF, no new concrete finding.
+- Pendingjoin closes actual liveAV and viewer; actualAPI-loss watchdog2542ms; actualPGcustomrestore authenticates restored openroomcookie200/newreadyepoch then oldJWT401on4paths, protectedclosedroom403. Not merely stalecookie denial. Native dump/restore command failures are rejected by existing harness.
+- NormalAV66/glass75/skew45/2100samples, source173frames7pairs44ms; degraded media-only filters preserve privatecontrol, separateAPI-loss mandatorypassed. Qualified local component only; browserfixture8CPU/public/device/rights/originalG3/P07/signedv3 remain separately unaccepted. Productionbuild02 all4files verified as separate a8a build/inventory metadata only. HistoricalFAILs/source-only records preserved.
+- Saved REPORT/INPUTS/DECISION, JSON validated and final hashes generated. No own runtime/test/Docker/network/API/app/registry/shared/Git/otherjournal mutations. INDEX is final write; ALL WRITES STOP.

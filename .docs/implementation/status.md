@@ -1,3 +1,9 @@
+# Текущий статус — P09 функционально принят
+
+P09: clean round25,32/32tests и19/19scenariosPASS; independent Engineering03/Security05PASS. A/V66ms, watchdog2542ms; actualPGrestore/staleJWT/closedroomfencesPASS. [Итог](evidence/p09/functional-acceptance01/REPORT.md) · [Реестр](p09-registry.json).
+
+P08 и P09 приняты как локальные функциональные компоненты по U022. Полные исходныеG2/G3, новый подписанныйv3release и общийP07 НЕ PASS. Следующие: вход P10 с честным учётом отсутствияdevices, P11 Calls и презентацииpreza. Ниже история сохранена.
+
 # Текущий статус — P09 в работе; P08 принят
 
 Cinema реализован на встроенном медиасервере; проходят реальные1+7 capture/ACL, Games coexistence, admission, autoplay retry и media readiness. Полный P09 PASS пока НЕ выдан: текущий чистый прогон e0841312 проверяет A/V после независимого исправления synthetic source clocks и остальные cutoff/restart/restore cases. Исторические FAIL сохранены. [Журнал P09](../../.history/2026-10-25-p09.md) · [Реестр](p09-registry.json).
