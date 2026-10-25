@@ -24,7 +24,7 @@ export function CinemaPanel({api,roomId,locale,connected,ducked=false}:{api:Sess
  useEffect(()=>{
   if(!connected){const value=active.current;if(value)retireRef.current(value);return;}
   let stopped=false,pending=false;const refresh=async()=>{if(pending)return;pending=true;try{const value=await api.request<CinemaState>(root+'/cinema');if(stopped)return;setState(value);const current=active.current;if(current?.grant&&value.rev>=current.grant.cinema_rev&&(!['starting','live'].includes(value.state)||value.source_member_id===null)){retireRef.current(current);setLocal('idle');}}catch{if(!stopped){const current=active.current;if(current)retireRef.current(current);setLocal('error');}}finally{pending=false;}};
-  void refresh();const timer=setInterval(()=>{void refresh();},1000);return()=>{stopped=true;clearInterval(timer);};
+  void refresh();const timer=setInterval(()=>{void refresh();},3000);return()=>{stopped=true;clearInterval(timer);};
  },[api,root,connected]);
  const play=async(value:Active)=>{
   if(value.closed||active.current!==value)return;

@@ -1,0 +1,73 @@
+ Container venus-p05-6a4fa9db1d16-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (23.047115ms)
+✔ P06-RELEASE reject signed wrong version (13.826653ms)
+✔ P06-RELEASE reject signed wrong schema (12.535963ms)
+✔ P06-RELEASE reject signed wrong environment (6.575063ms)
+✔ P06-RELEASE reject signed wrong image digest (4.210466ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.776676ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (5.284771ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (68.912536ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (11.864666ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (11.326628ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (10.42652ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (15.501437ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (13.821857ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (12.369645ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (12.335372ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (23.940935ms)
+✔ P06-JOURNAL corruption fails closed without mutation (7.693098ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (101.16045ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (34.274825ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (4.248828ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.194251ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1759.872041ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (11.718925ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (6.556075ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (7.227786ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.22074ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.237491ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (17.400894ms)
+✔ host authority denies stale database grants, rollback and unsafe state (6.993756ms)
+✔ backup and restore cannot run while a media container survives API stop (1.530341ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (12.741342ms)
+{"id":"P11-ADMISSION-SOURCES","phase":"START"}
+{"id":"P11-ADMISSION-SOURCES","status":"PASS"}
+{"id":"P11-CINEMA-GAMES","phase":"START"}
+{"id":"P11-CINEMA-GAMES","status":"PASS"}
+{"id":"P11-QUALITY-30S-8","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","status":"PASS"}
+{"id":"P11-TWO-PRIVATE-PAIRS","phase":"START"}
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (87138.126467ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 90206.550148
+
+✖ failing tests:
+
+test at tests/p11/integration.mjs:45:1
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (87138.126467ms)
+  AssertionError [ERR_ASSERTION]: HTTP 429 RATE_LIMITED
+  
+  429 !== 200
+  
+      at ok (file:///app/tests/p11/integration.mjs:26:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async file:///app/tests/p11/integration.mjs:54:2083
+      at async record (file:///app/tests/p11/integration.mjs:23:95)
+      at async TestContext.<anonymous> (file:///app/tests/p11/integration.mjs:54:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 429,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

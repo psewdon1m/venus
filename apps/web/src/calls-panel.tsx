@@ -38,7 +38,7 @@ export function CallsPanel({api,room,memberId,locale,connected,onAudioFocus}:{ap
  useEffect(()=>{
   if(!connected){const v=active.current;if(v)void closeRef.current(v);return;}
   let stopped=false,pending=false;const refresh=async()=>{if(pending)return;pending=true;const started=performance.now();try{const next=await api.request<CallsView>(prefix);if(stopped)return;setView(next);const v=active.current;if(v?.grant&&!v.closed&&started>=v.grantedAt&&next.self_lease?.lease_id!==v.grant.lease_id)void closeRef.current(v);}catch{if(!stopped){setError('error');const v=active.current;if(v)void closeRef.current(v);}}finally{pending=false;}};
-  void refresh();const timer=setInterval(()=>{void refresh();},1000);return()=>{stopped=true;clearInterval(timer);};
+  void refresh();const timer=setInterval(()=>{void refresh();},3000);return()=>{stopped=true;clearInterval(timer);};
  },[api,prefix,connected]);
  const start=async(scope?:CallScopeView)=>{
   if(!connected||!view?.transport_ready||active.current)return;let finish=()=>{};const done=new Promise<void>(resolve=>{finish=resolve;}),v:Active={closed:false,grantedAt:Infinity,peers:new Map(),audio:{serial:0},video:{serial:0},done,finish};active.current=v;setEngaged(true);setGrantView(null);setStatus('connecting');setError(null);focus.current(true);

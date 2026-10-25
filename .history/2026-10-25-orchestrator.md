@@ -285,3 +285,15 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 Гипотеза capacity blocker E11-02 снята: новый accept освобождает scope вовлечённых участников. Исправление ограничено реальной TTL/status hygiene — очисткой истёкшего active scope, даже когда у него нет leases; только текущая комната, через существующий durable retirement. Другие комнаты не затрагиваются. API types/lint exit0;31/31 адресный тест PASS404мс. Порог качества и ресурсы не изменены. Все implementation writers остановлены; следующий чистый прогон соберёт RTP source/receiver диагностику и завершит остальные независимые сценарии даже при quality/TCP FAIL.
 
+
+### 2026-10-25T05:44:33.464374+00:00 — Round10: установлен upstream вклад и дефект бюджета запросов
+
+- e2199351 exit1/source unchanged/cleanup complete. Доquality иdevices сценарии выполнены; qualityFAIL43мс, затем normal member release получил429 RATE_LIMITED. В логах одновременно429 game/self-actions и media/release.
+- SFU RTCP upstream max: Calls audio30.458мс/video5.622мс, Cinema audio3.479мс/video35.955мс. Browser max33/10/10/43мс соответственно. Нет утверждения о единственной причине. Память:5266max events,862359552swapbytes,0OOMkills.
+- Исправлен normal fallback budget: Games V1/V2 и Music/Cinema/Calls snapshots3s, HTTP/WS немедленные refresh и локальные deadline/clock timers прежние. Лимит240 не повышен. Максимальная базовая нагрузка224/min вместо превышения лимита.
+- Fixture теперь использует штатные Chrome own WAV/Y4M native fake inputs; удалены дополнительные AudioContext/canvas-преобразования послеgUM. Индивидуальные A/V markers и все ресурсы/пороги прежние; файлы будут хешироваться. Source correction до теста, не новая тестовая система. Требуются targetedUI/P08/P09 regressions.
+
+### 2026-10-25T05:48:50.1799191Z — Адресные проверки cadence
+
+Первый UI прогон:31 PASS/4 FAIL из-за hardcoded1500ms в существующем harness, который перестал вызывать реальный3000ms fallback. Исправлен только выбор interval в harness; повтор47/47 PASS,4files,5.56s,exit0. ESLint/Webtypes предыдущей проверки exit0. Исправлена newline-экранизация собственного Y4M до первого nativefile запуска. Кандидат фиксируется до чистого Docker прогона.
+

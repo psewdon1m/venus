@@ -17,7 +17,7 @@ export function MusicPanel({api,roomId,memberId,locale,meetingContext,connected,
   catch{if(live.current&&epoch===generation.current){stop();sample.current=null;setView(null);setError(true);}}
   finally{inflight.current=false;}
  },[api,prefix,stop,connected]);
- useEffect(()=>{live.current=true;const epoch=++generation.current,initial=setTimeout(()=>{void refresh();},0),timer=setInterval(()=>{void refresh();},1000);return()=>{live.current=false;generation.current=epoch+1;clearTimeout(initial);clearInterval(timer);stop();sample.current=null;};},[refresh,roomId,memberId,stop]);
+ useEffect(()=>{live.current=true;const epoch=++generation.current,initial=setTimeout(()=>{void refresh();},0),timer=setInterval(()=>{void refresh();},3000);return()=>{live.current=false;generation.current=epoch+1;clearTimeout(initial);clearInterval(timer);stop();sample.current=null;};},[refresh,roomId,memberId,stop]);
  useEffect(()=>{listening.current=listen&&connected&&!blocked;const a=audio.current;if(!a)return;a.volume=volume*(ducked?.2:1);if(!connected||!view||!view.track||view.reason!=='ready'||!listen){stop();return;}
   const src=prefix+'/tracks/'+view.track.id+'/stream'+(meetingContext==='in_person'&&!view.default_speaker?'?personal=1':'');
   if(loaded.current!==src){a.pause();a.src=src;a.load();loaded.current=src;}
