@@ -4,26 +4,26 @@ import {musicCopy} from '@venus/i18n';
 import {SessionApi} from './api.js';
 import {musicSample,applyMusicSync,type MusicSample} from './music-sync.js';
 type View=MusicState&{tracks:MusicTrack[]};
-export function MusicPanel({api,roomId,memberId,locale,meetingContext}:{api:SessionApi;roomId:string;memberId:string;locale:Locale;meetingContext:'online'|'in_person'}){
+export function MusicPanel({api,roomId,memberId,locale,meetingContext,connected}:{api:SessionApi;roomId:string;memberId:string;locale:Locale;meetingContext:'online'|'in_person';connected:boolean}){
  const t=musicCopy(locale),[view,setView]=useState<View|null>(null),[error,setError]=useState(false),[blocked,setBlocked]=useState(false),[listen,setListen]=useState(false),[volume,setVolume]=useState(0.5),[busy,setBusy]=useState(false);
  const audio=useRef<HTMLAudioElement>(null),sample=useRef<MusicSample|null>(null),listening=useRef(false),generation=useRef(0),loaded=useRef(''),inflight=useRef(false),live=useRef(false),pendingCommand=useRef(false);
  const prefix='/api/v1/rooms/'+roomId+'/music';
  const stop=useCallback(()=>{const a=audio.current;if(a){a.pause();a.removeAttribute('src');a.load();}loaded.current='';},[]);
  const refresh=useCallback(async()=>{
-  if(inflight.current||!live.current)return;inflight.current=true;const epoch=generation.current,start=performance.now();
+  if(inflight.current||!live.current||!connected)return;inflight.current=true;const epoch=generation.current,start=performance.now();
   try{const value=await api.request<View>(prefix);if(!live.current||epoch!==generation.current)return;sample.current=musicSample(value,start,performance.now());setView(value);setError(false);}
   catch{if(live.current&&epoch===generation.current){stop();sample.current=null;setView(null);setError(true);}}
   finally{inflight.current=false;}
- },[api,prefix,stop]);
+ },[api,prefix,stop,connected]);
  useEffect(()=>{live.current=true;const epoch=++generation.current,initial=setTimeout(()=>{void refresh();},0),timer=setInterval(()=>{void refresh();},1000);return()=>{live.current=false;generation.current=epoch+1;clearTimeout(initial);clearInterval(timer);stop();sample.current=null;};},[refresh,roomId,memberId,stop]);
- useEffect(()=>{listening.current=listen;const a=audio.current;if(!a)return;a.volume=volume;if(!view||!view.track||view.reason!=='ready'||!listen){stop();return;}
+ useEffect(()=>{listening.current=listen&&connected;const a=audio.current;if(!a)return;a.volume=volume;if(!connected||!view||!view.track||view.reason!=='ready'||!listen){stop();return;}
   const src=prefix+'/tracks/'+view.track.id+'/stream'+(meetingContext==='in_person'&&!view.default_speaker?'?personal=1':'');
   if(loaded.current!==src){a.pause();a.src=src;a.load();loaded.current=src;}
   if(sample.current)applyMusicSync(a,sample.current,performance.now(),listen);
- },[view,listen,volume,prefix,meetingContext,stop]);
+ },[view,listen,volume,prefix,meetingContext,stop,connected]);
  useEffect(()=>{const timer=setInterval(()=>{if(audio.current&&sample.current)applyMusicSync(audio.current,sample.current,performance.now(),listening.current);},250);return()=>clearInterval(timer);},[]);
  const command=async(value:Omit<Extract<MusicCommand,{action:'queue'}>,'expected_rev'|'idempotency_key'>|Omit<Extract<MusicCommand,{action:'seek'}>,'expected_rev'|'idempotency_key'>|{action:'play'|'pause'|'next'|'previous'})=>{
-  if(!view?.can_control||pendingCommand.current)return;pendingCommand.current=true;setBusy(true);
+  if(!connected||!view?.can_control||pendingCommand.current)return;pendingCommand.current=true;setBusy(true);
   try{await api.request(prefix,{...value,expected_rev:view.rev,idempotency_key:crypto.randomUUID()});await refresh();}
   catch{setError(true);await refresh();}finally{pendingCommand.current=false;setBusy(false);}
  };

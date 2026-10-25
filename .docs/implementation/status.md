@@ -1,4 +1,8 @@
-# Текущий статус — P06 закрыт в проверенном локальном Linux classic профиле
+# Текущий статус — P08 в работе
+
+U-022/U-023: функциональные P08–P11 и презентации перед финальным P07. U-024: источник музыки — локальные файлы на хосте; реальные треки подключаются отдельно. Входной независимый P08 gate разрешил разработку; код завершён до первого теста. Lint/types после исправлений native0, Linux Range/catalog unit3 и monotonic-sync unit2 PASS. Сейчас собирается холодный browser Docker image для узкого API/native-audio/8context60s drift; длинная статистика и P07 не запускались. Выходной независимый gate ещё NOT_RUN, полного P08 PASS нет. [РеестрP08](p08-registry.json) · [Контракт и профиль](P08_MUSIC.md).
+
+# Принятый вход — P06 закрыт в проверенном локальном Linux classic профиле
 
 **P06 PASS standalone-local-pilot-v2 только для Docker29.1.3 Linux amd64 / overlay2 classic. P07 не начат.** [Итоговый отчёт](evidence/p06/final-stage-acceptance01/REPORT.md) · [Решение и hashes](evidence/p06/final-stage-acceptance01/DECISION.json) · [Все118 IDs и8гейтов](evidence/p06/final-stage-acceptance01/ACCEPTANCE_LEDGER.json) · [Реестр](p06-registry.json) · [План](../10_IMPLEMENTATION_PLAN.md).
 

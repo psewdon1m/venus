@@ -42,9 +42,9 @@ export class Music {
  }
  async pauseForCinema(c:pg.PoolClient,id:string){const row=await this.row(c,id);if(!row.playing)return;const state=this.project(id,row,true,'online');await c.query('UPDATE room_music_state SET playing=false,position_ms=$2,anchored_at=$3,track_index=$4,rev=rev+1 WHERE room_id=$1',[id,state.position_ms,new Date(this.rooms.now()),state.index]);await this.rooms.changed(c,id);}
  async stream(id:string,session:string|undefined,trackId:string,range:string|undefined,personal:boolean){
-  let fd:number|undefined,streamKey='',counted=false;
-  const authorize=async(c:pg.PoolClient)=>{const a=await this.rooms.access(c,id,session,false,true);requireThat(a.member.slot!==null,'MEMBER_INACTIVE',403);const row=await this.row(c,id),view=this.project(id,row,a.member.role==='host',a.room.meeting_context);requireThat(view.track?.id===trackId,'MUSIC_TRACK_UNAVAILABLE',404);requireThat(a.room.meeting_context==='online'||a.member.role==='host'||personal,'MUSIC_PERSONAL_OUTPUT_REQUIRED',403);return a;};
-  await this.rooms.transaction(async c=>{const a=await authorize(c);streamKey=id+':'+a.member.id;(await this.rooms.finalAccessFence(c,a))();});
+  let fd:number|undefined,streamKey='',counted=false,streamGeneration:number|undefined;
+  const authorize=async(c:pg.PoolClient)=>{const a=await this.rooms.access(c,id,session,false,true);requireThat(a.member.slot!==null,'MEMBER_INACTIVE',403);if(streamGeneration!==undefined)requireThat(revision(a.member.socket_generation)===streamGeneration,'SOCKET_REPLACED',401);const row=await this.row(c,id),view=this.project(id,row,a.member.role==='host',a.room.meeting_context);requireThat(view.track?.id===trackId,'MUSIC_TRACK_UNAVAILABLE',404);requireThat(a.room.meeting_context==='online'||a.member.role==='host'||personal,'MUSIC_PERSONAL_OUTPUT_REQUIRED',403);return a;};
+  await this.rooms.transaction(async c=>{const a=await authorize(c);streamKey=id+':'+a.member.id;streamGeneration=revision(a.member.socket_generation);(await this.rooms.finalAccessFence(c,a,false,streamGeneration))();});
   const asset=this.catalog.asset(trackId,this.rooms.now()),selection=musicRange(range,asset.bytes);
   requireThat(this.streamCount<64&&(this.streams.get(streamKey)??0)<2,'MUSIC_STREAM_LIMIT',429);
   fd=fs.openSync(asset.file,fs.constants.O_RDONLY|fs.constants.O_NOFOLLOW);let offset=selection.start,pending=false,ended=false;
@@ -54,7 +54,7 @@ export class Music {
    if(pending||ended)return;pending=true;timer?.refresh();
    void this.rooms.transaction(async c=>{
     const a=await authorize(c);requireThat(fd!==undefined,'MUSIC_STREAM_CLOSED',403);const bytes=Buffer.alloc(Math.min(65536,selection.end-offset+1)),n=fs.readSync(fd,bytes,0,bytes.length,offset);requireThat(n===bytes.length,'MUSIC_ASSET_CHANGED',503);
-    (await this.rooms.finalAccessFence(c,a))();this.catalog.unchanged(asset,fd,this.rooms.now());offset+=n;pending=false;readable.push(bytes);if(offset>selection.end){ended=true;readable.push(null);release();}
+    (await this.rooms.finalAccessFence(c,a,false,streamGeneration))();this.catalog.unchanged(asset,fd,this.rooms.now());offset+=n;pending=false;readable.push(bytes);if(offset>selection.end){ended=true;readable.push(null);release();}
    }).catch(()=>{ended=true;pending=false;release();readable.destroy(Error('MUSIC_STREAM_UNAVAILABLE'));});
   },destroy(error,done){ended=true;release();done(error);}});
   const timer=setTimeout(()=>readable.destroy(Error('MUSIC_STREAM_IDLE')),30000);timer.unref();
