@@ -22,7 +22,7 @@ export function installDeviceMarkers(index){
 }
 export async function readCallStats(){
  const inbound=[],rtt=[];for(let i=0;i<window.p11PCs.length;i++){const pc=window.p11PCs[i];if(pc.connectionState==='closed')continue;const stats=await pc.getStats();for(const r of stats.values()){
-  if(r.type==='inbound-rtp'&&!r.isRemote&&r.packetsReceived>0)inbound.push({id:i+':'+r.id,kind:r.kind,received:r.packetsReceived,lost:r.packetsLost,jitter:r.jitter,...(r.kind==='video'?{frames:r.framesDecoded}:{})});
+  if(r.type==='inbound-rtp'&&!r.isRemote&&r.packetsReceived>0)inbound.push({id:i+':'+r.id,ssrc:r.ssrc,kind:r.kind,received:r.packetsReceived,lost:r.packetsLost,jitter:r.jitter,...(r.kind==='video'?{frames:r.framesDecoded}:{})});
   if(r.type==='transport'&&r.selectedCandidatePairId){const pair=stats.get(r.selectedCandidatePairId),candidate=pair&&stats.get(pair.localCandidateId);if(pair&&typeof pair.currentRoundTripTime==='number')rtt.push({pc:i,ms:pair.currentRoundTripTime*1000,protocol:candidate?.protocol??null});}
  }}return {at:performance.now(),inbound,rtt};
 }
