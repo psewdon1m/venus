@@ -1,0 +1,2466 @@
+[
+  {
+    "id": "REL-01",
+    "check_id": "P06-P12-REL-01",
+    "source_line": 130,
+    "source_row_sha256": "1d2f2f1b297598f744d273bf8882ac85de4764ec64e0921473a5827626edfaf8",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      ".github/workflows/venus-release.yml",
+      "tools/venus-operator/verify-published.mjs",
+      "tools/venus-operator/check-release-context.mjs",
+      "tools/venus-operator/release-gate.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Tag-only release job has separate protected permissions; exact tag/main/clean checkout and source-bound118/two-nonauthor gates precede signing secret. Ordinary CI cannot publish.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "REL-02",
+    "check_id": "P06-P12-REL-02",
+    "source_line": 131,
+    "source_row_sha256": "19af9254e3dace472b971cae4ff3ce685325305b6dc8222f126f7827f3024284",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "UNITS36",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      ".github/workflows/venus-release.yml",
+      "tools/venus-operator/verify-published.mjs",
+      "tools/venus-operator/check-release-context.mjs",
+      "tools/venus-operator/release-gate.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Qualified Venus semver is checked in verifier/context gate and existing P06-SEC02 schema/tag test. Immutable0.0.1 remains untouched.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "REL-03",
+    "check_id": "P06-P12-REL-03",
+    "source_line": 132,
+    "source_row_sha256": "72a39addee510aea691f55505891a7d554a461dcb9ffff9bfb705b84be77f448",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending genuine0.0.2 tag/main identity and post-publication remote API/ref confirmation; local source context verifier exists but no future remote receipt is claimed.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "REL-04",
+    "check_id": "P06-P12-REL-04",
+    "source_line": 133,
+    "source_row_sha256": "6c3e6889fcb3b8192c335cfcdf0c404cc76fcb12637db80754963881c2b4f121",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending exact newly published immutable0.0.2 image running service/version/source/OCI/config equality before signature; current c2ee local install02 is a separate observed component, not the final publication image.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "REL-05",
+    "check_id": "P06-P12-REL-05",
+    "source_line": 134,
+    "source_row_sha256": "8ce9ddf4868e198483ce5b9724500b162595dbf0f5e94e8693afd13dfe58fc66",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending actual one-image CI/release digest chain; final workflow must retain exact immutable image between prepare/install/signature/publication.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "REL-06",
+    "check_id": "P06-P12-REL-06",
+    "source_line": 135,
+    "source_row_sha256": "f2913745d5d4b2f42fbaad7271073191809febdcdfad564b74f923836cca11f4",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending actual atomic signed0.0.2 bundle/manifest/signature/checksum/distribution set and downloaded draft roundtrip; fixture signature does not discharge public service authenticity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "REL-07",
+    "check_id": "P06-P12-REL-07",
+    "source_line": 136,
+    "source_row_sha256": "e8b9b2cccd25920cd334067a117e2259bd2f398f89e6e76395a0b4634472497b",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending real immutable0.0.2 version-qualified bootstrap/release asset URL and downloaded bytes; fixed template is installed and source reviewed but not yet public new release.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "REL-08",
+    "check_id": "P06-P12-REL-08",
+    "source_line": 137,
+    "source_row_sha256": "65b8bd454c1716b68f6abca409930ec8c71c1d457f1860a4aea2dc5fd14b0774",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "SECURITY06",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      ".github/workflows/venus-release.yml",
+      "tools/venus-operator/verify-published.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Standalone v4 requires its own exact schema/profile/module/converter/image dependencies; Driver waits own DB/media/renderer/app. Real-v4 initialize and actual current install cover dependency order without Exocortex dependencies.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "REL-09",
+    "check_id": "P06-P12-REL-09",
+    "source_line": 138,
+    "source_row_sha256": "dc0e3ed00fb4f039789813a25297817adc0e2c48bbcea17d6a2dd1b26d43d404",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending complete anonymous external asset/image retrieval and cryptographic verification of genuine0.0.2 after publication; no authenticated/private/local fixture receipt substitutes it.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "REL-10",
+    "check_id": "P06-P12-REL-10",
+    "source_line": 139,
+    "source_row_sha256": "c071fb174ffd2d34da4226be7a04e002f92dd5563436668b763534e61c1ec8cf",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "HANDOFF",
+      "SOURCE06",
+      "SECURITY06",
+      "WORKFLOW",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      ".github/workflows/venus-release.yml",
+      "tools/venus-operator/verify-published.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Current additive v4/0.0.2/BK2 operator handoff supplies stable in-repository references and existing CLI/config/UID/restore boundaries while preserving historical snapshots. Source06 independently verifies exact c2ee source/dependency distribution; final strict producer regenerates Venus source/image/assets for final tag/core, rather than relabelling that archive. Existing isolated docs/quality CI remains mandatory before signing.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "REL-11",
+    "check_id": "P06-P12-REL-11",
+    "source_line": 140,
+    "source_row_sha256": "b74e3a3b345a8b28183043e44b8dc19ab51c7b9f939a77e2c93067615b8b7c1a",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "HANDOFF",
+      "JITTER_REVIEW14",
+      "JITTER14",
+      "JITTER_PARITY14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      ".github/workflows/venus-release.yml",
+      "tools/venus-operator/verify-published.mjs",
+      "tools/venus-operator/fetch-release.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "The exact final downloader now uses built-in bounded crypto.randomInt jitter for both network and transient HTTP retries, preserving four attempts, capped exponential/Retry-After waits, body/time bounds, partial staging and signature/digest/tag verification before rename. Existing targeted Linux P06-DOWNLOAD actually passed1/0 with unchanged assertions and lint0; independent downloader-review14 accepted exact b1844673 bytes/core36de10. No randomness statistics, real GitHub transport or full unit-suite execution is invented.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "REL-12",
+    "check_id": "P06-P12-REL-12",
+    "source_line": 141,
+    "source_row_sha256": "db3473fdd28099ceb2ba6f260373cd013e215a1f39de7253b3b659afdc88b583",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "PARITY13",
+      "INSTALL02",
+      "WORKFLOW",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      ".github/workflows/venus-release.yml",
+      "tools/venus-operator/verify-published.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Fixed v4 bundle/template/BK2 contract rejects old profiles before restart. Real-v4 compatible metadata A/B restore and current exact-image installation cover supported local predecessor boundary; neither claims0.0.1/v2 self-update to v4 or future signed bundle verification.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-01",
+    "check_id": "P06-P12-BST-01",
+    "source_line": 147,
+    "source_row_sha256": "cff6f6e87a246b4245d2b044b7eb7650e583227b23a10a288213763a6672f63b",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Venus has independent provision/trust/state/jobs/backups and fixed own Docker dependencies. Actual real-v4 and current UID-scoped install exercise one lifecycle without other services being installed.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-02",
+    "check_id": "P06-P12-BST-02",
+    "source_line": 148,
+    "source_row_sha256": "fa890e9544f3bc4afbaa69edfa04656fc42f7e81bb26a248df857f0ff0db45a6",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No input/env enrollment file from another service is consumed. Own generated config and secret-file permissions remain BST-05/PERM obligations.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "BST-03",
+    "check_id": "P06-P12-BST-03",
+    "source_line": 149,
+    "source_row_sha256": "9bb7e6815feff7047e40a11c02c769f2f42230e96f255fd2bd99b970dec73aca",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "SECURITY06",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Independent installed trust anchor is read before verification. Fixture/service environments are separate; actual install uses fixture trust only and never proves public service signing.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-04",
+    "check_id": "P06-P12-BST-04",
+    "source_line": 150,
+    "source_row_sha256": "8773c7af8e32932dfd4cbf3df1256dcf5418544c6cfaa738945398042173d07d",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "PARITY13",
+      "INSTALL02",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Immutable payload is separate from protected/secrets/operator state. BK2 excludes latest protected authorities and compatible rollback preserves them; actual old-PG restore proves floors survive.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-05",
+    "check_id": "P06-P12-BST-05",
+    "source_line": 151,
+    "source_row_sha256": "aeb824f3a1b6db4e7b31be72bb2db24414bc59a819548b393cbbf033e2511ac7",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Driver regenerates only generated compose.env from explicit versioned config; it has no arbitrary preserved .env merge branch. Operator values remain in config for both candidate and predecessor, with incompatible profiles rejected before mutation.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-06",
+    "check_id": "P06-P12-BST-06",
+    "source_line": 152,
+    "source_row_sha256": "cbc2bba00020640bf8a1d5f34ba7656938989df4384d9885aefa6add89ff606e",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "PARITY13",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Explicit configuration owns roots/ports/origin/capabilities; Driver reads those for candidate and predecessor, ignoring inherited COMPOSE variables. Import cannot overwrite operator config or credentials.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-07",
+    "check_id": "P06-P12-BST-07",
+    "source_line": 153,
+    "source_row_sha256": "88bb2b9378a25e790810ca757cd97cae1e5bd96c5a0eda587e4570258a3385eb",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "SECURITY06",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Profile/typed booleans select only actual v4 requirements. Fixture registry is explicit test-only trust, not a required production mock field. Current image install exposes actual v4 routes.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-08",
+    "check_id": "P06-P12-BST-08",
+    "source_line": 154,
+    "source_row_sha256": "254de32639f4a60baca572288fd18d6f58924cd627895ae373303f2896db0df8",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "PARITY13",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Explicit root provision preserves chosen credential bytes and separately generates machine secrets, refusing existing authority. Current real1001/1002/1000 install/ACL verifies usable separate roles.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-09",
+    "check_id": "P06-P12-BST-09",
+    "source_line": 155,
+    "source_row_sha256": "861bbd4dbbd166584d3d51948fad13d35b798f48b0984418e8f9ce96aa255f4c",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "LEGACY_DRILL",
+      "UNITS36",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Initialized provision/install refuses replacement; durable locks/job identity and idempotent apply prevent duplicate mutation; interrupted state requires explicit recover. Existing unit/fault branches remain function-scoped and current v4 install corroborates startup.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-10",
+    "check_id": "P06-P12-BST-10",
+    "source_line": 156,
+    "source_row_sha256": "8e774af7186fa5134c8b3a3290c9dd4b03f62e08b337d21e684d767e5cbad6ab",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Fixed Compose uses actual local/host roots and explicit service UIDs; preflight probes writable state and current protected runtime paths. Current1001 executor/1002 reader/1000 app exercise actual mounts, not root-only validation.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-11",
+    "check_id": "P06-P12-BST-11",
+    "source_line": 157,
+    "source_row_sha256": "1f6ae4b7c0140955baee6c7dd8e68b04ad0d0c4d4fa6ee0699d3f7cf90106c56",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "LEGACY_DRILL",
+      "INSTALL02",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Preflight validates canonical local origin, numeric port, exact published-port ownership and required v4 provisioning receipt. Fixed config/template has no arbitrary placeholder interpolation; historical port/disk/permission no-mutation records remain explicitly historical.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-12",
+    "check_id": "P06-P12-BST-12",
+    "source_line": 158,
+    "source_row_sha256": "6c7d531395ea08daa2859ba5a2f5743c77ab31cbf8107eb19b6b90b3ee8b8030",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "HANDOFF",
+      "INSTALL02",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Current additive handoff names exact existing CLI modes/config/UID/trust/mount/profile inputs and clearly marks substituted IDs; it advertises no nonexistent validate/restore command.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "BST-13",
+    "check_id": "P06-P12-BST-13",
+    "source_line": 159,
+    "source_row_sha256": "2f76ff96a020e9c605cd2748f9280fa6b40b9e2dd2908e372415ff32c3c9ccc1",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "INSTALL02",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Chosen bytes remain opaque; reversible base64url and timing-safe comparison plus per-request reread preserve exact input/rotation. Existing ACL unit uses Unicode/newline/NUL and one-byte replacement without strength/denylist/normalization.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "TRUST-01",
+    "check_id": "P06-P12-TRUST-01",
+    "source_line": 165,
+    "source_row_sha256": "783871b513bbfb889c7448df0fa0d6cfb3b790509e6132968f01384f5d504208",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "SECURITY06",
+      "INSTALL02",
+      "HANDOFF",
+      "WORKFLOW",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      "tools/venus-operator/http.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Service Ed25519 anchor differs from operator/DB/keyring/media/fixture keys. Owner already approved protected signing key; workflow exposes it only in the later signing step.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "TRUST-02",
+    "check_id": "P06-P12-TRUST-02",
+    "source_line": 166,
+    "source_row_sha256": "e5a85a53f158cdf69330ff48b5e13a8cab0a227e7c317211a65d865d65076193",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No SSH/SFTP client or host-key enrollment exists; signed HTTPS release and local DB trust remain applicable.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "TRUST-03",
+    "check_id": "P06-P12-TRUST-03",
+    "source_line": 167,
+    "source_row_sha256": "3e4c3f3614a3733a1f336af33074437c4a37f393f20d5d5aff2a349632362e22",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "SECURITY06",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      "tools/venus-operator/http.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Verifier uses independently installed public trust, never a key fetched alongside untrusted assets. Current fixture install tests verification path but does not claim genuine service signature.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "TRUST-04",
+    "check_id": "P06-P12-TRUST-04",
+    "source_line": 168,
+    "source_row_sha256": "47b810b980e96ea5fd39862a47335ea96f2e3adbd202d30554053ba64e435b74",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "SECURITY06",
+      "INSTALL02",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      "tools/venus-operator/http.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Actual secret values use protected files/mounts/stdin or protected signing env; argv contains paths/IDs. Controlled diagnostics map stderr into safe codes and do not publish arbitrary raw upstream bodies.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "TRUST-05",
+    "check_id": "P06-P12-TRUST-05",
+    "source_line": 169,
+    "source_row_sha256": "2e4c402f93e70e19d9a341dc33f7c95f0ebdf6eb0c310620e9076fd97854fc91",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No cross-service enrollment token handshake exists. Own operator credential rotation remains BST-13/CTR-02.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "TRUST-06",
+    "check_id": "P06-P12-TRUST-06",
+    "source_line": 170,
+    "source_row_sha256": "ae66c676eddc09adfb6939d4cb9ce7999f5489425bebd86dec82676fbb996bc1",
+    "canonical_status": "PENDING_FINAL_SIGNED_ARTIFACT_ONLY",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "WORKFLOW",
+      "CONTEXT",
+      "PRE_SIGN"
+    ],
+    "source_binding_refs": [],
+    "independent_disposition": "REQUIRE_REAL_FINAL_PRODUCER_PROOF_NOT_PASS",
+    "review_reason": "Pending actual genuine0.0.2 download/installed-root-trust/signature/digest verification before execution plus external published-bundle smoke; local fixture installation only proves the separate verifier mechanism.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "TRUST-07",
+    "check_id": "P06-P12-TRUST-07",
+    "source_line": 171,
+    "source_row_sha256": "61cbeb26872068d3a123e718e4891e0edf9e6059d87cd9cab28cf0b111636908",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "SECURITY06",
+      "INSTALL02",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/release.mjs",
+      "tools/venus-operator/http.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Standalone secrets are file-backed values with typed file-path config, not external secret locator enrollment. Handoff separates public trust/path/value; no external reference string is passed as a credential.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-01",
+    "check_id": "P06-P12-PERM-01",
+    "source_line": 177,
+    "source_row_sha256": "6c6dcd572782cd6484100d18496ea34b7ec91a51fb8eca74e0a54032b053e1b1",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Atomic file writer explicitly chmods before provision chown; roles have fixed ownership. Actual current install/independent reader exercises nonroot usability without broad permission changes.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-02",
+    "check_id": "P06-P12-PERM-02",
+    "source_line": 178,
+    "source_row_sha256": "3e14097a55fe5a186607c82bfc741e399c48458093581c8bdb8017f929fc703b",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "SECURITY06",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Narrow root provision is followed by real executor1001/operator1002/app1000; renderer root guardian has fixed isolation role with nonroot parser. Runtime validation is not a root smoke.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-03",
+    "check_id": "P06-P12-PERM-03",
+    "source_line": 179,
+    "source_row_sha256": "203e0248ba682d4a3416dc8c0f98d2e5219d8d69ec841f0c32ec679e92ed03a2",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Atomic writes explicitly fchmod; provision fixes ownership/modes so inherited umask is not an authority. Current actual role accesses demonstrate intended private/group-readable boundaries.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-04",
+    "check_id": "P06-P12-PERM-04",
+    "source_line": 180,
+    "source_row_sha256": "8544c556a3cae2a04d671a579a32d4a8838c504b133e6dd65a2a53c3c9e5f499",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "PARITY13",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Private state has fixed single-owner directories and specifically owned socket directory; this profile does not rely on shared-directory group inheritance/enrollment. Explicit owner/group and socket chmod cover the local requirement.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-05",
+    "check_id": "P06-P12-PERM-05",
+    "source_line": 181,
+    "source_row_sha256": "71874133cb2aa85419470c02f9f404a6559b44946924d000f132e5a6683c76e5",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "State/keys remain0700/0600 or stricter per-role mounts. Actual separate reader/ACL and renderer isolated negative prove denial instead of world-access workaround.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-06",
+    "check_id": "P06-P12-PERM-06",
+    "source_line": 182,
+    "source_row_sha256": "a89b15255ef460962fe504ad57783409ee4e83e9376bf9a8b55355b976988745",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "RECOVERY11",
+      "INSTALL02",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "lstat/NOFOLLOW/nlink/size/type checks protect bounded files; Driver validates authority path ownership/modes and backup/image mapping. Existing backup negative rejects links/permissions/oversize before restore.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-07",
+    "check_id": "P06-P12-PERM-07",
+    "source_line": 183,
+    "source_row_sha256": "f82f8f102bb94925c73806a857c09ec9ac0f836445adb9a2939619480416ae5e",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/provision.mjs",
+      "tools/venus-operator/files.mjs",
+      "infra/venus/venus-executor.service"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Explicit per-role searchable parents and actual1001/1002/1000 reads traverse real mounts. Independent reader remains separate from root provision.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "PERM-08",
+    "check_id": "P06-P12-PERM-08",
+    "source_line": 184,
+    "source_row_sha256": "3eeb5f7eaf53031bb6014fc49cb62c0b509fd8aa9ea28d3473bad7954f6974d5",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "Local UDS restart and unit source paths are checked; effective production systemd sandbox/stale-socket execution is untested. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "PERM-09",
+    "check_id": "P06-P12-PERM-09",
+    "source_line": 185,
+    "source_row_sha256": "c62bae98fbef528c2a08d806c5488502914e92e4fd3df0c1aafdbe4b0856e5f9",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "No Neptune helper upgrade; local write faults/recovery pass, production effective unit/helper upgrade is unproved. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "PERM-10",
+    "check_id": "P06-P12-PERM-10",
+    "source_line": 186,
+    "source_row_sha256": "250ec7e69064e9b875cf5c6e3e2bf424fd606889342a25b20f8d8367e3411313",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "No Saturn/vault deployment; local config/recovery permissions pass, production sandbox update/rollback is untested. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "PERM-11",
+    "check_id": "P06-P12-PERM-11",
+    "source_line": 187,
+    "source_row_sha256": "d1269df83fb106fed11a9f05e72c98cf7c8cf3faea7df0962ff4f0c301d60d95",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "No Kernel head mutation; local no-mutation permission refusal/offline recovery pass, production ReadWritePaths is deferred. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "PERM-12",
+    "check_id": "P06-P12-PERM-12",
+    "source_line": 188,
+    "source_row_sha256": "72d94a189a05d72188936fbeab61aec03f016b1a65c0e9e9934ce797a8c8279b",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "Local stable socket ownership and operator-surviving restarts pass; production RuntimeDirectory owner behavior is untested. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "PERM-13",
+    "check_id": "P06-P12-PERM-13",
+    "source_line": 189,
+    "source_row_sha256": "892a3f0d4a1b810d46acf7fa52dde8665ac154d2090289a566575a3c8f4a3a55",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No runtime writer of systemd or journald drop-ins exists; immutable provided unit files are not a dynamic updater. Production unit qualification remains deferred.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "CTR-01",
+    "check_id": "P06-P12-CTR-01",
+    "source_line": 195,
+    "source_row_sha256": "d6822faa055fd5ec76f3b428356ffd4263c76f26171e6467a9f2727984e1701e",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "PARITY13",
+      "HANDOFF",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "V4 Compose publishes app only on loopback and no DB host port; preflight checks actual port owner. Current install reaches app; current hour host observation and future edge remain distinct. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-02",
+    "check_id": "P06-P12-CTR-02",
+    "source_line": 196,
+    "source_row_sha256": "69ede1db3d0d37fdc978cabc1c7930433873977b8e06f5c2745b3781d4907615",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "INSTALL02",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Operator credential directory is mounted and key reread per request, avoiding stale file inode. Startup-only media/keyring changes require controlled restart; existing rotation unit proves next-request credential behavior.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-03",
+    "check_id": "P06-P12-CTR-03",
+    "source_line": 197,
+    "source_row_sha256": "84753b0de10821dad10e2eb77b7b2a0279ae04c9154766ac0bdbfb0a6e311b98",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Fixed exec into owned services plus explicit UID/capability helpers separate root provision from1001 execution. Exact current argv/context is recorded; no arbitrary compose-run dependency graph.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-04",
+    "check_id": "P06-P12-CTR-04",
+    "source_line": 198,
+    "source_row_sha256": "921a0b073b9f4e07c6b5d6d51dbeb2518019d70ee0fcae23a691b216591076e1",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "SECURITY06",
+      "WORKFLOW",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Driver verifies repository digest plus actual native/OCI/config/source/version, then uses native ID/signed OCI in fixed Compose. Current8ab/db6 local install is actual; future public signed manifest equality is still required.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-05",
+    "check_id": "P06-P12-CTR-05",
+    "source_line": 199,
+    "source_row_sha256": "cfb774cf6f4ff61f3c62535486cd064c3e35cba3c993236dd0ccde7bd48738b9",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "READINESS21",
+      "PARITY13",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Engine closes serving/quiesces writers, starts dependencies then waits exact healthy before reopen. Current21PG rejects failed chains; old-v4 restore/current install cover startup order, with strict current hour continuity separate. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-06",
+    "check_id": "P06-P12-CTR-06",
+    "source_line": 200,
+    "source_row_sha256": "8f6e92c74f9bfb2c3e9b0195b3431e3948414c4fc8bf14dd47163a51572a4bd4",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "READINESS21",
+      "SECURITY06",
+      "HANDOFF",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Live/fresh8schema readiness/media prepare/renderer freshness/exact version are separate. Current hour supplies host-loopback observations; no local check claims public edge/TLS. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-07",
+    "check_id": "P06-P12-CTR-07",
+    "source_line": 201,
+    "source_row_sha256": "c2e802965b7703d70a45cced45577d64a65885cdb0ed2a9f0da14c355c883762",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Driver regenerates fixed namespaced env with explicit --env-file/--file and ignores inherited Compose variables. Current exact-image install exercises resolved mounts/ports/profile.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-08",
+    "check_id": "P06-P12-CTR-08",
+    "source_line": 202,
+    "source_row_sha256": "b15d51a1fe6c9b7f1ac906f1fc83d3e1a8708119601a4b673bed8d0431825e49",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "PARITY13",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Executor unit preserves runtime directory on restart; stable credential-directory mount exposes rotation. No remote-agent/head-sidecar lifecycle exists; real production systemd isolation remains future-host scope.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "CTR-09",
+    "check_id": "P06-P12-CTR-09",
+    "source_line": 203,
+    "source_row_sha256": "0eaf4fad8ecd42b9e1304e4054921e4e204ac7cb69f92159ce74d3b259f2fda4",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "Current app update uses installed fixed operator/template; host helper binary/unit coordinated activation is not performed or proved. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "CTR-10",
+    "check_id": "P06-P12-CTR-10",
+    "source_line": 204,
+    "source_row_sha256": "7b4d9ed4327f5b0b087bfddce2dd02a4ec6a9545207924cf77de08575be93637",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "INSTALL02",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "infra/venus/compose.standalone.yml",
+      "tools/venus-operator/driver.mjs",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Fixed profile/config validates before mutation; env is deterministically generated for candidate and rollback. New authority needs provision receipt/boot validation; real-v4 rejects incompatible profile before restart and restores compatible predecessor.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-01",
+    "check_id": "P06-P12-NET-01",
+    "source_line": 210,
+    "source_row_sha256": "272ad8aeafe388772b5aa990e24e8ed02190ee19f901ba110d0e93372dbd390f",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "Local exact Host/Origin refusal passes; public SNI/Cloudflare/vhost mapping is not provisioned or tested. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "NET-02",
+    "check_id": "P06-P12-NET-02",
+    "source_line": 211,
+    "source_row_sha256": "a32ba65d187b1c1b8f79abbf3ef3af0ef8ea94191bba498a59578696960575e2",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "Venus installer does not start/stop a shared host Nginx or own shared ingress; own loopback exposure still requires CTR-01/NET-06.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "NET-03",
+    "check_id": "P06-P12-NET-03",
+    "source_line": 212,
+    "source_row_sha256": "ae5f8b0a49a94846a822f13bb5fe1f7d6b7c8f58b18bf8f47ca2a79c13dd53b8",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "Venus installer does not generate or overwrite shared virtual-host files; own template equality remains CTR-07/10.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "NET-04",
+    "check_id": "P06-P12-NET-04",
+    "source_line": 213,
+    "source_row_sha256": "24c08b3d02d282549b91a0672ecc114dfedbb5bc869eda613fa858a2c21ec0a9",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "INSTALL02",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/http.mjs",
+      "infra/venus/compose.standalone.yml",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Direct local operator enforces exact Host/Origin/canonical loopback without trusting arbitrary forwarded headers. Unconfigured external proxy checks remain deployment-deferred, not claimed local PASS.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-05",
+    "check_id": "P06-P12-NET-05",
+    "source_line": 214,
+    "source_row_sha256": "34a3fca2d1b5fc7f79946ccf2b28dbd250ca63eee48b2ad1f4c7b35cd8c6c820",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "INSTALL02",
+      "PREFLIGHT12",
+      "MOBILE21",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/http.mjs",
+      "infra/venus/compose.standalone.yml",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Canonical application/operator origins and CSRF/foreign origin rejection are explicit. Accepted browser/entry and current install bind direct local path, not a production proxy.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-06",
+    "check_id": "P06-P12-NET-06",
+    "source_line": 215,
+    "source_row_sha256": "c4041ceae507a3cc1ab81da622ae12dd6cabf67a54bfbeb7b6ca022166bf5991",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "SECURITY06",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/http.mjs",
+      "infra/venus/compose.standalone.yml",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "App/operator are loopback and DB unexposed; selected built-in SFU explicitly publishes TCP7881/UDP7882. Final disposition must name these required media transports; public firewall/NAT/edge stays deferred.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-07",
+    "check_id": "P06-P12-NET-07",
+    "source_line": 216,
+    "source_row_sha256": "3bc82f5f1a7425b94e881a5071f7e776d0cb9eb94767d4f4d35fc4639399a6d4",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "Local pull failure and bounded fetch503 are proved; production DNS/HTTPS/firewall egress remains untested. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "NET-08",
+    "check_id": "P06-P12-NET-08",
+    "source_line": 217,
+    "source_row_sha256": "378c6d0c57998fabf63598296d52227e0502b36c18ca61517110456139cde79d",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "No production certbot/certificate/vhost smoke; local artifact cannot claim public TLS deployment. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "NET-09",
+    "check_id": "P06-P12-NET-09",
+    "source_line": 218,
+    "source_row_sha256": "f0bf9ffc3789895bda3bd42cf0b47a727b33aa2a2ce9dd50ff323fd7e0f49c4d",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "PREFLIGHT12",
+      "RECOVERY11",
+      "PARITY13",
+      "SECURITY06",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/http.mjs",
+      "infra/venus/compose.standalone.yml",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "App64KiB/operator16KiB body bounds differ from PDF16MiB bounded capture/reservation/hash/converter limits. Selected actual native size/413 negatives and accepted encrypted-PDF/browser record apply only via named unchanged boundary parity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-10",
+    "check_id": "P06-P12-NET-10",
+    "source_line": 219,
+    "source_row_sha256": "48ee3b8e25a28e2d1f3808321311cc9bb81e7a15438477391a13cdd552b21f32",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No Nginx request-buffer/temp subsystem belongs to this local profile. Venus PDF capture and own spool quotas remain DATA-01/03.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "NET-11",
+    "check_id": "P06-P12-NET-11",
+    "source_line": 220,
+    "source_row_sha256": "01471bf185c7bcce6f6dc09914cd790692becda3d53dee4ac6eb0e01fd505f6c",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/http.mjs",
+      "infra/venus/compose.standalone.yml",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Durable async job separates long update from immediate acknowledgment; IPC/download/converter/health have bounded budgets. Existing timeout/recovery units and actual unchanged renderer120s receipt cover scoped work without repeating it.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-12",
+    "check_id": "P06-P12-NET-12",
+    "source_line": 221,
+    "source_row_sha256": "ac3f5ab9ed0b7f30d9b9129444c57ad1f9b0b8fd6d0e1bef47fc51c2c69feb70",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "MOBILE21",
+      "PREFLIGHT12",
+      "INSTALL02",
+      "SECURITY06",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/http.mjs",
+      "infra/venus/compose.standalone.yml",
+      "infra/venus/compose.presentations.standalone.yml"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Fixed image includes web assets/staticRoot and root-relative paths. Accepted desktop/mobile21cells plus current image startup cover local navigation; no public CDN/production claim.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "NET-13",
+    "check_id": "P06-P12-NET-13",
+    "source_line": 222,
+    "source_row_sha256": "554e27d83f556c1919ba35895254ab2e740e151bde492b8bdc68ebfe9b170021",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No arbitrary ZIP/self-update upload endpoint exists; fixed release identity import and bounded PDF HTTP uploads remain separately applicable.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "HLT-01",
+    "check_id": "P06-P12-HLT-01",
+    "source_line": 228,
+    "source_row_sha256": "2678a1aa701ab5b74e7a7ddc31b8d06936ff86aa74dd53d677f4e1bd23c4d327",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "READINESS21",
+      "READINESS_REVIEW",
+      "INSTALL02",
+      "SECURITY06",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Explicit live/ready/version contract and required profile dependencies define health; protected checkpoint precedes8fresh schemas on one pool client. Actual21PG proves rejection/recovery; hour remains mandatory. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-02",
+    "check_id": "P06-P12-HLT-02",
+    "source_line": 229,
+    "source_row_sha256": "ddbe245a2254293e9c3a9d97eb4a3ed122017448718cc5da891d8cd8bdcf0ce7",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "READINESS21",
+      "HANDOFF",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Process live, schema/dependency ready, media/renderer, exact version, host and eventual edge are separate. Actual install/PG21 cannot substitute hour or TLS. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-03",
+    "check_id": "P06-P12-HLT-03",
+    "source_line": 230,
+    "source_row_sha256": "e5e6ff36b52d3b734190368ed19e1536d85828170d44b46bbc2d772fbb206a31",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "READINESS21",
+      "INSTALL02",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Contracts/API version health schema; Driver consumes ready/version and fixed renderer schema. Real-v4 initialized checks and actualPG generation negatives provide consumer assertions; exact current existing workflow quality/units remain conditional. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-04",
+    "check_id": "P06-P12-HLT-04",
+    "source_line": 231,
+    "source_row_sha256": "4e46937f8154a786c2f33a620b8b06f87def001f859448e631b3e0ce79883ccc",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "READINESS21",
+      "RECOVERY11",
+      "INSTALL02",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Readiness is fresh success/503, not cached numeric zero. Renderer refuses stale/future/malformed health timestamps/schema; current hour must retain actual timestamps and non200 failures. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-05",
+    "check_id": "P06-P12-HLT-05",
+    "source_line": 232,
+    "source_row_sha256": "10434c48d77a4c79187ef7f26b6a7a3b4ed0bb4c4995659fd99b71bbac38f56c",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No host uptime dashboard is published; absence does not waive live/readiness or workload health metrics.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "HLT-06",
+    "check_id": "P06-P12-HLT-06",
+    "source_line": 233,
+    "source_row_sha256": "185c841ae37b3323488ec45aa05139e6d598033bf7df98ad67798287127d2ea5",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No user-facing global CPU/RAM dashboard is published. Actual P07 CPU/RAM observations remain required, not N_A.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "HLT-07",
+    "check_id": "P06-P12-HLT-07",
+    "source_line": 234,
+    "source_row_sha256": "bace26bfc7f78f4b096c2e327ad68bb1898d0191375216c0c27ba76a81ed101f",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No remote storage probe exists. Own local host-file write/read/restore remains DATA-05/06.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "HLT-08",
+    "check_id": "P06-P12-HLT-08",
+    "source_line": 235,
+    "source_row_sha256": "0869274b9ab490f1960d00a52fc9b25559b6e3a60dd8d8ccdeb072cb3663f19c",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "READINESS21",
+      "SECURITY06",
+      "INSTALL02",
+      "UNITS36",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Failures produce bounded safe request/job/error/operation/status fields with original cause retained. ActualPG negatives and retained failed hour stay failures; raw private DB/upstream bodies are not exposed. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-09",
+    "check_id": "P06-P12-HLT-09",
+    "source_line": 236,
+    "source_row_sha256": "fd67b30b9752be206836afd4641340cdbf2cb4957064a44d546057cad30825a3",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "READINESS21",
+      "SECURITY06",
+      "INSTALL02",
+      "RECOVERY11",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Protected checkpoint precedes checkout and all8fresh probes must succeed; incomplete clients are disposed. ActualPG21 covers generation/outage/timeout/recovery; current install covers startup, not hour continuity. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-10",
+    "check_id": "P06-P12-HLT-10",
+    "source_line": 237,
+    "source_row_sha256": "9620552bc2b5a199cea129c47e3c1ef936b4103497c1583f8b6e0a486843e4ca",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "LEGACY_DRILL",
+      "PARITY13",
+      "INSTALL02",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Driver statfs targets authoritative local_root and uses bavail*bsize before mutation/headroom, accounting for reserved blocks. Historical disk no-mutation receipt and exact unchanged function support calculation. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "HLT-11",
+    "check_id": "P06-P12-HLT-11",
+    "source_line": 238,
+    "source_row_sha256": "b4ca24f6f1971b47277c0561c73384e8941a2d9907d924c2ba73107c41a5abe7",
+    "canonical_status": "DEFERRED_PRODUCTION_NOT_LOCAL_PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_EXPLICIT_DEFERRED_NOT_PASS",
+    "review_reason": "Bounded local PG/app/executor readiness and exact identity pass; delayed production systemctl/unit activation is untested. Owner U-027 defers real deployment/device/network verification; no local source or Docker result closes this production item.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "HLT-12",
+    "check_id": "P06-P12-HLT-12",
+    "source_line": 239,
+    "source_row_sha256": "864bc55764295503c65f6383cb15f6237a9508780258c48309b776b635a74302",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "READINESS21",
+      "LEGACY_DRILL",
+      "UNITS36",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "apps/api/src/server.ts",
+      "tools/venus-operator/driver.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Driver uses bounded60-attempt readiness with exact running identity; failure/recovery outcomes stay distinct and serving closed. Actual historical health faults/currentPG21 cover negatives; current install demonstrates cold start, not sustained hour. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "INT-01",
+    "check_id": "P06-P12-INT-01",
+    "source_line": 245,
+    "source_row_sha256": "4acdb315c8019aee255639405bbc1125b6b1cc0e28eecd07fc8f0e87a77abfe6",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No central generic integration health aggregator exists; local readiness remains HLT-01/02.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-02",
+    "check_id": "P06-P12-INT-02",
+    "source_line": 246,
+    "source_row_sha256": "22364c62e377670ec58805209b1ca7f35f845f4f8ffca3551cdeaea12ca89e3d",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No enrollment dependency order across Exocortex services exists; own PostgreSQL/app order remains CTR-05.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-03",
+    "check_id": "P06-P12-INT-03",
+    "source_line": 247,
+    "source_row_sha256": "ee273980fb56be752f141a128ca27747a0c264ea0c47622ebd5539203feae80b",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No central Register endpoint/token setting is consumed; own controlled config remains BST-05/06.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-04",
+    "check_id": "P06-P12-INT-04",
+    "source_line": 248,
+    "source_row_sha256": "fbac1878aa8d531320fbd0d172a9ae897ee49e5cc9a4f304f164aba0b3e3e542",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No central enrollment machine token is used; own operator authentication remains TRUST-01/BST-13.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-05",
+    "check_id": "P06-P12-INT-05",
+    "source_line": 249,
+    "source_row_sha256": "5ccbbc6bbc657d5f3a66e6204beedaefa036c41ceab48e2ccad49a95f846cd2a",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No provider/central enrollment pending state exists; own durable jobs remain OPS-08/09.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-06",
+    "check_id": "P06-P12-INT-06",
+    "source_line": 250,
+    "source_row_sha256": "1cb5f828e94febb3b48f210507ff9e5d43971099f0b27a8a3c022f833dfa59ec",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No newly enrolled external token bind mount exists; own file credential reread remains CTR-02.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-07",
+    "check_id": "P06-P12-INT-07",
+    "source_line": 251,
+    "source_row_sha256": "49603f2dc81431bcbc3b14164a6e97f093e21c6bb9bb471431a93b897165d3ff",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No central registry plaintext-to-secret-ref publication exists; own key separation remains TRUST-01/03.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-08",
+    "check_id": "P06-P12-INT-08",
+    "source_line": 252,
+    "source_row_sha256": "417e692df1eeff09d6a6c9aab684cffa657433834c1bb99e91a57269140767ff",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No shared cross-service endpoint registry is resolved; own canonical Origin remains NET-04/05.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-09",
+    "check_id": "P06-P12-INT-09",
+    "source_line": 253,
+    "source_row_sha256": "4bbb81f0792aeb9a59b982fbeacee3ad471f4f5c7d733b6eea98e05bed91c0d2",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No shared service-prefix command gateway exists; own operator actions remain typed and ACL-limited.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-10",
+    "check_id": "P06-P12-INT-10",
+    "source_line": 254,
+    "source_row_sha256": "d5ff8615ddc9688e50421773b6b547b43c69226989bf743e9a3c223a765c37a7",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No provider callback registration/handshake exists; production DNS/TLS remains deferred NET-01/08.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-11",
+    "check_id": "P06-P12-INT-11",
+    "source_line": 255,
+    "source_row_sha256": "cf7b021bc6ce03c8a95265cebb4bdb80d98f6374bb2acb6a0e44530a4578050a",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No external webhook ping is used as integration evidence; actual local functional path remains required OPS-04.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-12",
+    "check_id": "P06-P12-INT-12",
+    "source_line": 256,
+    "source_row_sha256": "f6d475ef19d0dfb4d4d59d9ad3119f3fa08231c361d5bf66ddb8f860f05fa2e6",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No external repository key allowlist or Register lookup exists; immutable Venus repository/tag identity remains REL.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-13",
+    "check_id": "P06-P12-INT-13",
+    "source_line": 257,
+    "source_row_sha256": "a26d256ab2d02c8a585d10c52b335878704815bc922215d19913e8cd0b9c6605",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No Wyvern secret-publication API exists; local persisted config/job failure remains OPS-08/10.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-14",
+    "check_id": "P06-P12-INT-14",
+    "source_line": 258,
+    "source_row_sha256": "81231746a39b40ee151e5c10cf79cfd3dc4841beb5f9532c4c5b52345f3f3454",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No external AccessKey enrollment form exists; own URI and operator credential validation remain BST/NET/TRUST.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-15",
+    "check_id": "P06-P12-INT-15",
+    "source_line": 259,
+    "source_row_sha256": "9d278e4d50da06b0efcda8ec23476e2f3a760a1302a2a270d82444764d236d6d",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No Kernel/Updater host machine connection or backup release source is configured; own signed fetch remains REL-09/11.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "INT-16",
+    "check_id": "P06-P12-INT-16",
+    "source_line": 260,
+    "source_row_sha256": "b6123b2c262472aa999a4ed5da74e38454e944da97c70314cf5ad0ef2eb16d1a",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No central allowed_keys machine principal is used; own authorization and revocation remain independently applicable.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "DATA-01",
+    "check_id": "P06-P12-DATA-01",
+    "source_line": 266,
+    "source_row_sha256": "a50bdf8a7ebe1a43f01b1825d90cbb46a020eb0b3f126033814ee3dd32540325",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "PARITY13",
+      "PREFLIGHT12",
+      "MOBILE21",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/driver.mjs",
+      "apps/api/src/protected-runtime.ts",
+      "tools/venus-operator/presentation-backup.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "BK2 dump/restore streams bounded files with backpressure/time/output budgets. PDF remains bounded; actual real-content/quiescence/restore and accepted media/browser components cover mechanisms; hour supplies sustained mixed load. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "DATA-02",
+    "check_id": "P06-P12-DATA-02",
+    "source_line": 267,
+    "source_row_sha256": "a849150aa38b3f1ae05401ea3577febdd5b37a51545742f241daa93235e82236",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No remote-storage mirror or transient remote staging exists; own local host-file backup is the intentional destination and PDF spool still has bounds.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "DATA-03",
+    "check_id": "P06-P12-DATA-03",
+    "source_line": 268,
+    "source_row_sha256": "276d25e79e072992376274344317470d51a22b6d7549cc455b8e18a0d7caeb33",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "PARITY13",
+      "PREFLIGHT12",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/driver.mjs",
+      "apps/api/src/protected-runtime.ts",
+      "tools/venus-operator/presentation-backup.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "PDF has reservation/session/TTL/GC/protected atomic finalization; BK2 fsync/rename occurs only after complete bounded dump/hash. Actual-v4 quiescence/restore and selected native negatives cover orphan/retirement boundaries. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "DATA-04",
+    "check_id": "P06-P12-DATA-04",
+    "source_line": 269,
+    "source_row_sha256": "e93d82a504770313fd964d89883693d75e32fbf6b8010fff07903367dde4c573",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "UNITS36",
+      "PARITY13",
+      "PREFLIGHT12",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/driver.mjs",
+      "apps/api/src/protected-runtime.ts",
+      "tools/venus-operator/presentation-backup.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "BK2 checks dump magic/size/digest and durable frame; reader rejects corruption/truncation/link/oversize before restore. PDF publishes finalized decoded matching-version assets; real PNG/browser inheritance stays scoped. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "DATA-05",
+    "check_id": "P06-P12-DATA-05",
+    "source_line": 270,
+    "source_row_sha256": "da624bac00ac934a9240857d26b072fed19eb0a5e43eca8418c3b6b937911e62",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "INSTALL02",
+      "PREFLIGHT12",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/driver.mjs",
+      "apps/api/src/protected-runtime.ts",
+      "tools/venus-operator/presentation-backup.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Owned synthetic room/real-PDF upload/read/delete and separate-empty-PG restore are actual end-to-end canaries without a persistent health writer. Current install's V2/module reads corroborate startup, not external backup success. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "DATA-06",
+    "check_id": "P06-P12-DATA-06",
+    "source_line": 271,
+    "source_row_sha256": "b65af39e47206f26c0025b1a37e4cf7a54cbf68183a248339eb138a58cba5b7c",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "RECOVERY11",
+      "PARITY13",
+      "SECURITY06",
+      "INSTALL02",
+      "READINESS21",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/driver.mjs",
+      "apps/api/src/protected-runtime.ts",
+      "tools/venus-operator/presentation-backup.mjs"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Framed digest verification and actual-v4 empty-PostgreSQL restore recover settings/cipher assets/latestprotected floors. Independently reviewed exact34mechanism/readiness parity plus current install satisfy current boot condition; no public signed restore claim. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "DATA-07",
+    "check_id": "P06-P12-DATA-07",
+    "source_line": 272,
+    "source_row_sha256": "a89513ab90c50cd1a4a631ddde27f908b1c7e3574466dcdd901f283ba3122618",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No external shared storage namespace exists. Private per-installation root and owned-project cleanup remain required.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "DATA-08",
+    "check_id": "P06-P12-DATA-08",
+    "source_line": 273,
+    "source_row_sha256": "94259516aca30b08721327d984ae61570174956d7b6e1d98341e391bf657c2ea",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No external backup account/token is provisioned. Local DB/operator permissions remain PERM/TRUST obligations.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "DATA-09",
+    "check_id": "P06-P12-DATA-09",
+    "source_line": 274,
+    "source_row_sha256": "1b9bd79b93011288d6bfdcbb741fb7458ed1a5eee5611e97b4c13fcb26569f7d",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "Backup file copying/scheduling belongs to a separate owner mechanism; Venus exposes no schedule-success claim. Own file generation remains DATA-06.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "DATA-10",
+    "check_id": "P06-P12-DATA-10",
+    "source_line": 275,
+    "source_row_sha256": "65a27f1caf4623fafe63e4466a818aa481170e13ee6f23468946a4bc9301b6d0",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No cross-account/region/failure-domain copy is supplied by Venus; same-host file is explicitly not an off-host recovery guarantee.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "DATA-11",
+    "check_id": "P06-P12-DATA-11",
+    "source_line": 276,
+    "source_row_sha256": "bdb584cb4663fa2e4fd657ff77298a35a366201ad67f9b5cf42b0b82c0976736",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No Unicode remote-name mirroring/SFTP reconciler exists. Fixed UUID file names and safe archive paths remain checked locally.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "OPS-01",
+    "check_id": "P06-P12-OPS-01",
+    "source_line": 282,
+    "source_row_sha256": "618ef4831e8776a7bbb38c8dc6b5aebdebe6df154103c537a3ea87e7be02d407",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "HANDOFF",
+      "INSTALL02",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Current handoff requires UTC/host/cwd/source/core/OCI/config/schema/project/root/job/backup identity. Actual install receipt provides exact helper/argv/UID/check/cleanup context and explicit paths.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-02",
+    "check_id": "P06-P12-OPS-02",
+    "source_line": 283,
+    "source_row_sha256": "7c8b338fc60963ce387df95fa699bdcfcf474fa0b68fc2b63aafaaf33a786d02",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "HANDOFF",
+      "INSTALL02",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Handoff uses clean existing provision/import/install/status/recover fences with explicit substituted IDs and UID/config context; operational reference is distinguished from executed receipt.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-03",
+    "check_id": "P06-P12-OPS-03",
+    "source_line": 284,
+    "source_row_sha256": "4d4c805d233f94ee14bc0e4621e3597416a1abf91de2e18ec2937f53bd0f4d25",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "HANDOFF",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Additive operator-v4-handoff01 replaces operational routing for current v4/0.0.2/BK2 and preserves immutable P06v2/BK1 and P11v3 snapshots. Its creation-time pending jitter line is superseded by exact fix14 and independent reviewer receipts here. Root final registry/status assembly links this handoff/matrix; historical contracts/proof are not rewritten.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-04",
+    "check_id": "P06-P12-OPS-04",
+    "source_line": 285,
+    "source_row_sha256": "d7433a88c772082ecc22090d4d045fd00dd4139c0a49945e69962358a626208b",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "HANDOFF",
+      "INSTALL02",
+      "SECURITY06",
+      "READINESS21",
+      "PREFLIGHT12",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Handoff checklist covers fixed config/mounts/migrations/exact identity/readiness/authenticated affected scenarios/rollback metadata. Current install/source06/PG21/browser supply facts; hour/final reviews separate and public edge deferred. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-05",
+    "check_id": "P06-P12-OPS-05",
+    "source_line": 286,
+    "source_row_sha256": "e73685e8d177c040c9516cb1a8a2987eb58cfa3f76e006eaee29c62d46624ff8",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "INSTALL02",
+      "SECURITY06",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Actual install records UTC/source/core/OCI/config/argv/helper/UID/results/scoped cleanup. Safe request/job diagnostics preserve controlled correlation/status; handoff excludes private/credential/media bodies.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-06",
+    "check_id": "P06-P12-OPS-06",
+    "source_line": 287,
+    "source_row_sha256": "4dffad220f56b2f9810274d63b9629ac8a22a22282306a144de1aeb2245115bd",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "READINESS21",
+      "CINEMA32",
+      "CALLS32",
+      "PREFLIGHT12",
+      "PARITY13",
+      "HANDOFF",
+      "JITTER_REVIEW14",
+      "HOUR02",
+      "HOUR_AUDIT02",
+      "HOUR_CORRECTION02"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Retained faults/fix-specific regressions preserve root cause: readiness21fix13, failedhour01, Calls32/Cinema32 and accepted controller boundary. Additive handoff does not overwrite incidents or convert failed runs to PASS. Actual strict hour02 is now accepted by independent hour-security02 on unchanged consumer runtime, with exact old-source binding and correction02 retained; it is a bounded local observation, not production capacity.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-07",
+    "check_id": "P06-P12-OPS-07",
+    "source_line": 288,
+    "source_row_sha256": "110b665e2552f8c632f2b0fd782913f2b55591dde19845ed37691d907d81e250",
+    "canonical_status": "N_A",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [],
+    "source_binding_refs": [],
+    "independent_disposition": "ACCEPT_INDIVIDUAL_SCOPE_N_A",
+    "review_reason": "No third-party signed webhook callback exists. Own POST/Origin/CSRF/operator authentication remain NET/TRUST obligations.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": false
+  },
+  {
+    "id": "OPS-08",
+    "check_id": "P06-P12-OPS-08",
+    "source_line": 289,
+    "source_row_sha256": "42a9a8d34dcde65e6882b7e8972ae2b96ef6e90692c7cadd97c7cb600ba127d5",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "LEGACY_DRILL",
+      "RECOVERY11",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Engine stores original_error separately from recovery_outcome and closes serving after rollback failure. Existing failed-recovery/identity units and actual historical health/migration faults cover branches; v4 restore/current install bind profile.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-09",
+    "check_id": "P06-P12-OPS-09",
+    "source_line": 290,
+    "source_row_sha256": "d5b596f32ed85999b7c208a107d5e4643ebd43dfae90a36d0bd69d612f52256a",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "INSTALL02",
+      "HANDOFF",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Durable phases/hashes/active lock prevent blind retry; recover repeats install preflight or restores recorded predecessor with interrupted cause. Handoff requires inspection and forbids journal/lock deletion; current install exercises initial branch.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-10",
+    "check_id": "P06-P12-OPS-10",
+    "source_line": 291,
+    "source_row_sha256": "752e1ea3448f25aed4c0b990ebeae9d66e080b9500b8165921cb45493ce358fd",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "UNITS36",
+      "LEGACY_DRILL",
+      "SECURITY06",
+      "HANDOFF",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "Controlled command diagnostics retain upstreamHTTP/registry/disk codes and safe operation/exit fields; engine/UI retains job UUID/phase. Existing fault/unit coverage is scoped, not a claim of arbitrary fleet4xx/5xx coverage.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  },
+  {
+    "id": "OPS-11",
+    "check_id": "P06-P12-OPS-11",
+    "source_line": 292,
+    "source_row_sha256": "a7eea86205ad198aa097df2c64163e9188b6145b41e5cbe880ed117acf6daf9a",
+    "canonical_status": "PASS",
+    "identity_fields_match_original": true,
+    "evidence_paths_exist": true,
+    "evidence_pin_keys": [
+      "LEGACY_DRILL",
+      "UNITS36",
+      "HANDOFF",
+      "PARITY13",
+      "JITTER_REVIEW14"
+    ],
+    "source_binding_refs": [
+      "tools/venus-operator/engine.mjs",
+      ".docs/implementation/P06_OPERATOR_RUNBOOK.md",
+      "tools/venus-operator/ui/operator.js"
+    ],
+    "independent_disposition": "ACCEPT_LOCAL_MECHANISM_ONLY",
+    "review_reason": "UI keeps job UUID in hash and reloads existing status after login; durable idempotent apply separates transport failure from job failure. Existing native UI/idempotence records cover mechanism; handoff says inspect before mutation retry.",
+    "independent_nonauthor": true,
+    "mechanism_labels_reviewed_as_descriptive_not_literal": true
+  }
+]

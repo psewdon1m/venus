@@ -1,0 +1,186 @@
+{
+  "source_checkout": "C:/.projects/venus/.artifacts/p06-clean-source01",
+  "helper_build": {
+    "program": "docker",
+    "argv": [
+      "build",
+      "--platform",
+      "linux/amd64",
+      "--pull=false",
+      "--target",
+      "fixture",
+      "--build-arg",
+      "DOCKER_CLI_IMAGE=docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04",
+      "-f",
+      "infra/venus/Dockerfile.operator",
+      "-t",
+      "venus-p06-4a393010eb-helper:fixture",
+      "."
+    ],
+    "exit": 0
+  },
+  "registry": {
+    "program": "docker",
+    "argv": [
+      "run",
+      "-d",
+      "--name",
+      "venus-p06-4a393010eb-registry",
+      "--label",
+      "net.shmoza.venus.p06=4a393010eb",
+      "--network",
+      "host",
+      "--cpus",
+      "0.5",
+      "--memory",
+      "128m",
+      "--pids-limit",
+      "64",
+      "-e",
+      "REGISTRY_HTTP_ADDR=127.0.0.1:56187",
+      "registry:2.8.3"
+    ],
+    "exit": 0
+  },
+  "tag_push": {
+    "reference": "127.0.0.1:56187/venus:fixture-4a393010eb-a",
+    "actual_source_image": "sha256:8ab88180197553a43c52e68a2e3be70164a3ecd6cca736d94dde13da347b0b64",
+    "exit": 0
+  },
+  "actual_driver": {
+    "program": "docker",
+    "argv": [
+      "run",
+      "--name",
+      "venus-p06-4a393010eb-driver",
+      "--label",
+      "net.shmoza.venus.p06=4a393010eb",
+      "--user",
+      "0:0",
+      "--read-only",
+      "--cap-drop",
+      "ALL",
+      "--cap-add",
+      "CHOWN",
+      "--cap-add",
+      "FOWNER",
+      "--cap-add",
+      "DAC_OVERRIDE",
+      "--security-opt",
+      "no-new-privileges:true",
+      "--cpus",
+      "1",
+      "--memory",
+      "1g",
+      "--pids-limit",
+      "128",
+      "--tmpfs",
+      "/tmp:rw,size=64m,mode=1777",
+      "--mount",
+      "type=volume,source=venus-p06-4a393010eb-host,target=/data",
+      "--mount",
+      "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+      "-e",
+      "HOME=/tmp",
+      "-e",
+      "P06_INPUT=<UTF8 compactJSON base64 of recorded INPUT object>",
+      "--entrypoint",
+      "node",
+      "sha256:e9f37241b101459884c76ad85aa6e95f736904092ac66154bf250ce91a06d9f3",
+      "tests/p06/docker-drill.mjs"
+    ],
+    "input_path": "INPUT.json",
+    "input_sha256": "19d10f55ac65b8dbb92327148d80f6799742f8d65a6c6124cad9380b1f6127d7",
+    "exit": 0
+  },
+  "cleanup_events": [
+    {
+      "owned_verified": true,
+      "id": "ed6e9420439b",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "42933db03229",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "769b8cc58d81",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "78ea4d26c264",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "4f6e2d96833d",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "04f0dc3f6500",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "b38aa36ad5a7",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "id": "1956992b54c0",
+      "exit": 0,
+      "kind": "container"
+    },
+    {
+      "owned_verified": true,
+      "name": "venus-p06-4a393010eb_presentation-spool",
+      "exit": 0,
+      "kind": "compose_volume"
+    },
+    {
+      "owned_verified": true,
+      "id": "2435c4a92807",
+      "exit": 0,
+      "kind": "network"
+    },
+    {
+      "owned_verified": true,
+      "id": "827ff8c686c1",
+      "exit": 0,
+      "kind": "network"
+    },
+    {
+      "owned_verified": true,
+      "id": "608bf74dbfc5",
+      "exit": 0,
+      "kind": "network"
+    },
+    {
+      "owned_verified": true,
+      "name": "venus-p06-4a393010eb-host",
+      "exit": 0,
+      "kind": "state_volume"
+    },
+    {
+      "exit": 0,
+      "tag": "127.0.0.1:56187/venus:fixture-4a393010eb-a",
+      "kind": "own_tag"
+    },
+    {
+      "exit": 0,
+      "tag": "venus-p06-4a393010eb-helper:fixture",
+      "kind": "own_tag"
+    }
+  ]
+}
