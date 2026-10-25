@@ -1,0 +1,107 @@
+ Container venus-p05-9b831d03ecd0-db-1  Running
+node:internal/modules/esm/resolve:272
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/tools/venus-operator/create-release.mjs' imported from /app/tests/p06/helpers.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:272:11)
+    at moduleResolve (node:internal/modules/esm/resolve:879:10)
+    at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+    at #resolve (node:internal/modules/esm/loader:687:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:381:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///app/tools/venus-operator/create-release.mjs'
+}
+
+Node.js v24.22.0
+✖ tests/p06/operator.test.mjs (62.776305ms)
+✖ host authority denies stale database grants, rollback and unsafe state (5.653369ms)
+{"id":"P09-DENIED-NO-AUDIO","phase":"START"}
+{"id":"P09-DENIED-NO-AUDIO","status":"PASS"}
+{"id":"P09-REAL-TAB-CAPTURE-8","phase":"START"}
+✖ P09 actual media and current-authority lifecycle (27479.326154ms)
+node:internal/modules/esm/resolve:272
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/app/tools/venus-operator/driver.mjs' imported from /app/tests/p09/operator.test.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:272:11)
+    at moduleResolve (node:internal/modules/esm/resolve:879:10)
+    at defaultResolve (node:internal/modules/esm/resolve:1006:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:705:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:725:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:763:56)
+    at #resolve (node:internal/modules/esm/loader:687:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:607:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:276:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:381:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///app/tools/venus-operator/driver.mjs'
+}
+
+Node.js v24.22.0
+✖ tests/p09/operator.test.mjs (33.269799ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 27992.029921
+
+✖ failing tests:
+
+test at tests/p06/operator.test.mjs:1:1
+✖ tests/p06/operator.test.mjs (62.776305ms)
+  'test failed'
+
+test at tests/p09/authority.test.mjs:9:1
+✖ host authority denies stale database grants, rollback and unsafe state (5.653369ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /MEDIA_AUTHORITY_REGRESSED/. Input:
+  
+  'Error: Request could not be completed'
+  
+      at TestContext.<anonymous> (file:///app/tests/p09/authority.test.mjs:11:423)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Request could not be completed
+        at requireThat (file:///app/apps/api/dist/security.js:13:11)
+        at ProtectedAuthority.read (file:///app/apps/api/dist/protected-authority.js:49:9)
+        at ProtectedAuthority.checkpoint (file:///app/apps/api/dist/protected-authority.js:52:43)
+        at file:///app/tests/p09/authority.test.mjs:11:444
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///app/tests/p09/authority.test.mjs:11:423)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1402:25)
+        at Test.start (node:internal/test_runner/test:1262:17),
+    expected: /MEDIA_AUTHORITY_REGRESSED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests/p09/integration.mjs:34:1
+✖ P09 actual media and current-authority lifecycle (27479.326154ms)
+  page.waitForFunction: Timeout 20000ms exceeded.
+      at waitLive (/app/tests/p09/integration.mjs:30:36)
+      at /app/tests/p09/integration.mjs:42:643
+      at async record (/app/tests/p09/integration.mjs:19:95)
+      at async TestContext.<anonymous> (/app/tests/p09/integration.mjs:42:3) {
+    name: 'TimeoutError',
+    log: []
+  }
+
+test at tests/p09/operator.test.mjs:1:1
+✖ tests/p09/operator.test.mjs (33.269799ms)
+  'test failed'
+

@@ -46,3 +46,5 @@ VOLUME ["/var/lib/venus"]
 EXPOSE 4300
 STOPSIGNAL SIGTERM
 CMD ["node", "apps/api/dist/server.js"]
+
+COPY tools/media-inventory.mjs tools/media-inventory.mjs

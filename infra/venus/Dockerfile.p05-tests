@@ -27,9 +27,12 @@ COPY packages packages
 COPY tests tests
 COPY tools/music-demo.mjs tools/music-demo.mjs
 COPY tools/media-provision.mjs tools/media-provision.mjs
+COPY tools/venus-operator tools/venus-operator
 COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
 COPY infra/venus/compose.standalone.yml infra/venus/compose.media.standalone.yml infra/venus/
 COPY .docs/contracts/venus-standalone-release.v1.schema.json .docs/contracts/venus-standalone-release.v2.schema.json .docs/contracts/
 RUN npm run build && mkdir -p /artifacts /media-fixture && chown node:node /artifacts /media-fixture
 USER 1000:1000
 CMD ["node", "tests/p05/browser.mjs"]
+
+COPY tools/media-inventory.mjs tools/media-inventory.mjs
