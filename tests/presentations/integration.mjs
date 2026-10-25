@@ -1,4 +1,4 @@
-/* global window, document, URL */
+/* global window, document */
 /** Targeted original-PDF/real-PG/real-browser integration. No production/device acceptance. */
 import test,{before,after,afterEach} from 'node:test';
 import assert from 'node:assert/strict';

@@ -23,3 +23,13 @@ P11 d21a7e9e закрыт, финальныйmanifestW/ROOT32740paths exit0; о�
 ### 2026-10-25T07:02:38.599800+00:00 — ALL_INITIAL_IMPLEMENTATION_COMPLETE / writers STOP
 
 API/UI/renderer-operator authors сообщили COMPLETE_STOP; первоначальные код, wiring, migration, профили, backup2 и12 integration sources завершены до первого test/build/install/lint/typecheck. Оркестратор также закончил fixed adversary/cleanup/backup-capacity controls существующего runner и P07 preparation runbook. Далее разрешена только фаза targeted test -> fix -> test; общий P07 и длинная P03 статистика не запускаются. Source freeze перед clean commit; manifest будет обновлён после окончания финальных reviewer writes. Две попытки чтения helper по W/.artifacts вместо ROOT дали exit1; исправлены чтением ROOT, не являлись продуктовыми проверками.
+
+
+### 2026-10-25T07:05:02.502484+00:00 — Первые targeted проверки / сохранённые FAIL
+
+Initial commit e724073c clean, ROOT sync71files/indexguard неизменён. static-round01: tsc-b exit2 (inline pg QueryConfig/query_timeout excess typing), affectedeslint exit1/8errors (6React/UI, 2root testsource). Schema probe использует отдельно типизируемый config как существующий Music; tsc-b repeat exit0. Root lint2 исправлены (условный resolve/reject и redundantURLglobal), targetedrepeat exit0. UI6 переданы автору с новым fix01 journal, записи остального кода не разрешались. static-round02 webtypes exit0, JSONschemas exit0, i18n exit0; focused56tests:55PASS/1FAIL — существующий SessionApi equality ожидал error без новогоHTTPstatus. Обновлено точное409ожидание, session-api repeat3PASS/exit0. Новая functional ошибка приложению не маскировалась. Все логи пока ROOT/.artifacts/preza/static-round01|02, dirty fixes являются preflight до следующего clean-source. Общий P07/статистика не запускались.
+
+
+### 2026-10-25T07:06:44.474498+00:00 — Corrections01 STOP / clean Docker candidate
+
+UI fix01 автор завершил, focused lint0/webtypes0; без отключения правил. Root дополнительно связал Linux-only BK1/BK2 и затронутые operator/media compatibility units с тем же Docker запуском, exact helper imageID фиксируется отдельно. Все writers STOP. Далее clean-source native --presentations, без общего P07.

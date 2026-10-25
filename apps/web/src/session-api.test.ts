@@ -12,7 +12,7 @@ describe('room API transport',()=>{
  it('preserves exact retry request identity and exposes only bounded error codes',async()=>{
   const input={request_id:'fixed-request-id',kind:'stop'};const bodies:string[]=[];
   vi.stubGlobal('fetch',vi.fn(async(_path:string,options:RequestInit)=>{bodies.push(String(options.body));return new Response(JSON.stringify({code:'CONSENT_PROPOSAL_STALE',message:'private detail'}),{status:409});}));
-  const api=new SessionApi();for(let n=0;n<2;n++) await expect(api.request(`/api/v1/rooms/${id}/game/stop`,input)).rejects.toEqual(new ApiError('CONSENT_PROPOSAL_STALE'));expect(bodies).toEqual([JSON.stringify(input),JSON.stringify(input)]);
+  const api=new SessionApi();for(let n=0;n<2;n++) await expect(api.request(`/api/v1/rooms/${id}/game/stop`,input)).rejects.toEqual(new ApiError('CONSENT_PROPOSAL_STALE',409));expect(bodies).toEqual([JSON.stringify(input),JSON.stringify(input)]);
  });
  it('maps network and malformed response failures to localized service errors',async()=>{
   const api=new SessionApi();vi.stubGlobal('fetch',vi.fn(async()=>{throw new Error('private network detail');}));await expect(api.request('/api/v1/entry-policy')).rejects.toEqual(new ApiError('SERVICE_UNAVAILABLE'));
