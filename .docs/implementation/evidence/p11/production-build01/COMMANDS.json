@@ -1,0 +1,128 @@
+[
+  {
+    "argv": [
+      "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+      "--no-optional-locks",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:28.004485+00:00",
+    "finished_at_utc": "2026-10-25T05:14:28.048448+00:00",
+    "exit_code": 0,
+    "stdout": "source-before.stdout",
+    "stderr": "source-before.stderr"
+  },
+  {
+    "argv": [
+      "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+      "--no-optional-locks",
+      "status",
+      "--porcelain"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:28.048448+00:00",
+    "finished_at_utc": "2026-10-25T05:14:28.154151+00:00",
+    "exit_code": 0,
+    "stdout": "status-before.stdout",
+    "stderr": "status-before.stderr"
+  },
+  {
+    "argv": [
+      "docker",
+      "build",
+      "--progress=plain",
+      "--file",
+      "infra/venus/Dockerfile",
+      "--build-arg",
+      "SOURCE_REVISION=f510c30329d8c0ab90788d271970682245bf2fe9",
+      "--build-arg",
+      "RELEASE_VERSION=0.0.0",
+      "--tag",
+      "venus-p11-production:f510c303",
+      "--iidfile",
+      "C:\\.projects\\venus\\.artifacts\\p06-clean-source01\\.artifacts\\p11-production01\\image-id.txt",
+      "."
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:31.034195+00:00",
+    "finished_at_utc": "2026-10-25T05:14:54.634815+00:00",
+    "exit_code": 0,
+    "stdout": "build.stdout",
+    "stderr": "build.stderr"
+  },
+  {
+    "argv": [
+      "docker",
+      "image",
+      "inspect",
+      "sha256:f1199f9061e7296788add7a9b2bfae1a4efd19b61c28025fb91307062c179713"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:54.634815+00:00",
+    "finished_at_utc": "2026-10-25T05:14:54.914627+00:00",
+    "exit_code": 0,
+    "stdout": "image-inspect.stdout",
+    "stderr": "image-inspect.stderr"
+  },
+  {
+    "argv": [
+      "docker",
+      "run",
+      "--rm",
+      "--network",
+      "none",
+      "--read-only",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges:true",
+      "--cpus",
+      "1",
+      "--memory",
+      "512m",
+      "--pids-limit",
+      "64",
+      "--user",
+      "1000:1000",
+      "--entrypoint",
+      "node",
+      "sha256:f1199f9061e7296788add7a9b2bfae1a4efd19b61c28025fb91307062c179713",
+      "tools/media-inventory.mjs"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:54.914627+00:00",
+    "finished_at_utc": "2026-10-25T05:14:55.745012+00:00",
+    "exit_code": 0,
+    "stdout": "inventory.stdout",
+    "stderr": "inventory.stderr"
+  },
+  {
+    "argv": [
+      "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+      "--no-optional-locks",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:55.746611+00:00",
+    "finished_at_utc": "2026-10-25T05:14:55.806507+00:00",
+    "exit_code": 0,
+    "stdout": "source-after.stdout",
+    "stderr": "source-after.stderr"
+  },
+  {
+    "argv": [
+      "C:\\Users\\pc\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\native\\git\\cmd\\git.exe",
+      "--no-optional-locks",
+      "status",
+      "--porcelain"
+    ],
+    "cwd": "C:\\.projects\\venus\\.artifacts\\p06-clean-source01",
+    "started_at_utc": "2026-10-25T05:14:55.806507+00:00",
+    "finished_at_utc": "2026-10-25T05:14:55.949694+00:00",
+    "exit_code": 0,
+    "stdout": "status-after.stdout",
+    "stderr": "status-after.stderr"
+  }
+]

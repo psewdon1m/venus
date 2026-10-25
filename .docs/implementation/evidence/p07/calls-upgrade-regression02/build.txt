@@ -1,0 +1,147 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 3.73kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/venus-p07-browser-cache:14c5930b
+#4 DONE 0.0s
+
+#5 [patched_node 1/1] FROM docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+#5 resolve docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae 0.0s done
+#5 DONE 0.0s
+
+#6 [media_binary 1/1] FROM docker.io/livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105
+#6 resolve docker.io/livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105 0.0s done
+#6 DONE 0.0s
+
+#7 [dependencies  1/18] FROM docker.io/library/venus-p07-browser-cache:14c5930b@sha256:b2b19b69c0c22d01b7516c0e9ef625ffdcceba42e9ee362e42b4efa9ec0eb12d
+#7 resolve docker.io/library/venus-p07-browser-cache:14c5930b@sha256:b2b19b69c0c22d01b7516c0e9ef625ffdcceba42e9ee362e42b4efa9ec0eb12d 0.0s done
+#7 DONE 0.0s
+
+#8 [internal] load build context
+#8 transferring context: 23.51kB 0.0s done
+#8 DONE 0.0s
+
+#9 [dependencies 10/18] COPY apps/web/package.json apps/web/
+#9 CACHED
+
+#10 [dependencies 17/18] RUN apt-get update && apt-get install -y --no-install-recommends     poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3     python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1     python3.11=3.11.2-6+deb12u9 python3.11-minimal=3.11.2-6+deb12u9     libpython3.11-minimal=3.11.2-6+deb12u9 libpython3.11-stdlib=3.11.2-6+deb12u9     && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [dependencies  6/18] RUN rm -rf /app/apps /app/packages /app/tests /app/tools /app/node_modules
+#11 CACHED
+
+#12 [dependencies  7/18] COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
+#12 CACHED
+
+#13 [runtime 16/18] RUN npm run build && mkdir -p /artifacts /media-fixture && chown node:node /artifacts /media-fixture
+#13 CACHED
+
+#14 [runtime 17/18] COPY tools/media-inventory.mjs tools/media-inventory.mjs
+#14 CACHED
+
+#15 [runtime  9/18] COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
+#15 CACHED
+
+#16 [dependencies  9/18] COPY apps/api/package.json apps/api/
+#16 CACHED
+
+#17 [dependencies 15/18] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#17 CACHED
+
+#18 [dependencies 18/18] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#18 CACHED
+
+#19 [runtime  5/18] COPY tools/music-demo.mjs tools/music-demo.mjs
+#19 CACHED
+
+#20 [runtime 11/18] COPY infra/venus/presentation-app-entry.mjs infra/venus/
+#20 CACHED
+
+#21 [dependencies 11/18] COPY packages/contracts/package.json packages/contracts/
+#21 CACHED
+
+#22 [runtime  4/18] COPY tests tests
+#22 CACHED
+
+#23 [runtime 15/18] COPY .docs/contracts/venus-standalone-release.v4.schema.json .docs/contracts/
+#23 CACHED
+
+#24 [dependencies 14/18] COPY packages/card-catalog/package.json packages/card-catalog/
+#24 CACHED
+
+#25 [dependencies  2/18] COPY --from=patched_node /usr/local/bin/node /usr/local/bin/node
+#25 CACHED
+
+#26 [runtime  1/18] COPY tsconfig*.json ./
+#26 CACHED
+
+#27 [dependencies 16/18] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio iproute2 iptables && rm -rf /var/lib/apt/lists/*
+#27 CACHED
+
+#28 [runtime 14/18] COPY .docs/contracts/venus-standalone-release.v1.schema.json .docs/contracts/venus-standalone-release.v2.schema.json .docs/contracts/
+#28 CACHED
+
+#29 [dependencies  3/18] COPY --from=patched_node /usr/local/lib/node_modules /usr/local/lib/node_modules
+#29 CACHED
+
+#30 [runtime  7/18] COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
+#30 CACHED
+
+#31 [dependencies 13/18] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#31 CACHED
+
+#32 [runtime  3/18] COPY packages packages
+#32 CACHED
+
+#33 [runtime  6/18] COPY tools/media-provision.mjs tools/media-provision.mjs
+#33 CACHED
+
+#34 [runtime 10/18] COPY infra/venus/presentation-guardian.py infra/venus/presentation-render.py infra/venus/presentation-dependencies.json infra/venus/
+#34 CACHED
+
+#35 [runtime  2/18] COPY apps apps
+#35 CACHED
+
+#36 [runtime 12/18] COPY infra/venus/compose.standalone.yml infra/venus/compose.media.standalone.yml infra/venus/
+#36 CACHED
+
+#37 [dependencies  8/18] COPY package.json package-lock.json .npmrc ./
+#37 CACHED
+
+#38 [dependencies  5/18] WORKDIR /app
+#38 CACHED
+
+#39 [runtime  8/18] COPY tools/venus-operator tools/venus-operator
+#39 CACHED
+
+#40 [dependencies 12/18] COPY packages/i18n/package.json packages/i18n/
+#40 CACHED
+
+#41 [runtime 13/18] COPY infra/venus/compose.presentations.standalone.yml infra/venus/
+#41 CACHED
+
+#42 [dependencies  4/18] COPY --from=patched_node /usr/local/include/node /usr/local/include/node
+#42 CACHED
+
+#43 [runtime 18/18] COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs
+#43 CACHED
+
+#44 exporting to image
+#44 exporting layers 0.0s done
+#44 exporting manifest sha256:3c77c5eb35b9699234b06e88291ebf615d51afbc2bef8ff34637110d251179f8 done
+#44 exporting config sha256:284631c23c94bffa66155e20c8d913a38371addc12167a1358e536da523232fe done
+#44 exporting attestation manifest sha256:8bb310f77864cf0d16fc3f64a2fad26e0eb08a949ea1a44894a31134fb4bfb72 0.0s done
+#44 exporting manifest list sha256:04d3f6b8b9fd28d0dfd6359208703c50632e95e8ced95c967309fde4e0e7d940 done
+#44 naming to docker.io/library/venus-p05-ac3c6e6b4e06:local done
+#44 unpacking to docker.io/library/venus-p05-ac3c6e6b4e06:local 0.1s done
+#44 DONE 0.3s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/u7a0yz581xhlr0gzjqz00o2ng

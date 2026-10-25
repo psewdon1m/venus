@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/contract_review",
+  "gate_id": "PLAN-PRESENTATIONS-ENTRY",
+  "round": "entry-round01",
+  "status": "PASS_IMPLEMENTATION_WITH_MANDATORY_FENCES",
+  "scope": "standalone-local-pilot-v2/U-022-U-023",
+  "source_pin": "aeca0de85a54ca8c30ff9c7143f9352fdddfdecf",
+  "implementation_entry_allowed": true,
+  "feature_enable_allowed": false,
+  "feature_exit": "NOT_RUN",
+  "stage_pass": false,
+  "runtime_tests": "NOT_RUN",
+  "build_install": "NOT_RUN",
+  "production_devices": "NOT_RUN",
+  "no_owner_answer_required_for_bounded_remedies": true,
+  "mandatory_fences": [
+    {
+      "id": "PREZA-E01",
+      "severity": "P1",
+      "condition": "Global admission/storage reserve plus compatible bounded pg_dump/read/archive/restore envelope; actual worst accepted-data restore before enablement."
+    },
+    {
+      "id": "PREZA-E02",
+      "severity": "P1",
+      "condition": "Geometry/pixels, memory/CPU/pids/RLIMIT/scratch/output/time/concurrency, no network/secrets/socket, bounded IPC and output validation."
+    },
+    {
+      "id": "PREZA-E03",
+      "severity": "P1",
+      "condition": "Protected presentation deletion and minimum content-generation authority preserved across DB rollback and reconciled before serving."
+    },
+    {
+      "id": "PREZA-E04",
+      "severity": "P1",
+      "condition": "Current room/member/entry/serving/content/job generation fences on final publish/delivery; atomic replacement and stale-job cancellation."
+    }
+  ],
+  "next_action": "Orchestrator may prepare new presentation contract/ADR and implement all fences; only then impacted checks and independent exit review. Final P07 remains unpassed.",
+  "report": "REPORT.md",
+  "inputs": "INPUTS.json",
+  "complete_stop_after_index_and_journal": true
+}

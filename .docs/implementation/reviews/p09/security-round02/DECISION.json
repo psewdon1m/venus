@@ -1,0 +1,67 @@
+{
+  "format": 1,
+  "reviewer": "p09-security-review02",
+  "independent_nonauthor": true,
+  "stage": "P09",
+  "gate": "SECURITY_SOURCE_REPEAT",
+  "status": "CHANGES_REQUIRED",
+  "security_privacy_pass": false,
+  "full_stage_pass": false,
+  "source_git": "ba039f8731a053de030199394e754a5589e57431",
+  "prior_findings": [
+    {
+      "id": "S09-01",
+      "status": "PARTIALLY_FIXED_STILL_OPEN_RESTART_PENDING_RECEIPT_LOSS",
+      "file": "apps/api/src/media.ts",
+      "lines": [
+        31,
+        117
+      ]
+    },
+    {
+      "id": "S09-02",
+      "status": "CLOSED_MODE_IMPLEMENTED_OPEN_MODE_REGRESSION_S09_03",
+      "runtime_proof": "Parent partial progress only, not frozen independent acceptance"
+    }
+  ],
+  "findings": [
+    {
+      "id": "S09-01",
+      "priority": 2,
+      "issue": "API boot/changed boot clears pending cutoff without termination receipt",
+      "minimum_fix": "Preserve pending until positive removal/quiescence; verify restart between failure and retry"
+    },
+    {
+      "id": "S09-03",
+      "priority": 2,
+      "status": "AUTHOR_ACCEPTED_NOT_RETESTED",
+      "file": "tools/venus-operator/driver.mjs",
+      "line": 81,
+      "issue": "Always-prepare v3 healthy rejects normal open-gate update preflight",
+      "minimum_fix": "Open read-only authenticated readiness; closed prepare; retain v2 behavior"
+    },
+    {
+      "id": "S09-04",
+      "priority": 2,
+      "origin": "AUTHOR_REPORTED_INDEPENDENTLY_SOURCE_CONFIRMED",
+      "file": "apps/api/src/media.ts",
+      "line": 100,
+      "issue": "Release old lease retires newer member scope",
+      "minimum_fix": "Exact requested lease filter; publisher expansion only same upstream scope"
+    }
+  ],
+  "required_targeted_checks": [
+    "Restart while pending cutoff remains unconfirmed; retry must not succeed",
+    "Open-gate healthy success without lease retirement/child reboot; media-dead rejection",
+    "Delayed old release cannot revoke newer scope; publisher expansion exact upstream",
+    "Persistent failure explicit stop/release/reaccept retries",
+    "Actual complete corrected RTC profile and lifecycle/restore proof"
+  ],
+  "P07_pass": false,
+  "production_pass": false,
+  "physical_devices_pass": false,
+  "signed_001_new_feature_claim": false,
+  "prior_rounds_preserved": true,
+  "writer_status": "COMPLETE_STOP",
+  "created_at_utc": "2026-10-25T02:39:33.789Z"
+}

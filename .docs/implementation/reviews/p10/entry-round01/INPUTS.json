@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/contract_review",
+  "captured_at_utc": "2026-10-25T03:30:52.241849+00:00",
+  "root_git_at_capture": "b5436cde02dd09aa049ce0103cab58d9642e8c70",
+  "scope": "P10_INDEPENDENT_ENTRY_NO_IMPLEMENTATION",
+  "local_inputs": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "b14a918e631b79f2684bfd50a85aa7cc9d5f70c480cbe881d46bbfb9627479cb",
+      "bytes": 4220
+    },
+    {
+      "path": ".docs/10_IMPLEMENTATION_PLAN.md",
+      "sha256": "171139ce387bc9af063fdf7f5e68b235166c7b2fa1728a745a159e182b46c501",
+      "bytes": 81891
+    },
+    {
+      "path": ".docs/adr/ADR-035-functional-development-before-final-pilot.md",
+      "sha256": "7e9b077ee378a290f89fe3f85369ffd24f9113c8e128256097fa48f9e449a009",
+      "bytes": 2393
+    },
+    {
+      "path": ".docs/adr/ADR-002-android-capture.md",
+      "sha256": "52cb0f1f7935b1dce0f97cdc8209fc6783ce8ba9b2542ceb0d2c396b2d937bdd",
+      "bytes": 1916
+    },
+    {
+      "path": ".docs/adr/ADR-003-ios-capture.md",
+      "sha256": "dac7506c02d1355300167fe99dcb74de42407c0d9e187537d819ac9811181f66",
+      "bytes": 1966
+    },
+    {
+      "path": ".docs/implementation/user-decisions.v7.json",
+      "sha256": "951e1c50f75226b1616ab04e6bad9700683ab63ef42db673de8a08264d491970",
+      "bytes": 1374
+    },
+    {
+      "path": ".docs/implementation/user-decisions.v8.json",
+      "sha256": "6ac53668687189fdc2a59ec4ed978b8b222079e4f2058c09a8e1731b73567088",
+      "bytes": 1024
+    },
+    {
+      "path": ".docs/implementation/evidence/p09/functional-acceptance01/INDEX.json",
+      "sha256": "b0ab93d7c60d78b2188d8f8291c0fe3c92625fbd4cd7a2aa2cd26a82d175cb8f",
+      "bytes": 812
+    },
+    {
+      "path": ".docs/implementation/evidence/p09/functional-acceptance01/DECISION.json",
+      "sha256": "df81bb3dcf011cc21c3e4645954247246be619423aaf1c45f49cede4df5147b2",
+      "bytes": 1246
+    },
+    {
+      "path": "packages/contracts/src/media.ts",
+      "sha256": "aa1e19d635636e3f818714bce986d52d65ee1600c9cad063e1d2e09d4a000441",
+      "bytes": 729
+    },
+    {
+      "path": "apps/api/src/media.ts",
+      "sha256": "68bcf8366fd5f0c6b1f3d271a43c24f8e9a6270776283ce3ae231291835422db",
+      "bytes": 28794
+    },
+    {
+      "path": "apps/api/src/media-routes.ts",
+      "sha256": "fdc6ba7b04474a8fd1d2ec7ceaca6e0169bb64b8d808bf484fc57da8495338df",
+      "bytes": 8012
+    },
+    {
+      "path": "apps/api/src/rooms.ts",
+      "sha256": "bb29170d39e8ba936c8a65bd901b322cbd3c5450b0af0eeb353b7339143f3085",
+      "bytes": 45877
+    },
+    {
+      "path": "infra/venus/compose.media.standalone.yml",
+      "sha256": "e8854e8d8dd2d2ee88c08579d0c0024e45799c0a0a87c8f4f1888850335cacb9",
+      "bytes": 3632
+    },
+    {
+      "path": "package.json",
+      "sha256": "c088bf89785bae16826b04f744f13fb85c04c33a86a7db6eb8d16646d17b2c2e",
+      "bytes": 2807
+    }
+  ],
+  "p09_acceptance_index_sha256": "b0ab93d7c60d78b2188d8f8291c0fe3c92625fbd4cd7a2aa2cd26a82d175cb8f",
+  "p09_accepted_runtime_git": "3dad49ae02d62708977fd83aa1b3cfdfecd564eb",
+  "p09_accepted_runtime_core": "1b7758fd93c67d92312d9338760c08ff63d7616615bb001cadf3a2a88ccceb40",
+  "primary_sources": [
+    {
+      "id": "A1",
+      "url": "https://developer.android.com/media/grow/media-projection",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "System consent per capture session; Android14+ one-use projection intent/virtual display and mediaProjection foreground service; onStop must release resources.",
+      "observation_sha256": "237174355eeaea34c379522f6a29873e6aba77cadf0e6623615fbf163d4c6216",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "A2",
+      "url": "https://developer.android.com/media/platform/av-capture",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Playback capture starts Android10, requires RECORD_AUDIO and user-approved MediaProjection, same profile, eligible usage and source capture policy. Source restrictions cannot be overridden.",
+      "observation_sha256": "a2ac9c439fafb43e2c9275109ec76d71a26cf8a748ea1948101477953db8284c",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "A3",
+      "url": "https://developer.android.com/build/building-cmdline",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Gradle wrapper supports Windows/Linux command-line APK builds; build feasibility is separate from device runtime capture evidence.",
+      "observation_sha256": "92546a2fc93b9bea450c2eb6a46b52b150a2df28e148aab7d9bbefea5b392185",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "A4",
+      "url": "https://developer.android.com/studio/publish/app-signing",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Installed APKs must be signed. Debug signing can support local development; release signing and store distribution are separate.",
+      "observation_sha256": "2fe6dbd07554aa712bf35a09b0fbb9777b5e0c8c574d2ab877e1ac4123ed2b56",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "I1",
+      "url": "https://developer.apple.com/documentation/screencapturekit/capturing-screen-content-on-ios",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Current Apple sample requires iOS27+ and documents system picker and background modes; page flags preliminary technology. It is not evidence for an older iOS target.",
+      "observation_sha256": "6e596d41abda2ad4d918cbb76d836a5a5799af9ca763e8bed9aea6e078156998",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "I2",
+      "url": "https://developer.apple.com/documentation/replaykit",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "ReplayKit provides screen/app/microphone capture and broadcast extensions; docs note incompatibility with AVPlayer content. Actual permitted source matrix is required.",
+      "observation_sha256": "a60ac5c9654d314587483e341539ccb453ba2967e3708b277505b0ffb9f10acd",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "I3",
+      "url": "https://developer.apple.com/xcode/system-requirements",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Xcode SDK/toolchain targets require supported macOS versions; Windows/LinuxDocker is not an iOS SDK build/sign execution environment.",
+      "observation_sha256": "f244fb68714f71f094f25c3e6dd9ab1b209970dcd07ff970e0a25adc5ea35230",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "I4",
+      "url": "https://help.apple.com/xcode/mac/current/en.lproj/dev31de635e5.html",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "TestFlight/AppStoreConnect, AdHoc and development distribution have different signing/profile/device requirements.",
+      "observation_sha256": "c35afb7f93bf9b4c5b06a0da8ae5b902889eb1646ae7c0c8aa1f6d7811298400",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "I5",
+      "url": "https://developer.apple.com/help/account/basics/about-your-developer-account",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Personal Team can provision own devices with limits/expiration; this does not establish paid-program distribution or advanced entitlement availability.",
+      "observation_sha256": "1d682396e028d9e71030ecc52619c720ba119b9775467b71549215ce8daac3fa",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "I6",
+      "url": "https://developer.apple.com/documentation/Xcode/configuring-app-groups",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "App Groups permit shared containers/IPC between an app and extension, and require matching capability configuration.",
+      "observation_sha256": "9f36eb84c2bc6aa65f939767093feac9c9d05e32966ba628636433bc572a9e4a",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    },
+    {
+      "id": "L1",
+      "url": "https://github.com/livekit/client-sdk-swift/blob/main/Docs/ios-screen-sharing.md",
+      "accessed_at_utc": "2026-10-25T03:30:52.241849+00:00",
+      "observation": "Upstream main distinguishes iOS27+ ScreenCaptureKit, older system-wide Broadcast Upload Extension+AppGroup and in-app-only capture without application audio. Main is discovery only, not a pinned Venus dependency.",
+      "observation_sha256": "dd1722186938b56fa98c4260d688bb3a0895bb28c93525aa15329c6046e144d0",
+      "hash_scope": "Reviewer observation text only; not upstream document bytes/source attestation."
+    }
+  ],
+  "mandatory_fences": [
+    {
+      "id": "P10-E01",
+      "requirement": "New versioned mobile ADR/contract before enabling integration",
+      "detail": "Preserve ADR002/003 historical DEFERRED bytes. Record selected Android API/targetSDK and iOS deploymentSDK/capture route, pinned native SDK/licenses/checksums and media-protocol compatibility. No main/latest dependency accepted by this entry."
+    },
+    {
+      "id": "P10-E02",
+      "requirement": "Native admission retains Venus authority",
+      "detail": "Existing host/current18+/room/member/socket-generation/scope+20slease/5srenewal/protected epoch/revocation checks remain. Define native credential handoff, headers and background authority ownership explicitly; no direct SFU/admin endpoint or service signing secret, no browser session cookie/token in URL/deeplink/log/shared world-readable file."
+    },
+    {
+      "id": "P10-E03",
+      "requirement": "Actual AV/permissions/lifecycle, fail closed",
+      "detail": "Android fresh system projection consent + foreground service and playback capture only; iOS selected system picker/broadcast route. No microphone/camera substitution for missing app audio. Handle denied/noaudio/blocked/sourceended/background/OSstop/extensiondeath/processdeath/networkchange; stop current scope, never revive old grant, require new OS consent when needed."
+    },
+    {
+      "id": "P10-E04",
+      "requirement": "Default native publication unavailable until qualified",
+      "detail": "Server allowlist by protocol/platform/native-build capability, not untrusted version text as sole authority. Unknown/incompatible builds denied. UI states code-prepared/unverified and unsupported combinations; desktop/browser participation keeps its existing qualified scope."
+    },
+    {
+      "id": "P10-E05",
+      "requirement": "Separate bounded device-reachable same-host profile",
+      "detail": "Current APP_ORIGIN/ICE127.0.0.1 cannot serve physical phones. Define explicit privateLAN address, trusted scoped TLS hostname/certificate, mediaadvertisedIP/ports and firewall; no global TLS bypass, arbitrary ingress or externalSFU implied. PhysicalLAN profile is new NOT_RUN evidence, not reuse of internalDocker success."
+    },
+    {
+      "id": "P10-E06",
+      "requirement": "Native provenance and rollback",
+      "detail": "Record exact appartifact/digest, server/core/SDK/OS/device/source and signatures; devkeys marked nonrelease, real signing material offGit/image/logs. Retire protected native leases and confirm cutoff, deny bad publisher version, preserve additivestate/ledgers and desktop safety; installed clients are not recalled by a store update."
+    },
+    {
+      "id": "P10-E07",
+      "requirement": "Exit requires independent actual device evidence for both platforms",
+      "detail": "Per declared tuple, real publisher→7viewers AV, permissions/stop/revoke/background/termination/reconnect/networkchange and bounded latency/CPU/battery/thermal profile fixed before tests. No emulated/browser/mock/source-only PASS substituted. No fullG4 until both supported platform scopes and distribution/compatibility gates are demonstrated."
+    }
+  ],
+  "external_inputs": [
+    {
+      "id": "P10-X01",
+      "input": "Android and iPhone/iPad physical devices: models, OS versions, access, capture sources",
+      "status": "NOT_PROVIDED",
+      "owner": "Owner/Device QA",
+      "unblocks": "Supported-matrix choice and mandatory native runtime/device gate; source preparation can proceed."
+    },
+    {
+      "id": "P10-X02",
+      "input": "Supported macOS/Xcode/SDK execution host and Apple account/team/capability/provisioning access",
+      "status": "NOT_PROVIDED",
+      "owner": "Owner/iOS operator",
+      "unblocks": "Actual iOS build/sign/install and entitlement verification; Windows can prepare source only."
+    },
+    {
+      "id": "P10-X03",
+      "input": "Exact Android JDK/Gradle/AGP/SDK/build-tools and native client dependencies/pins/licenses",
+      "status": "NOT_YET_SELECTED_OR_VERIFIED",
+      "owner": "Android engineering",
+      "unblocks": "Reproducible Android build; SDK installation/license acceptance is not done in this entry."
+    },
+    {
+      "id": "P10-X04",
+      "input": "iOS deployment floor and route (older ReplayKit compatibility vs iOS27+ availability-gated ScreenCaptureKit), exact native SDK pin",
+      "status": "OWNER_TARGET_INPUT_AND_ENGINEERING_DECISION_NEEDED",
+      "owner": "Owner/iOS engineering",
+      "unblocks": "Concrete platform implementation and verified capability matrix; not automatic requirement to support every historical iOS."
+    },
+    {
+      "id": "P10-X05",
+      "input": "Pilot distribution choice and identity: Android debug/private signed APK vs store; iOS dev/AdHoc/TestFlight, team/bundle IDs/AppGroup when used",
+      "status": "NOT_PROVIDED",
+      "owner": "Owner/release operator",
+      "unblocks": "Installation/distribution record. Personal Team or store rights are not inferred; no secret upload requested."
+    },
+    {
+      "id": "P10-X06",
+      "input": "Device-reachable local host address/TLS trust/media endpoint profile and permitted access",
+      "status": "NOT_PROVIDED",
+      "owner": "Owner/operator",
+      "unblocks": "Actual phone→samehost transport test; current loopback/internalDocker profile cannot prove it."
+    }
+  ],
+  "execution": {
+    "tests_build_install_checks_run": false,
+    "application_changed": false,
+    "sdk_account_device_presence_probed": false,
+    "source_name_search_no_native_matches": true
+  }
+}

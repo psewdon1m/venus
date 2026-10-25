@@ -1,0 +1,298 @@
+{
+  "status": "FAIL",
+  "scope": "ACTUAL_PUBLISHED_SIGNED_RELEASE_DISPOSABLE_LOCAL_DOCKER_NOT_PRODUCTION",
+  "source_git": "77ee6ea5ab4d1e92fcf53328ede8f8d3fc3994aa",
+  "source_identity": "d44f9f1f0da5dd685685bedfe485046a0e31e5d3fd05c0f457b46e7e5e5e28cc",
+  "release_id": "446bef794ce99f71e95aec4c550049a58b53ca80ebdd440d5a8efebe2755cc7c",
+  "key_id": "59a72237edc78adf5874cd609471324108e55b2ac6e81f7ac63ed31f1038e1fb",
+  "tag": "venus-v0.0.1",
+  "project": "venus-real-6fd21806d7",
+  "commands": [
+    {
+      "sequence": 1,
+      "args": [
+        "build",
+        "--platform",
+        "linux/amd64",
+        "--target",
+        "runtime",
+        "--build-arg",
+        "DOCKER_CLI_IMAGE=docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04",
+        "-f",
+        "infra/venus/Dockerfile.operator",
+        "-t",
+        "venus-real-6fd21806d7-helper:qualified",
+        "."
+      ],
+      "exit": 0,
+      "ms": 2273,
+      "output": "001.txt"
+    },
+    {
+      "sequence": 2,
+      "args": [
+        "image",
+        "inspect",
+        "venus-real-6fd21806d7-helper:qualified"
+      ],
+      "exit": 0,
+      "ms": 177,
+      "output": "002.txt"
+    },
+    {
+      "sequence": 3,
+      "args": [
+        "volume",
+        "create",
+        "--label",
+        "net.shmoza.venus.real-install=6fd21806d7",
+        "venus-real-6fd21806d7-host"
+      ],
+      "exit": 0,
+      "ms": 147,
+      "output": "003.txt"
+    },
+    {
+      "sequence": 4,
+      "args": [
+        "volume",
+        "inspect",
+        "venus-real-6fd21806d7-host"
+      ],
+      "exit": 0,
+      "ms": 162,
+      "output": "004.txt"
+    },
+    {
+      "sequence": 5,
+      "args": [
+        "run",
+        "--rm",
+        "--label",
+        "net.shmoza.venus.real-install=6fd21806d7",
+        "--user",
+        "0:0",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--cap-add",
+        "CHOWN",
+        "--cap-add",
+        "FOWNER",
+        "--cap-add",
+        "DAC_OVERRIDE",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--cpus",
+        "1",
+        "--memory",
+        "256m",
+        "--pids-limit",
+        "64",
+        "--tmpfs",
+        "/tmp:rw,size=16m",
+        "--mount",
+        "type=volume,source=venus-real-6fd21806d7-host,target=/data",
+        "--mount",
+        "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p06-clean-source01/infra/venus/release-trust.json,target=/trust.json,readonly",
+        "--mount",
+        "type=bind,source=C:\\.projects\\venus\\.artifacts\\p06-service-release01\\anonymous-qualified-assets01,target=/input,readonly",
+        "-e",
+        "CONFIG=eyJwcm9qZWN0IjoidmVudXMtcmVhbC02ZmQyMTgwNmQ3IiwibG9jYWxfcm9vdCI6Ii9kYXRhIiwiaG9zdF9yb290IjoiL3Zhci9saWIvZG9ja2VyL3ZvbHVtZXMvdmVudXMtcmVhbC02ZmQyMTgwNmQ3LWhvc3QvX2RhdGEiLCJwb3J0Ijo0OTQzMiwiYXBwX29yaWdpbiI6Imh0dHBzOi8vMTI3LjAuMC4xOjQzMDAiLCJjb21wb3NlX3RlbXBsYXRlIjoiL29wdC92ZW51cy9pbmZyYS92ZW51cy9jb21wb3NlLnN0YW5kYWxvbmUueW1sIiwidHJ1c3RfZmlsZSI6Ii90cnVzdC5qc29uIiwic29ja2V0IjoiL2RhdGEvc29ja2V0L2V4ZWN1dG9yLnNvY2sifQ==",
+        "--entrypoint",
+        "node",
+        "sha256:c4e6c987eec05149c54fcedf6d75a229f456ee9b0b38041550f26c1e8e796a21",
+        "--input-type=module",
+        "-e",
+        "import fs from 'node:fs';import {randomBytes} from 'node:crypto';import {provision} from './tools/venus-operator/provision.mjs';fs.writeFileSync('/tmp/operator-input',randomBytes(32).toString('hex'),{mode:0o600});provision('/data','/tmp/operator-input');fs.chmodSync('/data',0o700);fs.mkdirSync('/data/release-input',{mode:0o700});fs.chownSync('/data/release-input',1001,1001);for(const f of ['manifest.json','manifest.sig.json','bundle.tar.gz']){fs.copyFileSync('/input/'+f,'/data/release-input/'+f);fs.chmodSync('/data/release-input/'+f,0o644);fs.chownSync('/data/release-input/'+f,1001,1001);}fs.writeFileSync('/data/executor.json',JSON.stringify(JSON.parse(Buffer.from(process.env.CONFIG,'base64'))),{mode:0o400});fs.chownSync('/data/executor.json',1001,1001);console.log(JSON.stringify({gid:fs.statSync('/var/run/docker.sock').gid,provisioned:true,secrets_logged:false}));"
+      ],
+      "exit": 0,
+      "ms": 714,
+      "output": "005.txt"
+    },
+    {
+      "sequence": 6,
+      "args": [
+        "run",
+        "--rm",
+        "--label",
+        "net.shmoza.venus.real-install=6fd21806d7",
+        "--user",
+        "1001:1002",
+        "--group-add",
+        "0",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--cpus",
+        "1",
+        "--memory",
+        "512m",
+        "--pids-limit",
+        "128",
+        "--tmpfs",
+        "/tmp:rw,size=64m",
+        "-e",
+        "HOME=/tmp",
+        "--mount",
+        "type=volume,source=venus-real-6fd21806d7-host,target=/data",
+        "--mount",
+        "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p06-clean-source01/infra/venus/release-trust.json,target=/trust.json,readonly",
+        "--entrypoint",
+        "node",
+        "sha256:c4e6c987eec05149c54fcedf6d75a229f456ee9b0b38041550f26c1e8e796a21",
+        "tools/venus-operator/cli.mjs",
+        "import",
+        "/data/executor.json",
+        "/data/release-input"
+      ],
+      "exit": 0,
+      "ms": 482,
+      "output": "006.txt"
+    },
+    {
+      "sequence": 7,
+      "args": [
+        "run",
+        "--rm",
+        "--label",
+        "net.shmoza.venus.real-install=6fd21806d7",
+        "--user",
+        "1001:1002",
+        "--group-add",
+        "0",
+        "--network",
+        "none",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--cpus",
+        "1",
+        "--memory",
+        "512m",
+        "--pids-limit",
+        "128",
+        "--tmpfs",
+        "/tmp:rw,size=64m",
+        "-e",
+        "HOME=/tmp",
+        "--mount",
+        "type=volume,source=venus-real-6fd21806d7-host,target=/data",
+        "--mount",
+        "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+        "--mount",
+        "type=bind,source=C:/.projects/venus/.artifacts/p06-clean-source01/infra/venus/release-trust.json,target=/trust.json,readonly",
+        "--entrypoint",
+        "node",
+        "sha256:c4e6c987eec05149c54fcedf6d75a229f456ee9b0b38041550f26c1e8e796a21",
+        "tools/venus-operator/cli.mjs",
+        "install",
+        "/data/executor.json",
+        "446bef794ce99f71e95aec4c550049a58b53ca80ebdd440d5a8efebe2755cc7c"
+      ],
+      "exit": 0,
+      "ms": 782,
+      "output": "007.txt"
+    },
+    {
+      "sequence": 8,
+      "args": [
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=venus-real-6fd21806d7"
+      ],
+      "exit": 0,
+      "ms": 152,
+      "output": "008.txt"
+    },
+    {
+      "sequence": 9,
+      "args": [
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=venus-real-6fd21806d7"
+      ],
+      "exit": 0,
+      "ms": 151,
+      "output": "009.txt"
+    },
+    {
+      "sequence": 10,
+      "args": [
+        "ps",
+        "-aq",
+        "--filter",
+        "label=net.shmoza.venus.real-install=6fd21806d7"
+      ],
+      "exit": 0,
+      "ms": 147,
+      "output": "010.txt"
+    }
+  ],
+  "private_service_key_accessed": false,
+  "fixture_signing_key_used": false,
+  "cleanup": "COMPLETE_OWNED_RESOURCES_STOPPED",
+  "helper_image": "sha256:c4e6c987eec05149c54fcedf6d75a229f456ee9b0b38041550f26c1e8e796a21",
+  "import": {
+    "release_id": "446bef794ce99f71e95aec4c550049a58b53ca80ebdd440d5a8efebe2755cc7c",
+    "version": "0.0.1"
+  },
+  "install": {
+    "job_id": "3964dabe-098e-4f45-86b9-a90ebd9cc357",
+    "release_id": "446bef794ce99f71e95aec4c550049a58b53ca80ebdd440d5a8efebe2755cc7c",
+    "phase": "RECOVERY_FAILED",
+    "created_at": "2026-10-24T22:53:57.436Z",
+    "updated_at": "2026-10-24T22:53:57.710Z",
+    "original_error": "IMAGE_ARCHIVE_METADATA",
+    "failure_details": {
+      "operation": null,
+      "exit_code": null,
+      "upstream_status": null
+    },
+    "interrupted_phase": null,
+    "recovery_outcome": "INITIAL_INSTALL_REQUIRES_EXPLICIT_RECOVERY",
+    "events": [
+      {
+        "sequence": 1,
+        "previous": "0000000000000000000000000000000000000000000000000000000000000000",
+        "phase": "INSTALL_CREATED",
+        "at": "2026-10-24T22:53:57.452Z",
+        "hash": "3ee84027ae6c91690f508115f64373e83f2009d699a5934303d3a13c8b5e2bfc"
+      },
+      {
+        "sequence": 2,
+        "previous": "3ee84027ae6c91690f508115f64373e83f2009d699a5934303d3a13c8b5e2bfc",
+        "phase": "INSTALL_PREFLIGHT",
+        "at": "2026-10-24T22:53:57.579Z",
+        "hash": "b0bff62f285aff3bea4654ae4ecf889818fe30698afb06b41b39715e3aca141e"
+      },
+      {
+        "sequence": 3,
+        "previous": "b0bff62f285aff3bea4654ae4ecf889818fe30698afb06b41b39715e3aca141e",
+        "phase": "RECOVERY_FAILED",
+        "at": "2026-10-24T22:53:57.710Z",
+        "hash": "b65143cfdbbe8a5941a1b6e338d733b940cc2edca0eb026642c7f84b28bd99e1"
+      }
+    ],
+    "backup": null
+  },
+  "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'RECOVERY_FAILED'\n- 'COMMITTED'\n",
+  "retained_failed_volume": "venus-real-6fd21806d7-host",
+  "cleanup_errors": [],
+  "finished_at_utc": "2026-10-24T22:53:58.338Z"
+}

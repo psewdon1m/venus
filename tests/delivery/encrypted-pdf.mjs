@@ -1,0 +1,10 @@
+/** Original valid empty-user-password Standard/R2 PDF; no external content or PDF dependency. */
+import {createHash} from 'node:crypto';
+const md5=b=>createHash('md5').update(b).digest();
+function rc4(key,data){const s=Array.from({length:256},(_,i)=>i);let j=0;for(let i=0;i<256;i++){j=(j+s[i]+key[i%key.length])&255;[s[i],s[j]]=[s[j],s[i]];}let i=0;j=0;return Buffer.from(data).map(b=>{i=(i+1)&255;j=(j+s[i])&255;[s[i],s[j]]=[s[j],s[i]];return b^s[(s[i]+s[j])&255];});}
+export function encryptedPdf(){
+ const pad=Buffer.from('28bf4e5e4e758a4164004e56fffa01082e2e00b6d0683e802f0ca9fe6453697a','hex'),owner=Buffer.concat([Buffer.from('VENUS-SYNTHETIC-OWNER'),pad]).subarray(0,32),O=rc4(md5(owner).subarray(0,5),pad),P=Buffer.alloc(4);P.writeInt32LE(-4);const id=md5(Buffer.from('VENUS ORIGINAL ENCRYPTED FIXTURE')),key=md5(Buffer.concat([pad,O,P,id])).subarray(0,5),U=rc4(key,pad),stream=Buffer.from('0.2 0.4 0.8 rg 10 10 80 60 re f'),objectKey=md5(Buffer.concat([key,Buffer.from([4,0,0,0,0])])).subarray(0,10),encoded=rc4(objectKey,stream);
+ const objects=[Buffer.from('<< /Type /Catalog /Pages 2 0 R >>'),Buffer.from('<< /Type /Pages /Count 1 /Kids [3 0 R] >>'),Buffer.from('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 320 240] /Resources << >> /Contents 4 0 R >>'),Buffer.concat([Buffer.from('<< /Length '+encoded.length+' >>\nstream\n'),encoded,Buffer.from('\nendstream')]),Buffer.from('<< /Filter /Standard /V 1 /R 2 /Length 40 /O <'+O.toString('hex')+'> /U <'+U.toString('hex')+'> /P -4 >>')];const parts=[Buffer.from('%PDF-1.4\n% ORIGINAL SYNTHETIC\n')],offsets=[];let size=parts[0].length;
+ for(let i=0;i<objects.length;i++){offsets.push(size);const bytes=Buffer.concat([Buffer.from((i+1)+' 0 obj\n'),objects[i],Buffer.from('\nendobj\n')]);parts.push(bytes);size+=bytes.length;}
+ parts.push(Buffer.from('xref\n0 6\n0000000000 65535 f \n'+offsets.map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size 6 /Root 1 0 R /Encrypt 5 0 R /ID [<'+id.toString('hex')+'><'+id.toString('hex')+'>] >>\nstartxref\n'+size+'\n%%EOF\n'));return Buffer.concat(parts);
+}

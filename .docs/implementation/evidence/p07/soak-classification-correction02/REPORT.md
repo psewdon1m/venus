@@ -1,0 +1,3 @@
+# Additive hour02 raw-alert classification correction
+
+Independent privacy audit caught a prose error in the root sealed hour02 REPORT: the single post-measurement ACTIVE alert is MONITOR_UNAVAILABLE, not readiness. Its sole raw monitor error occurred20:01:27.084Z after measurement_finished_at20:01:20.604Z. The sole post-marker recorded host observation20:01:21.416Z still has live200/ready200. Four earlier alert initialization rows are RECOVERED; there is no readiness ACTIVE in hour02. All720in-hour health records remain200 and all actual runtime thresholds/source/cleanup passed. Original sealed INDEX/REPORT and raw data remain unchanged. This correction changes derived explanation only, not the measurement window or runtime verdict; no rerun is needed.

@@ -1,0 +1,4 @@
+# P07 independent engineering code10 — prepared final authority fence
+
+2026-10-25T17:36:51Z — Started independentcodegatefix10 at475d2bfe plusdirty6files afterauthorSTOP. Ownjournal/report only, oldseals preserved. Read3productiondiffs/direct3testdiffs/actualLinuxlog/receipt/authorjournal, verifiedeagerguardoptionalpreparecontract/receiver/failurepropagation/fallback/freshclosureordering. Consumerinvocationsunchangedfromdesign09audit. No tests/Docker/network/profiler/productedits.
+2026-10-25T17:37:52.529420+00:00 — Independentlyverified6sourcehashes+EOLcounts andLinuxlogreceipt hash.193PASS1expectedunsupportedhostskip3filesexit0, dirtycomponentnotcleanaggregate. SOURCE_ONLY_ACCEPTED no blocker; actualclean8client/60min/currentimage stillmandatory. REPORT/INPUTS saved; allreviewerwritesSTOP, no furtherimprovements/tests.

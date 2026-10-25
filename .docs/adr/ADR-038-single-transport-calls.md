@@ -1,0 +1,7 @@
+# ADR-038 — Calls на едином Venus media transport
+
+2026-10-25. Принято для реализации по U022 и P11entry01, не EXIT/G5. General8 и privatepair2 используют тотже pinnedLiveKit1.13.10/browserSDK2.23.0/NodeSDK2.19.2, чтоCinema. P2P/externalSFU не добавляются. Точные API/data/quality перед первым appизменением — P11_CALLS.md и calls.v1.schema.json.
+
+Одна Callsобласть/member: general либо однаpair, Cinemaнезависим. Pairinvite иaccept — отдельное двустороннееA/Vсогласие, textchat/game согласие не переносится. Оба участника текущиеonline18+ сsession/generationbound; hostнеимеетoverride. Источники mic/cam явно выбираются приподключении, flagsвключеныв protectedleasebinding/JWT, остальныеsources/data/adminзапрещены. Реальное устройство включается только отдельнойкнопкой; listenonly не вызываетgetUserMedia. Добавление неразрешённого для текущегоleaseисточника требует нового explicitподключения/согласия; grantне расширяется молча.
+
+Первичноеstorageadditive, scopes/APIepoch/sessiongeneration истрогаяпроекция. Restart/restore/новыйSFUboot завершает oldscopes/invites, неавтовосстанавливаетcapture. Generalleave удаляеттолькоparticipant; pairterminal — обоих. Cinema.stop адресуеттолькоCinema; roomclose/fatalsharedfault могутпрерватьвсёmedia. Cutoffpendingdurable, неподтверждённыйcutover невыдаётновыйgrant. Откат: отключитьCallscapabilityversionedoperatorconfig, retireleases/scopes, подтвердитьcutoff, вернутьсовместимыйimage, сохранитьadditivetables/protectedwitness. Signed0.0.1непереписывается. ПолныйG5/P07/public/native/deviceacceptance отдельно.

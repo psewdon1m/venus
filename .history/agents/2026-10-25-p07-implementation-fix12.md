@@ -1,0 +1,23 @@
+# P07 fix12 author — controller measurement end before teardown
+
+- 2026-10-25T18:14:20Z — Parent authorized controller-only lifecycle fix: browser finally emits measurement_finished_at+save before teardown; aggregate validates end and excludes later alert/monitor-error observations from operational recovery verdict while retaining all raw data. Soak started..finished health/resource window600samples and thresholds unchanged. Raw16/browser all12PASS +cleanupcompleted; outerFAIL after teardown health0/unrecovered alert and later Dockerexecerror. Scope tests/p07/integration.mjs +tools/p07-aggregate.mjs +ownjournal/artifacts only; no app/C/ROOT/manifest/oldproof edits. First allcode, then finite raw16 re-evaluation, no8min/browser rerun or new framework/testfiles.
+
+- 2026-10-25T18:15:30Z — All controller source edits completed before checks. Browser finally FIRST writes report.measurement_finished_at UTC+save, before context/browser/Pulse/Xserver/pool/service teardown. Controller requires valid chronological browser.started_at<=measurement_finished_at<=finished_at<=currenttime, after controller start, and soak bounds contained. Retains report.alerts/rawalertfile/all hostsamples/monitorerrorfile; operational recovery and monitorerror rejection use only observations dated through validated measurement end. Report explicitly counts later alert/error observations. Missing/invalid marker fails, no legacy fallback added to production runner. Soak exact started..finished host window, >=600coverage, health ALL200 and resource/quality thresholds unchanged. No sampler protocol/new framework/helper/testfile added.
+
+- 2026-10-25T18:16:32Z — Finite actualraw16 re-evaluation executes the updated source validation block, not a hand-reimplemented predicate. Because historical raw16 lacks new marker, an in-memory clone is explicitly labeled legacy and supplies ONLY conservative existing browser.finished_at18:11:12.318Z as upper bound; no earlier end inferred. Updated controller subset PASS:12actualbrowserrecordsPASS,runtimecleanupcompleted,16of18alerts operational and both required alerts finallyRECOVERED;2later alerts retained and1of1monitorerrors after bound. Four finite negative cases reject in-windowmonitorerror, in-windowunrecoveredreadinessalert, missingmarker, invalidmarker. No browser/Docker/full8min rerun. These checks validate controller classification only; not a new aggregate or fullP07PASS. Original raw16/report.json remainsFAIL and unmodified.
+
+- 2026-10-25T18:16:32Z — Important retained limits: raw16 has7in-window non200health samples (2deliberateDB503 and5readytimeouts) whose alerts all recover before end; do NOT claim all bad health happened after end. The failure-causing unrecovered live/ready0 sample at18:11:13.271Z and monitorDockererror18:11:18.159Z are after conservative bound. Preflight's existing recovered-alert rule allows prior transient/fault observations; unchanged soak's ALL200 rule would reject such observations inside the hour. Parent explicitly informed.
+
+- 2026-10-25T18:16:32Z — Node24.22.1 targeted ESLint integration+aggregate exit0; rawreevaluation and negative assertions exit0. No source changes after initial edits/checks. Exact final CRLF conventions preserved: integration125CRLF/125LF, aggregate63CRLF/63LF. Own additive receipt .artifacts/p07-controller-fix12/raw16-additive-reevaluation.json includes all5rawinput hashes, originalFAIL disposition, conservative bound, rawpostend errors, explicit in-windowhealth samples and controllerhash.
+
+Final SHA256:
+- tests/p07/integration.mjs775d5ea4c9a4b4bc2b371ed1f4baf832e9b1ba78f5d2877fb9c0cea4a224a27a
+- tools/p07-aggregate.mjsc4daf80a6afefcfd567f590277d37c05b37c345fdcaa598d9ebd2a9a2c8c6114
+- raw16-additive-reevaluation.jsona754a57bdbdd023d38cb433c01a032bc4a81d58f99128eb99e789a02d96d947d
+- originalraw16/report.jsonb39a6d39b0ccb5d7429b6f40188c3a97d60e772b7e4cee992a2395eea3564d1a
+- originalraw16/p07-browser-report.json39c731cf84b053d4ed974b93f8b8bf503559eb12708ee04dbfb7780bb124f21f
+- originalraw16/host-samples.jsonl704c840ac0110198ded3e99cc068c9ae3d54e6a8cb60864e140eea5394291c5e
+- originalraw16/local-alerts.jsonl962ff700137430dc7c7e56affb2dae8123e6e48fb16321d67bab930e55110b47
+- originalraw16/monitor-errors.jsonlcc20b030abdbd2597b4d560f7dc64800696dad0bd4e1119544d942fe212d2570
+
+- 2026-10-25T18:16:32Z — STOP handoff; controller2files +ownjournal/artifact only. No app/C/ROOT/Git/manifest/oldseal changes, no broad rerun or test framework. Parent independent nonauthor review and remaining genuine hour/operator gates still required. Raw16 historicalFAIL preserved; additive classification does not promote it to new clean aggregatePASS.

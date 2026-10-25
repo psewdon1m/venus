@@ -1,0 +1,8 @@
+import {describe,it,expect} from 'vitest';
+import {Keyring} from './security.js';
+describe('presentation binary envelopes',()=>{
+ const keys=new Keyring('one',{one:Buffer.alloc(32,7).toString('base64')}),aad='venus:presentation:binary:v1:room:doc:version:0';
+ it('preserves arbitrary binary including null bytes while binding room/version/page',()=>{const plain=Buffer.from([0,255,137,80,78,71,0,1]),cipher=keys.encryptBinary(plain,aad);expect(cipher.includes(plain)).toBe(false);expect(keys.decryptBinary(cipher,aad,plain.length)).toEqual(plain);for(const other of [aad+':foreign',aad.replace('version','old-version'),aad.replace(':0',':1')])expect(()=>keys.decryptBinary(cipher,other,plain.length)).toThrow();});
+ it('rejects truncated, modified and oversized binary envelopes',()=>{const cipher=keys.encryptBinary(Buffer.alloc(1024,21),aad);expect(()=>keys.decryptBinary(cipher,aad,1023)).toThrow();expect(()=>keys.decryptBinary(cipher.subarray(0,18),aad,1024)).toThrow();const changed=Buffer.from(cipher);changed[changed.length-1]^=1;expect(()=>keys.decryptBinary(changed,aad,1024)).toThrow();});
+ it('retains existing padded JSON and previous-key binary decryption on key rotation',()=>{const json=keys.encrypt({comfort:42},'private-pref'),binary=keys.encryptBinary(Buffer.from('retained source'),aad),rotated=new Keyring('two',{one:Buffer.alloc(32,7).toString('base64'),two:Buffer.alloc(32,8).toString('base64')});expect(rotated.decrypt(json,'private-pref')).toEqual({comfort:42});expect(rotated.decryptBinary(binary,aad,100).toString()).toBe('retained source');expect(rotated.encryptBinary(Buffer.from('new'),aad)[5]).toBe('t'.charCodeAt(0));});
+});

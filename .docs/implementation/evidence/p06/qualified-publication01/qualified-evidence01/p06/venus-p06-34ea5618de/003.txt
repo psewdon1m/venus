@@ -1,0 +1,49 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.operator
+#1 transferring dockerfile: 883B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${DOCKER_CLI_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 DONE 0.0s
+
+#4 [runtime 1/6] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 DONE 0.0s
+
+#5 [dockercli 1/1] FROM docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 136.65kB 0.0s done
+#6 DONE 0.0s
+
+#7 [runtime 3/6] COPY --from=dockercli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+#7 CACHED
+
+#8 [runtime 2/6] COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
+#8 CACHED
+
+#9 [runtime 6/6] COPY infra/venus/compose.standalone.yml infra/venus/compose.standalone.yml
+#9 CACHED
+
+#10 [runtime 4/6] WORKDIR /opt/venus
+#10 CACHED
+
+#11 [runtime 5/6] COPY tools/venus-operator tools/venus-operator
+#11 CACHED
+
+#12 [fixture 1/1] COPY tests/p06 tests/p06
+#12 CACHED
+
+#13 exporting to image
+#13 exporting layers done
+#13 writing image sha256:24ee239df0ce54d01587e82bbcbc306fa931f31532dba838404ba3a711f62eb0 done
+#13 naming to docker.io/library/venus-p06-34ea5618de-helper:fixture done
+#13 DONE 0.0s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${DOCKER_CLI_IMAGE} results in empty or invalid base image name (line 2)

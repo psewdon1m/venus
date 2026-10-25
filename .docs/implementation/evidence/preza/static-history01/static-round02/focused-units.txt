@@ -1,0 +1,36 @@
+
+ RUN  v5.0.5 C:/Users/pc/.codex/worktrees/p06-standalone-release/venus
+
+ ❯ apps/web/src/session-api.test.ts (3 tests | 1 failed) 35ms
+   ❯ room API transport (3)
+     × preserves exact retry request identity and exposes only bounded error codes 7ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  apps/web/src/session-api.test.ts > room API transport > preserves exact retry request identity and exposes only bounded error codes
+AssertionError: expected Error: CONSENT_PROPOSAL_STALE { …(2) } to deeply equal Error: CONSENT_PROPOSAL_STALE { …(2) }
+
+- Expected
++ Received
+
+  ApiError {
+    "message": "CONSENT_PROPOSAL_STALE",
+    "code": "CONSENT_PROPOSAL_STALE",
+-   "status": undefined,
++   "status": 409,
+  }
+
+ ❯ apps/web/src/session-api.test.ts:15:115
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 6 passed (7)
+      Tests  1 failed | 55 passed (56)
+   Start at  10:03:42
+   Duration  7.10s (tests 78%, import 19%, transform 3%, worker 1%)
+
+    Isolate  7 workers spawned · ~115ms startup each (spawn + environment, per file)
+             at least ~688ms faster with isolate: false — reuses workers across files instead of one per file
+

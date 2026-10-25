@@ -1,0 +1,7 @@
+# P11 compatibility addendum
+
+Media migration003 добавляетCallscopes/sourceflags, primaryschemaGenerationостаётся1. 001/002непереписываются. Media-gen2P09image не является совместимым downgrade дляgen3: егоprobe блокируетserving. Дляfeature rollback использоватьgen3совместимыйimage сcalls_enabled=false, не удалятьтаблицы/не менятьprotectedwitness. Новыйv3signedreleaseinstall/update/recovery остаётсяфинальнымP07; existingvenus0.0.1/v2непереписывать/неимпортироватькакv3.
+
+Owner-only operatorconfiguration calls_enabled boolean (defaulttrue дляmedia-v3) даётфиксированныйVENUS_CALLS_ENABLED. Неверныйтипотклоняется; browser/operatorconsumerpayloadэтупривилегиюнеполучает. Вfixedcompose fallbackfalse. APIвалидируетtrue/false, unknownфейлитstartup; выключениеCallsсreload/restartиспользуетзакрытыйservinggate/stopquiesce иAPIbootretirement. Safetyrelease/leaveнеблокируютсяcapabilityfalse; media/CinemaневыключаютсяфлагомCalls, нообщийprocessrestartпрерываетmediaпоправиламP09.
+
+Callscopeне credential, upstreamnamesopaque. JWT/ключи/deviceIDs/SDP/приватныеpairметаданныевжурналынепопадают. At-restpairconsentmetadataдоступнатолькодоверенномусерверу/БД, это неE2EE. PGbackupберётnewtables; protectedmediaallowlist/witnessнеоткатываются, startup/SFUbootзавершаетстарыеscopes. Testsfullstack/signeddelivery/device/productionpending, неlegacyP06PASSдляновыхбайтов.

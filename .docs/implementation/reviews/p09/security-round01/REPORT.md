@@ -1,0 +1,35 @@
+# P09 independent security/preflight review — round01
+
+**CHANGES_REQUIRED; no P09 stage PASS.** Reviewed the P09 delta from accepted P08 `70ec9416c666483a198d79db21167ebad4ea58c5` to W `1bf51346ffb95f533ec64f10a16d9c503d78132e`. This is a non-author source/preflight review, not an executed RTC acceptance. Supplied31 Linux units are not independently re-executed here; actual RTC is FAIL/under correction per handoff. Older source runs are not relabelled as current proof.
+
+## S09-01 — terminal retries can falsely confirm media cutoff (P2)
+
+`apps/api/src/media.ts:78–88`, with `apps/api/src/rooms.ts:356–357`.
+
+Trigger: RemoveParticipant/DeleteRoom fails and supervisor quiesce cannot confirm termination. The first stop/release durably removes protected authority, closes gateway sockets, marks PG leases revoked/cinema ended, commits safety changes, then returns `MEDIA_CUTOFF_UNCONFIRMED`503. On retry, stop initializes `confirmed=true` and returns early because state is ended; release does the same because the lease is revoked. Neither rechecks backend termination. The same `retireLocked` empty-active-rows shortcut returns true to a second reaccept; that session remains valid after the first503. Continued backend failure can therefore produce a false successful cessation receipt while previously established media termination remains unconfirmed. The independent watchdog is a separate eventual safeguard, not confirmation for this response.
+
+Minimum correction: retry the actual removal of the exact stored scope/lease, or freshly confirm quiescence, before terminal success. Retained revoked metadata can support reconciliation without new DDL; absence of an active row is not confirmation. Unknown scope/lease should not fabricate successful cutoff. Cover the empty-active `retireMember` path used by reaccept (and connect after asynchronous PG retirement), not just stop/release. The author has accepted this finding and proposed exact-scope DeleteRoom/retained-lease removal; that proposal is not reviewed as implemented in this round.
+
+Normal committed room leave/close retries do **not** demonstrate a separate false200 replay: authentication runs before idempotency replay, and those operations revoke the session/close the room, so retry fails401/403. Their first committed safety changes plus503 are appropriate. Keep that behavior.
+
+Relevant verification after correction: in the existing narrow test mechanism, hold admin RPC and supervisor cutoff confirmation unavailable across first operation and retry; assert no success until a real confirmation. Include stop, revoked-lease release and reaccept/empty-active reconciliation. No new framework is required.
+
+## S09-02 — v3 operator accepts app health without media readiness (P2)
+
+`tools/venus-operator/driver.mjs:80`, `apps/api/src/server.ts` readiness probe, `apps/api/src/app.ts` request barrier, `tools/venus-operator/engine.mjs:26–38`.
+
+The new media-v3 driver starts app and media, but `healthy(expected)` still verifies only API `/health/ready` and version. API readiness verifies DB/schema including media tables, not a live supervisor/media child/current epoch. A failed media container/child can coexist with healthy API/PG and be accepted as an installed/updated/recovered healthy v3 delivery. This misses the contract's embedded media readiness requirement.
+
+Minimum correction: add a v3-specific authenticated media readiness/control check, preserving v2 behavior and exact image/source verification. Account for the closed-admission lifecycle: engine deliberately calls healthy with serving(false), and the current internal authority route and Rooms.transaction are behind that barrier. Simply requiring `Media.ready()` inside generic readiness would create a startup dependency cycle. Establish bounded closed-admission media readiness without allowing consumer grants/writes; do not open admission merely to satisfy the health probe. Verify media-dead/app-alive is rejected using the existing operator mechanism, plus successful closed-gate boot when the component is actually ready.
+
+## Reviewed protections and pending evidence
+
+Source review found meaningful controls: room-scoped cookie/Origin gateway on all four paths; no browser admin secret; strict JWT grant/source checks; room/member/session/generation/current acceptance and protected authority at synchronous grant/frame enqueue; bounded frame/pending queues; new random lease UUID and API/SFU epoch bindings; protected allowlist and independent witness outside PG backup; startup retirement; monotonic file verification and explicit provisioning. Authority retirement survives a PG rollback and does not implicitly recreate deleted IDs. Grant activation/enqueue is room-locked; per-frame send rechecks authority. These observations are source assessment, not a runtime claim.
+
+Supervisor confines upstream admin HTTP to loopback, owns only its child/key, filters RTC/RPC paths, reconciles actual participants and has an independent authority-loss cutoff watchdog. UI owns capture/lease/tracks by resource generation, requests capture on user action, stops late captures, distinguishes denial/no-audio, and exposes stop/leave. v3 is explicit and template-pinned; app/media are nonroot, readonly, capability-dropped, have no Docker socket; media has no DB/private/signing-key mount. Backup/restore now requires both owned app and media containers stopped; protected authority/key remain outside the dump. None of this establishes actual signed v3 install/restore success.
+
+Essential current gaps: existing P09 integration source includes four-path foreign cookie/Origin negatives, actual A/V profiles, stale JWT after release, API-loss watchdog and old-PG restore, but lacks dedicated persistent admin+quiesce failure/retry, pending join-vs-close, and gateway/SFU failure checks required by P09_MEDIA. Their absence is not waived by31 units or a successful signaling connection. Add only bounded relevant cases within the existing harness; first obtain actual RTC success on new exact bytes. Lease expiry/client disappearance, admission limit and refreshed-token revocation also require explicit actual evidence before exit acceptance, rather than assuming them from constants or a helper-only unit.
+
+The accepted P09 plan requires actual1+7 video and audio, fixed normal/degraded/TCP profiles and resource bounds, current ACL/revocation/restore failures, Cinema+Games and actual Music pause. These gates remain pending; the review does not request a new statistical framework or historical P05/P06 reruns. Preserve all failed attempts. Public NAT/TURN/DNS/TLS/physical devices, professional content/rights, final P07 and future private-pair Calls remain outside any local P09 result; immutable signed0.0.1 has no new feature claim.
+
+Only this review and the reviewer's own journal were written. No Docker, tests, API, network, app/source, shared status/manifest, root Git or other-agent journal mutations were performed. Exact file hashes are in INPUTS.json. COMPLETE_STOP after final hashing.

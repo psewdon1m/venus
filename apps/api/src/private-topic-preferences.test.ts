@@ -30,6 +30,7 @@ function fixture(withTaxonomy=false) {
  const query=vi.fn(async(text:string,values:unknown[]=[])=>{
   if(text.startsWith('SELECT private_protocol')) return {rows:[{private_protocol:protocol}]};
   if(text.startsWith('SELECT incarnation'))return {rows:missingBirth?[]:[{incarnation:birth.incarnation,minimum_sequence:String(birth.minimumSequence),taxonomy_digest:birth.taxonomy_digest,policy_digest:birth.policy_digest}]};
+  if(text.startsWith('SELECT owner_member_id,rev,cipher'))return {rows:[...(values[1] as string[])].sort().flatMap(owner_member_id=>{const row=preferences.get(owner_member_id);return row?[{owner_member_id,...row}]:[];})};
   if(text.startsWith('SELECT rev,cipher'))return {rows:preferences.has(values[1] as string)?[preferences.get(values[1] as string)]:[]};
   if(text.startsWith('SELECT id FROM room_members'))return {rows:[...(values[1] as string[])].sort().map(id=>({id}))};
   if(text.startsWith('SELECT request_hash'))return {rows:requests.has(values[2] as string)?[{request_hash:requests.get(values[2] as string)}]:[]};
@@ -199,6 +200,22 @@ describe('internal planner topic safety, explicit DB/auth/storage seams',()=>{
   const f=fixture(),s=await observe(f);expect(Object.isFrozen(s)).toBe(true);expect(s.members.map(m=>m.member_id)).toEqual([f.owner,f.other].sort());
   expect(()=>f.service.assertPlannerCurrent(f.room,s)).not.toThrow();
   expect(()=>f.service.assertPlannerCurrent(f.room,structuredClone(s))).toThrow(expect.objectContaining({code:'TOPIC_OBSERVATION_REQUIRED'}));
+ });
+ it('loads eight exact owners in four SQL reads while retaining per-owner fresh ledger/final fences and missing-row defaults',async()=>{
+  const f=fixture(),ids=[f.owner,f.other,...Array.from({length:6},()=>randomUUID())].sort();
+  for(const [index,id]of ids.entries())if(index<7){const rev=index+1,data={schema_version:1,room_id:f.room,owner_member_id:id,rev,incarnation:f.birth.incarnation,taxonomy_digest:f.pins.taxonomy,policy_digest:f.pins.policy,allow:['food','music'],excluded:[]};f.preferences.set(id,{rev:String(rev),cipher:f.keys.encrypt(data,`private-topics:${f.room}:${id}:${f.birth.incarnation}:${rev}:1`)});}
+  f.narrow({roomId:f.room,ownerId:ids[0]!,operationId:randomUUID(),expectedRevision:0,exclude:['music']});f.query.mockClear();f.read.mockClear();vi.mocked(f.lifecycle.open).mockClear();vi.mocked(f.lifecycle.assertLive).mockClear();
+  const state=await f.service.readForPlanner(f.c,f.room,[...ids].reverse());
+  expect(f.query).toHaveBeenCalledTimes(4);expect(f.query.mock.calls.map(([sql])=>sql.split(' FROM ')[0])).toEqual(['SELECT id','SELECT private_protocol','SELECT incarnation,minimum_sequence,taxonomy_digest,policy_digest','SELECT owner_member_id,rev,cipher']);
+  expect(f.query.mock.calls.at(-1)![1]).toEqual([f.room,ids]);expect(f.read).toHaveBeenCalledTimes(16);expect(f.lifecycle.open).toHaveBeenCalledTimes(8);expect(f.lifecycle.assertLive).toHaveBeenCalledTimes(8);
+  expect(state.members.map(member=>member.member_id)).toEqual(ids);expect(state.members[0]!.allow_topic_ids).toEqual(['food']);expect(state.members[0]!.excluded_topic_ids).toEqual(['music']);expect(state.members.at(-1)!.allow_topic_ids).toEqual([]);
+  f.query.mockClear();f.read.mockClear();const again=await f.service.readForPlanner(f.c,f.room,ids);expect(again).not.toBe(state);expect(again).toEqual(state);expect(f.query).toHaveBeenCalledTimes(4);expect(f.read).toHaveBeenCalledTimes(16);
+  f.narrow({roomId:f.room,ownerId:ids[1]!,operationId:randomUUID(),expectedRevision:0,exclude:['food']});expect(()=>f.service.assertPlannerCurrent(f.room,again)).toThrow(expect.objectContaining({code:'TOPIC_STATE_CHANGED'}));
+ });
+ it('batched planner rows retain owner AAD and fail closed when encrypted DB exclusions are ahead of authority',async()=>{
+  const f=fixture();await f.put(['food']);const saved=f.preferences.get(f.owner)!;f.preferences.delete(f.owner);f.preferences.set(f.other,saved);await expect(observe(f)).rejects.toThrow();
+  const g=fixture(),rev=1,data={schema_version:1,room_id:g.room,owner_member_id:g.owner,rev,incarnation:g.birth.incarnation,taxonomy_digest:g.pins.taxonomy,policy_digest:g.pins.policy,allow:[],excluded:['food']};g.preferences.set(g.owner,{rev:String(rev),cipher:g.keys.encrypt(data,`private-topics:${g.room}:${g.owner}:${g.birth.incarnation}:${rev}:1`)});
+  await expect(observe(g)).rejects.toMatchObject({code:'TOPIC_LEDGER_DB_AHEAD',statusCode:503});
  });
  it('rejects invalid/duplicate members before touching a ledger',async()=>{
   const f=fixture();await expect(f.service.readForPlanner(f.c,f.room,[f.owner,f.owner])).rejects.toMatchObject({code:'TOPIC_SAFETY_MEMBERS_INVALID'});expect(f.read).not.toHaveBeenCalled();

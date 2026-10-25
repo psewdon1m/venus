@@ -1,0 +1,98 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 1.36kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [dependencies  1/12] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#3 resolve docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 0.0s done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 31.31kB 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  3/12] COPY package.json package-lock.json .npmrc ./
+#5 CACHED
+
+#6 [dependencies 11/12] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio && rm -rf /var/lib/apt/lists/*
+#6 CACHED
+
+#7 [dependencies  9/12] COPY packages/card-catalog/package.json packages/card-catalog/
+#7 CACHED
+
+#8 [dependencies  8/12] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#8 CACHED
+
+#9 [dependencies  5/12] COPY apps/web/package.json apps/web/
+#9 CACHED
+
+#10 [runtime 2/6] COPY apps apps
+#10 CACHED
+
+#11 [dependencies  6/12] COPY packages/contracts/package.json packages/contracts/
+#11 CACHED
+
+#12 [dependencies 10/12] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#12 CACHED
+
+#13 [dependencies  2/12] WORKDIR /app
+#13 CACHED
+
+#14 [dependencies  7/12] COPY packages/i18n/package.json packages/i18n/
+#14 CACHED
+
+#15 [dependencies 12/12] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#15 CACHED
+
+#16 [runtime 1/6] COPY tsconfig*.json ./
+#16 CACHED
+
+#17 [dependencies  4/12] COPY apps/api/package.json apps/api/
+#17 CACHED
+
+#18 [runtime 3/6] COPY packages packages
+#18 CACHED
+
+#19 [runtime 4/6] COPY tests tests
+#19 DONE 0.0s
+
+#20 [runtime 5/6] COPY tools/music-demo.mjs tools/music-demo.mjs
+#20 DONE 0.0s
+
+#21 [runtime 6/6] RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+#21 0.267 
+#21 0.267 > venus@0.0.0 build
+#21 0.267 > tsc -b && npm run build -w @venus/web
+#21 0.267 
+#21 4.251 
+#21 4.251 > @venus/web@0.0.0 build
+#21 4.251 > vite build
+#21 4.251 
+#21 4.430 vite v8.3.4 building client environment for production...
+#21 4.441 transforming...
+#21 4.497 ✓ 38 modules transformed.
+#21 4.541 rendering chunks...
+#21 4.583 computing gzip size...
+#21 4.588 dist/index.html                   0.39 kB │ gzip:   0.27 kB
+#21 4.588 dist/assets/index-u7DQods-.css    9.74 kB │ gzip:   2.74 kB
+#21 4.588 dist/assets/index-1lVwe5Wf.js   355.74 kB │ gzip: 107.86 kB
+#21 4.588 
+#21 4.589 ✓ built in 158ms
+#21 DONE 4.6s
+
+#22 exporting to image
+#22 exporting layers
+#22 exporting layers 0.2s done
+#22 exporting manifest sha256:45a74e1b2e4a61d2c1c41b302ee2dfa42ab853fbed486c93156fb6d618887cb0 done
+#22 exporting config sha256:12d8c24994e8480d5bd957d1714264088afed6ecb55305428d49dcfef19da942 done
+#22 exporting attestation manifest sha256:7d9ecbb7dcf523ee8c55b175034b2c572718dcd8a2949869fea3c60cee54a6c9 0.0s done
+#22 exporting manifest list sha256:535ad19d6d6d63db493cd79eeb877dae46097b17477969aeac5420a4dd90d057 done
+#22 naming to docker.io/library/venus-p05-3464ab57e6d1:local done
+#22 unpacking to docker.io/library/venus-p05-3464ab57e6d1:local 0.1s done
+#22 DONE 0.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/t2xntss2rxhydr4stthxnombz

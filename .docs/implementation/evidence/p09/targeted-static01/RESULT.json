@@ -1,0 +1,82 @@
+{
+  "source_sha": "17a418676a9deec46d500d358b9973c610f17fcd",
+  "time_utc": "2026-10-25T02:46:57.941433+00:00",
+  "scope": "impacted static and 10 fast regression cases; no statistical P03 suites",
+  "results": [
+    {
+      "check": "types-api",
+      "args": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-b",
+        "packages/contracts",
+        "packages/i18n",
+        "apps/api"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "types-web",
+      "args": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "node_modules/typescript/bin/tsc",
+        "-p",
+        "apps/web/tsconfig.json",
+        "--noEmit"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "lint-impacted",
+      "args": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "node_modules/eslint/bin/eslint.js",
+        "apps/api/src/app.ts",
+        "apps/api/src/media.ts",
+        "apps/api/src/media-routes.ts",
+        "apps/api/src/media-migrations.ts",
+        "apps/web/src/cinema-panel.tsx",
+        "infra/venus/media-supervisor.mjs",
+        "tools/venus-operator/driver.mjs",
+        "tests/p09/integration.mjs",
+        "tests/p09/av-source.mjs",
+        "tests/p05/runtime.mjs",
+        "tests/p05/server.mjs",
+        "tools/p05-browser.mjs"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "regression-unit",
+      "args": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "node_modules/vitest/vitest.mjs",
+        "run",
+        "apps/web/src/session-api.test.ts",
+        "apps/api/src/app.test.ts",
+        "apps/web/src/music-sync.test.ts"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "schemas",
+      "args": [
+        "C:/.projects/venus/.venv/Scripts/python.exe",
+        "-X",
+        "utf8",
+        "-B",
+        "tools/check_schemas.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "check": "i18n",
+      "args": [
+        "C:/Temp/venus-p01-toolchain/node-v24.22.0-win-x64/node.exe",
+        "tools/check-i18n.mjs"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "status": "PASS"
+}

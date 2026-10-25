@@ -1,0 +1,158 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [media_binary 1/1] FROM docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5
+#1 resolve docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile.p05-tests
+#2 transferring dockerfile: 3.32kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5
+#3 DONE 0.0s
+
+#4 [internal] load metadata for docker.io/library/venus-p09-browser-cache:p08-5f4e218550bf
+#4 DONE 0.0s
+
+#5 [dependencies  1/15] FROM docker.io/library/venus-p09-browser-cache:p08-5f4e218550bf@sha256:5f4e218550bf9eb6993e2167a1d16ea4a205734d3ed54fff47e3721aeb4ae73b
+#5 resolve docker.io/library/venus-p09-browser-cache:p08-5f4e218550bf@sha256:5f4e218550bf9eb6993e2167a1d16ea4a205734d3ed54fff47e3721aeb4ae73b 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 1.18MB 0.1s
+#6 transferring context: 1.79MB 0.1s done
+#6 DONE 0.2s
+
+#7 [dependencies  7/15] COPY apps/web/package.json apps/web/
+#7 CACHED
+
+#8 [dependencies  9/15] COPY packages/i18n/package.json packages/i18n/
+#8 CACHED
+
+#9 [dependencies  5/15] COPY package.json package-lock.json .npmrc ./
+#9 CACHED
+
+#10 [dependencies  2/15] WORKDIR /app
+#10 CACHED
+
+#11 [dependencies 15/15] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#11 CACHED
+
+#12 [dependencies  6/15] COPY apps/api/package.json apps/api/
+#12 CACHED
+
+#13 [dependencies 13/15] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio iproute2 iptables && rm -rf /var/lib/apt/lists/*
+#13 CACHED
+
+#14 [dependencies 12/15] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#14 CACHED
+
+#15 [dependencies 14/15] RUN apt-get update && apt-get install -y --no-install-recommends     poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3     python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1     python3.11=3.11.2-6+deb12u9 python3.11-minimal=3.11.2-6+deb12u9     libpython3.11-minimal=3.11.2-6+deb12u9 libpython3.11-stdlib=3.11.2-6+deb12u9     && rm -rf /var/lib/apt/lists/*
+#15 CACHED
+
+#16 [dependencies 10/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#16 CACHED
+
+#17 [dependencies  4/15] COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
+#17 CACHED
+
+#18 [dependencies  8/15] COPY packages/contracts/package.json packages/contracts/
+#18 CACHED
+
+#19 [dependencies  3/15] RUN rm -rf /app/apps /app/packages /app/tests /app/tools /app/node_modules
+#19 CACHED
+
+#20 [dependencies 11/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#20 CACHED
+
+#21 [runtime  1/18] COPY tsconfig*.json ./
+#21 CACHED
+
+#22 [runtime  2/18] COPY apps apps
+#22 DONE 0.1s
+
+#23 [runtime  3/18] COPY packages packages
+#23 DONE 0.0s
+
+#24 [runtime  4/18] COPY tests tests
+#24 DONE 0.0s
+
+#25 [runtime  5/18] COPY tools/music-demo.mjs tools/music-demo.mjs
+#25 DONE 0.0s
+
+#26 [runtime  6/18] COPY tools/media-provision.mjs tools/media-provision.mjs
+#26 DONE 0.0s
+
+#27 [runtime  7/18] COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
+#27 DONE 0.0s
+
+#28 [runtime  8/18] COPY tools/venus-operator tools/venus-operator
+#28 DONE 0.0s
+
+#29 [runtime  9/18] COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
+#29 DONE 0.0s
+
+#30 [runtime 10/18] COPY infra/venus/presentation-guardian.py infra/venus/presentation-render.py infra/venus/presentation-dependencies.json infra/venus/
+#30 DONE 0.0s
+
+#31 [runtime 11/18] COPY infra/venus/presentation-app-entry.mjs infra/venus/
+#31 DONE 0.0s
+
+#32 [runtime 12/18] COPY infra/venus/compose.standalone.yml infra/venus/compose.media.standalone.yml infra/venus/
+#32 DONE 0.0s
+
+#33 [runtime 13/18] COPY infra/venus/compose.presentations.standalone.yml infra/venus/
+#33 DONE 0.0s
+
+#34 [runtime 14/18] COPY .docs/contracts/venus-standalone-release.v1.schema.json .docs/contracts/venus-standalone-release.v2.schema.json .docs/contracts/
+#34 DONE 0.0s
+
+#35 [runtime 15/18] COPY .docs/contracts/venus-standalone-release.v4.schema.json .docs/contracts/
+#35 DONE 0.0s
+
+#36 [runtime 16/18] RUN npm run build && mkdir -p /artifacts /media-fixture && chown node:node /artifacts /media-fixture
+#36 0.285 
+#36 0.285 > venus@0.0.0 build
+#36 0.285 > tsc -b && npm run build -w @venus/web
+#36 0.285 
+#36 4.962 
+#36 4.962 > @venus/web@0.0.0 build
+#36 4.962 > vite build
+#36 4.962 
+#36 5.105 vite v8.3.4 building client environment for production...
+#36 5.114 transforming...
+#36 5.217 ✓ 47 modules transformed.
+#36 5.305 rendering chunks...
+#36 5.386 computing gzip size...
+#36 5.393 dist/index.html                               0.39 kB │ gzip:   0.27 kB
+#36 5.393 dist/assets/index-xx0RDbqd.css               12.45 kB │ gzip:   3.35 kB
+#36 5.393 dist/assets/index-BO3uctxZ.js               417.64 kB │ gzip: 125.47 kB
+#36 5.393 dist/assets/livekit-client.esm-BzVyFppo.js  532.27 kB │ gzip: 138.15 kB
+#36 5.393 
+#36 5.393 ✓ built in 287ms
+#36 5.394 [plugin builtin:vite-reporter] 
+#36 5.394 (!) Some chunks are larger than 500 kB after minification. Consider:
+#36 5.394 - Using dynamic import() to code-split the application
+#36 5.394 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+#36 5.394 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#36 DONE 5.4s
+
+#37 [runtime 17/18] COPY tools/media-inventory.mjs tools/media-inventory.mjs
+#37 DONE 0.0s
+
+#38 [runtime 18/18] COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs
+#38 DONE 0.0s
+
+#39 exporting to image
+#39 exporting layers
+#39 exporting layers 0.6s done
+#39 exporting manifest sha256:19f28b31c2fca97c0756229362022d7cb09ba4b0f4cecb8fc5d875def73e04d5 0.0s done
+#39 exporting config sha256:70d817e7418026f1d34775cf27ecc112a0759a7b4323fc031e0f99ca6dd80d28 0.0s done
+#39 exporting attestation manifest sha256:eb90a378e46fdcd2d635055288f6b330510e826e19f1d808d05ca30d07251669 0.0s done
+#39 exporting manifest list sha256:05f4cc19e0e1a155cdd095b39155ed6675636ee28dd5c9e121046aacfa536152 0.0s done
+#39 naming to docker.io/library/venus-p05-c8b93c8897d9:local done
+#39 unpacking to docker.io/library/venus-p05-c8b93c8897d9:local
+#39 unpacking to docker.io/library/venus-p05-c8b93c8897d9:local 0.5s done
+#39 DONE 1.3s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/75n9i8e1qw2wrhkm4473e7ak0

@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "created_at_utc": "2026-10-24T23:43:40.867378+00:00",
+  "stage": "P08",
+  "gate": "ENTRY",
+  "reviewer": "/root/p08_entry_gate01",
+  "independent_nonauthor": true,
+  "status": "PASS_DEVELOPMENT_ENTRY_WITH_EXPLICIT_RELEASE_HOLDS",
+  "full_stage_pass": false,
+  "source_checkout": "C:/Users/pc/.codex/worktrees/p06-standalone-release/venus",
+  "source_git": "4954c85f778309142ea5e01b413bd120b7ab1a9a",
+  "accepted_p06_implementation_core": "d44f9f1f0da5dd685685bedfe485046a0e31e5d3fd05c0f457b46e7e5e5e28cc",
+  "accepted_p06_core_count": 1951,
+  "source_identity_recomputed": false,
+  "git_mutations": false,
+  "tests_build_lint_or_install_executed": false,
+  "P07_status": "DEFERRED_FINAL_INTEGRATION_NOT_PASS",
+  "owner_order_authority": {
+    "kind": "direct_owner_chat_message",
+    "quote": "Сначала обращаем внимание на следующие этапы с 8 по 11. ... 7 этап закроем как раз после последних этапов прогоном.",
+    "not_yet_represented_in_v6": true
+  },
+  "permitted_now": [
+    "Design and implement complete room-scoped Music mechanisms using owned/synthetic fixture assets",
+    "Define source revision, music contract, additive migration and rollback before implementation",
+    "After all implementation edits: only touched-mechanism tests, bounded 8-client music drift run, independent exit reviews"
+  ],
+  "exit_holds": [
+    {
+      "id": "P08-ENTRY-H01",
+      "status": "OWNER_INPUT_PENDING",
+      "requirement": "Concrete music source/catalogue decision and track/use/territory/expiry evidence before real tracks. Local-file catalogue is recommendation, not accepted owner decision. No synthetic evidence promoted to third-party rights approval."
+    },
+    {
+      "id": "P08-ENTRY-H02",
+      "status": "FINAL_INTEGRATION_DEFERRED",
+      "requirement": "P07 not passed: public/pilot availability and whole-project acceptance remain withheld until final integration run. Development/module evidence may finish earlier with explicit scoped report."
+    },
+    {
+      "id": "P08-ENTRY-H03",
+      "status": "IMPLEMENTATION_AND_PROOFS_NOT_YET_PRESENT",
+      "requirement": "Authoritative tuple/queue, Range ACL, retention/revoke, client autoplay/drift/output policy, touched Games integration and affected release/rollback proof must be produced."
+    }
+  ],
+  "implementation_requirements": [
+    {
+      "id": "P08-ENTRY-R01",
+      "requirement": "Use room-scoped stream URL under /api/v1/rooms/:roomId/ so existing path-scoped room cookie authenticates native audio; do not broaden cookie scope or put reusable credentials in URL."
+    },
+    {
+      "id": "P08-ENTRY-R02",
+      "requirement": "Native audio read requests cannot set x-csrf-token. Keep same-origin read/session guard distinct from mutation Origin+CSRF. Respect Range/HEAD/status bounds, IDs only, no arbitrary paths/URLs."
+    },
+    {
+      "id": "P08-ENTRY-R03",
+      "requirement": "Reuse current acceptance18+, current room/member/session, ledger and finalAccessFence. Revalidate and abort live delivery on revoke/close/idle expiry; room queue/state must not become cross-room profile or survive retired restore."
+    },
+    {
+      "id": "P08-ENTRY-R04",
+      "requirement": "Host transport/queue only with revisions/idempotency; participant local volume is client-only. In_person has one default speaker with explicit generation-fenced handoff."
+    },
+    {
+      "id": "P08-ENTRY-R05",
+      "requirement": "Authoritative calibrated clock, blocked autoplay recovery, jitter/buffer/reconnect UI. Fix measurement profile and thresholds before first test; proposed 15min/8 clients/p95<=300ms is targeted audio evidence, not heavy game-statistics corpus."
+    },
+    {
+      "id": "P08-ENTRY-R06",
+      "requirement": "Additive migrations and rollback preserve accepted Rooms/Games/private chat, deletion ledger and revoked music rights; downgrade must not reactivate retired asset."
+    },
+    {
+      "id": "P08-ENTRY-R07",
+      "requirement": "Cinema pause hook can be implemented now with unavailable Cinema; actual Cinema+Music check remains pending until P09. Do not assert proof for nonexisting module."
+    }
+  ],
+  "accepted_proof_integrity": [
+    {
+      "stage": "p05",
+      "path": "ACCEPTANCE_LEDGER.json",
+      "status": "HASH_MATCH",
+      "sha256": "bb76c594d7a964523ab40347109d22d4dbc7ee32eb20e3c30b62ce90cc69b637",
+      "bytes": 18772
+    },
+    {
+      "stage": "p05",
+      "path": "DECISION.json",
+      "status": "HASH_MATCH",
+      "sha256": "eb7c3e3fc70b35225419fdbcb52b095bd73a065198072bc1484f536e434860ce",
+      "bytes": 3430
+    },
+    {
+      "stage": "p05",
+      "path": "REPORT.md",
+      "status": "HASH_MATCH",
+      "sha256": "ffa7af2701ae82fe999e3f15ee6f66f13fd7bb9e006f9989dfb51849f24cac1e",
+      "bytes": 6434
+    },
+    {
+      "stage": "p06",
+      "path": "ACCEPTANCE_LEDGER.json",
+      "status": "HASH_MATCH",
+      "sha256": "b298a6c4391909a75bf25e439803fad178b2e88019c83b507bd986d109e1df20",
+      "bytes": 301417
+    },
+    {
+      "stage": "p06",
+      "path": "DECISION.json",
+      "status": "HASH_MATCH",
+      "sha256": "bc07f883ab3fe2a79c0dc64d67958cc7ce9e9b69a1e982293c34f1e566a0a116",
+      "bytes": 311083
+    },
+    {
+      "stage": "p06",
+      "path": "REPORT.md",
+      "status": "HASH_MATCH",
+      "sha256": "c6677e7beb4282bc1f1a2b65891daaf1ee670238a92c322fe79ccbd94fce1745",
+      "bytes": 5905
+    }
+  ],
+  "input_files": {
+    "AGENTS.md": {
+      "sha256": "a122651a3ff16283157b78e788c95be66f854a1a92969ead2ccc526020fa317f",
+      "bytes": 3781
+    },
+    ".docs/10_IMPLEMENTATION_PLAN.md": {
+      "sha256": "8b5e6a51a1e129c73114cc55843ed8d8cb78dff6bfd8f20fb356a684c1509ae9",
+      "bytes": 78597
+    },
+    ".docs/02_TECHNICAL_ARCHITECTURE.md": {
+      "sha256": "a7825eba063e6e6b4353ccc50082516a64affbf0dd4413c9ef4eac6464cb42ae",
+      "bytes": 36160
+    },
+    ".docs/05_CI_QUALITY_AND_RELEASES.md": {
+      "sha256": "6e1da56a201472c4826605606f6fd2d2edf4ef42d7403cce689fbd29ec480511",
+      "bytes": 29439
+    },
+    ".docs/adr/ADR-004-music-rights.md": {
+      "sha256": "669ce8dacfd9a2a34b204096a4f713d4dc12cab9f7f0334f37d88c146aa7ca52",
+      "bytes": 2053
+    },
+    ".docs/adr/ADR-005-retention.md": {
+      "sha256": "25b64d9e5da62728641c9276c034fa8542212be865f1bb41ece62c02d6dcb510",
+      "bytes": 2960
+    },
+    ".docs/implementation/status.md": {
+      "sha256": "a1be416c9b5e155fee778d73e8def37365d31609343f7785b95f19caa9ae9846",
+      "bytes": 38706
+    },
+    ".docs/implementation/traceability.csv": {
+      "sha256": "95de3ddfc4d5d015dc55a5f7fd62b53da352f2a205e44b71da07cf8281f90916",
+      "bytes": 148874
+    },
+    ".docs/implementation/user-decisions.v6.json": {
+      "sha256": "4edeea83db69d8fd372e34c93ab534a10665fcdfdd2fa0dc4cf8b669195a3fbf",
+      "bytes": 1960
+    },
+    ".docs/implementation/reviews/p02/security-final.json": {
+      "sha256": "9d76ee7836d97cc1e7ee3835ca84d6a0039e303859c6504f0f696780608dd0da",
+      "bytes": 475
+    },
+    ".docs/implementation/evidence/p05/final-stage-acceptance01/INDEX.json": {
+      "sha256": "58b680ef116bc2d1f652ea4c3862c1a00b23333100cc65d7bae88bfc7d4f1b81",
+      "bytes": 1412
+    },
+    ".docs/implementation/evidence/p05/final-stage-acceptance01/REPORT.md": {
+      "sha256": "ffa7af2701ae82fe999e3f15ee6f66f13fd7bb9e006f9989dfb51849f24cac1e",
+      "bytes": 6434
+    },
+    ".docs/implementation/evidence/p06/final-stage-acceptance01/INDEX.json": {
+      "sha256": "7d5b6207fcd4c186e1900e85aa189d2e13be17024e6b5a95e337101185990b77",
+      "bytes": 707
+    },
+    ".docs/implementation/evidence/p06/final-stage-acceptance01/REPORT.md": {
+      "sha256": "c6677e7beb4282bc1f1a2b65891daaf1ee670238a92c322fe79ccbd94fce1745",
+      "bytes": 5905
+    },
+    "apps/api/src/rooms.ts": {
+      "sha256": "73df4c1eff7cefb84711ec93a33832c2b7c6d5bdf2719765d3764e3ad5d339d0",
+      "bytes": 44333
+    },
+    "apps/api/src/room-routes.ts": {
+      "sha256": "c60c41df3ad5ed0857914f60207b65820baa1faa63061ee8d872bd0e0b4b6472",
+      "bytes": 17351
+    },
+    "apps/api/src/app.ts": {
+      "sha256": "4eb16213bd22295f4253ace6e45a0f09fbf701eab8d3e549e52bc381f52e05e4",
+      "bytes": 4520
+    },
+    "apps/web/src/room-shell.tsx": {
+      "sha256": "7409c37f0431694182fa48db927a01791df524d8f2ba08c1742b37ec7c1a8f81",
+      "bytes": 10928
+    },
+    "packages/contracts/src/index.ts": {
+      "sha256": "932e8a01405e03e97beb4f418b1e9f0f617576646a745b50bf776b361832ffc9",
+      "bytes": 309
+    },
+    ".docs/contracts/runtime-capabilities.v1.schema.json": {
+      "sha256": "f5126156037c69467d1b0638951f809d07adeb6c7a43d4d4c2e573fd1bd4022d",
+      "bytes": 383
+    }
+  },
+  "writer_status": "COMPLETE_STOP"
+}

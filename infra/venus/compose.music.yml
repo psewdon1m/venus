@@ -1,0 +1,11 @@
+# Optional local catalogue. The base signed deployment remains unchanged.
+# Apply only to a new compatible image/config; never reinterpret venus-v0.0.1.
+services:
+  app:
+    environment:
+      VENUS_MUSIC_CATALOG_FILE: /run/venus-music/catalog.json
+    volumes:
+      - type: bind
+        source: ${VENUS_MUSIC_DIRECTORY:?absolute host music directory required}
+        target: /run/venus-music
+        read_only: true

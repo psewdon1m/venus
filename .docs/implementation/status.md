@@ -1,16 +1,152 @@
-# Текущий статус — P06
+# Текущий статус — CItest-onlyошибкаисправлена; pre-signревизия02 PASS
 
-По прямому U-021/ADR-033 четыре тяжёлых измерения P03 вынесены в отдельный ручной `Venus optional P03 statistics` без изменения выборок/порогов. Защита main фактически требует пять quality/integration проверок; strict и остальные поля защиты сохранены. Незавершённые статистические задания прежнего head отменены, это не PASS.
+2026-10-25T20:36:35.426827+00:00. ПервыйCI(fef66316):container/P02/P03/P06PASS,qualityFAIL1/1378 — тествызывалустаревший1500msтаймервместофактического4000ms, heldnegativeнеотправлялся. Исправлены2селектораводномсуществующемtestfile+проверенофактическоеначалозапроса;16/16PASS/ESLint0. Приложение/UI/controls/Driver/hourruntimeнеизменны; повторчасанетребуется.
 
-CI policy revision8234e88e/coree87 passed5/5mandatory checks, statisticsNOTRUN. P04 expiry test source fix confirmed in actual CI. Это принятый компонент, не доказательство последующей I01-правки.
+Commitc9c652da/core95f359 включаеттолькоtestfile+workflowpointer01→02. ОбаsupplementalнезависимыхгейтаPASS, новаяDECISION02/release-gatePASS118; стараяDECISION01/всеproofсохранены. Docs2209/0errors, policy1/1PASS. ФинальныебайтысmanifestотправляютсявновыйобязательныйCI; предыдущийFAILнепереписан. ПолныйP07/sign/public0.0.2ещёpending. История ниже сохранена.
 
-Текущий clean source9434257/cored44f9f1f/1951: I01 исправлен, unit34PASS и fullDockeractual11:18PASS/41native0/9SIGKILL/реальныйofflinearchive reload/cleanup complete. Два независимых review06 закрыли I01 local и приняли [pre-sign05](evidence/p06/pre-sign-acceptance05/REPORT.md). Прежние source-only и pre-sign04 сохранены; полный EXIT ещё HOLD до currentCI/main/tag/настоящих подписанных assets/точного publishedimage install/anonymouspull.
+# Текущий статус — PR6, пять обязательныхCIзаданий выполняются
 
-Предварительный образ version0.0.0 опубликован, владелец сделал пакет Public, анонимный pull точногоdigest0653678...f4b3e PASS. Это unsignedpreview source195e2302, не qualifiedrelease и не приёмка P06.
+2026-10-25T20:23:50.229053+00:00. [PR6](https://github.com/psewdon1m/venus/pull/6), exactheadfef66316/core36de10a9. Локальныеpre-signгейты/118решений PASS; finalmanifest34624paths проверен0errors вcleanW доcommit. ОсновнаяROOTсверка сначалаобнаружила2нескопированныхисторическихфайлаcontroller-fix12; точныеGitбайтыдобавленыбезизменениясодержимого, повторROOTmanifest0errors. UserGitindex иimmutableP05/P06/P11INDEX сохранены.
 
-Owner-approved key/env готовы U020. Осталось: текущий CI/independent rebind, exactmain/tag, подписанный0.0.1/один OCI/публичные assets, anonymous pull/install точного сервисного digest (пакет уже Public) и финальная независимая приёмка. P07 не начат.
+ПятьобязательныхGitHubконтекстовRUNNING; длинныестатистическиепроверкиневызываются. Новыезаписижурнала/statusпослеfreeze — производнаялокальнаяревизия, не подменаcleanGitHubsnapshotfef66316. Merge/mainCI/qualified0.0.2/source/image/install/sign/anonymousпроверкивпереди; fullP07PASSfalse. История ниже сохранена.
 
-[Реестр](p06-registry.json) · [CI policy proof](evidence/p06/ci-policy-u02101/INDEX.json) · [План](../10_IMPLEMENTATION_PLAN.md).
+# Текущий статус — локальный pre-sign PASS; финальные CI и настоящий выпуск0.0.2 впереди
+
+2026-10-25T20:19:59.870405+00:00. Два независимых финальных pre-signгейта приняли все118пунктов:67localPASS/34N_A/10deferred/7ожидаютподписанныеартефакты. DECISION связан с обоими INDEX; существующийrelease-gate выполнен PRE_SIGN_GATE_PASS/core36de10a9. Реальныйчасовойпрогон/продуктовыецелевыеизмерения/установка/источники иограниченныйоператорскийjitter прошли. Проверка2201Markdownдокумента:0ошибок.
+
+Послеfreezeвсехагентскихзаписей оркестратор обновляетmanifest иотправляетфинальныебайтывобязательныйGitHubCI. Новыйqualifiedtag долженсобратьсвоиsource/image/install ДОподписи; старыеc2eeкомпоненты невыдаютсязафинальныеартефакты. Подпись/анонимныепубличныепроверки покаNOT_RUN; полныйP07PASSfalse. Production/реальнаямузыка/физическиеустройства отложены владельцем. История ниже сохранена.
+
+# Текущий статус — локальные тестовые компоненты PASS; сводятся независимые финальные гейты
+
+2026-10-25T20:08:00.349494+00:00. Текущая реализация60f28783/core36de10a9 отличается от прошедшей строгийчасовойпрогон c2eeb909/corecde7f146 только операторским загрузчиком обновлений. REL11jitter исправлен,1реальныйцелевойLinuxP06-DOWNLOAD PASS/ESLint0; независимыйdiffreview принят доseal. Приложение комнаты/consumerimage/hourruntime не менялись, повторчаса не требуется. Canonical118 и двафинальныхнезависимыхpre-signгейта подготавливаются. CI/настоящаяподпись/публичный0.0.2 ещё впереди; stagePASSfalse.
+
+Уточнение аудита: единственныйпослеизмерительныйACTIVEalert — MONITOR_UNAVAILABLE20:01:27.084Z, а неreadiness; solepostmarkerhostlive/ready200/200. Исходныйsealedотчёт сохранён; [additivecorrection](evidence/p07/soak-classification-correction02/REPORT.md) исправляеттолькоошибочнуюформулировку. Source06/archive/install02 остаются компонентамиc2ee с явнойoperator-onlyparity; финальныйreleaseworkflow соберётновыеsource/image/install для точноготега. [Текущийoperatorv4/BK2handoff](evidence/p07/operator-v4-handoff01/RUNBOOK.md). История ниже сохранена.
+
+# Текущий статус — реальный часовой P07 PASS; финальные технические гейты и поставка впереди
+
+2026-10-25T20:03:54.889610+00:00. Clean c2eeb909/corecde7f146: строгий3603929ms прогон PASS,8клиентов/12distinctgames/3режима/694browser+720host; in-hourlive/readyALL200. RTTp953ms/jitter.003s/loss0/freeze9866ms<=10s; resourceпороги выдержаны. Source unchanged, runtime/ownedcleanup completed. Один rawmonitorerror иreadinessalert после measurement_finished_at сохранены и исключены только как teardown.
+
+P10mobileWEB закрыт, preflight/Cinema32/Calls32/install02/source06 приняты как компоненты. Остался узкий REL11 jitter загрузчика обновлений: выполняется исправление с существующимцелевымтестом; код комнаты не затронут. Далее118пунктов/двафинальныхнезависимыхгейта/одинфинальныйCI/подписанныйпубличный0.0.2. ПолногоP07/releasePASS пока нет. [Текущий operator v4/BK2 handoff](evidence/p07/operator-v4-handoff01/RUNBOOK.md); production/реальныеустройства/реальнаямузыка отложены владельцем. История ниже сохранена.
+
+# Текущий статус — запущен строгий часовой P07, попытка02
+
+2026-10-25T19:00:49.690136+00:00. Clean c2eeb909/corecde7f146. Новый exact production install02:4PASS, очистка завершена. Source06:565archives/999notices, независимая проверка PASS с подготовкой seal. Fix13:21PG/TypeScript/ESLint PASS и независимый source gate. Запущен ownedvenus-p07-f91c630aeb9e: подготовка, затем реальные60минут,8клиентов,≥10completedgames/3режима, строгиеhealth/resource/media-пороги. Результата ещё нет; первый FAIL сохранён. Тяжёлые локальные задачи завершены;CI будет один раз на финальном evidence head. P10 mobileWEB закрыт. Подписанный0.0.2/публичная поставка и полныйP07 ещё не приняты. Productiondeploy не выполняется. История ниже сохранена.
+
+# Текущий статус — исправление readiness принято; обновляется точная поставка перед часовым P07
+
+2026-10-25T18:56:23.967353+00:00. Clean c2eeb909/core cde7f146: исправление проверки готовности (один checkout, восемь свежих SQL-проверок) прошло21 целевую PostgreSQL-проверку, TypeScript и ESLint; независимый engineering-exit13 принял исходники. Новая production0.0.2 собрана. Идут точная локальная установка02 и сбор исходников06; затем повторный строгий реальный60минутный P07. Первый FAIL сохранён; hour PASS ещё нет. P10 mobileWEB закрыт двумя независимыми проверками. Полные P07/подписанный0.0.2/публичная поставка ещё не закрыты. Productiondeploy не выполняется. История ниже сохранена.
+
+# Текущий статус — P10 закрыт; P07 остановлен на задержке readiness
+
+2026-10-25T18:38:02.159256+00:00. Первый строгий часовой прогон остановлен досрочно: readiness не ответил в3секунды на9-й секунде измерения; оставшийся час не расходуется. Сохранены raw/критерий/намеренный exit137; внешняя очистка завершена. Это не OOM и не подтверждённое падение API. Разбирается узкая правка приложения:8freshschema-checks на одном соединении вместо8повторных ожиданий пула, без изменения запросов/порогов/прав доступа. Часовой PASS не выдан.
+
+P10mobileWEB закрыт;12реальных browserPASS короткого прогона независимо приняты с сохранённым outerFAIL; Cinema32/Calls32, точная production-установка4 и565source/999notices — принятые компоненты3dbf. После исправления health нужен успешный60минутный P07, финальные гейты и подписанная публичная поставка0.0.2. Productiondeploy не выполняется. История ниже сохранена.
+
+# Текущий статус — P10 закрыт; запущен реальный часовой P07
+
+2026-10-25T18:31:02.933975+00:00. P10 mobileWEB принят двумя независимыми агентами. Короткий P07 принят как компонент по12реальным browserPASS с сохранённым исходным outerFAIL и независимой переоценкой позднего мониторинга. Cinema32/32 и Calls32/32 PASS. Точный production0.0.2 на clean3dbf/corefc809 установлен настоящим Driver:4проверки PASS; временные ресурсы очищены. Новый565source/999notice комплект независимо принят.
+
+Запущен P07soak в8клиентах (ownedvenus-p07-bb7476f32a63): подготовка, затем реальные60минут,≥10completedgames/3режима, совместные модули, строгие health/resource/media-пороги. Результата ещё нет, полного P07/releasePASS не выдано. Тяжёлых параллельных локальных задач во время измерения не будет. Реальные устройства/OSусловия/треки иproductiondeploy остаются отложенными владельцем; подписанный0.0.2/публичная поставка впереди. История ниже сохранена.
+
+# Текущий статус — P10 mobileWEB закрыт; P07: установка образа, затем часовой прогон
+
+2026-10-25T18:28:10.581111+00:00. P10 принят двумя независимыми агентами в согласованном локальном веб-объёме:18+,21активная ячейка RU/EN/TR,touch/Tab/modal/safearea/orientation, настоящий приватный ввод. Native не требуется; физические устройства/OS-клавиатуры и внешние условия послеdeploy отложены владельцем.
+
+Короткий P07 принят как компонент по12фактическим browserPASS с независимой переоценкой позднего мониторинга; исходный outerFAIL и7восстановившихся ранних health-наблюдений сохранены. Нового полного исполнения при переоценке не было. Текущий clean3dbf/corefc809 меняет только границу обёртки, приложение совпадает с runtime2ec. Cinema32/32 и Calls32/32 PASS. Собраны production0.0.2 и565sourcearchives/999notices. Идёт изолированная установка точного образа. Строгий реальный60минутный P07 ещё NOT_RUN; подписанный0.0.2/публичная поставка ещё не приняты. Productiondeploy не выполняется. История ниже сохранена.
+
+# Текущий статус — Cinema/Calls прошли, приватный чат ожидает реальный TTL
+
+2026-10-25T18:09:01.034779+00:00. Clean2ec/core4c7006: Cinema32/32 и Calls32/32 PASS после исправления взаимной блокировки; независимый гейт реализации принят. Preflight16: вход18+, реальные сбои/восстановлениеБД,3режима, reconnect, приватныйCalls, совместные модули, мобильная матрица21/touch/orientation и ввод приватного сообщения PASS. Идёт реальное ожидание TTL, итоговый receipt ещё не готов. Далее точный productionimage/install/sources и часовой soak; полный P07/P10/release ещё не выдан. Реальные треки и условия/устройства послеdeploy отложены владельцем. История ниже сохраняется.
+
+# Текущий статус — совместные модули прошли; сценарий приватного чата требует исправления
+
+2026-10-25T17:45:47.795112+00:00. Clean5de: совместные Calls/Cinema/Music/PDF и активная мобильная матрица21/touch/orientation PASS. Preflight15 остановился позднее: сценарий не получил приватную карточку за20раундов, compose/реальныйTTL ещё не проверены. Проверяется допустимость исходных настроек сценария, количество случайных раундов не увеличивается. Идёт отдельная существующая проверка Cinema на обновлённом LiveKit. Часовой soak NOT_RUN; полного P07/P10 и подписанного0.0.2 ещё нет. История ниже сохранена.
+
+# Текущий статус — мобильная матрица PASS как компонент; совместный P07 ещё HOLD
+
+2026-10-25T17:37:44.506172+00:00. Clean475d: активная матрица21сочетания размеров/языков, touch/keyboard/modal/safearea/orientation прошли. Затем общий сценарий обнаружил потерю Calls при таймауте pool.connect. Узкая fix10 удаляет повторную физическую проверку перед чтением собственных метаданных, сохраняя свежие проверки перед доступом и публикацией;193 целевых Linux tests PASS,1 ожидаемый platform skip, ESLint0. Независимый гейт реализации и новый clean preflight впереди. Часовой soak NOT_RUN; полный P07/P10 и подписанный0.0.2 ещё не приняты. Предыдущие FAIL сохранены.
+
+# Текущий статус — P07/P10: устраняется задержка API под совместной нагрузкой
+
+2026-10-25T17:05:19.392765+00:00. Clean6b6fc139: вход18+, PDF-импорт, реальная остановка/пересозданиеБД,3режима, reconnect и приватныйCalls PASS. Активная мобильная матрица HOLD: Music/Cinema работают, PNG пропадает после истечения разрешения при ответахmetadata2.4–3.7s. Выполняется один короткий CPU-профиль реального API для точечной правки. Сроки разрешений/ACL/ресурсные пороги сохранены.
+
+Отдельно исправлены и независимо приняты восстановление PNG после временной ошибки и сериализация смены языка с одним CAS-повтором. ScopedPNG/locales/offline/reconnect PASS; полная21cellматрица и часовойP07ещёNOT_PASS. Реальная music-библиотека, физические устройства и условия послеdeploy отложены владельцем. Подписанный0.0.2 ещё не выпущен. История ниже сохранена.
+
+# Текущий статус — P07/P10: короткий совместный прогон, техническая поставка в работе
+
+2026-10-25T16:29:20.737728+00:00. P07 разрешён U-025. Восьмиклиентный preflight08 выполняется на clean d18d27ed; предыдущие FAIL сохранены. Исправлены обработка ошибок соединения PostgreSQL и избыточные чтения настроек игроков; 83 scoped tests и реальный PostgreSQL подтвердили защитные инварианты и сокращение25→4SQL. Независимый engineering04 принял точные исходники. Реальный production-v4 REPRO/RESTORE11PASS остаётся отдельным компонентом; применимость к новому кандидату проверяется. Часовой soak пока NOT_RUN.
+
+P10 — только мобильный веб: вход18+ прошёл; полная матрица21сочетания на активной игре и медиамодулях повторяется после общего функционального FAIL. Полный PASS P07/P10 и подписанный0.0.2 ещё не выданы. Локальная music-библиотека владельца и реальные условия/устройства отложены до deploy. История статусов ниже сохраняется.
+
+# Текущий статус — P07 разрешён; mobileWEB и техническая поставка в работе
+
+U-025…028 / [ADR-043](../adr/ADR-043-local-aggregate-mobile-web-and-delivery.md): новый P10 только [мобильныйвеб](P10_MOBILE_WEB.md); nativeapps больше не требуются. P07 выполняется по [фиксированномупрофилю](P07_EXECUTION_PROFILE.md). Node/LiveKit patchedpins иполнаяsource/license/signedv4поставка реализуются до первых проверок. Реальныетрекипозже; реальныеусловия/устройствапослеdeploy. Tests пока NOT_RUN, P07/P10/deliveryPASSневыданы. Ниже сохраненаистория.
+
+# Текущий статус — локальные функции приняты; общий P07 подготовлен
+
+Презентации: **PASS_FUNCTIONAL_LOCAL_COMPONENT**. PDF-библиотека комнаты, личный просмотр и live-показ реализованы; clean native47/12cases, static56, actualoperator10 и два независимых выходных гейта PASS. Все обязательные замечания закрыты, прежние FAIL сохранены. [Итоговая приёмка](evidence/preza/functional-acceptance01/REPORT.md) · [Реестр](presentations-registry.json).
+
+P08 Music из локального каталога, P09 Cinema, P11 общие/парные Calls — локальные функциональные PASS. P10 — **только подготовка**, нативная реализация/сборки/реальные устройства ещё HOLD; весь P10 не закрыт. [Подготовка P07](P07_FINAL_RUN_PREPARATION.md) завершена, **общий прогон не запускался**. Новый подписанный релиз, публичная поставка и production/DNS/TLS/NAT/device приёмка не выданы. Актуальный план связан новой exact source-revisions.v3 цепочкой, исторические v2/CSV/приёмки сохранены. Далее сохранена история предыдущих статусов.
+
+# Текущий статус — презентации реализованы, исправляются замечания выходного гейта
+
+На clean31b4a57c проходят46/46 Docker tests и12/12 сценариев презентаций: PDF library/import/live, room ACL, cancel, old-PG restore, UI RU/EN/TR и реальный BK2 restore почти64MiB. Локальный unsigned image собран, Python/Poppler pins подтверждены. [Доказательства](evidence/preza/native-round04/INDEX.json). Независимые [Engineering01](reviews/preza/engineering-round01/REPORT.md) и [Security01](reviews/preza/security-round01/REPORT.md) выдали **FAIL**: требуется абсолютный upload deadline и дополнительные точечные recovery/timeout доказательства. Исправления и повторная приёмка в работе; полный PASS презентаций ещё не выдан.
+
+P08/P09/P11 приняты как локальные функциональные компоненты. P10 — только подготовка, полный native/device scope HOLD. [P07 подготовлен](P07_FINAL_RUN_PREPARATION.md), общий прогон не запускался. Публичная поставка нового набора модулей пока не принята. Ниже сохранена история.
+
+# Текущий статус — P11 функционально принят; следующий блок — презентации
+
+P11: clean32/32tests и12/12mandatoryrecords PASS, независимые Engineering02/Security02 PASS. AffectedMusic12cases (явная композицияreceipts) и Cinema32tests/19cases PASS. [Итоговая приёмка](evidence/p11/functional-acceptance01/REPORT.md) · [Реестр](p11-registry.json). P08/P09 локальные функциональные компоненты приняты; P10 только boundedprep, полныйnativeэтап HOLD. ОбщийP07/fullG5/publicdelivery/devices остаются NOT_PASS. ПрезентацииPreza: sourceaudit/entry выполнены, реализация следующая. Ниже сохранены прежние статусы/FAIL.
+
+# Текущий статус — P11: чистые обязательные сценарии PASS, выходной гейт в работе
+
+На9c710aa6 завершён чистый Docker прогон:32/32tests,12/12mandatory scenarios PASS; max jitter20ms при30ms,RTTp953ms,loss0,APIloss3267ms. Исходники неизменны, очистка завершена. [Доказательство](evidence/p11/targeted-round11/INDEX.json). Выполняются affected Music/Cinema/static/build и независимые финальные Engineering/Security; **полный P11 ещё не принят**. Изменение fallback опроса явно описано в ADR041; старые FAIL сохранены.
+
+P08/P09 ранее функционально приняты; их affected regression после нового cadence обязателен. P10 принят только в подготовительном scope, native/device этап HOLD. Презентации — аудит и входной гейт выполнены, реализация впереди. Общий P07 не запускался. Ниже сохранена история.
+
+# Текущий статус — P11: исправления после независимого аудита
+
+Начальная реализация общих Calls до 8 участников и приватных пар завершена до запуска проверок. На чистом источнике075b7bc9 прошли10из11 функциональных сценариев: реальные аудио/видео, Cinema+Games, устройства, две пары, переключение, TCP, UI, потеря API, восстановление PostgreSQL и минимальные права источников. **P11 пока не принят:** jitter33мс превышает30мс. Текущий исходник дополнительно исправляется по независимому security review; старые результаты на него автоматически не переносятся.
+
+Новый клиентский тестовый профиль12CPU обоснован измеренной нагрузкой и зафиксирован в ADR-039 до следующего прогона. Лимиты медиасервера и пороги качества неизменны. [Журнал](../../.history/2026-10-25-p11.md) · [Реестр](p11-registry.json).
+
+P08/P09 функционально приняты в локальном scope. P10: подготовка принята, native-код и проверки устройств ещё не завершены; полный этап HOLD. Презентацииpreza: аудит и входной гейт выполнены, реализация впереди. P07 — только после функций, общий прогон ещё не запускался. Ниже сохранена история статусов.
+
+# Текущий статус — P10 подготовка принята, native этап HOLD; вход P11
+
+P10: два independentprepPASS, cleanDocker2focusedtests/types/lint/schema/i18nPASS. **Native capture Android/iOS не реализован; полныйP10/G4непройден.** Остались внутренние nativeSDK/adapterзадачи и внешниеMac/device/distribution/LANвходы. [Честный остаток и приёмка подготовки](evidence/p10/preparation-acceptance01/REPORT.md).
+
+P08/P09functionalaccepted. Следом P11 Calls(входнойreview, пока безкода), затемPLAN-PRESENTATIONS. P07общийпрогон послефункций НЕ PASS. Ниже предыдущиестатусы сохранены.
+
+# Текущий статус — P09 функционально принят
+
+P09: clean round25,32/32tests и19/19scenariosPASS; independent Engineering03/Security05PASS. A/V66ms, watchdog2542ms; actualPGrestore/staleJWT/closedroomfencesPASS. [Итог](evidence/p09/functional-acceptance01/REPORT.md) · [Реестр](p09-registry.json).
+
+P08 и P09 приняты как локальные функциональные компоненты по U022. Полные исходныеG2/G3, новый подписанныйv3release и общийP07 НЕ PASS. Следующие: вход P10 с честным учётом отсутствияdevices, P11 Calls и презентацииpreza. Ниже история сохранена.
+
+# Текущий статус — P09 в работе; P08 принят
+
+Cinema реализован на встроенном медиасервере; проходят реальные1+7 capture/ACL, Games coexistence, admission, autoplay retry и media readiness. Полный P09 PASS пока НЕ выдан: текущий чистый прогон e0841312 проверяет A/V после независимого исправления synthetic source clocks и остальные cutoff/restart/restore cases. Исторические FAIL сохранены. [Журнал P09](../../.history/2026-10-25-p09.md) · [Реестр](p09-registry.json).
+
+P10/P11/показ презентаций ещё не реализованы; P07 общий прогон отложен до функций по U022. Условия локального пилота и public/device limitations прежние. Ниже предыдущие статусы сохранены для истории.
+
+# Текущий статус — P08 функционально принят; следующий P09
+
+P08: PASS локального музыкального компонента по новому порядку U022/U024.12 actual cases,3 browser engines,8Chromium/480samples/p95=104.320ms, реальные ACL/revoke/backpressure и PGrestore5rows PASS. Два независимых round02 gate PASS, все3 замечания закрыты. [Итог P08](evidence/p08/functional-acceptance01/REPORT.md) · [Реестр](p08-registry.json).
+
+Это не полный исходный G2 и не P07: общий release/load/soak/restore, actual Cinema+Music, реальные tracks/devices/public deployment перечислены отдельно. Signed0.0.1 и исторические accepted proof сохранены. P09 entry и source audit готовы; реализация P09 начинается после закрытия этой записи. Новый исходный код тестируется только после завершения всех правок этапа.
+
+Следующий раздел описывает ранее принятый P06 source, а не наличие Music в опубликованном0.0.1.
+
+# Принятый вход — P06 закрыт в проверенном локальном Linux classic профиле
+
+**P06 PASS standalone-local-pilot-v2 только для Docker29.1.3 Linux amd64 / overlay2 classic. P07 не начат.** [Итоговый отчёт](evidence/p06/final-stage-acceptance01/REPORT.md) · [Решение и hashes](evidence/p06/final-stage-acceptance01/DECISION.json) · [Все118 IDs и8гейтов](evidence/p06/final-stage-acceptance01/ACCEPTANCE_LEDGER.json) · [Реестр](p06-registry.json) · [План](../10_IMPLEMENTATION_PLAN.md).
+
+[Настоящий подписанный0.0.1](https://github.com/psewdon1m/venus/releases/tag/venus-v0.0.1), main/tag77ee6ea5/coreD44F/1951files, опубликован и проверен анонимно. Два независимых финальных Engineering/Security gate PASS. 8гейтов PASS;118IDs=74PASS/34external-onlyNA/10production-deferred. Unit34, Docker18, все5обязательных PR/main CI и qualified workflow SUCCESS. Четыре больших статистических P03 suite доступны отдельно только вручную; в этой приёмке не запускались.
+
+Actual service-key install COMMITTED и cache-absent/network-off archive recovery PASS; protected hashes неизменны. **Desktop29.1.3/containerd2.2.0: экспорт exact опубликованного image остаётся FAIL/unsupported/unrepaired**, verifier корректно блокирует mutation. Это ограничение не скрыто Linux результатом. [Нативные доказательства и operational addendum](evidence/p06/qualified-linux-install01/REPORT.md), [исходный FAIL и public release proof](evidence/p06/qualified-publication01/RESULT.json). Privileged daemon относится только к изолированной инфраструктуре теста; app/executor непривилегированы. Production/rootless isolation/DNS/TLS/UDP/devices/external backup copy/SLA не приняты.
+
+Review450 HOLD и временный owner PASS470 локального пилота сохранены; профессиональная/правовая/production приёмка не заявлена. Приложение после принятых source tests не менялось. Closing metadata не выдаётся за новый CI-tested application commit.
 
 Ниже сохранено предыдущее состояние завершённого P05; прежние строки «P06 не начат» относятся к моменту его закрытия, а не к текущей работе.
 

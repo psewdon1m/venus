@@ -1,6 +1,16 @@
-FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5 AS dependencies
+ARG VENUS_BROWSER_BASE=node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+FROM livekit/livekit-server:v1.13.11@sha256:04668840140552c7e5d7faf28959cbf2256fb04ea641c4fd23ea69cbf3d7d105 AS media_binary
+FROM node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae AS patched_node
+FROM ${VENUS_BROWSER_BASE} AS dependencies
+# A cached browser layer never retains its earlier Node/npm/headers.
+COPY --from=patched_node /usr/local/bin/node /usr/local/bin/node
+COPY --from=patched_node /usr/local/lib/node_modules /usr/local/lib/node_modules
+COPY --from=patched_node /usr/local/include/node /usr/local/include/node
+USER root
 WORKDIR /app
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+RUN rm -rf /app/apps /app/packages /app/tests /app/tools /app/node_modules
+COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
 COPY package.json package-lock.json .npmrc ./
 COPY apps/api/package.json apps/api/
 COPY apps/web/package.json apps/web/
@@ -9,7 +19,13 @@ COPY packages/i18n/package.json packages/i18n/
 COPY packages/relationship-engine/package.json packages/relationship-engine/
 COPY packages/card-catalog/package.json packages/card-catalog/
 RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
-RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio iproute2 iptables && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3 \
+    python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1 \
+    python3.11=3.11.2-6+deb12u9 python3.11-minimal=3.11.2-6+deb12u9 \
+    libpython3.11-minimal=3.11.2-6+deb12u9 libpython3.11-stdlib=3.11.2-6+deb12u9 \
+    && rm -rf /var/lib/apt/lists/*
 COPY tests/p05/probe.mjs tests/p05/probe.mjs
 USER 1000:1000
 CMD ["node", "tests/p05/probe.mjs"]
@@ -20,6 +36,20 @@ COPY tsconfig*.json ./
 COPY apps apps
 COPY packages packages
 COPY tests tests
-RUN npm run build && mkdir /artifacts && chown node:node /artifacts
+COPY tools/music-demo.mjs tools/music-demo.mjs
+COPY tools/media-provision.mjs tools/media-provision.mjs
+COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
+COPY tools/venus-operator tools/venus-operator
+COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
+COPY infra/venus/presentation-guardian.py infra/venus/presentation-render.py infra/venus/presentation-dependencies.json infra/venus/
+COPY infra/venus/presentation-app-entry.mjs infra/venus/
+COPY infra/venus/compose.standalone.yml infra/venus/compose.media.standalone.yml infra/venus/
+COPY infra/venus/compose.presentations.standalone.yml infra/venus/
+COPY .docs/contracts/venus-standalone-release.v1.schema.json .docs/contracts/venus-standalone-release.v2.schema.json .docs/contracts/
+COPY .docs/contracts/venus-standalone-release.v4.schema.json .docs/contracts/
+RUN npm run build && mkdir -p /artifacts /media-fixture && chown node:node /artifacts /media-fixture
 USER 1000:1000
 CMD ["node", "tests/p05/browser.mjs"]
+
+COPY tools/media-inventory.mjs tools/media-inventory.mjs
+COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs

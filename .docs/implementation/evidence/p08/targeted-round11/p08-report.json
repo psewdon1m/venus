@@ -1,0 +1,153 @@
+{
+  "suite": "P08_MUSIC",
+  "status": "PASS",
+  "synthetic_only": true,
+  "production": false,
+  "records": [
+    {
+      "id": "P08-ACL-STATE",
+      "status": "PASS",
+      "detail": {
+        "host_only": true,
+        "replay": true,
+        "conflict": true,
+        "origin": true
+      }
+    },
+    {
+      "id": "P08-RANGE-ROOM-BOUNDARY",
+      "status": "PASS",
+      "detail": {
+        "range": true,
+        "suffix": true,
+        "invalid416": true,
+        "cross_site403": true,
+        "foreign401": true
+      }
+    },
+    {
+      "id": "P08-PAUSE-SEEK-RESTART-AUTONEXT",
+      "status": "PASS",
+      "detail": {
+        "restart_persisted": true,
+        "paused_position": 2500,
+        "server_auto_next": true
+      }
+    },
+    {
+      "id": "P08-NATIVE-AUDIO-LOCAL-VOLUME",
+      "status": "PASS",
+      "detail": {
+        "decoded_audio": true,
+        "contexts": 8,
+        "volume_does_not_mutate": true
+      }
+    },
+    {
+      "id": "P08-MUSIC-WITH-GAMES",
+      "status": "PASS",
+      "detail": {
+        "actual_game_start": true,
+        "music_continues": true,
+        "game_actions_still_audited": true
+      }
+    },
+    {
+      "id": "P08-DRIFT-8-60S",
+      "status": "PASS",
+      "detail": {
+        "samples": 480,
+        "p95_ms": 104.31999999999971,
+        "max_ms": 186.20200000000023,
+        "seconds": 60
+      }
+    },
+    {
+      "id": "P08-RECONNECT-AND-CATALOG-REVOKE",
+      "status": "PASS",
+      "detail": {
+        "offline_stop": true,
+        "reconnect": true,
+        "revoke_stops_all": true
+      }
+    },
+    {
+      "id": "P08-INPERSON-OUTPUT-EXPLICIT",
+      "status": "PASS",
+      "detail": {
+        "host_default_only": true,
+        "personal_explicit": true,
+        "retained_cookie_after_leave_denied": true
+      }
+    },
+    {
+      "id": "P08-RAW-BACKPRESSURE-REVOKE",
+      "status": "PASS",
+      "detail": {
+        "production_music_and_real_PG": true,
+        "actual_node_writable": true,
+        "one_raw_enqueue_before_revoke": true,
+        "no_prefetched_delivery_after_revoke": true,
+        "close_commits_while_backpressured": true
+      }
+    },
+    {
+      "id": "P08-CLOSE-IDLE-SCHEMA-FENCES",
+      "status": "PASS",
+      "detail": {
+        "closed_retired_session401": true,
+        "idle_expired401": true,
+        "future_schema_rejected": true
+      }
+    },
+    {
+      "id": "P08-DECODE-FIREFOX",
+      "status": "PASS",
+      "detail": {
+        "decode": true,
+        "source": "own PCM",
+        "physical_device": false,
+        "forced_autoplay_denial_recovery": true,
+        "background_retries_halted": true,
+        "shared_tuple_unchanged_by_local_block": true
+      }
+    },
+    {
+      "id": "P08-DECODE-WEBKIT",
+      "status": "PASS",
+      "detail": {
+        "decode": true,
+        "source": "own PCM",
+        "physical_device": false,
+        "forced_autoplay_denial_recovery": true,
+        "background_retries_halted": true,
+        "shared_tuple_unchanged_by_local_block": true
+      }
+    }
+  ],
+  "browser_versions": [
+    {
+      "engine": "chromium",
+      "version": "156.0.8078.4"
+    },
+    {
+      "engine": "firefox",
+      "version": "157.0"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2"
+    }
+  ],
+  "drift_profile": {
+    "clients": 8,
+    "warmup_seconds": 2,
+    "seconds": 60,
+    "sample_ms": 1000,
+    "p95_limit_ms": 300
+  },
+  "runtime_cleanup": "completed",
+  "selected_engine": "all",
+  "full_music_matrix": true,
+  "audio_output": "isolated PulseAudio null sink; no physical-device claim"
+}

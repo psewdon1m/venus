@@ -1,0 +1,134 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.63kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 164B done
+#3 DONE 0.0s
+
+#4 [build  1/15] FROM docker.io/library/node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 7.01kB done
+#5 DONE 0.0s
+
+#6 [build  8/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#6 CACHED
+
+#7 [build  5/15] COPY apps/web/package.json apps/web/
+#7 CACHED
+
+#8 [build 12/15] COPY apps apps
+#8 CACHED
+
+#9 [build  3/15] COPY package.json package-lock.json .npmrc ./
+#9 CACHED
+
+#10 [build 11/15] COPY tsconfig*.json ./
+#10 CACHED
+
+#11 [build  7/15] COPY packages/i18n/package.json packages/i18n/
+#11 CACHED
+
+#12 [build  9/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#12 CACHED
+
+#13 [build  6/15] COPY packages/contracts/package.json packages/contracts/
+#13 CACHED
+
+#14 [build  2/15] WORKDIR /app
+#14 CACHED
+
+#15 [build 10/15] RUN npm ci
+#15 CACHED
+
+#16 [build  4/15] COPY apps/api/package.json apps/api/
+#16 CACHED
+
+#17 [build 13/15] COPY packages packages
+#17 CACHED
+
+#18 [build 14/15] RUN test -n "77ee6ea5ab4d1e92fcf53328ede8f8d3fc3994aa" && npm run build && node --input-type=module -e 'import fs from "node:fs"; const version=process.env.RELEASE_VERSION; if(!/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(version))process.exit(1); fs.writeFileSync("build-metadata.json",JSON.stringify({version,source_revision:process.env.SOURCE_REVISION}))'
+#18 0.171 
+#18 0.171 > venus@0.0.0 build
+#18 0.171 > tsc -b && npm run build -w @venus/web
+#18 0.171 
+#18 3.777 
+#18 3.777 > @venus/web@0.0.0 build
+#18 3.777 > vite build
+#18 3.777 
+#18 3.951 vite v8.3.4 building client environment for production...
+#18 3.959 transforming...
+#18 4.005 ✓ 35 modules transformed.
+#18 4.023 rendering chunks...
+#18 4.056 computing gzip size...
+#18 4.061 dist/index.html                   0.39 kB │ gzip:   0.27 kB
+#18 4.061 dist/assets/index-BoNI8E-V.css    9.58 kB │ gzip:   2.72 kB
+#18 4.061 dist/assets/index-CQ4hcLem.js   347.42 kB │ gzip: 105.35 kB
+#18 4.061 
+#18 4.062 ✓ built in 110ms
+#18 DONE 4.1s
+
+#19 [build 15/15] RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
+#19 0.956 
+#19 0.956 removed 173 packages, and audited 122 packages in 799ms
+#19 0.959 
+#19 0.959 1 moderate severity vulnerability
+#19 0.959 
+#19 0.959 To address all issues, run:
+#19 0.959   npm audit fix
+#19 0.959 
+#19 0.959 Run `npm audit` for details.
+#19 DONE 1.0s
+
+#20 [stage-1  6/15] COPY --from=build /app/apps/api/package.json ./apps/api/package.json
+#20 CACHED
+
+#21 [stage-1  9/15] COPY --from=build /app/apps/api/game-migrations ./apps/api/game-migrations
+#21 CACHED
+
+#22 [stage-1  3/15] COPY --from=build /app/node_modules ./node_modules
+#22 CACHED
+
+#23 [stage-1  8/15] COPY --from=build /app/apps/api/migrations ./apps/api/migrations
+#23 CACHED
+
+#24 [stage-1 10/15] COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
+#24 CACHED
+
+#25 [stage-1  5/15] COPY --from=build /app/apps/api/dist ./apps/api/dist
+#25 CACHED
+
+#26 [stage-1 12/15] COPY --from=build /app/apps/api/private-topic-migrations ./apps/api/private-topic-migrations
+#26 CACHED
+
+#27 [stage-1 11/15] COPY --from=build /app/apps/api/chat-migrations ./apps/api/chat-migrations
+#27 CACHED
+
+#28 [stage-1  4/15] COPY --from=build /app/packages ./packages
+#28 CACHED
+
+#29 [stage-1  7/15] COPY --from=build /app/apps/api/node_modules ./apps/api/node_modules
+#29 CACHED
+
+#30 [stage-1 13/15] COPY --from=build /app/apps/web/dist ./apps/web/dist
+#30 CACHED
+
+#31 [stage-1 14/15] COPY --from=build /app/package.json /app/build-metadata.json ./
+#31 DONE 0.0s
+
+#32 [stage-1 15/15] RUN mkdir -p /var/lib/venus/topic-births /var/lib/venus/topic-personal /var/lib/venus/topic-personal-witness /var/lib/venus/topic-lifecycle /var/lib/venus/topic-lifecycle-witness && chmod 0700 /var/lib/venus/topic-* && chown -R node:node /var/lib/venus
+#32 DONE 0.1s
+
+#33 exporting to image
+#33 exporting layers
+#33 exporting layers 0.7s done
+#33 writing image sha256:aa9eed889e8b023b1ba83e39762610d2790ddaa6de499d782a79cb024cd0961a done
+#33 naming to 127.0.0.1:32768/venus:fixture-9d77ac97d1-b done
+#33 DONE 0.7s

@@ -1,0 +1,49 @@
+{
+  "format": 1,
+  "reviewer": "p09-security-review01",
+  "independent_nonauthor": true,
+  "stage": "P09",
+  "gate": "SECURITY_PREFLIGHT_SOURCE_REVIEW",
+  "status": "CHANGES_REQUIRED",
+  "security_privacy_pass": false,
+  "full_stage_pass": false,
+  "source_git": "1bf51346ffb95f533ec64f10a16d9c503d78132e",
+  "comparison_base": "70ec9416c666483a198d79db21167ebad4ea58c5",
+  "findings": [
+    {
+      "id": "S09-01",
+      "priority": 2,
+      "file": "apps/api/src/media.ts",
+      "line": 81,
+      "status": "ACCEPTED_BY_AUTHOR_NOT_RETESTED",
+      "issue": "Terminal stop/release and empty-active reaccept retries report success after unconfirmed cutoff",
+      "minimum_fix": "Reconcile retained exact lease/scope or freshly confirm quiescence before success; never equate no active rows with confirmed termination"
+    },
+    {
+      "id": "S09-02",
+      "priority": 2,
+      "file": "tools/venus-operator/driver.mjs",
+      "line": 80,
+      "status": "ACCEPTED_BY_AUTHOR_NOT_RETESTED",
+      "issue": "v3 healthy candidate ignores failed media service/child",
+      "minimum_fix": "Authenticated v3 media readiness under closed admission, avoiding authority/serving startup cycle; preserve v2 checks"
+    }
+  ],
+  "required_targeted_evidence": [
+    "Persistent admin and quiesce failure across retirement retry, including empty-active reaccept",
+    "v3 media-dead/app-alive health rejection and successful closed-admission readiness",
+    "Pending join versus close; gateway/SFU failure; expiry/disappearance and admission negatives",
+    "Exact corrected source actual RTC1+7 AV/network/resource/coexistence/restore acceptance"
+  ],
+  "unit31_status": "SUPPLIED_PASS_NOT_RERUN_OR_CALLED_CURRENT_RTC_PROOF",
+  "actual_RTC_status": "FAIL_UNDER_CORRECTION_PER_HANDOFF",
+  "P07_pass": false,
+  "production_pass": false,
+  "physical_devices_pass": false,
+  "signed_001_feature_claim": false,
+  "prior_proofs_preserved": true,
+  "runtime_tests_or_source_mutations_by_reviewer": false,
+  "writer_status": "COMPLETE_STOP",
+  "created_at_utc": "2026-10-25T02:31:53.329Z",
+  "author_proposal_not_implemented_or_accepted_here": "Internal HMAC closed-gate prepare with confirmed old-child cutoff, empty-room child probe and bounded4s no-grant grace; requires exact implementation/relevant test/review"
+}

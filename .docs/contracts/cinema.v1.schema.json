@@ -1,0 +1,15 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://venus.shmoza.net/contracts/cinema.v1",
+  "title":"Room-scoped Cinema authority, not a public LiveKit token endpoint",
+  "$defs":{
+    "uuid":{"type":"string","format":"uuid"},
+    "revision":{"type":"integer","minimum":0,"maximum":9007199254740991},
+    "start":{"type":"object","additionalProperties":false,"required":["expected_rev","idempotency_key"],"properties":{"expected_rev":{"$ref":"#/$defs/revision"},"idempotency_key":{"$ref":"#/$defs/uuid"}}},
+    "stop":{"type":"object","additionalProperties":false,"required":["scope_id","idempotency_key"],"properties":{"scope_id":{"$ref":"#/$defs/uuid"},"idempotency_key":{"$ref":"#/$defs/uuid"}}},
+    "source":{"type":"object","additionalProperties":false,"required":["lease_id","scope_id","video","audio","idempotency_key"],"properties":{"lease_id":{"$ref":"#/$defs/uuid"},"scope_id":{"$ref":"#/$defs/uuid"},"video":{"type":"boolean"},"audio":{"type":"boolean"},"idempotency_key":{"$ref":"#/$defs/uuid"}}},
+    "leaseMutation":{"type":"object","additionalProperties":false,"required":["idempotency_key"],"properties":{"idempotency_key":{"$ref":"#/$defs/uuid"}}}
+  },
+  "oneOf":[{"$ref":"#/$defs/start"},{"$ref":"#/$defs/stop"},{"$ref":"#/$defs/source"},{"$ref":"#/$defs/leaseMutation"}],
+  "$comment":"GET /rooms/:id/cinema returns CinemaState under final room/18+/member fence. POST cinema/start|join uses start, source requires actual SFU screen video+audio, stop binds current scope. POST media/leases/:leaseId/renew|release uses leaseMutation. Four RTC paths require current protected lease, room cookie, same-origin and JWT; no direct SFU HTTP/admin exposure. Start/join replay cannot reactivate retired lease. Lease20s/renew5s, API/SFU boot epochs, protected authority excluded from DB rollback. API loss watchdog<=5s, explicit stop acknowledges confirmed server cutoff only. New media-v3 delivery is separate from signed0.0.1. Exact profile and rollback: P09_MEDIA.md/ADR036."
+}

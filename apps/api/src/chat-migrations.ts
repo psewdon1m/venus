@@ -20,7 +20,7 @@ export async function migrateChat(pool:pg.Pool,directory=new URL('../chat-migrat
     await c.query('COMMIT');
   } catch(error) {await c.query('ROLLBACK');throw error;} finally {c.release();}
 }
-export async function chatSchemaProbe(pool:pg.Pool) {
+export async function chatSchemaProbe(pool:Pick<pg.Pool,'query'>) {
   const query={text:`SELECT max(generation) AS generation,(SELECT count(*) FROM unnest(ARRAY['private_chat_scopes','private_chat_messages','private_chat_requests']) AS t(name) WHERE to_regclass(t.name) IS NOT NULL)::int AS tables FROM venus_chat_schema_migrations`,query_timeout:1000};
   const value=(await pool.query<{generation:number;tables:number}>(query)).rows[0];
   if(value?.generation!==chatSchemaGeneration||value.tables!==3) throw new Error('Chat schema not ready');

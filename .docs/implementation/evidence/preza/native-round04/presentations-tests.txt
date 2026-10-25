@@ -1,0 +1,79 @@
+ Container venus-p05-794c70ee909e-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (16.461881ms)
+✔ P06-RELEASE reject signed wrong version (5.326642ms)
+✔ P06-RELEASE reject signed wrong schema (5.582155ms)
+✔ P06-RELEASE reject signed wrong environment (4.146575ms)
+✔ P06-RELEASE reject signed wrong image digest (4.978858ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.626276ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.205641ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (63.685057ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (11.38694ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (10.630715ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (11.274372ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (10.596164ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (11.150328ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (10.015288ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (8.528629ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (24.062737ms)
+✔ P06-JOURNAL corruption fails closed without mutation (6.339735ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (78.886672ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (28.095679ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.558412ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.393286ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1758.810567ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (10.652906ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (5.837778ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (6.459297ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.034765ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.099947ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (14.473786ms)
+✔ backup and restore cannot run while a media container survives API stop (1.712831ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (12.961137ms)
+✔ BK2 profile binds converter and fixed environment without implicit v3 activation (1.864388ms)
+✔ BK2 framing verifies hash, exact declaration and permissions; ordinary BK1 stays readable (3.327868ms)
+✔ BK2 supports129MiB frame while BK1 rejects it, and BK2 still has finite256MiB cap (191.115449ms)
+✔ BK2 restore rejects legacy generation before any database command (0.999748ms)
+{"id":"PREZA-CAPACITY-BK2","phase":"START"}
+{"id":"PREZA-CAPACITY-BK2","status":"PASS"}
+{"id":"PREZA-LIBRARY-IMPORT","phase":"START"}
+✔ PREZA-CAPACITY-BK2 (23247.84558ms)
+{"id":"PREZA-LIBRARY-IMPORT","status":"PASS"}
+{"id":"PREZA-ROOM-ACL","phase":"START"}
+✔ PREZA-LIBRARY-IMPORT (1586.970601ms)
+{"id":"PREZA-ROOM-ACL","status":"PASS"}
+{"id":"PREZA-LIVE-SYNC","phase":"START"}
+✔ PREZA-ROOM-ACL (1446.117509ms)
+{"id":"PREZA-LIVE-SYNC","status":"PASS"}
+{"id":"PREZA-REPLACE-AND-IDEMPOTENCY","phase":"START"}
+✔ PREZA-LIVE-SYNC (4941.94964ms)
+{"id":"PREZA-REPLACE-AND-IDEMPOTENCY","status":"PASS"}
+{"id":"PREZA-INPUT-BOUNDS","phase":"START"}
+✔ PREZA-REPLACE-AND-IDEMPOTENCY (3104.071817ms)
+{"id":"PREZA-INPUT-BOUNDS","status":"PASS"}
+{"id":"PREZA-CANCEL-AND-ROOM-CLOSE","phase":"START"}
+✔ PREZA-INPUT-BOUNDS (16267.026428ms)
+{"id":"PREZA-CANCEL-AND-ROOM-CLOSE","status":"PASS"}
+{"id":"PREZA-OLD-PG-RESTORE","phase":"START"}
+✔ PREZA-CANCEL-AND-ROOM-CLOSE (6124.759471ms)
+{"id":"PREZA-OLD-PG-RESTORE","status":"PASS"}
+{"id":"PREZA-UI-LOCALES-LAYOUT","phase":"START"}
+✔ PREZA-OLD-PG-RESTORE (7631.206656ms)
+{"id":"PREZA-UI-LOCALES-LAYOUT","status":"PASS"}
+{"id":"PREZA-FEATURE-OFF","phase":"START"}
+✔ PREZA-UI-LOCALES-LAYOUT (10987.526654ms)
+{"id":"PREZA-FEATURE-OFF","status":"PASS"}
+{"id":"PREZA-GAMES-COEXISTENCE","phase":"START"}
+✔ PREZA-FEATURE-OFF (3427.750212ms)
+{"id":"PREZA-GAMES-COEXISTENCE","status":"PASS"}
+{"id":"PREZA-RETENTION","phase":"START"}
+✔ PREZA-GAMES-COEXISTENCE (1724.419368ms)
+{"id":"PREZA-RETENTION","status":"PASS"}
+✔ PREZA-RETENTION (2248.117631ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 46
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 85685.709926

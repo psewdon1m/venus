@@ -8,6 +8,8 @@ def source_files(root: Path):
         if Path(directory) == root/'.history':
             names[:] = [name for name in names if name != 'example']
         for name in files:
+            if name in EXCLUDED:
+                continue
             path = Path(directory)/name
             if name.endswith(('.pyc','.tsbuildinfo','.log')) or name == '.env' or (name.startswith('.env.') and name != '.env.example'):
                 continue

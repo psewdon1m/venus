@@ -1,0 +1,74 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.operator
+#1 transferring dockerfile: 1.45kB done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${DOCKER_CLI_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 2.62kB done
+#4 DONE 0.0s
+
+#5 [runtime  1/10] FROM docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
+#5 resolve docker.io/library/node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae 0.0s done
+#5 DONE 0.0s
+
+#6 [dockercli 1/1] FROM docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04
+#6 resolve docker.io/library/docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04 0.0s done
+#6 DONE 0.0s
+
+#7 [fixture 1/2] COPY tests/p06 tests/p06
+#7 CACHED
+
+#8 [runtime  7/10] COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
+#8 CACHED
+
+#9 [runtime  5/10] COPY tools/venus-operator tools/venus-operator
+#9 CACHED
+
+#10 [runtime 10/10] COPY infra/venus/compose.presentations.standalone.yml infra/venus/compose.presentations.standalone.yml
+#10 CACHED
+
+#11 [runtime  9/10] COPY infra/venus/compose.media.standalone.yml infra/venus/compose.media.standalone.yml
+#11 CACHED
+
+#12 [runtime  2/10] COPY --from=dockercli /usr/local/bin/docker /usr/local/bin/docker
+#12 CACHED
+
+#13 [runtime  4/10] WORKDIR /opt/venus
+#13 CACHED
+
+#14 [runtime  3/10] COPY --from=dockercli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/local/lib/docker/cli-plugins/docker-compose
+#14 CACHED
+
+#15 [runtime  6/10] COPY tools/media-provision.mjs tools/media-provision.mjs
+#15 CACHED
+
+#16 [runtime  8/10] COPY infra/venus/compose.standalone.yml infra/venus/compose.standalone.yml
+#16 CACHED
+
+#17 [fixture 2/2] COPY tests/presentations tests/presentations
+#17 CACHED
+
+#18 exporting to image
+#18 exporting layers done
+#18 exporting manifest sha256:1b5ddeb2f0f4ff83b40166aed4fc44c3c94bb0fc0889ed345308c10678574d2a done
+#18 exporting config sha256:c5ae9be770d5f74145aba82a3f2bee7488dd0ed26e8f0986cebf4aab309b713c done
+#18 exporting attestation manifest sha256:8e75653118b87ef66a09c2fec22cbc9c51b39c448bf080902e73ef7e1a42c19f 0.0s done
+#18 exporting manifest list sha256:805f1086d3b04af1004e9b297da20f38917d7ebd905e220bddd778304871e61e
+#18 exporting manifest list sha256:805f1086d3b04af1004e9b297da20f38917d7ebd905e220bddd778304871e61e 0.0s done
+#18 naming to docker.io/library/venus-preza-a980d3b717-operator:fixture done
+#18 unpacking to docker.io/library/venus-preza-a980d3b717-operator:fixture
+#18 unpacking to docker.io/library/venus-preza-a980d3b717-operator:fixture 0.4s done
+#18 DONE 0.5s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${DOCKER_CLI_IMAGE} results in empty or invalid base image name (line 2)
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/f0ui1307ge9cy0d8ap4vma4t3

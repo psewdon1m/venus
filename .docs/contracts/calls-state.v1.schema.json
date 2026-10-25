@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:calls-state:v1",
+  "title": "Room-authenticated personal calls projection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "room_id",
+    "available",
+    "transport_ready",
+    "general",
+    "pairs",
+    "self_lease"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "room_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "available": {
+      "type": "boolean"
+    },
+    "transport_ready": {
+      "type": "boolean"
+    },
+    "general": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "rev",
+            "kind",
+            "state",
+            "members",
+            "inviter_member_id",
+            "expires_at",
+            "participants"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "rev": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "kind": {
+              "enum": [
+                "general_call",
+                "pair_call"
+              ]
+            },
+            "state": {
+              "enum": [
+                "pending",
+                "active"
+              ]
+            },
+            "members": {
+              "type": "array",
+              "maxItems": 8,
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "inviter_member_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "expires_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "participants": {
+              "type": "array",
+              "maxItems": 8,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "lease_id",
+                  "member_id"
+                ],
+                "properties": {
+                  "lease_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "member_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "pairs": {
+      "type": "array",
+      "maxItems": 24,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "rev",
+          "kind",
+          "state",
+          "members",
+          "inviter_member_id",
+          "expires_at",
+          "participants"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rev": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "kind": {
+            "enum": [
+              "general_call",
+              "pair_call"
+            ]
+          },
+          "state": {
+            "enum": [
+              "pending",
+              "active"
+            ]
+          },
+          "members": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "inviter_member_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "participants": {
+            "type": "array",
+            "maxItems": 8,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "lease_id",
+                "member_id"
+              ],
+              "properties": {
+                "lease_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "member_id": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "self_lease": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "lease_id",
+            "scope_id",
+            "kind",
+            "audio",
+            "video"
+          ],
+          "properties": {
+            "lease_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "scope_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "kind": {
+              "enum": [
+                "general_call",
+                "pair_call"
+              ]
+            },
+            "audio": {
+              "type": "boolean"
+            },
+            "video": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

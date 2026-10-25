@@ -1,0 +1,5 @@
+# Watchdog single retirement security design11
+
+2026-10-25T17:52:38.925594+00:00 START. Independent preimplementation design only against5de418d7; inspectMedia.watchdog bootmismatch singleleaseUPDATE proposal and adminfailure/retirement persistence. Ownnewjournal/newdesignpacket only. No implementation/runtime/test/Docker/ROOT/C/Git/manifest/oldseal mutation. Calls32PASS/Cinema31PASS1FAIL and PGcycle are reported inputs, not independently rerun.
+
+2026-10-25T17:54:01.931960+00:00 — APPROVE narrowdesign. Read watchdogboot/selectedids/validfilter/backendfalse+quiesce fallback/finalpendingUPDATE, freshprotectedfinalLeaseFence gateway/frame, media lock, Calls.boot andsupervisor authorityexpiry. FullbootsetunrevokedORpending union preservesoldretirement set; irreversibleprotectedclear prevents precommit/rollbackresurrection, unconfirmedcutoff commits pending. No measuredPGcausation claim/no code/runtime acceptance. No tests/Docker/build/ROOT/C/Git/manifest/oldseal writes. Newdesignpacket sealed COMPLETE_STOP.

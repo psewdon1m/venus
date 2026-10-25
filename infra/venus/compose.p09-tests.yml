@@ -1,0 +1,35 @@
+services:
+  db:
+    cpus: 1
+    mem_limit: 512m
+  browser:
+    mem_limit: 4g
+    cpus: ${VENUS_MEDIA_BROWSER_CPUS:-8}
+    networks: [isolated, media_fixture]
+    volumes:
+      - media-fixture:/media-fixture
+  media:
+    image: ${VENUS_P05_IMAGE:?Set exact local test image ID}
+    init: true
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    # Only this isolated fault fixture grants NET_ADMIN for owned-network tc/iptables.
+    cap_add: [NET_ADMIN]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cpus: 2
+    mem_limit: 1g
+    pids_limit: 128
+    command: [node, infra/venus/media-supervisor.mjs]
+    environment:
+      VENUS_MEDIA_KEY_FILE: /media-fixture/venus/key.json
+      VENUS_MEDIA_AUTHORITY_ORIGIN: http://browser:4300
+    volumes: ["media-fixture:/media-fixture:ro"]
+    networks: [media_fixture]
+networks:
+  # Chromium needs an ordinary local default route to enumerate ICE interfaces.
+  # No host ports; PG remains on the separate internal isolated network.
+  media_fixture: {}
+volumes:
+  media-fixture:

@@ -1,0 +1,463 @@
+{
+  "suite": "P09_CINEMA",
+  "status": "FAIL",
+  "production": false,
+  "synthetic_only": true,
+  "records": [
+    {
+      "id": "P09-DENIED-NO-AUDIO",
+      "status": "PASS",
+      "detail": {
+        "explicit_denied": true,
+        "no_audio_never_live": true
+      }
+    },
+    {
+      "id": "P09-REAL-TAB-CAPTURE-8",
+      "status": "FAIL",
+      "error": "locator.waitFor: Timeout 25000ms exceeded.\nCall log:\n  - waiting for getByTestId('cinema-status').filter({ hasText: /Идёт показ/ }) to be visible\n"
+    }
+  ],
+  "page_errors": [],
+  "profile": {
+    "publisher": 1,
+    "viewers": 7,
+    "warmup_seconds": 3,
+    "measure_seconds": 30,
+    "av_min_samples": 20,
+    "av_p95_ms": 120,
+    "viewer_skew_p95_ms": 500,
+    "glass_p95_ms": 2000
+  },
+  "runtime_cleanup": "completed",
+  "browser_version": "156.0.8078.4",
+  "error": "locator.waitFor: Timeout 25000ms exceeded.\nCall log:\n  - waiting for getByTestId('cinema-status').filter({ hasText: /Идёт показ/ }) to be visible\n",
+  "final_media_state": [
+    {
+      "status": "Подключение прервано. Можно подключиться заново.",
+      "requests": [
+        {
+          "path": "/api/v1/rooms/5be06c64-c238-4c4e-965c-289b0d1d7ac9/cinema/start",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/5be06c64-c238-4c4e-965c-289b0d1d7ac9/media/leases/d5af76ba-ceb5-4c03-b216-e60b60272a58/release",
+          "status": 200,
+          "code": null
+        }
+      ],
+      "websockets": [
+        {
+          "path": "/api/v1/rooms/5be06c64-c238-4c4e-965c-289b0d1d7ac9/ws",
+          "opened": true,
+          "closed": false
+        },
+        {
+          "path": "/api/v1/rooms/5be06c64-c238-4c4e-965c-289b0d1d7ac9/media/rtc",
+          "opened": true,
+          "closed": true,
+          "code": 1000
+        }
+      ],
+      "capture": [
+        [
+          {
+            "kind": "audio",
+            "state": "live",
+            "muted": false
+          },
+          {
+            "kind": "video",
+            "state": "live",
+            "muted": false
+          }
+        ]
+      ],
+      "pc_history": [
+        {
+          "events": [
+            {
+              "at": 1792894854394,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792894854395,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854408,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854412,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854412,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854512,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 55826
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "e129b326d5e626525324d096c73b0404d19261b0b4ab7ada9d39a902fb4758e8"
+          ],
+          "remote_sdp_hashes": [
+            "c531d3dfd2779b0b1c0d49a5b7157e87c45d3fc2c7202d9f6ee74c4192ed1ad2"
+          ]
+        },
+        {
+          "events": [
+            {
+              "at": 1792894854380,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-remote-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792894854383,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "new"
+            },
+            {
+              "at": 1792894854385,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854385,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854386,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792894854496,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 36852
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "3b084dc902a2b4021e13aba084129de43b9f62bf04b74b2618881476eed20db2"
+          ],
+          "remote_sdp_hashes": [
+            "bc70bd7316040ac593daf3eb213bd558f4aa65fcc4c58a12877420aff6f9e5f3"
+          ]
+        }
+      ],
+      "pcs": [
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        }
+      ]
+    },
+    {
+      "status": "Sharing has ended.",
+      "requests": [],
+      "websockets": [
+        {
+          "path": "/api/v1/rooms/5be06c64-c238-4c4e-965c-289b0d1d7ac9/ws",
+          "opened": true,
+          "closed": false
+        }
+      ],
+      "capture": [],
+      "pc_history": [],
+      "pcs": []
+    }
+  ],
+  "supervisor_end": {
+    "running": true,
+    "boot_id": "eab9d4bf-340b-4d7a-8486-c6269497b10c",
+    "api_epoch": "d5c639a5-987f-44f5-974d-0e167399bf6f",
+    "cutoff_confirmed": false,
+    "authority_age_ms": 285.6217009999964,
+    "metrics": [
+      {
+        "mono_ms": 10902.281067,
+        "cpu_cores": 0.23036099618885578,
+        "memory_bytes": 59604992,
+        "egress_bps": 10585.975840632731
+      },
+      {
+        "mono_ms": 11902.146469,
+        "cpu_cores": 0.012155636124311068,
+        "memory_bytes": 60129280,
+        "egress_bps": 30268.07402222726
+      },
+      {
+        "mono_ms": 12902.433252,
+        "cpu_cores": 0.015024691173991031,
+        "memory_bytes": 60649472,
+        "egress_bps": 65573.1947224978
+      },
+      {
+        "mono_ms": 13902.693188,
+        "cpu_cores": 0.20586048944781518,
+        "memory_bytes": 86863872,
+        "egress_bps": 117041.57668072409
+      },
+      {
+        "mono_ms": 14902.709681,
+        "cpu_cores": 0.039842342880238836,
+        "memory_bytes": 86863872,
+        "egress_bps": 93206.46274580984
+      },
+      {
+        "mono_ms": 15902.493595,
+        "cpu_cores": 0.027809009137548506,
+        "memory_bytes": 86863872,
+        "egress_bps": 100581.73430463899
+      },
+      {
+        "mono_ms": 16902.512487,
+        "cpu_cores": 0.02940944439677645,
+        "memory_bytes": 86597632,
+        "egress_bps": 109117.93854390501
+      },
+      {
+        "mono_ms": 17902.690721,
+        "cpu_cores": 0.023715773042907493,
+        "memory_bytes": 86589440,
+        "egress_bps": 115075.48963518046
+      },
+      {
+        "mono_ms": 18903.430554,
+        "cpu_cores": 0.02878670264742026,
+        "memory_bytes": 86847488,
+        "egress_bps": 126866.14024286575
+      },
+      {
+        "mono_ms": 19904.470117,
+        "cpu_cores": 0.023507562407900504,
+        "memory_bytes": 86843392,
+        "egress_bps": 129497.37931586598
+      },
+      {
+        "mono_ms": 20905.247311,
+        "cpu_cores": 0.024848687748973666,
+        "memory_bytes": 86835200,
+        "egress_bps": 152441.52336269192
+      },
+      {
+        "mono_ms": 21904.304341,
+        "cpu_cores": 0.024586184033958507,
+        "memory_bytes": 87097344,
+        "egress_bps": 144432.19522713334
+      },
+      {
+        "mono_ms": 22905.362776,
+        "cpu_cores": 0.0223833087226321,
+        "memory_bytes": 87097344,
+        "egress_bps": 151455.6939925286
+      },
+      {
+        "mono_ms": 23906.163621,
+        "cpu_cores": 0.026857491312370002,
+        "memory_bytes": 87621632,
+        "egress_bps": 159839.9929408536
+      },
+      {
+        "mono_ms": 24905.867308,
+        "cpu_cores": 0.022599696583893835,
+        "memory_bytes": 88145920,
+        "egress_bps": 165961.17645407846
+      },
+      {
+        "mono_ms": 25905.878324,
+        "cpu_cores": 0.021434763874641147,
+        "memory_bytes": 88932352,
+        "egress_bps": 173270.09125667464
+      },
+      {
+        "mono_ms": 26905.430917,
+        "cpu_cores": 0.021226496883291056,
+        "memory_bytes": 89194496,
+        "egress_bps": 180664.83070991337
+      },
+      {
+        "mono_ms": 27905.545187,
+        "cpu_cores": 0.021267569754804157,
+        "memory_bytes": 89456640,
+        "egress_bps": 187842.5352334992
+      },
+      {
+        "mono_ms": 28905.633717,
+        "cpu_cores": 0.03220914852408113,
+        "memory_bytes": 89710592,
+        "egress_bps": 195598.68364853642
+      },
+      {
+        "mono_ms": 29905.55064,
+        "cpu_cores": 0.010407864654171867,
+        "memory_bytes": 89710592,
+        "egress_bps": 194992.19936694668
+      },
+      {
+        "mono_ms": 30905.615976,
+        "cpu_cores": 0.008889419200907094,
+        "memory_bytes": 89710592,
+        "egress_bps": 202250.7857426628
+      },
+      {
+        "mono_ms": 31906.228151,
+        "cpu_cores": 0.008184989354142141,
+        "memory_bytes": 89972736,
+        "egress_bps": 209295.87429815187
+      },
+      {
+        "mono_ms": 32905.480837,
+        "cpu_cores": 0.01218910909187184,
+        "memory_bytes": 90234880,
+        "egress_bps": 216954.13286084402
+      },
+      {
+        "mono_ms": 33905.564255,
+        "cpu_cores": 0.009354219689701975,
+        "memory_bytes": 90234880,
+        "egress_bps": 224013.3132574359
+      },
+      {
+        "mono_ms": 34905.816761,
+        "cpu_cores": 0.009453612906019513,
+        "memory_bytes": 90497024,
+        "egress_bps": 231205.61919391883
+      },
+      {
+        "mono_ms": 35906.094341,
+        "cpu_cores": 0.009434381204465247,
+        "memory_bytes": 90497024,
+        "egress_bps": 238501.7966712796
+      },
+      {
+        "mono_ms": 36906.393427,
+        "cpu_cores": 0.008131567961864565,
+        "memory_bytes": 90497024,
+        "egress_bps": 245646.53056176062
+      },
+      {
+        "mono_ms": 37906.46131,
+        "cpu_cores": 0.009638345720177514,
+        "memory_bytes": 90488832,
+        "egress_bps": 253054.82187952736
+      }
+    ],
+    "diagnostic_counts": {
+      "other": 94,
+      "ice": 68,
+      "candidate": 159,
+      "ice_ufrag": 10,
+      "discard": 242,
+      "connection_state": 12,
+      "candidate_failure": 6,
+      "stun": 16,
+      "other_failure": 25,
+      "ice_integrity": 2,
+      "dtls_failure": 6
+    },
+    "diagnostic_remote_ice_hashes": [
+      "3b084dc902a2b4021e13aba084129de43b9f62bf04b74b2618881476eed20db2",
+      "e129b326d5e626525324d096c73b0404d19261b0b4ab7ada9d39a902fb4758e8"
+    ]
+  }
+}

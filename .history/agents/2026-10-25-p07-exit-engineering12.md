@@ -1,0 +1,5 @@
+# P07 independent engineering review12 — measurement cutoff classification
+
+2026-10-25T18:14:33Z — Startedreadonlyraw16/controllerfix12 review. OriginalouterFAIL/all12browserPASS; alert/error timestamps afterexistingbrowser.finished_at identified. Initialread authorjournal beforecreation returnedmissing, retainedreadattempt notproductfailure.
+2026-10-25T18:15:50Z — Independentlycomputed Cpostruninventory2102files identity4c7006aa...matchesbefore/source2ec/cleanGit. RequiredalertstatesallRECOVERED/94hostsamples/0operationalmonitorerrors;7operationalnon200health retained/recovered, notstablehealthproof. Codefix12 preservesstrictsoakALL200/600coverage; newmarkerbeforecleanup+validatedwindowclassification only.
+2026-10-25T18:19:26.627164+00:00 — AuthorSTOPand2sourcehashesverified. P10all4records/21activecells checked finiteDOMmetrics, UI11files W==C, actualcurrent2ec media32/32suite logs/reports/sourceclean/cleanup read. P10localmobileWEB independentPASS, physical/native/productiondeferred; raw16additivecomponentrequalaccepted, notP07/signingPASS. No runtime tests/Docker/appedits. REPORT/REQUALIFICATION/P10OBSERVATIONS/INPUTS saved; allreviewerwritesSTOP.

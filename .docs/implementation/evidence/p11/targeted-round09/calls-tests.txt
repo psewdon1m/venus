@@ -1,0 +1,75 @@
+ Container venus-p05-ea8edfbfe93c-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (13.302104ms)
+✔ P06-RELEASE reject signed wrong version (4.99822ms)
+✔ P06-RELEASE reject signed wrong schema (6.017607ms)
+✔ P06-RELEASE reject signed wrong environment (4.720938ms)
+✔ P06-RELEASE reject signed wrong image digest (4.11635ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.623868ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.612693ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (87.623054ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (13.969999ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (17.170659ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (10.897103ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (11.571379ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (11.93734ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (13.615829ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (11.489521ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (21.731532ms)
+✔ P06-JOURNAL corruption fails closed without mutation (8.711093ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (121.484693ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (51.197817ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (4.187353ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (6.806605ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1764.15724ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (12.254916ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (7.981913ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (7.662878ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (3.916431ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (3.597706ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (16.192741ms)
+✔ host authority denies stale database grants, rollback and unsafe state (4.846264ms)
+✔ backup and restore cannot run while a media container survives API stop (1.606434ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (13.63351ms)
+{"id":"P11-ADMISSION-SOURCES","phase":"START"}
+{"id":"P11-ADMISSION-SOURCES","status":"PASS"}
+{"id":"P11-CINEMA-GAMES","phase":"START"}
+{"id":"P11-CINEMA-GAMES","status":"PASS"}
+{"id":"P11-QUALITY-30S-8","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","phase":"START"}
+{"id":"P11-DEVICE-LIFECYCLE","status":"PASS"}
+{"id":"P11-TWO-PRIVATE-PAIRS","phase":"START"}
+{"id":"P11-TWO-PRIVATE-PAIRS","status":"PASS"}
+{"id":"P11-SWITCH-AND-STALE-ACL","phase":"START"}
+{"id":"P11-SWITCH-AND-STALE-ACL","status":"PASS"}
+{"id":"P11-TCP-FALLBACK","phase":"START"}
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (109566.477983ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 31
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 112774.634727
+
+✖ failing tests:
+
+test at tests/p11/integration.mjs:45:1
+✖ P11 shared SFU room calls, private pairs and authority lifecycle (109566.477983ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert(stats.every(s=>s.rtt.length&&s.rtt.every(r=>r.protocol==='tcp')))
+  
+      at file:///app/tests/p11/integration.mjs:56:340
+      at async record (file:///app/tests/p11/integration.mjs:23:95)
+      at async TestContext.<anonymous> (file:///app/tests/p11/integration.mjs:56:3)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+

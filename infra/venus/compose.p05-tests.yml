@@ -23,7 +23,7 @@ services:
     shm_size: 1gb
     mem_limit: 3g
     cpus: 2
-    tmpfs: ["/tmp:size=1g,mode=1777,exec", "/home/node:size=64m,uid=1000,gid=1000"]
+    tmpfs: ["/var/tmp:size=64m,mode=1777", "/tmp:size=1g,mode=1777,exec", "/home/node:size=64m,uid=1000,gid=1000"]
     environment:
       DB_HOST: db
       DB_PASSWORD_FILE: /run/secrets/db_password

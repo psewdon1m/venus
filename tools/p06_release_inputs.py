@@ -26,7 +26,7 @@ if trust.get('environment')!='service' or trust.get('owner_approved') is not Tru
 candidate={'version':tag.removeprefix('venus-v'),'main_sha':source,'source_identity':identity(inventory(root)),
            'image_reference':reference,'oci_digest':digest,'config_digest':config_digest,
            'trust_file':str(trust_file),'private_key_file':str(Path(os.environ['RUNNER_TEMP'])/'venus-signing.pem'),
-           'compose_template':str(root/'infra/venus/compose.standalone.yml'),'output':str(root/'.artifacts/p06-service-release')}
+           'environment':'standalone-local-presentations-v4','compose_template':str(root/'infra/venus/compose.presentations.standalone.yml'),'distribution_directory':str(root/'.artifacts/delivery-release'),'output':str(root/'.artifacts/p06-service-release')}
 (root/'.artifacts/p06-service-candidate.json').write_text(json.dumps(candidate,indent=2)+'\n')
 print(json.dumps({'status':'CANDIDATE_INPUTS_ONLY','main_sha':source,'OCI':digest,'config_digest':config_digest,
                   'trust_key_id':trust['key_id'],'private_key_read':False}))

@@ -1,0 +1,9 @@
+# P11 local production build/inventory proof01
+
+**PASS_LOCAL_UNSIGNED_BUILD_INVENTORY** only. Built exact clean source `f510c30329d8c0ab90788d271970682245bf2fe9`, core `6509ee7b54a01f1bc1c5d1993d133bf7219af67e200a53835ad71fb053025dcd` with the existing production Dockerfile and RELEASE_VERSION0.0.0. Began context/build after the Calls08 log reached DEVICE-LIFECYCLE after its30squality phase; parent was notified. No quality PASS is inferred here.
+
+Native Docker build, image inspection and existing read-only `tools/media-inventory.mjs` each exited0. Actual image/config ID: `sha256:f1199f9061e7296788add7a9b2bfae1a4efd19b61c28025fb91307062c179713`. OCI revision/version labels match source and0.0.0. Source/core before/after match and Git status is empty before/after. Exact argv, UTC times and exit codes are in COMMANDS.json; raw stdout/stderr and combined build.txt are retained. There were no failed attempts or retries in this task.
+
+Actual production image: Nodev24.22.0, Debian12, 88OSpackages, LiveKit binary81133440bytes / SHA256 `5153d7ce95fb2f2ffb455a0e4ac464be2c94a38c77c99fd728f9c61748a11381`, go1.27.1. Embedded Go module/build info, binary hash, Node and OS inventory match P09production-build02 baseline exactly. Exporter ran by immutableimageID, nonroot1000:1000, readonly/no-network, capdropALL/no-new-privileges,1CPU/512MiB/64pids. It read media binary bytes rather than executing the LiveKit server; no Venus app, PostgreSQL, general test or new dependency/scanner was launched.
+
+Image remains local, unsigned and unpublished. This is not P11functional runtime/stage acceptance, P06publicdelivery or finalP07. Known Node24.22.1 patch/full redistribution-license/advisory readiness and new signedv3delivery obligations remain separate HOLD. No zero-CVE, reproducible upstream-source attestation, publicnetwork or physical-device claim is made. Immutable signed0.0.1 unchanged. No application, Git state/index, manifest or foreign journal was edited.

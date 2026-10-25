@@ -1,0 +1,121 @@
+# New explicit profile4. Historical signed v2/media-v3 templates are unchanged.
+services:
+  app:
+    image: ${VENUS_IMAGE:?signed exact image required}
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    cpus: 2
+    mem_limit: 1g
+    pids_limit: 128
+    command: [node, infra/venus/presentation-app-entry.mjs]
+    ports: ["127.0.0.1:${VENUS_HTTP_PORT:-4300}:4300"]
+    environment:
+      NODE_ENV: production
+      DB_HOST: db
+      DB_PASSWORD_FILE: /run/secrets/db_password
+      KEYRING_FILE: /run/secrets/keyring
+      IMAGE_DIGEST: ${VENUS_OCI_DIGEST:?signed OCI digest required}
+      APP_ORIGIN: ${VENUS_ORIGIN:-https://127.0.0.1:4300}
+      VENUS_DEPLOYMENT_PROFILE: ${VENUS_DEPLOYMENT_PROFILE:-local-pilot}
+      VENUS_PRIVATE_TEXT_CHAT: ${VENUS_PRIVATE_TEXT_CHAT:-true}
+      VENUS_PRIVATE_TOPICS: ${VENUS_PRIVATE_TOPICS:-true}
+      VENUS_PROTECTED_ROOT: /var/lib/venus-protected
+      DELETION_LEDGER_FILE: /var/lib/venus-protected/deletions.jsonl
+      CATALOG_REVOCATION_LEDGER_FILE: /var/lib/venus-protected/catalog.jsonl
+      VENUS_SERVING_GATE_FILE: /run/venus-control/serving.json
+      VENUS_MEDIA_KEY_FILE: /run/secrets/media_key
+      VENUS_MEDIA_AUTHORITY_DIRECTORY: /var/lib/venus-protected/media/authority
+      VENUS_MEDIA_INTERNAL_ORIGIN: http://media:7890
+      VENUS_CALLS_ENABLED: ${VENUS_CALLS_ENABLED:-false}
+      VENUS_PRESENTATIONS_ENABLED: ${VENUS_PRESENTATIONS_ENABLED:-false}
+      VENUS_PRESENTATIONS_AUTHORITY_DIRECTORY: /var/lib/venus-protected/presentations/authority
+      VENUS_PRESENTATIONS_SPOOL: /run/venus-presentations/spool
+      TOPIC_BIRTH_DIRECTORY: /var/lib/venus-protected/topic-births
+      TOPIC_PERSONAL_CHAIN_DIRECTORY: /var/lib/venus-protected/topic-personal
+      TOPIC_PERSONAL_WITNESS_DIRECTORY: /var/lib/venus-protected/topic-personal-witness
+      TOPIC_LIFECYCLE_CHAIN_DIRECTORY: /var/lib/venus-protected/topic-lifecycle
+      TOPIC_LIFECYCLE_WITNESS_DIRECTORY: /var/lib/venus-protected/topic-lifecycle-witness
+    volumes:
+      - ${VENUS_STATE_ROOT}/protected:/var/lib/venus-protected
+      - ${VENUS_STATE_ROOT}/control:/run/venus-control:ro
+      - ${VENUS_STATE_ROOT}/secrets/db_password:/run/secrets/db_password:ro
+      - ${VENUS_STATE_ROOT}/secrets/keyring:/run/secrets/keyring:ro
+      - ${VENUS_STATE_ROOT}/protected/media/key.json:/run/secrets/media_key:ro
+      - presentation-spool:/run/venus-presentations/spool
+    depends_on:
+      db: {condition: service_healthy}
+      presentation-renderer: {condition: service_started}
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4300/health/ready').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [database, edge, media_control]
+  presentation-renderer:
+    image: ${VENUS_IMAGE:?signed exact image required}
+    user: "0:0"
+    init: false
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [SETUID, SETGID, KILL]
+    security_opt: [no-new-privileges:true]
+    network_mode: none
+    command: [/usr/bin/python3, -I, -B, /app/infra/venus/presentation-guardian.py]
+    cpus: 0.5
+    mem_limit: 512m
+    pids_limit: 32
+    # Mask the shared production image's historical /var/lib/venus VOLUME;
+    # converter must not acquire an anonymous writable persistent volume.
+    tmpfs: ["/run/venus-presentations/scratch:size=64m,nr_inodes=1024,uid=65534,gid=65534,mode=0700,noexec,nosuid,nodev", "/var/lib/venus:size=4k,nr_inodes=1,mode=0000,ro,noexec,nosuid,nodev"]
+    volumes:
+      - presentation-spool:/run/venus-presentations/spool
+    stop_grace_period: 15s
+  media:
+    image: ${VENUS_IMAGE:?signed exact image required}
+    user: "1000:1000"
+    init: true
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    cpus: 2
+    mem_limit: 1g
+    pids_limit: 128
+    command: [node, infra/venus/media-supervisor.mjs]
+    ports: ["7881:7881/tcp", "7882:7882/udp"]
+    environment:
+      VENUS_MEDIA_KEY_FILE: /run/secrets/media_key
+      VENUS_MEDIA_AUTHORITY_ORIGIN: http://app:4300
+      VENUS_MEDIA_NODE_IP: 127.0.0.1
+    volumes:
+      - ${VENUS_STATE_ROOT}/protected/media/key.json:/run/secrets/media_key:ro
+    networks: [media_control, edge]
+  db:
+    image: postgres:16.14-bookworm@sha256:64154d0babcb1741988719e703419af0382b19953706149f9872fbd0f438efa8
+    environment: {POSTGRES_DB: venus, POSTGRES_USER: venus, POSTGRES_PASSWORD_FILE: /run/secrets/db_password}
+    volumes:
+      - ${VENUS_STATE_ROOT}/postgres:/var/lib/postgresql/data
+      - ${VENUS_STATE_ROOT}/secrets/db_password:/run/secrets/db_password:ro
+    healthcheck:
+      test: [CMD-SHELL, "pg_isready -U venus -d venus"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+    cpus: 1
+    mem_limit: 512m
+    pids_limit: 128
+    networks: [database]
+volumes:
+  presentation-spool:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+      o: size=64m,nr_inodes=1024,uid=1000,gid=1000,mode=1777,noexec,nosuid,nodev
+networks:
+  media_control: {internal: true}
+  database: {internal: true}
+  edge: {}

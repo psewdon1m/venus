@@ -26,6 +26,39 @@ ADR_SHA = '056fe00e29e117f6e1ef7e4884e1f6d3d6ca61fa9a1a27e22a4b9fc17de26dca'
 AUTHORITY_IDS = ['U-008', 'U-009', 'U-011', 'U-017']
 REVISION = 'STANDALONE-LOCAL-PILOT-20261019'
 
+
+# Exact additive chain for the owner's functional-first order. V2 remains sealed.
+V3_PATH = '.docs/implementation/source-revisions.v3.json'
+V3_INPUTS = {
+    MANIFEST_PATH: 'de15000772bfc1bc6b4dedb683daff5462366f911e4ba993527c431ae8c9430b',
+    '.docs/implementation/evidence/pipeline-v3-owner-order01/PLAN-v2-SNAPSHOT.md': PLAN_SHA,
+    PLAN_PATH: '171139ce387bc9af063fdf7f5e68b235166c7b2fa1728a745a159e182b46c501',
+    '.docs/implementation/user-decisions.v7.json': '951e1c50f75226b1616ab04e6bad9700683ab63ef42db673de8a08264d491970',
+    '.docs/adr/ADR-035-functional-development-before-final-pilot.md': '7e9b077ee378a290f89fe3f85369ffd24f9113c8e128256097fa48f9e449a009',
+}
+
+
+def expected_v3():
+    return {'schema_version': 3, 'revision': 'FUNCTIONAL-STAGES-FIRST-20261025',
+            'previous_revision': REVISION, 'decision_ids': ['U-022', 'U-023'],
+            'runtime_acceptance': 'NOT_RUN', 'inputs': V3_INPUTS,
+            'compatibility': 'Execution order only; preserve original requirements and stage gates',
+            'rollback': 'Restore pinned V2 plan and remove this addendum together; preserve all proof'}
+
+
+def current_plan_sha(root):
+    supplement = root / V3_PATH
+    if not supplement.exists():
+        return PLAN_SHA
+    if supplement.stat().st_size > 16384 or _json(supplement.read_bytes()) != expected_v3():
+        raise ValueError('v3 source revision differs from exact owner-authorized chain')
+    for name, expected in V3_INPUTS.items():
+        target = root / name
+        if not target.is_file() or hashlib.sha256(target.read_bytes()).hexdigest() != expected:
+            raise ValueError('v3 source revision input missing/stale: ' + name)
+    return V3_INPUTS[PLAN_PATH]
+
+
 # This finite map is the complete exemption surface: exactly these eight old
 # source rows, only the plan path and only its pinned original -> current bytes.
 LINKS = {
@@ -109,7 +142,7 @@ def validate_source_revisions(root: Path):
         # acceptance/status, extra metadata and recomputed authority/hash fields.
         if type(manifest.get('schema_version')) is not int or manifest != expected_manifest():
             raise ValueError('source revision manifest differs from reviewed exact revision')
-        for name, expected in ((PLAN_PATH, PLAN_SHA), (AUTHORITY_PATH, AUTHORITY_SHA),
+        for name, expected in ((PLAN_PATH, current_plan_sha(root)), (AUTHORITY_PATH, AUTHORITY_SHA),
                                (ADR_PATH, ADR_SHA), (ARCHIVE_PATH, ARCHIVE_SHA)):
             path = root / name
             if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:

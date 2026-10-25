@@ -1,0 +1,40 @@
+✖ real PG terminate_backend preserves active-query rejection and checked-out-client recovery (365.872594ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 492.548634
+
+✖ failing tests:
+
+test at tests/p07/database-checked-out.test.mjs:25:7
+✖ real PG terminate_backend preserves active-query rejection and checked-out-client recovery (365.872594ms)
+  Error: Isolated worker exited 1 during checked-out-between-queries; node:events:505
+      throw er; // Unhandled 'error' event
+      ^
+  
+  Error: Connection terminated unexpectedly
+      at Connection.<anonymous> (/app/node_modules/pg/lib/client.js:204:73)
+      at Connection.wrapper (node:events:639:12)
+      at Connection.emit (node:events:514:28)
+      at Socket.<anonymous> (/app/node_modules/pg/lib/connection.js:64:12)
+      at Socket.emit (node:events:514:28)
+      at TCP.<anonymous> (node:net:362:12)
+  Emitted 'error' event on Client instance at:
+      at Client._handleErrorEvent (/app/node_modules/pg/lib/client.js:422:10)
+      at Connection.<anonymous> (/app/node_modules/pg/lib/client.js:222:16)
+      at Connection.wrapper (node:events:639:12)
+      at Connection.emit (node:events:514:28)
+      at Socket.<anonymous> (/app/node_modules/pg/lib/connection.js:64:12)
+      at Socket.emit (node:events:514:28)
+      at TCP.<anonymous> (node:net:362:12)
+  
+  Node.js v24.22.1
+  
+      at phase (file:///app/tests/p07/database-checked-out.test.mjs:30:162)
+      at async TestContext.<anonymous> (file:///app/tests/p07/database-checked-out.test.mjs:33:14)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

@@ -5,3 +5,7 @@ export const contractRevision = 'P00-2' as const;
 export * from './private-chat.js';
 export * from './self-actions.js';
 export * from './topic-games.js';
+export * from './music.js';
+export * from './media.js';
+export * from './calls.js';
+export * from './presentations.js';

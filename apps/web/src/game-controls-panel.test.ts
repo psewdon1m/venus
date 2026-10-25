@@ -39,11 +39,11 @@ describe('actual GamesPanel own controls',()=>{
  });
  it('a newer shared frame cannot authorize Next against an older rendered game revision',async()=>{
   const result=await scenario(String.raw`
-   const first=publicGame(),completed={...first,game_rev:2,current_round:{...first.current_round,state:'completed'}},posts=[];let i,newer=false;
-   const api={async request(path,body){if(body){posts.push(body);return {};}if(path.endsWith('/current'))return first;if(path.endsWith('/self-actions'))return metadata(i,newer?completed:first,{session:{advance:newer},round:{finish:!newer}});throw new ApiError('NOT_FOUND');}};
+   const first=publicGame(),completed={...first,game_rev:2,current_round:{...first.current_round,state:'completed'}},posts=[];let i,newer=false,newerOwnReads=0;
+   const api={async request(path,body){if(body){posts.push(body);return {};}if(path.endsWith('/current'))return first;if(path.endsWith('/self-actions')){if(newer)newerOwnReads++;return metadata(i,newer?completed:first,{session:{advance:newer},round:{finish:!newer}});}throw new ApiError('NOT_FOUND');}};
    i=instance(api);render(i);await settle();render(i);newer=true;i.props.frame={schema:1,room_id:'room',room_rev:2,stream_rev:2,type:'game.snapshot',stream:'game',audience:'room',payload:completed};
    function beforeEffects(){current=i;i.cursor=0;i.effects=[];i.tree=GamesPanel(i.props);}
-   beforeEffects();for(const timer of intervals.filter(t=>t.ms===1500))timer.fn();await settle();beforeEffects();const next=find(i,'game-next');if(next)next.props.onClick();await settle();return {nextOffered:!!next,postedRevisions:posts.map(p=>p.expected_rev)};
+   beforeEffects();const syncTimers=intervals.filter(t=>t.ms===4000);assert.equal(syncTimers.length,1,'Actual GamesPanel sync timer must be scheduled');for(const timer of syncTimers)timer.fn();await settle();assert.equal(newerOwnReads,1,'Newer own metadata must actually be read');beforeEffects();const next=find(i,'game-next');if(next)next.props.onClick();await settle();return {nextOffered:!!next,postedRevisions:posts.map(p=>p.expected_rev)};
   `);expect(result).toEqual({nextOffered:false,postedRevisions:[]});
  });
  it('new same-session frame does not remove known Stop while round controls await coherent JSX',async()=>{
@@ -89,8 +89,8 @@ describe('actual GamesPanel degraded round refusal',()=>{
  });
  it('a late negative whose display lease aged in flight cannot leave or reseed refusal controls',async()=>{
   const result=await scenario(String.raw`
-   const live=game('invite'),posts=[];let i,hold=false,release;const pending=new Promise(done=>release=done);const api={async request(path,body){if(body){posts.push(body);return {};}if(path.endsWith('/current'))return live;if(path.endsWith('/self-actions')){if(hold)return pending;return invitationMetadata(i,live);}if(path.endsWith('/invitation'))return pendingInvitation(live);throw new ApiError('NOT_FOUND');}};
-   i=instance(api);render(i);await settle();render(i);const old=find(i,'pair-decline').props.onClick;hold=true;for(const t of intervals.filter(t=>t.ms===1500))t.fn();await settle();clock=16001;const negative=invitationMetadata(i,live);negative.round_actions.decline_invitation=false;negative.round_actions.skip=false;release(negative);await settle();render(i);const declined=find(i,'pair-decline');old();await settle();return {enabled:!!declined&&!declined.props.disabled,posts};
+   const live=game('invite'),posts=[];let i,hold=false,release,heldReads=0;const pending=new Promise(done=>release=done);const api={async request(path,body){if(body){posts.push(body);return {};}if(path.endsWith('/current'))return live;if(path.endsWith('/self-actions')){if(hold){heldReads++;return pending;}return invitationMetadata(i,live);}if(path.endsWith('/invitation'))return pendingInvitation(live);throw new ApiError('NOT_FOUND');}};
+   i=instance(api);render(i);await settle();render(i);const old=find(i,'pair-decline').props.onClick;hold=true;const syncTimers=intervals.filter(t=>t.ms===4000);assert.equal(syncTimers.length,1,'Actual GamesPanel sync timer must be scheduled');for(const t of syncTimers)t.fn();await settle();assert.equal(heldReads,1,'Self-actions request must be held in flight before its lease ages');clock=16001;const negative=invitationMetadata(i,live);negative.round_actions.decline_invitation=false;negative.round_actions.skip=false;release(negative);await settle();render(i);const declined=find(i,'pair-decline');old();await settle();return {enabled:!!declined&&!declined.props.disabled,posts};
   `);expect(result).toEqual({enabled:false,posts:[]});
  });
  it('an explicit private-cleared frame revokes generic refusal before passive effects',async()=>{

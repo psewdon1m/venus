@@ -5,7 +5,7 @@ services:
       APP_ORIGIN: https://127.0.0.1:${VENUS_PILOT_HTTPS_PORT:-8443}
       VENUS_DEPLOYMENT_PROFILE: ${VENUS_DEPLOYMENT_PROFILE:-local-pilot}
   local-tls:
-    image: node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+    image: node:24.22.1-bookworm-slim@sha256:2dd9a4f758e173b65fee15388f7706af6fb01ef50cf7a2c0538711d67a6981ae
     command: [node, /run/fixture/proxy.mjs]
     user: "1000:1000"
     read_only: true

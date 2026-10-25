@@ -1,0 +1,301 @@
+{
+  "suite": "P09_CINEMA",
+  "status": "FAIL",
+  "production": false,
+  "synthetic_only": true,
+  "records": [
+    {
+      "id": "P09-DENIED-NO-AUDIO",
+      "status": "PASS",
+      "detail": {
+        "explicit_denied": true,
+        "no_audio_never_live": true
+      }
+    },
+    {
+      "id": "P09-REAL-TAB-CAPTURE-8",
+      "status": "FAIL",
+      "error": "locator.waitFor: Timeout 25000ms exceeded.\nCall log:\n  - waiting for getByTestId('cinema-status').filter({ hasText: /Идёт показ/ }) to be visible\n"
+    }
+  ],
+  "page_errors": [],
+  "profile": {
+    "publisher": 1,
+    "viewers": 7,
+    "warmup_seconds": 3,
+    "measure_seconds": 30,
+    "av_min_samples": 20,
+    "av_p95_ms": 120,
+    "viewer_skew_p95_ms": 500,
+    "glass_p95_ms": 2000
+  },
+  "runtime_cleanup": "completed",
+  "browser_version": "156.0.8078.4",
+  "error": "locator.waitFor: Timeout 25000ms exceeded.\nCall log:\n  - waiting for getByTestId('cinema-status').filter({ hasText: /Идёт показ/ }) to be visible\n",
+  "final_media_state": [
+    {
+      "status": "Подключение прервано. Можно подключиться заново.",
+      "requests": [
+        {
+          "path": "/api/v1/rooms/bd97388d-6369-4cad-8079-1918e6614779/cinema/start",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/bd97388d-6369-4cad-8079-1918e6614779/media/leases/e9d94b43-0988-411d-b8af-5424e1c70d4c/release",
+          "status": 200,
+          "code": null
+        }
+      ],
+      "websockets": [
+        {
+          "path": "/api/v1/rooms/bd97388d-6369-4cad-8079-1918e6614779/ws",
+          "opened": true,
+          "closed": false
+        },
+        {
+          "path": "/api/v1/rooms/bd97388d-6369-4cad-8079-1918e6614779/media/rtc/v1",
+          "opened": true,
+          "closed": true,
+          "code": 1000
+        }
+      ],
+      "capture": [
+        [
+          {
+            "kind": "audio",
+            "state": "live",
+            "muted": false
+          },
+          {
+            "kind": "video",
+            "state": "live",
+            "muted": false
+          }
+        ]
+      ],
+      "pcs": [
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": [
+            {
+              "kind": "audio",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            },
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "video",
+              "state": "ended"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "status": "Sharing has ended.",
+      "requests": [],
+      "websockets": [
+        {
+          "path": "/api/v1/rooms/bd97388d-6369-4cad-8079-1918e6614779/ws",
+          "opened": true,
+          "closed": false
+        }
+      ],
+      "capture": [],
+      "pcs": []
+    }
+  ],
+  "supervisor_end": {
+    "running": true,
+    "boot_id": "89a32498-e03d-447b-8b6a-81563ce6a271",
+    "api_epoch": "a7ce23dd-8ae6-48e0-a71c-8334431e29a0",
+    "cutoff_confirmed": false,
+    "authority_age_ms": 253.2680309999996,
+    "metrics": [
+      {
+        "mono_ms": 11424.388416,
+        "cpu_cores": 0.20276838734497593,
+        "memory_bytes": 59723776,
+        "egress_bps": 13747.55119371511
+      },
+      {
+        "mono_ms": 12425.233472,
+        "cpu_cores": 0.01241950482293235,
+        "memory_bytes": 59985920,
+        "egress_bps": 27256.96633705507
+      },
+      {
+        "mono_ms": 13424.750248,
+        "cpu_cores": 0.018384884017194316,
+        "memory_bytes": 60248064,
+        "egress_bps": 59524.76379445979
+      },
+      {
+        "mono_ms": 14425.214055,
+        "cpu_cores": 0.16829694269989717,
+        "memory_bytes": 85413888,
+        "egress_bps": 226430.97972658594
+      },
+      {
+        "mono_ms": 15425.320477,
+        "cpu_cores": 0.041613571400504465,
+        "memory_bytes": 86986752,
+        "egress_bps": 67104.85856674169
+      },
+      {
+        "mono_ms": 16425.506768,
+        "cpu_cores": 0.014224350131589637,
+        "memory_bytes": 87248896,
+        "egress_bps": 74306.1574316259
+      },
+      {
+        "mono_ms": 17425.542072,
+        "cpu_cores": 0.017413385237847544,
+        "memory_bytes": 87248896,
+        "egress_bps": 82741.07890895012
+      },
+      {
+        "mono_ms": 18426.02883,
+        "cpu_cores": 0.01459389630422276,
+        "memory_bytes": 87248896,
+        "egress_bps": 98679.96673675123
+      },
+      {
+        "mono_ms": 19426.00161,
+        "cpu_cores": 0.02053455895069464,
+        "memory_bytes": 87764992,
+        "egress_bps": 89042.42373477406
+      },
+      {
+        "mono_ms": 20426.515274,
+        "cpu_cores": 0.016502523247898363,
+        "memory_bytes": 87486464,
+        "egress_bps": 114797.03289689384
+      },
+      {
+        "mono_ms": 21426.905942,
+        "cpu_cores": 0.015809823607830776,
+        "memory_bytes": 87465984,
+        "egress_bps": 110244.93083336118
+      },
+      {
+        "mono_ms": 22426.655223,
+        "cpu_cores": 0.015825967870838602,
+        "memory_bytes": 87965696,
+        "egress_bps": 117621.4899423368
+      },
+      {
+        "mono_ms": 23426.437684,
+        "cpu_cores": 0.018212962029546965,
+        "memory_bytes": 88207360,
+        "egress_bps": 124803.1495523506
+      },
+      {
+        "mono_ms": 24427.280372,
+        "cpu_cores": 0.020574661979246022,
+        "memory_bytes": 88186880,
+        "egress_bps": 133223.73395807826
+      },
+      {
+        "mono_ms": 25427.032444,
+        "cpu_cores": 0.014772662556682362,
+        "memory_bytes": 88162304,
+        "egress_bps": 139378.55584659404
+      },
+      {
+        "mono_ms": 26427.127288,
+        "cpu_cores": 0.014430631341201086,
+        "memory_bytes": 88137728,
+        "egress_bps": 146570.09870555848
+      },
+      {
+        "mono_ms": 27426.875218,
+        "cpu_cores": 0.018058552019207457,
+        "memory_bytes": 88137728,
+        "egress_bps": 153934.80234562705
+      },
+      {
+        "mono_ms": 28426.930016,
+        "cpu_cores": 0.011638362241025947,
+        "memory_bytes": 88662016,
+        "egress_bps": 161239.16441626873
+      },
+      {
+        "mono_ms": 29427.055851,
+        "cpu_cores": 0.018921618998073327,
+        "memory_bytes": 88924160,
+        "egress_bps": 170722.51713205624
+      },
+      {
+        "mono_ms": 30427.021878,
+        "cpu_cores": 0.007526255689484549,
+        "memory_bytes": 89186304,
+        "egress_bps": 171541.82779051576
+      },
+      {
+        "mono_ms": 31427.147588,
+        "cpu_cores": 0.008759898793122714,
+        "memory_bytes": 89448448,
+        "egress_bps": 178881.51280502524
+      },
+      {
+        "mono_ms": 32427.05079,
+        "cpu_cores": 0.007545730411612372,
+        "memory_bytes": 89710592,
+        "egress_bps": 186218.02553243522
+      },
+      {
+        "mono_ms": 33427.104596,
+        "cpu_cores": 0.012543325093850049,
+        "memory_bytes": 90234880,
+        "egress_bps": 193413.59318820565
+      },
+      {
+        "mono_ms": 34426.769885,
+        "cpu_cores": 0.010625556490638493,
+        "memory_bytes": 90497024,
+        "egress_bps": 200811.2137221553
+      },
+      {
+        "mono_ms": 35426.567384,
+        "cpu_cores": 0.011603349689915554,
+        "memory_bytes": 90759168,
+        "egress_bps": 207994.119017095
+      },
+      {
+        "mono_ms": 36426.91542,
+        "cpu_cores": 0.012558629144946962,
+        "memory_bytes": 90759168,
+        "egress_bps": 215061.1509772594
+      },
+      {
+        "mono_ms": 37426.709072,
+        "cpu_cores": 0.012586597219162976,
+        "memory_bytes": 91021312,
+        "egress_bps": 222301.87154658983
+      },
+      {
+        "mono_ms": 38427.100868,
+        "cpu_cores": 0.014820193507464498,
+        "memory_bytes": 91013120,
+        "egress_bps": 229502.08200227903
+      }
+    ]
+  }
+}

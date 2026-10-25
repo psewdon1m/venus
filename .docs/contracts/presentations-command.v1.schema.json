@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:presentations-command:v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_rev",
+        "idempotency_key",
+        "action"
+      ],
+      "properties": {
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "action": {
+          "const": "stop"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_rev",
+        "idempotency_key",
+        "action",
+        "document_id"
+      ],
+      "properties": {
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "action": {
+          "const": "delete"
+        },
+        "document_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_rev",
+        "idempotency_key",
+        "action",
+        "document_id",
+        "title",
+        "default_mode",
+        "allow_switch"
+      ],
+      "properties": {
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "action": {
+          "const": "settings"
+        },
+        "document_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "default_mode": {
+          "enum": [
+            "scroll",
+            "slides"
+          ]
+        },
+        "allow_switch": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expected_rev",
+        "idempotency_key",
+        "action",
+        "document_id",
+        "content_version",
+        "page_index"
+      ],
+      "properties": {
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "action": {
+          "enum": [
+            "start",
+            "page"
+          ]
+        },
+        "document_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "content_version": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "page_index": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        }
+      }
+    }
+  ]
+}

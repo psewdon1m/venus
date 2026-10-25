@@ -1,0 +1,5 @@
+# Strict actual hour02: local component PASS
+
+Clean c2eeb909/corecde7f146 ran the unchanged accepted profile for3603929.585ms with8browser processes/contexts,12distinct completed games across3modes,694browser and720actualhost observations. Every in-hour live/ready probe200. Quality:RTTp953ms/jitterp95.003seconds/maxloss0/maxsampledfreeze9866.076599ms<=10000. BrowserCPU p95734.94<=960; browserpeak5310727061.504bytes<5368709120bytes. Other CPU/RAM/disk thresholds passed. This is one local venue/8slots/oneactivegame; no production or larger-capacity/device claim.
+
+Before/after source identity unchanged, clean checkout unchanged, pageerrors0; browser/runtime and ownedouter cleanup completed. One raw monitor error/one readiness alert occurred AFTER measurement_finished_at during teardown and are retained; operational monitorerrors0 and in-hourhealthloss0. The accepted fix12 boundary excludes only post-measurement teardown, not in-hour samples. Prior hour01FAIL is preserved. The downloader jitter finding is separate operator code, not exercised by this hour; final source/inheritance/reviews/CI/sign/publication remain required.

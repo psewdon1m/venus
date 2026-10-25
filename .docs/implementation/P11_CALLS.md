@@ -1,0 +1,54 @@
+# P11 Calls v1 — контракт до реализации
+
+2026-10-25, sourcebaseline dc92c892, независимыйentry01 INDEX0e9bea0e. Contract frozen BEFORE firstP11appedits/tests. Scope standalone-local functionaldevelopment, общийP07послефункций. P10nativeHOLDнеprerequisite; acceptedP09transport иv3profileбазовые. ЭтотконтрактнеполучаетPASSотсвоегоописания.
+
+## API и согласие
+
+Все endpoints /api/v1/rooms/:roomId/calls. Cookiepath, exactOrigin+CSRF, currentroom/member/18+/onlineWSgeneration, boundedbody/ratelimit иfinalenqueuefence обязательны. Нетnativebypass/directSFUtoken илиhostadminpair. Все mutatebody strictkeys, expected_rev>=0 и UUIDidempotency_key. При409клиентполучаетfreshstate. Idempotency replay не оживляетterminalscope, изменённыйbody409. ВreceiptнетJWT, privateoperationнепубликуетpairметаданныевroomoutbox.
+
+- GET /calls: schema1, room_id, available, transport_ready, general:null|scope, pairs:толькосвоиpending/active, self_lease:null|{lease_id,scope_id,kind,audio,video}. Scope={id,rev,kind:general_call|pair_call,state:pending|active,members:[ID],inviter_member_id,expires_at,participants:[{lease_id,member_id}]}. Generalparticipants — общие; pairIDs/counts/причины/участникиневыдаютсяпосторонним/host.
+- POST /general/join: {expected_rev,idempotency_key,audio:boolean,video:boolean}. Первыйсоздаётgeneral scope, остальныевходятвтекущийrev, максимум8. ВозвращаетCallGrant. Flags—явноеintentразрешитьданныйsourceвэтомподключении, неавтоматическоевключениеhardware. false/false—listenonly. Расширениеflagsактивногоleaseнеразрешено: выйти, выбратьыразрешения, явно войти снова; дляterminalpairнужныновоеinvite/accept.
+- POST /pairs/invite: {expected_rev:0,idempotency_key,member_id}. Толькодругомутекущемуonlineпринятомучленутойжекомнаты. Инициаторсогласилсяэтимдействием, pending60s, grantещёнет. Наличиеpendingнеотключаеттекущийзвонок.
+- POST /pairs/:scopeId/accept: {expected_rev,idempotency_key}. Толькоадресатpendinginvite. Подтверждаетобоих, сначалаretireстарыеCallsобоихиconfirmbackendcutoff; generalостальныепродолжаются, oldpairзакрытцеликом. Неподтверждённыйcutoff503, новогодоступанет. Новуюinvite приэтомнесамоуничтожать.
+- POST /pairs/:scopeId/decline (адресат) и /cancel (инициатор): {expected_rev,idempotency_key}; terminal, replayнеоткрываетscope.
+- POST /pairs/:scopeId/media: {expected_rev,idempotency_key,audio,video}; толькодвеactiveconsentingстороны, свежийCallGrant.
+- POST /:scopeId/leave: {expected_rev,idempotency_key}; generalтолькосвойparticipant, pairотзывобоих. Повторыterminalбезреактивации.
+- Existing /media/leases/:leaseId/renew|release переиспользуютсясkind-awarepolicy. CallGrant={schema_version:1,lease_id,scope_id,kind:general_call|pair_call,call_rev,audio,video,expires_at,signaling_url,token}; roommember/epoch/20slease/5srenew/protectedUUID ивсе4RTCpathsтакиежекакCinema.
+
+## Данные, admission и terminal fences
+
+Additive media migration003: room_call_scopes (UUIDid/roomFKcascade/kind/state/rev/upstream_room/APIepoch/created_by/target/sessionA/sessionB/generationA/generationB/pending_or_activeexpiry/timestamps), lease allow_audio/allow_video boolean defaultfalse. Old001/002 checksumsнепереписываются. CallsflagsдобавляютсявbindingтолькодляCalls, Cinema bindingнеослабляется. Kind-specificscopevalidator, currentpairmember/session/generation/offerобоих иниодноговосстановленногоconsent. ПолныеданныеpeerсогласиянеявляютсяpublicRoomView, не пишутсявsharedoutbox/log.
+
+InviteTTL60s, activepair≤24hиroomTTL, ≤16pending/room, ≤1pendingoutgoing/member; ≤4activepairs, general≤8; recentterminalmetadataдо2min, общийroomretention23h/backup≤7dпрежний. ОбщийadmissionодналогическаяVenusmedia room дляCinema+Calls; ≤64leases/16upstreamrooms не повышаются. General8+Cinema8илиgeneral4+pair2+pair2+Cinema8 укладываются16leases/6upstreamrooms. Pendinginviteнепотребляетmedia capacity, actualgrantпроверяетобщийvenuebudget. Неразрешённаяpendingcutoffнеразрешаетновыйcutover/grant.
+
+Roomleave/reaccept/socketreplacement закрываютегоpairscopes+pendinginvitesипарныеleases, generalтолькосвоюlease; roomclose/idle — всё. Exactoldlease release невыключаетновыйscope. APIboot/restore/новыйSFUepochзакрываютactiveCalls+pendinginvitesДОserving. СамscopeизстаройDBнеисточниксогласия. WatchdogvalidsetsCinema/general/pairотдельные; listenonlyвалиден, activepublisherCinemaненужендляCalls. Отзыв—protectedretire+socketclose+actualRemoveParticipant/DeleteRoom иdurablependingreceipt; sharedchildquiesceвозможенкакfailclosedfallback, UIчестнопоказываетtransportfailure.
+
+## UI и источники
+
+Defaultallowmic/allowcam=false, устройствапослеjoinвыключены. Явныеcheckboxesдоjoin разрешаютисточникидляlease; отдельныекнопкивключаютgetUserMediaтолькоэтотsource. Hardwarepermissiondeniedневыдаётсязаготовыйживойsource. Mutingостанавливает/освобождаетtrack/device; devicechangeсначалапрекращаетстарыйtrack, затемпробуетновый, failureостаётсяmuted. Сменаgeneration/leave/error/unmountзакрываетtracks/RTC/renew; позднийcapture/grantостанавливается/отзывается, некасаетсяновойscope. Старыйpairникогдапродолжаетполучатьновыйgeneral/privateaudio.
+
+Camera320x180@15fps, max180kbit,VP8/noSimulcast; microphoneechoCancellation/noiseSuppression/autoGainControlзапрашиваются, actualsettingsмогутотличаться. Remoteaudio+videoсобираютсяводинvideoэлементнаpeer. Localvolume/явныйautoplayretry, mute/leaveдоступныклавиатуройвовсехсостояниях. LocalCinema/Musicduckдо20%приCallsсвосстановлениемисходнойгромкости; этонеglobalservermutation/privatepairsidechannel. CinemaиCallsвиднывsplitlayout, не смешиватьзаписываемыетрекитранспортом. Browsercaptureвыбранногопользователемисточника—неDRM. RU/EN/TR,reflow/zoom200%,reducedmotion.
+
+## Замороженный профиль проверок (до первогоизмерения)
+
+SamepinnedSDK/browser/SFUкакP09, ownsyntheticdeviceinputs (реальныйbrowsergetUserMediaсfixturedevicesотдельноотphysicalhardware),8contexts,3swarmup+30s/100msstats. ОжидаемыеsourceA/V реально доставлены/decodedprogress, missingmetricsне0. p95selectedcandidateRTT≤300ms, RTPpacketloss≤1%, jitter≤30ms, freeze≤2s; SFUp95≤1.6core/peak≤768MiBпри2CPU/1GiB, browserfixture8CPU/4GiB/PG1CPU512MiB. Этонеhardwarelip-sync/echo/batteryилиproductioncapacity. ДоactualgetDisplayMedia+Calls+Gamesнеутверждатьсовместимость.
+
+Cases: general8normal; одновременноgeneral4+pair2+pair2 сразличимымиaudio/video иactualnegativeforeign/host/formerpair; mutualdecline/switch/revoke/staleJWT/all4RTCpaths/lateasync; permissionsdenied+mute+devicesimulatedfailure+autoplayretry/keyboard/reflow/RUEN/TR. Затем10s Cinema1+7+Calls8+actualGame,10sUDPblockedactualTCP/recovery≤5s, API-losswatchdog≤5s(жёсткийproductiontargetнеповышаемдо6.5), actualoldactivePGrestoredenied/primarysafe. SourceflagsfalseнеполучаютJWTsource. Explicitrevokeпослеconfirmedcutoff+заранеезаданногоboundeddrainнеполучаетновыеRTPframes. FullP07общийrelease/load/soak/restoreотдельно; нетдлинныхP03stats.
+
+## Отключение, совместимость, откат
+
+Versionedoperator calls_enabled=false выставляетservercapabilityunavailable, не просто скрываетUI. Safetyrelease/leaveнеблокироватьdisabledмодулем. Новоеsignedv3изданиепослефункций; 0.0.1неизменен. ОтключитьCalls, terminate/retireleases/scopes, подтвердитьcutoff, вернутьсовместимыйclient/API/image; additivetables/protectedwitnessсохранить. Incompatibleoldschema — closed-servingtrustedrecovery, неblinddown/автоDBrestore. Cinemaостаётсядоступнымпослесобственныхпроверок, fatalsharedSFUfailможетзакрытьвсёmedia. NativeP10/publicDNS/TLS/NAT/deviceclaimsнеполучаютPASSотэтихтестов.
+
+## Profile revision 2
+
+Current candidate client-fixture budget and rationale: ADR-039. The preceding frozen revision1/8CPU profile is historical; all8CPU failures remain. New runs use12CPU/4GiB for browser+API, same2CPU/1GiB SFU and all strict quality targets. This is not production8CPU capacity acceptance.
+
+## Profile revision3 candidate
+
+ADR-040 specifies8independent Chromium processes/1context per simulated user, with the same total12CPU/4GiB and all acceptance thresholds unchanged. Independent approval is required before first measurement. Older one-browser FAILs remain visible; no cause or stage PASS is inferred.
+
+## Coexistence request budget and native fixture source correction
+
+Round10 exposed a real normal-use failure: Games fallback plus Music/Cinema/Calls polls and media renewal exhausted the existing shared240requests/member/minute, so a release received429. All fallback snapshots now poll3s (both game protocols and the three media panels), while immediate action refresh, WebSocket reactions, local clock/expiry timers,5s media renewal and server/peer final fences remain unchanged. At worst7game reads/cycle +3media reads/cycle +2renewals/5s is224/min, leaving room for explicit actions; normal public questions use fewer. No server limit raised. P08/P09 and relevant game UI regressions require recheck.
+
+Round10 source localization: SFU RTCP reports already saw own Calls audio max30.458ms and Cinema video35.955ms, compared with browser33/43ms. This shows upstream contribution, not sole-cause proof. Eight browsers also incurred5266memory.max events and862359552swap bytes withzeroOOMkills, confirming memory pressure, not OOM. Replace extra post-getUserMedia AudioContext/canvas transformations with original per-user2s48kHzWAV +320x180@15Y4M, fed through Chromium native fake-device switches. Same permission requests/AEC flags, identity frequencies/colors,8processes and aggregate12CPU/4GiB, SFU limits and all max30ms thresholds. Native inputs are synthetic, not hardware/AEC qualification; source files are hashed in the report. No new profile/cap/metric change. References: https://webrtc.org/getting-started/testing and Chromium media/base/media_switches.cc (file-backed capture semantics).

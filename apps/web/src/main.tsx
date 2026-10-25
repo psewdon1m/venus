@@ -113,8 +113,22 @@ function App() {
   function enter(view:RoomView|undefined,id:string) {reacceptRequested.current=false;setNeedsReaccept(false);if(view) setRoom(view);setRoomId(id);history.replaceState(null,'','/#room='+id);}
   async function chooseLocale(value:Locale) {
     if(!room) {setLocale(value);return;}
-    const input={locale:value,expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};
-    await perform(async()=>{await api.request<Member>(`/api/v1/rooms/${room.room_id}/me`,input,'PATCH');await refresh();});
+    const id=room.room_id;let input:{locale:Locale;expected_rev:number;idempotency_key:string}|undefined;
+    await perform(async()=>{
+      // Media commands can commit before their room WebSocket frame arrives.
+      // A transport retry keeps its original body/key; only a rejected CAS refreshes them.
+      for(let attempt=0;attempt<2;attempt++){
+        if(!input){const current=await api.request<RoomView>(`/api/v1/rooms/${id}`);input={locale:value,expected_rev:current.room_rev,idempotency_key:crypto.randomUUID()};}
+        try {await api.request<Member>(`/api/v1/rooms/${id}/me`,input,'PATCH');break;}
+        catch(error){
+          // A rejected CAS committed nothing. Re-read once for this locale-only
+          // intent; transport failures retain the original body and key.
+          if(error instanceof ApiError&&error.code==='REVISION_CONFLICT'){input=undefined;if(attempt===0)continue;}
+          throw error;
+        }
+      }
+      await refresh(id);
+    });
   }
   const hasApproval=Boolean(policy?.available&&accepted&&adult);
   const leave=()=>{
@@ -138,7 +152,7 @@ function App() {
     repairFocusCorrection(focusCorrection.current,main);scheduleFocusCorrection(focusCorrection.current,main);
   }}>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
-      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
+      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} disabled={busy} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
     </nav>
     {error?<section className="notice error" role="alert" data-testid="error-message"><p>{message(t,error)}</p>
       <button data-testid="retry-action" onClick={()=>{void perform(async()=>{if(error instanceof ApiError&&error.code==='REVISION_CONFLICT') await refresh();else if(retry) await retry();else if(roomId) await refresh();else setPolicy(await api.bootstrap());if(roomId) setConnectionEpoch(v=>v+1);});}}>{t.retry}</button>

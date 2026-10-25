@@ -1,0 +1,124 @@
+{
+  "status": "TECHNICAL_CHECKLIST_ONLY_NOT_GATE_APPROVAL",
+  "candidate_source": "d18d27ed5cc3012ca38f414c50386411226fa0e6",
+  "created_at_utc": "2026-10-25T16:31:48.274350+00:00",
+  "owner_action_required_now": false,
+  "tests_build_docker_network_executed": false,
+  "all118_promotion_is_new_document": true,
+  "steps": [
+    {
+      "id": "D02-01",
+      "evidence": "CURRENT_CLEAN_PREFLIGHT",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Successful current compiled joint preflight with all mandatory records, actual8clients/mobileWEB RU/EN/TR and DB fault/recovery, PDF/live/media observations. Round08 running is not PASS; retain01–07FAIL.",
+      "relevant_current_sources": [
+        ".docs/implementation/P07_EXECUTION_PROFILE.md",
+        ".docs/implementation/P07_EXECUTION_PROFILE.v2.md",
+        ".docs/implementation/P10_MOBILE_WEB.md"
+      ],
+      "resource_rule": "Existing short runner only; fix only actual failures and rerun affected path/combined preflight."
+    },
+    {
+      "id": "D02-02",
+      "evidence": "CURRENT_HOUR_SOAK",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "One actual monotonic>=3600000ms soak with8persistentclients and>=10distinct completed V2games across3modes, declared CPU/RAM/disk/RTP/continuity thresholds and coexistence; finalreport and cleanup, no fake clocks.",
+      "relevant_current_sources": [
+        ".docs/implementation/P07_EXECUTION_PROFILE.md",
+        ".docs/implementation/P07_EXECUTION_PROFILE.v2.md"
+      ],
+      "resource_rule": "Run only after successful preflight; no long G/F statistics and no repeating an unchanged successful soak."
+    },
+    {
+      "id": "D02-03",
+      "evidence": "FINAL_PRODUCTION_AND_SOURCES",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Exact new source/version0.0.2 production build/inventory/Node24.22.1/Go1.27.3/Poppler boundary and three fixed source/license assets. Source04 covers14c only. Reuse verified unchanged archives; regenerate exact Venus source and index/receipt for final bytes.",
+      "relevant_current_sources": [
+        "tools/delivery-inventory.mjs",
+        "tools/delivery-sources.mjs",
+        "tools/delivery-cache.mjs",
+        "tools/venus-operator/distribution.mjs"
+      ],
+      "resource_rule": "No724MB repeat download locally when verified cache is available; retain per-source SHA512/Go h1/Node/Debian checks."
+    },
+    {
+      "id": "D02-04",
+      "evidence": "SCOPED_RECOVERY_REBIND",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Two final nonauthors accept explicit per-mechanism14c→current parity plus the3newAPI fix receipts/current compiled functional evidence, or require only the unproven affected recovery branch. Never call whole application identical.",
+      "relevant_current_sources": [
+        ".docs/implementation/reviews/p07/recovery-reproduction01/INDEX.json",
+        ".docs/implementation/reviews/p07/engineering-exit03/REPORT.md",
+        ".docs/implementation/reviews/p07/engineering-exit04/REPORT.md"
+      ],
+      "resource_rule": "Reuse11actual componentrecords where unchanged; do not automatically repeat120srenderer/deepcleanup/whole freshDB drill. Current finalimagev4install remains mandatory separately."
+    },
+    {
+      "id": "D02-05",
+      "evidence": "ALL118_CURRENT_DECISION",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "New final decision preserving118originalIDs/checkIDs/rowhashes, per-ID actualpath/hash/scope/parity,67currentpending promoted only by received evidence;34namedN_A/10productiondeferred/7finalartifactpending remain precise before signature. OPS04 needs actualcurrentcriticalpath/soak,DATA01/03/04 explicit PDF obligations.",
+      "relevant_current_sources": [
+        ".docs/implementation/p06-part12-applicability.v1.json",
+        ".docs/implementation/evidence/p07/presign-draft02-correction01/CORRECTION.json"
+      ],
+      "resource_rule": "67pending rows are obligations, not67newtests. Sealed draft02 stays HOLD; do not mutate it or reuse its runid-as-core field."
+    },
+    {
+      "id": "D02-06",
+      "evidence": "TWO_FINAL_NONAUTHOR_REPORTS",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Two final engineering/security gate reports bound to final source/core, component inheritances, real test receipts and source asset hashes; existing engineering03/04 are SOURCE_ONLY and security02 is14csource-component, not final current gate.",
+      "relevant_current_sources": [
+        "tools/venus-operator/release-gate.mjs"
+      ],
+      "resource_rule": "Follow existing reviewers; no new test framework. Authors cannot approve their own implementation/draft."
+    },
+    {
+      "id": "D02-07",
+      "evidence": "EXACT_HEAD_FIVE_CI",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Five mandatory CI checks pass exact final main/head; check-release-context binds cleanHEAD==origin/main==newtag commit before release. No old PR CI rebinding or mutable main/tag shortcuts.",
+      "relevant_current_sources": [
+        ".github/workflows/ci.yml",
+        "tools/venus-operator/check-release-context.mjs"
+      ],
+      "resource_rule": "Existing5jobs; four long P03statistics remain manual-only."
+    },
+    {
+      "id": "D02-08",
+      "evidence": "REAL_RELEASE_V4_EXACT_IMAGE",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Existing release workflow builds one immutable GHCR image, collects corresponding material, performs exact candidatev4install/admission/module boot with realDriver before secret/signature; creates Ed25519 signed manifest/bundle/three boundassets for new0.0.2; old0.0.1 unchanged.",
+      "relevant_current_sources": [
+        ".github/workflows/venus-release.yml",
+        "tools/p06_release_inputs.py",
+        "tests/p06/docker-drill.mjs"
+      ],
+      "resource_rule": "The candidate-only v4 drill is real install/boot/admission, not full restore; no fixture key result may be called production signature."
+    },
+    {
+      "id": "D02-09",
+      "evidence": "PUBLIC_ANONYMOUS_ROUNDTRIP",
+      "status": "PENDING_FINAL_EVIDENCE",
+      "acceptance_condition": "Actual published prerelease assets/manifest/bundle/source tar match signed hashes/size, signature/trust/main/tag verified anonymously; anonymous GHCR exactdigest pull demonstrated with isolated empty Docker config; retain exact image install receipt.",
+      "relevant_current_sources": [
+        "tools/venus-operator/verify-published.mjs",
+        "tools/venus-operator/fetch-release.mjs"
+      ],
+      "resource_rule": "Published assets verification alone does not prove anonymous image access. No prodDNS/TLS/NAT/device deployment claim."
+    }
+  ],
+  "deferred": [
+    "Real music library",
+    "Physical devices/OS keyboards/external networks until post-deploy",
+    "ProductionDNS/TLS/Cloudflare/certbot/NAT/deployment"
+  ],
+  "out_of_scope": [
+    "Native Android/iOS apps",
+    "Exocortex/externalUpdater/separateSFUhost"
+  ],
+  "immutable_release": "venus-v0.0.1 never overwritten",
+  "current_key_approval_already_granted": true
+}

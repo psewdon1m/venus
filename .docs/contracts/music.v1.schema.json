@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.local/contracts/music.v1.schema.json",
+  "title": "Music room mutation",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "expected_rev",
+        "idempotency_key"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "play",
+            "pause",
+            "next",
+            "previous"
+          ]
+        },
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "expected_rev",
+        "idempotency_key",
+        "position_ms"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "seek"
+          ]
+        },
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "position_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 86400000
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "expected_rev",
+        "idempotency_key",
+        "tracks"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "queue"
+          ]
+        },
+        "expected_rev": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "idempotency_key": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "tracks": {
+          "type": "array",
+          "maxItems": 128,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9_-]{0,63}$"
+          }
+        }
+      }
+    }
+  ]
+}

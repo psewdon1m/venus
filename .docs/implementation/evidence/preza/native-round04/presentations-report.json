@@ -1,0 +1,336 @@
+{
+  "suite": "PLAN_PRESENTATIONS",
+  "status": "PASS",
+  "production": false,
+  "real_devices": false,
+  "synthetic_only": true,
+  "records": [
+    {
+      "id": "PREZA-CAPACITY-BK2",
+      "status": "PASS",
+      "elapsed_ms": 22196,
+      "detail": {
+        "actual_source_bytes": 16568165,
+        "rooms": 4,
+        "successful_replace_while_old_assets_counted": true,
+        "before_replacement": {
+          "ciphertext_bytes": 49744302,
+          "assets": 6,
+          "documents": 3,
+          "database_bytes": 61406231
+        },
+        "accepted_global": {
+          "ciphertext_bytes": 66325926,
+          "assets": 8,
+          "documents": 4,
+          "database_bytes": 95919127
+        },
+        "post_restore": {
+          "ciphertext_bytes": 66325926,
+          "assets": 8,
+          "documents": 4,
+          "database_bytes": 95919127
+        },
+        "quota_denial_status": 409,
+        "parent_bk2_control": {
+          "action": "backup_capacity",
+          "status": "PASS"
+        },
+        "all_current_png_hashes_unchanged": true,
+        "protected_bindings_outside_pg_restore": true
+      }
+    },
+    {
+      "id": "PREZA-LIBRARY-IMPORT",
+      "status": "PASS",
+      "elapsed_ms": 1525,
+      "detail": {
+        "actual_pdf_pages": 3,
+        "guest_png_sha256": "2cf7157e2b4a2064848c5a9dd0b3785f6e31ccb0b2184d47cfd4c65cdc7c4a57",
+        "decoded_dimensions": [
+          1020,
+          1320
+        ],
+        "no_store": true,
+        "actual_browser_decode": true
+      }
+    },
+    {
+      "id": "PREZA-ROOM-ACL",
+      "status": "PASS",
+      "elapsed_ms": 1354,
+      "detail": {
+        "anonymous_foreign_host_only_current18_origin_csrf": true,
+        "actual_denial_statuses": [
+          401,
+          403,
+          403,
+          403,
+          403,
+          403,
+          403,
+          403,
+          403,
+          403,
+          403
+        ],
+        "no500": true
+      }
+    },
+    {
+      "id": "PREZA-LIVE-SYNC",
+      "status": "PASS",
+      "elapsed_ms": 4850,
+      "detail": {
+        "local_page_independent": true,
+        "forced_live_page_index": 2,
+        "wrong_page409": true,
+        "late_join_current": true,
+        "reconnect_current": true,
+        "stop_default_restored": true,
+        "allow_switch_enforced": true
+      }
+    },
+    {
+      "id": "PREZA-REPLACE-AND-IDEMPOTENCY",
+      "status": "PASS",
+      "elapsed_ms": 3028,
+      "detail": {
+        "failed_replace_preserved_png_sha256": "2cf7157e2b4a2064848c5a9dd0b3785f6e31ccb0b2184d47cfd4c65cdc7c4a57",
+        "replacement_new_generation": true,
+        "old_url_denied_with_latest_rev": true,
+        "idempotent_same_ack": true,
+        "different_body_and_stale409": true
+      }
+    },
+    {
+      "id": "PREZA-INPUT-BOUNDS",
+      "status": "PASS",
+      "elapsed_ms": 16192,
+      "detail": {
+        "metadata_over16MiB_rejected": true,
+        "exact_body_length_and_hash": true,
+        "nonpdf_rejected": true,
+        "pages101_rejected": true,
+        "oversized_geometry_rejected": true,
+        "reservations_released": true,
+        "actual_statuses": [
+          400,
+          409,
+          409,
+          413,
+          409,
+          422
+        ],
+        "renderer_failures": [
+          {
+            "input": {
+              "pages": 101
+            },
+            "state": "failed",
+            "failure": "invalid_pdf"
+          },
+          {
+            "input": {
+              "pages": 1,
+              "width": 20000,
+              "height": 20000
+            },
+            "state": "failed",
+            "failure": "invalid_pdf"
+          }
+        ],
+        "actual_hostile_renderer": {
+          "pages": 100,
+          "terminal": "ready",
+          "adversary_control": "PASS",
+          "cleanup_control": "PASS",
+          "next_small_pdf_ready": true
+        }
+      }
+    },
+    {
+      "id": "PREZA-CANCEL-AND-ROOM-CLOSE",
+      "status": "PASS",
+      "elapsed_ms": 5970,
+      "detail": {
+        "pending_cancel_denies_late_source": true,
+        "closed_room_denies_source_snapshot": true,
+        "closed_room_late_render_state": "failed",
+        "actual_render_cancel_no_publication": true,
+        "offline_snapshot_deadline_clears_png": true,
+        "offline_fixture_page_count": 3
+      }
+    },
+    {
+      "id": "PREZA-OLD-PG-RESTORE",
+      "status": "PASS",
+      "elapsed_ms": 7480,
+      "detail": {
+        "actual_postgresql_custom_dump_restore": true,
+        "protected_files_not_restored": true,
+        "replaced_and_deleted_omitted": true,
+        "old_urls_latest_rev409": true,
+        "unaffected_png_sha256": "2cf7157e2b4a2064848c5a9dd0b3785f6e31ccb0b2184d47cfd4c65cdc7c4a57",
+        "restored_room_cookie200": true
+      }
+    },
+    {
+      "id": "PREZA-UI-LOCALES-LAYOUT",
+      "status": "PASS",
+      "elapsed_ms": 10865,
+      "detail": {
+        "matrix": [
+          {
+            "locale": "ru",
+            "width": 320,
+            "actual_width": 288
+          },
+          {
+            "locale": "ru",
+            "width": 768,
+            "actual_width": 688
+          },
+          {
+            "locale": "ru",
+            "width": 1024,
+            "actual_width": 944
+          },
+          {
+            "locale": "en",
+            "width": 320,
+            "actual_width": 288
+          },
+          {
+            "locale": "en",
+            "width": 768,
+            "actual_width": 688
+          },
+          {
+            "locale": "en",
+            "width": 1024,
+            "actual_width": 944
+          },
+          {
+            "locale": "tr",
+            "width": 320,
+            "actual_width": 288
+          },
+          {
+            "locale": "tr",
+            "width": 768,
+            "actual_width": 688
+          },
+          {
+            "locale": "tr",
+            "width": 1024,
+            "actual_width": 944
+          }
+        ],
+        "browser_file_input_upload": true,
+        "browser_live_start_stop": true,
+        "keyboard_search_and_submit": true,
+        "owned_blob_cache": {
+          "active": 1,
+          "maxActive": 2,
+          "maxInflight": 2
+        },
+        "offline_urls_revoked": true,
+        "reconnect_actual_png": true,
+        "last_png_sha256": "0cd873bd94a3000e35e208d46fc47a86e8ae0390a2fe89614a9de0cd5e71c344"
+      }
+    },
+    {
+      "id": "PREZA-FEATURE-OFF",
+      "status": "PASS",
+      "elapsed_ms": 3260,
+      "detail": {
+        "feature_off_no_assets_or_import": true,
+        "room_stays_healthy": true,
+        "same_encrypted_library_after_enable": true,
+        "no_live_auto_resume": true,
+        "old_epoch": "ed6f5b80-c336-4e90-ae21-061a7a1f138b",
+        "new_epoch": "81515694-da62-426e-a5fc-85a5799e72ff"
+      }
+    },
+    {
+      "id": "PREZA-GAMES-COEXISTENCE",
+      "status": "PASS",
+      "elapsed_ms": 1603,
+      "detail": {
+        "actual_v1_game": "questions",
+        "players": 2,
+        "game_active": true,
+        "actual_authenticated_websockets": 2,
+        "presentation_live": true,
+        "guest_png_sha256": "20be54adf85d316d4bf28f80571de196d806d83b2630ee3d3cd9510fb68e996f",
+        "long_statistics_not_run": true
+      }
+    },
+    {
+      "id": "PREZA-RETENTION",
+      "status": "PASS",
+      "elapsed_ms": 2129,
+      "detail": {
+        "immediate_closed_delivery_denial": true,
+        "accelerated_existing_primary_ttl_ms": 82860000,
+        "actual_pg_cascade": {
+          "rooms": 0,
+          "documents": 0,
+          "versions": 0,
+          "jobs": 0,
+          "assets": 0
+        },
+        "guardian_idle": "idle",
+        "owned_spool_files": [],
+        "backup_retention_external_not_simulated": true
+      }
+    }
+  ],
+  "page_errors": [],
+  "hook_errors": [],
+  "runtime_cleanup": "completed",
+  "browser_version": "156.0.8078.4",
+  "capacity_before_backup": {
+    "source_bytes": 16568165,
+    "before_replacement": {
+      "ciphertext_bytes": 49744302,
+      "assets": 6,
+      "documents": 3,
+      "database_bytes": 61406231
+    },
+    "accepted_global": {
+      "ciphertext_bytes": 66325926,
+      "assets": 8,
+      "documents": 4,
+      "database_bytes": 95919127
+    },
+    "documents": [
+      {
+        "room_id": "b8e17410-12cf-4ed3-85ed-d3322936ecb9",
+        "document_id": "21b45ca7-c47f-40b1-ad0d-b62c6da473f6",
+        "content_version": "26e361ab-e084-4bb8-9bb8-699cb7cdfd3d",
+        "png_sha256": "f9180c9b60b24a3a74c7544f6e3afc3384a9f456c56e78b5e437ebd378b0b972"
+      },
+      {
+        "room_id": "5cd5f6b0-b123-4d29-a515-6d35cd629bcb",
+        "document_id": "d4b9d55c-f05a-49a5-bb0b-28bf6fa113aa",
+        "content_version": "5362c8a8-de1c-4927-995f-06fed75bd216",
+        "png_sha256": "2cf7157e2b4a2064848c5a9dd0b3785f6e31ccb0b2184d47cfd4c65cdc7c4a57"
+      },
+      {
+        "room_id": "7102cfd4-f4da-40f3-9eb4-21eff25021d6",
+        "document_id": "25009b62-bd49-416c-a54e-19e72d387b1f",
+        "content_version": "8b958962-d1c9-4f7f-af8d-c261b3b02e56",
+        "png_sha256": "2cf7157e2b4a2064848c5a9dd0b3785f6e31ccb0b2184d47cfd4c65cdc7c4a57"
+      },
+      {
+        "room_id": "941ac9fe-e556-4c28-ae93-11d1c457a8e8",
+        "document_id": "609aa781-8b76-4c42-94d0-79a302b9393e",
+        "content_version": "bea8f313-766a-4cb9-9232-610f5df00c7b",
+        "png_sha256": "2cf7157e2b4a2064848c5a9dd0b3785f6e31ccb0b2184d47cfd4c65cdc7c4a57"
+      }
+    ]
+  },
+  "cleanup_errors": []
+}

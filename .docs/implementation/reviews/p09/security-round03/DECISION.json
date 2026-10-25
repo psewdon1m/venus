@@ -1,0 +1,56 @@
+{
+  "format": 1,
+  "reviewer": "p09-security-review03",
+  "independent_nonauthor": true,
+  "stage": "P09",
+  "gate": "SECURITY_SOURCE_REPEAT",
+  "status": "CHANGES_REQUIRED",
+  "security_privacy_pass": false,
+  "full_stage_pass": false,
+  "source_git": "5ababf57fc26b325a88964806aa8d15da8208639",
+  "prior_findings": [
+    {
+      "id": "S09-01",
+      "status": "CLOSED_SOURCE_PENDING_EXACT_RUNTIME_PROOF",
+      "basis": "Pending retained across API/unknown boot; actual expiry removal receipt and failed-old-cutoff start rejection"
+    },
+    {
+      "id": "S09-02",
+      "status": "CLOSED_SOURCE_PENDING_EXACT_RUNTIME_PROOF",
+      "basis": "Authenticated v3 open readiness and closed prepare preserve consumer barrier"
+    },
+    {
+      "id": "S09-03",
+      "status": "CLOSED_SOURCE_PENDING_EXACT_RUNTIME_PROOF",
+      "basis": "Open mode is read-only and returns ready; existing test checks unchanged boot/live state"
+    },
+    {
+      "id": "S09-04",
+      "status": "PARTIALLY_FIXED_STILL_OPEN",
+      "basis": "Exact lease selection fixed; current Cinema state UPDATE remains unscoped"
+    }
+  ],
+  "findings": [
+    {
+      "id": "S09-04",
+      "priority": 2,
+      "file": "apps/api/src/media.ts",
+      "line": 96,
+      "status": "AUTHOR_ACCEPTED_NOT_YET_FIXED_IN_REVIEWED_SOURCE",
+      "trigger": "Old retired publisher release fails, becomes pending; recovered retry updates newer Cinema state ended by room_id",
+      "minimum_fix": "Member-scoped Cinema UPDATE must match selected publisher upstream scope; room-wide remains broad",
+      "relevant_check": "Existing old-release/new-scope case: failed old release503, recovery/retry200, current scope remains live"
+    }
+  ],
+  "new_unrelated_scope_requested": false,
+  "actual_runtime_status": "ACTIVE_PER_HANDOFF_NO_FINAL_PROOF_AUDITED",
+  "next": "Exact correction + relevant completed tests + independent repeat",
+  "P07_pass": false,
+  "production_pass": false,
+  "physical_devices_pass": false,
+  "professional_rights_pass": false,
+  "signed_001_feature_claim": false,
+  "prior_rounds_preserved": true,
+  "writer_status": "COMPLETE_STOP",
+  "created_at_utc": "2026-10-25T02:45:19.556Z"
+}

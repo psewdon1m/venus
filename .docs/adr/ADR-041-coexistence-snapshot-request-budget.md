@@ -1,0 +1,9 @@
+# ADR-041 — Snapshot polling within the existing room request budget
+
+Status: implemented at9c710aa6; affected runtime regressions and independent acceptance pending. 2026-10-25 UTC.
+
+P11 round10 at e2199351 exposed real429 on a normal member media release while Games, Music, Cinema and Calls shared the existing240requests/member/minute guard. Raising that guard would hide application over-polling. The five fallback snapshot intervals (Games V1, Games V2, Music, Cinema and Calls) are now3000ms. At the worst V1 path7game reads plus3media reads per cycle and two media renewals every5s, baseline is224requests/minute. Explicit user actions still consume the remaining guard budget; this is not a guarantee against arbitrary rapid clicks.
+
+This current revision explicitly supersedes the one-second Music authority-poll statement in P08_MUSIC.md and the earlier one-second media fallback behavior. Historical contracts/evidence remain intact. P11_CALLS.md documents the implementing change. Immediate command refreshes, authenticated WebSocket reactions, local250ms clocks/expiry checks, server final delivery fences, media watchdog/renewals and per-command authorization remain unchanged. Unknown authority after a failed read still clears/stops the relevant UI/media; already-delivered bytes cannot be revoked. A remote state change can take up to the3s fallback plus request latency when no immediate signal applies.
+
+Compatibility: no API/schema/server-rate-limit change. Re-run affected game UI, P08 Music and P09 Cinema regression checks on the exact application source before accepting this change. A previous proof does not automatically qualify the new cadence. Rollback is a new source revision restoring the previous cadence only with a demonstrated sustainable combined request budget; do not alter protected ledgers or accepted proof.

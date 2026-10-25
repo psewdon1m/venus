@@ -87,6 +87,9 @@ export class PrivateTopicPreferences {
  private async loadOwner(c:pg.PoolClient,room:string,owner:string) {
   const birth=await this.birth(c,room),ledger=topicStorage(()=>this.lifecycle.open(room,birth));
   const row=(await c.query<PreferenceRow>('SELECT rev,cipher FROM private_topic_preferences WHERE room_id=$1 AND owner_member_id=$2',[room,owner])).rows[0];
+  return this.loadObservedOwner(room,owner,birth,row,ledger);
+ }
+ private loadObservedOwner(room:string,owner:string,birth:TopicRoomBirth,row:PreferenceRow|undefined,ledger:ReturnType<PrivateTopicLifecycle['open']>=topicStorage(()=>this.lifecycle.open(room,birth))) {
   const rev=row?revision(row.rev):0;
   let allow:string[]=[],excluded:string[]=[];
   if(row) {
@@ -107,8 +110,10 @@ export class PrivateTopicPreferences {
   requireThat(exactMemberIds.length>=2&&exactMemberIds.length<=8&&new Set(exactMemberIds).size===exactMemberIds.length&&exactMemberIds.every(id=>UUID.test(id)),'TOPIC_SAFETY_MEMBERS_INVALID',503);
   const ids=[...exactMemberIds].sort(),rows=(await c.query<{id:string}>('SELECT id FROM room_members WHERE room_id=$1 AND id=ANY($2::uuid[]) AND removed_at IS NULL AND slot IS NOT NULL ORDER BY id',[roomId,ids])).rows;
   requireThat(canonical(rows.map(r=>r.id).sort())===canonical(ids),'TOPIC_SAFETY_MEMBERS_CHANGED',409);
-  const members=[];
-  for(const id of ids) members.push({id,loaded:await this.loadOwner(c,roomId,id)});
+  const birth=await this.birth(c,roomId);
+  const preferences=(await c.query<PreferenceRow&{owner_member_id:string}>('SELECT owner_member_id,rev,cipher FROM private_topic_preferences WHERE room_id=$1 AND owner_member_id=ANY($2::uuid[]) ORDER BY owner_member_id',[roomId,ids])).rows;
+  const byOwner=new Map(preferences.map(row=>[row.owner_member_id,row]));
+  const members=ids.map(id=>({id,loaded:this.loadObservedOwner(roomId,id,birth,byOwner.get(id))}));
   const sequence=members[0]!.loaded.safety.sequence;
   requireThat(members.every(m=>m.loaded.safety.sequence===sequence&&m.loaded.rev<=4096),'TOPIC_STATE_CHANGED',409);
   // There are at most eight DB revisions of <=4096 each. A single durable

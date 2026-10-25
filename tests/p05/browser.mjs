@@ -190,7 +190,7 @@ async function nativeZoom(browser,actor,engine,screen){
 }
 const actorFactory=actor;
 try{
-  assert.deepEqual(toolchain,{node:'v24.22.0',npm:'11.19.1',playwright:'1.64.1'});
+  assert.deepEqual(toolchain,{node:'v24.22.1',npm:'11.19.1',playwright:'1.64.1'});
   service=await runtime();xserver=await display();
   for(const engine of [chromium,firefox,webkit].filter(engine=>!process.env.P05_ENGINE||process.env.P05_ENGINE==='all'||engine.name()===process.env.P05_ENGINE)){
     const browser=await launchBrowser(engine,engine.name()+':main');activeBrowser=browser;report.versions.push({engine:engine.name(),version:browser.version(),node:process.version});

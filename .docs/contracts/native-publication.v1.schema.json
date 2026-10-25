@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:native-publication:v1",
+  "title": "Native publication explicitly unavailable; browser capability is not device qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "native_publish",
+    "browser_capture"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "native_publish": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled",
+        "accepted_protocols",
+        "device_qualified"
+      ],
+      "properties": {
+        "enabled": {
+          "const": false
+        },
+        "accepted_protocols": {
+          "type": "array",
+          "maxItems": 0,
+          "items": false
+        },
+        "device_qualified": {
+          "const": false
+        }
+      }
+    },
+    "browser_capture": {
+      "const": "client_permission_and_actual_audio_required"
+    }
+  }
+}

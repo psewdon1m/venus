@@ -59,7 +59,7 @@ test('self-actions component receipt requires actual nonempty unique checks and 
 test('actual self-actions wrapper selects the fixed service suite without claiming browser matrix',()=>{
   const result=wrapper({selfActionsReport:selfActionsFixture()},['--self-actions']);
   assert.equal(result.child.status,0);assert.equal(result.receipt.status,'PASS');assert.equal(result.receipt.self_actions_only,true);assert.equal(result.receipt.full_browser_matrix,false);
-  const run=result.calls.find(row=>row.args.includes('run'));assert.deepEqual(run.args.slice(-4),['browser','node','--test','tests/p05-self-actions/integration.mjs']);
+  const run=result.calls.find(row=>row.args.includes('run'));assert.deepEqual(run.args.slice(-5),['browser','node','--test','--test-concurrency=1','tests/p05-self-actions/integration.mjs']);
 });
 test('actual self-actions wrapper rejects missing or empty component receipt despite a browser PASS',()=>{
   const missing=wrapper({report:reportFixture()},['--self-actions']);assert.equal(missing.child.status,1);assert.equal(missing.receipt.status,'FAIL');assert.match(missing.receipt.error,/self-actions-report\.json/);
