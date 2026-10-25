@@ -83,3 +83,8 @@ Profile02 helper530/appc2: actual initialize/healthy иHTTP3PDF/18+ PASS, stop/B
 ### 2026-10-25T08:05:59.971092+00:00 — Profile03: девять PASS, устаревшее ожидание сессии
 
 RealDriver initialize/HTTP/quiesce/BK2/A→B/B→A/feature-off/on/floors и оба actual worker negative probes PASS:120405ms PDF_TIMEOUT+idle; depth40/caps0/emptygroups отказ следующего plaintext. Последний assertion ожидал PNG200 после >120s отсутствия heartbeat; приложение правильно ответило403 MEMBER_INACTIVE (reservation90s). Исправляется только ожидание helper: driver healthy, явный403/код, затем настоящий stop/quiesce. Доступ не ослабляется. Profile03FAIL сохранён, исходникconsumer/native47 прежний.
+
+
+### 2026-10-25T08:08:00.121480+00:00 — Контроль повторного profile helper
+
+Ошибочная команда git pull в detached cleanC вернула1, shell продолжил старый helper; собственный executor78a9b33c94 остановлен с проверкойlabel, wrapper cleanup завершён. Следующий3e49894aef прерван после чтения auth: GETroom явно резервирует новыйslot, а presentations snapshot не резервирует. Финальное ожидание уточнено как настоящий reconnect GETroom → PNGhash200 → driverhealth/stop; никаких изменений доступа приложения. Обе отменённые попытки сохраняются отдельно, PASS не заявляется.

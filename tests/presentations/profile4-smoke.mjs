@@ -111,7 +111,7 @@ async function main(){
   await record('PROFILE4-REJECT-OLD-PROFILE',async()=>{const before=(await owned(on,'app')).Id;await assert.rejects(on.start({...A,environment:'standalone-local-media-v3'}),/PRESENTATIONS_ROLLBACK_PROFILE/);await assert.rejects(on.start({...A,presentations:{...PRESENTATIONS_RELEASE,module_generation:0}}),/PRESENTATIONS_ROLLBACK_PROFILE/);assert.equal((await owned(on,'app')).Id,before);await on.healthy(A);return {rejected_before_restart:true,healthy_container_unchanged:true};});
   await record('RENDERER-ACTUAL-120S-DEADLINE',()=>negative('deadline',0));
   await record('RENDERER-UNCLEANABLE-CLOSES',()=>negative('cleanup',1));
-  await record('PROFILE4-FINAL-HEALTH-QUIESCE',async()=>{await on.healthy(A);const expired=await f.host.call(pageUrl(f,keep,(await ok(f.host,f.base)).rev));assert.equal(expired.status,403);assert.equal(expired.value?.code,'MEMBER_INACTIVE');return {...await stop(on),healthy_after_isolated_probes:true,inactive_member_denied:expired.status};});
+  await record('PROFILE4-FINAL-HEALTH-QUIESCE',async()=>{await on.healthy(A);await ok(f.host,f.base);assert.equal(await page(f,keep),keepHash);return {...await stop(on),healthy_after_isolated_probes:true,member_reconnected_before_png:true,keep_png_sha256:keepHash};});
   assert.equal(report.records.length,10);assert(report.records.every(row=>row.status==='PASS'));report.status='PASS';
  }catch(error){report.error=String(error.message).slice(0,500);throw error;}finally{report.finished_at=stamp();save();}
 }
