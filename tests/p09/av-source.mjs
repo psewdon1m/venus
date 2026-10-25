@@ -1,4 +1,4 @@
-/* global document,window,AudioContext,performance */
+/* global document,window,AudioContext */
 /** Original generated AV; 32-bit wall-clock marker plus checksum survives VP8.
  * The source tab and receiving browsers use this Docker host's same clock. */
 export const sourceHtml=`<!doctype html><html><title>Venus Cinema Source</title><style>html,body{margin:0;overflow:hidden}canvas{position:fixed;inset:0;width:100vw;height:100vh}button{position:fixed;z-index:1;top:50px;left:50px}</style><body><button id="start">Start original synthetic AV</button><canvas width="640" height="360"></canvas><script>
