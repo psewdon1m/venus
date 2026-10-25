@@ -9,7 +9,7 @@ COPY packages/i18n/package.json packages/i18n/
 COPY packages/relationship-engine/package.json packages/relationship-engine/
 COPY packages/card-catalog/package.json packages/card-catalog/
 RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
-RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio && rm -rf /var/lib/apt/lists/*
 COPY tests/p05/probe.mjs tests/p05/probe.mjs
 USER 1000:1000
 CMD ["node", "tests/p05/probe.mjs"]

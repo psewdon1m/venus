@@ -112,3 +112,6 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 
 2026-10-25T00:20:39.942877+00:00 — Docker04 cleanbc7ac PASS8Musiccases: actual8Chromiumdecode+localvolume, Music+Games,480samples60s driftp95=118.132ms/max135.733ms, offline/reconnect/revoke иinpersonoptin. FAIL Firefox native decode; подробный media state/HTTP site/dest diagnostic добавлен безcookies. Дляэффективности существующий --engine selector теперьуважаетсяузкимMusicfixture; partialbrowserPASSнеполнаяматрица. ПовторсначалатолькоFirefox, 60sChromiumповторнезапускаетсябезизмененияобщегокода. Schema/i18n native0.
+
+
+2026-10-25T00:22:50.716256+00:00 — Изолированные Firefox05/06 FAIL: запросы same-origin Range получают 206, но нативный декодер выдаёт OnMediaSinkAudioError. Это отсутствие звукового выхода в headless Docker, а не отказ ACL. Добавлен один стандартный PulseAudio null sink только в локальную тестовую среду; реальные устройства не заявляются. Пакет pulseaudio устанавливается в существующем apt слое, P05 lifecycle и browser cache сохраняются. Диагностический lint06 сначала FAIL из-за browser globals, исправлен globalThis, повтор native0. Повторить Firefox и WebKit отдельно, затем только обоснованную общую матрицу.
