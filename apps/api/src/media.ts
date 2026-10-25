@@ -124,6 +124,8 @@ export class Media {
   await this.calls.ended(c,callScopes);await this.calls.emptyGenerals(c,id);await c.query('UPDATE venus_media_runtime SET cutoff_confirmed=$1 AND NOT EXISTS(SELECT 1 FROM room_media_leases WHERE cutoff_pending) WHERE singleton',[confirmed]);return confirmed;
  }
  async retireCallsMember(c:pg.PoolClient,id:string,member:string,except?:string,scopeId?:string){await this.lock(c);return this.retireLocked(c,id,member,undefined,{filter:'calls',...(except?{except}:{}),...(scopeId?{scopeId}:{})});}
+ /** Caller already holds the room row and Media ordering locks. */
+ async retireCallScope(c:pg.PoolClient,room:string,scopeId:string){return this.retireLocked(c,room,undefined,undefined,{filter:'calls',scopeId});}
 
  async retireRoom(c:pg.PoolClient,id:string){await this.lock(c);return this.retireLocked(c,id);}
  async retireMember(c:pg.PoolClient,id:string,member:string){await this.lock(c);return this.retireLocked(c,id,member);}

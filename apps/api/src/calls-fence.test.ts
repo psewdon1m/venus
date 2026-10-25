@@ -32,6 +32,7 @@ function fixture(deadline:Deadline){
    if(sql.includes("kind='pair_call'"))return {rows:pair?[scope]:[]};
    return {rows:[scope]};
   }
+  if(sql.startsWith('SELECT id FROM room_call_scopes'))return {rows:scope.expires_at.getTime()<=now?[{id:scope.id}]:[]};
   if(sql.startsWith('SELECT id AS lease_id'))return {rows:[{lease_id:leaseId,member_id:caller}]};
   if(sql.includes('FROM venus_media_runtime'))return {rows:[{api_epoch:epoch,sfu_epoch:boot,last_authority_at:new Date(1000)}]};
   if(sql.startsWith('SELECT l.*'))return {rows:[{...lease,session_expires_at:new Date(10000),room_activity_at:new Date(1000)}]};
@@ -91,4 +92,44 @@ for(const deadline of ['session','lease'] as const)it(`accept replay cannot enqu
 });
 for(const deadline of ['session','lease','scope'] as const)it(`watchdog omits expired pair ${deadline} authority after its backend cleanup awaits`,async()=>{
  const f=fixture(deadline);await expect(f.watchdog()).resolves.toMatchObject({leases:[]});
+});
+
+it('cleans stale accepted pair status with no leases, retiring only the locked room and exact upstream scopes',async()=>{
+ const day=86400000,foreign='00000000-0000-4000-8000-000000000099';let now=0,enqueued=0;
+ const sample:CallScope={id:scopeId,room_id:room,kind:'pair_call',state:'pending',rev:'0',upstream_room:'venus-p-'+'a'.repeat(48),api_epoch:epoch,created_by:peer,target_member_id:caller,a_session:'peer-session',b_session:null,a_generation:'8',b_generation:null,expires_at:new Date(day+60000),updated_at:new Date(day)};
+ const expired=Array.from({length:4},(_,i)=>({...sample,id:'00000000-0000-4000-8000-'+String(20+i).padStart(12,'0'),state:'active' as const,upstream_room:'venus-p-'+String(i).repeat(48),expires_at:new Date(day),updated_at:new Date(0)}));
+ const foreignActive={...expired[0]!,id:'00000000-0000-4000-8000-000000000090',room_id:foreign},foreignPending={...foreignActive,id:'00000000-0000-4000-8000-000000000091',state:'pending' as const};
+ const scopes:CallScope[]=[sample,...expired,foreignActive,foreignPending],deleted:string[]=[],mutatedRooms:string[]=[];
+ const query=async(sql:string,values:unknown[]=[])=>{
+  if(sql.startsWith('SELECT pg_advisory'))return {rows:[]};
+  if(sql.includes('MIN(t.expires_at)'))return {rows:[{n:values[7]?2:1,expires_at:new Date(day*2)}]};
+  if(sql.includes('MIN(expires_at) FILTER'))return {rows:[{n:0,expires_at:null}]};
+  if(sql.startsWith('SELECT * FROM room_call_scopes')){
+   if(sql.includes("kind='general_call'"))return {rows:[]};
+   if(sql.includes("state IN ('pending','active')")&&sql.includes('expires_at>$2'))return {rows:scopes.filter(s=>s.room_id===values[0]&&s.state!=='ended'&&s.expires_at.getTime()>(values[1] as Date).getTime())};
+   if(sql.includes('AND id=$2'))return {rows:scopes.filter(s=>s.room_id===values[0]&&s.id===values[1])};
+   return {rows:scopes.filter(s=>s.room_id===values[0]&&s.id===values[1]&&s.state!=='ended')};
+  }
+  if(sql.startsWith('SELECT id FROM room_call_scopes'))return {rows:scopes.filter(s=>s.room_id===values[0]&&s.state==='active'&&s.expires_at.getTime()<=(values[1] as Date).getTime()).map(s=>({id:s.id}))};
+  if(sql.startsWith('SELECT * FROM room_media_leases')||sql.startsWith('SELECT id AS lease_id'))return {rows:[]}; // No pair ever acquired a grant.
+  if(sql.startsWith('UPDATE room_call_scopes')){
+   if(sql.includes("SET state='active'")){Object.assign(sample,{state:'active',b_session:values[1],b_generation:values[2],rev:'1',expires_at:values[3],updated_at:values[4]});return {rows:[]};}
+   if(sql.includes('id=ANY')){for(const s of scopes)if((values[0] as string[]).includes(s.id)){s.state='ended';s.updated_at=values[1] as Date;mutatedRooms.push(s.room_id);}return {rows:[]};}
+   expect(sql).toContain('room_id=$1');for(const s of scopes)if(s.room_id===values[0]&&s.state==='pending'&&s.expires_at.getTime()<=(values[1] as Date).getTime()){s.state='ended';mutatedRooms.push(s.room_id);}return {rows:[]};
+  }
+  if(sql.startsWith('DELETE FROM room_call_scopes')){expect(sql).toContain('room_id=$1');expect(values[0]).toBe(room);return {rows:[]};}
+  if(sql.startsWith('UPDATE venus_media_runtime'))return {rows:[]};
+  throw Error('Unexpected expiry fixture SQL: '+sql);
+ };
+ const c={query} as unknown as pg.PoolClient,rooms={now:()=>now,options:{offer:()=>({version:'v1',digest:'digest'})},transaction:async<T>(fn:(c:pg.PoolClient)=>Promise<T>)=>fn(c),
+  access:async()=>({room:{id:room},member:{id:caller,presence:'online',slot:1,socket_generation:'7'},sessionHash:'caller-session'}),replay:async()=>null,remember:async()=>{},finalAccessFence:async()=>()=>{}
+ } as unknown as Rooms;
+ const media=Object.assign(Object.create(Media.prototype) as Media,{rooms,epoch,authority:{mutate:()=>{}},client:{deleteRoom:async(name:string)=>{deleted.push(name);}},ready:async()=>true});
+ const calls=new Calls(media,true);Object.assign(media,{calls});
+ expect(scopes.filter(s=>s.room_id===room&&s.state==='active')).toHaveLength(4);
+ now=day+1;
+ await calls.inspect(room,'caller',view=>{expect(view.pairs.map(s=>s.id)).toEqual([scopeId]);enqueued++;});
+ expect(enqueued).toBe(1);expect(expired.every(s=>s.state==='ended')).toBe(true);expect(deleted.sort()).toEqual(expired.map(s=>s.upstream_room).sort());
+ expect(mutatedRooms).not.toContain(foreign);expect(foreignActive.state).toBe('active');expect(foreignPending.state).toBe('pending');
+ await expect(calls.assertScope(c,room,expired[0]!.id,peer)).rejects.toMatchObject({code:'CALL_SCOPE_RETIRED'});
 });

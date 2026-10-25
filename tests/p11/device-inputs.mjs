@@ -21,10 +21,12 @@ export function installDeviceMarkers(index){
  };
 }
 export async function readCallStats(){
- const inbound=[],rtt=[];for(let i=0;i<window.p11PCs.length;i++){const pc=window.p11PCs[i];if(pc.connectionState==='closed')continue;const stats=await pc.getStats();for(const r of stats.values()){
+ const inbound=[],rtt=[],upstream=[],outbound=[],inspectSource=(window.p11StatsReads=(window.p11StatsReads??0)+1)%10===1;window.p11RRSeen??=new Map();for(let i=0;i<window.p11PCs.length;i++){const pc=window.p11PCs[i];if(pc.connectionState==='closed')continue;const stats=await pc.getStats();for(const r of stats.values()){
   if(r.type==='inbound-rtp'&&!r.isRemote&&r.packetsReceived>0)inbound.push({id:i+':'+r.id,ssrc:r.ssrc,kind:r.kind,received:r.packetsReceived,lost:r.packetsLost,jitter:r.jitter,...(r.kind==='video'?{frames:r.framesDecoded}:{})});
+  if(r.type==='remote-inbound-rtp'){const key=i+':'+r.id,version=r.reportsReceived??r.totalRoundTripTime??r.timestamp;if(window.p11RRSeen.get(key)!==version){window.p11RRSeen.set(key,version);const source=stats.get(r.localId);upstream.push({pc:i,id:r.id,local_id:r.localId,ssrc:r.ssrc,kind:r.kind??source?.kind,jitter_seconds:r.jitter??null,packets_lost:r.packetsLost??null,reports_received:r.reportsReceived??null,timestamp_ms:r.timestamp,round_trip_seconds:r.roundTripTime??null});}}
+  if(inspectSource&&r.type==='outbound-rtp'&&!r.isRemote&&r.packetsSent>0)outbound.push({pc:i,id:r.id,ssrc:r.ssrc,kind:r.kind,packets_sent:r.packetsSent,total_packet_send_delay_seconds:r.totalPacketSendDelay??null,frames_encoded:r.framesEncoded??null,total_encode_seconds:r.totalEncodeTime??null,frames_per_second:r.framesPerSecond??null,quality_limitation_reason:r.qualityLimitationReason??null,bytes_sent:r.bytesSent});
   if(r.type==='transport'&&r.selectedCandidatePairId){const pair=stats.get(r.selectedCandidatePairId),candidate=pair&&stats.get(pair.localCandidateId);if(pair&&typeof pair.currentRoundTripTime==='number')rtt.push({pc:i,ms:pair.currentRoundTripTime*1000,protocol:candidate?.protocol??null});}
- }}return {at:performance.now(),inbound,rtt};
+ }}return {at:performance.now(),inbound,rtt,upstream,outbound,connections:window.p11PCs.map((pc,index)=>({pc:index,state:pc.connectionState,ice:pc.iceConnectionState}))};
 }
 export async function readCallIdentities(){
  const values=[];window.p11Analysis??={context:new AudioContext(),tracks:new Map()};const analysis=window.p11Analysis;await analysis.context.resume();

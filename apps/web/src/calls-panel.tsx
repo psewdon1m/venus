@@ -24,13 +24,13 @@ export function CallsPanel({api,room,memberId,locale,connected,onAudioFocus}:{ap
  const stopSource=async(v:Active,kind:Source,invalidate=true)=>{const s=v[kind];if(invalidate){++s.serial;if(active.current===v&&alive.current)(kind==='audio'?setAudioIntent:setVideoIntent)(false);}s.stream?.getTracks().forEach(track=>track.stop());delete s.stream;const publication=s.publication;delete s.publication;if(kind==='video'&&preview.current){preview.current.pause();preview.current.srcObject=null;}if(active.current===v&&alive.current)(kind==='audio'?setMicrophone:setCamera)(false);if(publication?.track)try{await v.room?.localParticipant.unpublishTrack(publication.track,true);}catch{/* Already disconnected: device is still stopped. */}};
  const close=async(v:Active,unmount=false):Promise<boolean>=>{
   if(v.closing)return v.closing;
-  v.closed=true;if(v.renew)clearInterval(v.renew);void stopSource(v,'audio');void stopSource(v,'video');void v.room?.disconnect(true).catch(()=>{});v.peers.clear();if(active.current===v&&alive.current){setPeers([]);setError(null);setStatus('ending');}
+  v.closed=true;if(v.renew)clearInterval(v.renew);void stopSource(v,'audio');void stopSource(v,'video');const rtcClosed=v.room?.disconnect(true).catch(()=>{});v.peers.clear();if(active.current===v&&alive.current){setPeers([]);setError(null);setStatus('ending');}
   const operation=(async()=>{try{await v.done;
     // A cancelled HTTP join may have committed without delivering its grant.
     // Only the still-mounted, locked generation may discover its own lease.
     let lease=v.grant?.lease_id;if(!lease&&!unmount&&alive.current&&active.current===v){const state=await api.request<CallsView>(prefix);lease=state.self_lease?.lease_id;}
     if(lease)await api.request(`${mediaPrefix}/leases/${lease}/release`,{idempotency_key:crypto.randomUUID()});
-    if(active.current===v){active.current=null;if(alive.current){focus.current(false);setEngaged(false);setGrantView(null);setStatus('idle');setBlocked(false);}}return true;
+    await rtcClosed;if(active.current===v){active.current=null;if(alive.current){focus.current(false);setEngaged(false);setGrantView(null);setStatus('idle');setBlocked(false);}}return true;
    }catch{if(active.current===v&&alive.current){setError('unconfirmed');setStatus('ending');}return false;}finally{delete v.closing;}})();v.closing=operation;return operation;
  };
  const closeRef=useRef(close);useEffect(()=>{closeRef.current=close;});
