@@ -330,3 +330,9 @@ Clean6a66446d/nativeexit0/source unchanged/cleanupcomplete. Firefoxactualdecode+
 
 Clean6a66446d WebKitselector exit0/cleanupcomplete, actualdecode/forceddenial/recovery PASS10.082s иactualPGrestore. INDEX252d0bc7d8c81d14509dc261ef7429744f98719883a981bfcd0f976122d560de. Musiccomposition01 INDEX38093a234372ebbd18667aebc9d7f42cab5afb3638c29a669dfdc1fcc71e23c9 фиксирует12positivecase receipts:10Chromium/APIизoverallFAIL02 +отдельныеcleanFF/WK0. Это явнонеодинallenginegreenrun. App/P11 testbytes9c unchanged, Chromiumbodyb3==6a verified. ПоследняяaffectedCinemaрегрессия наclean6a стартовала в9c068bcfe761; после неё — финальные nonauthor отчёты и закрытие компонента.
 
+
+### 2026-10-25T06:13:24.601053+00:00 — Final Cinema PASS и переносимый manifest
+
+Чистый6a nativeexit0/32tests+19Cinema recordsPASS/unchanged/cleanupcomplete. A/Vp9539ms,glass92ms,skew45ms,35matchedpairs/viewer,SFUp95.155core/peak115433472B. affected-cinema-round01INDEX5a6fdfb79549223313909d382f4b215883f0af6f6385b38781e4968212a143d5. Полный пакет переданnon-author reviewers.
+
+Engineering финальнаясверка выявила административное различие: source_inventory исключал.git толькоиздиректорий, аmanagedworktree.gitfile попадалвidentity/manifest. Это мешало одинаковойпроверке ROOT иW, неявлялось appdrift. Исправлен существующийfileloop:EXCLUDEDприменяетсятакже кименамфайлов. Фактическаяпроверка inventoryW не содержит.git,обычныйserver sourceSHAсохранён;exit0. Неизменныеclean9c/6a receiptsсохраняютсвоистарыеidentity, appbytesunchanged. Обаreviewerприостановилиsealдополученияновоготочногopin. Новыхruntimeпрогонов/тестовмеханизманет.
