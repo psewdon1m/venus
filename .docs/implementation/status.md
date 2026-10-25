@@ -1,3 +1,9 @@
+# Текущий статус — P10 подготовка принята, native этап HOLD; вход P11
+
+P10: два independentprepPASS, cleanDocker2focusedtests/types/lint/schema/i18nPASS. **Native capture Android/iOS не реализован; полныйP10/G4непройден.** Остались внутренние nativeSDK/adapterзадачи и внешниеMac/device/distribution/LANвходы. [Честный остаток и приёмка подготовки](evidence/p10/preparation-acceptance01/REPORT.md).
+
+P08/P09functionalaccepted. Следом P11 Calls(входнойreview, пока безкода), затемPLAN-PRESENTATIONS. P07общийпрогон послефункций НЕ PASS. Ниже предыдущиестатусы сохранены.
+
 # Текущий статус — P09 функционально принят
 
 P09: clean round25,32/32tests и19/19scenariosPASS; independent Engineering03/Security05PASS. A/V66ms, watchdog2542ms; actualPGrestore/staleJWT/closedroomfencesPASS. [Итог](evidence/p09/functional-acceptance01/REPORT.md) · [Реестр](p09-registry.json).

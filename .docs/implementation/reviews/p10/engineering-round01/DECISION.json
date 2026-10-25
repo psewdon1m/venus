@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "reviewer_id": "/root/contract_review",
+  "created_at_utc": "2026-10-25T03:40:26.916039+00:00",
+  "status": "PASS",
+  "qualification": "BOUNDED_P10_PREPARATION_ONLY",
+  "source_git": "0ca608bb4e2a17fc3346e015014fef8a6b08cc87",
+  "source_identity_sha256": "e244432c0d0919f8b78090a8b56cd97995c3da688adff4874ae327c1b14e0120",
+  "evidence_index": {
+    "path": ".docs/implementation/evidence/p10/preparation-checks01/INDEX.json",
+    "sha256": "da291f0504b488e88a8173466d03d44609755339876b45b205e5672b3ff58176"
+  },
+  "open_blocking_findings": [],
+  "nonblocking_notes": [
+    {
+      "id": "P10-ENG-N01",
+      "severity": "P3",
+      "blocking": false,
+      "path": ".docs/implementation/P10_MOBILE.md",
+      "section": "Native prerequisites",
+      "finding": "External input IDs P10-X04/X05 have shifted meaning from entry-round01 INPUTS: entry X04=iOSfloor/route, X05=distribution; implementation doc X04 combines distribution/floors and X05=native credential handoff. Actual obligations are still listed, so this does not permit publishing or waive a gate.",
+      "recommendation": "Keep entry IDs meanings or add an explicit mapping and a new ID for native credential handoff; avoid silent ID reuse."
+    }
+  ],
+  "native_capture_pipelines_implemented": false,
+  "native_device_tests": "NOT_RUN_EXTERNAL_INPUTS",
+  "distribution": "NOT_RUN_EXTERNAL_INPUTS",
+  "full_P10_pass": false,
+  "full_G4_pass": false,
+  "P07_pass": false,
+  "public_mobile_release_pass": false,
+  "next_step": "Preserve external native HOLD; P11 may proceed independently after its entry. Native implementation needs new selectedSDK/toolchain/credential/device/distribution gates.",
+  "narrative": {
+    "path": ".docs/implementation/reviews/p10/engineering-round01/REPORT.md",
+    "sha256": "50b11afe91baa1bd16edf36ccbdff75d14f887ee75077e6f359b76e6d4d163df"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "stage": "P10",
+  "status": "PREPARATION_ACCEPTED_FULL_STAGE_HOLD",
+  "created_at_utc": "2026-10-25T03:42:27.745751+00:00",
+  "preparation_pass": true,
+  "full_P10_pass": false,
+  "full_G4_pass": false,
+  "native_capture_implemented": false,
+  "native_device_tests": "NOT_RUN",
+  "distribution": "NOT_RUN",
+  "source_git": "e3fd2a5a02c355fc3f4a8c2327eda0f49ae15524",
+  "source_identity": "03550c96dfda42bbfbe2db4cb594f0bf890037b18d2fbb92bd820ba76bd2b999",
+  "tested_source_git": "0ca608bb4e2a17fc3346e015014fef8a6b08cc87",
+  "tested_core": "e244432c0d0919f8b78090a8b56cd97995c3da688adff4874ae327c1b14e0120",
+  "later_source_delta": "P10_MOBILE external ID mapping only; no runtime/schema/test/build input change",
+  "final_doc_sha256": "66b0465252340694494d85e98db599481960feb843b0a789a84da56edd5346b5",
+  "engineering_doc_note": "Nonblocking P3 mapping addressed after sealed engineeringpacket; reviewer independently confirmed finaldoc66b046... read-only inhandoff; immutablepacket preserved",
+  "independent_reviews": {
+    "engineering": {
+      "path": ".docs/implementation/reviews/p10/engineering-round01/INDEX.json",
+      "sha256": "86f968b4037f3b461f0a6f79961ce7f484a82d8ff7d892615c42967ae5e2d313"
+    },
+    "security": {
+      "path": ".docs/implementation/reviews/p10/security-round01/INDEX.json",
+      "sha256": "b236ab09760013567f19f17bdadc8fbc651b4c4a6c523d7e9927d58c2e91ed0b"
+    }
+  },
+  "tests": {
+    "path": ".docs/implementation/evidence/p10/preparation-checks01/INDEX.json",
+    "sha256": "da291f0504b488e88a8173466d03d44609755339876b45b205e5672b3ff58176"
+  },
+  "remaining_internal_work": [
+    "Select/audit/pin exact Android+iOS native SDK/toolchains/capture routes",
+    "Implement actual native publishers, credential handoff and permission/lifecycle adapters",
+    "Compile/qualify supported native artifacts; preparation is not their implementation"
+  ],
+  "external_inputs": [
+    "Real Android+iOS models/OS/source/device access",
+    "Supported macOS/Xcode/SDK host and provisioning/capabilities",
+    "Pilotdistribution identity and OS targets",
+    "Trusted device-reachable LAN/TLS/ICE profile"
+  ],
+  "P11_independent_allowed": true,
+  "P07_pass": false,
+  "public_release_pass": false,
+  "writers": "P10 reviewers COMPLETE_STOP; P11 entry separate ongoing",
+  "rollback": "Remove additive preflight/nativeclosed routes ifnecessary; never enablenativepublisher or reviveprotectedleases"
+}
