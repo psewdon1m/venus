@@ -23,7 +23,7 @@ export async function migrate(pool: pg.Pool, directory = new URL('../migrations/
     await client.query('COMMIT');
   } catch(error) {await client.query('ROLLBACK');throw error;} finally {client.release();}
 }
-export async function schemaProbe(pool:pg.Pool) {
+export async function schemaProbe(pool:Pick<pg.Pool,'query'>) {
   const query={text:`SELECT max(generation) AS generation,
     (SELECT count(*) FROM unnest(ARRAY['rooms','room_members','room_sessions','private_preferences','entry_acceptances','ws_tickets','idempotency_keys','outbox_events','audit_events','admission_limits']) AS t(name) WHERE to_regclass(t.name) IS NOT NULL)::int AS tables
     FROM venus_schema_migrations`,query_timeout:1000};

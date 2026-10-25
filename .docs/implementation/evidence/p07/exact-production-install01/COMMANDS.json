@@ -1,0 +1,243 @@
+{
+  "status": "ACTUAL_COMMAND_METADATA",
+  "project": "venus-p06-d89fea3f65",
+  "commands": [
+    {
+      "phase": "helper",
+      "program": "docker",
+      "argv": [
+        "build",
+        "--platform",
+        "linux/amd64",
+        "--pull=false",
+        "--target",
+        "fixture",
+        "--build-arg",
+        "DOCKER_CLI_IMAGE=docker@sha256:4fa0ee1f3a7e4354c4ea34558b6d4ee32859baf4973d4c8ccc8e7fe3dd730c04",
+        "-f",
+        "infra/venus/Dockerfile.operator",
+        "-t",
+        "venus-p06-d89fea3f65-helper:fixture",
+        "."
+      ],
+      "exit": 0
+    },
+    {
+      "phase": "original_registry",
+      "program": "docker",
+      "argv": [
+        "run",
+        "-d",
+        "--name",
+        "venus-p06-d89fea3f65-registry",
+        "--label",
+        "net.shmoza.venus.p06=d89fea3f65",
+        "--cpus",
+        "0.5",
+        "--memory",
+        "128m",
+        "--pids-limit",
+        "64",
+        "-p",
+        "127.0.0.1::5000",
+        "registry:2.8.3"
+      ],
+      "exit": 0
+    },
+    {
+      "phase": "local_push_original",
+      "program": "docker",
+      "argv": [
+        "push",
+        "127.0.0.1:65422/venus:fixture-d89fea3f65-a"
+      ],
+      "exit": 1,
+      "log": "03-local-push.txt"
+    },
+    {
+      "phase": "same_push_after_hostHTTP200",
+      "program": "docker",
+      "argv": [
+        "push",
+        "127.0.0.1:65422/venus:fixture-d89fea3f65-a"
+      ],
+      "exit": 1,
+      "log": "05-local-push-repeat.txt"
+    },
+    {
+      "phase": "corrected_owned_registry",
+      "program": "docker",
+      "argv": [
+        "run",
+        "-d",
+        "--name",
+        "venus-p06-d89fea3f65-registry",
+        "--label",
+        "net.shmoza.venus.p06=d89fea3f65",
+        "--network",
+        "host",
+        "--cpus",
+        "0.5",
+        "--memory",
+        "128m",
+        "--pids-limit",
+        "64",
+        "-e",
+        "REGISTRY_HTTP_ADDR=127.0.0.1:65422",
+        "registry:2.8.3"
+      ],
+      "exit": 0
+    },
+    {
+      "phase": "real_local_push_vm_loopback",
+      "program": "docker",
+      "argv": [
+        "push",
+        "127.0.0.1:65422/venus:fixture-d89fea3f65-a"
+      ],
+      "exit": 0,
+      "log": "10-local-push-vm-loopback.txt"
+    },
+    {
+      "phase": "actual_install",
+      "program": "docker",
+      "argv": [
+        "run",
+        "--name",
+        "venus-p06-d89fea3f65-driver",
+        "--label",
+        "net.shmoza.venus.p06=d89fea3f65",
+        "--user",
+        "0:0",
+        "--read-only",
+        "--cap-drop",
+        "ALL",
+        "--cap-add",
+        "CHOWN",
+        "--cap-add",
+        "FOWNER",
+        "--cap-add",
+        "DAC_OVERRIDE",
+        "--security-opt",
+        "no-new-privileges:true",
+        "--cpus",
+        "1",
+        "--memory",
+        "1g",
+        "--pids-limit",
+        "128",
+        "--tmpfs",
+        "/tmp:rw,size=64m,mode=1777",
+        "--mount",
+        "type=volume,source=venus-p06-d89fea3f65-host,target=/data",
+        "--mount",
+        "type=bind,source=/var/run/docker.sock,target=/var/run/docker.sock",
+        "-e",
+        "HOME=/tmp",
+        "-e",
+        "P06_INPUT=<base64 of exact recorded INPUT object>",
+        "--entrypoint",
+        "node",
+        "sha256:a44e98738e7dca194b5487081f8168e5b9af71392097a3c8c261f85923a079d0",
+        "tests/p06/docker-drill.mjs"
+      ],
+      "input_json_file": "INPUT.json",
+      "input_json_sha256": "bf96a6a88df761a120a6c9aa117410c1e6e3a1f934114810f0b8386c6ea5fd6e",
+      "env_payload_rule": "UTF8 compactJSON of INPUT object; payload contains only synthetic fixture config/source/image refs, no secret. Actual invocation encoded by PowerShell ConvertTo-Json -Depth15 -Compress.",
+      "exit": 0
+    }
+  ],
+  "cleanup_events": [
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "f5233e59082d"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "28a252c56061"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "f46c239f9a4b"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "7d9a6af74d5b"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "2c3d7200bec5"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "cb51a497e625"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "b6ece564f506"
+    },
+    {
+      "kind": "container",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "df8dd0b27f28"
+    },
+    {
+      "kind": "compose_volume",
+      "exit": 0,
+      "name": "venus-p06-d89fea3f65_presentation-spool",
+      "owned_verified": true
+    },
+    {
+      "kind": "network",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "e761d3dc57d9"
+    },
+    {
+      "kind": "network",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "ad62eb41bb64"
+    },
+    {
+      "kind": "network",
+      "owned_verified": true,
+      "exit": 0,
+      "id": "d077cd9467b0"
+    },
+    {
+      "kind": "state_volume",
+      "exit": 0,
+      "name": "venus-p06-d89fea3f65-host",
+      "owned_verified": true,
+      "removed_after_pass": true
+    },
+    {
+      "tag": "127.0.0.1:65422/venus:fixture-d89fea3f65-a",
+      "kind": "own_tag",
+      "production_image_not_deleted": true,
+      "exit": 0
+    },
+    {
+      "tag": "venus-p06-d89fea3f65-helper:fixture",
+      "kind": "own_tag",
+      "production_image_not_deleted": true,
+      "exit": 0
+    }
+  ]
+}

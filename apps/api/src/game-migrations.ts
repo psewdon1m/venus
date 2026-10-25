@@ -18,7 +18,7 @@ export async function migrateGames(pool:pg.Pool,directory=new URL('../game-migra
     await c.query('COMMIT');
   } catch(error) {await c.query('ROLLBACK');throw error;} finally {c.release();}
 }
-export async function engineSchemaProbe(pool:pg.Pool) {
+export async function engineSchemaProbe(pool:Pick<pg.Pool,'query'>) {
   const query={text:`SELECT max(generation) AS generation,(SELECT count(*) FROM unnest(ARRAY['game_packs','game_sessions','game_participants','game_rounds','game_round_actors','game_consent_actors','game_private_streams','game_outbox_refs']) AS t(name) WHERE to_regclass(t.name) IS NOT NULL)::int AS tables FROM venus_game_schema_migrations`,query_timeout:1000};
   const value=(await pool.query<{generation:number;tables:number}>(query)).rows[0];
   if(value?.generation!==engineSchemaGeneration||value.tables!==8) throw new Error('Engine schema not ready');

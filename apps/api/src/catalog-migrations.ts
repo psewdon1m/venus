@@ -12,7 +12,7 @@ export async function migrateCatalog(pool:pg.Pool) {
     await c.query('COMMIT');
   } catch(error) {await c.query('ROLLBACK');throw error;}finally {c.release();}
 }
-export async function catalogSchemaProbe(pool:pg.Pool) {
+export async function catalogSchemaProbe(pool:Pick<pg.Pool,'query'>) {
   const query={text:`SELECT max(generation) AS generation,(SELECT count(*) FROM unnest(ARRAY['venus_catalog_state','venus_catalog_withdrawals','venus_catalog_events']) AS t(name) WHERE to_regclass(t.name) IS NOT NULL)::int AS tables FROM venus_catalog_schema_migrations`,query_timeout:1000};
   const result=await pool.query<{generation:number;tables:number}>(query);
   if(result.rows[0]?.generation!==1||result.rows[0]?.tables!==3) throw new Error('Catalog schema not ready');

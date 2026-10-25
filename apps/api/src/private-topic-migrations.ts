@@ -18,7 +18,7 @@ export async function migratePrivateTopics(pool:pg.Pool,directory=new URL('../pr
   await c.query('COMMIT');
  } catch(error) {await c.query('ROLLBACK');throw error;} finally {c.release();}
 }
-export async function privateTopicSchemaProbe(pool:pg.Pool) {
+export async function privateTopicSchemaProbe(pool:Pick<pg.Pool,'query'>) {
  const query={text:`SELECT max(generation) AS generation,
   (SELECT count(*) FROM unnest(ARRAY['private_topic_room_births','private_topic_preferences','private_topic_requests','topic_game_sessions','topic_game_objects','topic_game_chunks','topic_game_requests','topic_game_private_refs']) AS t(name) WHERE to_regclass(t.name) IS NOT NULL)::int AS tables
   FROM venus_private_conversation_schema_migrations`,query_timeout:1000};
