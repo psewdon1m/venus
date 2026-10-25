@@ -1,3 +1,9 @@
+# Текущий статус — локальные функции приняты; общий P07 подготовлен
+
+Презентации: **PASS_FUNCTIONAL_LOCAL_COMPONENT**. PDF-библиотека комнаты, личный просмотр и live-показ реализованы; clean native47/12cases, static56, actualoperator10 и два независимых выходных гейта PASS. Все обязательные замечания закрыты, прежние FAIL сохранены. [Итоговая приёмка](evidence/preza/functional-acceptance01/REPORT.md) · [Реестр](presentations-registry.json).
+
+P08 Music из локального каталога, P09 Cinema, P11 общие/парные Calls — локальные функциональные PASS. P10 — **только подготовка**, нативная реализация/сборки/реальные устройства ещё HOLD; весь P10 не закрыт. [Подготовка P07](P07_FINAL_RUN_PREPARATION.md) завершена, **общий прогон не запускался**. Новый подписанный релиз, публичная поставка и production/DNS/TLS/NAT/device приёмка не выданы. Актуальный план связан новой exact source-revisions.v3 цепочкой, исторические v2/CSV/приёмки сохранены. Далее сохранена история предыдущих статусов.
+
 # Текущий статус — презентации реализованы, исправляются замечания выходного гейта
 
 На clean31b4a57c проходят46/46 Docker tests и12/12 сценариев презентаций: PDF library/import/live, room ACL, cancel, old-PG restore, UI RU/EN/TR и реальный BK2 restore почти64MiB. Локальный unsigned image собран, Python/Poppler pins подтверждены. [Доказательства](evidence/preza/native-round04/INDEX.json). Независимые [Engineering01](reviews/preza/engineering-round01/REPORT.md) и [Security01](reviews/preza/security-round01/REPORT.md) выдали **FAIL**: требуется абсолютный upload deadline и дополнительные точечные recovery/timeout доказательства. Исправления и повторная приёмка в работе; полный PASS презентаций ещё не выдан.

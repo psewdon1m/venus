@@ -88,3 +88,28 @@ RealDriver initialize/HTTP/quiesce/BK2/A→B/B→A/feature-off/on/floors и об
 ### 2026-10-25T08:08:00.121480+00:00 — Контроль повторного profile helper
 
 Ошибочная команда git pull в detached cleanC вернула1, shell продолжил старый helper; собственный executor78a9b33c94 остановлен с проверкойlabel, wrapper cleanup завершён. Следующий3e49894aef прерван после чтения auth: GETroom явно резервирует новыйslot, а presentations snapshot не резервирует. Финальное ожидание уточнено как настоящий reconnect GETroom → PNGhash200 → driverhealth/stop; никаких изменений доступа приложения. Обе отменённые попытки сохраняются отдельно, PASS не заявляется.
+
+
+### 2026-10-25T08:09:40.559963+00:00 — Независимый round02 и точное разделение proof
+
+Engineering/security nonauthor agents возобновлены с новыми собственными журналами. Engineering подтвердил ENG01 actual60010ms cutoff и ENG03 postfloorPGsequence/4assetsreconcile. Новый proof runtime-source-parity01: consumer/native47 inputs c2 идентичны; отличия ровно profilehelper,wrapper иproductionoperator driver. Исправленный executor46fbb2/core624075b2 квалифицируется отдельным actualprofile, не выдается за testeddriverc2. Targetedeslint3files exit0. Отменённые попытки archived отдельно с FAIL; failedstatevolumes пока сохранены.
+
+
+### 2026-10-25T08:17:55.400171+00:00 — Final профиль PASS; новая traceability chain PASS
+
+Actualprofile04 clean46fbb2:10/10PASS, productionconsumer c2/imagec11a7/configde828, executorUID1001 безidentityoverrides. A→Bmetadata-only→BK2restoreA/off→on, protectedfloors, oldprofiledenial,120644ms PDF_TIMEOUT, cleanupfailclosed/nextplaintextdenied, reconnectPNGhash иfinalstop. Wrapper cleanup0errors/sourceunchanged. Late docscheck обнаружил legitimateplanoverlay456c949f безновойsourcechain; новаяsource-revisions.v3 на59ca/coref704 сохраняетv2/oldplan/CSV/archive; cleancheck_p00exit0/21tampertests0, rawprooftraceability-final01. Runtime unchanged до59ca provenparity02. check_docs2070md0errors; check_stage_history exit0(P01/P02/P03 source/evidence). InvariantsP05/P06/P11INDEX/rootindexunchanged. Пять собственныхsyntheticfailedstatevolumes удалены после proof с проверкойlabels/noattachedcontainers; FAILpackets сохранены. Никакого P07aggregate/publicrelease/deviceclaim.
+
+
+### 2026-10-25T08:19:57.146439+00:00 — Независимые выходные гейты PASS / все агенты STOP
+
+Engineering02 dbc0b920 иSecurity02 e970b1b6 PASS на59ca/coref704,106proofhashes сверены, обязательныхfindings0; journals sealed cf31d495/76a24816, обаCOMPLETE_STOP. Функциональная приёмка презентаций/реестр/status оформлены с явными c2consumer/46fexecutor/59cavalidator источниками. P08/P09/P11 localPASS, P10 preparationonly/internalnative+devicesHOLD, P07preparedNOT_RUN. Consumerновыхправокнет. Теперь только производныйmanifest ифинальнаяsourceconsistency; agentjournals не редактируются.
+
+
+### 2026-10-25T08:22:03.936385+00:00 — Завершение локального функционального цикла
+
+После STOP всехавторов/ревьюеров произведён manifest33324paths. verify_manifestW exit0/errors0; verify_manifestROOTexit0/errors0; finalcheck_docs2073md/0errors exit0. ROOTstagedindexa4bb6d51 сохранён, manifestW/ROOTbyteexact. Gateengineering/security finalPASS, openmandatoryfindings0, acceptanceINDEXe2db0d7c. Эта последняя собственная запись требует производного refreshmanifest перед commit; агенты больше не пишут. Далее только проверкаderivedconsistency/commit/pushрабочейветки, безизмененийприложения, P07общего прогона илиpublicrelease. P10nativeinternalimplementation/device/distribution остаётсяHOLD.
+
+
+### 2026-10-25T08:22:59.174853+00:00 — Derived sync guard
+
+Повторныйguardedsync exit1 отказал ROOTconcurrent для собственного журнала: ROOT содержит предыдущую ещёнеcommitted производнуюревизию, а W ужеappend. Это ожидаемоограниченный guard, не ошибкаприложения. Дляразрешения проверяются normalizedROOTjournal prefixofW и manifestdelta ровнодвасобственныхжурнала; затемкопируются толькоэтидваownedjournal+производныйmanifest. Agentjournals/reviews не меняются.
