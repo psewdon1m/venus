@@ -1,5 +1,5 @@
 import {useEffect,useRef,useState} from 'react';
-import {Room,RoomEvent,Track,VideoPresets} from 'livekit-client';
+import type {Room} from 'livekit-client';
 import type {CinemaState,Locale,MediaGrant} from '@venus/contracts';
 import {cinemaCopy} from '@venus/i18n';
 import {ApiError,SessionApi} from './api.js';
@@ -43,6 +43,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
    }
    const grant=await api.request<MediaGrant>(root+'/cinema/'+(publisher?'start':'join'),{expected_rev:state.rev,idempotency_key:crypto.randomUUID()});value.grant=grant;
    if(!current()){void api.request(`${root}/media/leases/${grant.lease_id}/release`,{idempotency_key:crypto.randomUUID()}).catch(()=>{});return;}
+   const {Room,RoomEvent,Track}=await import('livekit-client');if(!current())return;
    const room=new Room({adaptiveStream:false,dynacast:false,disconnectOnPageLeave:true});value.room=room;
    room.on(RoomEvent.Disconnected,()=>{if(current()){retire(value);setLocal('error');}});
    room.on(RoomEvent.TrackSubscribed,(track)=>{
@@ -55,7 +56,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
    await room.connect(grant.signaling_url,grant.token,{autoSubscribe:true});if(!current()){void room.disconnect(true);return;}
    value.renew=setInterval(()=>{if(!current())return;void api.request(`${root}/media/leases/${grant.lease_id}/renew`,{idempotency_key:crypto.randomUUID()}).catch(()=>{if(current()){retire(value);setLocal('error');}});},5000);
    if(publisher){
-    await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,videoCodec:'vp8',simulcast:false,videoEncoding:{maxBitrate:1500000,maxFramerate:15},screenShareEncoding:VideoPresets.h720.encoding});
+    await room.localParticipant.publishTrack(value.capture!.getVideoTracks()[0]!,{source:Track.Source.ScreenShare,videoCodec:'vp8',simulcast:false,videoEncoding:{maxBitrate:1500000,maxFramerate:15},screenShareEncoding:{maxBitrate:1500000,maxFramerate:15}});
     if(!current())return;
     await room.localParticipant.publishTrack(value.capture!.getAudioTracks()[0]!,{source:Track.Source.ScreenShareAudio});
     if(!current())return;

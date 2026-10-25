@@ -22,6 +22,7 @@ ARG SOURCE_REVISION
 ARG RELEASE_VERSION=0.0.0
 LABEL org.opencontainers.image.title="Venus" org.opencontainers.image.version="$RELEASE_VERSION" org.opencontainers.image.revision="$SOURCE_REVISION" org.opencontainers.image.source="https://github.com/psewdon1m/venus"
 COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
+COPY third-party/livekit-server-1.13.10 /usr/share/licenses/venus/livekit-server-1.13.10
 ENV NODE_ENV=production
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
