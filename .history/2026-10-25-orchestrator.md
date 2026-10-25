@@ -392,3 +392,8 @@ Clean f663ea66: actual BK2 capacity PASS за24.2s, 66,325,926 bytes encrypted a
 ### 2026-10-25T07:20:23.551555+00:00 — Исправления round02 завершены, writers STOP
 
 API fix01 завершён: import admission проверяет отсутствие running conversion/raw body и свежий idle с полностью очищенным spool; quiesce учитывает durable request до busy и не создаёт поздний cancel после ACK. Native integration ждёт фактическую готовность, использует2 настоящих WS для Games и проверяет PDF replacement/start/stop через UI. Авторские syntax/lint/API types exit0, root runnerlint/PythonAST exit0; native повтора агент не делал. Все writers STOP, следующий запуск из нового clean commit. Предыдущие43/46 native PASS и3FAIL сохранены отдельно, не перекрашены.
+
+
+### 2026-10-25T07:24:25.064856+00:00 — Native round03 44/46, две конкретные правки
+
+Clean12f2956e: capacity/library/ACL/live/replace/cancel/oldrestore/featureoff/Games(realWS)/retention PASS. Hostile child фактически имеет CapEff/Prm/Amb0, NNP1, SIGTERM/KILL/STOP к guardian EPERM, forbidden paths absent. Проверка cleanup ошибочно читала scratch0700 uid65534 от root без DAC capability: корректный PermissionError, не нарушение изоляции. Root control теперь отдельно проверяет отсутствие orphan UID65534 и читает scratch через фактический guardian.dropped(65534), права не расширялись. Новый UI import/replace/start/stop прошёл; смена locale сразу после него получила настоящий REVISION_CONFLICT из-за ещё не доставленного room WS frame. main.chooseLocale теперь получает свежую room revision перед первой mutation, фиксирует body/key для транспортного retry. Targeted lint exit0, далее browser regression. Round03 остаётся FAIL и сохранён. Static04 на12f: types/lint/schema/i18n exit0,56/56units PASS.

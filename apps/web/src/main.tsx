@@ -113,8 +113,13 @@ function App() {
   function enter(view:RoomView|undefined,id:string) {reacceptRequested.current=false;setNeedsReaccept(false);if(view) setRoom(view);setRoomId(id);history.replaceState(null,'','/#room='+id);}
   async function chooseLocale(value:Locale) {
     if(!room) {setLocale(value);return;}
-    const input={locale:value,expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};
-    await perform(async()=>{await api.request<Member>(`/api/v1/rooms/${room.room_id}/me`,input,'PATCH');await refresh();});
+    const id=room.room_id;let input:{locale:Locale;expected_rev:number;idempotency_key:string}|undefined;
+    await perform(async()=>{
+      // Media commands can commit before their room WebSocket frame arrives.
+      // Capture a fresh revision once; a transport retry keeps the same body/key.
+      if(!input){const current=await api.request<RoomView>(`/api/v1/rooms/${id}`);input={locale:value,expected_rev:current.room_rev,idempotency_key:crypto.randomUUID()};}
+      await api.request<Member>(`/api/v1/rooms/${id}/me`,input,'PATCH');await refresh(id);
+    });
   }
   const hasApproval=Boolean(policy?.available&&accepted&&adult);
   const leave=()=>{
