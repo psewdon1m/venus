@@ -1,0 +1,85 @@
+{
+  "format": 1,
+  "reviewer": "p09-security-review03",
+  "source_git": "5ababf57fc26b325a88964806aa8d15da8208639",
+  "comparison_base": "ba039f8731a053de030199394e754a5589e57431",
+  "source_basis": "Exact immutable Git blobs; no future corrections accepted",
+  "source_files": {
+    ".docs/implementation/P09_MEDIA.md": {
+      "sha256": "94970a47e75c62484060ceac8a859f16ac708b0b448f1cc7d397a20a470ecb7d",
+      "bytes": 17792
+    },
+    "apps/api/src/media.ts": {
+      "sha256": "024d822fe1daf59457ea48d3fc22ed747961aabde3373ae65f0caf1183a3235b",
+      "bytes": 28723
+    },
+    "apps/api/src/app.ts": {
+      "sha256": "b331ec32d1558b14aa4998c1042a09962cb1a1d0f09b1c3135f472e42e84bb5a",
+      "bytes": 5127
+    },
+    "apps/api/src/rooms.ts": {
+      "sha256": "bb29170d39e8ba936c8a65bd901b322cbd3c5450b0af0eeb353b7339143f3085",
+      "bytes": 45877
+    },
+    "apps/api/src/media-routes.ts": {
+      "sha256": "fdc6ba7b04474a8fd1d2ec7ceaca6e0169bb64b8d808bf484fc57da8495338df",
+      "bytes": 8012
+    },
+    "apps/api/media-migrations/001_media.sql": {
+      "sha256": "cb0b0db3e6743e2c07b7d851195ed531e9138c5b3a10caac222497b1d058aeb4",
+      "bytes": 2402
+    },
+    "apps/api/media-migrations/002_cutoff_receipts.sql": {
+      "sha256": "dbebda02c16d435a490acb9566880b95fc6ebdd14a34f67ea16e5aadd2ccca6a",
+      "bytes": 186
+    },
+    "apps/api/src/media-migrations.ts": {
+      "sha256": "883de41e7057f7da989367c470e2fea03a95d5d4bd25b6dc8a7f3390d381962b",
+      "bytes": 1609
+    },
+    "infra/venus/media-supervisor.mjs": {
+      "sha256": "30a5d66e6b4949f66f01f1b87f6b1b4ad29f32392bd2a45c1232ccee33372e8e",
+      "bytes": 13177
+    },
+    "tools/venus-operator/driver.mjs": {
+      "sha256": "a7efa78eb9bd1d94b4d13aab4e80629c3411ed5d7ee95c437b7aeff4d62f6dbd",
+      "bytes": 20723
+    },
+    "tools/venus-operator/engine.mjs": {
+      "sha256": "cdd712f4215073dbdb1799c4d1972e422b73a8d7a7ee2a9dd84f069646897ab6",
+      "bytes": 12996
+    },
+    "apps/web/src/cinema-panel.tsx": {
+      "sha256": "36a1d098e4b454376034ac1a842558985dc7edacd7a9544ecf74953eb6ded6fa",
+      "bytes": 8497
+    },
+    "tests/p09/integration.mjs": {
+      "sha256": "5e8cab44676cb5cfac6b38216d6d0ec337a93c103f931ad0c9bee34afa3044e6",
+      "bytes": 30923
+    },
+    "tests/p09/av-source.mjs": {
+      "sha256": "5b9e20db9570b8576d1818dc9b44b4848d52f62122e376afa680ec63d3e57347",
+      "bytes": 4239
+    },
+    "tests/p05/server.mjs": {
+      "sha256": "6748056ed92ff6d0b509ce69aa46588210ecb2a546d61ea63d0a70be312ac4d1",
+      "bytes": 4934
+    },
+    "tests/p05/runtime.mjs": {
+      "sha256": "9e74338270ed0b3dd838746b35fd38917f5cb04260ca44b5da9fa2e0111a644b",
+      "bytes": 7283
+    }
+  },
+  "previous_review_index_sha256": "6aeea1450aa971e5f11bceb7c8b270bf23c00046e8aa84735a4f798e51f64d6b",
+  "active_runtime_per_handoff": ".artifacts/p05/venus-p05-8fb1e503adef",
+  "final_runtime_evidence_audited": false,
+  "reviewer_actions": {
+    "source_diff_and_test_source_reads": true,
+    "Docker_or_test_launches": false,
+    "network_API": false,
+    "app_source_or_shared_file_mutations": false
+  },
+  "finding_line": 96,
+  "author_acceptance": "S09-04 residual accepted; member-scoped state UPDATE will match selected publisher upstream scopes; existing case will add failure/retry; not yet reviewed",
+  "created_at_utc": "2026-10-25T02:45:19.556Z"
+}
