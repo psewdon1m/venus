@@ -1,0 +1,2200 @@
+{
+  "suite": "P09_CINEMA",
+  "status": "FAIL",
+  "production": false,
+  "synthetic_only": true,
+  "records": [
+    {
+      "id": "P09-DENIED-NO-AUDIO",
+      "status": "PASS",
+      "detail": {
+        "explicit_denied": true,
+        "no_audio_never_live": true
+      }
+    },
+    {
+      "id": "P09-REAL-TAB-CAPTURE-8",
+      "status": "PASS",
+      "detail": {
+        "capture": "actual getDisplayMedia; browser tab containing own generated AV",
+        "participants": 8,
+        "one_embedded_sfu": true,
+        "music_paused": true
+      }
+    },
+    {
+      "id": "P09-ACL-FOUR-PATHS",
+      "status": "PASS",
+      "detail": {
+        "guest_publish403": true,
+        "second_publish409": true,
+        "all_four_foreign_cookie401": true,
+        "all_four_foreign_origin403": true
+      }
+    },
+    {
+      "id": "P09-AV-30S-8",
+      "status": "PASS",
+      "detail": {
+        "per_viewer": [
+          {
+            "matched": 34,
+            "p95_ms": 83,
+            "decoded_frames": 519
+          },
+          {
+            "matched": 34,
+            "p95_ms": 88,
+            "decoded_frames": 519
+          },
+          {
+            "matched": 34,
+            "p95_ms": 87,
+            "decoded_frames": 518
+          },
+          {
+            "matched": 34,
+            "p95_ms": 77,
+            "decoded_frames": 519
+          },
+          {
+            "matched": 34,
+            "p95_ms": 85,
+            "decoded_frames": 519
+          },
+          {
+            "matched": 34,
+            "p95_ms": 60,
+            "decoded_frames": 519
+          },
+          {
+            "matched": 34,
+            "p95_ms": 70,
+            "decoded_frames": 519
+          }
+        ],
+        "av_p95_ms": 83,
+        "glass_p95_ms": 70,
+        "viewer_skew_p95_ms": 67,
+        "samples": 2100,
+        "audio": "received remote MediaStream analysed at subscriber, actual null-sink playback",
+        "clock": "same Docker host wall clock; encoded timestamp+checksum, 1ms clock granularity",
+        "sfu": {
+          "p95_cpu_cores": 0.08269771240815373,
+          "peak_memory_bytes": 105992192,
+          "p95_egress_bps": 3472033.8137252824
+        },
+        "rtp": [
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1112,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 162453
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1880,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1805189
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1096,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 160199
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1833,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1755611
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1062,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 155287
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1801,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1723914
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1055,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 154381
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1754,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1672438
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1036,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 151924
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1722,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1640454
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1020,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 149741
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1679,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1595139
+            }
+          ],
+          [
+            {
+              "kind": "audio",
+              "packetsReceived": 1010,
+              "packetsLost": 0,
+              "jitter": 0,
+              "bytesReceived": 148817
+            },
+            {
+              "kind": "video",
+              "packetsReceived": 1636,
+              "packetsLost": 0,
+              "jitter": 0.001,
+              "bytesReceived": 1549134
+            }
+          ]
+        ]
+      }
+    },
+    {
+      "id": "P09-DEGRADED-10S",
+      "status": "PASS",
+      "detail": {
+        "profile": "owned media eth0:50ms±10ms,0.5%loss,4Mbit;10s",
+        "advanced": true,
+        "normal_targets_claimed": false
+      }
+    },
+    {
+      "id": "P09-REVOKE-STALE-JWT",
+      "status": "PASS",
+      "detail": {
+        "protected_revoke": true,
+        "all_four_old_token401": true,
+        "old_frames_cleared": true
+      }
+    },
+    {
+      "id": "P09-UDP-BLOCKED-TCP-10S",
+      "status": "PASS",
+      "detail": {
+        "profile": "owned SFU INPUT drops UDP7882;new explicit capture+joins;10s",
+        "protocols": [
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ],
+          [
+            "tcp"
+          ]
+        ],
+        "no_external_relay": true
+      }
+    },
+    {
+      "id": "P09-SOURCE-END-AND-CLOSE",
+      "status": "PASS",
+      "detail": {
+        "source_stop": true,
+        "room_close_revokes_cookie": true,
+        "music_not_resumed": true
+      }
+    },
+    {
+      "id": "P09-API-LOSS-WATCHDOG",
+      "status": "FAIL",
+      "error": "Expected values to be strictly equal:\n\nfalse !== true\n"
+    }
+  ],
+  "page_errors": [],
+  "profile": {
+    "publisher": 1,
+    "viewers": 7,
+    "warmup_seconds": 3,
+    "measure_seconds": 30,
+    "av_min_samples": 20,
+    "av_p95_ms": 120,
+    "viewer_skew_p95_ms": 500,
+    "glass_p95_ms": 2000
+  },
+  "runtime_cleanup": "completed",
+  "browser_version": "156.0.8078.4",
+  "error": "Expected values to be strictly equal:\n\nfalse !== true\n",
+  "final_media_state": [
+    {
+      "status": "Для показа нужно соединение с комнатой.",
+      "requests": [
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/start",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/source",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/64beeace-6087-46a3-8429-08588b5f8080/release",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/start",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/source",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/e8ea25df-4105-4599-8cb2-ddb647b57ae7/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/e8ea25df-4105-4599-8cb2-ddb647b57ae7/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/e8ea25df-4105-4599-8cb2-ddb647b57ae7/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/e8ea25df-4105-4599-8cb2-ddb647b57ae7/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/e8ea25df-4105-4599-8cb2-ddb647b57ae7/release",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/start",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/source",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/a7da2eaa-2d4a-4975-a63e-ad405b9632e6/release",
+          "status": 200,
+          "code": null
+        }
+      ],
+      "websockets": [
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/ws",
+          "opened": true,
+          "closed": true,
+          "code": 1006
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/rtc",
+          "opened": true,
+          "closed": true,
+          "code": 1006
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/rtc",
+          "opened": true,
+          "closed": true,
+          "code": 1006
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/rtc",
+          "opened": true,
+          "closed": true,
+          "code": 1000
+        }
+      ],
+      "capture": [
+        [
+          {
+            "kind": "audio",
+            "state": "live",
+            "muted": false
+          },
+          {
+            "kind": "video",
+            "state": "live",
+            "muted": false
+          }
+        ],
+        [
+          {
+            "kind": "audio",
+            "state": "live",
+            "muted": false
+          },
+          {
+            "kind": "video",
+            "state": "live",
+            "muted": false
+          }
+        ],
+        [
+          {
+            "kind": "audio",
+            "state": "live",
+            "muted": false
+          },
+          {
+            "kind": "video",
+            "state": "live",
+            "muted": false
+          }
+        ]
+      ],
+      "pc_history": [
+        {
+          "events": [
+            {
+              "at": 1792895221596,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895221597,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221607,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221607,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221610,
+              "event": "signalingstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221611,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221611,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895221612,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895221656,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-local-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895221672,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895221703,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-local-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895221718,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 34868
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "770c7321988a7aea2e6ed9972b6a08cba4b978c458b3298f0ec4ed6dc5e83aaf",
+            "770c7321988a7aea2e6ed9972b6a08cba4b978c458b3298f0ec4ed6dc5e83aaf",
+            "770c7321988a7aea2e6ed9972b6a08cba4b978c458b3298f0ec4ed6dc5e83aaf"
+          ],
+          "remote_sdp_hashes": [
+            "3e6695d6e616f05373b92dc3ab16ce57f9b965f215b94609cb4a3e473056eced",
+            "3e6695d6e616f05373b92dc3ab16ce57f9b965f215b94609cb4a3e473056eced",
+            "3e6695d6e616f05373b92dc3ab16ce57f9b965f215b94609cb4a3e473056eced"
+          ]
+        },
+        {
+          "events": [
+            {
+              "at": 1792895221578,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-remote-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895221580,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "new"
+            },
+            {
+              "at": 1792895221582,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221582,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221583,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221590,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895221590,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895221596,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 57290
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "65e2914b1af63dfaba29d735db2fdd727affdc7e00c07f8148873006513f3ec4"
+          ],
+          "remote_sdp_hashes": [
+            "a7b62053e4891e87a53045d959538969169b165bb769762af1172dc8d62c4c0b"
+          ]
+        },
+        {
+          "events": [
+            {
+              "at": 1792895279354,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895279355,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279362,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279362,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279364,
+              "event": "signalingstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279473,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895279490,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895279492,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895280564,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-local-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895280576,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895280605,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-local-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895280619,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 40527
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "ec36775ef37e877f6dc8ab2d0b638776c65df46cd6353f417e96d0f99cf8170e",
+            "ec36775ef37e877f6dc8ab2d0b638776c65df46cd6353f417e96d0f99cf8170e",
+            "ec36775ef37e877f6dc8ab2d0b638776c65df46cd6353f417e96d0f99cf8170e"
+          ],
+          "remote_sdp_hashes": [
+            "9eb94379381d20436810c1fccc2c239b70337672b758a70d199ac5025037f77b",
+            "9eb94379381d20436810c1fccc2c239b70337672b758a70d199ac5025037f77b",
+            "9eb94379381d20436810c1fccc2c239b70337672b758a70d199ac5025037f77b"
+          ]
+        },
+        {
+          "events": [
+            {
+              "at": 1792895279337,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-remote-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895279338,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "new"
+            },
+            {
+              "at": 1792895279338,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279340,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279340,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895279458,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895279521,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895280527,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 46708
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "13ed98fbc732a1e13065dc8f945095b34e5350e22569ae2835f4db54559b3682"
+          ],
+          "remote_sdp_hashes": [
+            "0b9301d2067e3760133a3a1349195d537d3473e34fbb2863012311827846586c"
+          ]
+        },
+        {
+          "events": [
+            {
+              "at": 1792895303166,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895303166,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303174,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303174,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "have-local-offer",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303176,
+              "event": "signalingstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303176,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303176,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895303178,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895303222,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-local-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895303234,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895303262,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-local-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895303273,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 60692
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "01a35e71ffd8e029b4312f5de59e18a5768a04bc2ef511b2a47b4e64a73c3807",
+            "01a35e71ffd8e029b4312f5de59e18a5768a04bc2ef511b2a47b4e64a73c3807",
+            "01a35e71ffd8e029b4312f5de59e18a5768a04bc2ef511b2a47b4e64a73c3807"
+          ],
+          "remote_sdp_hashes": [
+            "b8a231dea6ed0326f8442852deb3d4180091d1438db684c5e98de96bbe440761",
+            "b8a231dea6ed0326f8442852deb3d4180091d1438db684c5e98de96bbe440761",
+            "b8a231dea6ed0326f8442852deb3d4180091d1438db684c5e98de96bbe440761"
+          ]
+        },
+        {
+          "events": [
+            {
+              "at": 1792895303149,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-remote-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895303150,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "new"
+            },
+            {
+              "at": 1792895303150,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303152,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303152,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303155,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895303155,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895303161,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 54602
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "c48d3dbd84256e6fd64041b351e3d218710937f9d5b55caa357d610863a6659c"
+          ],
+          "remote_sdp_hashes": [
+            "d432ed06d058c8f5dd194a8ce158455ae8f4f20841bc40bd1982fe22e8213df0"
+          ]
+        }
+      ],
+      "pcs": [
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": [
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            }
+          ]
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": [
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            }
+          ]
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": [
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            }
+          ]
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        }
+      ]
+    },
+    {
+      "status": "Connect to the room to share or watch.",
+      "requests": [
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/join",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/d7de418e-fe1b-4273-8fb0-bd126bb86023/release",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/cinema/join",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/260553e7-74c8-48cb-b246-3743ef39db4a/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/260553e7-74c8-48cb-b246-3743ef39db4a/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/260553e7-74c8-48cb-b246-3743ef39db4a/renew",
+          "status": 200,
+          "code": null
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/leases/260553e7-74c8-48cb-b246-3743ef39db4a/release",
+          "status": 200,
+          "code": null
+        }
+      ],
+      "websockets": [
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/ws",
+          "opened": true,
+          "closed": true,
+          "code": 1006
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/rtc",
+          "opened": true,
+          "closed": true,
+          "code": 1000
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/rtc",
+          "opened": true,
+          "closed": true,
+          "code": 1006
+        },
+        {
+          "path": "/api/v1/rooms/40573014-c962-41ac-b8d2-0eb97010cd9e/media/rtc",
+          "opened": false,
+          "closed": true,
+          "code": 1006
+        }
+      ],
+      "capture": [],
+      "pc_history": [
+        {
+          "events": [],
+          "ice_errors": [],
+          "local": [],
+          "remote": [],
+          "local_sdp_hashes": [],
+          "remote_sdp_hashes": []
+        },
+        {
+          "events": [
+            {
+              "at": 1792895222316,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-remote-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895222319,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "new"
+            },
+            {
+              "at": 1792895222322,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895222322,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895222323,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895222327,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895222328,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895222337,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895222459,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "have-remote-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895222468,
+              "event": "signalingstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 54270
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "8eceee08d2653ac6f5c333fa92ca5528498c27841399e2d14faee8ff7a1abf15",
+            "8eceee08d2653ac6f5c333fa92ca5528498c27841399e2d14faee8ff7a1abf15"
+          ],
+          "remote_sdp_hashes": [
+            "87a33de7d5af5da7980665b43765de00457b03ec996f16c0ed7be5bb519539f5",
+            "87a33de7d5af5da7980665b43765de00457b03ec996f16c0ed7be5bb519539f5"
+          ]
+        },
+        {
+          "events": [],
+          "ice_errors": [],
+          "local": [],
+          "remote": [],
+          "local_sdp_hashes": [],
+          "remote_sdp_hashes": []
+        },
+        {
+          "events": [
+            {
+              "at": 1792895281290,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "have-remote-offer",
+              "gather": "new"
+            },
+            {
+              "at": 1792895281291,
+              "event": "signalingstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "new"
+            },
+            {
+              "at": 1792895281292,
+              "event": "icegatheringstatechange",
+              "connection": "new",
+              "ice": "new",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895281302,
+              "event": "iceconnectionstatechange",
+              "connection": "new",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895281302,
+              "event": "connectionstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "gathering"
+            },
+            {
+              "at": 1792895281411,
+              "event": "icegatheringstatechange",
+              "connection": "connecting",
+              "ice": "checking",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895281427,
+              "event": "iceconnectionstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895281435,
+              "event": "signalingstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "have-remote-offer",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895281439,
+              "event": "signalingstatechange",
+              "connection": "connecting",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            },
+            {
+              "at": 1792895282433,
+              "event": "connectionstatechange",
+              "connection": "connected",
+              "ice": "connected",
+              "signal": "stable",
+              "gather": "complete"
+            }
+          ],
+          "ice_errors": [],
+          "local": [
+            {
+              "protocol": "udp",
+              "type": "host",
+              "address": "172.23.0.3",
+              "port": 59421
+            }
+          ],
+          "remote": [
+            {
+              "protocol": "udp",
+              "address": "172.23.0.2",
+              "port": "7882",
+              "type": "host"
+            },
+            {
+              "protocol": "tcp",
+              "address": "172.23.0.2",
+              "port": "7881",
+              "type": "host"
+            }
+          ],
+          "local_sdp_hashes": [
+            "f4db0ce56e3f8362076294a90da79d045605a3676becfdf2e9c79cce65675508",
+            "f4db0ce56e3f8362076294a90da79d045605a3676becfdf2e9c79cce65675508"
+          ],
+          "remote_sdp_hashes": [
+            "00cac54dab139e77f448d45d62e537fc7164299e9892b6557960bbdef3e2a3ad",
+            "00cac54dab139e77f448d45d62e537fc7164299e9892b6557960bbdef3e2a3ad"
+          ]
+        }
+      ],
+      "pcs": [
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": [
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            }
+          ]
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": []
+        },
+        {
+          "connection": "closed",
+          "ice": "closed",
+          "receivers": [
+            {
+              "kind": "video",
+              "state": "ended"
+            },
+            {
+              "kind": "audio",
+              "state": "ended"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "supervisor_end": {
+    "running": false,
+    "boot_id": "1d4a8b7d-1f60-4a59-b4dd-de9698201af8",
+    "api_epoch": "ebac70e1-8760-4ae3-8e69-ca8f8bae5427",
+    "cutoff_confirmed": false,
+    "authority_age_ms": 5010.440033999999,
+    "metrics": [
+      {
+        "mono_ms": 10788.111299,
+        "cpu_cores": 0.22275485707064174,
+        "memory_bytes": 58339328,
+        "egress_bps": 24137.04966413804
+      },
+      {
+        "mono_ms": 11788.391067,
+        "cpu_cores": 0.014173034838389328,
+        "memory_bytes": 58863616,
+        "egress_bps": 45907.15664659927
+      },
+      {
+        "mono_ms": 12788.929895,
+        "cpu_cores": 0.23408087067261746,
+        "memory_bytes": 86343680,
+        "egress_bps": 238687.38855180168
+      },
+      {
+        "mono_ms": 13788.294664,
+        "cpu_cores": 0.10733218072849636,
+        "memory_bytes": 89452544,
+        "egress_bps": 451294.67636856437
+      },
+      {
+        "mono_ms": 14789.078824,
+        "cpu_cores": 0.09294811380707695,
+        "memory_bytes": 92557312,
+        "egress_bps": 1152504.252265542
+      },
+      {
+        "mono_ms": 15789.177224,
+        "cpu_cores": 0.1583864147767861,
+        "memory_bytes": 96948224,
+        "egress_bps": 2731307.239367649
+      },
+      {
+        "mono_ms": 16789.989005,
+        "cpu_cores": 0.11855975544316655,
+        "memory_bytes": 97943552,
+        "egress_bps": 3476186.0981730376
+      },
+      {
+        "mono_ms": 17790.935874,
+        "cpu_cores": 0.12136108694896179,
+        "memory_bytes": 100024320,
+        "egress_bps": 3606105.4905003174
+      },
+      {
+        "mono_ms": 18791.212982,
+        "cpu_cores": 0.09862766948376449,
+        "memory_bytes": 100544512,
+        "egress_bps": 3389044.868554557
+      },
+      {
+        "mono_ms": 19791.482895,
+        "cpu_cores": 0.07639038124302755,
+        "memory_bytes": 101068800,
+        "egress_bps": 3401153.9843246285
+      },
+      {
+        "mono_ms": 20791.385524,
+        "cpu_cores": 0.08908967475072013,
+        "memory_bytes": 101588992,
+        "egress_bps": 3189494.5642752177
+      },
+      {
+        "mono_ms": 21791.882746,
+        "cpu_cores": 0.08622112895781749,
+        "memory_bytes": 102375424,
+        "egress_bps": 3131818.790797208
+      },
+      {
+        "mono_ms": 22791.413105,
+        "cpu_cores": 0.07595167001825902,
+        "memory_bytes": 102637568,
+        "egress_bps": 3260963.4821507195
+      },
+      {
+        "mono_ms": 23791.758294,
+        "cpu_cores": 0.07559390581524557,
+        "memory_bytes": 102899712,
+        "egress_bps": 3365798.1634977413
+      },
+      {
+        "mono_ms": 24791.746996,
+        "cpu_cores": 0.0752938506699247,
+        "memory_bytes": 102899712,
+        "egress_bps": 3384630.2395524387
+      },
+      {
+        "mono_ms": 25791.031465,
+        "cpu_cores": 0.0801833736895596,
+        "memory_bytes": 103157760,
+        "egress_bps": 3316180.830185609
+      },
+      {
+        "mono_ms": 26791.269622,
+        "cpu_cores": 0.08036486054590698,
+        "memory_bytes": 103157760,
+        "egress_bps": 3360463.6820508745
+      },
+      {
+        "mono_ms": 27791.094021,
+        "cpu_cores": 0.08031310306121058,
+        "memory_bytes": 103157760,
+        "egress_bps": 3373408.3738838593
+      },
+      {
+        "mono_ms": 28791.895586,
+        "cpu_cores": 0.08269771240815373,
+        "memory_bytes": 103157760,
+        "egress_bps": 3246317.865220371
+      },
+      {
+        "mono_ms": 29791.899127,
+        "cpu_cores": 0.08615669491914313,
+        "memory_bytes": 103157760,
+        "egress_bps": 3329332.210834635
+      },
+      {
+        "mono_ms": 30792.182971,
+        "cpu_cores": 0.07529962665277254,
+        "memory_bytes": 103157760,
+        "egress_bps": 3440191.5222775587
+      },
+      {
+        "mono_ms": 31792.318926,
+        "cpu_cores": 0.07518377838940896,
+        "memory_bytes": 103157760,
+        "egress_bps": 3473831.7152091535
+      },
+      {
+        "mono_ms": 32792.614937,
+        "cpu_cores": 0.07926953534557293,
+        "memory_bytes": 103157760,
+        "egress_bps": 3445708.032519591
+      },
+      {
+        "mono_ms": 33792.029206,
+        "cpu_cores": 0.07648479951810648,
+        "memory_bytes": 103157760,
+        "egress_bps": 3393523.692025651
+      },
+      {
+        "mono_ms": 34792.377415,
+        "cpu_cores": 0.07125019004257524,
+        "memory_bytes": 103157760,
+        "egress_bps": 3377375.9672917943
+      },
+      {
+        "mono_ms": 35792.996308,
+        "cpu_cores": 0.07051136101224914,
+        "memory_bytes": 103157760,
+        "egress_bps": 3278171.162814536
+      },
+      {
+        "mono_ms": 36793.85876,
+        "cpu_cores": 0.07369843863420296,
+        "memory_bytes": 102891520,
+        "egress_bps": 3439537.5639488935
+      },
+      {
+        "mono_ms": 37793.28616,
+        "cpu_cores": 0.07456969860942371,
+        "memory_bytes": 103153664,
+        "egress_bps": 3193636.6763608824
+      },
+      {
+        "mono_ms": 38793.436913,
+        "cpu_cores": 0.0774083304619583,
+        "memory_bytes": 103153664,
+        "egress_bps": 3297934.826431129
+      },
+      {
+        "mono_ms": 39793.317514,
+        "cpu_cores": 0.07187158139494665,
+        "memory_bytes": 103415808,
+        "egress_bps": 3415847.8488172856
+      },
+      {
+        "mono_ms": 40793.608865,
+        "cpu_cores": 0.07681162085745158,
+        "memory_bytes": 104194048,
+        "egress_bps": 3315402.0542960796
+      },
+      {
+        "mono_ms": 41793.766324,
+        "cpu_cores": 0.07597603688920787,
+        "memory_bytes": 104189952,
+        "egress_bps": 3292793.520025148
+      },
+      {
+        "mono_ms": 42793.53614,
+        "cpu_cores": 0.07513829563344208,
+        "memory_bytes": 104177664,
+        "egress_bps": 3446449.317489697
+      },
+      {
+        "mono_ms": 43793.914933,
+        "cpu_cores": 0.07909803821680947,
+        "memory_bytes": 104173568,
+        "egress_bps": 3250992.5467802165
+      },
+      {
+        "mono_ms": 44794.093142,
+        "cpu_cores": 0.07223912633753465,
+        "memory_bytes": 104427520,
+        "egress_bps": 3312337.7116087587
+      },
+      {
+        "mono_ms": 45794.652522,
+        "cpu_cores": 0.08167231414091596,
+        "memory_bytes": 104947712,
+        "egress_bps": 3472033.8137252824
+      },
+      {
+        "mono_ms": 46794.478305,
+        "cpu_cores": 0.07698541216755157,
+        "memory_bytes": 105209856,
+        "egress_bps": 3316065.715020673
+      },
+      {
+        "mono_ms": 47794.633016,
+        "cpu_cores": 0.07995862952046803,
+        "memory_bytes": 105209856,
+        "egress_bps": 3343874.6658065687
+      },
+      {
+        "mono_ms": 48795.063981,
+        "cpu_cores": 0.07863011317327631,
+        "memory_bytes": 105472000,
+        "egress_bps": 3420677.8075886536
+      },
+      {
+        "mono_ms": 49795.745214,
+        "cpu_cores": 0.07587031463794802,
+        "memory_bytes": 105730048,
+        "egress_bps": 3308034.4577622255
+      },
+      {
+        "mono_ms": 50795.888576,
+        "cpu_cores": 0.07290854768478715,
+        "memory_bytes": 105992192,
+        "egress_bps": 3360550.224798688
+      },
+      {
+        "mono_ms": 51795.793948,
+        "cpu_cores": 0.07247785843478788,
+        "memory_bytes": 105988096,
+        "egress_bps": 3321706.3264262537
+      },
+      {
+        "mono_ms": 52795.754204,
+        "cpu_cores": 0.08713946327082837,
+        "memory_bytes": 106512384,
+        "egress_bps": 3300875.1899835556
+      },
+      {
+        "mono_ms": 53795.952779,
+        "cpu_cores": 0.09092194517473672,
+        "memory_bytes": 108109824,
+        "egress_bps": 3067414.888088591
+      },
+      {
+        "mono_ms": 54797.007409,
+        "cpu_cores": 0.0754134666956189,
+        "memory_bytes": 108105728,
+        "egress_bps": 3317509.2552141775
+      },
+      {
+        "mono_ms": 55797.36497,
+        "cpu_cores": 0.07297690630440457,
+        "memory_bytes": 108367872,
+        "egress_bps": 3396201.650741544
+      },
+      {
+        "mono_ms": 56797.615087,
+        "cpu_cores": 0.06430591599720879,
+        "memory_bytes": 108617728,
+        "egress_bps": 3352065.5914104865
+      },
+      {
+        "mono_ms": 57797.299898,
+        "cpu_cores": 0.06835754554642329,
+        "memory_bytes": 108871680,
+        "egress_bps": 3421566.440104693
+      },
+      {
+        "mono_ms": 58797.93205,
+        "cpu_cores": 0.07987550653879004,
+        "memory_bytes": 108867584,
+        "egress_bps": 3419326.4659358864
+      },
+      {
+        "mono_ms": 59797.408552,
+        "cpu_cores": 0.07600879044978305,
+        "memory_bytes": 109391872,
+        "egress_bps": 3397778.730369799
+      },
+      {
+        "mono_ms": 60797.181987,
+        "cpu_cores": 0.07590319700782985,
+        "memory_bytes": 109907968,
+        "egress_bps": 3419998.852039903
+      },
+      {
+        "mono_ms": 61797.212813,
+        "cpu_cores": 0.0677959101232749,
+        "memory_bytes": 109907968,
+        "egress_bps": 3447557.7255855696
+      },
+      {
+        "mono_ms": 62797.800264,
+        "cpu_cores": 0.07183080292299213,
+        "memory_bytes": 109899776,
+        "egress_bps": 3376224.6334628495
+      },
+      {
+        "mono_ms": 63797.036344,
+        "cpu_cores": 0.13991188148450331,
+        "memory_bytes": 110956544,
+        "egress_bps": 3426169.319266366
+      },
+      {
+        "mono_ms": 64797.512386,
+        "cpu_cores": 0.07802185831852218,
+        "memory_bytes": 111214592,
+        "egress_bps": 3022297.2595679546
+      },
+      {
+        "mono_ms": 65797.293734,
+        "cpu_cores": 0.07555452014693885,
+        "memory_bytes": 111214592,
+        "egress_bps": 2897921.636361622
+      },
+      {
+        "mono_ms": 66797.957534,
+        "cpu_cores": 0.07655218465982322,
+        "memory_bytes": 111988736,
+        "egress_bps": 2966750.670904669
+      },
+      {
+        "mono_ms": 67798.478294,
+        "cpu_cores": 0.07951958937863524,
+        "memory_bytes": 112734208,
+        "egress_bps": 1623002.8050592383
+      },
+      {
+        "mono_ms": 68798.577504,
+        "cpu_cores": 0.028912131627421234,
+        "memory_bytes": 112742400,
+        "egress_bps": 511589.24523098045
+      },
+      {
+        "mono_ms": 69798.723256,
+        "cpu_cores": 0.009538609728554874,
+        "memory_bytes": 112640000,
+        "egress_bps": 518908.36806753906
+      },
+      {
+        "mono_ms": 70798.542215,
+        "cpu_cores": 0.0428117506821554,
+        "memory_bytes": 112619520,
+        "egress_bps": 679547.0258731134
+      },
+      {
+        "mono_ms": 71798.316504,
+        "cpu_cores": 0.04748871872619202,
+        "memory_bytes": 113618944,
+        "egress_bps": 665318.1696293799
+      },
+      {
+        "mono_ms": 72799.095784,
+        "cpu_cores": 0.04926960518207359,
+        "memory_bytes": 113856512,
+        "egress_bps": 723124.4835524556
+      },
+      {
+        "mono_ms": 73799.127871,
+        "cpu_cores": 0.06899278622846831,
+        "memory_bytes": 113827840,
+        "egress_bps": 983424.4448598381
+      },
+      {
+        "mono_ms": 74799.330315,
+        "cpu_cores": 0.03967796743356108,
+        "memory_bytes": 113557504,
+        "egress_bps": 1061241.158094996
+      },
+      {
+        "mono_ms": 75799.467095,
+        "cpu_cores": 0.08511935737429828,
+        "memory_bytes": 114061312,
+        "egress_bps": 1950253.2443612348
+      },
+      {
+        "mono_ms": 76800.091841,
+        "cpu_cores": 0.08227260052191422,
+        "memory_bytes": 114814976,
+        "egress_bps": 1930074.1938676755
+      },
+      {
+        "mono_ms": 77800.445368,
+        "cpu_cores": 0.09587910414794797,
+        "memory_bytes": 115568640,
+        "egress_bps": 2874751.697656585
+      },
+      {
+        "mono_ms": 78800.656697,
+        "cpu_cores": 0.06222884923951919,
+        "memory_bytes": 115294208,
+        "egress_bps": 2510581.4413345894
+      },
+      {
+        "mono_ms": 79800.483861,
+        "cpu_cores": 0.08126204500681063,
+        "memory_bytes": 114720768,
+        "egress_bps": 3551397.8093917766
+      },
+      {
+        "mono_ms": 80801.087013,
+        "cpu_cores": 0.10595509297376311,
+        "memory_bytes": 115445760,
+        "egress_bps": 3526664.8850212838
+      },
+      {
+        "mono_ms": 81801.879099,
+        "cpu_cores": 0.08061814349718979,
+        "memory_bytes": 115957760,
+        "egress_bps": 4341808.913944584
+      },
+      {
+        "mono_ms": 82801.2699,
+        "cpu_cores": 0.06689975526400699,
+        "memory_bytes": 115675136,
+        "egress_bps": 3897246.198486867
+      },
+      {
+        "mono_ms": 83801.938334,
+        "cpu_cores": 0.06074639504417465,
+        "memory_bytes": 115658752,
+        "egress_bps": 4041418.5784139303
+      },
+      {
+        "mono_ms": 84802.584626,
+        "cpu_cores": 0.05744287512934746,
+        "memory_bytes": 115892224,
+        "egress_bps": 3876918.3786672517
+      },
+      {
+        "mono_ms": 85802.812589,
+        "cpu_cores": 0.06105108261205466,
+        "memory_bytes": 115884032,
+        "egress_bps": 3964464.2488364526
+      },
+      {
+        "mono_ms": 86802.058706,
+        "cpu_cores": 0.05160090104208018,
+        "memory_bytes": 115597312,
+        "egress_bps": 3968775.992751734
+      },
+      {
+        "mono_ms": 87802.64573,
+        "cpu_cores": 0.05880048270543987,
+        "memory_bytes": 115843072,
+        "egress_bps": 3960778.927710709
+      },
+      {
+        "mono_ms": 88802.918747,
+        "cpu_cores": 0.053093504570662656,
+        "memory_bytes": 115818496,
+        "egress_bps": 3962806.0865706643
+      },
+      {
+        "mono_ms": 89802.57285,
+        "cpu_cores": 0.05397567002233407,
+        "memory_bytes": 116326400,
+        "egress_bps": 3968916.8364269957
+      },
+      {
+        "mono_ms": 90802.648861,
+        "cpu_cores": 0.05984645101141233,
+        "memory_bytes": 115761152,
+        "egress_bps": 3861378.4927593973
+      },
+      {
+        "mono_ms": 91802.700024,
+        "cpu_cores": 0.09005739239363197,
+        "memory_bytes": 118009856,
+        "egress_bps": 3932398.8066798104
+      },
+      {
+        "mono_ms": 92802.314855,
+        "cpu_cores": 0.05582750302351212,
+        "memory_bytes": 116228096,
+        "egress_bps": 3966615.8174477946
+      },
+      {
+        "mono_ms": 93802.916546,
+        "cpu_cores": 0.06385158107833011,
+        "memory_bytes": 116715520,
+        "egress_bps": 1274489.1513480505
+      },
+      {
+        "mono_ms": 94803.42796,
+        "cpu_cores": 0.09208390700078439,
+        "memory_bytes": 117452800,
+        "egress_bps": 1270398.3005235263
+      },
+      {
+        "mono_ms": 95803.216544,
+        "cpu_cores": 0.011125352077434864,
+        "memory_bytes": 116871168,
+        "egress_bps": 917906.0600275919
+      },
+      {
+        "mono_ms": 96803.455018,
+        "cpu_cores": 0.009256792495666409,
+        "memory_bytes": 116871168,
+        "egress_bps": 926643.0197325143
+      },
+      {
+        "mono_ms": 97803.831334,
+        "cpu_cores": 0.027721567930442437,
+        "memory_bytes": 116842496,
+        "egress_bps": 935583.9247997466
+      },
+      {
+        "mono_ms": 98803.545949,
+        "cpu_cores": 0.00785724233910491,
+        "memory_bytes": 116809728,
+        "egress_bps": 850874.8269124746
+      }
+    ],
+    "diagnostic_counts": {
+      "other": 6140,
+      "ice": 442,
+      "candidate": 506,
+      "ice_ufrag": 58,
+      "connection_state": 208,
+      "candidate_failure": 41,
+      "stun": 1104,
+      "other_failure": 73,
+      "dtls": 3,
+      "dtls_failure": 6,
+      "discard": 10,
+      "ice_integrity": 9,
+      "expired_or_discarded": 9,
+      "stun_failure": 1
+    },
+    "diagnostic_remote_ice_hashes": [
+      "65e2914b1af63dfaba29d735db2fdd727affdc7e00c07f8148873006513f3ec4",
+      "770c7321988a7aea2e6ed9972b6a08cba4b978c458b3298f0ec4ed6dc5e83aaf",
+      "8eceee08d2653ac6f5c333fa92ca5528498c27841399e2d14faee8ff7a1abf15",
+      "2b4ffd9f0379a18bc0439776485ac59fb7707ae4f625777a46c0487fcd498bd3",
+      "ad3ad98aae5b59ddd35b3e68e61db03cdcd5fcc28086feeff6b2a4d10871dfe6",
+      "d08f3911c1d39376771978deb2bad6a4403e1ff8ad3169d8c9798c0141528484",
+      "b1b2f0c23368e06c63ca75fb2c2b2c46f3aa2babb641e754e2441cfa6db06f19",
+      "905b550297d32798f6581524eeff5e744a405801518c2e1fe3e3decf8b333e3f",
+      "6c63605d3b49dceccd245059341cc80ebf4857918b50df5304f079305f6499f8",
+      "13ed98fbc732a1e13065dc8f945095b34e5350e22569ae2835f4db54559b3682",
+      "ec36775ef37e877f6dc8ab2d0b638776c65df46cd6353f417e96d0f99cf8170e",
+      "f4db0ce56e3f8362076294a90da79d045605a3676becfdf2e9c79cce65675508",
+      "d2daaa0b3eba9d0073bbfb46d706a90296597afa26165e8916341d0ba78749cb",
+      "3386f22426ee493bd95907eadea4bd7b7485462e8324e4301983339c035f57c5",
+      "91236319baee6b1a7a5d64f07a07bec9e906343e2f6ea19b6727910dfcfee6a7",
+      "df80836886c7f466ac26e3f585336788eb5737c3bcb01ccd8ce405468843396f"
+    ]
+  }
+}

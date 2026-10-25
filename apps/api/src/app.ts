@@ -56,8 +56,9 @@ export async function createApp(options: AppOptions) {
     return reply.code(status).send({code: error instanceof DomainError?error.code:status === 500 ? 'INTERNAL_ERROR' : 'INVALID_REQUEST', message: 'Request could not be completed', request_id: request.id});
   });
   await app.register(websocket,{options:{maxPayload:options.media?262144:8192,perMessageDeflate:false},...(options.media?{errorHandler:(_error:Error,socket:{terminate:()=>void})=>{socket.terminate();}}:{})});
-  if(options.servingBarrier)app.addHook('onRequest',async request=>{if(!['/health/live','/health/ready','/api/v1/version'].includes(request.url))options.servingBarrier!();});
+  if(options.servingBarrier)app.addHook('onRequest',async request=>{if(!['/health/live','/health/ready','/api/v1/version','/internal/v1/media/prepare'].includes(request.url))options.servingBarrier!();});
   if(options.rooms) await registerRooms(app,options.rooms,options.games,options.privateTopics,options.topicGames,options.roomCreationProtocol??1,options.music,options.media);
+  if(options.media)app.post('/internal/v1/media/prepare',async request=>{options.media!.internalCredential(request.headers['x-venus-media-internal']);return options.media!.prepareDelivery(options.servingBarrier);});
   app.get('/health/live', async (): Promise<HealthLive> => ({status: 'alive'}));
   app.get('/health/ready', async (_request, reply): Promise<HealthReady> => {
     try {

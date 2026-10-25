@@ -44,7 +44,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
    const grant=await api.request<MediaGrant>(root+'/cinema/'+(publisher?'start':'join'),{expected_rev:state.rev,idempotency_key:crypto.randomUUID()});value.grant=grant;
    if(!current()){void api.request(`${root}/media/leases/${grant.lease_id}/release`,{idempotency_key:crypto.randomUUID()}).catch(()=>{});return;}
    const {Room,RoomEvent,Track}=await import('livekit-client');if(!current())return;
-   const room=new Room({adaptiveStream:false,dynacast:false,disconnectOnPageLeave:true,singlePeerConnection:false});value.room=room;
+   const room=new Room({adaptiveStream:false,dynacast:false,disconnectOnPageLeave:true});value.room=room;
    room.on(RoomEvent.Disconnected,()=>{if(current()){retire(value);setLocal('error');}});
    room.on(RoomEvent.TrackSubscribed,(track)=>{
     if(!current()||publisher)return;

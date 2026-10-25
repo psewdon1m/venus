@@ -57,3 +57,11 @@ Fixture network revision: browser и media используют обычный �
 Chromium fixture получает --disable-features=WebRtcHideLocalIpsWithMdns: адреса принадлежат только собственному Docker bridge. Это не browserproduction setting и не изменяет API/consent/capturepermissions. Реальное getDisplayMedia остаётся, SDK/WebRTC/DTLS/SFU не подменяются; ограничение сетевой квалификации сохраняется до физического/publicnetworkприёмочного прогона.
 
 Native signaling compatibility: pinned SDK Room(singlePeerConnection:false) явно выбирает поддерживаемый /rtc V0. Это один и тот же SFU для Cinema/будущих Calls, не отдельный P2P transport: внутри SDK два RTCPeerConnection выполняют publisher/subscriber роли. V1 offer-with-join в текущемpin завершался15sICE timeout при доступномTCP/UDP и корректныхадресах; SDK сам содержит V0 fallback и описание ICEпроблем offer-with-join. Выбор стабильного поддерживаемого режима проверяется следующим раундом. Все4gateway routes сохраняют одинаковые authority fences, положительный productprofile закреплёнV0.
+
+## Исправления независимого security review round01
+
+S09-01: additive migration002 хранит pending cutoff по lease; неподтверждённые записи не удаляются таймером. Повтор stop/release/reaccept заново подтверждает backend cutoff, а не принимает terminal/revoked state за успех. Неизвестные scope/lease не объявляются успешной остановкой.
+
+S09-02: v3 operator healthy дополнительно вызывает HMAC-only /internal/v1/media/prepare при закрытом serving gate. Эта maintenance-команда исключает старые lease из protected authority, подтверждает остановку прежнего child, запускает пустой child и реально проверяет admin ListRooms. Consumer barriers не обходятся; running/RTC/grants остаются закрыты до обычного current-authority poll после commit/open. Preparation grace ≤4s, не продлевается повторным probe; нет подтверждения — gateFAIL. Обычный v2 health не меняется.
+
+ICE: loopbackcandidatefalse исключает alias loopbackFD при explicitnodeIP rewrite; HTTPbind127 остаётся. Временный debug/credential-hash instrumentation удалён. Возвращён SDK default single-PC V1 и обычный browser mDNS; они не были доказанной причиной. Normal/degraded repeats проверят итоговые байты.
