@@ -34,7 +34,7 @@ Publish the source tar and receipt with the **same new release** as the correspo
 
 ## Collection scope and bounds
 
-The asset includes a Git archive of the exact Venus commit: tracked root build/config files plus apps/packages/infra/tools/tests/.github/.docs/contracts and this delivery contract. Historical evidence and journals are intentionally excluded; included pathspecs and commit are recorded in SOURCE-INDEX. No source is read from a dirty filesystem for this archive.
+The asset includes a Git archive of the exact Venus commit: tracked root build/config files plus apps/packages/infra/tools/tests/third-party/.github/.docs/contracts and this delivery contract. Historical evidence and journals are intentionally excluded; included pathspecs and commit are recorded in SOURCE-INDEX. No source is read from a dirty filesystem for this archive.
 
 Node24.22.1 source includes bundled npm11.19.1 and Node dependencies; the official release SHA256 is checked. Go1.27.3 standard-library/toolchain source is verified against official release metadata. The official LiveKit1.13.11 source commit is `385aa40f9292fe1db8caad87301e4b285b7c198a`. For every actual linked Go dependency, the **effective replacement path/version** is used and the module ZIP hash is recomputed using Go's h1 directory algorithm. This does not independently attest an official publisher binary source build.
 

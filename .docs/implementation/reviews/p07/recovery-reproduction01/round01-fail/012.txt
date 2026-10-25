@@ -1,0 +1,20 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.repro
+#1 transferring dockerfile: 202B done
+#1 DONE 0.1s
+
+#2 [internal] load metadata for docker.io/library/sha256:b5232af24b37916dbe960f32607b7a37e79fc1cad6f09b58f2d19dd55b57d949
+#2 ERROR: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+------
+ > [internal] load metadata for docker.io/library/sha256:b5232af24b37916dbe960f32607b7a37e79fc1cad6f09b58f2d19dd55b57d949:
+------
+Dockerfile.repro:1
+--------------------
+   1 | >>> FROM sha256:b5232af24b37916dbe960f32607b7a37e79fc1cad6f09b58f2d19dd55b57d949
+   2 |     COPY independent-repro.mjs /opt/venus/tests/presentations/independent-repro.mjs
+   3 |     
+--------------------
+ERROR: failed to build: failed to solve: sha256:b5232af24b37916dbe960f32607b7a37e79fc1cad6f09b58f2d19dd55b57d949: failed to resolve source metadata for docker.io/library/sha256:b5232af24b37916dbe960f32607b7a37e79fc1cad6f09b58f2d19dd55b57d949: pull access denied, repository does not exist or may require authorization: server message: insufficient_scope: authorization failed
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/vlm34hv3sdsnisy2ofbo35tv6

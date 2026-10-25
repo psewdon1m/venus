@@ -1,0 +1,31 @@
+✖ new service-v4 signature binds all three source assets and denies tampering/missing material (16.6102ms)
+✔ archive reuse requires exact URL and verified bytes/size/hash (5.5328ms)
+✔ archive reuse rejects outside-owned indexes and traversal entries (2.2665ms)
+✔ archive reuse never follows source symlinks (2.0905ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.2318
+
+✖ failing tests:
+
+test at tests\delivery\distribution.test.mjs:11:1
+✖ new service-v4 signature binds all three source assets and denies tampering/missing material (16.6102ms)
+  Error: EPERM: operation not permitted, fsync
+      at Module.fsyncSync (node:fs:1345:11)
+      at syncDirectory (file:///C:/Users/pc/.codex/worktrees/p06-standalone-release/venus/tools/venus-operator/files.mjs:16:91)
+      at atomic (file:///C:/Users/pc/.codex/worktrees/p06-standalone-release/venus/tools/venus-operator/files.mjs:21:31)
+      at createRelease (file:///C:/Users/pc/.codex/worktrees/p06-standalone-release/venus/tools/venus-operator/create-release.mjs:16:128)
+      at TestContext.<anonymous> (file:///C:/Users/pc/.codex/worktrees/p06-standalone-release/venus/tests/delivery/distribution.test.mjs:15:2)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    errno: -4048,
+    code: 'EPERM',
+    syscall: 'fsync'
+  }

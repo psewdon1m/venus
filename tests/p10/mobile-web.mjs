@@ -56,6 +56,40 @@ async function modalCheck(page){
  return {...detail,confirm_reachable:true,cancel_preserves_room:true};
 }
 
+/** The existing touch context opens one bounded entry page, without entering a
+ * ninth room identity or changing any current room/member state. */
+export async function checkMobileEntry({context,origin}){
+ const page=await context.newPage(),errors=[];
+ page.on('pageerror',error=>errors.push(error.name));
+ try{
+  await page.setViewportSize({width:320,height:568});await page.goto(origin);
+  const adult=page.getByTestId('adult18'),offer=page.getByTestId('accept-offer'),create=page.getByTestId('create-room'),join=page.getByTestId('join-room');
+  await expect(adult).toBeVisible();await expect(offer).toBeVisible();
+  await expect(create).toBeDisabled();await expect(join).toBeDisabled();
+  await offer.tap();await expect(offer).toBeChecked();await expect(create).toBeDisabled();await expect(join).toBeDisabled();
+  const portrait=await containment(page);await adult.tap();await expect(adult).toBeChecked();
+  await expect(create).toBeEnabled();await expect(join).toBeEnabled();
+  await page.setViewportSize({width:640,height:360});const landscape=await containment(page);
+  await adult.focus();await expect(adult).toBeFocused();await page.keyboard.press('Space');
+  await expect(adult).not.toBeChecked();await expect(create).toBeDisabled();await expect(join).toBeDisabled();
+  assert.deepEqual(errors,[]);
+  return {portrait,landscape,adult_and_offer_independently_required:true,touch_checkbox:true,keyboard_withdrawal:true,room_created:false,physical_devices:false};
+ }finally{await page.close();}
+}
+
+async function populatedModules(page){
+ await expect(page.getByTestId('game-state')).toBeVisible();
+ await expect(page.locator('.game-card')).toBeVisible();
+ for(const id of ['calls-leave','calls-microphone','calls-camera','cinema-stop','presentation-stop','presentation-page-image'])await expect(page.getByTestId(id).first()).toBeVisible();
+ await expect(page.getByTestId('calls-microphone')).toHaveAttribute('aria-pressed','true');
+ await expect(page.getByTestId('calls-camera')).toHaveAttribute('aria-pressed','true');
+ await page.waitForFunction(()=>{
+  const audio=document.querySelector('[data-testid="music-panel"] audio'),images=[...document.querySelectorAll('[data-testid="presentation-page-image"]')],cinema=document.querySelector('[data-testid="cinema-video"]');
+  return audio&&!audio.paused&&audio.readyState>=2&&images.length>0&&images.every(image=>image.complete&&image.naturalWidth>0)&&cinema?.srcObject?.getVideoTracks().some(track=>track.readyState==='live')&&cinema.srcObject.getAudioTracks().some(track=>track.readyState==='live');
+ });
+ return {active_game_card:true,music_playing:true,pdf_decoded:true,presentation_live_controls:true,cinema_live_controls:true,calls_active_controls:true};
+}
+
 /** Called only when P07 has an actual active, consented private conversation.
  * submit({actor,text}) must submit via the real UI and verify receipt by the
  * other authorized participant. The viewport reduction approximates available
@@ -75,7 +109,8 @@ export async function checkMobileCompose(actor,{submit,inputTestId='pair-chat-in
 }
 
 /** No runtime, context, database, capture or media transport is created here.
- * actors[0] must be the host, already in its room, in a hasTouch context.
+ * actors[0] must be the host in a hasTouch context, with an active game/card,
+ * playing music, a decoded live PDF, live Cinema and joined audio/video Calls.
  * setLocale(actor,locale) selects the actual application language and waits for
  * its authoritative room update. record(id,operation) owns PASS/FAIL reporting.
  * composeChat, when supplied, runs a real chat proof; absent means NOT_RUN.
@@ -88,12 +123,13 @@ export async function runMobileWebChecks({actors,setLocale,record,screenshotDire
  assert(await page.evaluate(()=>navigator.maxTouchPoints>0),'Mobile checks require an actual hasTouch browser context');
  if(screenshotDirectory)await mkdir(screenshotDirectory,{recursive:true});
  try{
+  await page.bringToFront();
   await record('P10-WEB-LAYOUT-LOCALES',async()=>{
    for(const locale of languages){
     await setLocale(actor,locale);await expect(page.locator('html')).toHaveAttribute('lang',locale);
     for(const viewport of mobileViewports){
      await page.setViewportSize(viewport);await expect(page.getByTestId('room-shell')).toBeVisible();
-     matrix.push({locale,viewport,...await containment(page)});
+     matrix.push({locale,viewport,modules:await populatedModules(page),...await containment(page)});
     }
    }
    assert.equal(matrix.length,21);
