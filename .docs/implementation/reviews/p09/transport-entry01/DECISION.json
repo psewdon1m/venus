@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "review_id": "P09-TRANSPORT-ENTRY-01",
+  "reviewer": "preza_source_audit01",
+  "reviewed_at_utc": "2026-10-25T00:24:26.8887665Z",
+  "scope": "standalone-local-pilot-v2 / functional-order-v3",
+  "independent_of_p09_implementation": true,
+  "verdict": "PASS_FOR_IMPLEMENTATION_WITH_MANDATORY_FENCES",
+  "unfenced_self_host_jwt_profile": "REJECTED",
+  "p09_exit": "NOT_RUN",
+  "p07_aggregate": "HOLD_NOT_RUN",
+  "p10_actual_devices": "HOLD_NOT_PROVIDED",
+  "public_network_and_production": "HOLD_NOT_RUN",
+  "implementation_started_by_reviewer": false,
+  "tests_executed": false,
+  "recommended_transport": {
+    "server": "LiveKit OSS1.13.10",
+    "source_commit": "e5655ac20267fa5005dccaf3f0e3bfc3ea688c07",
+    "image_index": "sha256:89ca9ce0791e18d6e03bf6e2c49ceb27e1c754eae8bd50c989386c1a5963791a",
+    "linux_amd64_manifest": "sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5",
+    "browser_sdk": "livekit-client@2.23.0",
+    "node_sdk": "livekit-server-sdk@2.19.2"
+  },
+  "mandatory_implementation_conditions": [
+    "Internal-only7880; same-origin room-scoped gateway strict allowlist /rtc,/rtc/validate,/rtc/v1,/rtc/v1/validate.",
+    "Current cookie/member/18+/room/scope/immutable active lease+generation and signedJWT exact identity-room-grants validation for every join/validate/reconnect; refreshed JWT cannot bypass.",
+    "Atomic final fence/socket registration/pending-upgrade cancellation/durable retirement before RemoveParticipant; no reactivation after restore.",
+    "Confirmed SFU media removal plus closed proxy endpoints; independent expiry/watchdog/quiesce on authority loss or admin failure; WS close alone insufficient.",
+    "Cinema host-only publish and separate general8/pair2 namespaces/consents with no parent-host pair access; least privilege grants.",
+    "Pinned nonroot sandbox/network/resource limits; resolved dependency/OS license notices and known-advisory review before freeze.",
+    "Actual targeted 1+7A/V, replay/revoke/race/fault/network/rollback and Games/Music integration evidence before P09 EXIT."
+  ],
+  "findings": [
+    {
+      "id": "P09-ENTRY-F01",
+      "severity": "critical-if-ignored",
+      "state": "IMPLEMENTATION_CONDITION",
+      "finding": "Self-host LiveKit has no durable token revocation; remove+shortTTL alone fails owner stale-rejoin contract."
+    },
+    {
+      "id": "P09-ENTRY-F02",
+      "severity": "high-if-ignored",
+      "state": "IMPLEMENTATION_CONDITION",
+      "finding": "All four v0/v1 signaling/validate paths need admission fence; upstream origin/CORS is permissive."
+    },
+    {
+      "id": "P09-ENTRY-F03",
+      "severity": "high-if-ignored",
+      "state": "IMPLEMENTATION_CONDITION",
+      "finding": "Existing UDP/DTLS can outlive signaling; independent lease expiry and fail-closed supervision required."
+    },
+    {
+      "id": "P09-ENTRY-F04",
+      "severity": "medium",
+      "state": "NOT_RUN_BEFORE_FREEZE_REQUIRED",
+      "finding": "Full resolved dependency+OS-license inventory and image/SDK advisory check not performed by source audit."
+    }
+  ],
+  "source_report_sha256": "87f0b094d4f05acc3dd19a9750c7c15cb4d1ff0ea60e7a755e6eed9d30b1947d",
+  "inputs_sha256": "cd1fd540fa4074f07f1afff071830afde42cb397342c8f8f677b07a14eee243f",
+  "stop": "COMPLETE_STOP"
+}

@@ -115,3 +115,9 @@ Previous stage journal: `2026-10-24-p06.md`. Times below explicitly UTC; client 
 
 
 2026-10-25T00:22:50.716256+00:00 — Изолированные Firefox05/06 FAIL: запросы same-origin Range получают 206, но нативный декодер выдаёт OnMediaSinkAudioError. Это отсутствие звукового выхода в headless Docker, а не отказ ACL. Добавлен один стандартный PulseAudio null sink только в локальную тестовую среду; реальные устройства не заявляются. Пакет pulseaudio устанавливается в существующем apt слое, P05 lifecycle и browser cache сохраняются. Диагностический lint06 сначала FAIL из-за browser globals, исправлен globalThis, повтор native0. Повторить Firefox и WebKit отдельно, затем только обоснованную общую матрицу.
+
+
+2026-10-25T00:24:01.853511+00:00 — Firefox07: clean source5b0817a6, native0, actual PCM decode PASS после подключения отдельного PulseAudio null sink. Реальная PG16 custom dump/restore PASS:1 Music row и одинаковые before/after SHA. Source unchanged=true; cleanup completed. Это частичный Firefox PASS, не полная P08 матрица. WebKit08 запущен на тех же неизменных байтах; общий P07 и физические устройства не запускаются.
+
+
+2026-10-25T00:25:13.705743+00:00 — WebKit08 FAIL: нативная ошибка Could not create temp file /var/tmp/WebKit-Media-XXXXXX. Same-origin audio GET200 подтверждён. Ограниченный tmpfs64MiB /var/tmp добавлен только browser service; read-only root сохранён. Все среды очищены. Перед финальной матрицей добавлены короткие отрицательные проверки новых Music routes для сохранённой cookie после leave, closed/idle expiry и future schema generation; это обязательные security fences, без статистических прогонов. Общая матрица повторяется из-за нового реального audio-output профиля, который затрагивает и измерение Chromium clock.
