@@ -8,10 +8,10 @@ type LocalState='idle'|'connecting'|'live'|'denied'|'no_audio'|'error'|'blocked'
 interface Active {revision:number;room?:Room;capture?:MediaStream;grant?:MediaGrant;renew?:ReturnType<typeof setInterval>;closed:boolean}
 /** Capture permission is always a direct user gesture. A resource generation owns
  * its tracks, lease and teardown; late completion cannot stop a newer scope. */
-export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId:string;locale:Locale;connected:boolean}){
+export function CinemaPanel({api,roomId,locale,connected,ducked=false}:{api:SessionApi;roomId:string;locale:Locale;connected:boolean;ducked?:boolean}){
  const t=cinemaCopy(locale),root=`/api/v1/rooms/${roomId}`,video=useRef<HTMLVideoElement>(null),active=useRef<Active|null>(null),serial=useRef(0),alive=useRef(true);
  const [state,setState]=useState<CinemaState|null>(null),[local,setLocal]=useState<LocalState>('idle'),[volume,setVolume]=useState(.7),[publishing,setPublishing]=useState(false),[hasMedia,setHasMedia]=useState(false),[engaged,setEngaged]=useState(false);
- const volumeRef=useRef(volume);useEffect(()=>{volumeRef.current=volume;},[volume]);
+ const volumeRef=useRef(volume);useEffect(()=>{volumeRef.current=volume*(ducked?.2:1);if(video.current&&!publishing)video.current.volume=volumeRef.current;},[volume,ducked,publishing]);
  const captureAvailability=displayCaptureAvailability({secure:window.isSecureContext,hasApi:typeof navigator.mediaDevices?.getDisplayMedia==='function'});
  const clearElements=()=>{for(const element of [video.current])if(element){element.pause();element.srcObject=null;}};
  const retire=(value:Active,notify=true)=>{
@@ -72,7 +72,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
   <video ref={video} playsInline controls={false} aria-label={publishing?t.preview:t.viewer} data-testid="cinema-video" hidden={!hasMedia&&local!=='connecting'}/>
   <div className="actions">{!engaged?<>{state?.can_publish?<button data-testid="cinema-share" disabled={!connected||!state.transport_ready||['starting','live'].includes(state.state)} onClick={()=>{void begin(true);}}>{t.share}</button>:null}<button data-testid="cinema-watch" disabled={!connected||state?.state!=='live'} onClick={()=>{void begin(false);}}>{t.watch}</button></>:<button data-testid="cinema-stop" onClick={()=>{const value=active.current;if(value)retire(value);setLocal('idle');}}>{publishing?t.stop:t.leave}</button>}
   {hasMedia&&!publishing?<button data-testid="cinema-sound" onClick={()=>{const value=active.current;if(value){void value.room?.startAudio().then(()=>play(value)).catch(()=>{if(active.current===value&&!value.closed)setLocal('blocked');});}}}>{t.sound}</button>:null}</div>
-  {hasMedia&&!publishing?<label>{t.volume}<input type="range" min="0" max="1" step="0.05" value={volume} onChange={event=>{const n=Number(event.target.value);setVolume(n);if(video.current)video.current.volume=n;}}/></label>:null}
+  {hasMedia&&!publishing?<label>{t.volume}<input type="range" min="0" max="1" step="0.05" value={volume} onChange={event=>{const n=Number(event.target.value);setVolume(n);if(video.current)video.current.volume=n*(ducked?.2:1);}}/></label>:null}
   {state?.can_publish?<p className="hint" data-testid="cinema-capture-hint">{captureAvailability==='available'?t.hint:t[captureAvailability]}</p>:null}
  </section>;
 }

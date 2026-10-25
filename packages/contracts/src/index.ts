@@ -7,3 +7,4 @@ export * from './self-actions.js';
 export * from './topic-games.js';
 export * from './music.js';
 export * from './media.js';
+export * from './calls.js';

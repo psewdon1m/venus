@@ -4,9 +4,11 @@ import type {GameHttpGuards} from './game-routes.js';
 import {requireThat} from './security.js';
 import {enqueueFencedJson} from './http-delivery.js';
 import {Media,mediaLimits} from './media.js';
+import {registerCallRoutes} from './call-routes.js';
 const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][0-9a-f]{3}-[a-f0-9]{12}$/i;
 function input(request:FastifyRequest,keys:string){const v=request.body;requireThat(v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===keys,'INVALID_REQUEST',400);return v as Record<string,unknown>;}
 export function registerMediaRoutes(app:FastifyInstance,media:Media,guard:GameHttpGuards){
+ if(media.calls)registerCallRoutes(app,media.calls,guard);
  const root='/api/v1/rooms/:roomId',cinema=root+'/cinema';
  app.get(cinema+'/publication-capabilities',async(request,reply)=>{await guard.privateReadGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);await media.publicationCapabilities(guard.roomId(request),guard.credential(request),state=>enqueueFencedJson(reply,state));return reply;});
  // No native SDK/build is qualified. Authenticate first; issue no lease or JWT.

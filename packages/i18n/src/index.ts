@@ -9,3 +9,5 @@ export {topicCopy} from './topics.js';
 export {musicCopy} from './music.js';
 
 export {cinemaCopy} from './cinema.js';
+
+export {callsCopy} from './calls.js';

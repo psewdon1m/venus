@@ -74,7 +74,8 @@ async function main() {
       safety:{read:privateTopics.readForPlanner.bind(privateTopics),assertCurrent:privateTopics.assertPlannerCurrent.bind(privateTopics),excludeLocked:privateTopics.excludeForPlannerLocked.bind(privateTopics)}});
   }
   const music=process.env.VENUS_MUSIC_CATALOG_FILE?new Music(rooms,new MusicCatalog(process.env.VENUS_MUSIC_CATALOG_FILE,process.env.VENUS_DEPLOYMENT_PROFILE==='local-pilot')):undefined;
-  const media=process.env.VENUS_MEDIA_KEY_FILE?new Media(rooms,{keyFile:process.env.VENUS_MEDIA_KEY_FILE,authorityDirectory:process.env.VENUS_MEDIA_AUTHORITY_DIRECTORY??'',internalOrigin:process.env.VENUS_MEDIA_INTERNAL_ORIGIN??'http://media:7890'},music):undefined;
+  requireThat(process.env.VENUS_CALLS_ENABLED===undefined||['true','false'].includes(process.env.VENUS_CALLS_ENABLED),'CALLS_CONFIGURATION_INVALID',503);
+  const media=process.env.VENUS_MEDIA_KEY_FILE?new Media(rooms,{keyFile:process.env.VENUS_MEDIA_KEY_FILE,authorityDirectory:process.env.VENUS_MEDIA_AUTHORITY_DIRECTORY??'',internalOrigin:process.env.VENUS_MEDIA_INTERNAL_ORIGIN??'http://media:7890',callsEnabled:process.env.VENUS_CALLS_ENABLED!=='false'},music):undefined;
   await media?.bootGate();
   rooms.attachGames(registry?new RoomGames(games,topicGames??null):games);
   // Startup grants never survive a database restore or an API process restart.
