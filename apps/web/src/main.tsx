@@ -152,7 +152,7 @@ function App() {
     repairFocusCorrection(focusCorrection.current,main);scheduleFocusCorrection(focusCorrection.current,main);
   }}>
     <nav aria-label={t.language}><a className="brand" href="/">venus<span aria-hidden="true">✦</span></a>
-      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
+      <div className="languages">{locales.map(value=><button key={value} lang={value} aria-pressed={locale===value} disabled={busy} onClick={()=>{void chooseLocale(value);}}>{{ru:'Русский',en:'English',tr:'Türkçe'}[value]}</button>)}</div>
     </nav>
     {error?<section className="notice error" role="alert" data-testid="error-message"><p>{message(t,error)}</p>
       <button data-testid="retry-action" onClick={()=>{void perform(async()=>{if(error instanceof ApiError&&error.code==='REVISION_CONFLICT') await refresh();else if(retry) await retry();else if(roomId) await refresh();else setPolicy(await api.bootstrap());if(roomId) setConnectionEpoch(v=>v+1);});}}>{t.retry}</button>
