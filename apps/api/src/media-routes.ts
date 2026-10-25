@@ -8,6 +8,9 @@ const UUID=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][0-9a-f]{3}-[a-f0-9]
 function input(request:FastifyRequest,keys:string){const v=request.body;requireThat(v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===keys,'INVALID_REQUEST',400);return v as Record<string,unknown>;}
 export function registerMediaRoutes(app:FastifyInstance,media:Media,guard:GameHttpGuards){
  const root='/api/v1/rooms/:roomId',cinema=root+'/cinema';
+ app.get(cinema+'/publication-capabilities',async(request,reply)=>{await guard.privateReadGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);await media.publicationCapabilities(guard.roomId(request),guard.credential(request),state=>enqueueFencedJson(reply,state));return reply;});
+ // No native SDK/build is qualified. Authenticate first; issue no lease or JWT.
+ app.post(cinema+'/native/start',async request=>{const session=await guard.memberGuard(request);await media.publicationCapabilities(guard.roomId(request),session,()=>{});requireThat(false,'NATIVE_PUBLICATION_UNAVAILABLE',409);});
  app.get(cinema,async(request,reply)=>{await guard.privateReadGuard(request);requireThat(!request.url.includes('?'),'INVALID_REQUEST',400);await media.inspect(guard.roomId(request),guard.credential(request),state=>enqueueFencedJson(reply,state));return reply;});
  for(const action of ['start','join'] as const)app.post(cinema+'/'+action,async(request,reply)=>{
   const session=await guard.memberGuard(request),v=input(request,'expected_rev,idempotency_key');requireThat(typeof v.idempotency_key==='string'&&UUID.test(v.idempotency_key)&&Number.isSafeInteger(v.expected_rev),'INVALID_REQUEST',400);

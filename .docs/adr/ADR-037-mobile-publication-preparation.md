@@ -1,0 +1,11 @@
+# ADR-037 — P10: подготовка, native-публикация закрыта
+
+2026-10-25. DECIDED_FOR_BOUNDED_PREPARATION, не native implementation acceptance/G4. Основание U022 и независимый P10entry01; ADR002/003 исторические сохраняются.
+
+Пока нет квалифицированных Android/iOS сборок, SDK pins, device/OS/source matrix и подписанного distribution path. Native capability сервера false, accepted_protocols пуст; /cinema/native/start после настоящей room/session/Origin/CSRF/18+ проверки всегда409NATIVE_PUBLICATION_UNAVAILABLE и не создаёт lease/JWT. GET publication-capabilities повторяет finalroom/member/entry fence. Version/build string не становится credential. В существующий browser RTCgateway никаких native исключений, новых CORS/Origin bypass или direct SFU admission не добавлено. Эндпоинт не доказывает невозможность клиента с действующей browser authority воспроизвести browser protocol: происхождение приложения без отдельной аттестации не удостоверяется.
+
+Browser UI отдельно различает insecure context, отсутствие getDisplayMedia, OS/captureblock и отказ пользователя. НаличиеAPI не означает поддерживаемый phone/desktop tuple. Live по-прежнему требует реальный capture video+audio, чужой звук/микрофон не подменяют source audio. Просмотр, Rooms/Games/Music/private chat и безопасный выход остаются по прежним ACL.
+
+Полные native adapters здесь не выдаются за реализованные: отсутствуют проекты/toolchain/hardware, нет утверждённых dependency и credential handoff. Следующая source revision должна зафиксировать AndroidMediaProjection+разрешённыйplaybackcapture и выбранный актуальный iOSroute (ReplayKit/Broadcast или подходящий ScreenCaptureKit по реальной OS/SDK), pinnedSDKs/license, securecredentialhandoff, foreground/backgroundauthority, one-timepermission lifecycle. Нельзя просто выбрать latest/main или iOS27-only и назвать обе платформы готовыми.
+
+Совместимость: новые capability/native-unavailable routes additive; CinemaStatev1 и выданный0.0.1 неизменны. Старый browser работает; неизвестный native protocol никогда не принят. Откат — убрать новые routes/UIhandling вместе с этим source, native capability остаётся unavailable по отсутствиюnativeинтеграции; protectedleases/witness не восстанавливать. Фактические телефоны, trustedLAN/TLS/ICE и iOS signing/toolchain — отдельные внешние входы.

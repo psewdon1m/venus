@@ -3,7 +3,8 @@ import type {Room} from 'livekit-client';
 import type {CinemaState,Locale,MediaGrant} from '@venus/contracts';
 import {cinemaCopy} from '@venus/i18n';
 import {ApiError,SessionApi} from './api.js';
-type LocalState='idle'|'connecting'|'live'|'denied'|'no_audio'|'error'|'blocked';
+import {displayCaptureAvailability,displayCaptureFailure} from './display-capture.js';
+type LocalState='idle'|'connecting'|'live'|'denied'|'no_audio'|'error'|'blocked'|'insecure'|'unsupported'|'capture_blocked';
 interface Active {revision:number;room?:Room;capture?:MediaStream;grant?:MediaGrant;renew?:ReturnType<typeof setInterval>;closed:boolean}
 /** Capture permission is always a direct user gesture. A resource generation owns
  * its tracks, lease and teardown; late completion cannot stop a newer scope. */
@@ -11,6 +12,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
  const t=cinemaCopy(locale),root=`/api/v1/rooms/${roomId}`,video=useRef<HTMLVideoElement>(null),active=useRef<Active|null>(null),serial=useRef(0),alive=useRef(true);
  const [state,setState]=useState<CinemaState|null>(null),[local,setLocal]=useState<LocalState>('idle'),[volume,setVolume]=useState(.7),[publishing,setPublishing]=useState(false),[hasMedia,setHasMedia]=useState(false),[engaged,setEngaged]=useState(false);
  const volumeRef=useRef(volume);useEffect(()=>{volumeRef.current=volume;},[volume]);
+ const captureAvailability=displayCaptureAvailability({secure:window.isSecureContext,hasApi:typeof navigator.mediaDevices?.getDisplayMedia==='function'});
  const clearElements=()=>{for(const element of [video.current])if(element){element.pause();element.srcObject=null;}};
  const retire=(value:Active,notify=true)=>{
   if(value.closed)return;value.closed=true;if(value.renew)clearInterval(value.renew);value.capture?.getTracks().forEach(track=>track.stop());void value.room?.disconnect(true);
@@ -32,6 +34,7 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
  };
  const begin=async(publisher:boolean)=>{
   if(!connected||!state||active.current)return;
+  if(publisher&&captureAvailability!=='available'){setLocal(captureAvailability);return;}
   const value:Active={revision:++serial.current,closed:false};active.current=value;setEngaged(true);setLocal('connecting');setPublishing(publisher);
   const current=()=>!value.closed&&active.current===value&&alive.current;
   try{
@@ -63,13 +66,13 @@ export function CinemaPanel({api,roomId,locale,connected}:{api:SessionApi;roomId
     if(!current())return;
     await api.request(root+'/cinema/source',{lease_id:grant.lease_id,scope_id:grant.scope_id,video:true,audio:true,idempotency_key:crypto.randomUUID()});if(current()){setHasMedia(true);setLocal('live');}
    }
-  }catch(error){if(!current())return;retire(value);setLocal(error instanceof DOMException&&error.name==='NotAllowedError'?'denied':error instanceof ApiError&&error.code==='MEDIA_AUDIO_REQUIRED'?'no_audio':'error');}
+  }catch(error){if(!current())return;retire(value);setLocal(error instanceof ApiError&&error.code==='MEDIA_AUDIO_REQUIRED'?'no_audio':displayCaptureFailure(error));}
  };
  return <section className="panel cinema-panel" data-testid="cinema-panel"><h2>{t.title}</h2><p role="status" data-testid="cinema-status">{!connected?t.offline:local!=='idle'?t[local]:state?t[state.state]:t.connecting}</p>
   <video ref={video} playsInline controls={false} aria-label={publishing?t.preview:t.viewer} data-testid="cinema-video" hidden={!hasMedia&&local!=='connecting'}/>
   <div className="actions">{!engaged?<>{state?.can_publish?<button data-testid="cinema-share" disabled={!connected||!state.transport_ready||['starting','live'].includes(state.state)} onClick={()=>{void begin(true);}}>{t.share}</button>:null}<button data-testid="cinema-watch" disabled={!connected||state?.state!=='live'} onClick={()=>{void begin(false);}}>{t.watch}</button></>:<button data-testid="cinema-stop" onClick={()=>{const value=active.current;if(value)retire(value);setLocal('idle');}}>{publishing?t.stop:t.leave}</button>}
   {hasMedia&&!publishing?<button data-testid="cinema-sound" onClick={()=>{const value=active.current;if(value){void value.room?.startAudio().then(()=>play(value)).catch(()=>{if(active.current===value&&!value.closed)setLocal('blocked');});}}}>{t.sound}</button>:null}</div>
   {hasMedia&&!publishing?<label>{t.volume}<input type="range" min="0" max="1" step="0.05" value={volume} onChange={event=>{const n=Number(event.target.value);setVolume(n);if(video.current)video.current.volume=n;}}/></label>:null}
-  {state?.can_publish?<p className="hint">{t.hint}</p>:null}
+  {state?.can_publish?<p className="hint" data-testid="cinema-capture-hint">{captureAvailability==='available'?t.hint:t[captureAvailability]}</p>:null}
  </section>;
 }

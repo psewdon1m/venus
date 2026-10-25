@@ -1,3 +1,4 @@
 export interface CinemaState {schema_version:1;room_id:string;rev:number;state:'idle'|'starting'|'live'|'ended'|'transport_unavailable';reason:'idle'|'starting'|'live'|'ended'|'no_audio'|'denied'|'revoked'|'transport_unavailable';can_publish:boolean;source_member_id:string|null;transport_ready:boolean;viewers:number}
 export interface MediaGrant {schema_version:1;lease_id:string;expires_at:string;signaling_url:string;token:string;publisher:boolean;scope_id:string;cinema_rev:number}
+export interface PublicationCapabilities {schema_version:1;native_publish:{enabled:false;accepted_protocols:never[];device_qualified:false};browser_capture:'client_permission_and_actual_audio_required'}
 export type CinemaCommand={action:'start';expected_rev:number;idempotency_key:string}|{action:'stop';scope_id:string;idempotency_key:string}|{action:'source';lease_id:string;scope_id:string;video:boolean;audio:boolean;idempotency_key:string};

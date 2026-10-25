@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import {createHash,createHmac,randomUUID,timingSafeEqual} from 'node:crypto';
 import type pg from 'pg';
 import {AccessToken,TokenVerifier,RoomServiceClient,TrackSource} from 'livekit-server-sdk';
-import type {CinemaState,MediaGrant} from '@venus/contracts';
+import type {CinemaState,MediaGrant,PublicationCapabilities} from '@venus/contracts';
 import {Rooms,revision,timers} from './rooms.js';
 import {requireThat} from './security.js';
 import {ProtectedAuthority} from './protected-authority.js';
@@ -43,6 +43,7 @@ export class Media {
   requireThat(confirmed,'MEDIA_PREPARE_UNAVAILABLE',503);return {...result!,ready:true,mode:'prepared'};
  }
  async ready(){try{const value=await this.control('health');return value.running&&value.api_epoch===this.epoch&&UUID.test(value.boot_id);}catch{return false;}}
+ async publicationCapabilities(id:string,session:string|undefined,enqueue:(state:PublicationCapabilities)=>void){await this.rooms.transaction(async c=>{const a=await this.rooms.access(c,id,session,false,true);(await this.rooms.finalAccessFence(c,a,false,revision(a.member.socket_generation)))();enqueue({schema_version:1,native_publish:{enabled:false,accepted_protocols:[],device_qualified:false},browser_capture:'client_permission_and_actual_audio_required'});});}
  private async runtime(c:pg.PoolClient){const row=(await c.query<{api_epoch:string;sfu_epoch:string|null;last_authority_at:Date|null}>('SELECT * FROM venus_media_runtime WHERE singleton')).rows[0];requireThat(row&&row.api_epoch===this.epoch&&row.sfu_epoch&&row.last_authority_at&&this.rooms.now()-row.last_authority_at.getTime()<mediaLimits.watchdogMs,'MEDIA_TRANSPORT_UNAVAILABLE',503);return row as typeof row&{sfu_epoch:string};}
  private async cinema(c:pg.PoolClient,id:string){return (await c.query<CinemaRow>('SELECT * FROM room_cinema_state WHERE room_id=$1',[id])).rows[0];}
  private async assertLease(c:pg.PoolClient,id:string,room:string,member:string,generation:number,sessionHash:string){
