@@ -4,7 +4,7 @@ import type {CallGrant,CallScopeView,CallsView,Locale,RoomView} from '@venus/con
 import {callsCopy} from '@venus/i18n';
 import {ApiError,SessionApi} from './api.js';
 type Source='audio'|'video';
-interface Peer {id:string;audio?:RemoteTrack;video?:RemoteTrack}
+interface Peer {id:string;sid:string;audio?:RemoteTrack;video?:RemoteTrack}
 interface DeviceSource {serial:number;stream?:MediaStream;publication?:LocalTrackPublication}
 interface Active {closed:boolean;grant?:CallGrant;grantedAt:number;room?:Room;renew?:ReturnType<typeof setInterval>;peers:Map<string,Peer>;audio:DeviceSource;video:DeviceSource;done:Promise<void>;finish:()=>void;closing?:Promise<boolean>}
 function RemotePeer({peer,volume,label,onBlocked}:{peer:Peer;volume:number;label:string;onBlocked:()=>void}){
@@ -44,9 +44,9 @@ export function CallsPanel({api,room,memberId,locale,connected,onAudioFocus}:{ap
   if(!connected||!view?.transport_ready||active.current)return;let finish=()=>{};const done=new Promise<void>(resolve=>{finish=resolve;}),v:Active={closed:false,grantedAt:Infinity,peers:new Map(),audio:{serial:0},video:{serial:0},done,finish};active.current=v;setEngaged(true);setGrantView(null);setStatus('connecting');setError(null);focus.current(true);
   let failed=false;try{const grant=await api.request<CallGrant>(scope?`${prefix}/pairs/${scope.id}/media`:prefix+'/general/join',{expected_rev:scope?.rev??view.general?.rev??0,idempotency_key:crypto.randomUUID(),audio:allowAudio,video:allowVideo});v.grant=grant;v.grantedAt=performance.now();if(!current(v))return;setGrantView({scope_id:grant.scope_id,audio:grant.audio,video:grant.video});
    const {Room,RoomEvent}=await import('livekit-client');if(!current(v))return;const rtc=new Room({adaptiveStream:false,dynacast:false,disconnectOnPageLeave:true});v.room=rtc;
-   rtc.on(RoomEvent.TrackSubscribed,(track,_publication,participant)=>{if(!current(v))return;const old=v.peers.get(participant.identity)??{id:participant.identity};v.peers.set(participant.identity,{...old,[track.kind]:track});publishPeers(v);});
-   rtc.on(RoomEvent.TrackUnsubscribed,(track,_publication,participant)=>{track.detach();if(!current(v))return;const old=v.peers.get(participant.identity);if(old){const next={...old};delete next[track.kind as Source];if(!next.audio&&!next.video)v.peers.delete(participant.identity);else v.peers.set(participant.identity,next);publishPeers(v);}});
-   rtc.on(RoomEvent.ParticipantDisconnected,participant=>{if(current(v)){v.peers.delete(participant.identity);publishPeers(v);}});
+   rtc.on(RoomEvent.TrackSubscribed,(track,_publication,participant)=>{if(!current(v))return;const previous=v.peers.get(participant.identity),old=previous?.sid===participant.sid?previous:{id:participant.identity,sid:participant.sid};v.peers.set(participant.identity,{...old,[track.kind]:track});publishPeers(v);});
+   rtc.on(RoomEvent.TrackUnsubscribed,(track,_publication,participant)=>{if(!current(v))return;const old=v.peers.get(participant.identity);if(old?.sid===participant.sid&&old[track.kind as Source]===track){track.detach();const next={...old};delete next[track.kind as Source];if(!next.audio&&!next.video)v.peers.delete(participant.identity);else v.peers.set(participant.identity,next);publishPeers(v);}});
+   rtc.on(RoomEvent.ParticipantDisconnected,participant=>{if(current(v)&&v.peers.get(participant.identity)?.sid===participant.sid){v.peers.delete(participant.identity);publishPeers(v);}});
    rtc.on(RoomEvent.Reconnecting,()=>{if(current(v))setStatus('reconnecting');});rtc.on(RoomEvent.Reconnected,()=>{if(current(v))setStatus('connected');});rtc.on(RoomEvent.Disconnected,()=>{if(current(v))void closeRef.current(v);});
    await rtc.connect(grant.signaling_url,grant.token,{autoSubscribe:true,rtcConfig:{iceServers:[]}});if(!current(v)){void rtc.disconnect(true);return;}setStatus('connected');
    v.renew=setInterval(()=>{if(current(v))void api.request(`${mediaPrefix}/leases/${grant.lease_id}/renew`,{idempotency_key:crypto.randomUUID()}).catch(()=>{if(current(v))void closeRef.current(v);});},5000);
