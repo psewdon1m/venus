@@ -377,3 +377,8 @@ Initial commit e724073c clean, ROOT sync71files/indexguard неизменён. s
 ### 2026-10-25T07:06:44.474498+00:00 — Corrections01 STOP / clean Docker candidate
 
 UI fix01 автор завершил, focused lint0/webtypes0; без отключения правил. Root дополнительно связал Linux-only BK1/BK2 и затронутые operator/media compatibility units с тем же Docker запуском, exact helper imageID фиксируется отдельно. Все writers STOP. Далее clean-source native --presentations, без общего P07.
+
+
+### 2026-10-25T07:13:10.842167+00:00 — Native round01 FAIL / исправление приложения
+
+Clean db10c91f/core ac7a6967: первый Docker образ собран, pinned Python/Poppler реально установлены. native --presentations exit1; cleanup completed; source unchanged true. 4 BK2 framing/profile tests PASS, 28 P06 unit PASS, v3 signature compatibility PASS; прежний partial-object media quiescence unit FAIL из-за отсутствующего config. Все12 presentation cases FAIL на импорте HTTP500: новый audit action не включён в DB allowlist (safe diagnostic rooms.audit). Native round01 сохранён целиком, включая исходные FAIL. В unreleased migration001 добавлен полный прежний audit allowlist и7 фиксированных presentation codes; это новая source revision до первой принятой/поставленной presentation БД, не изменение released migration/proof. Partial-object unit теперь явно задаёт media-v3 config; runtime default не ослаблялся. Далее повтор ровно затронутого Docker набора.

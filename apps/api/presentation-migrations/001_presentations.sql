@@ -30,3 +30,13 @@ CREATE TABLE room_presentation_jobs (
 );
 CREATE UNIQUE INDEX room_presentation_one_import ON room_presentation_jobs((true)) WHERE state IN ('awaiting_upload','rendering');
 CREATE INDEX room_presentation_jobs_room ON room_presentation_jobs(room_id,created_at DESC);
+
+-- Unreleased presentation module revision: preserve the complete existing audit
+-- allowlist and add its seven fixed mutation codes. No source/body is audited.
+ALTER TABLE audit_events DROP CONSTRAINT audit_events_action_check;
+ALTER TABLE audit_events ADD CONSTRAINT audit_events_action_check CHECK(action IN
+ ('create','join','context','profile','preferences','skip','leave','close','reaccept','idle_close',
+ 'game_prepare','game_start','game_advance','game_response','game_stop','game_pause','game_resume','game_choice','game_condition','game_finish','game_transport','game_expire','game_quiesce',
+ 'music_queue','music_play','music_pause','music_seek','music_next','music_previous',
+ 'media_start','media_join','media_source','media_stop','media_leave','media_expire','media_revoke',
+ 'presentation_import','presentation_cancel','presentation_settings','presentation_delete','presentation_start','presentation_page','presentation_stop'));

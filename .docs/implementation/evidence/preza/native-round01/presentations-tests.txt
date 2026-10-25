@@ -1,0 +1,368 @@
+ Container venus-p05-ec9470643111-db-1  Running
+✔ P06-RELEASE signed exact source/bundle and fixture/service identities (13.16092ms)
+✔ P06-RELEASE reject signed wrong version (4.729935ms)
+✔ P06-RELEASE reject signed wrong schema (4.80186ms)
+✔ P06-RELEASE reject signed wrong environment (4.578689ms)
+✔ P06-RELEASE reject signed wrong image digest (4.040744ms)
+✔ P06-RELEASE reject signed wrong main SHA (3.329332ms)
+✔ P06-RELEASE tampered signature and bundle fail independently (4.036254ms)
+✔ P06-RELEASE tar traversal/duplicate/link/truncation/gzip bomb rejected (58.582367ms)
+✔ P06-RELEASE canonical bytes, replay/downgrade and unsupported template (9.570146ms)
+✔ P06-FAULTS DISK_SPACE preserves A/data and original error (9.836078ms)
+✔ P06-FAULTS PULL_FAILED preserves A/data and original error (9.118665ms)
+✔ P06-FAULTS BACKUP_FAILED preserves A/data and original error (12.285595ms)
+✔ P06-FAULTS MIGRATION_FAILED preserves A/data and original error (10.730459ms)
+✔ P06-FAULTS HEALTH_FAILED preserves A/data and original error (11.828689ms)
+✔ P06-FAULTS failed recovery remains closed and retains original fault (10.331527ms)
+✔ P06-UPDATE idempotent apply, immutable job ID, durable reload and cancellation (21.860171ms)
+✔ P06-JOURNAL corruption fails closed without mutation (6.825992ms)
+✔ P06-JOURNAL phase fault keeps durable earlier phase and backup boundary (82.086224ms)
+✔ P06-ACL distinct operator, opaque bytes/rotation, foreign origin, command fields (30.136105ms)
+✔ P06 archive template digest is signed, not executed or accepted by filename alone (3.425736ms)
+✔ P06-BACKUP framed reader rejects truncation/corruption/permissions/link/oversize before restore (5.108943ms)
+✔ P06-DOWNLOAD transient503 retries boundedly and never mutates healthy A (1759.792852ms)
+✔ P06-E01 wrong runtime identity recovers A; finished recovery validates identity before opening (10.253367ms)
+✔ P06-E02 explicit recovery removes only owned interrupted-job backup temps (5.755322ms)
+✔ P06-SEC01 install recovery repeats preflight before initialization or start (6.763264ms)
+✔ P06-SEC02 published schema version/tag patterns agree with valid runtime manifests (2.901482ms)
+✔ P06-INSTALL missing pinned PostgreSQL image is verified before DB mutation; pull failure does not start DB (2.788577ms)
+✔ P06-E06 interrupted nonterminal jobs retain durable cause and phase before and after backup (13.542367ms)
+✖ backup and restore cannot run while a media container survives API stop (1.245727ms)
+✔ signed media-v3 profile is explicit and cannot be imported as original v2 (11.310288ms)
+✔ BK2 profile binds converter and fixed environment without implicit v3 activation (1.875685ms)
+✔ BK2 framing verifies hash, exact declaration and permissions; ordinary BK1 stays readable (3.413366ms)
+✔ BK2 supports129MiB frame while BK1 rejects it, and BK2 still has finite256MiB cap (191.378027ms)
+✔ BK2 restore rejects legacy generation before any database command (0.798566ms)
+{"id":"PREZA-CAPACITY-BK2","phase":"START"}
+{"id":"PREZA-CAPACITY-BK2","status":"FAIL"}
+{"id":"PREZA-LIBRARY-IMPORT","phase":"START"}
+✖ PREZA-CAPACITY-BK2 (1618.240232ms)
+{"id":"PREZA-LIBRARY-IMPORT","status":"FAIL"}
+{"id":"PREZA-ROOM-ACL","phase":"START"}
+✖ PREZA-LIBRARY-IMPORT (143.481503ms)
+{"id":"PREZA-ROOM-ACL","status":"FAIL"}
+{"id":"PREZA-LIVE-SYNC","phase":"START"}
+✖ PREZA-ROOM-ACL (183.993602ms)
+{"id":"PREZA-LIVE-SYNC","status":"FAIL"}
+{"id":"PREZA-REPLACE-AND-IDEMPOTENCY","phase":"START"}
+✖ PREZA-LIVE-SYNC (100.614719ms)
+{"id":"PREZA-REPLACE-AND-IDEMPOTENCY","status":"FAIL"}
+{"id":"PREZA-INPUT-BOUNDS","phase":"START"}
+✖ PREZA-REPLACE-AND-IDEMPOTENCY (104.713006ms)
+{"id":"PREZA-INPUT-BOUNDS","status":"FAIL"}
+{"id":"PREZA-CANCEL-AND-ROOM-CLOSE","phase":"START"}
+✖ PREZA-INPUT-BOUNDS (128.695449ms)
+{"id":"PREZA-CANCEL-AND-ROOM-CLOSE","status":"FAIL"}
+{"id":"PREZA-OLD-PG-RESTORE","phase":"START"}
+✖ PREZA-CANCEL-AND-ROOM-CLOSE (124.421325ms)
+{"id":"PREZA-OLD-PG-RESTORE","status":"FAIL"}
+{"id":"PREZA-UI-LOCALES-LAYOUT","phase":"START"}
+✖ PREZA-OLD-PG-RESTORE (133.620484ms)
+{"id":"PREZA-UI-LOCALES-LAYOUT","status":"FAIL"}
+{"id":"PREZA-FEATURE-OFF","phase":"START"}
+✖ PREZA-UI-LOCALES-LAYOUT (162.959726ms)
+{"id":"PREZA-FEATURE-OFF","status":"FAIL"}
+{"id":"PREZA-GAMES-COEXISTENCE","phase":"START"}
+✖ PREZA-FEATURE-OFF (150.155289ms)
+{"id":"PREZA-GAMES-COEXISTENCE","status":"FAIL"}
+{"id":"PREZA-RETENTION","phase":"START"}
+✖ PREZA-GAMES-COEXISTENCE (205.88225ms)
+{"id":"PREZA-RETENTION","status":"FAIL"}
+✖ PREZA-RETENTION (172.74793ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 33
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6139.66702
+
+✖ failing tests:
+
+test at tests/p09/operator.test.mjs:8:1
+✖ backup and restore cannot run while a media container survives API stop (1.245727ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /QUIESCE_REQUIRED/. Input:
+  
+  "TypeError: Cannot read properties of undefined (reading 'release_environment')"
+  
+      at async TestContext.<anonymous> (file:///app/tests/p09/operator.test.mjs:9:121)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: Cannot read properties of undefined (reading 'release_environment')
+        at DockerDriver.presentationsProfile (file:///app/tools/venus-operator/driver.mjs:20:39)
+        at DockerDriver.requireQuiesced (file:///app/tools/venus-operator/driver.mjs:22:71)
+        at TestContext.<anonymous> (file:///app/tests/p09/operator.test.mjs:9:149)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1402:25)
+        at Test.start (node:internal/test_runner/test:1262:17)
+        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),
+    expected: /QUIESCE_REQUIRED/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:44:1
+✖ PREZA-CAPACITY-BK2 (1618.240232ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:49:66
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:66:1
+✖ PREZA-LIBRARY-IMPORT (143.481503ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:66:107
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:68:1
+✖ PREZA-ROOM-ACL (183.993602ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:68:131
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:70:1
+✖ PREZA-LIVE-SYNC (100.614719ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:70:87
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:72:1
+✖ PREZA-REPLACE-AND-IDEMPOTENCY (104.713006ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:72:91
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:74:1
+✖ PREZA-INPUT-BOUNDS (128.695449ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async file:///app/tests/presentations/integration.mjs:74:633
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:76:1
+✖ PREZA-CANCEL-AND-ROOM-CLOSE (124.421325ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async file:///app/tests/presentations/integration.mjs:76:89
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:78:1
+✖ PREZA-OLD-PG-RESTORE (133.620484ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:78:83
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:80:1
+✖ PREZA-UI-LOCALES-LAYOUT (162.959726ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:80:87
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:83:1
+✖ PREZA-FEATURE-OFF (150.155289ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:83:87
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:85:1
+✖ PREZA-GAMES-COEXISTENCE (205.88225ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:85:107
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/presentations/integration.mjs:87:1
+✖ PREZA-RETENTION (172.74793ms)
+  AssertionError [ERR_ASSERTION]: HTTP 500 INTERNAL_ERROR
+  
+  500 !== 200
+  
+      at ok (file:///app/tests/presentations/integration.mjs:21:125)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async allocate (file:///app/tests/presentations/integration.mjs:26:303)
+      at async importPdf (file:///app/tests/presentations/integration.mjs:29:68)
+      at async file:///app/tests/presentations/integration.mjs:87:89
+      at async record (file:///app/tests/presentations/integration.mjs:39:120)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 500,
+    expected: 200,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

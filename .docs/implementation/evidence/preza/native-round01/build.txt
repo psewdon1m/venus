@@ -1,0 +1,245 @@
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile.p05-tests
+#1 transferring dockerfile: 3.32kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5
+#2 ...
+
+#3 [internal] load metadata for docker.io/library/venus-p09-browser-cache:p08-5f4e218550bf
+#3 DONE 0.2s
+
+#2 [internal] load metadata for docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5
+#2 DONE 2.8s
+
+#4 [media_binary 1/1] FROM docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5
+#4 resolve docker.io/livekit/livekit-server:v1.13.10@sha256:e96a42b8623f738919a3f2006d433aeb19d0f3c67ce11eb986ea20e2cf65fbf5 0.0s done
+#4 DONE 0.0s
+
+#5 [dependencies  1/15] FROM docker.io/library/venus-p09-browser-cache:p08-5f4e218550bf@sha256:5f4e218550bf9eb6993e2167a1d16ea4a205734d3ed54fff47e3721aeb4ae73b
+#5 resolve docker.io/library/venus-p09-browser-cache:p08-5f4e218550bf@sha256:5f4e218550bf9eb6993e2167a1d16ea4a205734d3ed54fff47e3721aeb4ae73b 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 437.04kB 0.0s done
+#6 DONE 0.1s
+
+#7 [dependencies 10/15] COPY packages/relationship-engine/package.json packages/relationship-engine/
+#7 CACHED
+
+#8 [dependencies 11/15] COPY packages/card-catalog/package.json packages/card-catalog/
+#8 CACHED
+
+#9 [dependencies 12/15] RUN npm ci && node node_modules/playwright/cli.js install --with-deps chromium firefox webkit
+#9 CACHED
+
+#10 [dependencies  3/15] RUN rm -rf /app/apps /app/packages /app/tests /app/tools /app/node_modules
+#10 CACHED
+
+#11 [dependencies  9/15] COPY packages/i18n/package.json packages/i18n/
+#11 CACHED
+
+#12 [dependencies  8/15] COPY packages/contracts/package.json packages/contracts/
+#12 CACHED
+
+#13 [dependencies  5/15] COPY package.json package-lock.json .npmrc ./
+#13 CACHED
+
+#14 [dependencies  6/15] COPY apps/api/package.json apps/api/
+#14 CACHED
+
+#15 [dependencies  7/15] COPY apps/web/package.json apps/web/
+#15 CACHED
+
+#16 [dependencies  2/15] WORKDIR /app
+#16 CACHED
+
+#17 [dependencies  4/15] COPY --from=media_binary /livekit-server /usr/local/bin/venus-media-server
+#17 CACHED
+
+#18 [dependencies 13/15] RUN apt-get update && apt-get install -y --no-install-recommends xdotool ffmpeg pulseaudio iproute2 iptables && rm -rf /var/lib/apt/lists/*
+#18 CACHED
+
+#19 [dependencies 14/15] RUN apt-get update && apt-get install -y --no-install-recommends     poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3     python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1     python3.11=3.11.2-6+deb12u9 python3.11-minimal=3.11.2-6+deb12u9     libpython3.11-minimal=3.11.2-6+deb12u9 libpython3.11-stdlib=3.11.2-6+deb12u9     && rm -rf /var/lib/apt/lists/*
+#19 3.430 Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+#19 3.927 Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+#19 4.707 Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [34.8 kB]
+#19 5.368 Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8790 kB]
+#19 113.8 Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+#19 113.9 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [357 kB]
+#19 119.7 Fetched 9395 kB in 2min 0s (78.6 kB/s)
+#19 119.7 Reading package lists...
+#19 120.1 Reading package lists...
+#19 120.4 Building dependency tree...
+#19 120.5 Reading state information...
+#19 120.7 The following additional packages will be installed:
+#19 120.7   media-types
+#19 120.7 Suggested packages:
+#19 120.7   python3-doc python3-tk python3-venv python3.11-venv python3.11-doc binutils
+#19 120.7   binfmt-support
+#19 120.7 Recommended packages:
+#19 120.7   poppler-data ca-certificates
+#19 120.7 The following NEW packages will be installed:
+#19 120.7   libpoppler126 libpython3-stdlib libpython3.11-minimal libpython3.11-stdlib
+#19 120.7   media-types poppler-utils python3 python3-minimal python3.11
+#19 120.7   python3.11-minimal
+#19 121.4 0 upgraded, 10 newly installed, 0 to remove and 2 not upgraded.
+#19 121.4 Need to get 7385 kB of archives.
+#19 121.4 After this operation, 27.2 MB of additional disk space will be used.
+#19 121.4 Get:1 http://deb.debian.org/debian-security bookworm-security/main amd64 libpython3.11-minimal amd64 3.11.2-6+deb12u9 [821 kB]
+#19 127.8 Get:2 http://deb.debian.org/debian-security bookworm-security/main amd64 python3.11-minimal amd64 3.11.2-6+deb12u9 [2055 kB]
+#19 161.1 Get:3 http://deb.debian.org/debian bookworm/main amd64 python3-minimal amd64 3.11.2-1+b1 [26.3 kB]
+#19 161.2 Get:4 http://deb.debian.org/debian bookworm/main amd64 media-types all 10.0.0 [26.1 kB]
+#19 161.3 Get:5 http://deb.debian.org/debian-security bookworm-security/main amd64 libpython3.11-stdlib amd64 3.11.2-6+deb12u9 [1798 kB]
+#19 183.0 Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 python3.11 amd64 3.11.2-6+deb12u9 [575 kB]
+#19 190.7 Get:7 http://deb.debian.org/debian bookworm/main amd64 libpython3-stdlib amd64 3.11.2-1+b1 [9312 B]
+#19 190.8 Get:8 http://deb.debian.org/debian bookworm/main amd64 python3 amd64 3.11.2-1+b1 [26.3 kB]
+#19 191.8 Get:9 http://deb.debian.org/debian-security bookworm-security/main amd64 libpoppler126 amd64 22.12.0-2+deb12u3 [1856 kB]
+#19 209.4 Get:10 http://deb.debian.org/debian-security bookworm-security/main amd64 poppler-utils amd64 22.12.0-2+deb12u3 [192 kB]
+#19 212.8 debconf: delaying package configuration, since apt-utils is not installed
+#19 212.9 Fetched 7385 kB in 1min 32s (80.3 kB/s)
+#19 212.9 Selecting previously unselected package libpython3.11-minimal:amd64.
+#19 212.9 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 21282 files and directories currently installed.)
+#19 213.0 Preparing to unpack .../libpython3.11-minimal_3.11.2-6+deb12u9_amd64.deb ...
+#19 213.0 Unpacking libpython3.11-minimal:amd64 (3.11.2-6+deb12u9) ...
+#19 213.1 Selecting previously unselected package python3.11-minimal.
+#19 213.1 Preparing to unpack .../python3.11-minimal_3.11.2-6+deb12u9_amd64.deb ...
+#19 213.1 Unpacking python3.11-minimal (3.11.2-6+deb12u9) ...
+#19 213.2 Setting up libpython3.11-minimal:amd64 (3.11.2-6+deb12u9) ...
+#19 213.3 Setting up python3.11-minimal (3.11.2-6+deb12u9) ...
+#19 213.7 Selecting previously unselected package python3-minimal.
+#19 213.7 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 21588 files and directories currently installed.)
+#19 213.8 Preparing to unpack .../python3-minimal_3.11.2-1+b1_amd64.deb ...
+#19 213.8 Unpacking python3-minimal (3.11.2-1+b1) ...
+#19 213.8 Selecting previously unselected package media-types.
+#19 213.8 Preparing to unpack .../media-types_10.0.0_all.deb ...
+#19 213.8 Unpacking media-types (10.0.0) ...
+#19 213.8 Selecting previously unselected package libpython3.11-stdlib:amd64.
+#19 213.8 Preparing to unpack .../libpython3.11-stdlib_3.11.2-6+deb12u9_amd64.deb ...
+#19 213.8 Unpacking libpython3.11-stdlib:amd64 (3.11.2-6+deb12u9) ...
+#19 213.9 Selecting previously unselected package python3.11.
+#19 213.9 Preparing to unpack .../python3.11_3.11.2-6+deb12u9_amd64.deb ...
+#19 213.9 Unpacking python3.11 (3.11.2-6+deb12u9) ...
+#19 214.0 Selecting previously unselected package libpython3-stdlib:amd64.
+#19 214.0 Preparing to unpack .../libpython3-stdlib_3.11.2-1+b1_amd64.deb ...
+#19 214.0 Unpacking libpython3-stdlib:amd64 (3.11.2-1+b1) ...
+#19 214.0 Setting up python3-minimal (3.11.2-1+b1) ...
+#19 214.1 Selecting previously unselected package python3.
+#19 214.1 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 21998 files and directories currently installed.)
+#19 214.1 Preparing to unpack .../python3_3.11.2-1+b1_amd64.deb ...
+#19 214.1 Unpacking python3 (3.11.2-1+b1) ...
+#19 214.2 Selecting previously unselected package libpoppler126:amd64.
+#19 214.2 Preparing to unpack .../libpoppler126_22.12.0-2+deb12u3_amd64.deb ...
+#19 214.2 Unpacking libpoppler126:amd64 (22.12.0-2+deb12u3) ...
+#19 214.3 Selecting previously unselected package poppler-utils.
+#19 214.3 Preparing to unpack .../poppler-utils_22.12.0-2+deb12u3_amd64.deb ...
+#19 214.3 Unpacking poppler-utils (22.12.0-2+deb12u3) ...
+#19 214.3 Setting up media-types (10.0.0) ...
+#19 214.3 Setting up libpython3.11-stdlib:amd64 (3.11.2-6+deb12u9) ...
+#19 214.3 Setting up libpoppler126:amd64 (22.12.0-2+deb12u3) ...
+#19 214.3 Setting up poppler-utils (22.12.0-2+deb12u3) ...
+#19 214.3 Setting up libpython3-stdlib:amd64 (3.11.2-1+b1) ...
+#19 214.3 Setting up python3.11 (3.11.2-6+deb12u9) ...
+#19 214.9 Setting up python3 (3.11.2-1+b1) ...
+#19 214.9 running python rtupdate hooks for python3.11...
+#19 214.9 running python post-rtupdate hooks for python3.11...
+#19 214.9 Processing triggers for libc-bin (2.36-9+deb12u14) ...
+#19 215.4 Processing triggers for systemd (252.39-1~deb12u2) ...
+#19 DONE 215.5s
+
+#20 [dependencies 15/15] COPY tests/p05/probe.mjs tests/p05/probe.mjs
+#20 DONE 0.0s
+
+#21 [runtime  1/18] COPY tsconfig*.json ./
+#21 DONE 0.0s
+
+#22 [runtime  2/18] COPY apps apps
+#22 DONE 0.1s
+
+#23 [runtime  3/18] COPY packages packages
+#23 DONE 0.0s
+
+#24 [runtime  4/18] COPY tests tests
+#24 DONE 0.0s
+
+#25 [runtime  5/18] COPY tools/music-demo.mjs tools/music-demo.mjs
+#25 DONE 0.0s
+
+#26 [runtime  6/18] COPY tools/media-provision.mjs tools/media-provision.mjs
+#26 DONE 0.0s
+
+#27 [runtime  7/18] COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
+#27 DONE 0.0s
+
+#28 [runtime  8/18] COPY tools/venus-operator tools/venus-operator
+#28 DONE 0.0s
+
+#29 [runtime  9/18] COPY infra/venus/media-supervisor.mjs infra/venus/media-supervisor.mjs
+#29 DONE 0.0s
+
+#30 [runtime 10/18] COPY infra/venus/presentation-guardian.py infra/venus/presentation-render.py infra/venus/presentation-dependencies.json infra/venus/
+#30 DONE 0.0s
+
+#31 [runtime 11/18] COPY infra/venus/presentation-app-entry.mjs infra/venus/
+#31 DONE 0.0s
+
+#32 [runtime 12/18] COPY infra/venus/compose.standalone.yml infra/venus/compose.media.standalone.yml infra/venus/
+#32 DONE 0.0s
+
+#33 [runtime 13/18] COPY infra/venus/compose.presentations.standalone.yml infra/venus/
+#33 DONE 0.0s
+
+#34 [runtime 14/18] COPY .docs/contracts/venus-standalone-release.v1.schema.json .docs/contracts/venus-standalone-release.v2.schema.json .docs/contracts/
+#34 DONE 0.0s
+
+#35 [runtime 15/18] COPY .docs/contracts/venus-standalone-release.v4.schema.json .docs/contracts/
+#35 DONE 0.0s
+
+#36 [runtime 16/18] RUN npm run build && mkdir -p /artifacts /media-fixture && chown node:node /artifacts /media-fixture
+#36 0.272 
+#36 0.272 > venus@0.0.0 build
+#36 0.272 > tsc -b && npm run build -w @venus/web
+#36 0.272 
+#36 4.851 
+#36 4.851 > @venus/web@0.0.0 build
+#36 4.851 > vite build
+#36 4.851 
+#36 4.992 vite v8.3.4 building client environment for production...
+#36 5.004 transforming...
+#36 5.118 ✓ 47 modules transformed.
+#36 5.191 rendering chunks...
+#36 5.277 computing gzip size...
+#36 5.283 dist/index.html                               0.39 kB │ gzip:   0.27 kB
+#36 5.283 dist/assets/index-xx0RDbqd.css               12.45 kB │ gzip:   3.35 kB
+#36 5.283 dist/assets/index-BTQ3Wiu5.js               417.59 kB │ gzip: 125.44 kB
+#36 5.283 dist/assets/livekit-client.esm-BzVyFppo.js  532.27 kB │ gzip: 138.15 kB
+#36 5.283 
+#36 5.284 [plugin builtin:vite-reporter] 
+#36 5.284 (!) Some chunks are larger than 500 kB after minification. Consider:
+#36 5.284 - Using dynamic import() to code-split the application
+#36 5.284 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+#36 5.284 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+#36 5.285 ✓ built in 291ms
+#36 DONE 5.3s
+
+#37 [runtime 17/18] COPY tools/media-inventory.mjs tools/media-inventory.mjs
+#37 DONE 0.0s
+
+#38 [runtime 18/18] COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs
+#38 DONE 0.0s
+
+#39 exporting to image
+#39 exporting layers
+#39 exporting layers 1.3s done
+#39 exporting manifest sha256:91b79064ba226993175410f702848d72b0384cf332efa46c0c8dff1c9728bce7 0.0s done
+#39 exporting config sha256:71ab5ce7e2e207003a68425b0e5fa89129374129c9ca609f9c73772619143508 0.0s done
+#39 exporting attestation manifest sha256:b280dc5b85a0426534f78e36b965ae5e78d4d1d23c5f840363d0bfe9a7aab93a 0.0s done
+#39 exporting manifest list sha256:b7237fea257ca3ab42f457a198f62ec44d4b3f149c15fa2954056550def231cf
+#39 exporting manifest list sha256:b7237fea257ca3ab42f457a198f62ec44d4b3f149c15fa2954056550def231cf done
+#39 naming to docker.io/library/venus-p05-ec9470643111:local done
+#39 unpacking to docker.io/library/venus-p05-ec9470643111:local
+#39 unpacking to docker.io/library/venus-p05-ec9470643111:local 0.9s done
+#39 DONE 2.5s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/rzpjqryhk08p2nn3y8e53a4iu
