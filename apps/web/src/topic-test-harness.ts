@@ -34,7 +34,7 @@ const actions=(g,overrides={},conversation={})=>({schema_version:2,room_id:'room
 const target=(g)=>({schema_version:2,room_id:'room',session_id:g.session_id,round_id:g.current_round.round_id,game_rev:g.game_rev,content_revision:1,invitation:{offer_id:'invite',consent_scope:'invitation',proposal_revision:1,own_state:'accepted',state:'active',expires_at:iso(clock+180000)},action:null,choice:null,condition:null});
 const conversation=(g,active=false)=>({schema_version:2,room_id:'room',session_id:g.session_id,round_id:g.current_round.round_id,game_rev:g.game_rev,conversation_id:'c-'+g.session_id,epoch:1,revision:1,state:active?'active':'pending',server_time:iso(clock),expires_at:iso(clock+30000),offer:{offer_id:'topic',epoch:1,proposal_revision:3,token:'token',own_accepted:active,topics:[{topic_id:'a',label:'FULL A'},{topic_id:'b',label:'FULL B'}],expires_at:iso(clock+30000)},...(active?{prompt:{text:'PRIVATE QUESTION',condition:null,choice:null}}:{}),advice:[]});
 const privateChat=(c)=>({schema_version:2,conversation_id:c.conversation_id,epoch:c.epoch,revision:1,state:'active',messages:[{message_id:'m',sequence:1,direction:'received',text:'PRIVATE CHAT'}]});
-const tick=async()=>{for(const row of [...intervals])if(row.ms===3000)row.fn();await settle();};
+const tick=async()=>{for(const row of [...intervals])if(row.ms===4000)row.fn();await settle();};
 
 `;
 export async function topicScenario(source:string):Promise<unknown> {

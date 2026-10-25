@@ -2,6 +2,7 @@ import {createPublicKey,sign,verify} from 'node:crypto';
 import {gunzipSync} from 'node:zlib';
 import path from 'node:path';
 import {read,sha256,canonical,requireValue,exactKeys,HEX} from './files.mjs';
+import {PRESENTATIONS_ENVIRONMENT,PRESENTATIONS_RELEASE} from './presentations-profile.mjs';
 export function keyIdentity(pem){const key=createPublicKey(pem);requireValue(key.asymmetricKeyType==='ed25519','RELEASE_KEY_ALGORITHM');return {key,id:sha256(key.export({type:'spki',format:'der'}))};}
 export function version(value){requireValue(typeof value==='string'&&/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(value),'RELEASE_VERSION');const v=value.split('.').map(Number);requireValue(v.every(Number.isSafeInteger),'RELEASE_VERSION');return v;}
 export function newer(a,b){const x=version(a),y=version(b);for(let i=0;i<3;i++)if(x[i]!==y[i])return x[i]>y[i];return false;}
@@ -23,12 +24,13 @@ export function verifyRelease(dir,trust,policy){
  requireValue(trust.environment==='fixture'||trust.environment==='service'&&trust.owner_approved===true,'SERVICE_KEY_OWNER_APPROVAL_REQUIRED');
  const bytes=read(path.join(dir,'manifest.json'),65536),sig=JSON.parse(read(path.join(dir,'manifest.sig.json'),16384));exactKeys(sig,['algorithm','key_id','signature']);
  const {key,id}=keyIdentity(trust.public_key_pem);requireValue(id===trust.key_id&&sig.key_id===id&&sig.algorithm==='Ed25519','RELEASE_TRUST');const signature=Buffer.from(sig.signature,'base64');requireValue(signature.toString('base64')===sig.signature&&verify(null,bytes,key,signature),'RELEASE_SIGNATURE');
- const m=JSON.parse(bytes.toString('utf8'));requireValue(Buffer.from(canonical(m)).equals(bytes),'RELEASE_CANONICAL');exactKeys(m,['format','service','version','tag','main_sha','source_identity','image','schema','environment','bundle','key_id','created_at','trust_environment']);
+ const m=JSON.parse(bytes.toString('utf8'));requireValue(Buffer.from(canonical(m)).equals(bytes),'RELEASE_CANONICAL');const presentations=m.environment===PRESENTATIONS_ENVIRONMENT;exactKeys(m,['format','service','version','tag','main_sha','source_identity','image','schema','environment','bundle','key_id','created_at','trust_environment',...(presentations?['presentations']:[])]);if(presentations)requireValue(canonical(m.presentations)===canonical(PRESENTATIONS_RELEASE),'PRESENTATIONS_RELEASE_PROFILE');
  requireValue(m.format==='VENUS-RELEASE-1'&&m.service==='venus'&&m.tag===(trust.environment==='fixture'?'venus-fixture-v':'venus-v')+m.version&&m.key_id===id&&newer(m.version,'0.0.0'),'RELEASE_IDENTITY');
  requireValue(/^[a-f0-9]{40}$/.test(m.main_sha)&&HEX.test(m.source_identity)&&Number.isFinite(Date.parse(m.created_at)),'RELEASE_SOURCE');
  exactKeys(m.image,['reference','oci_digest','config_digest']);const referenceAllowed=/^ghcr\.io\/psewdon1m\/venus@sha256:[a-f0-9]{64}$/.test(m.image.reference)||(trust.environment==='fixture'&&typeof trust.fixture_registry==='string'&&/^127\.0\.0\.1:[0-9]+\/venus$/.test(trust.fixture_registry)&&m.image.reference===trust.fixture_registry+'@'+m.image.oci_digest);requireValue(/^sha256:[a-f0-9]{64}$/.test(m.image.oci_digest)&&/^sha256:[a-f0-9]{64}$/.test(m.image.config_digest)&&referenceAllowed&&m.image.reference.endsWith('@'+m.image.oci_digest),'RELEASE_IMAGE');
  exactKeys(m.schema,['generation','read_min','read_max']);requireValue([m.schema.generation,m.schema.read_min,m.schema.read_max].every(Number.isSafeInteger)&&m.schema.read_min>=0&&m.schema.read_min<=m.schema.generation&&m.schema.read_max>=m.schema.generation,'RELEASE_SCHEMA');
- requireValue(['standalone-local-pilot-v2','standalone-local-media-v3'].includes(m.environment)&&m.environment===policy.environment&&m.schema.generation===policy.schema,'RELEASE_ENV_SCHEMA');
+ if(presentations)requireValue(canonical(m.schema)===canonical({generation:1,read_min:1,read_max:1}),'PRESENTATIONS_RELEASE_SCHEMA');
+ requireValue(['standalone-local-pilot-v2','standalone-local-media-v3',PRESENTATIONS_ENVIRONMENT].includes(m.environment)&&m.environment===policy.environment&&m.schema.generation===policy.schema,'RELEASE_ENV_SCHEMA');
  requireValue(m.trust_environment===trust.environment&&['service','fixture'].includes(m.trust_environment),'RELEASE_TRUST_ENV');
  if(policy.expected_main)requireValue(m.main_sha===policy.expected_main,'RELEASE_MAIN');
  exactKeys(m.bundle,['sha256','size']);requireValue(HEX.test(m.bundle.sha256)&&Number.isSafeInteger(m.bundle.size)&&m.bundle.size>0&&m.bundle.size<=16*1024*1024,'BUNDLE_LIMIT');

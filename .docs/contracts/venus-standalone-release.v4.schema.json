@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://venus.shmoza.net/contracts/venus-standalone-release.v4",
+  "title": "VENUS-RELEASE-1 explicit presentation-aware profile4; primary schema remains1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "service",
+    "version",
+    "tag",
+    "main_sha",
+    "source_identity",
+    "image",
+    "schema",
+    "environment",
+    "bundle",
+    "key_id",
+    "created_at",
+    "trust_environment",
+    "presentations"
+  ],
+  "properties": {
+    "format": {
+      "const": "VENUS-RELEASE-1"
+    },
+    "service": {
+      "const": "venus"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$"
+    },
+    "tag": {
+      "type": "string",
+      "pattern": "^venus-(fixture-)?v[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "main_sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "source_identity": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "key_id": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "environment": {
+      "const": "standalone-local-presentations-v4"
+    },
+    "trust_environment": {
+      "enum": [
+        "service",
+        "fixture"
+      ]
+    },
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "generation",
+        "read_min",
+        "read_max"
+      ],
+      "properties": {
+        "generation": {
+          "const": 1
+        },
+        "read_min": {
+          "const": 1
+        },
+        "read_max": {
+          "const": 1
+        }
+      }
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "oci_digest",
+        "config_digest"
+      ],
+      "properties": {
+        "reference": {
+          "type": "string",
+          "maxLength": 256
+        },
+        "oci_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "config_digest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
+    },
+    "bundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "size"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        }
+      }
+    },
+    "presentations": {
+      "const": {
+        "module_generation": 1,
+        "backup_format": "VENUS-HOST-BACKUP-2",
+        "max_dump_bytes": 268435456,
+        "converter_role": "python-root-pid1-nonroot-parser-v1",
+        "quiesced_services": [
+          "app",
+          "media",
+          "presentation-renderer"
+        ],
+        "rollback_environment": "standalone-local-presentations-v4"
+      }
+    }
+  },
+  "$comment": "Runtime additionally verifies Ed25519 over exact canonical bytes, trusted key identity/owner approval, service versus fixture tag, exact Git main context, one OCI/config mapping, allowed repository, schema range, archive member semantics and installed template equality. A schema-only PASS is not release acceptance. Profile4 explicitly binds converter, quiescence, module1 and BK2 envelope. No v2/v3/0.0.1 artifact rewrite, no gen3 rollback authorization, and no public release acceptance from schema validation."
+}

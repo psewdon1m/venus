@@ -6,10 +6,13 @@ COPY --from=dockercli /usr/local/libexec/docker/cli-plugins/docker-compose /usr/
 WORKDIR /opt/venus
 COPY tools/venus-operator tools/venus-operator
 COPY tools/media-provision.mjs tools/media-provision.mjs
+COPY tools/presentation-provision.mjs tools/presentation-provision.mjs
 COPY infra/venus/compose.standalone.yml infra/venus/compose.standalone.yml
 COPY infra/venus/compose.media.standalone.yml infra/venus/compose.media.standalone.yml
+COPY infra/venus/compose.presentations.standalone.yml infra/venus/compose.presentations.standalone.yml
 USER 1001:1002
 ENTRYPOINT ["node","tools/venus-operator/cli.mjs"]
 
 FROM runtime AS fixture
 COPY tests/p06 tests/p06
+COPY tests/presentations tests/presentations

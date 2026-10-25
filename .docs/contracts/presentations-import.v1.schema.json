@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:venus:presentations-import:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "expected_rev",
+    "idempotency_key",
+    "document_id",
+    "title",
+    "default_mode",
+    "allow_switch",
+    "source_bytes",
+    "source_sha256"
+  ],
+  "properties": {
+    "expected_rev": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "idempotency_key": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "document_id": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "default_mode": {
+      "enum": [
+        "scroll",
+        "slides"
+      ]
+    },
+    "allow_switch": {
+      "type": "boolean"
+    },
+    "source_bytes": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 16777216
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}

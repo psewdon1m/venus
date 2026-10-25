@@ -1,0 +1,7 @@
+/** Original deterministic PDF test data; no external content or PDF dependency. */
+export function fixturePdf({pages=3,width=612,height=792,padding=0}={}){
+ const objects=[],pageIds=[];const put=value=>(objects.push(value),objects.length);
+ put('<< /Type /Catalog /Pages 2 0 R >>');put('PAGES');const font=put('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+ for(let i=0;i<pages;i++){const color=[[.85,.15,.1],[.1,.65,.25],[.1,.25,.85]][i%3],stream=color.join(' ')+' rg 20 20 180 120 re f BT /F1 24 Tf 30 190 Td (VENUS SYNTHETIC PAGE '+(i+1)+') Tj ET';const content=put('<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'\nendstream');pageIds.push(put('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 '+width+' '+height+'] /Resources << /Font << /F1 '+font+' 0 R >> >> /Contents '+content+' 0 R >>'));}
+ objects[1]='<< /Type /Pages /Kids ['+pageIds.map(id=>id+' 0 R').join(' ')+'] /Count '+pages+' >>';let text='%PDF-1.4\n% ORIGINAL VENUS FIXTURE\n'+(padding?'%'+('a'.repeat(padding))+'\n':''),offsets=[0];for(let i=0;i<objects.length;i++){offsets.push(Buffer.byteLength(text));text+=(i+1)+' 0 obj\n'+objects[i]+'\nendobj\n';}const xref=Buffer.byteLength(text);text+='xref\n0 '+(objects.length+1)+'\n0000000000 65535 f \n'+offsets.slice(1).map(n=>String(n).padStart(10,'0')+' 00000 n \n').join('')+'trailer\n<< /Size '+(objects.length+1)+' /Root 1 0 R >>\nstartxref\n'+xref+'\n%%EOF\n';return Buffer.from(text);
+}

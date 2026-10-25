@@ -19,6 +19,8 @@ import type {Music} from './music.js';
 import {registerMusicRoutes} from './music-routes.js';
 import type {Media} from './media.js';
 import {registerMediaRoutes} from './media-routes.js';
+import type {Presentations} from './presentations.js';
+import {registerPresentationRoutes} from './presentation-routes.js';
 const admissionCookie='__Host-venus-admission';
 export const roomCookie=()=>'venus_room_session';
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i;
@@ -31,7 +33,7 @@ function body<T>(request:FastifyRequest,schema:string):T {
   requireThat(validate(request.body),'INVALID_REQUEST',400);return request.body as T;
 }
 function roomId(request:FastifyRequest) {const id=(request.params as {roomId:string}).roomId;requireThat(uuid.test(id),'INVALID_REQUEST',400);return id.toLowerCase();}
-export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games,privateTopics?:PrivateTopicPreferences,topicGames?:TopicGames,roomCreationProtocol:1|2=1,music?:Music,media?:Media) {
+export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games,privateTopics?:PrivateTopicPreferences,topicGames?:TopicGames,roomCreationProtocol:1|2=1,music?:Music,media?:Media,presentations?:Presentations) {
   requireThat(roomCreationProtocol===1||roomCreationProtocol===2,'ROOM_CREATION_PROTOCOL_INVALID',503);
   requireThat(roomCreationProtocol===1||topicGames?.options.enabled===true,'ROOM_CREATION_PROTOCOL_UNAVAILABLE',503);
   await app.register(cookie);
@@ -127,6 +129,7 @@ export async function registerRooms(app:FastifyInstance,rooms:Rooms,games?:Games
   const gameGuards={roomId,origin,credential,memberGuard,privateReadGuard,body};
   if(music)registerMusicRoutes(app,music,gameGuards);
   if(media)registerMediaRoutes(app,media,gameGuards);
+  if(presentations)await registerPresentationRoutes(app,presentations,gameGuards);
   if(games) {
     if(rooms.options.privateProtocol) await app.register(async scoped=>{
       // Protocol is immutable from birth. Reject the legacy transport before it

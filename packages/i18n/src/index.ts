@@ -11,3 +11,4 @@ export {musicCopy} from './music.js';
 export {cinemaCopy} from './cinema.js';
 
 export {callsCopy} from './calls.js';
+export {presentationsCopy} from './presentations.js';

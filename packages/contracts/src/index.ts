@@ -8,3 +8,4 @@ export * from './topic-games.js';
 export * from './music.js';
 export * from './media.js';
 export * from './calls.js';
+export * from './presentations.js';

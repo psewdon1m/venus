@@ -34,6 +34,20 @@ export class Keyring {
     const data=Buffer.concat([cipher.update(plain),cipher.final()]).toString('base64');
     return {key_version:this.current,nonce:iv.toString('base64'),data,tag:cipher.getAuthTag().toString('base64'),format};
   }
+  /** Binary assets are length-bounded by their caller. JSON envelope semantics stay unchanged. */
+  encryptBinary(plain:Buffer,aad:string):Buffer {
+    requireThat(plain.length<=64*1024*1024,'ENCRYPTED_VALUE_TOO_LARGE',503);
+    const keyVersion=Buffer.from(this.current),nonce=randomBytes(12),cipher=createCipheriv('aes-256-gcm',Buffer.from(this.keys[this.current]!,'base64'),nonce);
+    cipher.setAAD(Buffer.from(aad+':binary-v1'));
+    return Buffer.concat([Buffer.from('VBN1'),Buffer.from([keyVersion.length]),keyVersion,nonce,cipher.update(plain),cipher.final(),cipher.getAuthTag()]);
+  }
+  decryptBinary(value:Buffer,aad:string,maximum:number):Buffer {
+    requireThat(value.length>=34&&value.subarray(0,4).toString()==='VBN1','CIPHER_FORMAT_INVALID',503);
+    const n=value[4]!,offset=5+n;requireThat(n>0&&n<=64&&value.length>=offset+28&&value.length-offset-28<=maximum,'CIPHER_FORMAT_INVALID',503);
+    const key=this.keys[value.subarray(5,offset).toString()];requireThat(key,'KEY_VERSION_UNAVAILABLE',503);
+    const cipher=createDecipheriv('aes-256-gcm',Buffer.from(key,'base64'),value.subarray(offset,offset+12));cipher.setAAD(Buffer.from(aad+':binary-v1'));cipher.setAuthTag(value.subarray(-16));
+    return Buffer.concat([cipher.update(value.subarray(offset+12,-16)),cipher.final()]);
+  }
   decrypt<T>(value:Cipher,aad:string):T {
     const key=this.keys[value.key_version];requireThat(key,'KEY_VERSION_UNAVAILABLE',503);
     const cipher=createDecipheriv('aes-256-gcm',Buffer.from(key,'base64'),Buffer.from(value.nonce,'base64'));

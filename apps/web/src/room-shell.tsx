@@ -9,10 +9,12 @@ import {gameCopy} from './game-copy.js';
 import {MusicPanel} from './music-panel.js';
 import {CinemaPanel} from './cinema-panel.js';
 import {CallsPanel} from './calls-panel.js';
+import {PresentationsPanel} from './presentations-panel.js';
 type Text=ReturnType<typeof dictionary>;
 export function RoomShell({api,room,prefs,t,locale,busy,connectionEpoch,perform,refresh,onSnapshot,onError,leave,onClosed}:{api:SessionApi;room:RoomView;prefs:SelfPreferences;t:Text;locale:Locale;busy:boolean;connectionEpoch:number;perform:(action:()=>Promise<void>)=>Promise<void>;refresh:()=>Promise<void>;onSnapshot:(frame:unknown)=>void;onError:(e:unknown)=>void;leave:()=>void;onClosed:()=>void}) {
   const [invite,setInvite]=useState(''),[connection,setConnection]=useState<'checking'|'ready'|'offline'>('checking');
   const [gameFrame,setGameFrame]=useState<unknown>(null),[callsFocus,setCallsFocus]=useState(false);
+  const [presentationSignal,setPresentationSignal]=useState(0);
   const inviteInput=useRef<HTMLInputElement>(null),[inviteCopyStatus,setInviteCopyStatus]=useState<'copied'|'manual'|null>(null);
   const copyInvite=async()=>{
     if(!invite) return;
@@ -30,7 +32,7 @@ export function RoomShell({api,room,prefs,t,locale,busy,connectionEpoch,perform,
         const ticket=await api.request<WsTicket>(`/api/v1/rooms/${room.room_id}/ws-ticket`,{request_id:crypto.randomUUID()});if(stopped) return;
         socket=new WebSocket(location.origin.replace('https:','wss:')+`/api/v1/rooms/${room.room_id}/ws`);
         socket.onopen=()=>{socket?.send(JSON.stringify({type:'auth',ticket:ticket.ticket}));};
-        socket.onmessage=event=>{try {const frame:unknown=JSON.parse(String(event.data));if(frame&&typeof frame==='object'&&'type' in frame) {if(frame.type==='room.snapshot') {onSnapshotRef.current(frame);setConnection('ready');attempts=0;}else if(typeof frame.type==='string'&&frame.type.startsWith('game.')) setGameFrame(frame);}} catch {onErrorRef.current(new ApiError('SERVICE_UNAVAILABLE'));}};
+        socket.onmessage=event=>{try {const frame:unknown=JSON.parse(String(event.data));if(frame&&typeof frame==='object'&&'type' in frame) {if(frame.type==='room.snapshot') {onSnapshotRef.current(frame);setConnection('ready');attempts=0;setPresentationSignal(value=>value+1);}else if(frame.type==='room.changed'||frame.type==='presentations.changed')setPresentationSignal(value=>value+1);else if(typeof frame.type==='string'&&frame.type.startsWith('game.')) setGameFrame(frame);}} catch {onErrorRef.current(new ApiError('SERVICE_UNAVAILABLE'));}};
         heartbeat=setInterval(()=>{if(socket?.readyState===WebSocket.OPEN) socket.send(JSON.stringify({type:'ping'}));},20000);
         socket.onerror=()=>setConnection('offline');
         socket.onclose=()=>{if(heartbeat) clearInterval(heartbeat);setConnection('offline');if(!stopped&&attempts++<3) retry=setTimeout(()=>{void connect();},Math.min(500*2**attempts,4000));};
@@ -52,6 +54,7 @@ export function RoomShell({api,room,prefs,t,locale,busy,connectionEpoch,perform,
     {room.features.music==='available'?<MusicPanel key={room.room_id+':'+prefs.owner_member_id+':'+connectionEpoch} api={api} roomId={room.room_id} memberId={prefs.owner_member_id} locale={locale} meetingContext={room.meeting_context} connected={connection==='ready'} ducked={callsFocus}/>:null}
     <div className={room.features.calls==='available'?'room-media-layout':''}>{room.features.cinema==='available'?<CinemaPanel key={room.room_id+':'+prefs.owner_member_id+':'+connectionEpoch} api={api} roomId={room.room_id} locale={locale} connected={connection==='ready'} ducked={callsFocus}/>:null}
     {room.features.calls==='available'?<CallsPanel key={room.room_id+':'+prefs.owner_member_id+':'+connectionEpoch} api={api} room={room} memberId={prefs.owner_member_id} locale={locale} connected={connection==='ready'} onAudioFocus={setCallsFocus}/>:null}</div>
+    <PresentationsPanel key={room.room_id+':'+prefs.owner_member_id+':'+connectionEpoch} api={api} roomId={room.room_id} memberId={prefs.owner_member_id} locale={locale} connected={connection==='ready'} roomRevision={room.room_rev} signal={presentationSignal} onError={onError}/>
     <section className="feature-grid" aria-label={t.modules}>{(['music','cinema','calls'] as const).filter(feature=>room.features[feature]!=='available').map(feature=><div className="feature" key={feature}><h3>{t[feature]}</h3><p>{t.featureUnavailable}</p></div>)}</section>
     <div className="actions room-exit"><button data-testid="leave-room" onClick={leave}>{t.leaveRoom}</button>{me?.role==='host'?<button className="danger" data-testid="close-room" onClick={()=>dialog.current?.showModal()}>{t.closeRoom}</button>:null}</div>
     <dialog ref={dialog} aria-labelledby="close-title"><h2 id="close-title">{t.closeRoom}</h2><p>{t.closeWarning}</p><div className="actions"><button onClick={()=>dialog.current?.close()}>{t.cancel}</button><button className="danger" data-testid="confirm-close" onClick={()=>{const input={expected_rev:room.room_rev,idempotency_key:crypto.randomUUID()};void perform(async()=>{await api.request(`/api/v1/rooms/${room.room_id}/close`,input);dialog.current?.close();onClosed();});}}>{t.confirmClose}</button></div></dialog>

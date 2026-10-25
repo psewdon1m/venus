@@ -18,6 +18,12 @@ RUN test -n "$SOURCE_REVISION" && npm run build && node --input-type=module -e '
 RUN npm prune --omit=dev --ignore-scripts && mkdir -p apps/api/node_modules
 
 FROM node:24.22.0-bookworm-slim@sha256:a5f4366e834695d5f363b920c104953a535d3a9864d1bdf74566a0ebe01daee5
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    poppler-utils=22.12.0-2+deb12u3 libpoppler126=22.12.0-2+deb12u3 \
+    python3=3.11.2-1+b1 python3-minimal=3.11.2-1+b1 libpython3-stdlib=3.11.2-1+b1 \
+    python3.11=3.11.2-6+deb12u9 python3.11-minimal=3.11.2-6+deb12u9 \
+    libpython3.11-minimal=3.11.2-6+deb12u9 libpython3.11-stdlib=3.11.2-6+deb12u9 \
+    && rm -rf /var/lib/apt/lists/*
 ARG SOURCE_REVISION
 ARG RELEASE_VERSION=0.0.0
 LABEL org.opencontainers.image.title="Venus" org.opencontainers.image.version="$RELEASE_VERSION" org.opencontainers.image.revision="$SOURCE_REVISION" org.opencontainers.image.source="https://github.com/psewdon1m/venus"
@@ -36,7 +42,10 @@ COPY --from=build /app/apps/api/catalog-migrations ./apps/api/catalog-migrations
 COPY --from=build /app/apps/api/chat-migrations ./apps/api/chat-migrations
 COPY --from=build /app/apps/api/music-migrations ./apps/api/music-migrations
 COPY --from=build /app/apps/api/media-migrations ./apps/api/media-migrations
+COPY --from=build /app/apps/api/presentation-migrations ./apps/api/presentation-migrations
 COPY infra/venus/media-supervisor.mjs ./infra/venus/media-supervisor.mjs
+COPY infra/venus/presentation-guardian.py infra/venus/presentation-render.py infra/venus/presentation-dependencies.json ./infra/venus/
+COPY infra/venus/presentation-app-entry.mjs ./infra/venus/
 COPY --from=build /app/apps/api/private-topic-migrations ./apps/api/private-topic-migrations
 COPY --from=build /app/apps/web/dist ./apps/web/dist
 COPY --from=build /app/package.json /app/build-metadata.json ./
@@ -48,3 +57,4 @@ STOPSIGNAL SIGTERM
 CMD ["node", "apps/api/dist/server.js"]
 
 COPY tools/media-inventory.mjs tools/media-inventory.mjs
+COPY tools/presentation-inventory.mjs tools/presentation-inventory.mjs

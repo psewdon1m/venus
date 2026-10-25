@@ -5,7 +5,7 @@ from pathlib import Path
 import re
 from source_inventory import source_files
 ROOT=Path(__file__).resolve().parents[1]
-EXCLUDED_FILES={'FILE_MANIFEST.sha256','.docs/implementation/status.md'}
+EXCLUDED_FILES={'FILE_MANIFEST.sha256','.docs/implementation/status.md','.docs/implementation/presentations-registry.json'}
 EXCLUDED_PREFIXES=('.history/','.docs/implementation/evidence/','.docs/implementation/reviews/')
 def included(name):return name not in EXCLUDED_FILES and not name.startswith(EXCLUDED_PREFIXES) and not re.fullmatch(r'\.docs/implementation/p\d{2}-registry\.json',name)
 def digest(data):return hashlib.sha256(data).hexdigest()

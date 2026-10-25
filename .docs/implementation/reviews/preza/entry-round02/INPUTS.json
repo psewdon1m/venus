@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "reviewer": "/root/p06_engineering_gate01",
+  "gate": "PREZA_SUPPLEMENTARY_ENTRY02",
+  "source_git": "4f6581365983ddfd4ae08c59c34d467f42a2854f",
+  "source_worktree": "C:/Users/pc/.codex/worktrees/p06-standalone-release/venus",
+  "scope": "Design-only supplementary guardian/protected binding/budget/backup/final-fence review. Implementation NOT_STARTED at handoff.",
+  "frozen_git_inputs": [
+    {
+      "path": ".docs/adr/ADR-042-room-presentations-preza.md",
+      "git_sha256": "974d5aa304a131a818ccfa9bef13a68a2f904739c24251dd56c2edaf2ded2c54",
+      "bytes": 4027,
+      "working_tree_matches": true
+    },
+    {
+      "path": ".docs/implementation/PRESENTATIONS.md",
+      "git_sha256": "7c7d34c10348ad1975a8e5965dd56252b6291d76c496f79ea6a7f7ff4363f134",
+      "bytes": 9811,
+      "working_tree_matches": true
+    },
+    {
+      "path": "apps/api/src/protected-authority.ts",
+      "git_sha256": "3fc2c39dedc589316fc2e10c0635692dcbafc7ae3289748601010ca494ee3c7b",
+      "bytes": 4514,
+      "working_tree_matches": true
+    }
+  ],
+  "preserved_prior_packets": [
+    {
+      "path": ".docs/implementation/reviews/preza/entry-round01/INDEX.json",
+      "index_sha256": "5b629e4251db5e414305eb23f29680b16719fb4f70b25e7c6a802d4acf17a284",
+      "verified_artifacts": [
+        {
+          "path": ".docs/implementation/reviews/preza/entry-round01/REPORT.md",
+          "sha256": "91e3aa481949df14e355bdea8b8f564fa17d3c50ff537edbbf3ab57ddb8ada3c",
+          "bytes": 20134
+        },
+        {
+          "path": ".docs/implementation/reviews/preza/entry-round01/INPUTS.json",
+          "sha256": "d7e19e31e5f4a4dbc6d1a2bfc0eff14e38c3ce155c68406bbf357d944bfaed47",
+          "bytes": 5729
+        },
+        {
+          "path": ".docs/implementation/reviews/preza/entry-round01/DECISION.json",
+          "sha256": "32968c73f6caed3b19836b6bd301ae153a210307774e00d0813c4c8de46a7d1d",
+          "bytes": 1829
+        }
+      ]
+    },
+    {
+      "path": ".docs/implementation/evidence/preza/source-audit01/INDEX.json",
+      "index_sha256": "da780a1650c872645efe21a45fde24b3285973f5ef2b8776569f145bdc90f8a0",
+      "verified_artifacts": [
+        {
+          "path": "REPORT.md",
+          "sha256": "1dc1aed533e1e4c3c6b756d9514582b7abda5ecd0f4df041202c2128dab6ea39",
+          "bytes": 14704
+        },
+        {
+          "path": "INPUTS.json",
+          "sha256": "49a67adfb028c49216962e196949643e3477a60df65e370dee48b1c1291bad64",
+          "bytes": 10975
+        }
+      ]
+    }
+  ],
+  "external_primary_sources": [
+    {
+      "url": "https://man7.org/linux/man-pages/man2/kill.2.html",
+      "checked_at_utc": "2026-10-25T06:33:48.694Z",
+      "basis": "Permission-based kill(-1), PID1/caller exclusions; successful syscall does not establish all processes reaped."
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/pid_namespaces.7.html",
+      "checked_at_utc": "2026-10-25T06:33:48.694Z",
+      "basis": "Namespace init/adoption/signal/visibility semantics."
+    },
+    {
+      "url": "https://security-tracker.debian.org/tracker/source-package/poppler",
+      "checked_at_utc": "2026-10-25T06:33:48.694Z",
+      "basis": "bookworm-security22.12.0-2+deb12u3; open security issues."
+    },
+    {
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-107705",
+      "checked_at_utc": "2026-10-25T06:33:48.694Z",
+      "basis": "Vulnerable/unfixed listing; password-driven AESV3/R6 described path, proposed feature exploit not proven."
+    }
+  ],
+  "external_content_note": "Read-only live primary lookup, not a frozen local byte-for-byte advisory snapshot.",
+  "mandatory_fences": [
+    {
+      "id": "ENTRY02-S1",
+      "condition": "Guardian Python is actualPID1/private namespace/noTINI; only SETUID/GID/KILL; renderer irreversibly nonroot/no capabilities before parser work. Network-none/no secrets/socket/DB/host mounts."
+    },
+    {
+      "id": "ENTRY02-S2",
+      "condition": "Namespace-wide kill/reap and trusted unsafe-file cleanup proven before output adoption/acknowledgement/new plaintext; cleanup failure closes. No process-group-only or successful kill-call shortcut."
+    },
+    {
+      "id": "ENTRY02-S3",
+      "condition": "Independent <=256 protected bindings survive epoch/feature-off/restore/rollback; complete staged commit-point rollforward, permanent deletion and fail-closed missing stage/capacity."
+    },
+    {
+      "id": "ENTRY02-S4",
+      "condition": "Global64 includes ciphertext/stage/reservations/old bytes. BK1strict128, profile4/BK2strict256 producer+consumer+archive+restore, actual whole-DB margin/worst-data restore and writer quiescence."
+    },
+    {
+      "id": "ENTRY02-S5",
+      "condition": "Current authorization/document/live-page/job/epoch synchronous final fences after all awaits, bounded raw/JSON enqueue, no source/cache/Range bypass; later affected Games4s checks."
+    },
+    {
+      "id": "ENTRY02-S6",
+      "condition": "Known unfixed Poppler advisory preserved; arbitrary-code renderer isolation threat model and actual hostile/resource tests. No zero-CVE/parser-safe/public delivery claim."
+    }
+  ],
+  "reviewer_actions": {
+    "read_only_source_hash_inspection": true,
+    "primary_documentation_lookup": true,
+    "application_tests": 0,
+    "build": 0,
+    "install": 0,
+    "lint": 0,
+    "types": 0,
+    "docker": 0,
+    "app_edits": 0,
+    "git_mutations": 0
+  },
+  "initial_implementation": "NOT_STARTED",
+  "feature_exit": "NOT_RUN"
+}
