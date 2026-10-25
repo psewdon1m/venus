@@ -1,0 +1,4 @@
+# P07 engineering independent review03
+
+2026-10-25T15:51:26.378354+00:00 — Narrow source-only review at HEADdcf2d708 plus dirty3line database and socketView optimization, new2mock cases and actualPG regression. Own files only; prior seals preserved. Inspected current() rowlock/AAD/schema binding, loaded() source/snapshot/history/safety/presence, caller auth and final dispatch fences, pg Client _queryable/_errorAllQueries order, pgPool checkout/remove/release behavior. No application edits, test/Docker executions or broad suites. Source-only ACCEPTED, no blocker; actual new clean retry still required.
+2026-10-25T15:51:26.378354+00:00 — Report/inputs saved; actualregression artifacts read only, exits checked. No new blocker; sourceonly acceptance transmitted. All reviewer writes STOP. Finalaggregate/release followup separate.
